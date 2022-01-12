@@ -5,18 +5,15 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using ModernVLC.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Media;
 using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
 namespace ModernVLC.ViewModels
 {
-    internal class PlayerViewModel : ObservableObject
+    internal partial class PlayerViewModel : ObservableObject
     {
         public ICommand VideoViewInitializedCommand { get; private set; }
         public ICommand VideoViewContextRequestedCommand { get; private set; }
@@ -34,12 +31,14 @@ namespace ModernVLC.ViewModels
 
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer DispathcerTimer;
+        private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
         private ObservableMediaPlayer _mediaPlayer;
 
         public PlayerViewModel()
         {
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispathcerTimer = DispatcherQueue.CreateTimer();
             VideoViewInitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
             VideoViewContextRequestedCommand = new RelayCommand<ContextRequestedEventArgs>(VideoView_ContextRequested);
@@ -48,6 +47,9 @@ namespace ModernVLC.ViewModels
             SeekBarPointerPressedCommand = new RelayCommand(SeekBar_DragStarted);
             SeekBarPointerReleasedCommand = new RelayCommand(SeekBar_DragCompleted);
             SeekBarValueChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SeekBar_ValueChanged);
+
+            TransportControl.ButtonPressed += TransportControl_ButtonPressed;
+            InitSystemTransportControls();
         }
 
         private void VideoView_Initialized(InitializedEventArgs eventArgs)
@@ -59,7 +61,7 @@ namespace ModernVLC.ViewModels
             }
 
             MediaPlayer = new ObservableMediaPlayer(libVlc);
-            MediaPlayer.EnableHardwareDecoding = true;
+            RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
             var media = _media = new Media(libVlc, uri);
             MediaPlayer.Play(media);
