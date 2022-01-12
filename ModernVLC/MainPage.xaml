@@ -1,0 +1,135 @@
+﻿<Page
+    x:Class="ModernVLC.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:ModernVLC.Controls"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:ModernVLC.ViewModels"
+    xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    Background="Black"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
+            <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" />
+            <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Offset="0" Color="#00000000" />
+                <GradientStop Offset="1" Color="#64000000" />
+            </LinearGradientBrush>
+
+            <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Page.DataContext>
+        <local:PlayerViewModel x:Name="ViewModel" />
+    </Page.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <lvs:VideoView
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Initialized">
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewInitializedCommand}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ContextRequested">
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewContextRequestedCommand}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="Unloaded">
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewUnloadedCommand}" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </lvs:VideoView>
+
+        <Grid
+            x:Name="PlayerControls"
+            Grid.Row="2"
+            Padding="12,20,12,12"
+            Background="{StaticResource PlayerControlsBackground}"
+            XYFocusKeyboardNavigation="Enabled">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <muxc:ProgressBar
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                AutomationProperties.AccessibilityView="Raw"
+                Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
+                Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
+            <Slider
+                x:Name="SeekBar"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                Foreground="Transparent"
+                IsEnabled="{x:Bind ViewModel.MediaPlayer.ObservableIsSeekable, Mode=OneWay, FallbackValue=False}"
+                LargeChange="10000"
+                Maximum="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, FallbackValue=0}"
+                Minimum="0"
+                SmallChange="5000"
+                Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="ValueChanged">
+                        <core:InvokeCommandAction Command="{x:Bind ViewModel.SeekBarValueChangedCommand}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+
+                <!--<ToolTipService.ToolTip>
+                    <ToolTip x:Name="SeekBarToolTip" PlacementRect="0,8,500,32" />
+                </ToolTipService.ToolTip>-->
+            </Slider>
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                Command="{x:Bind ViewModel.PlayPauseCommand}">
+                <SymbolIcon Symbol="Pause" />
+            </Button>
+            <muxc:SplitButton
+                Grid.Row="1"
+                Grid.Column="1"
+                Background="Transparent"
+                BorderThickness="0">
+                <SymbolIcon Symbol="Volume" />
+                <muxc:SplitButton.Flyout>
+                    <Flyout>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Margin="0,0,4,0">
+                                <SymbolIcon Symbol="Volume" />
+                            </Button>
+                            <Slider Width="150" Value="50" />
+                        </StackPanel>
+                    </Flyout>
+                </muxc:SplitButton.Flyout>
+            </muxc:SplitButton>
+        </Grid>
+    </Grid>
+</Page>
