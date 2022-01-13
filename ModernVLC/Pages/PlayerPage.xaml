@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:ModernVLC.Controls"
+    xmlns:converters="using:ModernVLC.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -23,11 +24,11 @@
                 <GradientStop Offset="0" Color="#00000000" />
                 <GradientStop Offset="1" Color="#64000000" />
             </LinearGradientBrush>
-
             <LinearGradientBrush x:Key="TitleBarBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="1" Color="#00000000" />
                 <GradientStop Offset="0" Color="#64000000" />
             </LinearGradientBrush>
+            <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
 
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
@@ -53,7 +54,7 @@
             Background="{StaticResource TitleBarBackground}"
             Canvas.ZIndex="1">
             <TextBlock
-                Margin="90,0,0,0"
+                Margin="80,0,0,0"
                 VerticalAlignment="Center"
                 FontSize="28"
                 FontWeight="SemiBold"
@@ -63,8 +64,8 @@
         <Button
             x:Name="BackButton"
             Grid.Row="0"
-            Width="56"
-            Height="56"
+            Width="52"
+            Height="52"
             Margin="12"
             HorizontalAlignment="Left"
             Canvas.ZIndex="2">
@@ -102,13 +103,17 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <muxc:ProgressBar
                 Grid.Row="0"
                 Grid.Column="0"
-                Grid.ColumnSpan="3"
+                Grid.ColumnSpan="7"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 AutomationProperties.AccessibilityView="Raw"
@@ -118,7 +123,7 @@
                 x:Name="SeekBar"
                 Grid.Row="0"
                 Grid.Column="0"
-                Grid.ColumnSpan="3"
+                Grid.ColumnSpan="7"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Background="Transparent"
@@ -128,6 +133,7 @@
                 Maximum="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, FallbackValue=0}"
                 Minimum="0"
                 SmallChange="5000"
+                ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
                 Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="ValueChanged">
@@ -154,7 +160,10 @@
                 <muxc:SplitButton.Flyout>
                     <Flyout>
                         <StackPanel Orientation="Horizontal">
-                            <Button Margin="0,0,4,0">
+                            <Button
+                                Margin="0,0,8,0"
+                                Background="Transparent"
+                                BorderThickness="0">
                                 <SymbolIcon Symbol="Volume" />
                             </Button>
                             <Slider Width="150" Value="50" />
@@ -162,6 +171,15 @@
                     </Flyout>
                 </muxc:SplitButton.Flyout>
             </muxc:SplitButton>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="2"
+                Margin="8,0"
+                VerticalAlignment="Center">
+                <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                <Run Text=" / " />
+                <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+            </TextBlock>
         </Grid>
     </Grid>
 </Page>
