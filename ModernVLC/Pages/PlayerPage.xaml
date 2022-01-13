@@ -2,7 +2,6 @@
     x:Class="ModernVLC.Pages.PlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:ModernVLC.Controls"
     xmlns:converters="using:ModernVLC.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -33,12 +32,32 @@
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="2,0" />
             </Style>
+
+            <Flyout x:Key="VolumeFlyout">
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,8,0"
+                        Background="Transparent"
+                        BorderThickness="0">
+                        <SymbolIcon Symbol="Volume" />
+                    </Button>
+                    <Slider Width="150" Value="50" />
+                </StackPanel>
+            </Flyout>
         </ResourceDictionary>
     </Page.Resources>
     <Page.DataContext>
         <local:PlayerViewModel x:Name="ViewModel" />
     </Page.DataContext>
+
+    <interactivity:Interaction.Behaviors>
+        <core:EventTriggerBehavior EventName="PreviewKeyDown">
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.PreviewKeyDownCommand}" />
+        </core:EventTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -54,11 +73,12 @@
             Background="{StaticResource TitleBarBackground}"
             Canvas.ZIndex="1">
             <TextBlock
-                Margin="80,0,0,0"
+                Margin="80,0,90,0"
                 VerticalAlignment="Center"
                 FontSize="28"
                 FontWeight="SemiBold"
-                Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}" />
+                Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis" />
         </Border>
 
         <Button
@@ -73,19 +93,19 @@
         </Button>
 
         <lvs:VideoView
+            x:Name="VideoView"
             Grid.Row="0"
             Grid.RowSpan="3"
             Canvas.ZIndex="0"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            IsTabStop="True"
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+            Tapped="VideoView_Tapped">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Initialized">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewInitializedCommand}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ContextRequested">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewContextRequestedCommand}" />
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Unloaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.VideoViewUnloadedCommand}" />
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.UnloadedCommand}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
@@ -102,18 +122,14 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <muxc:ProgressBar
                 Grid.Row="0"
                 Grid.Column="0"
-                Grid.ColumnSpan="7"
+                Grid.ColumnSpan="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 AutomationProperties.AccessibilityView="Raw"
@@ -123,7 +139,7 @@
                 x:Name="SeekBar"
                 Grid.Row="0"
                 Grid.Column="0"
-                Grid.ColumnSpan="7"
+                Grid.ColumnSpan="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 Background="Transparent"
@@ -132,7 +148,7 @@
                 LargeChange="10000"
                 Maximum="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, FallbackValue=0}"
                 Minimum="0"
-                SmallChange="5000"
+                SmallChange="1000"
                 ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
                 Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay}">
                 <interactivity:Interaction.Behaviors>
@@ -145,41 +161,61 @@
                     <ToolTip x:Name="SeekBarToolTip" PlacementRect="0,8,500,32" />
                 </ToolTipService.ToolTip>-->
             </Slider>
-            <Button
+
+            <StackPanel
                 Grid.Row="1"
                 Grid.Column="0"
-                Command="{x:Bind ViewModel.PlayPauseCommand}">
-                <SymbolIcon Symbol="Pause" />
-            </Button>
-            <muxc:SplitButton
-                Grid.Row="1"
-                Grid.Column="1"
-                Background="Transparent"
-                BorderThickness="0">
-                <SymbolIcon Symbol="Volume" />
-                <muxc:SplitButton.Flyout>
-                    <Flyout>
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                Margin="0,0,8,0"
-                                Background="Transparent"
-                                BorderThickness="0">
-                                <SymbolIcon Symbol="Volume" />
-                            </Button>
-                            <Slider Width="150" Value="50" />
-                        </StackPanel>
-                    </Flyout>
-                </muxc:SplitButton.Flyout>
-            </muxc:SplitButton>
-            <TextBlock
+                Orientation="Horizontal">
+                <Button
+                    x:Name="PlayPauseButton"
+                    Margin="0,0,2,0"
+                    Command="{x:Bind ViewModel.PlayPauseCommand}">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="P" />
+                        <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoView}" />
+                    </Button.KeyboardAccelerators>
+                    <SymbolIcon Symbol="Pause" />
+                </Button>
+                <muxc:SplitButton
+                    Height="40"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Flyout="{StaticResource VolumeFlyout}">
+                    <muxc:SplitButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="M" />
+                    </muxc:SplitButton.KeyboardAccelerators>
+                    <SymbolIcon Symbol="Volume" />
+                </muxc:SplitButton>
+                <TextBlock Margin="8,0" VerticalAlignment="Center">
+                    <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                    <Run Text=" / " />
+                    <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel
                 Grid.Row="1"
                 Grid.Column="2"
-                Margin="8,0"
-                VerticalAlignment="Center">
-                <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-                <Run Text=" / " />
-                <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableLength, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-            </TextBlock>
+                Orientation="Horizontal">
+                <Button>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
+                </Button>
+
+                <!--<Button>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+                </Button>-->
+
+                <Button>
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F" />
+                    </Button.KeyboardAccelerators>
+                    <SymbolIcon Symbol="FullScreen" />
+                </Button>
+
+                <Button Margin="2,0,0,0">
+                    <SymbolIcon Symbol="More" />
+                </Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

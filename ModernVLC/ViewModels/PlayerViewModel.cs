@@ -16,13 +16,11 @@ namespace ModernVLC.ViewModels
 {
     internal partial class PlayerViewModel : ObservableObject
     {
-        public ICommand VideoViewInitializedCommand { get; private set; }
-        public ICommand VideoViewContextRequestedCommand { get; private set; }
-        public ICommand VideoViewUnloadedCommand { get; private set; }
+        public ICommand InitializedCommand { get; private set; }
+        public ICommand UnloadedCommand { get; private set; }
         public ICommand PlayPauseCommand { get; private set; }
-        public ICommand SeekBarPointerPressedCommand { get; private set; }
-        public ICommand SeekBarPointerReleasedCommand { get; private set; }
         public ICommand SeekBarValueChangedCommand { get; private set; }
+        public ICommand PreviewKeyDownCommand { get; private set; }
 
         public ObservableMediaPlayer MediaPlayer
         {
@@ -48,12 +46,9 @@ namespace ModernVLC.ViewModels
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispathcerTimer = DispatcherQueue.CreateTimer();
-            VideoViewInitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
-            VideoViewContextRequestedCommand = new RelayCommand<ContextRequestedEventArgs>(VideoView_ContextRequested);
-            VideoViewUnloadedCommand = new RelayCommand(VideoView_Unloaded);
+            InitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
+            UnloadedCommand = new RelayCommand(VideoView_Unloaded);
             PlayPauseCommand = new RelayCommand(PlayPause);
-            SeekBarPointerPressedCommand = new RelayCommand(SeekBar_DragStarted);
-            SeekBarPointerReleasedCommand = new RelayCommand(SeekBar_DragCompleted);
             SeekBarValueChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SeekBar_ValueChanged);
 
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
@@ -69,16 +64,12 @@ namespace ModernVLC.ViewModels
             }
 
             MediaPlayer = new ObservableMediaPlayer(libVlc);
+            MediaPlayer.EnableKeyInput = false;
             RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
             MediaTitle = uri.Segments.LastOrDefault();
             var media = _media = new Media(libVlc, uri);
             MediaPlayer.Play(media);
-        }
-
-        private void VideoView_ContextRequested(ContextRequestedEventArgs args)
-        {
-            var desc = MediaPlayer.SpuDescription;
         }
 
         private void VideoView_Unloaded()
@@ -105,12 +96,12 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        private void SeekBar_DragStarted()
+        public void SeekBar_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             MediaPlayer.ShouldUpdateTime = false;
         }
 
-        private void SeekBar_DragCompleted()
+        public void SeekBar_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             MediaPlayer.ShouldUpdateTime = true;
         }

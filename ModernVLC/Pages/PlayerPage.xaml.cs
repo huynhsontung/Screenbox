@@ -2,6 +2,7 @@
 using LibVLCSharp.Shared;
 using ModernVLC.ViewModels;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -27,8 +28,8 @@ namespace ModernVLC.Pages
 
         private void RegisterEventHandlers()
         {
-            PointerEventHandler pointerPressedEventHandler = (s, e) => ViewModel.SeekBarPointerPressedCommand.Execute(e);
-            PointerEventHandler pointerReleasedEventHandler = (s, e) => ViewModel.SeekBarPointerReleasedCommand.Execute(e);
+            PointerEventHandler pointerPressedEventHandler = ViewModel.SeekBar_PointerPressed;
+            PointerEventHandler pointerReleasedEventHandler = ViewModel.SeekBar_PointerReleased;
             SeekBar.AddHandler(PointerPressedEvent, pointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, pointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, pointerReleasedEventHandler, true);
@@ -53,5 +54,7 @@ namespace ModernVLC.Pages
             //SeekBarToolTip.Content = $"{potentialValue}";
             //SeekBarToolTip.HorizontalOffset = position.X;
         }
+
+        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => VideoView.Focus(FocusState.Programmatic);
     }
 }
