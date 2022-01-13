@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using ModernVLC.Core;
 using System;
+using System.Linq;
 using System.Windows.Input;
 using Windows.Media;
 using Windows.System;
@@ -29,10 +30,17 @@ namespace ModernVLC.ViewModels
             set => SetProperty(ref _mediaPlayer, value);
         }
 
+        public string MediaTitle
+        {
+            get => _mediaTitle;
+            set => SetProperty(ref _mediaTitle, value);
+        }
+
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer DispathcerTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
+        private string _mediaTitle;
         private ObservableMediaPlayer _mediaPlayer;
 
         public PlayerViewModel()
@@ -63,6 +71,7 @@ namespace ModernVLC.ViewModels
             MediaPlayer = new ObservableMediaPlayer(libVlc);
             RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
+            MediaTitle = uri.Segments.LastOrDefault();
             var media = _media = new Media(libVlc, uri);
             MediaPlayer.Play(media);
         }

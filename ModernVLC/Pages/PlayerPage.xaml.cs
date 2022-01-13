@@ -2,6 +2,9 @@
 using LibVLCSharp.Shared;
 using ModernVLC.ViewModels;
 using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
@@ -19,6 +22,7 @@ namespace ModernVLC.Pages
         {
             this.InitializeComponent();
             RegisterEventHandlers();
+            ConfigureTitleBar();
         }
 
         private void RegisterEventHandlers()
@@ -28,6 +32,17 @@ namespace ModernVLC.Pages
             SeekBar.AddHandler(PointerPressedEvent, pointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, pointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, pointerReleasedEventHandler, true);
+        }
+
+        private void ConfigureTitleBar()
+        {
+            Window.Current.SetTitleBar(TitleBarElement);
+            var coreApp = CoreApplication.GetCurrentView();
+            coreApp.TitleBar.ExtendViewIntoTitleBar = true;
+
+            var view = ApplicationView.GetForCurrentView();
+            view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            view.TitleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
         }
 
         private void SeekBar_PointerMoved(object sender, PointerRoutedEventArgs e)
