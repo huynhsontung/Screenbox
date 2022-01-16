@@ -117,13 +117,11 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Canvas.ZIndex="0"
+            Initialized="VideoView_Initialized"
             IsTabStop="True"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
             ProcessKeyboardAccelerators="VideoView_ProcessKeyboardAccelerators">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Initialized">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Unloaded">
                     <core:CallMethodAction MethodName="Dispose" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>

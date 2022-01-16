@@ -1,5 +1,4 @@
-﻿using LibVLCSharp.Platforms.UWP;
-using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
@@ -11,13 +10,11 @@ using Windows.Media;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
 
 namespace ModernVLC.ViewModels
 {
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
-        public ICommand InitializedCommand { get; private set; }
         public ICommand PlayPauseCommand { get; private set; }
         public ICommand SeekingCommand { get; private set; }
         public ICommand SetTimeCommand { get; private set; }
@@ -54,7 +51,6 @@ namespace ModernVLC.ViewModels
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispathcerTimer = DispatcherQueue.CreateTimer();
-            InitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekingCommand = new RelayCommand<long>(Seek);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
@@ -80,16 +76,15 @@ namespace ModernVLC.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
-        private void VideoView_Initialized(InitializedEventArgs eventArgs)
+        public void Initialize(string[] swapChainOptions)
         {
             var libVlc = App.DerivedCurrent.LibVLC;
             if (libVlc == null)
             {
-                App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, eventArgs.SwapChainOptions);
+                App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, swapChainOptions);
             }
 
             MediaPlayer = new PlayerService(libVlc);
-            MediaPlayer.EnableKeyInput = false;
             RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
             MediaTitle = uri.Segments.LastOrDefault();

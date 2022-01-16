@@ -61,6 +61,8 @@ namespace ModernVLC.Pages
             VideoView.Focus(FocusState.Programmatic);
         }
 
+        private void VideoView_Initialized(object sender, InitializedEventArgs e) => ViewModel.Initialize(e.SwapChainOptions);
+
         private void VideoView_ProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
             long seekAmount = 0;
