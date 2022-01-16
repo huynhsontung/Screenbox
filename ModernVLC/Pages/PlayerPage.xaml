@@ -118,7 +118,8 @@
             Grid.RowSpan="3"
             Canvas.ZIndex="0"
             IsTabStop="True"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+            ProcessKeyboardAccelerators="VideoView_ProcessKeyboardAccelerators">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Initialized">
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}" />

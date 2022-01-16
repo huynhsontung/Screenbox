@@ -56,9 +56,12 @@ namespace ModernVLC.Services
             get => _volume;
             set
             {
+                if (value > 100) value = 100;
+                if (value < 0) value = 0;
                 if (SetProperty(ref _volume, value) && Volume != value)
                 {
                     Volume = value;
+                    ObservableIsMute = value == 0;
                 }
             }
         }
