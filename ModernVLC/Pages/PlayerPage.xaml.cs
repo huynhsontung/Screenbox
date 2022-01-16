@@ -28,8 +28,8 @@ namespace ModernVLC.Pages
 
         private void RegisterEventHandlers()
         {
-            PointerEventHandler pointerPressedEventHandler = ViewModel.SeekBar_PointerPressed;
-            PointerEventHandler pointerReleasedEventHandler = ViewModel.SeekBar_PointerReleased;
+            PointerEventHandler pointerPressedEventHandler = (s, e) => ViewModel.SetInteracting(true);
+            PointerEventHandler pointerReleasedEventHandler = (s, e) => ViewModel.SetInteracting(false);
             SeekBar.AddHandler(PointerPressedEvent, pointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, pointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, pointerReleasedEventHandler, true);
@@ -59,5 +59,11 @@ namespace ModernVLC.Pages
         {
             VideoView.Focus(FocusState.Programmatic);
         }
+
+        private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
+
+        private Symbol GetMuteToggleSymbol(bool isMute) => isMute ? Symbol.Mute : Symbol.Volume;
+
+        private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
     }
 }

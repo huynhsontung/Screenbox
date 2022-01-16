@@ -3,26 +3,27 @@ using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
-using ModernVLC.Core;
+using ModernVLC.Services;
 using System;
 using System.Linq;
 using System.Windows.Input;
 using Windows.Media;
 using Windows.System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
 namespace ModernVLC.ViewModels
 {
-    internal partial class PlayerViewModel : ObservableObject
+    internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
         public ICommand InitializedCommand { get; private set; }
-        public ICommand UnloadedCommand { get; private set; }
         public ICommand PlayPauseCommand { get; private set; }
         public ICommand SeekingCommand { get; private set; }
         public ICommand SetTimeCommand { get; private set; }
+        public ICommand FullscreenCommand { get; private set; }
 
-        public ObservableMediaPlayer MediaPlayer
+        public PlayerService MediaPlayer
         {
             get => _mediaPlayer;
             set => SetProperty(ref _mediaPlayer, value);
@@ -34,12 +35,19 @@ namespace ModernVLC.ViewModels
             set => SetProperty(ref _mediaTitle, value);
         }
 
+        public bool IsFullscreen
+        {
+            get => _isFullscreen;
+            private set => SetProperty(ref _isFullscreen, value);
+        }
+
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer DispathcerTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
         private string _mediaTitle;
-        private ObservableMediaPlayer _mediaPlayer;
+        private PlayerService _mediaPlayer;
+        private bool _isFullscreen;
 
         public PlayerViewModel()
         {
@@ -47,13 +55,29 @@ namespace ModernVLC.ViewModels
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispathcerTimer = DispatcherQueue.CreateTimer();
             InitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
-            UnloadedCommand = new RelayCommand(VideoView_Unloaded);
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekingCommand = new RelayCommand<long>(Seek);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
+            FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
 
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void SetFullscreen(bool value)
+        {
+            var view = ApplicationView.GetForCurrentView();
+            if (view.IsFullScreenMode && !value)
+            {
+                view.ExitFullScreenMode();
+            }
+
+            if (!view.IsFullScreenMode && value)
+            {
+                view.TryEnterFullScreenMode();
+            }
+
+            IsFullscreen = view.IsFullScreenMode;
         }
 
         private void VideoView_Initialized(InitializedEventArgs eventArgs)
@@ -64,7 +88,7 @@ namespace ModernVLC.ViewModels
                 App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, eventArgs.SwapChainOptions);
             }
 
-            MediaPlayer = new ObservableMediaPlayer(libVlc);
+            MediaPlayer = new PlayerService(libVlc);
             MediaPlayer.EnableKeyInput = false;
             RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
@@ -73,7 +97,7 @@ namespace ModernVLC.ViewModels
             MediaPlayer.Play(media);
         }
 
-        private void VideoView_Unloaded()
+        public void Dispose()
         {
             _media?.Dispose();
             MediaPlayer.Dispose();
@@ -105,14 +129,9 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        public void SeekBar_PointerPressed(object sender, PointerRoutedEventArgs e)
+        public void SetInteracting(bool interacting)
         {
-            MediaPlayer.ShouldUpdateTime = false;
-        }
-
-        public void SeekBar_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            MediaPlayer.ShouldUpdateTime = true;
+            MediaPlayer.ShouldUpdateTime = !interacting;
         }
 
         private void SetTime(RangeBaseValueChangedEventArgs args)

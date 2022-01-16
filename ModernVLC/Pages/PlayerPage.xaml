@@ -14,11 +14,15 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Controls/NoAnimationProgressBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" />
+
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
                 <GradientStop Offset="1" Color="#64000000" />
@@ -36,15 +40,23 @@
                 <Setter Property="Margin" Value="2,0" />
             </Style>
 
+            <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="2,0" />
+            </Style>
+
             <Flyout x:Key="VolumeFlyout">
                 <StackPanel Orientation="Horizontal">
-                    <Button
+                    <ToggleButton
                         Margin="0,0,8,0"
                         Background="Transparent"
-                        BorderThickness="0">
-                        <SymbolIcon Symbol="Volume" />
-                    </Button>
-                    <Slider Width="150" Value="50" />
+                        BorderThickness="0"
+                        IsChecked="{x:Bind ViewModel.MediaPlayer.ObservableIsMute, Mode=TwoWay}">
+                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.ObservableIsMute), Mode=OneWay}" />
+                    </ToggleButton>
+                    <Slider Width="150" Value="{x:Bind ViewModel.MediaPlayer.ObservableVolume, Mode=TwoWay}" />
                 </StackPanel>
             </Flyout>
         </ResourceDictionary>
@@ -98,7 +110,7 @@
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.InitializedCommand}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Unloaded">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.UnloadedCommand}" />
+                    <core:CallMethodAction MethodName="Dispose" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Tapped">
                     <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
@@ -130,6 +142,7 @@
                 VerticalAlignment="Center"
                 AutomationProperties.AccessibilityView="Raw"
                 Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
+                Style="{StaticResource NoAnimationProgressBar}"
                 Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
             <Slider
                 x:Name="SeekBar"
@@ -170,18 +183,19 @@
                         <KeyboardAccelerator Key="P" />
                         <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoView}" />
                     </Button.KeyboardAccelerators>
-                    <SymbolIcon Symbol="Pause" />
+                    <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.ObservableIsPlaying), Mode=OneWay}" />
                 </Button>
-                <muxc:SplitButton
+                <muxc:ToggleSplitButton
                     Height="40"
                     Background="Transparent"
                     BorderThickness="0"
-                    Flyout="{StaticResource VolumeFlyout}">
+                    Flyout="{StaticResource VolumeFlyout}"
+                    IsChecked="{x:Bind ViewModel.MediaPlayer.ObservableIsMute, Mode=TwoWay}">
                     <muxc:SplitButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="M" />
                     </muxc:SplitButton.KeyboardAccelerators>
-                    <SymbolIcon Symbol="Volume" />
-                </muxc:SplitButton>
+                    <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.ObservableIsMute), Mode=OneWay}" />
+                </muxc:ToggleSplitButton>
                 <TextBlock Margin="8,0" VerticalAlignment="Center">
                     <Run Text="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                     <Run Text=" / " />
@@ -201,12 +215,16 @@
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                 </Button>-->
 
-                <Button>
-                    <Button.KeyboardAccelerators>
+                <ToggleButton
+                    x:Name="FullscreenButton"
+                    Command="{x:Bind ViewModel.FullscreenCommand}"
+                    CommandParameter="{x:Bind FullscreenButton.IsChecked, Mode=OneWay}"
+                    IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
+                    <ToggleButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="F" />
-                    </Button.KeyboardAccelerators>
-                    <SymbolIcon Symbol="FullScreen" />
-                </Button>
+                    </ToggleButton.KeyboardAccelerators>
+                    <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
+                </ToggleButton>
 
                 <Button Margin="2,0,0,0">
                     <SymbolIcon Symbol="More" />
