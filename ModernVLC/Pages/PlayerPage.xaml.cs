@@ -55,6 +55,9 @@ namespace ModernVLC.Pages
             //SeekBarToolTip.HorizontalOffset = position.X;
         }
 
-        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => VideoView.Focus(FocusState.Programmatic);
+        public void FocusVideoView()
+        {
+            VideoView.Focus(FocusState.Programmatic);
+        }
     }
 }

@@ -49,9 +49,17 @@ namespace ModernVLC.Core
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             LengthChanged += OnLengthChanged;
             TimeChanged += OnTimeChanged;
+            EndReached += OnEndReached;
             SeekableChanged += OnSeekableChanged;
             ShouldUpdateTime = true;
         }
+
+        public void Replay()
+        {
+            Stop();
+            Play();
+        }
+
 
         private void OnSeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
         {
@@ -63,6 +71,14 @@ namespace ModernVLC.Core
             if (ShouldUpdateTime)
             {
                 SetProperty(ref _time, e.Time, nameof(ObservableTime));
+            }
+        }
+
+        private void OnEndReached(object sender, EventArgs e)
+        {
+            if (ShouldUpdateTime)
+            {
+                SetProperty(ref _time, Length, nameof(ObservableTime));
             }
         }
 

@@ -19,8 +19,8 @@ namespace ModernVLC.ViewModels
         public ICommand InitializedCommand { get; private set; }
         public ICommand UnloadedCommand { get; private set; }
         public ICommand PlayPauseCommand { get; private set; }
-        public ICommand SeekBarValueChangedCommand { get; private set; }
-        public ICommand PreviewKeyDownCommand { get; private set; }
+        public ICommand SeekingCommand { get; private set; }
+        public ICommand SetTimeCommand { get; private set; }
 
         public ObservableMediaPlayer MediaPlayer
         {
@@ -49,7 +49,8 @@ namespace ModernVLC.ViewModels
             InitializedCommand = new RelayCommand<InitializedEventArgs>(VideoView_Initialized);
             UnloadedCommand = new RelayCommand(VideoView_Unloaded);
             PlayPauseCommand = new RelayCommand(PlayPause);
-            SeekBarValueChangedCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SeekBar_ValueChanged);
+            SeekingCommand = new RelayCommand<long>(Seek);
+            SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
 
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
@@ -90,9 +91,17 @@ namespace ModernVLC.ViewModels
                 MediaPlayer.Play();
             }
 
-            if (MediaPlayer.State == VLCState.Stopped && _media != null)
+            if (MediaPlayer.State == VLCState.Ended)
             {
-                MediaPlayer.Play(_media);
+                MediaPlayer.Replay();
+            }
+        }
+
+        private void Seek(long amount)
+        {
+            if (MediaPlayer.IsSeekable)
+            {
+                MediaPlayer.Time += amount;
             }
         }
 
@@ -106,17 +115,27 @@ namespace ModernVLC.ViewModels
             MediaPlayer.ShouldUpdateTime = true;
         }
 
-        private void SeekBar_ValueChanged(RangeBaseValueChangedEventArgs args)
+        private void SetTime(RangeBaseValueChangedEventArgs args)
         {
-            if (MediaPlayer.IsSeekable && (args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying))
+            if (MediaPlayer.IsSeekable)
             {
-                MediaPlayer.Time = (long)args.NewValue;
-                return;
-            }
+                if ((args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying) &&
+                    args.NewValue != MediaPlayer.Length)
+                {
+                    if (MediaPlayer.State == VLCState.Ended)
+                    {
+                        MediaPlayer.Replay();
+                    }
 
-            if (!MediaPlayer.ShouldUpdateTime && MediaPlayer.IsSeekable)
-            {
-                DispathcerTimer.Debounce(() => MediaPlayer.Time = (long)args.NewValue, TimeSpan.FromMilliseconds(300));
+                    MediaPlayer.Time = (long)args.NewValue;
+                    return;
+                }
+
+                if (!MediaPlayer.ShouldUpdateTime && args.NewValue != MediaPlayer.Length)
+                {
+                    DispathcerTimer.Debounce(() => MediaPlayer.Time = (long)args.NewValue, TimeSpan.FromMilliseconds(300));
+                    return;
+                }
             }
         }
     }
