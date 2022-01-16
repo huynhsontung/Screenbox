@@ -2,6 +2,7 @@
     x:Class="ModernVLC.Pages.PlayerPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:converters="using:ModernVLC.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -22,6 +23,15 @@
             <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" />
+
+            <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
+            <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
+            <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+            <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+            <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
 
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
@@ -95,7 +105,11 @@
             Margin="12"
             HorizontalAlignment="Left"
             Canvas.ZIndex="2">
-            <SymbolIcon Symbol="Back" />
+            <muxc:AnimatedIcon>
+                <muxc:AnimatedIcon.Source>
+                    <animatedvisuals:AnimatedBackVisualSource />
+                </muxc:AnimatedIcon.Source>
+            </muxc:AnimatedIcon>
         </Button>
 
         <lvs:VideoView
