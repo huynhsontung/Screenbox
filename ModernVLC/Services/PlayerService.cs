@@ -72,6 +72,8 @@ namespace ModernVLC.Services
             private set => SetProperty(ref _state, value);
         }
 
+        public long FrameDuration => Fps != 0 ? (long)Math.Ceiling(1000.0 / Fps) : 0;
+
         public bool ShouldUpdateTime { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;

@@ -16,7 +16,7 @@ namespace ModernVLC.ViewModels
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
         public ICommand PlayPauseCommand { get; private set; }
-        public ICommand SeekingCommand { get; private set; }
+        public ICommand SeekCommand { get; private set; }
         public ICommand SetTimeCommand { get; private set; }
         public ICommand FullscreenCommand { get; private set; }
 
@@ -52,7 +52,7 @@ namespace ModernVLC.ViewModels
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispathcerTimer = DispatcherQueue.CreateTimer();
             PlayPauseCommand = new RelayCommand(PlayPause);
-            SeekingCommand = new RelayCommand<long>(Seek);
+            SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
 
@@ -127,6 +127,25 @@ namespace ModernVLC.ViewModels
         public void SetInteracting(bool interacting)
         {
             MediaPlayer.ShouldUpdateTime = !interacting;
+        }
+
+        public bool JumpFrame(bool previous = false)
+        {
+            if (MediaPlayer.State == VLCState.Paused && MediaPlayer.IsSeekable)
+            {
+                if (previous)
+                {
+                    MediaPlayer.Time -= MediaPlayer.FrameDuration;
+                }
+                else
+                {
+                    MediaPlayer.NextFrame();
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private void SetTime(RangeBaseValueChangedEventArgs args)

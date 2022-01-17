@@ -83,6 +83,12 @@ namespace ModernVLC.Pages
                 case VirtualKey.Down:
                     volumeChange = -10;
                     break;
+                case (VirtualKey)190 when args.Modifiers == VirtualKeyModifiers.None:   // Period (".")
+                    ViewModel.JumpFrame(false);
+                    return;
+                case (VirtualKey)188 when args.Modifiers == VirtualKeyModifiers.None:   // Comma (",")
+                    ViewModel.JumpFrame(true);
+                    return;
             }
 
             switch (args.Modifiers)
@@ -100,7 +106,7 @@ namespace ModernVLC.Pages
 
             if (seekAmount * direction != 0)
             {
-                ViewModel.SeekingCommand.Execute(seekAmount * direction);
+                ViewModel.SeekCommand.Execute(seekAmount * direction);
             }
 
             if (volumeChange != 0)
