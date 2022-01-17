@@ -1,4 +1,5 @@
 ﻿using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,14 @@ namespace ModernVLC.Services
             private set => SetProperty(ref _state, value);
         }
 
+        public int ObservableSpu => Spu;
+
+        public int ObservableAudioTrack => AudioTrack;
+
+        public TrackDescription[] ObservableSpuDescription => SpuDescription;
+
+        public TrackDescription[] ObservableAudioTrackDescription => AudioTrackDescription;
+
         public long FrameDuration => Fps != 0 ? (long)Math.Ceiling(1000.0 / Fps) : 0;
 
         public bool ShouldUpdateTime { get; set; }
@@ -100,11 +109,25 @@ namespace ModernVLC.Services
             Buffering += OnStateChanged;
             EncounteredError += OnStateChanged;
             Opening += OnStateChanged;
-
+            MediaChanged += OnMediaChanged;
+            
             ShouldUpdateTime = true;
             _volume = Volume;
             _isMute = Mute;
             _state = State;
+        }
+
+        private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
+        {
+            NotifyPropertyChanged(nameof(ObservableSpuDescription));
+            NotifyPropertyChanged(nameof(ObservableSpu));
+            NotifyPropertyChanged(nameof(ObservableAudioTrackDescription));
+            NotifyPropertyChanged(nameof(ObservableAudioTrack));
+        }
+
+        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
+        {
+            e.Media.ParsedChanged += Media_ParsedChanged;
         }
 
         public void Replay()

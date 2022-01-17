@@ -1,5 +1,6 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using ModernVLC.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -115,10 +116,29 @@ namespace ModernVLC.Pages
             }
         }
 
+        private void AudioTrack_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            ViewModel.SetAudioTrackCommand.Execute(selected.Id);
+        }
+
+        private void Subtitles_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            ViewModel.SetSubtitleCommand.Execute(selected.Id);
+        }
+
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
 
         private Symbol GetMuteToggleSymbol(bool isMute) => isMute ? Symbol.Mute : Symbol.Volume;
 
         private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Dispose();
+        }
     }
 }

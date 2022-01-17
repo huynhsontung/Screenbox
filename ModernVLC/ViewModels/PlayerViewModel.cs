@@ -20,6 +20,9 @@ namespace ModernVLC.ViewModels
         public ICommand SeekCommand { get; private set; }
         public ICommand SetTimeCommand { get; private set; }
         public ICommand FullscreenCommand { get; private set; }
+        public ICommand SetAudioTrackCommand { get; private set; }
+        public ICommand SetSubtitleCommand { get; private set; }
+        public ICommand AddSubtitleCommand { get; private set; }
 
         public PlayerService MediaPlayer
         {
@@ -56,10 +59,28 @@ namespace ModernVLC.ViewModels
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
+            SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
+            SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void SetSubtitle(int index)
+        {
+            if (MediaPlayer.Spu != index)
+            {
+                MediaPlayer.SetSpu(index);
+            }
+        }
+
+        private void SetAudioTrack(int index)
+        {
+            if (MediaPlayer.AudioTrack != index)
+            {
+                MediaPlayer.SetAudioTrack(index);
+            }
         }
 
         private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
@@ -93,7 +114,7 @@ namespace ModernVLC.ViewModels
             {
                 App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, swapChainOptions);
             }
-
+            
             MediaPlayer = new PlayerService(libVlc);
             RegisterMediaPlayerPlaybackEvents();
             var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
@@ -106,6 +127,7 @@ namespace ModernVLC.ViewModels
         {
             _media?.Dispose();
             MediaPlayer.Dispose();
+            TransportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
         }
 
         private void PlayPause()

@@ -7,11 +7,13 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:libvlcstructs="using:LibVLCSharp.Shared.Structures"
     xmlns:local="using:ModernVLC.ViewModels"
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Black"
+    Unloaded="Page_Unloaded"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -68,6 +70,55 @@
                     </ToggleButton>
                     <Slider Width="150" Value="{x:Bind ViewModel.MediaPlayer.ObservableVolume, Mode=TwoWay}" />
                 </StackPanel>
+            </Flyout>
+
+            <Flyout x:Key="AudioSubtitlesFlyout">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <muxc:RadioButtons
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Width="150"
+                        Header="Audio"
+                        ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrack, Mode=OneWay}"
+                        SelectionChanged="AudioTrack_OnSelectionChanged">
+                        <muxc:RadioButtons.ItemTemplate>
+                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </muxc:RadioButtons.ItemTemplate>
+                    </muxc:RadioButtons>
+
+                    <muxc:RadioButtons
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Width="150"
+                        Header="Subtitles"
+                        ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.ObservableSpu, Mode=OneWay}"
+                        SelectionChanged="Subtitles_OnSelectionChanged">
+                        <muxc:RadioButtons.ItemTemplate>
+                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </muxc:RadioButtons.ItemTemplate>
+                    </muxc:RadioButtons>
+
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,12,0,0"
+                        Content="Add subtitle" />
+                </Grid>
             </Flyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -220,7 +271,7 @@
                 Grid.Row="1"
                 Grid.Column="2"
                 Orientation="Horizontal">
-                <Button>
+                <Button Flyout="{StaticResource AudioSubtitlesFlyout}">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
                 </Button>
 
