@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using Windows.Media;
+using Windows.Media.Devices;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -56,8 +57,17 @@ namespace ModernVLC.ViewModels
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
 
+            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role == AudioDeviceRole.Default)
+            {
+                MediaPlayer.SetOutputDevice(MediaPlayer.OutputDevice);
+            }
         }
 
         private void SetFullscreen(bool value)
