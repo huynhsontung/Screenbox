@@ -23,6 +23,7 @@ namespace ModernVLC.ViewModels
         public ICommand SetAudioTrackCommand { get; private set; }
         public ICommand SetSubtitleCommand { get; private set; }
         public ICommand AddSubtitleCommand { get; private set; }
+        public ICommand SetPlaybackSpeedCommand { get; private set; }
 
         public PlayerService MediaPlayer
         {
@@ -61,10 +62,19 @@ namespace ModernVLC.ViewModels
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
+            SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void SetPlaybackSpeed(float speed)
+        {
+            if (speed != MediaPlayer.Rate)
+            {
+                MediaPlayer.SetRate(speed);
+            }
         }
 
         private void SetSubtitle(int index)

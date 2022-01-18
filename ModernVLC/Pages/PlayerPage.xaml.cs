@@ -1,6 +1,7 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
+using Microsoft.UI.Xaml.Controls;
 using ModernVLC.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -128,6 +129,14 @@ namespace ModernVLC.Pages
             if (args.AddedItems[0] == null) return;
             var selected = (TrackDescription)args.AddedItems[0];
             ViewModel.SetSubtitleCommand.Execute(selected.Id);
+        }
+
+        private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (RadioMenuFlyoutItem)sender;
+            var speedText = item.Text;
+            float.TryParse(speedText, out var speed);
+            ViewModel.SetPlaybackSpeedCommand.Execute(speed);
         }
 
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;

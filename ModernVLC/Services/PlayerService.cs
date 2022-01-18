@@ -73,6 +73,12 @@ namespace ModernVLC.Services
             private set => SetProperty(ref _state, value);
         }
 
+        public bool ShouldLoop
+        {
+            get => _shouldLoop;
+            set => SetProperty(ref _shouldLoop, value);
+        }
+
         public int ObservableSpu => Spu;
 
         public int ObservableAudioTrack => AudioTrack;
@@ -93,6 +99,7 @@ namespace ModernVLC.Services
         private bool _isPlaying;
         private int _volume;
         private bool _isMute;
+        private bool _shouldLoop;
 
         public PlayerService(LibVLC lib) : base(lib)
         {
@@ -172,6 +179,12 @@ namespace ModernVLC.Services
             if (ShouldUpdateTime)
             {
                 ObservableTime = Length;
+            }
+
+            if (ShouldLoop)
+            {
+                Replay();
+                return;
             }
 
             UpdateState();

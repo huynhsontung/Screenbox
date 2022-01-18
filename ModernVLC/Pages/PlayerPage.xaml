@@ -120,6 +120,51 @@
                         Content="Add subtitle" />
                 </Grid>
             </Flyout>
+
+            <MenuFlyout x:Key="VideoContextMenu">
+                <ToggleMenuFlyoutItem
+                    Icon="RepeatOne"
+                    IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=OneWay}"
+                    Text="Loop" />
+                <MenuFlyoutSubItem Text="Playback speed">
+                    <MenuFlyoutSubItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC57;" />
+                    </MenuFlyoutSubItem.Icon>
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="0.25" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="0.5" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="0.75" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        IsChecked="True"
+                        Text="1" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="1.25" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="1.5" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="1.75" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="PlaybackSpeedItem_Click"
+                        GroupName="SpeedGroup"
+                        Text="2" />
+                </MenuFlyoutSubItem>
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
     <Page.DataContext>
@@ -168,6 +213,7 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Canvas.ZIndex="0"
+            ContextFlyout="{StaticResource VideoContextMenu}"
             Initialized="VideoView_Initialized"
             IsTabStop="True"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
@@ -290,7 +336,7 @@
                     <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
                 </ToggleButton>
 
-                <Button Margin="2,0,0,0">
+                <Button Margin="2,0,0,0" Flyout="{StaticResource VideoContextMenu}">
                     <SymbolIcon Symbol="More" />
                 </Button>
             </StackPanel>
