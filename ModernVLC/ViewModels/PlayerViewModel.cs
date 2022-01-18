@@ -24,6 +24,7 @@ namespace ModernVLC.ViewModels
         public ICommand SetSubtitleCommand { get; private set; }
         public ICommand AddSubtitleCommand { get; private set; }
         public ICommand SetPlaybackSpeedCommand { get; private set; }
+        public ICommand OpenCommand { get; private set; }
 
         public PlayerService MediaPlayer
         {
@@ -63,10 +64,24 @@ namespace ModernVLC.ViewModels
             SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
             SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
+            OpenCommand = new RelayCommand<object>(Open);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void Open(object value)
+        {
+            var libVlc = App.DerivedCurrent.LibVLC;
+            var uri = value as Uri ?? (value is string path ? new Uri(path) : null);
+            if (uri == null) return;
+
+            MediaTitle = uri.Segments.LastOrDefault();
+            var oldMedia = _media;
+            var media = _media = new Media(libVlc, uri);
+            MediaPlayer.Play(media);
+            oldMedia?.Dispose();
         }
 
         private void SetPlaybackSpeed(float speed)
@@ -127,10 +142,6 @@ namespace ModernVLC.ViewModels
             
             MediaPlayer = new PlayerService(libVlc);
             RegisterMediaPlayerPlaybackEvents();
-            var uri = new Uri("\\\\192.168.0.157\\storage\\movies\\American.Made.2017.1080p.10bit.BluRay.8CH.x265.HEVC-PSA\\American.Made.2017.1080p.10bit.BluRay.8CH.sample.mkv");
-            MediaTitle = uri.Segments.LastOrDefault();
-            var media = _media = new Media(libVlc, uri);
-            MediaPlayer.Play(media);
         }
 
         public void Dispose()

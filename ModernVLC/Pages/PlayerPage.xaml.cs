@@ -2,10 +2,13 @@
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.UI.Xaml.Controls;
+using ModernVLC.Services;
 using ModernVLC.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -47,6 +50,7 @@ namespace ModernVLC.Pages
             var view = ApplicationView.GetForCurrentView();
             view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             view.TitleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
+            view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
         }
 
         private void SeekBar_PointerMoved(object sender, PointerRoutedEventArgs e)
@@ -145,11 +149,35 @@ namespace ModernVLC.Pages
 
         private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
 
-        private Visibility GetBufferingVisibilityIndicator(VLCState state) => state == VLCState.Buffering ? Visibility.Visible : Visibility.Collapsed;
+        private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
+            state == VLCState.Buffering || state == VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.Dispose();
+        }
+
+        private void VideoView_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Link;
+            e.DragUIOverride.Caption = "Open";
+        }
+
+        private async void VideoView_Drop(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await e.DataView.GetStorageItemsAsync();
+                if (items.Count > 0)
+                {
+                    var storageItem = items[0] as StorageFile;
+                    var extension = storageItem.FileType;
+                    if (FileService.SupportedFormats.Contains(extension))
+                    {
+                        ViewModel.OpenCommand.Execute(storageItem.Path);
+                    }
+                }
+            }
         }
     }
 }
