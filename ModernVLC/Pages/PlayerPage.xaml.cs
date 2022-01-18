@@ -145,6 +145,8 @@ namespace ModernVLC.Pages
 
         private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
 
+        private Visibility GetBufferingVisibilityIndicator(VLCState state) => state == VLCState.Buffering ? Visibility.Visible : Visibility.Collapsed;
+
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.Dispose();

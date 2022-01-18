@@ -228,6 +228,16 @@
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
 
+        <muxc:ProgressRing
+            x:Name="BufferingIndicator"
+            Grid.Row="1"
+            Width="52"
+            Height="52"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="True"
+            Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.MediaPlayer.ObservableState), Mode=OneWay}" />
+
         <Grid
             x:Name="PlayerControls"
             Grid.Row="2"
