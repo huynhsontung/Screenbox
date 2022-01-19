@@ -79,9 +79,9 @@ namespace ModernVLC.Services
             set => SetProperty(ref _shouldLoop, value);
         }
 
-        public int ObservableSpu => Spu;
+        public int SpuIndex => GetIndexFromTrackId(Spu, SpuDescription);
 
-        public int ObservableAudioTrack => AudioTrack;
+        public int AudioTrackIndex => GetIndexFromTrackId(AudioTrack, AudioTrackDescription);
 
         public TrackDescription[] ObservableSpuDescription => SpuDescription;
 
@@ -124,12 +124,22 @@ namespace ModernVLC.Services
             _state = State;
         }
 
+        private int GetIndexFromTrackId(int id, TrackDescription[] tracks)
+        {
+            for (int i = 0; i < tracks.Length; i++)
+            {
+                if (tracks[i].Id == id) return i;
+            }
+
+             return -1;
+        }
+
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
             NotifyPropertyChanged(nameof(ObservableSpuDescription));
-            NotifyPropertyChanged(nameof(ObservableSpu));
+            NotifyPropertyChanged(nameof(SpuIndex));
             NotifyPropertyChanged(nameof(ObservableAudioTrackDescription));
-            NotifyPropertyChanged(nameof(ObservableAudioTrack));
+            NotifyPropertyChanged(nameof(AudioTrackIndex));
         }
 
         private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
@@ -176,15 +186,15 @@ namespace ModernVLC.Services
 
         private void OnEndReached(object sender, EventArgs e)
         {
+            if (ShouldLoop)
+            {
+                DispatcherQueue.TryEnqueue(() => Replay());
+                return;
+            }
+
             if (ShouldUpdateTime)
             {
                 ObservableTime = Length;
-            }
-
-            if (ShouldLoop)
-            {
-                Replay();
-                return;
             }
 
             UpdateState();

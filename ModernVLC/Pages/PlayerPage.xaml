@@ -7,12 +7,14 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:libvlcshared="using:LibVLCSharp.Shared"
     xmlns:libvlcstructs="using:LibVLCSharp.Shared.Structures"
     xmlns:local="using:ModernVLC.ViewModels"
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Black"
+    PointerExited="Page_PointerExited"
     Unloaded="Page_Unloaded"
     mc:Ignorable="d">
     <Page.Resources>
@@ -20,6 +22,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Controls/NoAnimationProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <libvlcshared:VLCState x:Key="VLCPlayingState">Playing</libvlcshared:VLCState>
+
             <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
@@ -89,7 +93,7 @@
                         Width="150"
                         Header="Audio"
                         ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrack, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=OneWay}"
                         SelectionChanged="AudioTrack_OnSelectionChanged">
                         <muxc:RadioButtons.ItemTemplate>
                             <DataTemplate x:DataType="libvlcstructs:TrackDescription">
@@ -104,7 +108,7 @@
                         Width="150"
                         Header="Subtitles"
                         ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.ObservableSpu, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=OneWay}"
                         SelectionChanged="Subtitles_OnSelectionChanged">
                         <muxc:RadioButtons.ItemTemplate>
                             <DataTemplate x:DataType="libvlcstructs:TrackDescription">
@@ -124,7 +128,7 @@
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
                     Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=OneWay}"
+                    IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=TwoWay}"
                     Text="Loop" />
                 <MenuFlyoutSubItem Text="Playback speed">
                     <MenuFlyoutSubItem.Icon>
@@ -171,7 +175,7 @@
         <local:PlayerViewModel x:Name="ViewModel" />
     </Page.DataContext>
 
-    <Grid>
+    <Grid x:Name="LayoutRoot">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -179,6 +183,13 @@
         </Grid.RowDefinitions>
         <Border
             x:Name="TitleBarElement"
+            Grid.Row="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            Canvas.ZIndex="2" />
+        <Border
+            x:Name="Header"
             Grid.Row="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
@@ -220,6 +231,7 @@
             Initialized="VideoView_Initialized"
             IsTabStop="True"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+            PointerMoved="VideoView_PointerMoved"
             ProcessKeyboardAccelerators="VideoView_ProcessKeyboardAccelerators">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Unloaded">
@@ -354,5 +366,41 @@
                 </Button>
             </StackPanel>
         </Grid>
+
+        <interactivity:Interaction.Behaviors>
+            <core:DataTriggerBehavior
+                Binding="{x:Bind ViewModel.MediaPlayer.ObservableState, Mode=OneWay}"
+                ComparisonCondition="NotEqual"
+                Value="{StaticResource VLCPlayingState}">
+                <core:GoToStateAction StateName="Normal" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ControlsVisibilityStates">
+                <VisualState x:Name="Normal">
+                    <Storyboard>
+                        <FadeInThemeAnimation TargetName="PlayerControls" Duration="0:0:0.8" />
+                        <FadeInThemeAnimation TargetName="Header" Duration="0:0:0.8" />
+                        <FadeInThemeAnimation TargetName="BackButton" Duration="0:0:0.8" />
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Hidden">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames
+                            Storyboard.TargetName="PlayerControls"
+                            Storyboard.TargetProperty="Visibility"
+                            Duration="0:0:0.167">
+                            <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.167" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames.KeyFrames>
+                        </ObjectAnimationUsingKeyFrames>
+                        <FadeOutThemeAnimation TargetName="PlayerControls" Duration="0:0:0.167" />
+                        <FadeOutThemeAnimation TargetName="Header" Duration="0:0:0.167" />
+                        <FadeOutThemeAnimation TargetName="BackButton" Duration="0:0:0.167" />
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
