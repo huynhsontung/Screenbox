@@ -1,22 +1,17 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
-using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using ModernVLC.Services;
-using ModernVLC.ViewModels;
 using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -27,15 +22,9 @@ namespace ModernVLC.Pages
     /// </summary>
     public sealed partial class PlayerPage : Page
     {
-        private readonly DispatcherQueue DispatcherQueue;
-        private readonly DispatcherQueueTimer DispatcherTimer;
-        private bool _hideControlsManually;
-        private CoreCursor _cursor;
 
         public PlayerPage()
         {
-            DispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            DispatcherTimer = DispatcherQueue.CreateTimer();
             this.InitializeComponent();
             RegisterEventHandlers();
             ConfigureTitleBar();
@@ -74,17 +63,6 @@ namespace ModernVLC.Pages
         public void FocusVideoView()
         {
             VideoView.Focus(FocusState.Programmatic);
-            var currentState = ControlsVisibilityStates.CurrentState;
-            if (currentState?.Name == "Hidden")
-            {
-                VisualStateManager.GoToState(this, "Normal", true);
-                _hideControlsManually = false;
-            }
-            else if (ViewModel.MediaPlayer.IsPlaying)
-            {
-                VisualStateManager.GoToState(this, "Hidden", true);
-                _hideControlsManually = true;
-            }
         }
 
         private void VideoView_Initialized(object sender, InitializedEventArgs e) => ViewModel.Initialize(e.SwapChainOptions);
@@ -172,11 +150,6 @@ namespace ModernVLC.Pages
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
             state == VLCState.Buffering || state == VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.Dispose();
-        }
-
         private void VideoView_DragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Link;
@@ -207,40 +180,6 @@ namespace ModernVLC.Pages
                     ViewModel.OpenCommand.Execute(uri);
                 }
             }
-        }
-
-        private void VideoView_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            var coreWindow = Window.Current.CoreWindow;
-            if (coreWindow.PointerCursor == null)
-            {
-                coreWindow.PointerCursor = _cursor;
-            }
-
-            if (_hideControlsManually) return;
-            var currentState = ControlsVisibilityStates.CurrentState;
-            if (currentState?.Name == "Hidden")
-            {
-                VisualStateManager.GoToState(this, "Normal", true);
-            }
-
-            DispatcherTimer.Debounce(() =>
-            {
-                if (ViewModel.MediaPlayer.IsPlaying)
-                {
-                    VisualStateManager.GoToState(this, "Hidden", true);
-                    if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
-                    {
-                        _cursor = coreWindow.PointerCursor;
-                        coreWindow.PointerCursor = null;
-                    }
-                }
-            }, TimeSpan.FromSeconds(5));
-        }
-
-        private void Page_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            _hideControlsManually = false;
         }
     }
 }

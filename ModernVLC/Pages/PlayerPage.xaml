@@ -14,8 +14,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Black"
-    PointerExited="Page_PointerExited"
-    Unloaded="Page_Unloaded"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -23,6 +21,8 @@
                 <ResourceDictionary Source="../Controls/NoAnimationProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <libvlcshared:VLCState x:Key="VLCPlayingState">Playing</libvlcshared:VLCState>
+            <x:Double x:Key="HideControlsNoDelay">0</x:Double>
+            <x:Double x:Key="HideControlsDelay">5</x:Double>
 
             <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
@@ -172,7 +172,7 @@
         </ResourceDictionary>
     </Page.Resources>
     <Page.DataContext>
-        <local:PlayerViewModel x:Name="ViewModel" />
+        <local:PlayerViewModel x:Name="ViewModel" VideoView="{x:Bind VideoView}" />
     </Page.DataContext>
 
     <Grid x:Name="LayoutRoot">
@@ -231,7 +231,6 @@
             Initialized="VideoView_Initialized"
             IsTabStop="True"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
-            PointerMoved="VideoView_PointerMoved"
             ProcessKeyboardAccelerators="VideoView_ProcessKeyboardAccelerators">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Unloaded">
@@ -239,6 +238,13 @@
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Tapped">
                     <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.ToggleControlsVisibilityCommand}" CommandParameter="{StaticResource HideControlsNoDelay}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="PointerMoved">
+                    <core:InvokeCommandAction Command="{x:Bind ViewModel.ToggleControlsVisibilityCommand}" CommandParameter="{StaticResource HideControlsDelay}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="PointerExited">
+                    <core:CallMethodAction MethodName="OnPointerExited" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
@@ -372,6 +378,12 @@
                 Binding="{x:Bind ViewModel.MediaPlayer.ObservableState, Mode=OneWay}"
                 ComparisonCondition="NotEqual"
                 Value="{StaticResource VLCPlayingState}">
+                <core:GoToStateAction StateName="Normal" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="Hidden" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Normal" TargetObject="{x:Bind}" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>

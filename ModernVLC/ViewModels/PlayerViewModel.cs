@@ -9,7 +9,10 @@ using System.Windows.Input;
 using Windows.Media;
 using Windows.Media.Devices;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace ModernVLC.ViewModels
@@ -25,6 +28,7 @@ namespace ModernVLC.ViewModels
         public ICommand AddSubtitleCommand { get; private set; }
         public ICommand SetPlaybackSpeedCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
+        public ICommand ToggleControlsVisibilityCommand { get; private set; }
 
         public PlayerService MediaPlayer
         {
@@ -44,19 +48,30 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _isFullscreen, value);
         }
 
+        public bool ControlsHidden
+        {
+            get => _controlsHidden;
+            set => SetProperty(ref _controlsHidden, value);
+        }
+
+        public Control VideoView { get; set; }
+
         private readonly DispatcherQueue DispatcherQueue;
-        private readonly DispatcherQueueTimer DispathcerTimer;
+        private readonly DispatcherQueueTimer DispatcherTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
         private string _mediaTitle;
         private PlayerService _mediaPlayer;
         private bool _isFullscreen;
+        private bool _controlsHidden;
+        private bool _hideControlsManually;
+        private CoreCursor _cursor;
 
         public PlayerViewModel()
         {
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
-            DispathcerTimer = DispatcherQueue.CreateTimer();
+            DispatcherTimer = DispatcherQueue.CreateTimer();
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
@@ -65,6 +80,7 @@ namespace ModernVLC.ViewModels
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
             SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
             OpenCommand = new RelayCommand<object>(Open);
+            ToggleControlsVisibilityCommand = new RelayCommand<double>(ToggleControlsVisibility);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
@@ -201,6 +217,50 @@ namespace ModernVLC.ViewModels
             return false;
         }
 
+        public void ToggleControlsVisibility(double delayInSeconds)
+        {
+            if (delayInSeconds <= 0)
+            {
+                if (ControlsHidden)
+                {
+                    ControlsHidden = false;
+                    _hideControlsManually = false;
+                }
+                else if (MediaPlayer.IsPlaying)
+                {
+                    ControlsHidden = true;
+                    _hideControlsManually = true;
+                }
+            }
+            else
+            {
+                var coreWindow = Window.Current.CoreWindow;
+                if (coreWindow.PointerCursor == null)
+                {
+                    coreWindow.PointerCursor = _cursor;
+                }
+
+                if (_hideControlsManually) return;
+                if (ControlsHidden) ControlsHidden = false;
+
+                if (!MediaPlayer.ShouldUpdateTime) return;
+                DispatcherTimer.Debounce(() =>
+                {
+                    if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
+                    {
+                        ControlsHidden = true;
+                        if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
+                        {
+                            _cursor = coreWindow.PointerCursor;
+                            coreWindow.PointerCursor = null;
+                        }
+                    }
+                }, TimeSpan.FromSeconds(delayInSeconds));
+            }
+        }
+
+        public void OnPointerExited() => _hideControlsManually = false;
+
         private void SetTime(RangeBaseValueChangedEventArgs args)
         {
             if (MediaPlayer.IsSeekable)
@@ -219,7 +279,7 @@ namespace ModernVLC.ViewModels
 
                 if (!MediaPlayer.ShouldUpdateTime && args.NewValue != MediaPlayer.Length)
                 {
-                    DispathcerTimer.Debounce(() => MediaPlayer.Time = (long)args.NewValue, TimeSpan.FromMilliseconds(300));
+                    DispatcherTimer.Debounce(() => MediaPlayer.Time = (long)args.NewValue, TimeSpan.FromMilliseconds(300));
                     return;
                 }
             }
