@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using ModernVLC.Services;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Media;
 using Windows.Media.Devices;
@@ -66,6 +67,7 @@ namespace ModernVLC.ViewModels
         private bool _controlsHidden;
         private bool _hideControlsManually;
         private CoreCursor _cursor;
+        private bool _pointerMovedOverride;
 
         public PlayerViewModel()
         {
@@ -232,7 +234,7 @@ namespace ModernVLC.ViewModels
                     _hideControlsManually = true;
                 }
             }
-            else
+            else if (!_pointerMovedOverride)
             {
                 var coreWindow = Window.Current.CoreWindow;
                 if (coreWindow.PointerCursor == null)
@@ -241,7 +243,10 @@ namespace ModernVLC.ViewModels
                 }
 
                 if (_hideControlsManually) return;
-                if (ControlsHidden) ControlsHidden = false;
+                if (ControlsHidden)
+                {
+                    ControlsHidden = false;
+                }
 
                 if (!MediaPlayer.ShouldUpdateTime) return;
                 DispatcherTimer.Debounce(() =>
@@ -254,6 +259,10 @@ namespace ModernVLC.ViewModels
                             _cursor = coreWindow.PointerCursor;
                             coreWindow.PointerCursor = null;
                         }
+
+                        // Workaround for PointerMoved is raised when changing VisualState
+                        _pointerMovedOverride = true;
+                        Task.Delay(1000).ContinueWith(t => _pointerMovedOverride = false);
                     }
                 }, TimeSpan.FromSeconds(delayInSeconds));
             }
