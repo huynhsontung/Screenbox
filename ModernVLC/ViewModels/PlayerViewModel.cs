@@ -226,23 +226,17 @@ namespace ModernVLC.ViewModels
                 if (ControlsHidden)
                 {
                     ControlsHidden = false;
-                    _hideControlsManually = false;
                 }
                 else if (MediaPlayer.IsPlaying)
                 {
                     ControlsHidden = true;
-                    _hideControlsManually = true;
+                    HideCursor();
                 }
             }
             else if (!_pointerMovedOverride)
             {
-                var coreWindow = Window.Current.CoreWindow;
-                if (coreWindow.PointerCursor == null)
-                {
-                    coreWindow.PointerCursor = _cursor;
-                }
+                ShowCursor();
 
-                if (_hideControlsManually) return;
                 if (ControlsHidden)
                 {
                     ControlsHidden = false;
@@ -254,17 +248,32 @@ namespace ModernVLC.ViewModels
                     if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
                     {
                         ControlsHidden = true;
-                        if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
-                        {
-                            _cursor = coreWindow.PointerCursor;
-                            coreWindow.PointerCursor = null;
-                        }
+                        HideCursor();
 
                         // Workaround for PointerMoved is raised when changing VisualState
                         _pointerMovedOverride = true;
                         Task.Delay(1000).ContinueWith(t => _pointerMovedOverride = false);
                     }
                 }, TimeSpan.FromSeconds(delayInSeconds));
+            }
+        }
+
+        private void HideCursor()
+        {
+            var coreWindow = Window.Current.CoreWindow;
+            if (coreWindow.PointerCursor?.Type == CoreCursorType.Arrow)
+            {
+                _cursor = coreWindow.PointerCursor;
+                coreWindow.PointerCursor = null;
+            }
+        }
+
+        private void ShowCursor()
+        {
+            var coreWindow = Window.Current.CoreWindow;
+            if (coreWindow.PointerCursor == null)
+            {
+                coreWindow.PointerCursor = _cursor;
             }
         }
 
