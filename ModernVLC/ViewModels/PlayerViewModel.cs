@@ -65,7 +65,6 @@ namespace ModernVLC.ViewModels
         private PlayerService _mediaPlayer;
         private bool _isFullscreen;
         private bool _controlsHidden;
-        private bool _hideControlsManually;
         private CoreCursor _cursor;
         private bool _pointerMovedOverride;
 
@@ -82,7 +81,7 @@ namespace ModernVLC.ViewModels
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
             SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
             OpenCommand = new RelayCommand<object>(Open);
-            ToggleControlsVisibilityCommand = new RelayCommand<double>(ToggleControlsVisibility);
+            ToggleControlsVisibilityCommand = new RelayCommand(ToggleControlsVisibility);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
@@ -159,7 +158,24 @@ namespace ModernVLC.ViewModels
             }
             
             MediaPlayer = new PlayerService(libVlc);
+            MediaPlayer.PropertyChanged += MediaPlayer_PropertyChanged;
             RegisterMediaPlayerPlaybackEvents();
+        }
+
+        private void MediaPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlayerService.ObservableState))
+            {
+                if (ControlsHidden && MediaPlayer.ObservableState != VLCState.Playing)
+                {
+                    ControlsHidden = false;
+                }
+
+                if (!ControlsHidden && MediaPlayer.ObservableState == VLCState.Playing)
+                {
+                    DelayHideControls();
+                }
+            }
         }
 
         public void Dispose()
@@ -219,43 +235,48 @@ namespace ModernVLC.ViewModels
             return false;
         }
 
-        public void ToggleControlsVisibility(double delayInSeconds)
+        public void ToggleControlsVisibility()
         {
-            if (delayInSeconds <= 0)
+            if (ControlsHidden)
             {
-                if (ControlsHidden)
-                {
-                    ControlsHidden = false;
-                }
-                else if (MediaPlayer.IsPlaying)
-                {
-                    ControlsHidden = true;
-                    HideCursor();
-                }
+                ControlsHidden = false;
             }
-            else if (!_pointerMovedOverride)
+            else if (MediaPlayer.IsPlaying)
             {
-                ShowCursor();
+                ControlsHidden = true;
+                HideCursor();
+            }
+        }
 
+        public void OnPointerMoved()
+        {
+            if (!_pointerMovedOverride)
+            {
                 if (ControlsHidden)
                 {
+                    ShowCursor();
                     ControlsHidden = false;
                 }
 
                 if (!MediaPlayer.ShouldUpdateTime) return;
-                DispatcherTimer.Debounce(() =>
-                {
-                    if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
-                    {
-                        ControlsHidden = true;
-                        HideCursor();
-
-                        // Workaround for PointerMoved is raised when changing VisualState
-                        _pointerMovedOverride = true;
-                        Task.Delay(1000).ContinueWith(t => _pointerMovedOverride = false);
-                    }
-                }, TimeSpan.FromSeconds(delayInSeconds));
+                DelayHideControls();
             }
+        }
+
+        private void DelayHideControls()
+        {
+            DispatcherTimer.Debounce(() =>
+            {
+                if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
+                {
+                    HideCursor();
+                    ControlsHidden = true;
+
+                    // Workaround for PointerMoved is raised when show/hide cursor
+                    _pointerMovedOverride = true;
+                    Task.Delay(1000).ContinueWith(t => _pointerMovedOverride = false);
+                }
+            }, TimeSpan.FromSeconds(5));
         }
 
         private void HideCursor()
@@ -276,8 +297,6 @@ namespace ModernVLC.ViewModels
                 coreWindow.PointerCursor = _cursor;
             }
         }
-
-        public void OnPointerExited() => _hideControlsManually = false;
 
         private void SetTime(RangeBaseValueChangedEventArgs args)
         {
