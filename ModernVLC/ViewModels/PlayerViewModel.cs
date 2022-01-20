@@ -239,7 +239,9 @@ namespace ModernVLC.ViewModels
         {
             if (ControlsHidden)
             {
+                ShowCursor();
                 ControlsHidden = false;
+                DelayHideControls();
             }
             else if (MediaPlayer.IsPlaying)
             {

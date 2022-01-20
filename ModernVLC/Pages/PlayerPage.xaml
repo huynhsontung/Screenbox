@@ -402,11 +402,6 @@
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseOut" />
                         </VisualTransition.GeneratedEasingFunction>
-                        <Storyboard>
-                            <FadeInThemeAnimation TargetName="PlayerControls" />
-                            <FadeInThemeAnimation TargetName="Header" />
-                            <FadeInThemeAnimation TargetName="BackButton" />
-                        </Storyboard>
                     </VisualTransition>
                     <VisualTransition
                         GeneratedDuration="0:0:0.3"
@@ -415,11 +410,6 @@
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseIn" />
                         </VisualTransition.GeneratedEasingFunction>
-                        <Storyboard>
-                            <FadeOutThemeAnimation TargetName="PlayerControls" />
-                            <FadeOutThemeAnimation TargetName="Header" />
-                            <FadeOutThemeAnimation TargetName="BackButton" />
-                        </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
                 <VisualState x:Name="Normal" />
