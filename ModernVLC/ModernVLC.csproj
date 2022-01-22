@@ -121,6 +121,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
+    <Compile Include="Converters\NullVisibilityConverter.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\PlayerService.cs" />

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:converters="using:ModernVLC.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -47,6 +48,7 @@
                 <GradientStop Offset="1" Color="#00000000" />
                 <GradientStop Offset="0" Color="#64000000" />
             </LinearGradientBrush>
+            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
             <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
 
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
@@ -259,9 +261,34 @@
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
 
+        <Border
+            x:Name="StatusMessage"
+            Grid.Row="1"
+            Margin="24,4"
+            Padding="10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            CornerRadius="6"
+            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
+            </animations:Implicit.HideAnimations>
+            <TextBlock
+                x:Name="StatusMessageText"
+                FontSize="20"
+                FontWeight="SemiBold"
+                Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
+        </Border>
+
         <muxc:ProgressRing
             x:Name="BufferingIndicator"
-            Grid.Row="1"
+            Grid.Row="0"
+            Grid.RowSpan="3"
             Width="52"
             Height="52"
             HorizontalAlignment="Center"
@@ -465,6 +492,7 @@
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerProgressBar.(Grid.Row)" Value="2" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
+                        <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

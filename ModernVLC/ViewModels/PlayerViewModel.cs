@@ -2,6 +2,7 @@
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using ModernVLC.Converters;
 using ModernVLC.Services;
 using System;
 using System.Linq;
@@ -29,6 +30,7 @@ namespace ModernVLC.ViewModels
         public ICommand SetSubtitleCommand { get; private set; }
         public ICommand AddSubtitleCommand { get; private set; }
         public ICommand SetPlaybackSpeedCommand { get; private set; }
+        public ICommand ChangeVolumeCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand ToggleControlsVisibilityCommand { get; private set; }
         public ICommand ToggleCompactLayoutCommand { get; private set; }
@@ -57,16 +59,29 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _isCompact, value);
         }
 
+        public bool StatusVisible
+        {
+            get => _statusVisibile;
+            private set => SetProperty(ref _statusVisibile, value);
+        }
+
         public bool ControlsHidden
         {
             get => _controlsHidden;
-            set => SetProperty(ref _controlsHidden, value);
+            private set => SetProperty(ref _controlsHidden, value);
+        }
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            private set => SetProperty(ref _statusMessage, value);
         }
 
         public Control VideoView { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer DispatcherTimer;
+        private readonly DispatcherQueueTimer StatusMessageTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
         private string _mediaTitle;
@@ -76,15 +91,19 @@ namespace ModernVLC.ViewModels
         private CoreCursor _cursor;
         private bool _pointerMovedOverride;
         private bool _isCompact;
+        private bool _statusVisibile;
+        private string _statusMessage;
 
         public PlayerViewModel()
         {
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             DispatcherTimer = DispatcherQueue.CreateTimer();
+            StatusMessageTimer = DispatcherQueue.CreateTimer();
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
+            ChangeVolumeCommand = new RelayCommand<int>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
@@ -96,6 +115,12 @@ namespace ModernVLC.ViewModels
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private void ChangeVolume(int changeAmount)
+        {
+            MediaPlayer.ObservableVolume += changeAmount;
+            ShowStatusMessage($"Volume {MediaPlayer.ObservableVolume}%");
         }
 
         private async void ToggleCompactLayout()
@@ -194,6 +219,12 @@ namespace ModernVLC.ViewModels
             RegisterMediaPlayerPlaybackEvents();
         }
 
+        public void ShowStatusMessage(string message)
+        {
+            StatusMessage = message;
+            StatusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
+        }
+
         private void MediaPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(PlayerService.ObservableState))
@@ -240,6 +271,7 @@ namespace ModernVLC.ViewModels
             if (MediaPlayer.IsSeekable)
             {
                 MediaPlayer.Time += amount;
+                ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} / {HumanizedDurationConverter.Convert(MediaPlayer.Length)}");
             }
         }
 

@@ -115,7 +115,7 @@ namespace ModernVLC.Pages
 
             if (volumeChange != 0)
             {
-                ViewModel.MediaPlayer.ObservableVolume += volumeChange;
+                ViewModel.ChangeVolumeCommand.Execute(volumeChange);
             }
         }
 
