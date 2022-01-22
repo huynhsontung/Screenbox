@@ -70,6 +70,17 @@ namespace ModernVLC.ViewModels
             get => _controlsHidden;
             private set => SetProperty(ref _controlsHidden, value);
         }
+        public bool ZoomToFit
+        {
+            get => _zoomToFit;
+            set
+            {
+                if (SetProperty(ref _zoomToFit, value))
+                {
+                    OnSizeChanged();
+                }
+            }
+        }
 
         public string StatusMessage
         {
@@ -93,6 +104,7 @@ namespace ModernVLC.ViewModels
         private bool _isCompact;
         private bool _statusVisibile;
         private string _statusMessage;
+        private bool _zoomToFit;
 
         public PlayerViewModel()
         {
@@ -309,6 +321,12 @@ namespace ModernVLC.ViewModels
             {
                 HideControls();
             }
+        }
+
+        public void OnSizeChanged()
+        {
+            if (MediaPlayer == null) return;
+            MediaPlayer.CropGeometry = ZoomToFit ? $"{VideoView.ActualWidth}:{VideoView.ActualHeight}" : null;
         }
 
         public void OnPointerMoved()

@@ -170,11 +170,20 @@
                         GroupName="SpeedGroup"
                         Text="2" />
                 </MenuFlyoutSubItem>
-                <MenuFlyoutItem Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}" Text="Picture in picture">
-                    <MenuFlyoutItem.Icon>
+                <MenuFlyoutSeparator />
+                <ToggleMenuFlyoutItem
+                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
+                    Text="Picture in picture">
+                    <ToggleMenuFlyoutItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE49;" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
+                    </ToggleMenuFlyoutItem.Icon>
+                </ToggleMenuFlyoutItem>
+                <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}" Text="Zoom to fit">
+                    <ToggleMenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A6;" />
+                    </ToggleMenuFlyoutItem.Icon>
+                </ToggleMenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -257,6 +266,9 @@
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="PointerMoved">
                     <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="SizeChanged">
+                    <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
