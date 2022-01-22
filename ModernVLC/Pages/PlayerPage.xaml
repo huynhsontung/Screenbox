@@ -168,6 +168,11 @@
                         GroupName="SpeedGroup"
                         Text="2" />
                 </MenuFlyoutSubItem>
+                <MenuFlyoutItem Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}" Text="Picture in picture">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE49;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -200,6 +205,7 @@
                 <TranslateTransform x:Name="HeaderTranslate" />
             </Border.RenderTransform>
             <TextBlock
+                x:Name="TitleText"
                 Margin="80,0,90,0"
                 VerticalAlignment="Center"
                 FontSize="28"
@@ -275,6 +281,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -283,6 +290,7 @@
             </Grid.ColumnDefinitions>
 
             <muxc:ProgressBar
+                x:Name="PlayerProgressBar"
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
@@ -334,6 +342,7 @@
                     <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.ObservableIsPlaying), Mode=OneWay}" />
                 </Button>
                 <muxc:ToggleSplitButton
+                    x:Name="MuteButton"
                     Height="40"
                     Background="Transparent"
                     BorderThickness="0"
@@ -355,16 +364,12 @@
                 Grid.Row="1"
                 Grid.Column="2"
                 Orientation="Horizontal">
-                <Button Flyout="{StaticResource AudioSubtitlesFlyout}">
+                <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioSubtitlesFlyout}">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="C" />
                     </Button.KeyboardAccelerators>
                 </Button>
-
-                <!--<Button>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
-                </Button>-->
 
                 <ToggleButton
                     x:Name="FullscreenButton"
@@ -377,8 +382,21 @@
                     <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
                 </ToggleButton>
 
-                <Button Margin="2,0,0,0" Flyout="{StaticResource VideoContextMenu}">
+                <Button
+                    x:Name="MoreButton"
+                    Margin="2,0,0,0"
+                    Flyout="{StaticResource VideoContextMenu}">
                     <SymbolIcon Symbol="More" />
+                </Button>
+
+                <Button
+                    x:Name="ExitCompactOverlayButton"
+                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                    Visibility="Collapsed">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Escape" />
+                    </Button.KeyboardAccelerators>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
                 </Button>
             </StackPanel>
         </Grid>
@@ -389,6 +407,12 @@
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Normal" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="Compact" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="False">
+                <core:GoToStateAction StateName="Full" TargetObject="{x:Bind}" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
@@ -421,6 +445,26 @@
                         <Setter Target="Header.Opacity" Value="0" />
                         <Setter Target="BackButton.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="LayoutGroup">
+                <VisualState x:Name="Full" />
+                <VisualState x:Name="Compact">
+                    <VisualState.Setters>
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleBarElement.MinHeight" Value="32" />
+                        <Setter Target="TitleText.FontSize" Value="12" />
+                        <Setter Target="TitleText.FontWeight" Value="Normal" />
+                        <Setter Target="TitleText.Margin" Value="13,0,0,0" />
+                        <Setter Target="MuteButton.Visibility" Value="Collapsed" />
+                        <Setter Target="MoreButton.Visibility" Value="Collapsed" />
+                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
+                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SeekBar.Visibility" Value="Collapsed" />
+                        <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
+                        <Setter Target="PlayerProgressBar.(Grid.Row)" Value="2" />
+                        <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

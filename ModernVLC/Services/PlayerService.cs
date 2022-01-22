@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.System;
 
 namespace ModernVLC.Services
@@ -82,6 +83,25 @@ namespace ModernVLC.Services
         public int SpuIndex => GetIndexFromTrackId(Spu, SpuDescription);
 
         public int AudioTrackIndex => GetIndexFromTrackId(AudioTrack, AudioTrackDescription);
+
+        public double? NumericAspectRatio
+        {
+            get
+            {
+                uint px = 0, py = 0;
+                return Size(0, ref px, ref py) && py != 0 ? (double)px / py : null;
+            }
+        }
+
+        public Size Dimension
+        {
+            get
+            {
+                uint px = 0, py = 0;
+                return Size(0, ref px, ref py) ? new Size(px, py) : new Size(0, 0);
+            }
+        }
+
 
         public TrackDescription[] ObservableSpuDescription => SpuDescription;
 

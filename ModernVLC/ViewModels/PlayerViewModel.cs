@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Devices;
 using Windows.System;
@@ -30,6 +31,7 @@ namespace ModernVLC.ViewModels
         public ICommand SetPlaybackSpeedCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand ToggleControlsVisibilityCommand { get; private set; }
+        public ICommand ToggleCompactLayoutCommand { get; private set; }
 
         public PlayerService MediaPlayer
         {
@@ -47,6 +49,12 @@ namespace ModernVLC.ViewModels
         {
             get => _isFullscreen;
             private set => SetProperty(ref _isFullscreen, value);
+        }
+
+        public bool IsCompact
+        {
+            get => _isCompact;
+            private set => SetProperty(ref _isCompact, value);
         }
 
         public bool ControlsHidden
@@ -67,6 +75,7 @@ namespace ModernVLC.ViewModels
         private bool _controlsHidden;
         private CoreCursor _cursor;
         private bool _pointerMovedOverride;
+        private bool _isCompact;
 
         public PlayerViewModel()
         {
@@ -82,10 +91,33 @@ namespace ModernVLC.ViewModels
             SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
             OpenCommand = new RelayCommand<object>(Open);
             ToggleControlsVisibilityCommand = new RelayCommand(ToggleControlsVisibility);
+            ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+        }
+
+        private async void ToggleCompactLayout()
+        {
+            var view = ApplicationView.GetForCurrentView();
+            if (IsCompact)
+            {
+                if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
+                {
+                    IsCompact = false;
+                }
+            }
+            else
+            {
+                var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+                preferences.ViewSizePreference = ViewSizePreference.Custom;
+                preferences.CustomSize = new Size(240 * (MediaPlayer.NumericAspectRatio ?? 1), 240);
+                if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
+                {
+                    IsCompact = true;
+                }
+            }
         }
 
         private void Open(object value)
@@ -168,7 +200,7 @@ namespace ModernVLC.ViewModels
             {
                 if (ControlsHidden && MediaPlayer.ObservableState != VLCState.Playing)
                 {
-                    ControlsHidden = false;
+                    ShowControls();
                 }
 
                 if (!ControlsHidden && MediaPlayer.ObservableState == VLCState.Playing)
@@ -239,14 +271,11 @@ namespace ModernVLC.ViewModels
         {
             if (ControlsHidden)
             {
-                ShowCursor();
-                ControlsHidden = false;
-                DelayHideControls();
+                ShowControls();
             }
             else if (MediaPlayer.IsPlaying)
             {
-                ControlsHidden = true;
-                HideCursor();
+                HideControls();
             }
         }
 
@@ -263,6 +292,19 @@ namespace ModernVLC.ViewModels
                 if (!MediaPlayer.ShouldUpdateTime) return;
                 DelayHideControls();
             }
+        }
+
+        private void ShowControls()
+        {
+            ShowCursor();
+            ControlsHidden = false;
+            DelayHideControls();
+        }
+
+        private void HideControls()
+        {
+            ControlsHidden = true;
+            HideCursor();
         }
 
         private void DelayHideControls()
