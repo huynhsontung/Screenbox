@@ -94,10 +94,25 @@ namespace ModernVLC.Pages
                     ViewModel.SetWindowSize(0.5);
                     return;
                 case VirtualKey.Number3:
-                    ViewModel.SetWindowSize(1);
+                    ViewModel.SetWindowSize(0.75);
                     return;
                 case VirtualKey.Number4:
+                    ViewModel.SetWindowSize(1);
+                    return;
+                case VirtualKey.Number5:
+                    ViewModel.SetWindowSize(1.25);
+                    return;
+                case VirtualKey.Number6:
+                    ViewModel.SetWindowSize(1.5);
+                    return;
+                case VirtualKey.Number7:
+                    ViewModel.SetWindowSize(1.75);
+                    return;
+                case VirtualKey.Number8:
                     ViewModel.SetWindowSize(2);
+                    return;
+                case VirtualKey.Number9:
+                    ViewModel.SetWindowSize(4);
                     return;
                 case (VirtualKey)190 when args.Modifiers == VirtualKeyModifiers.None:   // Period (".")
                     ViewModel.JumpFrame(false);
