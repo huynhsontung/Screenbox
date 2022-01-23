@@ -60,10 +60,10 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _isCompact, value);
         }
 
-        public bool StatusVisible
+        public bool BufferingVisible
         {
-            get => _statusVisibile;
-            private set => SetProperty(ref _statusVisibile, value);
+            get => _bufferingVisible;
+            private set => SetProperty(ref _bufferingVisible, value);
         }
 
         public bool ControlsHidden
@@ -92,8 +92,9 @@ namespace ModernVLC.ViewModels
         public Control VideoView { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;
-        private readonly DispatcherQueueTimer DispatcherTimer;
+        private readonly DispatcherQueueTimer ControlsVisibilityTimer;
         private readonly DispatcherQueueTimer StatusMessageTimer;
+        private readonly DispatcherQueueTimer BufferingTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private Media _media;
         private string _mediaTitle;
@@ -103,16 +104,17 @@ namespace ModernVLC.ViewModels
         private CoreCursor _cursor;
         private bool _pointerMovedOverride;
         private bool _isCompact;
-        private bool _statusVisibile;
         private string _statusMessage;
         private bool _zoomToFit;
+        private bool _bufferingVisible;
 
         public PlayerViewModel()
         {
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
-            DispatcherTimer = DispatcherQueue.CreateTimer();
+            ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
             StatusMessageTimer = DispatcherQueue.CreateTimer();
+            BufferingTimer = DispatcherQueue.CreateTimer();
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
@@ -270,6 +272,13 @@ namespace ModernVLC.ViewModels
                     DelayHideControls();
                 }
             }
+
+            if (e.PropertyName == nameof(PlayerService.BufferingProgress))
+            {
+                BufferingTimer.Debounce(
+                    () => BufferingVisible = MediaPlayer.BufferingProgress < 100,
+                    TimeSpan.FromSeconds(0.5));
+            }
         }
 
         public void Dispose()
@@ -403,7 +412,7 @@ namespace ModernVLC.ViewModels
 
         private void DelayHideControls()
         {
-            DispatcherTimer.Debounce(() =>
+            ControlsVisibilityTimer.Debounce(() =>
             {
                 if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
                 {
@@ -454,7 +463,7 @@ namespace ModernVLC.ViewModels
 
                 if (!MediaPlayer.ShouldUpdateTime && args.NewValue != MediaPlayer.Length)
                 {
-                    DispatcherTimer.Debounce(() => MediaPlayer.Time = (long)args.NewValue, TimeSpan.FromMilliseconds(300));
+                    MediaPlayer.Time = (long)args.NewValue;
                     return;
                 }
             }

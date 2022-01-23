@@ -4,12 +4,22 @@ using Windows.UI.Xaml.Data;
 
 namespace ModernVLC.Converters
 {
-    internal class NullVisibilityConverter : IValueConverter
+    internal class CommonVisibilityConverter : IValueConverter
     {
         public bool Invert { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (value is bool b)
+            {
+                if (Invert)
+                {
+                    return b ? Visibility.Collapsed : Visibility.Visible;
+                }
+
+                return b ? Visibility.Visible : Visibility.Collapsed;
+            }
+
             var result = value is string s ? !string.IsNullOrEmpty(s) : value != null;
 
             if (Invert)

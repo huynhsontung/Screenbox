@@ -48,7 +48,7 @@
                 <GradientStop Offset="1" Color="#00000000" />
                 <GradientStop Offset="0" Color="#64000000" />
             </LinearGradientBrush>
-            <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+            <converters:CommonVisibilityConverter x:Key="CommonVisibilityConverter" />
             <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
 
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
@@ -282,7 +282,7 @@
             VerticalAlignment="Top"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             CornerRadius="6"
-            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
             </animations:Implicit.ShowAnimations>
@@ -327,7 +327,6 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-
             <muxc:ProgressBar
                 x:Name="PlayerProgressBar"
                 Grid.Row="0"
@@ -339,6 +338,17 @@
                 Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
                 Style="{StaticResource NoAnimationProgressBar}"
                 Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
+            <muxc:ProgressBar
+                x:Name="BufferingProgressBar"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                AutomationProperties.AccessibilityView="Raw"
+                Foreground="{ThemeResource SystemAccentColor}"
+                IsIndeterminate="True"
+                Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
             <Slider
                 x:Name="SeekBar"
                 Grid.Row="0"
@@ -478,9 +488,6 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="Hidden">
                     <VisualState.Setters>
-                        <Setter Target="HeaderTranslate.Y" Value="{StaticResource HeaderOffsetAmount}" />
-                        <Setter Target="BackButtonTranslate.Y" Value="{StaticResource HeaderOffsetAmount}" />
-                        <Setter Target="PlayerControlsTranslate.Y" Value="{StaticResource PlayerControlsOffsetAmount}" />
                         <Setter Target="Header.Opacity" Value="0" />
                         <Setter Target="BackButton.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
@@ -503,6 +510,7 @@
                         <Setter Target="SeekBar.Visibility" Value="Collapsed" />
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerProgressBar.(Grid.Row)" Value="2" />
+                        <Setter Target="BufferingProgressBar.(Grid.Row)" Value="2" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>

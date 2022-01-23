@@ -74,6 +74,12 @@ namespace ModernVLC.Services
             private set => SetProperty(ref _state, value);
         }
 
+        public double BufferingProgress
+        {
+            get => _bufferingProgress;
+            private set => SetProperty(ref _bufferingProgress, value);
+        }
+
         public bool ShouldLoop
         {
             get => _shouldLoop;
@@ -102,7 +108,6 @@ namespace ModernVLC.Services
             }
         }
 
-
         public TrackDescription[] ObservableSpuDescription => SpuDescription;
 
         public TrackDescription[] ObservableAudioTrackDescription => AudioTrackDescription;
@@ -120,6 +125,7 @@ namespace ModernVLC.Services
         private int _volume;
         private bool _isMute;
         private bool _shouldLoop;
+        private double _bufferingProgress;
 
         public PlayerService(LibVLC lib) : base(lib)
         {
@@ -133,15 +139,22 @@ namespace ModernVLC.Services
             Playing += OnStateChanged;
             Paused += OnStateChanged;
             Stopped += OnStateChanged;
-            Buffering += OnStateChanged;
             EncounteredError += OnStateChanged;
             Opening += OnStateChanged;
+            Buffering += OnBuffering;
             MediaChanged += OnMediaChanged;
             
             ShouldUpdateTime = true;
+            BufferingProgress = 100;
             _volume = Volume;
             _isMute = Mute;
             _state = State;
+        }
+
+        private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
+        {
+            UpdateState();
+            BufferingProgress = e.Cache;
         }
 
         private int GetIndexFromTrackId(int id, TrackDescription[] tracks)
