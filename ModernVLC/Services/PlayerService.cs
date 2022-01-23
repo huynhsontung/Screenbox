@@ -26,7 +26,12 @@ namespace ModernVLC.Services
         public double ObservableTime
         {
             get => _time;
-            private set => SetProperty(ref _time, value);
+            set
+            {
+                if (value < 0) value = 0;
+                if (value > Length) value = Length;
+                SetProperty(ref _time, value);
+            }
         }
 
         public bool ObservableIsSeekable

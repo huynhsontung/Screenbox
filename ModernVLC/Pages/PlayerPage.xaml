@@ -384,7 +384,7 @@
                 Minimum="0"
                 SmallChange="1000"
                 ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
-                Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=OneWay}">
+                Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="ValueChanged">
                         <core:InvokeCommandAction Command="{x:Bind ViewModel.SetTimeCommand}" />

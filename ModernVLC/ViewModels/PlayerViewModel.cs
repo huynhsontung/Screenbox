@@ -250,6 +250,8 @@ namespace ModernVLC.ViewModels
             MediaPlayer = new PlayerService(libVlc);
             MediaPlayer.PropertyChanged += MediaPlayer_PropertyChanged;
             RegisterMediaPlayerPlaybackEvents();
+
+            ConfigureVideoViewManipulation();
         }
 
         public void ShowStatusMessage(string message)
@@ -449,7 +451,8 @@ namespace ModernVLC.ViewModels
         {
             if (MediaPlayer.IsSeekable)
             {
-                if ((args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying) &&
+                if ((args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying) ||
+                    !MediaPlayer.ShouldUpdateTime &&
                     args.NewValue != MediaPlayer.Length)
                 {
                     if (MediaPlayer.State == VLCState.Ended)
@@ -458,13 +461,6 @@ namespace ModernVLC.ViewModels
                     }
 
                     MediaPlayer.Time = (long)args.NewValue;
-                    return;
-                }
-
-                if (!MediaPlayer.ShouldUpdateTime && args.NewValue != MediaPlayer.Length)
-                {
-                    MediaPlayer.Time = (long)args.NewValue;
-                    return;
                 }
             }
         }
