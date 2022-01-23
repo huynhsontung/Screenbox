@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Foundation;
+using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Devices;
 using Windows.System;
@@ -166,8 +167,26 @@ namespace ModernVLC.ViewModels
             MediaTitle = uri.Segments.LastOrDefault();
             var oldMedia = _media;
             var media = _media = new Media(libVlc, uri);
+            media.ParsedChanged += OnMediaParsed;
             MediaPlayer.Play(media);
             oldMedia?.Dispose();
+        }
+
+        private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                var dimension = MediaPlayer.Dimension;
+                var view = ApplicationView.GetForCurrentView();
+                if (view.VisibleBounds.Width >= dimension.Width ||
+                    view.VisibleBounds.Height >= dimension.Height) return;
+
+                // Try some scaler to reach as close to 1.0 as possible.
+                // Due to UWP limitation, setting 1.0 size won't always work.
+                if (SetWindowSize(1.0)) return;
+                if (SetWindowSize(0.99)) return;
+                if (SetWindowSize(0.94)) return;
+            });
         }
 
         private void SetPlaybackSpeed(float speed)
@@ -321,6 +340,31 @@ namespace ModernVLC.ViewModels
             {
                 HideControls();
             }
+        }
+
+        public bool SetWindowSize(double scaler)
+        {
+            if (scaler <= 0) return false;
+            var displayInformation = DisplayInformation.GetForCurrentView();
+            var maxWidth = displayInformation.ScreenWidthInRawPixels;
+            var maxHeight = displayInformation.ScreenHeightInRawPixels;
+            var view = ApplicationView.GetForCurrentView();
+            var videoDimension = MediaPlayer.Dimension;
+            if (!videoDimension.IsEmpty)
+            {
+                var aspectRatio = videoDimension.Width / videoDimension.Height;
+                var newWidth = videoDimension.Width * scaler;
+                if (newWidth > maxWidth) newWidth = maxWidth;
+                var newHeight = newWidth / aspectRatio;
+                scaler = newWidth / videoDimension.Width;
+                if (view.TryResizeView(new Size(newWidth, newHeight)))
+                {
+                    ShowStatusMessage($"Scale {scaler * scaler * 100:0.##}%");
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void OnSizeChanged()

@@ -9,6 +9,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -36,6 +37,12 @@ namespace ModernVLC
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        private void SetMinWindowSize()
+        {
+            var view = ApplicationView.GetForCurrentView();
+            view.SetPreferredMinSize(new Size(390, 240));
         }
 
         /// <summary>
@@ -67,6 +74,7 @@ namespace ModernVLC
 
             if (e.PrelaunchActivated == false)
             {
+                SetMinWindowSize();
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,

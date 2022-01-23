@@ -98,7 +98,7 @@ namespace ModernVLC.Services
             get
             {
                 uint px = 0, py = 0;
-                return Size(0, ref px, ref py) ? new Size(px, py) : new Size(0, 0);
+                return Size(0, ref px, ref py) ? new Size(px, py) : Windows.Foundation.Size.Empty;
             }
         }
 
