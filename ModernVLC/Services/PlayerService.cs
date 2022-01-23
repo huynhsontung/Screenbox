@@ -58,17 +58,18 @@ namespace ModernVLC.Services
             }
         }
 
-        public int ObservableVolume
+        public double ObservableVolume
         {
             get => _volume;
             set
             {
                 if (value > 100) value = 100;
                 if (value < 0) value = 0;
-                if (SetProperty(ref _volume, value) && Volume != value)
+                var intVal = (int)value;
+                if (SetProperty(ref _volume, value) && Volume != intVal)
                 {
-                    Volume = value;
-                    ObservableIsMute = value == 0;
+                    Volume = intVal;
+                    ObservableIsMute = intVal == 0;
                 }
             }
         }
@@ -127,7 +128,7 @@ namespace ModernVLC.Services
         private bool _isSeekable;
         private VLCState _state;
         private bool _isPlaying;
-        private int _volume;
+        private double _volume;
         private bool _isMute;
         private bool _shouldLoop;
         private double _bufferingProgress;

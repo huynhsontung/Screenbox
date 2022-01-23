@@ -118,7 +118,7 @@ namespace ModernVLC.ViewModels
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
             SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
-            ChangeVolumeCommand = new RelayCommand<int>(ChangeVolume);
+            ChangeVolumeCommand = new RelayCommand<double>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
             SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
@@ -132,10 +132,10 @@ namespace ModernVLC.ViewModels
             InitSystemTransportControls();
         }
 
-        private void ChangeVolume(int changeAmount)
+        private void ChangeVolume(double changeAmount)
         {
             MediaPlayer.ObservableVolume += changeAmount;
-            ShowStatusMessage($"Volume {MediaPlayer.ObservableVolume}%");
+            ShowStatusMessage($"Volume {MediaPlayer.ObservableVolume:F0}%");
         }
 
         private async void ToggleCompactLayout()

@@ -1,17 +1,21 @@
 ﻿using ModernVLC.Converters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 namespace ModernVLC.ViewModels
 {
     internal partial class PlayerViewModel
     {
-        private bool _verticalLock;
+        private enum ManipulationLock
+        {
+            None,
+            Horizontal,
+            Vertical
+        }
+
+        const double HorizontalChangePerPixel = 100;
+
+        private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;
 
         private void ConfigureVideoViewManipulation()
@@ -27,29 +31,32 @@ namespace ModernVLC.ViewModels
 
         private void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-            _verticalLock = false;
             StatusMessage = null;
             MediaPlayer.ShouldUpdateTime = true;
         }
 
         private void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            var actualWidth = VideoView.ActualWidth;
-            var actualHeight = VideoView.ActualHeight;
+            var horizontalChange = e.Delta.Translation.X;
+            var verticalChange = e.Delta.Translation.Y;
+            var horizontalCumulative = e.Cumulative.Translation.X;
+            var verticalCumulative = e.Cumulative.Translation.Y;
+            if (Math.Abs(horizontalCumulative) < 50 && Math.Abs(verticalCumulative) < 50) return;
 
-            var horizontalScaler = e.Delta.Translation.X / actualWidth;
-            var verticalScaler = e.Delta.Translation.Y / actualHeight;
-            if (_verticalLock || Math.Abs(verticalScaler) > 0.01)
+            if (_lockDirection == ManipulationLock.Vertical ||
+                (_lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50))
             {
-                _verticalLock = true;
-                var volumeChange = (int)(-verticalScaler * 100);
-                MediaPlayer.ObservableVolume += volumeChange;
-                StatusMessage = $"Volume {MediaPlayer.ObservableVolume}%";
+                _lockDirection = ManipulationLock.Vertical;
+                MediaPlayer.ObservableVolume += -verticalChange;
+                StatusMessage = $"Volume {MediaPlayer.ObservableVolume:F0}%";
+                return;
             }
-            else if (MediaPlayer.IsSeekable)
+
+            if (MediaPlayer.IsSeekable)
             {
-                var maxChange = Math.Max(MediaPlayer.Length * 0.1, 5000);
-                var timeChange = horizontalScaler * maxChange;
+                _lockDirection = ManipulationLock.Horizontal;
+                MediaPlayer.ShouldUpdateTime = false;
+                var timeChange = horizontalChange * HorizontalChangePerPixel;
                 MediaPlayer.ObservableTime += timeChange;
 
                 var changeText = HumanizedDurationConverter.Convert(MediaPlayer.ObservableTime - _timeBeforeManipulation);
@@ -60,7 +67,7 @@ namespace ModernVLC.ViewModels
 
         private void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            MediaPlayer.ShouldUpdateTime = false;
+            _lockDirection = ManipulationLock.None;
             _timeBeforeManipulation = MediaPlayer.Time;
         }
     }
