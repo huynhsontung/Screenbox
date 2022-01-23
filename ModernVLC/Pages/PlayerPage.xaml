@@ -15,6 +15,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="Black"
+    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -78,49 +79,68 @@
                 </StackPanel>
             </Flyout>
 
-            <Flyout x:Key="AudioSubtitlesFlyout">
+            <Flyout x:Key="AudioCaptionFlyout">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <muxc:RadioButtons
+                    <TextBlock
                         Grid.Row="0"
                         Grid.Column="0"
-                        Width="150"
-                        Header="Audio"
-                        ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=OneWay}"
-                        SelectionChanged="AudioTrack_OnSelectionChanged">
-                        <muxc:RadioButtons.ItemTemplate>
-                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                <TextBlock Text="{x:Bind Name}" />
-                            </DataTemplate>
-                        </muxc:RadioButtons.ItemTemplate>
-                    </muxc:RadioButtons>
+                        FontWeight="SemiBold"
+                        Text="Audio" />
+                    <ScrollViewer
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        MinWidth="150"
+                        MaxWidth="220"
+                        MaxHeight="300"
+                        HorizontalScrollMode="Disabled">
+                        <muxc:RadioButtons
+                            ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}"
+                            SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=OneWay}"
+                            SelectionChanged="AudioTrack_OnSelectionChanged">
+                            <muxc:RadioButtons.ItemTemplate>
+                                <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                    <TextBlock Text="{x:Bind Name}" />
+                                </DataTemplate>
+                            </muxc:RadioButtons.ItemTemplate>
+                        </muxc:RadioButtons>
+                    </ScrollViewer>
 
-                    <muxc:RadioButtons
+                    <TextBlock
                         Grid.Row="0"
                         Grid.Column="1"
-                        Width="150"
-                        Header="Subtitles"
-                        ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=OneWay}"
-                        SelectionChanged="Subtitles_OnSelectionChanged">
-                        <muxc:RadioButtons.ItemTemplate>
-                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                <TextBlock Text="{x:Bind Name}" />
-                            </DataTemplate>
-                        </muxc:RadioButtons.ItemTemplate>
-                    </muxc:RadioButtons>
+                        FontWeight="SemiBold"
+                        Text="Subtitles" />
+                    <ScrollViewer
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        MinWidth="150"
+                        MaxWidth="220"
+                        MaxHeight="300"
+                        HorizontalScrollMode="Disabled">
+                        <muxc:RadioButtons
+                            ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}"
+                            SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=OneWay}"
+                            SelectionChanged="Subtitles_OnSelectionChanged">
+                            <muxc:RadioButtons.ItemTemplate>
+                                <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                    <TextBlock Text="{x:Bind Name}" />
+                                </DataTemplate>
+                            </muxc:RadioButtons.ItemTemplate>
+                        </muxc:RadioButtons>
+                    </ScrollViewer>
 
                     <Button
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Grid.Column="1"
                         Margin="0,12,0,0"
                         Content="Add subtitle" />
@@ -346,7 +366,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 AutomationProperties.AccessibilityView="Raw"
-                Foreground="{ThemeResource SystemAccentColor}"
+                Foreground="Orange"
                 IsIndeterminate="True"
                 Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
             <Slider
@@ -413,7 +433,7 @@
                 Grid.Row="1"
                 Grid.Column="2"
                 Orientation="Horizontal">
-                <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioSubtitlesFlyout}">
+                <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioCaptionFlyout}">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="C" />

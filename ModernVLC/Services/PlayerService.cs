@@ -143,7 +143,7 @@ namespace ModernVLC.Services
             Opening += OnStateChanged;
             Buffering += OnBuffering;
             MediaChanged += OnMediaChanged;
-            
+
             ShouldUpdateTime = true;
             BufferingProgress = 100;
             _volume = Volume;
@@ -164,7 +164,7 @@ namespace ModernVLC.Services
                 if (tracks[i].Id == id) return i;
             }
 
-             return -1;
+            return -1;
         }
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
