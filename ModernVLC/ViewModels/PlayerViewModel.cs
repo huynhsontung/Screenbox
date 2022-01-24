@@ -90,6 +90,7 @@ namespace ModernVLC.ViewModels
         }
 
         public Control VideoView { get; set; }
+        public Uri ToBeOpened { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer ControlsVisibilityTimer;
@@ -252,6 +253,7 @@ namespace ModernVLC.ViewModels
             RegisterMediaPlayerPlaybackEvents();
 
             ConfigureVideoViewManipulation();
+            if (ToBeOpened != null) Open(ToBeOpened);
         }
 
         public void ShowStatusMessage(string message)

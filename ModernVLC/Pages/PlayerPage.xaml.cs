@@ -12,6 +12,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,12 +23,21 @@ namespace ModernVLC.Pages
     /// </summary>
     public sealed partial class PlayerPage : Page
     {
-
         public PlayerPage()
         {
             this.InitializeComponent();
             RegisterEventHandlers();
             ConfigureTitleBar();
+        }
+
+        public void Open(Uri uri) => ViewModel.OpenCommand.Execute(uri);
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is Uri uri)
+            {
+                ViewModel.ToBeOpened = uri;
+            }
         }
 
         private void RegisterEventHandlers()
