@@ -13,7 +13,7 @@ namespace ModernVLC.ViewModels
             Vertical
         }
 
-        const double HorizontalChangePerPixel = 100;
+        const double HorizontalChangePerPixel = 200;
 
         private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;

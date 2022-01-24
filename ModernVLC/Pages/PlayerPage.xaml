@@ -284,9 +284,6 @@
                     <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.ToggleControlsVisibilityCommand}" />
                 </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="PointerMoved">
-                    <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="SizeChanged">
                     <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
@@ -406,6 +403,7 @@
                     Command="{x:Bind ViewModel.PlayPauseCommand}">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="P" />
+                        <KeyboardAccelerator Key="K" />
                         <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoView}" />
                     </Button.KeyboardAccelerators>
                     <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.ObservableIsPlaying), Mode=OneWay}" />
@@ -483,6 +481,9 @@
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Full" TargetObject="{x:Bind}" />
             </core:DataTriggerBehavior>
+            <core:EventTriggerBehavior EventName="PointerMoved">
+                <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
+            </core:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
