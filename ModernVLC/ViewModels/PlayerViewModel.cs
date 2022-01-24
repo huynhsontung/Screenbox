@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using ModernVLC.Converters;
 using ModernVLC.Services;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,6 +13,7 @@ using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Devices;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -71,6 +73,7 @@ namespace ModernVLC.ViewModels
             get => _controlsHidden;
             private set => SetProperty(ref _controlsHidden, value);
         }
+
         public bool ZoomToFit
         {
             get => _zoomToFit;
@@ -90,7 +93,9 @@ namespace ModernVLC.ViewModels
         }
 
         public Control VideoView { get; set; }
-        public Uri ToBeOpened { get; set; }
+        public object ToBeOpened { get; set; }
+
+        private LibVLC LibVLC => App.DerivedCurrent.LibVLC;
 
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer ControlsVisibilityTimer;
@@ -161,15 +166,31 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        private void Open(object value)
+        private async void Open(object value)
         {
-            var libVlc = App.DerivedCurrent.LibVLC;
-            var uri = value as Uri ?? (value is string path ? new Uri(path) : null);
-            if (uri == null) return;
+            Media media = null;
+            Uri uri = null;
+
+            if (value is StorageFile file)
+            {
+                var extension = file.FileType.ToLowerInvariant();
+                if (!file.IsAvailable || !FileService.SupportedFormats.Contains(extension)) return;
+                var stream = await file.OpenStreamForReadAsync();
+                media = new Media(LibVLC, new StreamMediaInput(stream));
+                uri = new Uri(file.Path);
+            }
+
+            if (value is Uri)
+            {
+                uri = (Uri)value;
+                media = new Media(LibVLC, uri);
+            }
+
+            if (media == null || uri == null) return;
 
             MediaTitle = uri.Segments.LastOrDefault();
             var oldMedia = _media;
-            var media = _media = new Media(libVlc, uri);
+            _media = media;
             media.ParsedChanged += OnMediaParsed;
             MediaPlayer.Play(media);
             oldMedia?.Dispose();

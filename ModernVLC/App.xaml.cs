@@ -47,17 +47,17 @@ namespace ModernVLC
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
+            var file = args.Files[0];
             // TODO: Handle multiple files (playlist)
-            var uri = new Uri(args.Files[0].Path);
             var rootFrame = InitRootFrame();
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
-                rootFrame.Navigate(typeof(PlayerPage), uri);
+                rootFrame.Navigate(typeof(PlayerPage), file);
             }
             else if (rootFrame.Content is PlayerPage playerPage)
             {
-                playerPage.Open(uri);
+                playerPage.Open(file);
             }
 
             Window.Current.Activate();

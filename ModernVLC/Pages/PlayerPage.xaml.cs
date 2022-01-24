@@ -2,11 +2,9 @@
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.UI.Xaml.Controls;
-using ModernVLC.Services;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -30,14 +28,11 @@ namespace ModernVLC.Pages
             ConfigureTitleBar();
         }
 
-        public void Open(Uri uri) => ViewModel.OpenCommand.Execute(uri);
+        public void Open(object target) => ViewModel.OpenCommand.Execute(target);
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter is Uri uri)
-            {
-                ViewModel.ToBeOpened = uri;
-            }
+            ViewModel.ToBeOpened = e.Parameter;
         }
 
         private void RegisterEventHandlers()
@@ -200,12 +195,7 @@ namespace ModernVLC.Pages
                 var items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    var storageItem = items[0] as StorageFile;
-                    var extension = storageItem.FileType;
-                    if (FileService.SupportedFormats.Contains(extension))
-                    {
-                        ViewModel.OpenCommand.Execute(storageItem.Path);
-                    }
+                    ViewModel.OpenCommand.Execute(items[0]);
                 }
             }
 
