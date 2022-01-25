@@ -404,6 +404,9 @@ namespace ModernVLC.ViewModels
         public void OnSizeChanged()
         {
             if (MediaPlayer == null) return;
+            var existingCropGeometry = MediaPlayer.CropGeometry;
+            if (ZoomToFit && existingCropGeometry != null) return;
+            if (!ZoomToFit && existingCropGeometry == null) return;
             MediaPlayer.CropGeometry = ZoomToFit ? $"{VideoView.ActualWidth}:{VideoView.ActualHeight}" : null;
         }
 
