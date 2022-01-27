@@ -1,7 +1,10 @@
-﻿using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Platforms.UWP;
+using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls;
 using ModernVLC.Converters;
 using ModernVLC.Services;
 using System;
@@ -9,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.Media;
@@ -20,6 +24,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Input;
 
 namespace ModernVLC.ViewModels
 {
@@ -261,12 +266,12 @@ namespace ModernVLC.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
-        public void Initialize(string[] swapChainOptions)
+        public void Initialize(object sender, InitializedEventArgs e)
         {
             var libVlc = App.DerivedCurrent.LibVLC;
             if (libVlc == null)
             {
-                App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, swapChainOptions);
+                App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, e.SwapChainOptions);
             }
             
             MediaPlayer = new PlayerService(libVlc);
@@ -381,7 +386,6 @@ namespace ModernVLC.ViewModels
             if (scaler <= 0) return false;
             var displayInformation = DisplayInformation.GetForCurrentView();
             var maxWidth = displayInformation.ScreenWidthInRawPixels;
-            var maxHeight = displayInformation.ScreenHeightInRawPixels;
             var view = ApplicationView.GetForCurrentView();
             var videoDimension = MediaPlayer.Dimension;
             if (!videoDimension.IsEmpty)
@@ -401,12 +405,15 @@ namespace ModernVLC.ViewModels
             return false;
         }
 
+        public void FocusVideoView()
+        {
+            VideoView.Focus(FocusState.Programmatic);
+        }
+
         public void OnSizeChanged()
         {
             if (MediaPlayer == null) return;
-            var existingCropGeometry = MediaPlayer.CropGeometry;
-            if (ZoomToFit && existingCropGeometry != null) return;
-            if (!ZoomToFit && existingCropGeometry == null) return;
+            if (!ZoomToFit && MediaPlayer.CropGeometry == null) return;
             MediaPlayer.CropGeometry = ZoomToFit ? $"{VideoView.ActualWidth}:{VideoView.ActualHeight}" : null;
         }
 
@@ -423,6 +430,133 @@ namespace ModernVLC.ViewModels
                 if (!MediaPlayer.ShouldUpdateTime) return;
                 DelayHideControls();
             }
+        }
+
+        public void OnDragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Link;
+            e.DragUIOverride.Caption = "Open";
+        }
+
+        public async void OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            {
+                var items = await e.DataView.GetStorageItemsAsync();
+                if (items.Count > 0)
+                {
+                    Open(items[0]);
+                }
+            }
+
+            if (e.DataView.Contains(StandardDataFormats.WebLink))
+            {
+                var uri = await e.DataView.GetWebLinkAsync();
+                if (uri.IsFile)
+                {
+                    Open(uri);
+                }
+            }
+        }
+
+        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint(VideoView);
+            var mouseWheelDelta = pointer.Properties.MouseWheelDelta;
+            ChangeVolume(mouseWheelDelta / 25.0);
+        }
+
+        public void OnProcessKeyboardAccelerators(object sender, ProcessKeyboardAcceleratorEventArgs args)
+        {
+            long seekAmount = 0;
+            int volumeChange = 0;
+            int direction = 0;
+
+            switch (args.Key)
+            {
+                case VirtualKey.Left:
+                    direction = -1;
+                    break;
+                case VirtualKey.Right:
+                    direction = 1;
+                    break;
+                case VirtualKey.Up:
+                    volumeChange = 10;
+                    break;
+                case VirtualKey.Down:
+                    volumeChange = -10;
+                    break;
+                case VirtualKey.Number1:
+                    SetWindowSize(0.25);
+                    return;
+                case VirtualKey.Number2:
+                    SetWindowSize(0.5);
+                    return;
+                case VirtualKey.Number3:
+                    SetWindowSize(0.75);
+                    return;
+                case VirtualKey.Number4:
+                    SetWindowSize(1);
+                    return;
+                case VirtualKey.Number5:
+                    SetWindowSize(1.25);
+                    return;
+                case VirtualKey.Number6:
+                    SetWindowSize(1.5);
+                    return;
+                case VirtualKey.Number7:
+                    SetWindowSize(1.75);
+                    return;
+                case VirtualKey.Number8:
+                    SetWindowSize(2);
+                    return;
+                case VirtualKey.Number9:
+                    SetWindowSize(4);
+                    return;
+                case (VirtualKey)190 when args.Modifiers == VirtualKeyModifiers.None:   // Period (".")
+                    JumpFrame(false);
+                    return;
+                case (VirtualKey)188 when args.Modifiers == VirtualKeyModifiers.None:   // Comma (",")
+                    JumpFrame(true);
+                    return;
+            }
+
+            switch (args.Modifiers)
+            {
+                case VirtualKeyModifiers.Control:
+                    seekAmount = 10000;
+                    break;
+                case VirtualKeyModifiers.Shift:
+                    seekAmount = 1000;
+                    break;
+                case VirtualKeyModifiers.None:
+                    seekAmount = 5000;
+                    break;
+            }
+
+            if (seekAmount * direction != 0)
+            {
+                Seek(seekAmount * direction);
+            }
+
+            if (volumeChange != 0)
+            {
+                ChangeVolume(volumeChange);
+            }
+        }
+
+        public void AudioTrack_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            SetAudioTrack(selected.Id);
+        }
+
+        public void Subtitles_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            SetSubtitle(selected.Id);
         }
 
         private void ShowControls()
