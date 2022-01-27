@@ -212,9 +212,7 @@ namespace ModernVLC.ViewModels
 
                 // Try some scaler to reach as close to 1.0 as possible.
                 // Due to UWP limitation, setting 1.0 size won't always work.
-                if (SetWindowSize(1.0)) return;
-                if (SetWindowSize(0.99)) return;
-                if (SetWindowSize(0.94)) return;
+                if (SetWindowSize()) return;
             });
         }
 
@@ -381,23 +379,41 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        public bool SetWindowSize(double scaler)
+        public bool SetWindowSize(double scalar = 0)
         {
-            if (scaler <= 0) return false;
+            if (scalar < 0) return false;
             var displayInformation = DisplayInformation.GetForCurrentView();
-            var maxWidth = displayInformation.ScreenWidthInRawPixels;
             var view = ApplicationView.GetForCurrentView();
+            var maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
+            var maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel;
+            if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
+            {
+                var displayRegion = view.GetDisplayRegions()[0];
+                maxWidth = (uint)displayRegion.WorkAreaSize.Width;
+                maxHeight = (uint)displayRegion.WorkAreaSize.Height;
+            }
+
+            maxHeight -= 16;
+            maxWidth -= 16;
+
             var videoDimension = MediaPlayer.Dimension;
             if (!videoDimension.IsEmpty)
             {
+                if (scalar == 0)
+                {
+                    var widthRatio = maxWidth / videoDimension.Width ;
+                    var heightRatio = maxHeight / videoDimension.Height;
+                    scalar = Math.Min(widthRatio, heightRatio);
+                }
+
                 var aspectRatio = videoDimension.Width / videoDimension.Height;
-                var newWidth = videoDimension.Width * scaler;
+                var newWidth = videoDimension.Width * scalar;
                 if (newWidth > maxWidth) newWidth = maxWidth;
                 var newHeight = newWidth / aspectRatio;
-                scaler = newWidth / videoDimension.Width;
+                scalar = newWidth / videoDimension.Width;
                 if (view.TryResizeView(new Size(newWidth, newHeight)))
                 {
-                    ShowStatusMessage($"Scale {scaler * scaler * 100:0.##}%");
+                    ShowStatusMessage($"Scale {scalar * scalar * 100:0.##}%");
                     return true;
                 }
             }
@@ -500,6 +516,7 @@ namespace ModernVLC.ViewModels
                 case VirtualKey.NumberPad9:
                     SetTime(MediaPlayer.Length * (0.1 * (args.Key - VirtualKey.NumberPad0)));
                     break;
+                case VirtualKey.Number0:
                 case VirtualKey.Number1:
                 case VirtualKey.Number2:
                 case VirtualKey.Number3:
