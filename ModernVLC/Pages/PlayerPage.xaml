@@ -397,13 +397,9 @@
                 Value="{x:Bind ViewModel.MediaPlayer.ObservableTime, Mode=TwoWay}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="ValueChanged">
-                        <core:InvokeCommandAction Command="{x:Bind ViewModel.SetTimeCommand}" />
+                        <core:CallMethodAction MethodName="OnSeekBarValueChanged" TargetObject="{x:Bind ViewModel}" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-
-                <!--<ToolTipService.ToolTip>
-                    <ToolTip x:Name="SeekBarToolTip" PlacementRect="0,8,500,32" />
-                </ToolTipService.ToolTip>-->
             </Slider>
 
             <StackPanel

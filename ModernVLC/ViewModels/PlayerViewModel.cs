@@ -128,7 +128,7 @@ namespace ModernVLC.ViewModels
             BufferingTimer = DispatcherQueue.CreateTimer();
             PlayPauseCommand = new RelayCommand(PlayPause);
             SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
-            SetTimeCommand = new RelayCommand<RangeBaseValueChangedEventArgs>(SetTime);
+            SetTimeCommand = new RelayCommand<double>(SetTime);
             ChangeVolumeCommand = new RelayCommand<double>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
@@ -475,9 +475,11 @@ namespace ModernVLC.ViewModels
             switch (args.Key)
             {
                 case VirtualKey.Left:
+                case VirtualKey.J:
                     direction = -1;
                     break;
                 case VirtualKey.Right:
+                case VirtualKey.L:
                     direction = 1;
                     break;
                 case VirtualKey.Up:
@@ -486,29 +488,27 @@ namespace ModernVLC.ViewModels
                 case VirtualKey.Down:
                     volumeChange = -10;
                     break;
+                case VirtualKey.NumberPad0:
+                case VirtualKey.NumberPad1:
+                case VirtualKey.NumberPad2:
+                case VirtualKey.NumberPad3:
+                case VirtualKey.NumberPad4:
+                case VirtualKey.NumberPad5:
+                case VirtualKey.NumberPad6:
+                case VirtualKey.NumberPad7:
+                case VirtualKey.NumberPad8:
+                case VirtualKey.NumberPad9:
+                    SetTime(MediaPlayer.Length * (0.1 * (args.Key - VirtualKey.NumberPad0)));
+                    break;
                 case VirtualKey.Number1:
-                    SetWindowSize(0.25);
-                    return;
                 case VirtualKey.Number2:
-                    SetWindowSize(0.5);
-                    return;
                 case VirtualKey.Number3:
-                    SetWindowSize(0.75);
-                    return;
                 case VirtualKey.Number4:
-                    SetWindowSize(1);
-                    return;
                 case VirtualKey.Number5:
-                    SetWindowSize(1.25);
-                    return;
                 case VirtualKey.Number6:
-                    SetWindowSize(1.5);
-                    return;
                 case VirtualKey.Number7:
-                    SetWindowSize(1.75);
-                    return;
                 case VirtualKey.Number8:
-                    SetWindowSize(2);
+                    SetWindowSize(0.25 * (args.Key - VirtualKey.Number0));
                     return;
                 case VirtualKey.Number9:
                     SetWindowSize(4);
@@ -593,20 +593,27 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        private void SetTime(RangeBaseValueChangedEventArgs args)
+        private void SetTime(double time)
+        {
+            if (!MediaPlayer.IsSeekable || time < 0 || time > MediaPlayer.Length) return;
+            if (MediaPlayer.State == VLCState.Ended)
+            {
+                MediaPlayer.Replay();
+            }
+
+            MediaPlayer.Time = (long)time;
+        }
+
+        public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
         {
             if (MediaPlayer.IsSeekable)
             {
+                double newTime = args.NewValue;
                 if ((args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying) ||
                     !MediaPlayer.ShouldUpdateTime &&
-                    args.NewValue != MediaPlayer.Length)
+                    newTime != MediaPlayer.Length)
                 {
-                    if (MediaPlayer.State == VLCState.Ended)
-                    {
-                        MediaPlayer.Replay();
-                    }
-
-                    MediaPlayer.Time = (long)args.NewValue;
+                    SetTime(newTime);
                 }
             }
         }
