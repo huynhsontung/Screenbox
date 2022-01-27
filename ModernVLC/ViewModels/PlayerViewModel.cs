@@ -545,20 +545,6 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        public void AudioTrack_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems[0] == null) return;
-            var selected = (TrackDescription)args.AddedItems[0];
-            SetAudioTrack(selected.Id);
-        }
-
-        public void Subtitles_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
-        {
-            if (args.AddedItems[0] == null) return;
-            var selected = (TrackDescription)args.AddedItems[0];
-            SetSubtitle(selected.Id);
-        }
-
         private void ShowControls()
         {
             ShowCursor();

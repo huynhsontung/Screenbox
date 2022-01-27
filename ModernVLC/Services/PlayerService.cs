@@ -176,8 +176,8 @@ namespace ModernVLC.Services
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
             NotifyPropertyChanged(nameof(ObservableSpuDescription));
-            NotifyPropertyChanged(nameof(SpuIndex));
             NotifyPropertyChanged(nameof(ObservableAudioTrackDescription));
+            NotifyPropertyChanged(nameof(SpuIndex));
             NotifyPropertyChanged(nameof(AudioTrackIndex));
         }
 

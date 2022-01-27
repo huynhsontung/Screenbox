@@ -79,7 +79,7 @@
                 </StackPanel>
             </Flyout>
 
-            <Flyout x:Key="AudioCaptionFlyout">
+            <Flyout x:Key="AudioCaptionFlyout" Opened="AudioCaptionFlyout_Opened">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -103,15 +103,15 @@
                         MaxWidth="220"
                         MaxHeight="300"
                         HorizontalScrollMode="Disabled">
-                        <muxc:RadioButtons ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=OneWay}">
+                        <muxc:RadioButtons
+                            x:Name="AudioTrackSelector"
+                            ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableAudioTrackDescription, Mode=OneWay}"
+                            SelectionChanged="AudioTrack_OnSelectionChanged">
                             <muxc:RadioButtons.ItemTemplate>
                                 <DataTemplate x:DataType="libvlcstructs:TrackDescription">
                                     <TextBlock Text="{x:Bind Name}" />
                                 </DataTemplate>
                             </muxc:RadioButtons.ItemTemplate>
-                            <core:EventTriggerBehavior EventName="SelectionChanged">
-                                <core:CallMethodAction MethodName="AudioTrack_OnSelectionChanged" TargetObject="{x:Bind ViewModel}" />
-                            </core:EventTriggerBehavior>
                         </muxc:RadioButtons>
                     </ScrollViewer>
 
@@ -127,15 +127,15 @@
                         MaxWidth="220"
                         MaxHeight="300"
                         HorizontalScrollMode="Disabled">
-                        <muxc:RadioButtons ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}" SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=OneWay}">
+                        <muxc:RadioButtons
+                            x:Name="SubtitleSelector"
+                            ItemsSource="{x:Bind ViewModel.MediaPlayer.ObservableSpuDescription, Mode=OneWay}"
+                            SelectionChanged="Subtitles_OnSelectionChanged">
                             <muxc:RadioButtons.ItemTemplate>
                                 <DataTemplate x:DataType="libvlcstructs:TrackDescription">
                                     <TextBlock Text="{x:Bind Name}" />
                                 </DataTemplate>
                             </muxc:RadioButtons.ItemTemplate>
-                            <core:EventTriggerBehavior EventName="SelectionChanged">
-                                <core:CallMethodAction MethodName="Subtitles_OnSelectionChanged" TargetObject="{x:Bind ViewModel}" />
-                            </core:EventTriggerBehavior>
                         </muxc:RadioButtons>
                     </ScrollViewer>
 

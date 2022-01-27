@@ -56,6 +56,20 @@ namespace ModernVLC.Pages
             view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
         }
 
+        private void AudioTrack_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            ViewModel.SetAudioTrackCommand.Execute(selected.Id);
+        }
+
+        private void Subtitles_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
+        {
+            if (args.AddedItems[0] == null) return;
+            var selected = (TrackDescription)args.AddedItems[0];
+            ViewModel.SetSubtitleCommand.Execute(selected.Id);
+        }
+
         private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
         {
             var item = (RadioMenuFlyoutItem)sender;
@@ -72,5 +86,12 @@ namespace ModernVLC.Pages
 
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
             state == VLCState.Buffering || state == VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
+
+        private void AudioCaptionFlyout_Opened(object sender, object e)
+        {
+            // Binding does not work after the flyout is opened once
+            SubtitleSelector.SelectedIndex = ViewModel.MediaPlayer.SpuIndex;
+            AudioTrackSelector.SelectedIndex = ViewModel.MediaPlayer.AudioTrackIndex;
+        }
     }
 }
