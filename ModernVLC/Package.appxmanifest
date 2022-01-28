@@ -10,8 +10,8 @@
 
   <Identity
     Name="04cbdd55-e1b2-4eeb-84f3-fdefa70bda6e"
-    Publisher="CN=tung7"
-    Version="1.0.0.0" />
+    Publisher="CN=Tung Huynh"
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="04cbdd55-e1b2-4eeb-84f3-fdefa70bda6e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

@@ -191,7 +191,11 @@ namespace ModernVLC.ViewModels
                 media = new Media(LibVLC, uri);
             }
 
-            if (media == null || uri == null) return;
+            if (media == null || uri == null)
+            {
+                media?.Dispose();
+                return;
+            }
 
             MediaTitle = uri.Segments.LastOrDefault();
             var oldMedia = _media;
@@ -205,14 +209,8 @@ namespace ModernVLC.ViewModels
         {
             DispatcherQueue.TryEnqueue(() =>
             {
-                var dimension = MediaPlayer.Dimension;
-                var view = ApplicationView.GetForCurrentView();
-                if (view.VisibleBounds.Width >= dimension.Width ||
-                    view.VisibleBounds.Height >= dimension.Height) return;
-
-                // Try some scaler to reach as close to 1.0 as possible.
-                // Due to UWP limitation, setting 1.0 size won't always work.
-                if (SetWindowSize()) return;
+                if (SetWindowSize(1)) return;
+                SetWindowSize();
             });
         }
 
@@ -385,7 +383,7 @@ namespace ModernVLC.ViewModels
             var displayInformation = DisplayInformation.GetForCurrentView();
             var view = ApplicationView.GetForCurrentView();
             var maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
-            var maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel;
+            var maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
             {
                 var displayRegion = view.GetDisplayRegions()[0];
@@ -413,7 +411,7 @@ namespace ModernVLC.ViewModels
                 scalar = newWidth / videoDimension.Width;
                 if (view.TryResizeView(new Size(newWidth, newHeight)))
                 {
-                    ShowStatusMessage($"Scale {scalar * scalar * 100:0.##}%");
+                    ShowStatusMessage($"Scale {scalar * 100:0.##}%");
                     return true;
                 }
             }
