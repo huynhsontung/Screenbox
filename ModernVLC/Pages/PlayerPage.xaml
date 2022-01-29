@@ -22,9 +22,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Controls/NoAnimationProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <libvlcshared:VLCState x:Key="VLCPlayingState">Playing</libvlcshared:VLCState>
-            <x:Double x:Key="HeaderOffsetAmount">-76</x:Double>
-            <x:Double x:Key="PlayerControlsOffsetAmount">104</x:Double>
 
             <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
@@ -271,7 +268,70 @@
             Canvas.ZIndex="0"
             ContextFlyout="{StaticResource VideoContextMenu}"
             IsTabStop="True"
+            KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            <lvs:VideoView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Modifiers="Control"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Modifiers="Shift"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Modifiers="Control"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Modifiers="Shift"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Up"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator
+                    Key="Down"
+                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    ScopeOwner="{x:Bind VideoView}" />
+                <KeyboardAccelerator Key="J" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="L" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number0" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number1" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number2" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number3" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number4" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number5" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number6" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number7" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number8" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="Number9" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad0" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad1" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad2" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad3" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad4" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad5" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad6" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad7" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad8" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="NumberPad9" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="{x:Bind PeriodKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="{x:Bind CommaKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
+            </lvs:VideoView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Unloaded">
                     <core:CallMethodAction MethodName="Dispose" TargetObject="{x:Bind ViewModel}" />
@@ -291,9 +351,6 @@
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Initialized">
                     <core:CallMethodAction MethodName="Initialize" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ProcessKeyboardAccelerators">
-                    <core:CallMethodAction MethodName="OnProcessKeyboardAccelerators" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="PointerWheelChanged">
                     <core:CallMethodAction MethodName="OnPointerWheelChanged" TargetObject="{x:Bind ViewModel}" />

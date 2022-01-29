@@ -131,8 +131,8 @@ namespace ModernVLC.ViewModels
             SetTimeCommand = new RelayCommand<double>(SetTime);
             ChangeVolumeCommand = new RelayCommand<double>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
-            SetAudioTrackCommand = new RelayCommand<int>(SetAudioTrack);
-            SetSubtitleCommand = new RelayCommand<int>(SetSubtitle);
+            SetAudioTrackCommand = new RelayCommand<TrackDescription>(SetAudioTrack);
+            SetSubtitleCommand = new RelayCommand<TrackDescription>(SetSubtitle);
             SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
             OpenCommand = new RelayCommand<object>(Open);
             ToggleControlsVisibilityCommand = new RelayCommand(ToggleControlsVisibility);
@@ -222,16 +222,18 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        private void SetSubtitle(int index)
+        private void SetSubtitle(TrackDescription subtitleTrack)
         {
+            var index = subtitleTrack.Id;
             if (MediaPlayer.Spu != index)
             {
                 MediaPlayer.SetSpu(index);
             }
         }
 
-        private void SetAudioTrack(int index)
+        private void SetAudioTrack(TrackDescription audioTrack)
         {
+            var index= audioTrack.Id;
             if (MediaPlayer.AudioTrack != index)
             {
                 MediaPlayer.SetAudioTrack(index);
@@ -480,26 +482,28 @@ namespace ModernVLC.ViewModels
             ChangeVolume(mouseWheelDelta / 25.0);
         }
 
-        public void OnProcessKeyboardAccelerators(object sender, ProcessKeyboardAcceleratorEventArgs args)
+        public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            args.Handled = true;
             long seekAmount = 0;
             int volumeChange = 0;
             int direction = 0;
+            var key = sender.Key;
 
-            switch (args.Key)
+            switch (key)
             {
-                case VirtualKey.Left:
+                case VirtualKey.Left when VideoView.FocusState != FocusState.Unfocused:
                 case VirtualKey.J:
                     direction = -1;
                     break;
-                case VirtualKey.Right:
+                case VirtualKey.Right when VideoView.FocusState != FocusState.Unfocused:
                 case VirtualKey.L:
                     direction = 1;
                     break;
-                case VirtualKey.Up:
+                case VirtualKey.Up when VideoView.FocusState != FocusState.Unfocused:
                     volumeChange = 10;
                     break;
-                case VirtualKey.Down:
+                case VirtualKey.Down when VideoView.FocusState != FocusState.Unfocused:
                     volumeChange = -10;
                     break;
                 case VirtualKey.NumberPad0:
@@ -512,7 +516,7 @@ namespace ModernVLC.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    SetTime(MediaPlayer.Length * (0.1 * (args.Key - VirtualKey.NumberPad0)));
+                    SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
                     break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
@@ -523,20 +527,20 @@ namespace ModernVLC.ViewModels
                 case VirtualKey.Number6:
                 case VirtualKey.Number7:
                 case VirtualKey.Number8:
-                    SetWindowSize(0.25 * (args.Key - VirtualKey.Number0));
+                    SetWindowSize(0.25 * (key - VirtualKey.Number0));
                     return;
                 case VirtualKey.Number9:
                     SetWindowSize(4);
                     return;
-                case (VirtualKey)190 when args.Modifiers == VirtualKeyModifiers.None:   // Period (".")
+                case (VirtualKey)190:   // Period (".")
                     JumpFrame(false);
                     return;
-                case (VirtualKey)188 when args.Modifiers == VirtualKeyModifiers.None:   // Comma (",")
+                case (VirtualKey)188:   // Comma (",")
                     JumpFrame(true);
                     return;
             }
 
-            switch (args.Modifiers)
+            switch (sender.Modifiers)
             {
                 case VirtualKeyModifiers.Control:
                     seekAmount = 10000;

@@ -21,6 +21,9 @@ namespace ModernVLC.Pages
     /// </summary>
     public sealed partial class PlayerPage : Page
     {
+        private readonly VirtualKey PeriodKey = (VirtualKey)190;
+        private readonly VirtualKey CommaKey = (VirtualKey)188;
+
         public PlayerPage()
         {
             this.InitializeComponent();
@@ -58,16 +61,14 @@ namespace ModernVLC.Pages
 
         private void AudioTrack_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
-            if (args.AddedItems[0] == null) return;
-            var selected = (TrackDescription)args.AddedItems[0];
-            ViewModel.SetAudioTrackCommand.Execute(selected.Id);
+            if (args.AddedItems[0] == null) return;   
+            ViewModel.SetAudioTrackCommand.Execute(args.AddedItems[0]);
         }
 
         private void Subtitles_OnSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             if (args.AddedItems[0] == null) return;
-            var selected = (TrackDescription)args.AddedItems[0];
-            ViewModel.SetSubtitleCommand.Execute(selected.Id);
+            ViewModel.SetSubtitleCommand.Execute(args.AddedItems[0]);
         }
 
         private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
@@ -86,6 +87,9 @@ namespace ModernVLC.Pages
 
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
             state == VLCState.Buffering || state == VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
+
+        private void ProcessVideoViewKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) =>
+            ViewModel.ProcessKeyboardAccelerators(sender, args);
 
         private void AudioCaptionFlyout_Opened(object sender, object e)
         {
