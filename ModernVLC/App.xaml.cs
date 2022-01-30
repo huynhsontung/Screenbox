@@ -1,5 +1,6 @@
 ﻿using LibVLCSharp.Shared;
 using ModernVLC.Pages;
+using ModernVLC.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,6 +38,17 @@ namespace ModernVLC
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+        }
+
+        public LibVLC InitializeLibVLC(string[] swapChainOptions)
+        {
+            if (LibVLC == null)
+            {
+                LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
+                LibVLC.RegisterLogsHandler();
+            }
+
+            return LibVLC;
         }
 
         private void SetMinWindowSize()

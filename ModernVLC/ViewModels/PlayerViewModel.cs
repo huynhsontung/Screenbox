@@ -266,11 +266,7 @@ namespace ModernVLC.ViewModels
 
         public void Initialize(object sender, InitializedEventArgs e)
         {
-            var libVlc = App.DerivedCurrent.LibVLC;
-            if (libVlc == null)
-            {
-                App.DerivedCurrent.LibVLC = libVlc = new LibVLC(enableDebugLogs: true, e.SwapChainOptions);
-            }
+            var libVlc = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
             
             MediaPlayer = new PlayerService(libVlc);
             MediaPlayer.PropertyChanged += MediaPlayer_PropertyChanged;
