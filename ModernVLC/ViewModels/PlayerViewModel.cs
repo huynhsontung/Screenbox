@@ -1,10 +1,10 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.UI.Xaml.Controls;
 using ModernVLC.Converters;
 using ModernVLC.Services;
 using System;
@@ -30,7 +30,7 @@ namespace ModernVLC.ViewModels
 {
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
-        public ICommand PlayPauseCommand { get; private set; }
+        public RelayCommand PlayPauseCommand { get; private set; }
         public ICommand SeekCommand { get; private set; }
         public ICommand SetTimeCommand { get; private set; }
         public ICommand FullscreenCommand { get; private set; }
@@ -43,10 +43,10 @@ namespace ModernVLC.ViewModels
         public ICommand ToggleControlsVisibilityCommand { get; private set; }
         public ICommand ToggleCompactLayoutCommand { get; private set; }
 
-        public PlayerService MediaPlayer
+        public MediaPlayer MediaPlayer
         {
             get => _mediaPlayer;
-            set => SetProperty(ref _mediaPlayer, value);
+            private set => SetProperty(ref _mediaPlayer, value);
         }
 
         public string MediaTitle
@@ -100,16 +100,16 @@ namespace ModernVLC.ViewModels
         public Control VideoView { get; set; }
         public object ToBeOpened { get; set; }
 
-        private LibVLC LibVLC => App.DerivedCurrent.LibVLC;
-
         private readonly DispatcherQueue DispatcherQueue;
         private readonly DispatcherQueueTimer ControlsVisibilityTimer;
         private readonly DispatcherQueueTimer StatusMessageTimer;
         private readonly DispatcherQueueTimer BufferingTimer;
         private readonly SystemMediaTransportControls TransportControl;
+        private readonly IFilesService FilesService;
+        private LibVLC _libVLC;
         private Media _media;
         private string _mediaTitle;
-        private PlayerService _mediaPlayer;
+        private MediaPlayer _mediaPlayer;
         private bool _isFullscreen;
         private bool _controlsHidden;
         private CoreCursor _cursor;
@@ -119,15 +119,16 @@ namespace ModernVLC.ViewModels
         private bool _zoomToFit;
         private bool _bufferingVisible;
 
-        public PlayerViewModel()
+        public PlayerViewModel(IFilesService filesService)
         {
+            FilesService = filesService;
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
             StatusMessageTimer = DispatcherQueue.CreateTimer();
             BufferingTimer = DispatcherQueue.CreateTimer();
-            PlayPauseCommand = new RelayCommand(PlayPause);
-            SeekCommand = new RelayCommand<long>(Seek, (long _) => MediaPlayer.IsSeekable);
+            PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
+            SeekCommand = new RelayCommand<long>(Seek);
             SetTimeCommand = new RelayCommand<double>(SetTime);
             ChangeVolumeCommand = new RelayCommand<double>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
@@ -141,12 +142,13 @@ namespace ModernVLC.ViewModels
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
+            PropertyChanged += MediaPlayer_PropertyChanged;
         }
 
         private void ChangeVolume(double changeAmount)
         {
-            MediaPlayer.ObservableVolume += changeAmount;
-            ShowStatusMessage($"Volume {MediaPlayer.ObservableVolume:F0}%");
+            Volume += changeAmount;
+            ShowStatusMessage($"Volume {Volume:F0}%");
         }
 
         private async void ToggleCompactLayout()
@@ -163,7 +165,7 @@ namespace ModernVLC.ViewModels
             {
                 var preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
                 preferences.ViewSizePreference = ViewSizePreference.Custom;
-                preferences.CustomSize = new Size(240 * (MediaPlayer.NumericAspectRatio ?? 1), 240);
+                preferences.CustomSize = new Size(240 * (NumericAspectRatio ?? 1), 240);
                 if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
                 {
                     IsCompact = true;
@@ -179,16 +181,16 @@ namespace ModernVLC.ViewModels
             if (value is StorageFile file)
             {
                 var extension = file.FileType.ToLowerInvariant();
-                if (!file.IsAvailable || !FileService.SupportedFormats.Contains(extension)) return;
+                if (!file.IsAvailable || !FilesService.SupportedFormats.Contains(extension)) return;
                 var stream = await file.OpenStreamForReadAsync();
-                media = new Media(LibVLC, new StreamMediaInput(stream));
+                media = new Media(_libVLC, new StreamMediaInput(stream));
                 uri = new Uri(file.Path);
             }
 
             if (value is Uri)
             {
                 uri = (Uri)value;
-                media = new Media(LibVLC, uri);
+                media = new Media(_libVLC, uri);
             }
 
             if (media == null || uri == null)
@@ -202,6 +204,7 @@ namespace ModernVLC.ViewModels
             _media = media;
             media.ParsedChanged += OnMediaParsed;
             MediaPlayer.Play(media);
+            PlayPauseCommand.NotifyCanExecuteChanged();
             oldMedia?.Dispose();
         }
 
@@ -266,10 +269,12 @@ namespace ModernVLC.ViewModels
 
         public void Initialize(object sender, InitializedEventArgs e)
         {
-            var libVlc = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
-            
-            MediaPlayer = new PlayerService(libVlc);
-            MediaPlayer.PropertyChanged += MediaPlayer_PropertyChanged;
+            // Due to LibVLC 3.x limitation, have to manually set swap chain options here.
+            App.DerivedCurrent.SwapChainOptions = e.SwapChainOptions;
+
+            _libVLC = App.Services.GetRequiredService<LibVLC>();
+            MediaPlayer = App.Services.GetRequiredService<MediaPlayer>();
+            InitMediaPlayer();
             RegisterMediaPlayerPlaybackEvents();
 
             ConfigureVideoViewManipulation();
@@ -284,23 +289,23 @@ namespace ModernVLC.ViewModels
 
         private void MediaPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(PlayerService.ObservableState))
+            if (e.PropertyName == nameof(PlayerState))
             {
-                if (ControlsHidden && MediaPlayer.ObservableState != VLCState.Playing)
+                if (ControlsHidden && PlayerState != VLCState.Playing)
                 {
                     ShowControls();
                 }
 
-                if (!ControlsHidden && MediaPlayer.ObservableState == VLCState.Playing)
+                if (!ControlsHidden && PlayerState == VLCState.Playing)
                 {
                     DelayHideControls();
                 }
             }
 
-            if (e.PropertyName == nameof(PlayerService.BufferingProgress))
+            if (e.PropertyName == nameof(BufferingProgress))
             {
                 BufferingTimer.Debounce(
-                    () => BufferingVisible = MediaPlayer.BufferingProgress < 100,
+                    () => BufferingVisible = BufferingProgress < 100,
                     TimeSpan.FromSeconds(0.5));
             }
         }
@@ -308,7 +313,6 @@ namespace ModernVLC.ViewModels
         public void Dispose()
         {
             _media?.Dispose();
-            MediaPlayer.Dispose();
             TransportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
         }
 
@@ -326,7 +330,7 @@ namespace ModernVLC.ViewModels
 
             if (MediaPlayer.State == VLCState.Ended)
             {
-                MediaPlayer.Replay();
+                Replay();
             }
         }
 
@@ -341,7 +345,7 @@ namespace ModernVLC.ViewModels
 
         public void SetInteracting(bool interacting)
         {
-            MediaPlayer.ShouldUpdateTime = !interacting;
+            ShouldUpdateTime = !interacting;
         }
 
         public bool JumpFrame(bool previous = false)
@@ -350,7 +354,7 @@ namespace ModernVLC.ViewModels
             {
                 if (previous)
                 {
-                    MediaPlayer.Time -= MediaPlayer.FrameDuration;
+                    MediaPlayer.Time -= FrameDuration;
                 }
                 else
                 {
@@ -392,7 +396,7 @@ namespace ModernVLC.ViewModels
             maxHeight -= 16;
             maxWidth -= 16;
 
-            var videoDimension = MediaPlayer.Dimension;
+            var videoDimension = Dimension;
             if (!videoDimension.IsEmpty)
             {
                 if (scalar == 0)
@@ -439,7 +443,7 @@ namespace ModernVLC.ViewModels
                     ControlsHidden = false;
                 }
 
-                if (!MediaPlayer.ShouldUpdateTime) return;
+                if (!ShouldUpdateTime) return;
                 DelayHideControls();
             }
         }
@@ -613,7 +617,7 @@ namespace ModernVLC.ViewModels
             if (!MediaPlayer.IsSeekable || time < 0 || time > MediaPlayer.Length) return;
             if (MediaPlayer.State == VLCState.Ended)
             {
-                MediaPlayer.Replay();
+                Replay();
             }
 
             MediaPlayer.Time = (long)time;
@@ -625,7 +629,7 @@ namespace ModernVLC.ViewModels
             {
                 double newTime = args.NewValue;
                 if ((args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying) ||
-                    !MediaPlayer.ShouldUpdateTime &&
+                    !ShouldUpdateTime &&
                     newTime != MediaPlayer.Length)
                 {
                     SetTime(newTime);

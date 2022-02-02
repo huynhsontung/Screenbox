@@ -32,7 +32,7 @@ namespace ModernVLC.ViewModels
         private void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             StatusMessage = null;
-            MediaPlayer.ShouldUpdateTime = true;
+            ShouldUpdateTime = true;
         }
 
         private void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -47,21 +47,21 @@ namespace ModernVLC.ViewModels
                 (_lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50))
             {
                 _lockDirection = ManipulationLock.Vertical;
-                MediaPlayer.ObservableVolume += -verticalChange;
-                StatusMessage = $"Volume {MediaPlayer.ObservableVolume:F0}%";
+                Volume += -verticalChange;
+                StatusMessage = $"Volume {MediaPlayer.Volume:F0}%";
                 return;
             }
 
             if (MediaPlayer.IsSeekable)
             {
                 _lockDirection = ManipulationLock.Horizontal;
-                MediaPlayer.ShouldUpdateTime = false;
+                ShouldUpdateTime = false;
                 var timeChange = horizontalChange * HorizontalChangePerPixel;
-                MediaPlayer.ObservableTime += timeChange;
+                Time += timeChange;
 
-                var changeText = HumanizedDurationConverter.Convert(MediaPlayer.ObservableTime - _timeBeforeManipulation);
+                var changeText = HumanizedDurationConverter.Convert(MediaPlayer.Time - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
-                StatusMessage = $"{HumanizedDurationConverter.Convert(MediaPlayer.ObservableTime)} ({changeText})";
+                StatusMessage = $"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} ({changeText})";
             }
         }
 

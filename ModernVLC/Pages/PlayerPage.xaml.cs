@@ -1,7 +1,9 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using ModernVLC.ViewModels;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
@@ -24,9 +26,13 @@ namespace ModernVLC.Pages
         private readonly VirtualKey PeriodKey = (VirtualKey)190;
         private readonly VirtualKey CommaKey = (VirtualKey)188;
 
+        private PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
+
         public PlayerPage()
         {
+            DataContext = App.Services.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
+            ViewModel.VideoView = VideoView;
             RegisterEventHandlers();
             ConfigureTitleBar();
         }
@@ -94,8 +100,8 @@ namespace ModernVLC.Pages
         private void AudioCaptionFlyout_Opened(object sender, object e)
         {
             // Binding does not work after the flyout is opened once
-            SubtitleSelector.SelectedIndex = ViewModel.MediaPlayer.SpuIndex;
-            AudioTrackSelector.SelectedIndex = ViewModel.MediaPlayer.AudioTrackIndex;
+            SubtitleSelector.SelectedIndex = ViewModel.SpuIndex;
+            AudioTrackSelector.SelectedIndex = ViewModel.AudioTrackIndex;
         }
     }
 }

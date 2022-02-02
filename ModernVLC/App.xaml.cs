@@ -1,6 +1,8 @@
 ﻿using LibVLCSharp.Shared;
+using Microsoft.Extensions.DependencyInjection;
 using ModernVLC.Pages;
 using ModernVLC.Services;
+using ModernVLC.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +30,11 @@ namespace ModernVLC
     {
         public static App DerivedCurrent => (App)Current;
 
-        public LibVLC LibVLC { get; set; }
+        public static IServiceProvider Services => DerivedCurrent._services;
+
+        public string[] SwapChainOptions { get; set; }
+
+        private readonly IServiceProvider _services;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -36,19 +42,22 @@ namespace ModernVLC
         /// </summary>
         public App()
         {
+            _services = ConfigureServices();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
-        public LibVLC InitializeLibVLC(string[] swapChainOptions)
+        private IServiceProvider ConfigureServices()
         {
-            if (LibVLC == null)
-            {
-                LibVLC = new LibVLC(enableDebugLogs: true, swapChainOptions);
-                LibVLC.RegisterLogsHandler();
-            }
+            var services = new ServiceCollection();
 
-            return LibVLC;
+            services.AddTransient<PlayerViewModel>();
+
+            services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<LibVLC>(sp => new LibVLCService(true, SwapChainOptions));
+            services.AddSingleton<MediaPlayer>();
+
+            return services.BuildServiceProvider();
         }
 
         private void SetMinWindowSize()

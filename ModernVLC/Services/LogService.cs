@@ -16,17 +16,5 @@ namespace ModernVLC.Services
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
         }
-
-        public static void RegisterLogsHandler(this LibVLC libVLC)
-        {
-#if DEBUG
-            libVLC.Log += LibVLC_Log;
-#endif
-        }
-
-        private static void LibVLC_Log(object sender, LogEventArgs e)
-        {
-            Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - LibVLC]: {e.FormattedLog}");
-        }
     }
 }
