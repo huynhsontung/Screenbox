@@ -26,18 +26,15 @@ namespace ModernVLC.Pages
         private readonly VirtualKey PeriodKey = (VirtualKey)190;
         private readonly VirtualKey CommaKey = (VirtualKey)188;
 
-        private PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
+        internal PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
 
         public PlayerPage()
         {
             DataContext = App.Services.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
-            ViewModel.VideoView = VideoView;
             RegisterEventHandlers();
             ConfigureTitleBar();
         }
-
-        public void Open(object target) => ViewModel.OpenCommand.Execute(target);
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -46,8 +43,8 @@ namespace ModernVLC.Pages
 
         private void RegisterEventHandlers()
         {
-            PointerEventHandler pointerPressedEventHandler = (s, e) => ViewModel.SetInteracting(true);
-            PointerEventHandler pointerReleasedEventHandler = (s, e) => ViewModel.SetInteracting(false);
+            PointerEventHandler pointerPressedEventHandler = (s, e) => ViewModel.ShouldUpdateTime = false;
+            PointerEventHandler pointerReleasedEventHandler = (s, e) => ViewModel.ShouldUpdateTime = true;
             SeekBar.AddHandler(PointerPressedEvent, pointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, pointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, pointerReleasedEventHandler, true);
@@ -99,9 +96,16 @@ namespace ModernVLC.Pages
 
         private void AudioCaptionFlyout_Opened(object sender, object e)
         {
+            Flyout_Opened(sender, e);
             // Binding does not work after the flyout is opened once
             SubtitleSelector.SelectedIndex = ViewModel.SpuIndex;
             AudioTrackSelector.SelectedIndex = ViewModel.AudioTrackIndex;
         }
+
+        private void Flyout_Opened(object sender, object e) => ViewModel.FlyoutOpened = true;
+
+        private void Flyout_Closed(object sender, object e) => ViewModel.FlyoutOpened = false;
+
+        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => VideoView.Focus(FocusState.Programmatic);
     }
 }

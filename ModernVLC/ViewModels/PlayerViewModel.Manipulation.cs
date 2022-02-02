@@ -18,24 +18,13 @@ namespace ModernVLC.ViewModels
         private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;
 
-        private void ConfigureVideoViewManipulation()
-        {
-            VideoView.ManipulationStarted += new ManipulationStartedEventHandler(VideoView_ManipulationStarted);
-            VideoView.ManipulationDelta += new ManipulationDeltaEventHandler(VideoView_ManipulationDelta);
-            VideoView.ManipulationCompleted += new ManipulationCompletedEventHandler(VideoView_ManipulationCompleted);
-
-            VideoView.ManipulationMode =
-                ManipulationModes.TranslateX |
-                ManipulationModes.TranslateY;
-        }
-
-        private void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             StatusMessage = null;
             ShouldUpdateTime = true;
         }
 
-        private void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             var horizontalChange = e.Delta.Translation.X;
             var verticalChange = e.Delta.Translation.Y;
@@ -65,7 +54,7 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        private void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             _lockDirection = ManipulationLock.None;
             _timeBeforeManipulation = MediaPlayer.Time;

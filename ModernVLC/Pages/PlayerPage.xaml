@@ -61,7 +61,10 @@
                 <Setter Property="Margin" Value="2,0" />
             </Style>
 
-            <Flyout x:Key="VolumeFlyout">
+            <Flyout
+                x:Key="VolumeFlyout"
+                Closed="Flyout_Closed"
+                Opened="Flyout_Opened">
                 <StackPanel Orientation="Horizontal">
                     <ToggleButton
                         Margin="0,0,8,0"
@@ -74,7 +77,10 @@
                 </StackPanel>
             </Flyout>
 
-            <Flyout x:Key="AudioCaptionFlyout" Opened="AudioCaptionFlyout_Opened">
+            <Flyout
+                x:Key="AudioCaptionFlyout"
+                Closed="Flyout_Closed"
+                Opened="AudioCaptionFlyout_Opened">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -264,7 +270,9 @@
             ContextFlyout="{StaticResource VideoContextMenu}"
             IsTabStop="True"
             KeyboardAcceleratorPlacementMode="Hidden"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            ManipulationMode="TranslateX,TranslateY"
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+            Tapped="VideoView_Tapped">
             <lvs:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Left"
@@ -332,7 +340,6 @@
                     <core:CallMethodAction MethodName="Dispose" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Tapped">
-                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind ViewModel}" />
                     <core:InvokeCommandAction Command="{x:Bind ViewModel.ToggleControlsVisibilityCommand}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="SizeChanged">
@@ -349,6 +356,27 @@
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="PointerWheelChanged">
                     <core:CallMethodAction MethodName="OnPointerWheelChanged" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationStarted">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationStarted" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationDelta">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationDelta" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationEnded">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationEnded" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="GotFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="True" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="LostFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="False" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
@@ -450,6 +478,18 @@
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="ValueChanged">
                         <core:CallMethodAction MethodName="OnSeekBarValueChanged" TargetObject="{x:Bind ViewModel}" />
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="GotFocus">
+                        <core:ChangePropertyAction
+                            PropertyName="SeekbarFocused"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="True" />
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="LostFocus">
+                        <core:ChangePropertyAction
+                            PropertyName="SeekbarFocused"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="False" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </Slider>

@@ -22,7 +22,6 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
@@ -38,7 +37,6 @@ namespace ModernVLC.ViewModels
         public ICommand SetSubtitleCommand { get; private set; }
         public ICommand AddSubtitleCommand { get; private set; }
         public ICommand SetPlaybackSpeedCommand { get; private set; }
-        public ICommand ChangeVolumeCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand ToggleControlsVisibilityCommand { get; private set; }
         public ICommand ToggleCompactLayoutCommand { get; private set; }
@@ -82,13 +80,7 @@ namespace ModernVLC.ViewModels
         public bool ZoomToFit
         {
             get => _zoomToFit;
-            set
-            {
-                if (SetProperty(ref _zoomToFit, value))
-                {
-                    OnSizeChanged();
-                }
-            }
+            set => SetProperty(ref _zoomToFit, value);
         }
 
         public string StatusMessage
@@ -97,7 +89,9 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _statusMessage, value);
         }
 
-        public Control VideoView { get; set; }
+        public bool FlyoutOpened { get; set; }
+        public bool SeekbarFocused { get; set; }
+        public bool VideoViewFocused { get; set; }
         public object ToBeOpened { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;
@@ -110,6 +104,7 @@ namespace ModernVLC.ViewModels
         private Media _media;
         private string _mediaTitle;
         private MediaPlayer _mediaPlayer;
+        private Size _viewSize;
         private bool _isFullscreen;
         private bool _controlsHidden;
         private CoreCursor _cursor;
@@ -130,7 +125,6 @@ namespace ModernVLC.ViewModels
             PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
             SeekCommand = new RelayCommand<long>(Seek);
             SetTimeCommand = new RelayCommand<double>(SetTime);
-            ChangeVolumeCommand = new RelayCommand<double>(ChangeVolume);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             SetAudioTrackCommand = new RelayCommand<TrackDescription>(SetAudioTrack);
             SetSubtitleCommand = new RelayCommand<TrackDescription>(SetSubtitle);
@@ -142,7 +136,7 @@ namespace ModernVLC.ViewModels
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
-            PropertyChanged += MediaPlayer_PropertyChanged;
+            PropertyChanged += OnPropertyChanged;
         }
 
         private void ChangeVolume(double changeAmount)
@@ -236,7 +230,7 @@ namespace ModernVLC.ViewModels
 
         private void SetAudioTrack(TrackDescription audioTrack)
         {
-            var index= audioTrack.Id;
+            var index = audioTrack.Id;
             if (MediaPlayer.AudioTrack != index)
             {
                 MediaPlayer.SetAudioTrack(index);
@@ -277,7 +271,6 @@ namespace ModernVLC.ViewModels
             InitMediaPlayer();
             RegisterMediaPlayerPlaybackEvents();
 
-            ConfigureVideoViewManipulation();
             if (ToBeOpened != null) Open(ToBeOpened);
         }
 
@@ -287,26 +280,32 @@ namespace ModernVLC.ViewModels
             StatusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
         }
 
-        private void MediaPlayer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(PlayerState))
+            switch (e.PropertyName)
             {
-                if (ControlsHidden && PlayerState != VLCState.Playing)
-                {
-                    ShowControls();
-                }
+                case nameof(PlayerState):
+                    if (ControlsHidden && PlayerState != VLCState.Playing)
+                    {
+                        ShowControls();
+                    }
 
-                if (!ControlsHidden && PlayerState == VLCState.Playing)
-                {
-                    DelayHideControls();
-                }
-            }
+                    if (!ControlsHidden && PlayerState == VLCState.Playing)
+                    {
+                        DelayHideControls();
+                    }
 
-            if (e.PropertyName == nameof(BufferingProgress))
-            {
-                BufferingTimer.Debounce(
-                    () => BufferingVisible = BufferingProgress < 100,
-                    TimeSpan.FromSeconds(0.5));
+                    break;
+
+                case nameof(BufferingProgress):
+                    BufferingTimer.Debounce(
+                        () => BufferingVisible = BufferingProgress < 100,
+                        TimeSpan.FromSeconds(0.5));
+                    break;
+
+                case nameof(ZoomToFit):
+                    OnSizeChanged(null, null);
+                    break;
             }
         }
 
@@ -341,11 +340,6 @@ namespace ModernVLC.ViewModels
                 MediaPlayer.Time += amount;
                 ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} / {HumanizedDurationConverter.Convert(MediaPlayer.Length)}");
             }
-        }
-
-        public void SetInteracting(bool interacting)
-        {
-            ShouldUpdateTime = !interacting;
         }
 
         public bool JumpFrame(bool previous = false)
@@ -401,7 +395,7 @@ namespace ModernVLC.ViewModels
             {
                 if (scalar == 0)
                 {
-                    var widthRatio = maxWidth / videoDimension.Width ;
+                    var widthRatio = maxWidth / videoDimension.Width;
                     var heightRatio = maxHeight / videoDimension.Height;
                     scalar = Math.Min(widthRatio, heightRatio);
                 }
@@ -421,16 +415,12 @@ namespace ModernVLC.ViewModels
             return false;
         }
 
-        public void FocusVideoView()
+        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            VideoView.Focus(FocusState.Programmatic);
-        }
-
-        public void OnSizeChanged()
-        {
+            if (args != null) _viewSize = args.NewSize;
             if (MediaPlayer == null) return;
             if (!ZoomToFit && MediaPlayer.CropGeometry == null) return;
-            MediaPlayer.CropGeometry = ZoomToFit ? $"{VideoView.ActualWidth}:{VideoView.ActualHeight}" : null;
+            MediaPlayer.CropGeometry = ZoomToFit ? $"{_viewSize.Width}:{_viewSize.Height}" : null;
         }
 
         public void OnPointerMoved()
@@ -477,7 +467,7 @@ namespace ModernVLC.ViewModels
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            var pointer = e.GetCurrentPoint(VideoView);
+            var pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             var mouseWheelDelta = pointer.Properties.MouseWheelDelta;
             ChangeVolume(mouseWheelDelta / 25.0);
         }
@@ -492,18 +482,18 @@ namespace ModernVLC.ViewModels
 
             switch (key)
             {
-                case VirtualKey.Left when VideoView.FocusState != FocusState.Unfocused:
+                case VirtualKey.Left when VideoViewFocused:
                 case VirtualKey.J:
                     direction = -1;
                     break;
-                case VirtualKey.Right when VideoView.FocusState != FocusState.Unfocused:
+                case VirtualKey.Right when VideoViewFocused:
                 case VirtualKey.L:
                     direction = 1;
                     break;
-                case VirtualKey.Up when VideoView.FocusState != FocusState.Unfocused:
+                case VirtualKey.Up when VideoViewFocused:
                     volumeChange = 10;
                     break;
-                case VirtualKey.Down when VideoView.FocusState != FocusState.Unfocused:
+                case VirtualKey.Down when VideoViewFocused:
                     volumeChange = -10;
                     break;
                 case VirtualKey.NumberPad0:
@@ -581,7 +571,7 @@ namespace ModernVLC.ViewModels
         {
             ControlsVisibilityTimer.Debounce(() =>
             {
-                if (MediaPlayer.IsPlaying && VideoView.FocusState != FocusState.Unfocused)
+                if (MediaPlayer.IsPlaying && !SeekbarFocused && !FlyoutOpened)
                 {
                     HideCursor();
                     ControlsHidden = true;

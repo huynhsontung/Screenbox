@@ -78,7 +78,7 @@ namespace ModernVLC
             }
             else if (rootFrame.Content is PlayerPage playerPage)
             {
-                playerPage.Open(file);
+                playerPage.ViewModel.OpenCommand.Execute(file);
             }
 
             Window.Current.Activate();
