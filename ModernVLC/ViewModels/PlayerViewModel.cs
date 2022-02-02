@@ -389,8 +389,8 @@ namespace ModernVLC.ViewModels
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
             {
                 var displayRegion = view.GetDisplayRegions()[0];
-                maxWidth = (uint)displayRegion.WorkAreaSize.Width;
-                maxHeight = (uint)displayRegion.WorkAreaSize.Height;
+                maxWidth = displayRegion.WorkAreaSize.Width / displayInformation.RawPixelsPerViewPixel;
+                maxHeight = displayRegion.WorkAreaSize.Height / displayInformation.RawPixelsPerViewPixel;
             }
 
             maxHeight -= 16;
