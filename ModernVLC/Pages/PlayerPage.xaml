@@ -80,72 +80,45 @@
             <Flyout
                 x:Key="AudioCaptionFlyout"
                 Closed="Flyout_Closed"
-                Opened="AudioCaptionFlyout_Opened">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                Opened="Flyout_Opened">
+                <StackPanel Orientation="Vertical">
+                    <ListView
+                        Width="220"
+                        Margin="0,0,0,14"
+                        ItemContainerTransitions="{x:Null}"
+                        ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
+                        <ListView.Header>
+                            <TextBlock FontWeight="SemiBold" Text="Audio" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        FontWeight="SemiBold"
-                        Text="Audio" />
-                    <ScrollViewer
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        MinWidth="150"
-                        MaxWidth="220"
-                        MaxHeight="300"
-                        HorizontalScrollMode="Disabled">
-                        <muxc:RadioButtons
-                            x:Name="AudioTrackSelector"
-                            ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
-                            SelectionChanged="AudioTrack_OnSelectionChanged">
-                            <muxc:RadioButtons.ItemTemplate>
-                                <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                    <TextBlock Text="{x:Bind Name}" />
-                                </DataTemplate>
-                            </muxc:RadioButtons.ItemTemplate>
-                        </muxc:RadioButtons>
-                    </ScrollViewer>
-
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        FontWeight="SemiBold"
-                        Text="Subtitles" />
-                    <ScrollViewer
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        MinWidth="150"
-                        MaxWidth="220"
-                        MaxHeight="300"
-                        HorizontalScrollMode="Disabled">
-                        <muxc:RadioButtons
-                            x:Name="SubtitleSelector"
-                            ItemsSource="{x:Bind ViewModel.SpuDescriptions, Mode=OneWay}"
-                            SelectionChanged="Subtitles_OnSelectionChanged">
-                            <muxc:RadioButtons.ItemTemplate>
-                                <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                    <TextBlock Text="{x:Bind Name}" />
-                                </DataTemplate>
-                            </muxc:RadioButtons.ItemTemplate>
-                        </muxc:RadioButtons>
-                    </ScrollViewer>
-
-                    <Button
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Margin="0,12,0,0"
-                        Content="Add subtitle" />
-                </Grid>
+                    <ListView
+                        Width="220"
+                        ItemContainerTransitions="{x:Null}"
+                        ItemsSource="{x:Bind ViewModel.SpuDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.SpuIndex, Mode=TwoWay}">
+                        <ListView.Header>
+                            <TextBlock FontWeight="SemiBold" Text="Subtitles" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Button
+                                Margin="4,2"
+                                HorizontalAlignment="Stretch"
+                                Content="Add subtitle" />
+                        </ListView.Footer>
+                    </ListView>
+                </StackPanel>
             </Flyout>
 
             <MenuFlyout x:Key="VideoContextMenu">

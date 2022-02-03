@@ -30,13 +30,7 @@ namespace ModernVLC.ViewModels
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
         public RelayCommand PlayPauseCommand { get; private set; }
-        public ICommand SeekCommand { get; private set; }
-        public ICommand SetTimeCommand { get; private set; }
         public ICommand FullscreenCommand { get; private set; }
-        public ICommand SetAudioTrackCommand { get; private set; }
-        public ICommand SetSubtitleCommand { get; private set; }
-        public ICommand AddSubtitleCommand { get; private set; }
-        public ICommand SetPlaybackSpeedCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
         public ICommand ToggleControlsVisibilityCommand { get; private set; }
         public ICommand ToggleCompactLayoutCommand { get; private set; }
@@ -122,13 +116,9 @@ namespace ModernVLC.ViewModels
             ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
             StatusMessageTimer = DispatcherQueue.CreateTimer();
             BufferingTimer = DispatcherQueue.CreateTimer();
+
             PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
-            SeekCommand = new RelayCommand<long>(Seek);
-            SetTimeCommand = new RelayCommand<double>(SetTime);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
-            SetAudioTrackCommand = new RelayCommand<TrackDescription>(SetAudioTrack);
-            SetSubtitleCommand = new RelayCommand<TrackDescription>(SetSubtitle);
-            SetPlaybackSpeedCommand = new RelayCommand<float>(SetPlaybackSpeed);
             OpenCommand = new RelayCommand<object>(Open);
             ToggleControlsVisibilityCommand = new RelayCommand(ToggleControlsVisibility);
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
@@ -211,29 +201,11 @@ namespace ModernVLC.ViewModels
             });
         }
 
-        private void SetPlaybackSpeed(float speed)
+        public void SetPlaybackSpeed(float speed)
         {
             if (speed != MediaPlayer.Rate)
             {
                 MediaPlayer.SetRate(speed);
-            }
-        }
-
-        private void SetSubtitle(TrackDescription subtitleTrack)
-        {
-            var index = subtitleTrack.Id;
-            if (MediaPlayer.Spu != index)
-            {
-                MediaPlayer.SetSpu(index);
-            }
-        }
-
-        private void SetAudioTrack(TrackDescription audioTrack)
-        {
-            var index = audioTrack.Id;
-            if (MediaPlayer.AudioTrack != index)
-            {
-                MediaPlayer.SetAudioTrack(index);
             }
         }
 
@@ -373,7 +345,7 @@ namespace ModernVLC.ViewModels
             }
         }
 
-        public bool SetWindowSize(double scalar = 0)
+        private bool SetWindowSize(double scalar = 0)
         {
             if (scalar < 0) return false;
             var displayInformation = DisplayInformation.GetForCurrentView();

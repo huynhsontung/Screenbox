@@ -83,9 +83,33 @@ namespace ModernVLC.ViewModels
             set => SetProperty(ref _shouldLoop, value);
         }
 
-        public int SpuIndex => GetIndexFromTrackId(MediaPlayer.Spu, SpuDescriptions);
+        public int SpuIndex
+        {
+            get => _spuIndex;
+            set
+            {
+                if (SetProperty(ref _spuIndex, value))
+                {
+                    var spuDesc = MediaPlayer.SpuDescription;
+                    if (spuDesc != null && value >= 0 && value < spuDesc.Length)
+                        MediaPlayer.SetSpu(spuDesc[value].Id);
+                }
+            }
+        }
 
-        public int AudioTrackIndex => GetIndexFromTrackId(MediaPlayer.AudioTrack, AudioTrackDescriptions);
+        public int AudioTrackIndex
+        {
+            get => _audioTrackIndex;
+            set
+            {
+                if (SetProperty(ref _audioTrackIndex, value))
+                {
+                    var audioDesc = MediaPlayer.AudioTrackDescription;
+                    if (audioDesc != null && value >= 0 && value < audioDesc.Length)
+                        MediaPlayer.SetSpu(audioDesc[value].Id);
+                }
+            }
+        }
 
         public double? NumericAspectRatio
         {
@@ -132,6 +156,8 @@ namespace ModernVLC.ViewModels
         private double _bufferingProgress;
         private TrackDescription[] _spuDescriptions;
         private TrackDescription[] _audioTrackDescriptions;
+        private int _spuIndex;
+        private int _audioTrackIndex;
 
         private void InitMediaPlayer()
         {
@@ -166,7 +192,9 @@ namespace ModernVLC.ViewModels
             DispatcherQueue.TryEnqueue(() =>
             {
                 SpuDescriptions = MediaPlayer.SpuDescription;
+                SpuIndex = GetIndexFromTrackId(MediaPlayer.Spu, MediaPlayer.SpuDescription);
                 AudioTrackDescriptions = MediaPlayer.AudioTrackDescription;
+                AudioTrackIndex = GetIndexFromTrackId(MediaPlayer.AudioTrack, MediaPlayer.AudioTrackDescription);
             });
         }
 
