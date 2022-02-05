@@ -128,15 +128,22 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VLCLoginDialog.xaml.cs">
+      <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\CommonVisibilityConverter.cs" />
+    <Compile Include="Core\NotificationRaisedEventArgs.cs" />
+    <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Services\FilesService.cs" />
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Pages\PlayerPage.xaml.cs">
       <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\NotificationService.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.Manipulation.cs" />
     <Compile Include="ViewModels\PlayerViewModel.Player.cs" />
@@ -163,6 +170,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\NoAnimationProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\VLCLoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -52,6 +52,8 @@ namespace ModernVLC
             if (_libVLC == null)
             {
                 _libVLC = new LibVLC(true, swapChainOptions);
+                var notificationService = _services.GetService<INotificationService>();
+                notificationService.SetVLCDiaglogHandlers(_libVLC);
                 LogService.RegisterLibVLCLogging(_libVLC);
             }
 
@@ -65,6 +67,7 @@ namespace ModernVLC
             services.AddTransient<PlayerViewModel>();
 
             services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<INotificationService, NotificationService>();
 
             return services.BuildServiceProvider();
         }

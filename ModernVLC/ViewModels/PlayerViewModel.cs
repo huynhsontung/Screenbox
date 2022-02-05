@@ -94,6 +94,7 @@ namespace ModernVLC.ViewModels
         private readonly DispatcherQueueTimer BufferingTimer;
         private readonly SystemMediaTransportControls TransportControl;
         private readonly IFilesService FilesService;
+        private readonly INotificationService NotificationService;
         private LibVLC _libVLC;
         private Media _media;
         private string _mediaTitle;
@@ -108,9 +109,10 @@ namespace ModernVLC.ViewModels
         private bool _zoomToFit;
         private bool _bufferingVisible;
 
-        public PlayerViewModel(IFilesService filesService)
+        public PlayerViewModel(IFilesService filesService, INotificationService notificationService)
         {
             FilesService = filesService;
+            NotificationService = notificationService;
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
@@ -251,7 +253,7 @@ namespace ModernVLC.ViewModels
                 _libVLC = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
                 InitMediaPlayer(_libVLC);
                 RegisterMediaPlayerPlaybackEvents();
-
+                
                 Open(ToBeOpened);
             });
         }
@@ -293,8 +295,10 @@ namespace ModernVLC.ViewModels
 
         public void Dispose()
         {
+            var mediaPlayer = MediaPlayer;
+            MediaPlayer = null;
+            mediaPlayer?.Dispose();
             _media?.Dispose();
-            TransportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
         }
 
         private void PlayPause()

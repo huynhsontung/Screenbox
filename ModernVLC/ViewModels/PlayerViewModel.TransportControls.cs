@@ -31,6 +31,7 @@ namespace ModernVLC.ViewModels
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
+            if (MediaPlayer == null) return;
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Pause:
