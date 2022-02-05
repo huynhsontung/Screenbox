@@ -159,8 +159,9 @@ namespace ModernVLC.ViewModels
         private int _spuIndex;
         private int _audioTrackIndex;
 
-        private void InitMediaPlayer()
+        private void InitMediaPlayer(LibVLC libVLC)
         {
+            MediaPlayer = new MediaPlayer(libVLC);
             MediaPlayer.LengthChanged += OnLengthChanged;
             MediaPlayer.TimeChanged += OnTimeChanged;
             MediaPlayer.SeekableChanged += OnSeekableChanged;
@@ -174,12 +175,6 @@ namespace ModernVLC.ViewModels
             MediaPlayer.Opening += OnStateChanged;
             MediaPlayer.Buffering += OnBuffering;
             MediaPlayer.MediaChanged += OnMediaChanged;
-
-            ShouldUpdateTime = true;
-            BufferingProgress = 100;
-            _volume = MediaPlayer.Volume;
-            _isMute = MediaPlayer.Mute;
-            _state = MediaPlayer.State;
         }
 
         private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)

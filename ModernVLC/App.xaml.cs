@@ -32,9 +32,9 @@ namespace ModernVLC
 
         public static IServiceProvider Services => DerivedCurrent._services;
 
-        public string[] SwapChainOptions { get; set; }
-
         private readonly IServiceProvider _services;
+
+        private LibVLC _libVLC;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -47,15 +47,24 @@ namespace ModernVLC
             this.Suspending += OnSuspending;
         }
 
-        private IServiceProvider ConfigureServices()
+        public LibVLC InitializeLibVLC(string[] swapChainOptions = default)
+        {
+            if (_libVLC == null)
+            {
+                _libVLC = new LibVLC(true, swapChainOptions);
+                LogService.RegisterLibVLCLogging(_libVLC);
+            }
+
+            return _libVLC;
+        }
+
+        private static IServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection();
 
             services.AddTransient<PlayerViewModel>();
 
             services.AddSingleton<IFilesService, FilesService>();
-            services.AddSingleton<LibVLC>(sp => new LibVLCService(true, SwapChainOptions));
-            services.AddSingleton<MediaPlayer>();
 
             return services.BuildServiceProvider();
         }

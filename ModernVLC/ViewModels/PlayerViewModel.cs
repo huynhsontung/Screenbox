@@ -127,6 +127,11 @@ namespace ModernVLC.ViewModels
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
             InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
+
+            ShouldUpdateTime = true;
+            _bufferingProgress = 100;
+            _volume = 100;
+            _state = VLCState.NothingSpecial;
         }
 
         private void ChangeVolume(double changeAmount)
@@ -159,6 +164,12 @@ namespace ModernVLC.ViewModels
 
         private async void Open(object value)
         {
+            if (MediaPlayer == null)
+            {
+                ToBeOpened = value;
+                return;
+            }
+
             Media media = null;
             Uri uri = null;
 
@@ -233,17 +244,16 @@ namespace ModernVLC.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
-        public void Initialize(object sender, InitializedEventArgs e)
+        public async void Initialize(object sender, InitializedEventArgs e)
         {
-            // Due to LibVLC 3.x limitation, have to manually set swap chain options here.
-            App.DerivedCurrent.SwapChainOptions = e.SwapChainOptions;
+            await Task.Run(() =>
+            {
+                _libVLC = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
+                InitMediaPlayer(_libVLC);
+                RegisterMediaPlayerPlaybackEvents();
 
-            _libVLC = App.Services.GetRequiredService<LibVLC>();
-            MediaPlayer = App.Services.GetRequiredService<MediaPlayer>();
-            InitMediaPlayer();
-            RegisterMediaPlayerPlaybackEvents();
-
-            if (ToBeOpened != null) Open(ToBeOpened);
+                Open(ToBeOpened);
+            });
         }
 
         public void ShowStatusMessage(string message)

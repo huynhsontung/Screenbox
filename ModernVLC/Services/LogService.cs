@@ -16,5 +16,16 @@ namespace ModernVLC.Services
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
         }
+
+        public static void RegisterLibVLCLogging(LibVLC libVLC)
+        {
+            libVLC.Log -= LibVLC_Log;
+            libVLC.Log += LibVLC_Log;
+        }
+
+        private static void LibVLC_Log(object sender, LogEventArgs e)
+        {
+            Log(e.FormattedLog, "LibVLC");
+        }
     }
 }
