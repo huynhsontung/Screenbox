@@ -132,7 +132,6 @@
     <Compile Include="Converters\CommonVisibilityConverter.cs" />
     <Compile Include="Services\FilesService.cs" />
     <Compile Include="Services\IFilesService.cs" />
-    <Compile Include="Services\LibVLCService.cs" />
     <Compile Include="Pages\PlayerPage.xaml.cs">
       <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
