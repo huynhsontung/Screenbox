@@ -46,6 +46,7 @@
             </LinearGradientBrush>
             <converters:CommonVisibilityConverter x:Key="CommonVisibilityConverter" />
             <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
+            <converters:ObjectToBooleanConverter x:Key="ObjectToBooleanConverter" />
 
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
@@ -390,6 +391,17 @@
             IsActive="True"
             IsHitTestVisible="False"
             Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.PlayerState), Mode=OneWay}" />
+
+        <muxc:InfoBar
+            Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
+            Grid.Row="1"
+            Margin="12,12"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Content="{x:Bind ViewModel.Notification.Content, Mode=OneWay}"
+            IsOpen="{x:Bind ViewModel.Notification, Mode=OneWay, Converter={StaticResource ObjectToBooleanConverter}}"
+            Message="{x:Bind ViewModel.Notification.Message, Mode=OneWay}"
+            Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}" />
 
         <Grid
             x:Name="PlayerControls"

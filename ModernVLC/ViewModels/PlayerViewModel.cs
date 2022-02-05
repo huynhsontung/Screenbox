@@ -1,11 +1,10 @@
 ﻿using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.Structures;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using ModernVLC.Converters;
+using ModernVLC.Core;
 using ModernVLC.Services;
 using System;
 using System.IO;
@@ -83,6 +82,12 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _statusMessage, value);
         }
 
+        public NotificationRaisedEventArgs Notification
+        {
+            get => _notification;
+            private set => SetProperty(ref _notification, value);
+        }
+
         public bool FlyoutOpened { get; set; }
         public bool SeekbarFocused { get; set; }
         public bool VideoViewFocused { get; set; }
@@ -108,11 +113,16 @@ namespace ModernVLC.ViewModels
         private string _statusMessage;
         private bool _zoomToFit;
         private bool _bufferingVisible;
+        private NotificationRaisedEventArgs _notification;
+        private Stream _fileStream;
+        private StreamMediaInput _streamMediaInput;
 
         public PlayerViewModel(IFilesService filesService, INotificationService notificationService)
         {
             FilesService = filesService;
             NotificationService = notificationService;
+            NotificationService.NotificationRaised += OnNotificationRaised;
+            NotificationService.ProgressUpdated += OnProgressUpdated;
             DispatcherQueue = DispatcherQueue.GetForCurrentThread();
             TransportControl = SystemMediaTransportControls.GetForCurrentView();
             ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
@@ -134,6 +144,18 @@ namespace ModernVLC.ViewModels
             _bufferingProgress = 100;
             _volume = 100;
             _state = VLCState.NothingSpecial;
+        }
+
+        private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
+        {
+            LogService.Log(e.Title);
+            LogService.Log(e.Text);
+            LogService.Log(e.Value);
+        }
+
+        private void OnNotificationRaised(object sender, NotificationRaisedEventArgs e)
+        {
+            DispatcherQueue.TryEnqueue(() => Notification = e);
         }
 
         private void ChangeVolume(double changeAmount)
@@ -174,14 +196,24 @@ namespace ModernVLC.ViewModels
 
             Media media = null;
             Uri uri = null;
+            Stream stream = null;
+            StreamMediaInput streamInput = null;
 
             if (value is StorageFile file)
             {
-                var extension = file.FileType.ToLowerInvariant();
-                if (!file.IsAvailable || !FilesService.SupportedFormats.Contains(extension)) return;
-                var stream = await file.OpenStreamForReadAsync();
-                media = new Media(_libVLC, new StreamMediaInput(stream));
                 uri = new Uri(file.Path);
+                if (uri.IsLoopback)
+                {
+                    var extension = file.FileType.ToLowerInvariant();
+                    if (!file.IsAvailable || !FilesService.SupportedFormats.Contains(extension)) return;
+                    stream = await file.OpenStreamForReadAsync();
+                    streamInput = new StreamMediaInput(stream);
+                    media = new Media(_libVLC, streamInput);
+                }
+                else
+                {
+                    media = new Media(_libVLC, uri);
+                }
             }
 
             if (value is Uri)
@@ -198,17 +230,30 @@ namespace ModernVLC.ViewModels
 
             MediaTitle = uri.Segments.LastOrDefault();
             var oldMedia = _media;
+            var oldStream = _fileStream;
+            var oldStreamInput = _streamMediaInput;
             _media = media;
+            _fileStream = stream;
+            _streamMediaInput = streamInput;
+
             media.ParsedChanged += OnMediaParsed;
             MediaPlayer.Play(media);
             PlayPauseCommand.NotifyCanExecuteChanged();
+
             oldMedia?.Dispose();
+            oldStream?.Dispose();
+            oldStreamInput?.Dispose();
         }
 
         private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
         {
             DispatcherQueue.TryEnqueue(() =>
             {
+                SpuDescriptions = MediaPlayer.SpuDescription;
+                SpuIndex = GetIndexFromTrackId(MediaPlayer.Spu, MediaPlayer.SpuDescription);
+                AudioTrackDescriptions = MediaPlayer.AudioTrackDescription;
+                AudioTrackIndex = GetIndexFromTrackId(MediaPlayer.AudioTrack, MediaPlayer.AudioTrackDescription);
+
                 if (SetWindowSize(1)) return;
                 SetWindowSize();
             });
@@ -253,7 +298,7 @@ namespace ModernVLC.ViewModels
                 _libVLC = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
                 InitMediaPlayer(_libVLC);
                 RegisterMediaPlayerPlaybackEvents();
-                
+
                 Open(ToBeOpened);
             });
         }
@@ -299,6 +344,8 @@ namespace ModernVLC.ViewModels
             MediaPlayer = null;
             mediaPlayer?.Dispose();
             _media?.Dispose();
+            _fileStream?.Dispose();
+            _streamMediaInput?.Dispose();
         }
 
         private void PlayPause()

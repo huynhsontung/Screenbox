@@ -3,6 +3,7 @@ using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using ModernVLC.Core;
 using ModernVLC.ViewModels;
 using System;
 using Windows.ApplicationModel.Core;
@@ -78,6 +79,19 @@ namespace ModernVLC.Pages
 
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
             state == VLCState.Buffering || state == VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
+
+        private InfoBarSeverity ConvertInfoBarSeverity(NotificationLevel level)
+        {
+            switch (level)
+            {
+                case NotificationLevel.Error:
+                    return InfoBarSeverity.Error;
+                case NotificationLevel.Warning:
+                    return InfoBarSeverity.Warning;
+                default:
+                    return InfoBarSeverity.Informational;
+            }
+        }
 
         private void ProcessVideoViewKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) =>
             ViewModel.ProcessKeyboardAccelerators(sender, args);

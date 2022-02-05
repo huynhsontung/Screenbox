@@ -174,28 +174,10 @@ namespace ModernVLC.ViewModels
             MediaPlayer.EncounteredError += OnStateChanged;
             MediaPlayer.Opening += OnStateChanged;
             MediaPlayer.Buffering += OnBuffering;
-            MediaPlayer.MediaChanged += OnMediaChanged;
-        }
-
-        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
-        {
-            e.Media.ParsedChanged += Media_ParsedChanged;
-        }
-
-        private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
-        {
-            DispatcherQueue.TryEnqueue(() =>
-            {
-                SpuDescriptions = MediaPlayer.SpuDescription;
-                SpuIndex = GetIndexFromTrackId(MediaPlayer.Spu, MediaPlayer.SpuDescription);
-                AudioTrackDescriptions = MediaPlayer.AudioTrackDescription;
-                AudioTrackIndex = GetIndexFromTrackId(MediaPlayer.AudioTrack, MediaPlayer.AudioTrackDescription);
-            });
         }
 
         private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
         {
-            UpdateState();
             DispatcherQueue.TryEnqueue(() => BufferingProgress = e.Cache);
         }
 
