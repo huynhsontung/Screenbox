@@ -304,7 +304,7 @@ namespace Screenbox.ViewModels
         {
             await Task.Run(() =>
             {
-                _libVlc = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
+                _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
                 InitMediaPlayer(_libVlc);
                 RegisterMediaPlayerPlaybackEvents();
 

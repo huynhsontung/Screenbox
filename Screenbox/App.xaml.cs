@@ -1,12 +1,16 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using LibVLCSharp.Shared;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Pages;
 using Screenbox.Services;
@@ -25,7 +29,7 @@ namespace Screenbox
 
         private readonly IServiceProvider _services;
 
-        private LibVLC _libVLC;
+        private LibVLC _libVlc;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -33,22 +37,23 @@ namespace Screenbox
         /// </summary>
         public App()
         {
+            ConfigureAppCenter();
             _services = ConfigureServices();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
-        public LibVLC InitializeLibVLC(string[] swapChainOptions = default)
+        public LibVLC InitializeLibVlc(string[] swapChainOptions = default)
         {
-            if (_libVLC == null)
+            if (_libVlc == null)
             {
-                _libVLC = new LibVLC(true, swapChainOptions);
+                _libVlc = new LibVLC(true, swapChainOptions);
                 var notificationService = _services.GetService<INotificationService>();
-                notificationService.SetVLCDiaglogHandlers(_libVLC);
-                LogService.RegisterLibVLCLogging(_libVLC);
+                notificationService?.SetVLCDiaglogHandlers(_libVlc);
+                LogService.RegisterLibVLCLogging(_libVlc);
             }
 
-            return _libVLC;
+            return _libVlc;
         }
 
         private static IServiceProvider ConfigureServices()
@@ -61,6 +66,16 @@ namespace Screenbox
             services.AddSingleton<INotificationService, NotificationService>();
 
             return services.BuildServiceProvider();
+        }
+
+        private static void ConfigureAppCenter()
+        {
+            var secrets = ResourceLoader.GetForCurrentView("Secrets");
+
+#if !DEBUG
+            AppCenter.Start(secrets.GetString("AppCenterApiKey"),
+                typeof(Analytics), typeof(Crashes));
+#endif
         }
 
         private void SetMinWindowSize()
