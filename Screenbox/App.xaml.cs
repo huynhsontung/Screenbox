@@ -70,9 +70,8 @@ namespace Screenbox
 
         private static void ConfigureAppCenter()
         {
-            var secrets = ResourceLoader.GetForCurrentView("Secrets");
-
 #if !DEBUG
+            var secrets = ResourceLoader.GetForViewIndependentUse("Secrets");
             AppCenter.Start(secrets.GetString("AppCenterApiKey"),
                 typeof(Analytics), typeof(Crashes));
 #endif
