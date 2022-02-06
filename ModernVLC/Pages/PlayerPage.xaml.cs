@@ -37,6 +37,12 @@ namespace ModernVLC.Pages
             ConfigureTitleBar();
         }
 
+        public void FocusVideoView()
+        {
+            if (VideoView.FocusState == FocusState.Unfocused)
+                VideoView.Focus(FocusState.Programmatic);
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.ToBeOpened = e.Parameter;
@@ -100,6 +106,6 @@ namespace ModernVLC.Pages
 
         private void Flyout_Closed(object sender, object e) => ViewModel.FlyoutOpened = false;
 
-        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => VideoView.Focus(FocusState.Programmatic);
+        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => FocusVideoView();
     }
 }

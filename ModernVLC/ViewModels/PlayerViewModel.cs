@@ -87,9 +87,14 @@ namespace ModernVLC.ViewModels
             private set => SetProperty(ref _notification, value);
         }
 
+        public bool VideoViewFocused
+        {
+            get => _videoViewFocused;
+            set => SetProperty(ref _videoViewFocused, value);
+        }
+
         public bool FlyoutOpened { get; set; }
         public bool SeekbarFocused { get; set; }
-        public bool VideoViewFocused { get; set; }
         public object ToBeOpened { get; set; }
 
         private readonly DispatcherQueue DispatcherQueue;
@@ -115,6 +120,7 @@ namespace ModernVLC.ViewModels
         private NotificationRaisedEventArgs _notification;
         private Stream _fileStream;
         private StreamMediaInput _streamMediaInput;
+        private bool _videoViewFocused;
 
         public PlayerViewModel(IFilesService filesService, INotificationService notificationService)
         {
@@ -135,6 +141,7 @@ namespace ModernVLC.ViewModels
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             TransportControl.ButtonPressed += TransportControl_ButtonPressed;
+            FocusManager.LostFocus += FocusManager_LostFocus;
             InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
 
@@ -142,6 +149,11 @@ namespace ModernVLC.ViewModels
             _bufferingProgress = 100;
             _volume = 100;
             _state = VLCState.NothingSpecial;
+        }
+
+        private void FocusManager_LostFocus(object sender, FocusManagerLostFocusEventArgs e)
+        {
+            OnPointerMoved();
         }
 
         private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
@@ -338,9 +350,10 @@ namespace ModernVLC.ViewModels
 
         public void Dispose()
         {
-            var mediaPlayer = MediaPlayer;
-            MediaPlayer = null;
-            mediaPlayer?.Dispose();
+            MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
+            TransportControl.ButtonPressed -= TransportControl_ButtonPressed;
+            FocusManager.LostFocus -= FocusManager_LostFocus;
+            MediaPlayer?.Dispose();
             _media?.Dispose();
             _fileStream?.Dispose();
             _streamMediaInput?.Dispose();
@@ -604,6 +617,7 @@ namespace ModernVLC.ViewModels
             {
                 if (MediaPlayer.IsPlaying && !SeekbarFocused && !FlyoutOpened)
                 {
+                    VideoViewFocused = true;
                     HideCursor();
                     ControlsHidden = true;
 

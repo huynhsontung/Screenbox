@@ -351,6 +351,9 @@
                         TargetObject="{x:Bind ViewModel}"
                         Value="False" />
                 </core:EventTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.VideoViewFocused, Mode=OneWay}" Value="True">
+                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
+                </core:DataTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
 
