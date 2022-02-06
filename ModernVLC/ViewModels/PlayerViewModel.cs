@@ -31,7 +31,6 @@ namespace ModernVLC.ViewModels
         public RelayCommand PlayPauseCommand { get; private set; }
         public ICommand FullscreenCommand { get; private set; }
         public ICommand OpenCommand { get; private set; }
-        public ICommand ToggleControlsVisibilityCommand { get; private set; }
         public ICommand ToggleCompactLayoutCommand { get; private set; }
 
         public MediaPlayer MediaPlayer
@@ -132,7 +131,6 @@ namespace ModernVLC.ViewModels
             PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             OpenCommand = new RelayCommand<object>(Open);
-            ToggleControlsVisibilityCommand = new RelayCommand(ToggleControlsVisibility);
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;

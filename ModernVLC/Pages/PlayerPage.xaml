@@ -85,7 +85,6 @@
                 <StackPanel Orientation="Vertical">
                     <ListView
                         Width="220"
-                        Margin="0,0,0,14"
                         ItemContainerTransitions="{x:Null}"
                         ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
                         SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
@@ -98,7 +97,7 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-
+                    <MenuFlyoutSeparator Margin="0,4,0,10" IsTabStop="False" />
                     <ListView
                         Width="220"
                         ItemContainerTransitions="{x:Null}"
@@ -114,8 +113,8 @@
                         </ListView.ItemTemplate>
                         <ListView.Footer>
                             <Button
-                                Margin="4,2"
-                                HorizontalAlignment="Stretch"
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Right"
                                 Content="Add subtitle" />
                         </ListView.Footer>
                     </ListView>
@@ -314,7 +313,7 @@
                     <core:CallMethodAction MethodName="Dispose" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Tapped">
-                    <core:InvokeCommandAction Command="{x:Bind ViewModel.ToggleControlsVisibilityCommand}" />
+                    <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="SizeChanged">
                     <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
