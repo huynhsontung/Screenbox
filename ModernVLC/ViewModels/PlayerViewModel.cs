@@ -28,10 +28,10 @@ namespace ModernVLC.ViewModels
 {
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
-        public RelayCommand PlayPauseCommand { get; private set; }
-        public ICommand FullscreenCommand { get; private set; }
-        public ICommand OpenCommand { get; private set; }
-        public ICommand ToggleCompactLayoutCommand { get; private set; }
+        public RelayCommand PlayPauseCommand { get; }
+        public ICommand FullscreenCommand { get; }
+        public ICommand OpenCommand { get; }
+        public ICommand ToggleCompactLayoutCommand { get; }
 
         public MediaPlayer MediaPlayer
         {
@@ -97,14 +97,14 @@ namespace ModernVLC.ViewModels
         public bool SeekbarFocused { get; set; }
         public object ToBeOpened { get; set; }
 
-        private readonly DispatcherQueue DispatcherQueue;
-        private readonly DispatcherQueueTimer ControlsVisibilityTimer;
-        private readonly DispatcherQueueTimer StatusMessageTimer;
-        private readonly DispatcherQueueTimer BufferingTimer;
-        private readonly SystemMediaTransportControls TransportControl;
-        private readonly IFilesService FilesService;
-        private readonly INotificationService NotificationService;
-        private LibVLC _libVLC;
+        private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _controlsVisibilityTimer;
+        private readonly DispatcherQueueTimer _statusMessageTimer;
+        private readonly DispatcherQueueTimer _bufferingTimer;
+        private readonly SystemMediaTransportControls _transportControl;
+        private readonly IFilesService _filesService;
+        private readonly INotificationService _notificationService;
+        private LibVLC _libVlc;
         private Media _media;
         private string _mediaTitle;
         private MediaPlayer _mediaPlayer;
@@ -124,15 +124,15 @@ namespace ModernVLC.ViewModels
 
         public PlayerViewModel(IFilesService filesService, INotificationService notificationService)
         {
-            FilesService = filesService;
-            NotificationService = notificationService;
-            NotificationService.NotificationRaised += OnNotificationRaised;
-            NotificationService.ProgressUpdated += OnProgressUpdated;
-            DispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            TransportControl = SystemMediaTransportControls.GetForCurrentView();
-            ControlsVisibilityTimer = DispatcherQueue.CreateTimer();
-            StatusMessageTimer = DispatcherQueue.CreateTimer();
-            BufferingTimer = DispatcherQueue.CreateTimer();
+            _filesService = filesService;
+            _notificationService = notificationService;
+            _notificationService.NotificationRaised += OnNotificationRaised;
+            _notificationService.ProgressUpdated += OnProgressUpdated;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _transportControl = SystemMediaTransportControls.GetForCurrentView();
+            _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
+            _statusMessageTimer = _dispatcherQueue.CreateTimer();
+            _bufferingTimer = _dispatcherQueue.CreateTimer();
 
             PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
@@ -140,7 +140,7 @@ namespace ModernVLC.ViewModels
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
-            TransportControl.ButtonPressed += TransportControl_ButtonPressed;
+            _transportControl.ButtonPressed += TransportControl_ButtonPressed;
             FocusManager.LostFocus += FocusManager_LostFocus;
             InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
@@ -165,7 +165,7 @@ namespace ModernVLC.ViewModels
 
         private void OnNotificationRaised(object sender, NotificationRaisedEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() => Notification = e);
+            _dispatcherQueue.TryEnqueue(() => Notification = e);
         }
 
         private void ChangeVolume(double changeAmount)
@@ -215,26 +215,25 @@ namespace ModernVLC.ViewModels
                 if (uri.IsLoopback)
                 {
                     var extension = file.FileType.ToLowerInvariant();
-                    if (!file.IsAvailable || !FilesService.SupportedFormats.Contains(extension)) return;
+                    if (!file.IsAvailable || !_filesService.SupportedFormats.Contains(extension)) return;
                     stream = await file.OpenStreamForReadAsync();
                     streamInput = new StreamMediaInput(stream);
-                    media = new Media(_libVLC, streamInput);
+                    media = new Media(_libVlc, streamInput);
                 }
                 else
                 {
-                    media = new Media(_libVLC, uri);
+                    media = new Media(_libVlc, uri);
                 }
             }
 
             if (value is Uri)
             {
                 uri = (Uri)value;
-                media = new Media(_libVLC, uri);
+                media = new Media(_libVlc, uri);
             }
 
-            if (media == null || uri == null)
+            if (media == null)
             {
-                media?.Dispose();
                 return;
             }
 
@@ -257,7 +256,7 @@ namespace ModernVLC.ViewModels
 
         private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() =>
+            _dispatcherQueue.TryEnqueue(() =>
             {
                 SpuDescriptions = MediaPlayer.SpuDescription;
                 SpuIndex = GetIndexFromTrackId(MediaPlayer.Spu, MediaPlayer.SpuDescription);
@@ -305,8 +304,8 @@ namespace ModernVLC.ViewModels
         {
             await Task.Run(() =>
             {
-                _libVLC = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
-                InitMediaPlayer(_libVLC);
+                _libVlc = App.DerivedCurrent.InitializeLibVLC(e.SwapChainOptions);
+                InitMediaPlayer(_libVlc);
                 RegisterMediaPlayerPlaybackEvents();
 
                 Open(ToBeOpened);
@@ -316,7 +315,7 @@ namespace ModernVLC.ViewModels
         public void ShowStatusMessage(string message)
         {
             StatusMessage = message;
-            StatusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
+            _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
         }
 
         private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -337,7 +336,7 @@ namespace ModernVLC.ViewModels
                     break;
 
                 case nameof(BufferingProgress):
-                    BufferingTimer.Debounce(
+                    _bufferingTimer.Debounce(
                         () => BufferingVisible = BufferingProgress < 100,
                         TimeSpan.FromSeconds(0.5));
                     break;
@@ -351,7 +350,7 @@ namespace ModernVLC.ViewModels
         public void Dispose()
         {
             MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
-            TransportControl.ButtonPressed -= TransportControl_ButtonPressed;
+            _transportControl.ButtonPressed -= TransportControl_ButtonPressed;
             FocusManager.LostFocus -= FocusManager_LostFocus;
             MediaPlayer?.Dispose();
             _media?.Dispose();
@@ -613,7 +612,7 @@ namespace ModernVLC.ViewModels
 
         private void DelayHideControls()
         {
-            ControlsVisibilityTimer.Debounce(() =>
+            _controlsVisibilityTimer.Debounce(() =>
             {
                 if (MediaPlayer.IsPlaying && !SeekbarFocused && !FlyoutOpened)
                 {

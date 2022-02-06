@@ -6,13 +6,13 @@ namespace ModernVLC.ViewModels
     {
         private SystemMediaTransportControlsDisplayUpdater InitSystemTransportControls()
         {
-            TransportControl.IsEnabled = true;
-            TransportControl.IsPlayEnabled = true;
-            TransportControl.IsPauseEnabled = true;
-            TransportControl.IsStopEnabled = true;
-            TransportControl.PlaybackStatus = MediaPlaybackStatus.Playing;
+            _transportControl.IsEnabled = true;
+            _transportControl.IsPlayEnabled = true;
+            _transportControl.IsPauseEnabled = true;
+            _transportControl.IsStopEnabled = true;
+            _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing;
 
-            var updater = TransportControl.DisplayUpdater;
+            var updater = _transportControl.DisplayUpdater;
             updater.ClearAll();
             updater.AppMediaId = "Modern VLC";
             return updater;
@@ -22,11 +22,11 @@ namespace ModernVLC.ViewModels
 
         private void RegisterMediaPlayerPlaybackEvents()
         {
-            MediaPlayer.Paused += (sender, args) => DispatcherQueue.TryEnqueue(() => TransportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
-            MediaPlayer.Stopped += (sender, args) => DispatcherQueue.TryEnqueue(() => TransportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
-            MediaPlayer.Playing += (sender, args) => DispatcherQueue.TryEnqueue(() => TransportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
-            MediaPlayer.EncounteredError += (sender, args) => DispatcherQueue.TryEnqueue(() => TransportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
-            MediaPlayer.Opening += (sender, args) => DispatcherQueue.TryEnqueue(() => TransportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
+            MediaPlayer.Paused += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
+            MediaPlayer.Stopped += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
+            MediaPlayer.Playing += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
+            MediaPlayer.EncounteredError += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
+            MediaPlayer.Opening += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
         }
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)

@@ -178,7 +178,7 @@ namespace ModernVLC.ViewModels
 
         private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() => BufferingProgress = e.Cache);
+            _dispatcherQueue.TryEnqueue(() => BufferingProgress = e.Cache);
         }
 
         private int GetIndexFromTrackId(int id, TrackDescription[] tracks)
@@ -200,7 +200,7 @@ namespace ModernVLC.ViewModels
 
         private void UpdateState()
         {
-            DispatcherQueue.TryEnqueue(() =>
+            _dispatcherQueue.TryEnqueue(() =>
             {
                 PlayerState = MediaPlayer.State;
                 IsPlaying = MediaPlayer.IsPlaying;
@@ -215,7 +215,7 @@ namespace ModernVLC.ViewModels
 
         private void OnVolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() =>
+            _dispatcherQueue.TryEnqueue(() =>
             {
                 Volume = MediaPlayer.Volume;
                 IsMute = MediaPlayer.Mute;
@@ -224,14 +224,14 @@ namespace ModernVLC.ViewModels
 
         private void OnSeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() => IsSeekable = MediaPlayer.IsSeekable);
+            _dispatcherQueue.TryEnqueue(() => IsSeekable = MediaPlayer.IsSeekable);
         }
 
         private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
         {
             if (ShouldUpdateTime)
             {
-                DispatcherQueue.TryEnqueue(() => Time = e.Time);
+                _dispatcherQueue.TryEnqueue(() => Time = e.Time);
             }
         }
 
@@ -239,13 +239,13 @@ namespace ModernVLC.ViewModels
         {
             if (ShouldLoop)
             {
-                DispatcherQueue.TryEnqueue(() => Replay());
+                _dispatcherQueue.TryEnqueue(() => Replay());
                 return;
             }
 
             if (ShouldUpdateTime)
             {
-                DispatcherQueue.TryEnqueue(() => Time = MediaPlayer.Length);
+                _dispatcherQueue.TryEnqueue(() => Time = MediaPlayer.Length);
             }
 
             UpdateState();
@@ -253,7 +253,7 @@ namespace ModernVLC.ViewModels
 
         private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
         {
-            DispatcherQueue.TryEnqueue(() => Length = e.Length);
+            _dispatcherQueue.TryEnqueue(() => Length = e.Length);
         }
     }
 }
