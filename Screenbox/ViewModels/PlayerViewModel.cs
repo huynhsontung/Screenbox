@@ -300,16 +300,13 @@ namespace Screenbox.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
-        public async void Initialize(object sender, InitializedEventArgs e)
+        public void Initialize(object sender, InitializedEventArgs e)
         {
-            await Task.Run(() =>
-            {
-                _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
-                InitMediaPlayer(_libVlc);
-                RegisterMediaPlayerPlaybackEvents();
+            _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
+            InitMediaPlayer(_libVlc);
+            RegisterMediaPlayerPlaybackEvents();
 
-                Open(ToBeOpened);
-            });
+            Open(ToBeOpened);
         }
 
         public void ShowStatusMessage(string message)
