@@ -237,7 +237,11 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            MediaTitle = uri.Segments.LastOrDefault();
+            if (uri.Segments.Length > 0)
+            {
+                MediaTitle = Uri.UnescapeDataString(uri.Segments.Last());
+            }
+
             var oldMedia = _media;
             var oldStream = _fileStream;
             var oldStreamInput = _streamMediaInput;
