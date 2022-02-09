@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -11,7 +12,6 @@
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:converters="using:Screenbox.Converters"
     Background="Black"
     RequestedTheme="Dark"
     mc:Ignorable="d">
@@ -234,6 +234,34 @@
             </muxc:AnimatedIcon>
         </Button>
 
+        <Button
+            x:Name="FocusButton"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Command="{x:Bind ViewModel.PlayPauseCommand}"
+            Opacity="0"
+            Style="{x:Null}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="GotFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="True" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="LostFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="False" />
+                </core:EventTriggerBehavior>
+                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.VideoViewFocused, Mode=OneWay}" Value="True">
+                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
+                </core:DataTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </Button>
+
         <lvs:VideoView
             x:Name="VideoView"
             Grid.Row="0"
@@ -241,7 +269,7 @@
             AllowDrop="True"
             Canvas.ZIndex="0"
             ContextFlyout="{StaticResource VideoContextMenu}"
-            IsTabStop="True"
+            IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             ManipulationMode="TranslateX,TranslateY"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
@@ -250,39 +278,39 @@
                 <KeyboardAccelerator
                     Key="Left"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Left"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
                     Modifiers="Control"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Left"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
                     Modifiers="Shift"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
                     Modifiers="Control"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
                     Modifiers="Shift"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Up"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Down"
                     Invoked="ProcessVideoViewKeyboardAccelerators"
-                    ScopeOwner="{x:Bind VideoView}" />
+                    ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator Key="J" Invoked="ProcessVideoViewKeyboardAccelerators" />
                 <KeyboardAccelerator Key="L" Invoked="ProcessVideoViewKeyboardAccelerators" />
                 <KeyboardAccelerator Key="Number0" Invoked="ProcessVideoViewKeyboardAccelerators" />
@@ -336,24 +364,9 @@
                 <core:EventTriggerBehavior EventName="ManipulationDelta">
                     <core:CallMethodAction MethodName="VideoView_ManipulationDelta" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationEnded">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationEnded" TargetObject="{x:Bind ViewModel}" />
+                <core:EventTriggerBehavior EventName="ManipulationCompleted">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationCompleted" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="GotFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="True" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="LostFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="False" />
-                </core:EventTriggerBehavior>
-                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.VideoViewFocused, Mode=OneWay}" Value="True">
-                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                </core:DataTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
 
@@ -492,7 +505,6 @@
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="P" />
                         <KeyboardAccelerator Key="K" />
-                        <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoView}" />
                     </Button.KeyboardAccelerators>
                     <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
                 </Button>

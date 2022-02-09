@@ -35,8 +35,7 @@ namespace Screenbox.Pages
 
         public void FocusVideoView()
         {
-            if (VideoView.FocusState == FocusState.Unfocused)
-                VideoView.Focus(FocusState.Programmatic);
+            FocusButton.Focus(FocusState.Programmatic);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -102,6 +101,13 @@ namespace Screenbox.Pages
 
         private void Flyout_Closed(object sender, object e) => ViewModel.FlyoutOpened = false;
 
-        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e) => FocusVideoView();
+        private void VideoView_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (FocusButton.FocusState == Windows.UI.Xaml.FocusState.Unfocused)
+            {
+                FocusVideoView();
+                e.Handled = true;
+            }
+        }
     }
 }
