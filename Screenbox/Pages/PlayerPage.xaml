@@ -12,6 +12,7 @@
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:pages="using:Screenbox.Pages"
     Background="Black"
     RequestedTheme="Dark"
     mc:Ignorable="d">
@@ -257,7 +258,6 @@
         </Button>
 
         <lvs:VideoView
-            x:Name="VideoView"
             Grid.Row="0"
             Grid.RowSpan="3"
             AllowDrop="True"
@@ -266,8 +266,7 @@
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             ManipulationMode="TranslateX,TranslateY"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
-            Tapped="VideoView_Tapped">
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
             <lvs:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Left"
@@ -327,10 +326,14 @@
                 <KeyboardAccelerator Key="NumberPad7" Invoked="ProcessVideoViewKeyboardAccelerators" />
                 <KeyboardAccelerator Key="NumberPad8" Invoked="ProcessVideoViewKeyboardAccelerators" />
                 <KeyboardAccelerator Key="NumberPad9" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="{x:Bind PeriodKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="{x:Bind CommaKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
             </lvs:VideoView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Tapped">
+                    <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
+                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
+                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="SizeChanged">
                     <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
