@@ -41,6 +41,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.ToBeOpened = e.Parameter;
+            FocusVideoView();
         }
 
         private void RegisterEventHandlers()
@@ -97,17 +98,11 @@ namespace Screenbox.Pages
         private void ProcessVideoViewKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) =>
             ViewModel.ProcessKeyboardAccelerators(sender, args);
 
-        private void Flyout_Opened(object sender, object e) => ViewModel.FlyoutOpened = true;
-
-        private void Flyout_Closed(object sender, object e) => ViewModel.FlyoutOpened = false;
-
         private void VideoView_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (FocusButton.FocusState == Windows.UI.Xaml.FocusState.Unfocused)
-            {
-                FocusVideoView();
-                e.Handled = true;
-            }
+            FocusVideoView();
+            
+            ViewModel.ToggleControlsVisibility();
         }
     }
 }

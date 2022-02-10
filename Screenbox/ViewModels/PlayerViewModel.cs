@@ -93,8 +93,6 @@ namespace Screenbox.ViewModels
             set => SetProperty(ref _videoViewFocused, value);
         }
 
-        public bool FlyoutOpened { get; set; }
-        public bool SeekbarFocused { get; set; }
         public object ToBeOpened { get; set; }
 
         private readonly DispatcherQueue _dispatcherQueue;
@@ -141,7 +139,6 @@ namespace Screenbox.ViewModels
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             _transportControl.ButtonPressed += TransportControl_ButtonPressed;
-            FocusManager.LostFocus += FocusManager_LostFocus;
             InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
 
@@ -149,11 +146,6 @@ namespace Screenbox.ViewModels
             _bufferingProgress = 100;
             _volume = 100;
             _state = VLCState.NothingSpecial;
-        }
-
-        private void FocusManager_LostFocus(object sender, FocusManagerLostFocusEventArgs e)
-        {
-            OnPointerMoved();
         }
 
         private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
@@ -345,6 +337,14 @@ namespace Screenbox.ViewModels
                 case nameof(ZoomToFit):
                     OnSizeChanged(null, null);
                     break;
+
+                case nameof(VideoViewFocused) when !VideoViewFocused:
+                    // Delay due to counter focus switching when tapping on video view
+                    Task.Delay(100).ContinueWith(_ =>
+                    {
+                        if (!VideoViewFocused) _dispatcherQueue.TryEnqueue(OnPointerMoved);
+                    });
+                    break;
             }
         }
 
@@ -352,7 +352,6 @@ namespace Screenbox.ViewModels
         {
             MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
             _transportControl.ButtonPressed -= TransportControl_ButtonPressed;
-            FocusManager.LostFocus -= FocusManager_LostFocus;
             MediaPlayer?.Dispose();
             _media?.Dispose();
             _fileStream?.Dispose();
@@ -615,9 +614,8 @@ namespace Screenbox.ViewModels
         {
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (MediaPlayer.IsPlaying && !SeekbarFocused && !FlyoutOpened)
+                if (MediaPlayer.IsPlaying && VideoViewFocused)
                 {
-                    VideoViewFocused = true;
                     HideCursor();
                     ControlsHidden = true;
 
