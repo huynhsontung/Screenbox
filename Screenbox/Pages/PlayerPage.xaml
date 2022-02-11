@@ -126,36 +126,36 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC57;" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="0.25" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="0.5" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="0.75" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
                         Text="1" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="1.25" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="1.5" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="1.75" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="PlaybackSpeedItem_Click"
+                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
                         GroupName="SpeedGroup"
                         Text="2" />
                 </MenuFlyoutSubItem>
@@ -262,32 +262,20 @@
             AllowDrop="True"
             Background="Black"
             ContextFlyout="{StaticResource VideoContextMenu}"
+            DragOver="{x:Bind ViewModel.OnDragOver}"
+            Drop="{x:Bind ViewModel.OnDrop}"
             IsTabStop="False"
+            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"
+            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
             Opacity="0"
+            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Style="{x:Null}">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="Click">
                     <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
                     <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="DragOver">
-                    <core:CallMethodAction MethodName="OnDragOver" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="Drop">
-                    <core:CallMethodAction MethodName="OnDrop" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="PointerWheelChanged">
-                    <core:CallMethodAction MethodName="OnPointerWheelChanged" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationStarted">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationStarted" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationDelta">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationDelta" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationCompleted">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationCompleted" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </Button>
@@ -296,80 +284,74 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Canvas.ZIndex="0"
+            Initialized="{x:Bind ViewModel.OnInitialized}"
             IsHitTestVisible="False"
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
+            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+            SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
             <lvs:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Left"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Left"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     Modifiers="Control"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Left"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     Modifiers="Shift"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     Modifiers="Control"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Right"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     Modifiers="Shift"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Up"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     ScopeOwner="{x:Bind FocusButton}" />
                 <KeyboardAccelerator
                     Key="Down"
-                    Invoked="ProcessVideoViewKeyboardAccelerators"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator Key="J" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="L" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number0" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number1" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number2" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number3" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number4" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number5" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number6" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number7" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number8" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="Number9" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad0" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad1" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad2" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad3" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad4" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad5" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad6" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad7" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad8" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="NumberPad9" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
-                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
+                <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
             </lvs:VideoView.KeyboardAccelerators>
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="SizeChanged">
-                    <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="Initialized">
-                    <core:CallMethodAction MethodName="Initialize" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
 
         <Border

@@ -20,6 +20,7 @@ using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Services;
@@ -264,7 +265,7 @@ namespace Screenbox.ViewModels
             });
         }
 
-        public void SetPlaybackSpeed(float speed)
+        private void SetPlaybackSpeed(float speed)
         {
             if (speed != MediaPlayer.Rate)
             {
@@ -296,7 +297,7 @@ namespace Screenbox.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
-        public void Initialize(object sender, InitializedEventArgs e)
+        public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
             InitMediaPlayer(_libVlc);
@@ -420,6 +421,14 @@ namespace Screenbox.ViewModels
                 // Keep hiding even when pointer moved right after
                 OverrideVisibilityChange();
             }
+        }
+
+        public void OnPlaybackSpeedItemClick(object sender, RoutedEventArgs e)
+        {
+            var item = (RadioMenuFlyoutItem)sender;
+            var speedText = item.Text;
+            float.TryParse(speedText, out var speed);
+            SetPlaybackSpeed(speed);
         }
 
         private bool SetWindowSize(double scalar = 0)
