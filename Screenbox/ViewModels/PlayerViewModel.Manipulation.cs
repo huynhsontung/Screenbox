@@ -21,6 +21,7 @@ namespace Screenbox.ViewModels
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (_lockDirection == ManipulationLock.None) return;
+            OverrideVisibilityChange(100);
             StatusMessage = null;
             ShouldUpdateTime = true;
         }

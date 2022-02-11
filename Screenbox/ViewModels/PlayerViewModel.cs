@@ -110,7 +110,7 @@ namespace Screenbox.ViewModels
         private bool _isFullscreen;
         private bool _controlsHidden;
         private CoreCursor _cursor;
-        private bool _pointerMovedOverride;
+        private bool _visibilityOverride;
         private bool _isCompact;
         private string _statusMessage;
         private bool _zoomToFit;
@@ -338,12 +338,15 @@ namespace Screenbox.ViewModels
                     OnSizeChanged(null, null);
                     break;
 
-                case nameof(VideoViewFocused) when !VideoViewFocused:
-                    // Delay due to counter focus switching when tapping on video view
-                    Task.Delay(100).ContinueWith(_ =>
+                case nameof(VideoViewFocused):
+                    if (VideoViewFocused)
                     {
-                        if (!VideoViewFocused) _dispatcherQueue.TryEnqueue(OnPointerMoved);
-                    });
+                        DelayHideControls();
+                    }
+                    else
+                    {
+                        ShowControls();
+                    }
                     break;
             }
         }
@@ -409,10 +412,13 @@ namespace Screenbox.ViewModels
             if (ControlsHidden)
             {
                 ShowControls();
+                DelayHideControls();
             }
-            else if (MediaPlayer.IsPlaying)
+            else if (MediaPlayer.IsPlaying && !_visibilityOverride)
             {
                 HideControls();
+                // Keep hiding even when pointer moved right after
+                OverrideVisibilityChange();
             }
         }
 
@@ -468,12 +474,11 @@ namespace Screenbox.ViewModels
 
         public void OnPointerMoved()
         {
-            if (!_pointerMovedOverride)
+            if (!_visibilityOverride)
             {
                 if (ControlsHidden)
                 {
-                    ShowCursor();
-                    ControlsHidden = false;
+                    ShowControls();
                 }
 
                 if (!ShouldUpdateTime) return;
@@ -601,7 +606,6 @@ namespace Screenbox.ViewModels
         {
             ShowCursor();
             ControlsHidden = false;
-            DelayHideControls();
         }
 
         private void HideControls()
@@ -616,14 +620,18 @@ namespace Screenbox.ViewModels
             {
                 if (MediaPlayer.IsPlaying && VideoViewFocused)
                 {
-                    HideCursor();
-                    ControlsHidden = true;
+                    HideControls();
 
                     // Workaround for PointerMoved is raised when show/hide cursor
-                    _pointerMovedOverride = true;
-                    Task.Delay(1000).ContinueWith(t => _pointerMovedOverride = false);
+                    OverrideVisibilityChange();
                 }
             }, TimeSpan.FromSeconds(5));
+        }
+
+        private void OverrideVisibilityChange(int delay = 1000)
+        {
+            _visibilityOverride = true;
+            Task.Delay(delay).ContinueWith(t => _visibilityOverride = false);
         }
 
         private void HideCursor()

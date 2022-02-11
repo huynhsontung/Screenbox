@@ -251,21 +251,54 @@
                         TargetObject="{x:Bind ViewModel}"
                         Value="False" />
                 </core:EventTriggerBehavior>
-                <core:DataTriggerBehavior Binding="{x:Bind ViewModel.VideoViewFocused, Mode=OneWay}" Value="True">
+            </interactivity:Interaction.Behaviors>
+        </Button>
+
+        <Button
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            AllowDrop="True"
+            Background="Black"
+            ContextFlyout="{StaticResource VideoContextMenu}"
+            IsTabStop="False"
+            ManipulationMode="TranslateX,TranslateY"
+            Opacity="0"
+            Style="{x:Null}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Click">
+                    <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
                     <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                </core:DataTriggerBehavior>
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="DragOver">
+                    <core:CallMethodAction MethodName="OnDragOver" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="Drop">
+                    <core:CallMethodAction MethodName="OnDrop" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="PointerWheelChanged">
+                    <core:CallMethodAction MethodName="OnPointerWheelChanged" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationStarted">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationStarted" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationDelta">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationDelta" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="ManipulationCompleted">
+                    <core:CallMethodAction MethodName="VideoView_ManipulationCompleted" TargetObject="{x:Bind ViewModel}" />
+                </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </Button>
 
         <lvs:VideoView
             Grid.Row="0"
             Grid.RowSpan="3"
-            AllowDrop="True"
             Canvas.ZIndex="0"
-            ContextFlyout="{StaticResource VideoContextMenu}"
+            IsHitTestVisible="False"
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
-            ManipulationMode="TranslateX,TranslateY"
             MediaPlayer="{x:Bind ViewModel.MediaPlayer}">
             <lvs:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
@@ -330,33 +363,11 @@
                 <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="ProcessVideoViewKeyboardAccelerators" />
             </lvs:VideoView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Tapped">
-                    <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
-                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="SizeChanged">
                     <core:CallMethodAction MethodName="OnSizeChanged" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="DragOver">
-                    <core:CallMethodAction MethodName="OnDragOver" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="Drop">
-                    <core:CallMethodAction MethodName="OnDrop" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="Initialized">
                     <core:CallMethodAction MethodName="Initialize" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="PointerWheelChanged">
-                    <core:CallMethodAction MethodName="OnPointerWheelChanged" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationStarted">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationStarted" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationDelta">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationDelta" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="ManipulationCompleted">
-                    <core:CallMethodAction MethodName="VideoView_ManipulationCompleted" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </lvs:VideoView>
