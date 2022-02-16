@@ -177,388 +177,442 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid x:Name="LayoutRoot">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <Grid>
         <Border
             x:Name="TitleBarElement"
             Grid.Row="0"
             MinHeight="52"
+            Margin="64,0,0,0"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
+            VerticalAlignment="Top"
             Background="Transparent"
             Canvas.ZIndex="2" />
-        <Border
-            x:Name="Header"
-            Grid.Row="0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="{StaticResource TitleBarBackground}"
-            Canvas.ZIndex="1">
-            <Border.RenderTransform>
-                <TranslateTransform x:Name="HeaderTranslate" />
-            </Border.RenderTransform>
-            <TextBlock
-                x:Name="TitleText"
-                Margin="80,0,90,0"
+
+        <Frame x:Name="InlineFrame" Visibility="Collapsed">
+            <Frame.Content>
+                <pages:MainPage />
+            </Frame.Content>
+        </Frame>
+
+        <Grid x:Name="LayoutRoot">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border
+                x:Name="Header"
+                Grid.Row="0"
+                MinHeight="32"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{StaticResource TitleBarBackground}"
+                Canvas.ZIndex="1">
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="HeaderTranslate" />
+                </Border.RenderTransform>
+                <TextBlock
+                    x:Name="TitleText"
+                    Margin="80,0,90,0"
+                    VerticalAlignment="Center"
+                    FontSize="28"
+                    FontWeight="SemiBold"
+                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
+            </Border>
+
+            <Button
+                x:Name="BackButton"
+                Grid.Row="0"
+                Width="52"
+                Height="52"
+                Margin="12"
+                HorizontalAlignment="Left"
+                Canvas.ZIndex="2">
+                <Button.RenderTransform>
+                    <TranslateTransform x:Name="BackButtonTranslate" />
+                </Button.RenderTransform>
+                <muxc:AnimatedIcon>
+                    <muxc:AnimatedIcon.Source>
+                        <animatedvisuals:AnimatedBackVisualSource />
+                    </muxc:AnimatedIcon.Source>
+                </muxc:AnimatedIcon>
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <core:ChangePropertyAction
+                            PropertyName="PlayerHidden"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="True" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </Button>
+
+            <Button
+                x:Name="FocusButton"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Command="{x:Bind ViewModel.PlayPauseCommand}"
+                Opacity="0"
+                Style="{x:Null}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="GotFocus">
+                        <core:ChangePropertyAction
+                            PropertyName="VideoViewFocused"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="True" />
+                    </core:EventTriggerBehavior>
+                    <core:EventTriggerBehavior EventName="LostFocus">
+                        <core:ChangePropertyAction
+                            PropertyName="VideoViewFocused"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="False" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </Button>
+
+            <Button
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                AllowDrop="True"
+                Background="Black"
+                ContextFlyout="{StaticResource VideoContextMenu}"
+                DragOver="{x:Bind ViewModel.OnDragOver}"
+                Drop="{x:Bind ViewModel.OnDrop}"
+                IsTabStop="False"
+                ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+                ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
+                ManipulationMode="TranslateX,TranslateY"
+                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
+                Opacity="0"
+                PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+                Style="{x:Null}">
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
+                        <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </Button>
+
+            <lvs:VideoView
+                x:Name="VideoView"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Canvas.ZIndex="0"
+                Initialized="{x:Bind ViewModel.OnInitialized}"
+                IsHitTestVisible="False"
+                IsTabStop="False"
+                KeyboardAcceleratorPlacementMode="Hidden"
+                MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+                SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
+                <lvs:VideoView.KeyboardAccelerators>
+                    <KeyboardAccelerator
+                        Key="Left"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Left"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        Modifiers="Control"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Left"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        Modifiers="Shift"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Right"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Right"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        Modifiers="Control"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Right"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        Modifiers="Shift"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Up"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator
+                        Key="Down"
+                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                        ScopeOwner="{x:Bind FocusButton}" />
+                    <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                    <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                </lvs:VideoView.KeyboardAccelerators>
+            </lvs:VideoView>
+
+            <Border
+                x:Name="StatusMessage"
+                Grid.Row="1"
+                Margin="24,4"
+                Padding="10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                CornerRadius="6"
+                IsHitTestVisible="False"
+                Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                <animations:Implicit.ShowAnimations>
+                    <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
+                </animations:Implicit.ShowAnimations>
+
+                <animations:Implicit.HideAnimations>
+                    <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
+                </animations:Implicit.HideAnimations>
+                <TextBlock
+                    x:Name="StatusMessageText"
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
+            </Border>
+
+            <muxc:ProgressRing
+                x:Name="BufferingIndicator"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Width="52"
+                Height="52"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="28"
-                FontWeight="SemiBold"
-                Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
-                TextTrimming="CharacterEllipsis" />
-        </Border>
+                IsActive="True"
+                IsHitTestVisible="False"
+                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.PlayerState), Mode=OneWay}" />
 
-        <Button
-            x:Name="BackButton"
-            Grid.Row="0"
-            Width="52"
-            Height="52"
-            Margin="12"
-            HorizontalAlignment="Left"
-            Canvas.ZIndex="2">
-            <Button.RenderTransform>
-                <TranslateTransform x:Name="BackButtonTranslate" />
-            </Button.RenderTransform>
-            <muxc:AnimatedIcon>
-                <muxc:AnimatedIcon.Source>
-                    <animatedvisuals:AnimatedBackVisualSource />
-                </muxc:AnimatedIcon.Source>
-            </muxc:AnimatedIcon>
-        </Button>
+            <muxc:InfoBar
+                Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
+                Grid.Row="1"
+                Margin="12,12"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Content="{x:Bind ViewModel.Notification.Content, Mode=OneWay}"
+                IsOpen="{x:Bind ViewModel.Notification, Mode=OneWay, Converter={StaticResource ObjectToBooleanConverter}}"
+                Message="{x:Bind ViewModel.Notification.Message, Mode=OneWay}"
+                Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}" />
 
-        <Button
-            x:Name="FocusButton"
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Command="{x:Bind ViewModel.PlayPauseCommand}"
-            Opacity="0"
-            Style="{x:Null}">
+            <Grid
+                x:Name="PlayerControls"
+                Grid.Row="2"
+                Padding="12,20,12,12"
+                Background="{StaticResource PlayerControlsBackground}"
+                XYFocusKeyboardNavigation="Enabled">
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="PlayerControlsTranslate" />
+                </Grid.RenderTransform>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <muxc:ProgressBar
+                    x:Name="PlayerProgressBar"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    AutomationProperties.AccessibilityView="Raw"
+                    Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
+                    Style="{StaticResource NoAnimationProgressBar}"
+                    Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
+                <muxc:ProgressBar
+                    x:Name="BufferingProgressBar"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    AutomationProperties.AccessibilityView="Raw"
+                    Foreground="Orange"
+                    IsIndeterminate="True"
+                    Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
+                <Slider
+                    x:Name="SeekBar"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    Background="Transparent"
+                    Foreground="Transparent"
+                    IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
+                    LargeChange="10000"
+                    Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
+                    Minimum="0"
+                    SmallChange="1000"
+                    ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
+                    Value="{x:Bind ViewModel.Time, Mode=TwoWay}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="ValueChanged">
+                            <core:CallMethodAction MethodName="OnSeekBarValueChanged" TargetObject="{x:Bind ViewModel}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Slider>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="PlayPauseButton"
+                        Margin="0,0,2,0"
+                        Command="{x:Bind ViewModel.PlayPauseCommand}">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="P" />
+                            <KeyboardAccelerator Key="K" />
+                        </Button.KeyboardAccelerators>
+                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
+                    </Button>
+                    <muxc:ToggleSplitButton
+                        x:Name="MuteButton"
+                        Height="40"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Flyout="{StaticResource VolumeFlyout}"
+                        IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
+                        <muxc:SplitButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="M" />
+                        </muxc:SplitButton.KeyboardAccelerators>
+                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
+                    </muxc:ToggleSplitButton>
+                    <TextBlock Margin="8,0" VerticalAlignment="Center">
+                        <Run Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                        <Run Text=" / " />
+                        <Run Text="{x:Bind ViewModel.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Orientation="Horizontal">
+                    <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioCaptionFlyout}">
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="C" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+
+                    <ToggleButton
+                        x:Name="FullscreenButton"
+                        Command="{x:Bind ViewModel.FullscreenCommand}"
+                        CommandParameter="{x:Bind FullscreenButton.IsChecked, Mode=OneWay}"
+                        IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
+                        <ToggleButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="F" />
+                        </ToggleButton.KeyboardAccelerators>
+                        <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
+                    </ToggleButton>
+
+                    <Button
+                        x:Name="MoreButton"
+                        Margin="2,0,0,0"
+                        Flyout="{StaticResource VideoContextMenu}">
+                        <SymbolIcon Symbol="More" />
+                    </Button>
+
+                    <Button
+                        x:Name="ExitCompactOverlayButton"
+                        Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                        Visibility="Collapsed">
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Escape" />
+                        </Button.KeyboardAccelerators>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="GotFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="True" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="LostFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="False" />
+                <core:EventTriggerBehavior EventName="PointerMoved">
+                    <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
-        </Button>
 
-        <Button
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            AllowDrop="True"
-            Background="Black"
-            ContextFlyout="{StaticResource VideoContextMenu}"
-            DragOver="{x:Bind ViewModel.OnDragOver}"
-            Drop="{x:Bind ViewModel.OnDrop}"
-            IsTabStop="False"
-            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
-            ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-            Opacity="0"
-            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
-            Style="{x:Null}">
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Click">
-                    <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
-                    <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </Button>
-
-        <lvs:VideoView
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            Canvas.ZIndex="0"
-            Initialized="{x:Bind ViewModel.OnInitialized}"
-            IsHitTestVisible="False"
-            IsTabStop="False"
-            KeyboardAcceleratorPlacementMode="Hidden"
-            MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
-            <lvs:VideoView.KeyboardAccelerators>
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Control"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Control"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Up"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator
-                    Key="Down"
-                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind FocusButton}" />
-                <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-            </lvs:VideoView.KeyboardAccelerators>
-        </lvs:VideoView>
-
-        <Border
-            x:Name="StatusMessage"
-            Grid.Row="1"
-            Margin="24,4"
-            Padding="10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            CornerRadius="6"
-            IsHitTestVisible="False"
-            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
+                <animations:TranslationAnimation
+                    From="{x:Bind GetHeightAsVec3(ViewModel.ViewSize), Mode=OneWay}"
+                    To="0"
+                    Duration="0:0:0.5" />
             </animations:Implicit.ShowAnimations>
 
             <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
+                <animations:TranslationAnimation
+                    From="0"
+                    To="{x:Bind GetHeightAsVec3(ViewModel.ViewSize), Mode=OneWay}"
+                    Duration="0:0:0.5" />
             </animations:Implicit.HideAnimations>
-            <TextBlock
-                x:Name="StatusMessageText"
-                FontSize="20"
-                FontWeight="SemiBold"
-                Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
-        </Border>
 
-        <muxc:ProgressRing
-            x:Name="BufferingIndicator"
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            Width="52"
-            Height="52"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            IsActive="True"
-            IsHitTestVisible="False"
-            Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.PlayerState), Mode=OneWay}" />
-
-        <muxc:InfoBar
-            Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
-            Grid.Row="1"
-            Margin="12,12"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Content="{x:Bind ViewModel.Notification.Content, Mode=OneWay}"
-            IsOpen="{x:Bind ViewModel.Notification, Mode=OneWay, Converter={StaticResource ObjectToBooleanConverter}}"
-            Message="{x:Bind ViewModel.Notification.Message, Mode=OneWay}"
-            Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}" />
-
-        <Grid
-            x:Name="PlayerControls"
-            Grid.Row="2"
-            Padding="12,20,12,12"
-            Background="{StaticResource PlayerControlsBackground}"
-            XYFocusKeyboardNavigation="Enabled">
-            <Grid.RenderTransform>
-                <TranslateTransform x:Name="PlayerControlsTranslate" />
-            </Grid.RenderTransform>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <muxc:ProgressBar
-                x:Name="PlayerProgressBar"
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                AutomationProperties.AccessibilityView="Raw"
-                Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
-                Style="{StaticResource NoAnimationProgressBar}"
-                Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
-            <muxc:ProgressBar
-                x:Name="BufferingProgressBar"
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                AutomationProperties.AccessibilityView="Raw"
-                Foreground="Orange"
-                IsIndeterminate="True"
-                Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
-            <Slider
-                x:Name="SeekBar"
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                Background="Transparent"
-                Foreground="Transparent"
-                IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
-                LargeChange="10000"
-                Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
-                Minimum="0"
-                SmallChange="1000"
-                ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
-                Value="{x:Bind ViewModel.Time, Mode=TwoWay}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="ValueChanged">
-                        <core:CallMethodAction MethodName="OnSeekBarValueChanged" TargetObject="{x:Bind ViewModel}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </Slider>
-
-            <StackPanel
-                Grid.Row="1"
-                Grid.Column="0"
-                Orientation="Horizontal">
-                <Button
-                    x:Name="PlayPauseButton"
-                    Margin="0,0,2,0"
-                    Command="{x:Bind ViewModel.PlayPauseCommand}">
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="P" />
-                        <KeyboardAccelerator Key="K" />
-                    </Button.KeyboardAccelerators>
-                    <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
-                </Button>
-                <muxc:ToggleSplitButton
-                    x:Name="MuteButton"
-                    Height="40"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Flyout="{StaticResource VolumeFlyout}"
-                    IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
-                    <muxc:SplitButton.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="M" />
-                    </muxc:SplitButton.KeyboardAccelerators>
-                    <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
-                </muxc:ToggleSplitButton>
-                <TextBlock Margin="8,0" VerticalAlignment="Center">
-                    <Run Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-                    <Run Text=" / " />
-                    <Run Text="{x:Bind ViewModel.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-                </TextBlock>
-            </StackPanel>
-
-            <StackPanel
-                Grid.Row="1"
-                Grid.Column="2"
-                Orientation="Horizontal">
-                <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioCaptionFlyout}">
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="C" />
-                    </Button.KeyboardAccelerators>
-                </Button>
-
-                <ToggleButton
-                    x:Name="FullscreenButton"
-                    Command="{x:Bind ViewModel.FullscreenCommand}"
-                    CommandParameter="{x:Bind FullscreenButton.IsChecked, Mode=OneWay}"
-                    IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
-                    <ToggleButton.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F" />
-                    </ToggleButton.KeyboardAccelerators>
-                    <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
-                </ToggleButton>
-
-                <Button
-                    x:Name="MoreButton"
-                    Margin="2,0,0,0"
-                    Flyout="{StaticResource VideoContextMenu}">
-                    <SymbolIcon Symbol="More" />
-                </Button>
-
-                <Button
-                    x:Name="ExitCompactOverlayButton"
-                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                    Visibility="Collapsed">
-                    <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="Escape" />
-                    </Button.KeyboardAccelerators>
-                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
-                </Button>
-            </StackPanel>
         </Grid>
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="Hidden" TargetObject="{x:Bind}" />
+                <core:GoToStateAction StateName="Hidden" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Normal" TargetObject="{x:Bind}" />
+                <core:GoToStateAction StateName="Normal" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="Compact" TargetObject="{x:Bind}" />
+                <core:GoToStateAction StateName="Compact" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Full" TargetObject="{x:Bind}" />
+                <core:GoToStateAction StateName="Full" />
             </core:DataTriggerBehavior>
-            <core:EventTriggerBehavior EventName="PointerMoved">
-                <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
-            </core:EventTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="PlayerHidden" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">
+                <core:GoToStateAction StateName="PlayerVisible" />
+            </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="PageStates">
+                <VisualState x:Name="PlayerVisible" />
+                <VisualState x:Name="PlayerHidden">
+                    <VisualState.Setters>
+                        <Setter Target="InlineFrame.Visibility" Value="Visible" />
+                        <Setter Target="LayoutRoot.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
                 <VisualStateGroup.Transitions>
                     <VisualTransition
@@ -593,6 +647,7 @@
                     <VisualState.Setters>
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.MinHeight" Value="32" />
+                        <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="12" />
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
                         <Setter Target="TitleText.Margin" Value="13,0,0,0" />

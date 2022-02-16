@@ -1,4 +1,5 @@
 ﻿using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -25,9 +26,12 @@ namespace Screenbox.Pages
 
         internal PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
 
+        private readonly IServiceScope _scope; 
+
         public PlayerPage()
         {
-            DataContext = App.Services.GetRequiredService<PlayerViewModel>();
+            _scope = App.Services.CreateScope();
+            DataContext = _scope.ServiceProvider.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
             RegisterPointerHandlersForSeekBar();
             ConfigureTitleBar();
@@ -42,6 +46,11 @@ namespace Screenbox.Pages
         {
             ViewModel.ToBeOpened = e.Parameter;
             FocusVideoView();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            _scope.Dispose();
         }
 
         private void RegisterPointerHandlersForSeekBar()
@@ -86,5 +95,7 @@ namespace Screenbox.Pages
                     return InfoBarSeverity.Informational;
             }
         }
+
+        private string GetHeightAsVec3(Size viewSize) => $"0,{viewSize.Height},0";
     }
 }

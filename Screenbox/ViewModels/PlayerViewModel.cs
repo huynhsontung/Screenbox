@@ -29,7 +29,7 @@ namespace Screenbox.ViewModels
 {
     internal partial class PlayerViewModel : ObservableObject, IDisposable
     {
-        public RelayCommand PlayPauseCommand { get; }
+        public ICommand PlayPauseCommand { get; }
         public ICommand FullscreenCommand { get; }
         public ICommand OpenCommand { get; }
         public ICommand ToggleCompactLayoutCommand { get; }
@@ -88,10 +88,22 @@ namespace Screenbox.ViewModels
             private set => SetProperty(ref _notification, value);
         }
 
+        public Size ViewSize
+        {
+            get => _viewSize;
+            private set => SetProperty(ref _viewSize, value);
+        }
+
         public bool VideoViewFocused
         {
             get => _videoViewFocused;
             set => SetProperty(ref _videoViewFocused, value);
+        }
+
+        public bool PlayerHidden
+        {
+            get => _playerHidden;
+            set => SetProperty(ref _playerHidden, value);
         }
 
         public object ToBeOpened { get; set; }
@@ -103,6 +115,7 @@ namespace Screenbox.ViewModels
         private readonly SystemMediaTransportControls _transportControl;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
+        private readonly IPlaylistService _playlistService;
         private LibVLC _libVlc;
         private Media _media;
         private string _mediaTitle;
@@ -120,11 +133,17 @@ namespace Screenbox.ViewModels
         private Stream _fileStream;
         private StreamMediaInput _streamMediaInput;
         private bool _videoViewFocused;
+        private bool _playerHidden;
 
-        public PlayerViewModel(IFilesService filesService, INotificationService notificationService)
+        public PlayerViewModel(
+            IFilesService filesService,
+            INotificationService notificationService,
+            IPlaylistService playlistService)
         {
             _filesService = filesService;
             _notificationService = notificationService;
+            _playlistService = playlistService;
+            _playlistService.OpenRequested += OnOpenRequested;
             _notificationService.NotificationRaised += OnNotificationRaised;
             _notificationService.ProgressUpdated += OnProgressUpdated;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -133,7 +152,7 @@ namespace Screenbox.ViewModels
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
 
-            PlayPauseCommand = new RelayCommand(PlayPause, () => _media != null);
+            PlayPauseCommand = new RelayCommand(PlayPause);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             OpenCommand = new RelayCommand<object>(Open);
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
@@ -147,6 +166,11 @@ namespace Screenbox.ViewModels
             _bufferingProgress = 100;
             _volume = 100;
             _state = VLCState.NothingSpecial;
+        }
+
+        private void OnOpenRequested(object sender, object e)
+        {
+            _dispatcherQueue.TryEnqueue(() => Open(e));
         }
 
         private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
@@ -191,6 +215,7 @@ namespace Screenbox.ViewModels
 
         private async void Open(object value)
         {
+            PlayerHidden = false;
             if (MediaPlayer == null)
             {
                 ToBeOpened = value;
@@ -207,8 +232,7 @@ namespace Screenbox.ViewModels
                 uri = new Uri(file.Path);
                 if (uri.IsLoopback)
                 {
-                    var extension = file.FileType.ToLowerInvariant();
-                    if (!file.IsAvailable || !_filesService.SupportedFormats.Contains(extension)) return;
+                    if (!file.IsAvailable) return;
                     stream = await file.OpenStreamForReadAsync();
                     streamInput = new StreamMediaInput(stream);
                     media = new Media(_libVlc, streamInput);
@@ -217,6 +241,12 @@ namespace Screenbox.ViewModels
                 {
                     media = new Media(_libVlc, uri);
                 }
+            }
+
+            if (value is string str)
+            {
+                Uri.TryCreate(str, UriKind.Absolute, out uri);
+                value = uri;
             }
 
             if (value is Uri)
@@ -244,7 +274,6 @@ namespace Screenbox.ViewModels
 
             media.ParsedChanged += OnMediaParsed;
             MediaPlayer.Play(media);
-            PlayPauseCommand.NotifyCanExecuteChanged();
 
             oldMedia?.Dispose();
             oldStream?.Dispose();
@@ -302,11 +331,11 @@ namespace Screenbox.ViewModels
             _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
             InitMediaPlayer(_libVlc);
             RegisterMediaPlayerPlaybackEvents();
-
+            
             Open(ToBeOpened);
         }
 
-        public void ShowStatusMessage(string message)
+        private void ShowStatusMessage(string message)
         {
             StatusMessage = message;
             _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
@@ -349,6 +378,10 @@ namespace Screenbox.ViewModels
                         ShowControls();
                     }
                     break;
+
+                case nameof(PlayerHidden) when PlayerHidden:
+                    MediaPlayer?.Stop();
+                    break;
             }
         }
 
@@ -356,10 +389,18 @@ namespace Screenbox.ViewModels
         {
             MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
             _transportControl.ButtonPressed -= TransportControl_ButtonPressed;
-            MediaPlayer?.Dispose();
+            _controlsVisibilityTimer.Stop();
+            _bufferingTimer.Stop();
+            _statusMessageTimer.Stop();
+
+            if (MediaPlayer != null)
+            {
+                RemoveMediaPlayerEventHandlers();
+                MediaPlayer.Dispose();
+            }
             _media?.Dispose();
-            _fileStream?.Dispose();
             _streamMediaInput?.Dispose();
+            _fileStream?.Dispose();
         }
 
         private void PlayPause()
@@ -475,10 +516,10 @@ namespace Screenbox.ViewModels
 
         public void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            if (args != null) _viewSize = args.NewSize;
+            if (args != null) ViewSize = args.NewSize;
             if (MediaPlayer == null) return;
             if (!ZoomToFit && MediaPlayer.CropGeometry == null) return;
-            MediaPlayer.CropGeometry = ZoomToFit ? $"{_viewSize.Width}:{_viewSize.Height}" : null;
+            MediaPlayer.CropGeometry = ZoomToFit ? $"{ViewSize.Width}:{ViewSize.Height}" : null;
         }
 
         public void OnPointerMoved()
@@ -627,6 +668,7 @@ namespace Screenbox.ViewModels
         {
             _controlsVisibilityTimer.Debounce(() =>
             {
+                if (MediaPlayer == null) return;
                 if (MediaPlayer.IsPlaying && VideoViewFocused)
                 {
                     HideControls();

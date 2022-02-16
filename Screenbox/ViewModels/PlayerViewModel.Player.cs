@@ -175,6 +175,22 @@ namespace Screenbox.ViewModels
             MediaPlayer.Buffering += OnBuffering;
         }
 
+        private void RemoveMediaPlayerEventHandlers()
+        {
+            MediaPlayer.LengthChanged -= OnLengthChanged;
+            MediaPlayer.TimeChanged -= OnTimeChanged;
+            MediaPlayer.SeekableChanged -= OnSeekableChanged;
+            MediaPlayer.VolumeChanged -= OnVolumeChanged;
+            MediaPlayer.Muted -= OnStateChanged;
+            MediaPlayer.EndReached -= OnEndReached;
+            MediaPlayer.Playing -= OnStateChanged;
+            MediaPlayer.Paused -= OnStateChanged;
+            MediaPlayer.Stopped -= OnStateChanged;
+            MediaPlayer.EncounteredError -= OnStateChanged;
+            MediaPlayer.Opening -= OnStateChanged;
+            MediaPlayer.Buffering -= OnBuffering;
+        }
+
         private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
         {
             _dispatcherQueue.TryEnqueue(() => BufferingProgress = e.Cache);
@@ -201,6 +217,7 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
+                if (MediaPlayer == null) return;
                 PlayerState = MediaPlayer.State;
                 IsPlaying = MediaPlayer.IsPlaying;
                 IsMute = MediaPlayer.Mute;
@@ -216,6 +233,7 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
+                if (MediaPlayer == null) return;
                 Volume = MediaPlayer.Volume;
                 IsMute = MediaPlayer.Mute;
             });
@@ -223,7 +241,7 @@ namespace Screenbox.ViewModels
 
         private void OnSeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
         {
-            _dispatcherQueue.TryEnqueue(() => IsSeekable = MediaPlayer.IsSeekable);
+            _dispatcherQueue.TryEnqueue(() => IsSeekable = e.Seekable != 0);
         }
 
         private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)

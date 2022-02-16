@@ -27,9 +27,9 @@ namespace Screenbox
 
         public static IServiceProvider Services => DerivedCurrent._services;
 
-        private readonly IServiceProvider _services;
+        public LibVLC LibVlc { get; private set; }
 
-        private LibVLC _libVlc;
+        private readonly IServiceProvider _services;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -45,15 +45,15 @@ namespace Screenbox
 
         public LibVLC InitializeLibVlc(string[] swapChainOptions = default)
         {
-            if (_libVlc == null)
+            if (LibVlc == null)
             {
-                _libVlc = new LibVLC(true, swapChainOptions);
+                LibVlc = new LibVLC(true, swapChainOptions);
                 var notificationService = _services.GetService<INotificationService>();
-                notificationService?.SetVLCDiaglogHandlers(_libVlc);
-                LogService.RegisterLibVLCLogging(_libVlc);
+                notificationService?.SetVLCDiaglogHandlers(LibVlc);
+                LogService.RegisterLibVLCLogging(LibVlc);
             }
 
-            return _libVlc;
+            return LibVlc;
         }
 
         private static IServiceProvider ConfigureServices()
@@ -63,9 +63,10 @@ namespace Screenbox
             services.AddTransient<PlayerViewModel>();
 
             services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<IPlaylistService, PlaylistService>();
             services.AddSingleton<INotificationService, NotificationService>();
 
-            return services.BuildServiceProvider();
+            return services.BuildServiceProvider(true);
         }
 
         private static void ConfigureAppCenter()
@@ -88,9 +89,8 @@ namespace Screenbox
             var file = args.Files[0];
             // TODO: Handle multiple files (playlist)
             var rootFrame = InitRootFrame();
-            if (rootFrame.Content == null)
+            if (rootFrame.Content is not PlayerPage)
             {
-                SetMinWindowSize();
                 rootFrame.Navigate(typeof(PlayerPage), file);
             }
             else if (rootFrame.Content is PlayerPage playerPage)
@@ -118,7 +118,7 @@ namespace Screenbox
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
-                rootFrame.Navigate(typeof(PlayerPage), e.Arguments);
+                rootFrame.Navigate(typeof(PlayerPage));
             }
             // Ensure the current window is active
             Window.Current.Activate();
@@ -161,6 +161,7 @@ namespace Screenbox
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+                SetMinWindowSize();
             }
 
             return rootFrame;
