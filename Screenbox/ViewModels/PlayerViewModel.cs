@@ -326,6 +326,8 @@ namespace Screenbox.ViewModels
             IsFullscreen = view.IsFullScreenMode;
         }
 
+        public void ToggleFullscreen() => SetFullscreen(!IsFullscreen);
+
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);

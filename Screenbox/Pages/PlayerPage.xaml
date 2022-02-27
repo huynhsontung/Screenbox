@@ -282,6 +282,7 @@
                 Background="Black"
                 Click="{x:Bind ViewModel.ToggleControlsVisibility}"
                 ContextFlyout="{StaticResource VideoContextMenu}"
+                DoubleTapped="{x:Bind ViewModel.ToggleFullscreen}"
                 DragOver="{x:Bind ViewModel.OnDragOver}"
                 Drop="{x:Bind ViewModel.OnDrop}"
                 IsTabStop="False"
