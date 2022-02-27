@@ -35,6 +35,10 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             RegisterPointerHandlersForSeekBar();
             ConfigureTitleBar();
+
+            VideoViewButton.Click += (_, _) => FocusVideoView();
+            VideoViewButton.Drop += (_, _) => FocusVideoView();
+            Loaded += (_, _) => FocusVideoView();
         }
 
         public void FocusVideoView()
@@ -45,7 +49,6 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.ToBeOpened = e.Parameter;
-            FocusVideoView();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -56,7 +59,12 @@ namespace Screenbox.Pages
         private void RegisterPointerHandlersForSeekBar()
         {
             void PointerPressedEventHandler(object s, PointerRoutedEventArgs e) => ViewModel.ShouldUpdateTime = false;
-            void PointerReleasedEventHandler(object s, PointerRoutedEventArgs e) => ViewModel.ShouldUpdateTime = true;
+            void PointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
+            {
+                ViewModel.ShouldUpdateTime = true;
+                FocusVideoView();
+            }
+
             SeekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)PointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)PointerReleasedEventHandler, true);

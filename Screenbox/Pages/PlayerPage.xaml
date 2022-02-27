@@ -194,7 +194,7 @@
             </Frame.Content>
         </Frame>
 
-        <Grid x:Name="LayoutRoot">
+        <Grid x:Name="LayoutRoot" PointerMoved="{x:Bind ViewModel.OnPointerMoved}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -273,12 +273,14 @@
             </Button>
 
             <Button
+                x:Name="VideoViewButton"
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 AllowDrop="True"
                 Background="Black"
+                Click="{x:Bind ViewModel.ToggleControlsVisibility}"
                 ContextFlyout="{StaticResource VideoContextMenu}"
                 DragOver="{x:Bind ViewModel.OnDragOver}"
                 Drop="{x:Bind ViewModel.OnDrop}"
@@ -289,14 +291,7 @@
                 ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
                 Opacity="0"
                 PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
-                Style="{x:Null}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <core:CallMethodAction MethodName="ToggleControlsVisibility" TargetObject="{x:Bind ViewModel}" />
-                        <core:CallMethodAction MethodName="FocusVideoView" TargetObject="{x:Bind}" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </Button>
+                Style="{x:Null}" />
 
             <lvs:VideoView
                 x:Name="VideoView"
@@ -477,13 +472,8 @@
                     Minimum="0"
                     SmallChange="1000"
                     ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
-                    Value="{x:Bind ViewModel.Time, Mode=TwoWay}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="ValueChanged">
-                            <core:CallMethodAction MethodName="OnSeekBarValueChanged" TargetObject="{x:Bind ViewModel}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </Slider>
+                    ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
+                    Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
 
                 <StackPanel
                     Grid.Row="1"
@@ -558,12 +548,6 @@
                     </Button>
                 </StackPanel>
             </Grid>
-
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="PointerMoved">
-                    <core:CallMethodAction MethodName="OnPointerMoved" TargetObject="{x:Bind ViewModel}" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
 
             <animations:Implicit.ShowAnimations>
                 <animations:TranslationAnimation
