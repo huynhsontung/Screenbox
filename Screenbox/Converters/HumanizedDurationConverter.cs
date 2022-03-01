@@ -11,7 +11,7 @@ namespace Screenbox.Converters
             value = Math.Abs(value);
             var hours = (long)(value / 3.6e+6);
             var duration = TimeSpan.FromMilliseconds(value);
-            return (negative ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:%m}:{duration:ss}" : duration.ToString(@"%m\:ss"));
+            return (negative ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)
