@@ -230,17 +230,10 @@ namespace Screenbox.ViewModels
             if (value is StorageFile file)
             {
                 uri = new Uri(file.Path);
-                if (uri.IsLoopback)
-                {
-                    if (!file.IsAvailable) return;
-                    stream = await file.OpenStreamForReadAsync();
-                    streamInput = new StreamMediaInput(stream);
-                    media = new Media(_libVlc, streamInput);
-                }
-                else
-                {
-                    media = new Media(_libVlc, uri);
-                }
+                if (!file.IsAvailable) return;
+                stream = await file.OpenStreamForReadAsync();
+                streamInput = new StreamMediaInput(stream);
+                media = new Media(_libVlc, streamInput);
             }
 
             if (value is string str)
