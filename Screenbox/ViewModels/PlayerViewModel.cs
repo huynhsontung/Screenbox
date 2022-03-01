@@ -281,6 +281,7 @@ namespace Screenbox.ViewModels
                 SpuIndex = GetIndexFromTrackId(MediaPlayer.Spu, MediaPlayer.SpuDescription);
                 AudioTrackDescriptions = MediaPlayer.AudioTrackDescription;
                 AudioTrackIndex = GetIndexFromTrackId(MediaPlayer.AudioTrack, MediaPlayer.AudioTrackDescription);
+                Chapters = MediaPlayer.FullChapterDescriptions();
 
                 if (SetWindowSize(1)) return;
                 SetWindowSize();

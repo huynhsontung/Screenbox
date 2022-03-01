@@ -139,6 +139,10 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ChapterProgressBar.xaml.cs">
+      <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ChapterProgressItem.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">
       <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
     </Compile>
@@ -232,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\NoAnimationProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -289,6 +297,7 @@
       <SubType>Designer</SubType>
     </PRIResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

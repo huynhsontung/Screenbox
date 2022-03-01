@@ -140,6 +140,12 @@ namespace Screenbox.ViewModels
             private set => SetProperty(ref _audioTrackDescriptions, value);
         }
 
+        public ChapterDescription[] Chapters
+        {
+            get => _chapters;
+            private set => SetProperty(ref _chapters, value);
+        }
+
         public long FrameDuration => MediaPlayer.Fps != 0 ? (long)Math.Ceiling(1000.0 / MediaPlayer.Fps) : 0;
 
         public bool ShouldUpdateTime { get; set; }
@@ -157,6 +163,7 @@ namespace Screenbox.ViewModels
         private TrackDescription[] _audioTrackDescriptions;
         private int _spuIndex;
         private int _audioTrackIndex;
+        private ChapterDescription[] _chapters;
 
         private void InitMediaPlayer(LibVLC libVLC)
         {

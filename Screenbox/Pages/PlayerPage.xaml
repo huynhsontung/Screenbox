@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,10 +19,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../Controls/NoAnimationProgressBar.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
@@ -436,7 +433,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <muxc:ProgressBar
+                <controls:ChapterProgressBar
                     x:Name="PlayerProgressBar"
                     Grid.Row="0"
                     Grid.Column="0"
@@ -444,8 +441,8 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     AutomationProperties.AccessibilityView="Raw"
+                    Chapters="{x:Bind ViewModel.Chapters, Mode=OneWay}"
                     Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
-                    Style="{StaticResource NoAnimationProgressBar}"
                     Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
                 <muxc:ProgressBar
                     x:Name="BufferingProgressBar"
