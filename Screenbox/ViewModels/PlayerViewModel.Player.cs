@@ -56,11 +56,9 @@ namespace Screenbox.ViewModels
                 if (value > 100) value = 100;
                 if (value < 0) value = 0;
                 var intVal = (int)value;
-                if (SetProperty(ref _volume, value) && MediaPlayer.Volume != intVal)
-                {
-                    MediaPlayer.Volume = intVal;
-                    IsMute = intVal == 0;
-                }
+                if (!SetProperty(ref _volume, value) || MediaPlayer.Volume == intVal) return;
+                MediaPlayer.Volume = intVal;
+                IsMute = intVal == 0;
             }
         }
 
@@ -87,12 +85,10 @@ namespace Screenbox.ViewModels
             get => _spuIndex;
             set
             {
-                if (SetProperty(ref _spuIndex, value))
-                {
-                    var spuDesc = MediaPlayer.SpuDescription;
-                    if (spuDesc != null && value >= 0 && value < spuDesc.Length)
-                        MediaPlayer.SetSpu(spuDesc[value].Id);
-                }
+                if (!SetProperty(ref _spuIndex, value)) return;
+                var spuDesc = MediaPlayer.SpuDescription;
+                if (value >= 0 && value < spuDesc.Length)
+                    MediaPlayer.SetSpu(spuDesc[value].Id);
             }
         }
 
@@ -101,12 +97,10 @@ namespace Screenbox.ViewModels
             get => _audioTrackIndex;
             set
             {
-                if (SetProperty(ref _audioTrackIndex, value))
-                {
-                    var audioDesc = MediaPlayer.AudioTrackDescription;
-                    if (audioDesc != null && value >= 0 && value < audioDesc.Length)
-                        MediaPlayer.SetSpu(audioDesc[value].Id);
-                }
+                if (!SetProperty(ref _audioTrackIndex, value)) return;
+                var audioDesc = MediaPlayer.AudioTrackDescription;
+                if (value >= 0 && value < audioDesc.Length)
+                    MediaPlayer.SetSpu(audioDesc[value].Id);
             }
         }
 
@@ -124,7 +118,7 @@ namespace Screenbox.ViewModels
             get
             {
                 uint px = 0, py = 0;
-                return MediaPlayer.Size(0, ref px, ref py) ? new Size(px, py) : Windows.Foundation.Size.Empty;
+                return MediaPlayer.Size(0, ref px, ref py) ? new Size(px, py) : Size.Empty;
             }
         }
 
@@ -203,7 +197,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => BufferingProgress = e.Cache);
         }
 
-        private int GetIndexFromTrackId(int id, TrackDescription[] tracks)
+        private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
         {
             if (tracks == null) return -1;
             for (int i = 0; i < tracks.Length; i++)
@@ -263,7 +257,7 @@ namespace Screenbox.ViewModels
         {
             if (ShouldLoop)
             {
-                _dispatcherQueue.TryEnqueue(() => Replay());
+                _dispatcherQueue.TryEnqueue(Replay);
                 return;
             }
 
@@ -277,7 +271,11 @@ namespace Screenbox.ViewModels
 
         private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
         {
-            _dispatcherQueue.TryEnqueue(() => Length = e.Length);
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Length = e.Length;
+                Chapters = MediaPlayer.FullChapterDescriptions();
+            });
         }
     }
 }
