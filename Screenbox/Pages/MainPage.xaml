@@ -2,9 +2,13 @@
     x:Class="Screenbox.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -17,6 +21,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <StackPanel
@@ -27,7 +32,11 @@
                 Margin="4"
                 Click="PickFileButtonClick"
                 Content="Pick file" />
-            <TextBlock x:Name="FileNameText" Margin="4" />
+            <TextBlock
+                x:Name="FileNameText"
+                MaxWidth="250"
+                Margin="4"
+                TextTrimming="CharacterEllipsis" />
             <TextBox
                 x:Name="UrlBox"
                 Width="250"
@@ -38,5 +47,30 @@
                 Click="OpenButtonClick"
                 Content="Open" />
         </StackPanel>
+
+        <Button
+            Grid.Row="2"
+            Width="64"
+            Height="52"
+            Margin="8"
+            HorizontalAlignment="Center">
+            <muxc:AnimatedIcon>
+                <muxc:AnimatedIcon.Source>
+                    <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
+                </muxc:AnimatedIcon.Source>
+                <muxc:AnimatedIcon.FallbackIconSource>
+                    <muxc:SymbolIconSource Symbol="Up" />
+                </muxc:AnimatedIcon.FallbackIconSource>
+            </muxc:AnimatedIcon>
+
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Click">
+                    <core:ChangePropertyAction
+                        PropertyName="PlayerHidden"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="False" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </Button>
     </Grid>
 </Page>

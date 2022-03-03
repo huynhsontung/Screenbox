@@ -187,7 +187,7 @@
 
         <Frame x:Name="InlineFrame" Visibility="Collapsed">
             <Frame.Content>
-                <pages:MainPage />
+                <pages:MainPage DataContext="{x:Bind ViewModel}" />
             </Frame.Content>
         </Frame>
 
@@ -225,7 +225,8 @@
                 Height="52"
                 Margin="12"
                 HorizontalAlignment="Left"
-                Canvas.ZIndex="2">
+                Canvas.ZIndex="2"
+                Click="{x:Bind ViewModel.OnBackRequested}">
                 <Button.RenderTransform>
                     <TranslateTransform x:Name="BackButtonTranslate" />
                 </Button.RenderTransform>
@@ -234,14 +235,6 @@
                         <animatedvisuals:AnimatedBackVisualSource />
                     </muxc:AnimatedIcon.Source>
                 </muxc:AnimatedIcon>
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <core:ChangePropertyAction
-                            PropertyName="PlayerHidden"
-                            TargetObject="{x:Bind ViewModel}"
-                            Value="True" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
             </Button>
 
             <Button

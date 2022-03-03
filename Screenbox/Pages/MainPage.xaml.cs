@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Services;
+using Screenbox.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,14 +27,14 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        internal PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
+
         private StorageFile _pickedFile;
         private readonly IFilesService _filesService;
-        private readonly IPlaylistService _playlistService;
 
         public MainPage()
         {
             _filesService = App.Services.GetRequiredService<IFilesService>();
-            _playlistService = App.Services.GetRequiredService<IPlaylistService>();
             this.InitializeComponent();
         }
 
@@ -41,12 +42,12 @@ namespace Screenbox.Pages
         {
             if (_pickedFile != null)
             {
-                _playlistService.RequestOpen(_pickedFile);
+                ViewModel.OpenCommand.Execute(_pickedFile);
             }
 
             if (!string.IsNullOrEmpty(UrlBox.Text))
             {
-                _playlistService.RequestOpen(UrlBox.Text);
+                ViewModel.OpenCommand.Execute(UrlBox.Text);
             }
         }
 

@@ -330,6 +330,15 @@ namespace Screenbox.ViewModels
             Open(ToBeOpened);
         }
 
+        public void OnBackRequested()
+        {
+            PlayerHidden = true;
+            if (MediaPlayer?.IsPlaying ?? false)
+            {
+                MediaPlayer.Pause();
+            }
+        }
+
         private void ShowStatusMessage(string message)
         {
             StatusMessage = message;
@@ -372,10 +381,6 @@ namespace Screenbox.ViewModels
                     {
                         ShowControls();
                     }
-                    break;
-
-                case nameof(PlayerHidden) when PlayerHidden:
-                    MediaPlayer?.Stop();
                     break;
             }
         }

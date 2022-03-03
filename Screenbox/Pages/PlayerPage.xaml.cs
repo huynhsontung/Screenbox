@@ -33,12 +33,9 @@ namespace Screenbox.Pages
             _scope = App.Services.CreateScope();
             DataContext = _scope.ServiceProvider.GetRequiredService<PlayerViewModel>();
             this.InitializeComponent();
-            RegisterPointerHandlersForSeekBar();
+            RegisterSeekBarPointerHandlers();
+            FocusVideoViewOnEvents();
             ConfigureTitleBar();
-
-            VideoViewButton.Click += (_, _) => FocusVideoView();
-            VideoViewButton.Drop += (_, _) => FocusVideoView();
-            Loaded += (_, _) => FocusVideoView();
         }
 
         public void FocusVideoView()
@@ -56,7 +53,19 @@ namespace Screenbox.Pages
             _scope.Dispose();
         }
 
-        private void RegisterPointerHandlersForSeekBar()
+        private void FocusVideoViewOnEvents()
+        {
+            VideoViewButton.Click += (_, _) => FocusVideoView();
+            VideoViewButton.Drop += (_, _) => FocusVideoView();
+            Loaded += (_, _) => FocusVideoView();
+            PageStates.CurrentStateChanged += (_, args) =>
+            {
+                if (args.NewState.Name == "PlayerVisible")
+                    FocusVideoView();
+            };
+        }
+
+        private void RegisterSeekBarPointerHandlers()
         {
             void PointerPressedEventHandler(object s, PointerRoutedEventArgs e) => ViewModel.ShouldUpdateTime = false;
             void PointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
