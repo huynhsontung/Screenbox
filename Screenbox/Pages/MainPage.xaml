@@ -24,22 +24,35 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <TextBlock
+            Grid.Row="0"
+            Margin="13,0,0,0"
+            VerticalAlignment="Center"
+            FontSize="12"
+            Text="Screenbox" />
+
         <StackPanel
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
+            <TextBlock
+                Margin="0,0,0,32"
+                HorizontalAlignment="Center"
+                FontStyle="Italic"
+                Opacity="0.5"
+                Text="This page is for testing purpose only" />
             <Button
                 Margin="4"
                 Click="PickFileButtonClick"
                 Content="Pick file" />
             <TextBlock
                 x:Name="FileNameText"
-                MaxWidth="250"
+                MaxWidth="350"
                 Margin="4"
                 TextTrimming="CharacterEllipsis" />
             <TextBox
                 x:Name="UrlBox"
-                Width="250"
+                Width="350"
                 Margin="4"
                 Header="Url to open" />
             <Button
