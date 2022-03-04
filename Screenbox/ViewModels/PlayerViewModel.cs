@@ -676,7 +676,7 @@ namespace Screenbox.ViewModels
                     // Workaround for PointerMoved is raised when show/hide cursor
                     OverrideVisibilityChange();
                 }
-            }, TimeSpan.FromSeconds(5));
+            }, TimeSpan.FromSeconds(3));
         }
 
         private void OverrideVisibilityChange(int delay = 1000)
