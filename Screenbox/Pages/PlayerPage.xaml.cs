@@ -67,10 +67,10 @@ namespace Screenbox.Pages
 
         private void RegisterSeekBarPointerHandlers()
         {
-            void PointerPressedEventHandler(object s, PointerRoutedEventArgs e) => ViewModel.ShouldUpdateTime = false;
+            void PointerPressedEventHandler(object s, PointerRoutedEventArgs e) => ViewModel.OnSeekBarPointerEvent(true);
             void PointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
             {
-                ViewModel.ShouldUpdateTime = true;
+                ViewModel.OnSeekBarPointerEvent(false);
                 FocusVideoView();
             }
 

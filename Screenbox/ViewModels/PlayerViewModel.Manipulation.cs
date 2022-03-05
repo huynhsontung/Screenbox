@@ -23,7 +23,7 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             StatusMessage = null;
-            ShouldUpdateTime = true;
+            MediaPlayer.ShouldUpdateTime = true;
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -38,7 +38,7 @@ namespace Screenbox.ViewModels
                 (_lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50))
             {
                 _lockDirection = ManipulationLock.Vertical;
-                Volume += -verticalChange;
+                MediaPlayer.Volume += -verticalChange;
                 StatusMessage = $"Volume {MediaPlayer.Volume:F0}%";
                 return;
             }
@@ -46,9 +46,9 @@ namespace Screenbox.ViewModels
             if (MediaPlayer.IsSeekable)
             {
                 _lockDirection = ManipulationLock.Horizontal;
-                ShouldUpdateTime = false;
+                MediaPlayer.ShouldUpdateTime = false;
                 var timeChange = horizontalChange * HorizontalChangePerPixel;
-                Time += timeChange;
+                MediaPlayer.Time += timeChange;
 
                 var changeText = HumanizedDurationConverter.Convert(MediaPlayer.Time - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;

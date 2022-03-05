@@ -66,10 +66,10 @@
                         Margin="0,0,8,0"
                         Background="Transparent"
                         BorderThickness="0"
-                        IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
-                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
+                        IsChecked="{x:Bind ViewModel.MediaPlayer.IsMute, Mode=TwoWay}">
+                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.IsMute), Mode=OneWay}" />
                     </ToggleButton>
-                    <Slider Width="150" Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
+                    <Slider Width="150" Value="{x:Bind ViewModel.MediaPlayer.Volume, Mode=TwoWay}" />
                 </StackPanel>
             </Flyout>
 
@@ -78,8 +78,8 @@
                     <ListView
                         Width="220"
                         ItemContainerTransitions="{x:Null}"
-                        ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.MediaPlayer.AudioTrackDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=TwoWay}">
                         <ListView.Header>
                             <TextBlock FontWeight="SemiBold" Text="Audio" />
                         </ListView.Header>
@@ -93,8 +93,8 @@
                     <ListView
                         Width="220"
                         ItemContainerTransitions="{x:Null}"
-                        ItemsSource="{x:Bind ViewModel.SpuDescriptions, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.SpuIndex, Mode=TwoWay}">
+                        ItemsSource="{x:Bind ViewModel.MediaPlayer.SpuDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=TwoWay}">
                         <ListView.Header>
                             <TextBlock FontWeight="SemiBold" Text="Subtitles" />
                         </ListView.Header>
@@ -116,7 +116,7 @@
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
                     Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=TwoWay}"
                     Text="Loop" />
                 <MenuFlyoutSubItem Text="Playback speed">
                     <MenuFlyoutSubItem.Icon>
@@ -293,7 +293,7 @@
                 IsHitTestVisible="False"
                 IsTabStop="False"
                 KeyboardAcceleratorPlacementMode="Hidden"
-                MediaPlayer="{x:Bind ViewModel.MediaPlayer}"
+                MediaPlayer="{x:Bind ViewModel.MediaPlayer.VlcPlayer}"
                 SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
                 <lvs:VideoView.KeyboardAccelerators>
                     <KeyboardAccelerator
@@ -394,7 +394,7 @@
                 VerticalAlignment="Center"
                 IsActive="True"
                 IsHitTestVisible="False"
-                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.PlayerState), Mode=OneWay}" />
+                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.MediaPlayer.State), Mode=OneWay}" />
 
             <muxc:InfoBar
                 Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
@@ -434,7 +434,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     AutomationProperties.AccessibilityView="Raw"
-                    Chapters="{x:Bind ViewModel.Chapters, Mode=OneWay}"
+                    Chapters="{x:Bind ViewModel.MediaPlayer.Chapters, Mode=OneWay}"
                     Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
                     Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
                 <muxc:ProgressBar
@@ -457,14 +457,13 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     Foreground="Transparent"
-                    IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
+                    IsEnabled="{x:Bind ViewModel.MediaPlayer.IsSeekable, Mode=OneWay, FallbackValue=False}"
                     LargeChange="10000"
-                    Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
+                    Maximum="{x:Bind ViewModel.MediaPlayer.Length, Mode=OneWay, FallbackValue=0}"
                     Minimum="0"
                     SmallChange="1000"
                     ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
-                    ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
-                    Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
+                    Value="{x:Bind ViewModel.MediaPlayer.Time, Mode=TwoWay}" />
 
                 <StackPanel
                     Grid.Row="1"
@@ -478,7 +477,7 @@
                             <KeyboardAccelerator Key="P" />
                             <KeyboardAccelerator Key="K" />
                         </Button.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
+                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.IsPlaying), Mode=OneWay}" />
                     </Button>
                     <muxc:ToggleSplitButton
                         x:Name="MuteButton"
@@ -486,16 +485,16 @@
                         Background="Transparent"
                         BorderThickness="0"
                         Flyout="{StaticResource VolumeFlyout}"
-                        IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
+                        IsChecked="{x:Bind ViewModel.MediaPlayer.IsMute, Mode=TwoWay}">
                         <muxc:SplitButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="M" />
                         </muxc:SplitButton.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
+                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.IsMute), Mode=OneWay}" />
                     </muxc:ToggleSplitButton>
                     <TextBlock Margin="8,0" VerticalAlignment="Center">
-                        <Run Text="{x:Bind ViewModel.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                        <Run Text="{x:Bind ViewModel.MediaPlayer.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                         <Run Text=" / " />
-                        <Run Text="{x:Bind ViewModel.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                        <Run Text="{x:Bind ViewModel.MediaPlayer.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                     </TextBlock>
                 </StackPanel>
 

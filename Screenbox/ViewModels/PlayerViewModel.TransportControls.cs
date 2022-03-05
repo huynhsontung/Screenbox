@@ -1,4 +1,5 @@
 ﻿using Windows.Media;
+using Screenbox.Core;
 
 namespace Screenbox.ViewModels
 {
@@ -6,6 +7,7 @@ namespace Screenbox.ViewModels
     {
         private SystemMediaTransportControlsDisplayUpdater InitSystemTransportControls()
         {
+            _transportControl.ButtonPressed += TransportControl_ButtonPressed;
             _transportControl.IsEnabled = true;
             _transportControl.IsPlayEnabled = true;
             _transportControl.IsPauseEnabled = true;
@@ -20,13 +22,13 @@ namespace Screenbox.ViewModels
 
         // TODO: Update SystemMediaTransportControlsDisplayUpdater with media metadata
 
-        private void RegisterMediaPlayerPlaybackEvents()
+        private void RegisterMediaPlayerPlaybackEvents(ObservablePlayer player)
         {
-            MediaPlayer.Paused += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
-            MediaPlayer.Stopped += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
-            MediaPlayer.Playing += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
-            MediaPlayer.EncounteredError += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
-            MediaPlayer.Opening += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
+            player.VlcPlayer.Paused += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
+            player.VlcPlayer.Stopped += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
+            player.VlcPlayer.Playing += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
+            player.VlcPlayer.EncounteredError += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
+            player.VlcPlayer.Opening += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
         }
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
