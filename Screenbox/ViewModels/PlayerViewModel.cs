@@ -16,7 +16,6 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;

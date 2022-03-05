@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using LibVLCSharp.Shared;
 using Screenbox.Core;
 
@@ -9,10 +11,10 @@ namespace Screenbox.Services
         event EventHandler<NotificationRaisedEventArgs> NotificationRaised;
         event EventHandler<ProgressUpdatedEventArgs> ProgressUpdated;
 
-        void RaiseError(string title, string message = null);
-        void RaiseInfo(string title, string message = null);
-        void RaiseNotification(NotificationLevel level, string title, string message = null, object content = null);
-        void RaiseWarning(string title, string message = null);
+        void RaiseError(string? title, string? message);
+        void RaiseInfo(string? title, string? message);
+        void RaiseNotification(NotificationLevel level, string? title, string? message, object? content = null);
+        void RaiseWarning(string? title, string? message);
         void SetVLCDiaglogHandlers(LibVLC libVLC);
     }
 }

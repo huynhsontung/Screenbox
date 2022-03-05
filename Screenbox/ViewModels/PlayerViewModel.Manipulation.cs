@@ -23,11 +23,12 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             StatusMessage = null;
-            MediaPlayer.ShouldUpdateTime = true;
+            if (MediaPlayer != null) MediaPlayer.ShouldUpdateTime = true;
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
+            if (MediaPlayer == null) return;
             var horizontalChange = e.Delta.Translation.X;
             var verticalChange = e.Delta.Translation.Y;
             var horizontalCumulative = e.Cumulative.Translation.X;
@@ -35,7 +36,7 @@ namespace Screenbox.ViewModels
             if (Math.Abs(horizontalCumulative) < 50 && Math.Abs(verticalCumulative) < 50) return;
 
             if (_lockDirection == ManipulationLock.Vertical ||
-                (_lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50))
+                _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
             {
                 _lockDirection = ManipulationLock.Vertical;
                 MediaPlayer.Volume += -verticalChange;
@@ -59,7 +60,7 @@ namespace Screenbox.ViewModels
         public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             _lockDirection = ManipulationLock.None;
-            _timeBeforeManipulation = MediaPlayer.Time;
+            _timeBeforeManipulation = MediaPlayer?.Time ?? 0;
         }
     }
 }

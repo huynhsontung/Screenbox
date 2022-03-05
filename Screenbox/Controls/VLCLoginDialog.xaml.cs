@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿#nullable enable
+
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -19,9 +21,9 @@ namespace Screenbox.Controls
             typeof(VLCLoginDialog),
             new PropertyMetadata(null));
 
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
-        public string Username
+        public string? Username
         {
             get => (string)GetValue(UsernameProperty);
             set => SetValue(UsernameProperty, value);

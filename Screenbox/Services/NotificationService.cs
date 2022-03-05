@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
@@ -10,13 +12,13 @@ namespace Screenbox.Services
 {
     internal class NotificationService : INotificationService
     {
-        public event EventHandler<NotificationRaisedEventArgs> NotificationRaised;
+        public event EventHandler<NotificationRaisedEventArgs>? NotificationRaised;
 
-        public event EventHandler<ProgressUpdatedEventArgs> ProgressUpdated;
+        public event EventHandler<ProgressUpdatedEventArgs>? ProgressUpdated;
 
-        private string _progressTitle;
+        private string? _progressTitle;
 
-        public void RaiseNotification(NotificationLevel level, string title, string message = default, object content = default)
+        public void RaiseNotification(NotificationLevel level, string? title, string? message, object? content = default)
         {
             var eventArgs = new NotificationRaisedEventArgs
             {
@@ -28,48 +30,42 @@ namespace Screenbox.Services
             NotificationRaised?.Invoke(this, eventArgs);
         }
 
-        public void RaiseError(string title, string message = default) => RaiseNotification(NotificationLevel.Error, title, message);
+        public void RaiseError(string? title, string? message) => RaiseNotification(NotificationLevel.Error, title, message);
 
-        public void RaiseWarning(string title, string message = default) => RaiseNotification(NotificationLevel.Warning, title, message);
+        public void RaiseWarning(string? title, string? message) => RaiseNotification(NotificationLevel.Warning, title, message);
 
-        public void RaiseInfo(string title, string message = default) => RaiseNotification(NotificationLevel.Info, title, message);
+        public void RaiseInfo(string? title, string? message) => RaiseNotification(NotificationLevel.Info, title, message);
 
-        public void SetVLCDiaglogHandlers(LibVLC libVLC)
+        public void SetVLCDiaglogHandlers(LibVLC libVlc)
         {
-            if (libVLC.DialogHandlersSet)
+            if (libVlc.DialogHandlersSet)
             {
-                libVLC.UnsetDialogHandlers();
+                libVlc.UnsetDialogHandlers();
             }
 
-            libVLC.SetDialogHandlers(DisplayErrorMessage, DisplayLoginDialog, DisplayQuestionDialog, DisplayProgress, UpdateProgress);
+            libVlc.SetDialogHandlers(DisplayErrorMessage, DisplayLoginDialog, DisplayQuestionDialog, DisplayProgress, UpdateProgress);
         }
 
-        private Task DisplayErrorMessage(string title, string text)
+        private Task DisplayErrorMessage(string? title, string? text)
         {
             return Task.Run(() => RaiseError(title, text));
         }
 
-        private Task DisplayProgress(Dialog dialog, string title, string text, bool indeterminate, float position, string cancelText, CancellationToken token)
+        private Task DisplayProgress(Dialog dialog, string? title, string? text, bool indeterminate, float position, string? cancelText, CancellationToken token)
         {
             return Task.Run(() =>
             {
                 if (token.IsCancellationRequested) return;
                 _progressTitle = title;
-                var eventArgs = new ProgressUpdatedEventArgs
-                {
-                    Title = title,
-                    Text = text,
-                    IsIndeterminate = indeterminate,
-                    Value = position,
-                };
+                var eventArgs = new ProgressUpdatedEventArgs(title, text, indeterminate, position);
                 ProgressUpdated?.Invoke(this, eventArgs);
-            });
+            }, token);
         }
 
-        private Task UpdateProgress(Dialog dialog, float position, string text) =>
+        private Task UpdateProgress(Dialog dialog, float position, string? text) =>
             DisplayProgress(dialog, _progressTitle, text, false, position, null, CancellationToken.None);
 
-        private async Task DisplayLoginDialog(Dialog dialog, string title, string text, string defaultUsername, bool askStore, CancellationToken token)
+        private async Task DisplayLoginDialog(Dialog dialog, string? title, string? text, string? defaultUsername, bool askStore, CancellationToken token)
         {
             if (token.IsCancellationRequested) return;
             var loginDialog = new VLCLoginDialog
@@ -103,8 +99,8 @@ namespace Screenbox.Services
             }
         }
 
-        private async Task DisplayQuestionDialog(Dialog dialog, string title, string text, DialogQuestionType type, string cancelText,
-            string firstActionText, string secondActionText, CancellationToken token)
+        private async Task DisplayQuestionDialog(Dialog dialog, string? title, string? text, DialogQuestionType type, string? cancelText,
+            string? firstActionText, string? secondActionText, CancellationToken token)
         {
             if (token.IsCancellationRequested) return;
             var questionDialog = new ContentDialog

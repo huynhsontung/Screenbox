@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
@@ -27,7 +29,7 @@ namespace Screenbox
 
         public static IServiceProvider Services => DerivedCurrent._services;
 
-        public LibVLC LibVlc { get; private set; }
+        public LibVLC? LibVlc { get; private set; }
 
         private readonly IServiceProvider _services;
 
@@ -43,7 +45,7 @@ namespace Screenbox
             this.Suspending += OnSuspending;
         }
 
-        public LibVLC InitializeLibVlc(string[] swapChainOptions = default)
+        public LibVLC InitializeLibVlc(string[] swapChainOptions)
         {
             if (LibVlc == null)
             {
