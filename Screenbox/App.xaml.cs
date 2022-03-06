@@ -49,7 +49,10 @@ namespace Screenbox
         {
             if (LibVlc == null)
             {
-                LibVlc = new LibVLC(true, swapChainOptions);
+                var options = new string[swapChainOptions.Length + 1];
+                options[0] = "--no-osd";
+                swapChainOptions.CopyTo(options, 1);
+                LibVlc = new LibVLC(true, options);
                 var notificationService = _services.GetService<INotificationService>();
                 notificationService?.SetVLCDiaglogHandlers(LibVlc);
                 LogService.RegisterLibVLCLogging(LibVlc);
