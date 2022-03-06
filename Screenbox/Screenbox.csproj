@@ -160,7 +160,6 @@
     <Compile Include="Core\NotificationRaisedEventArgs.cs" />
     <Compile Include="Core\ObservablePlayer.cs" />
     <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
-    <Compile Include="Core\WindowsStreamMediaInput.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
