@@ -248,6 +248,18 @@ namespace Screenbox.Core
 
         public void Stop() => _vlcPlayer.Stop();
 
+        public void SetTime(double time)
+        {
+            time = Math.Clamp(time, 0, Length);
+            if (State == VLCState.Ended)
+            {
+                Replay();
+            }
+
+            // Manually set time to eliminate infinite update loop
+            Time = VlcPlayer.Time = (long)time;
+        }
+
         private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
         {
             for (int i = 0; i < tracks.Length; i++)

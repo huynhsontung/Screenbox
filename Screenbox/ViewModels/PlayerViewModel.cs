@@ -504,7 +504,8 @@ namespace Screenbox.ViewModels
         {
             if (MediaPlayer?.IsSeekable ?? false)
             {
-                MediaPlayer.Time += amount;
+                if (MediaPlayer.State == VLCState.Ended && amount > 0) return;
+                MediaPlayer.SetTime(MediaPlayer.Time + amount);
                 ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} / {HumanizedDurationConverter.Convert(MediaPlayer.Length)}");
             }
         }
@@ -516,7 +517,7 @@ namespace Screenbox.ViewModels
             {
                 if (previous)
                 {
-                    MediaPlayer.Time -= MediaPlayer.FrameDuration;
+                    MediaPlayer.SetTime(MediaPlayer.Time - MediaPlayer.FrameDuration);
                 }
                 else
                 {
@@ -694,7 +695,7 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
+                    MediaPlayer.SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
                     break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
@@ -791,20 +792,6 @@ namespace Screenbox.ViewModels
             coreWindow.PointerCursor ??= _cursor;
         }
 
-        private void SetTime(double time)
-        {
-            if (MediaPlayer == null) return;
-            if (!MediaPlayer.IsSeekable || time < 0 || time > MediaPlayer.Length) return;
-            if (MediaPlayer.State == VLCState.Ended)
-            {
-                MediaPlayer.Replay();
-            }
-
-            // Manually set time to eliminate infinite update loop
-            time = MediaPlayer.Time = time;
-            MediaPlayer.VlcPlayer.Time = (long)time;
-        }
-
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
         {
             if (MediaPlayer?.IsSeekable ?? false)
@@ -814,7 +801,7 @@ namespace Screenbox.ViewModels
                     !MediaPlayer.ShouldUpdateTime &&
                     newTime != MediaPlayer.Length)
                 {
-                    SetTime(newTime);
+                    MediaPlayer.SetTime(newTime);
                 }
             }
         }

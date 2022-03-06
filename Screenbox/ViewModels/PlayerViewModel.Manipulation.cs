@@ -49,7 +49,7 @@ namespace Screenbox.ViewModels
                 _lockDirection = ManipulationLock.Horizontal;
                 MediaPlayer.ShouldUpdateTime = false;
                 var timeChange = horizontalChange * HorizontalChangePerPixel;
-                MediaPlayer.Time += timeChange;
+                MediaPlayer.SetTime(MediaPlayer.Time + timeChange);
 
                 var changeText = HumanizedDurationConverter.Convert(MediaPlayer.Time - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
