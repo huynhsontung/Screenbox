@@ -422,7 +422,6 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -430,7 +429,7 @@
                     x:Name="PlayerProgressBar"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     AutomationProperties.AccessibilityView="Raw"
@@ -441,7 +440,7 @@
                     x:Name="BufferingProgressBar"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     AutomationProperties.AccessibilityView="Raw"
@@ -452,7 +451,7 @@
                     x:Name="SeekBar"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -463,6 +462,7 @@
                     Minimum="0"
                     SmallChange="1000"
                     ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
+                    ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
                     Value="{x:Bind ViewModel.MediaPlayer.Time, Mode=TwoWay}" />
 
                 <StackPanel
@@ -491,16 +491,28 @@
                         </muxc:SplitButton.KeyboardAccelerators>
                         <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.IsMute), Mode=OneWay}" />
                     </muxc:ToggleSplitButton>
-                    <TextBlock Margin="8,0" VerticalAlignment="Center">
+                    <TextBlock
+                        MinWidth="0"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center">
                         <Run Text="{x:Bind ViewModel.MediaPlayer.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                         <Run Text=" / " />
                         <Run Text="{x:Bind ViewModel.MediaPlayer.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                    </TextBlock>
+                    <TextBlock
+                        MinWidth="0"
+                        Margin="8,0,0,0"
+                        VerticalAlignment="Center"
+                        Visibility="{x:Bind ViewModel.MediaPlayer.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                        <Run Text="• " />
+                        <Run Text="{x:Bind ViewModel.GetChapterName(ViewModel.MediaPlayer.CurrentChapter.Name), Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
 
                 <StackPanel
                     Grid.Row="1"
-                    Grid.Column="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
                     Orientation="Horizontal">
                     <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioCaptionFlyout}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />

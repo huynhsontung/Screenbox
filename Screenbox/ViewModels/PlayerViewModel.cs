@@ -16,6 +16,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
@@ -571,6 +572,10 @@ namespace Screenbox.ViewModels
             ChangeVolume(mouseWheelDelta / 25.0);
         }
 
+        public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
+            ? $"Chapter {MediaPlayer?.VlcPlayer.Chapter + 1}"
+            : nullableName ?? string.Empty;
+
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (MediaPlayer == null) return;
@@ -712,7 +717,23 @@ namespace Screenbox.ViewModels
                 MediaPlayer.Replay();
             }
 
-            MediaPlayer.Time = time;
+            // Manually set time to eliminate infinite update loop
+            time = MediaPlayer.Time = time;
+            MediaPlayer.VlcPlayer.Time = (long)time;
+        }
+
+        public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
+        {
+            if (MediaPlayer?.IsSeekable ?? false)
+            {
+                double newTime = args.NewValue;
+                if (args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying ||
+                    !MediaPlayer.ShouldUpdateTime &&
+                    newTime != MediaPlayer.Length)
+                {
+                    SetTime(newTime);
+                }
+            }
         }
     }
 }

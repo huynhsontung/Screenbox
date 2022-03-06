@@ -1,4 +1,7 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
+using System.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -8,31 +11,36 @@ namespace Screenbox.Converters
     {
         public bool Invert { get; set; }
 
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object Convert(object? value, Type targetType, object parameter, string language)
         {
-            if (value is bool b)
+            switch (value)
             {
-                if (Invert)
+                case ICollection collection:
+                    return GetVisibility(collection.Count > 0);
+                case bool b:
+                    return GetVisibility(b);
+                default:
                 {
-                    return b ? Visibility.Collapsed : Visibility.Visible;
+                    var result = value is string s ? !string.IsNullOrEmpty(s) : value != null;
+
+                    return GetVisibility(result);
                 }
-
-                return b ? Visibility.Visible : Visibility.Collapsed;
             }
+        }
 
-            var result = value is string s ? !string.IsNullOrEmpty(s) : value != null;
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
 
+        private Visibility GetVisibility(bool result)
+        {
             if (Invert)
             {
                 return !result ? Visibility.Visible : Visibility.Collapsed;
             }
 
             return result ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            throw new NotImplementedException();
         }
     }
 }

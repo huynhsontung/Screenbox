@@ -26,11 +26,7 @@ namespace Screenbox.Core
             {
                 if (value < 0) value = 0;
                 if (value > Length) value = Length;
-                var time = (long)value;
-                if (SetProperty(ref _time, value) && _vlcPlayer.Time != time)
-                {
-                    _vlcPlayer.Time = time;
-                }
+                SetProperty(ref _time, value);
             }
         }
 
@@ -150,6 +146,12 @@ namespace Screenbox.Core
             private set => SetProperty(ref _chapters, value);
         }
 
+        public ChapterDescription CurrentChapter
+        {
+            get => _currentChapter;
+            private set => SetProperty(ref _currentChapter, value);
+        }
+
         public float Rate
         {
             get => _vlcPlayer.Rate;
@@ -184,6 +186,7 @@ namespace Screenbox.Core
         private int _spuIndex;
         private int _audioTrackIndex;
         private ChapterDescription[] _chapters;
+        private ChapterDescription _currentChapter;
 
         public ObservablePlayer(LibVLC libVlc)
         {
@@ -204,6 +207,7 @@ namespace Screenbox.Core
             _vlcPlayer.EncounteredError += OnStateChanged;
             _vlcPlayer.Opening += OnStateChanged;
             _vlcPlayer.Buffering += OnBuffering;
+            _vlcPlayer.ChapterChanged += OnChapterChanged;
 
             ShouldUpdateTime = true;
             _bufferingProgress = 100;
@@ -254,6 +258,16 @@ namespace Screenbox.Core
             return -1;
         }
 
+        private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                var chapters = Chapters;
+                if (chapters.Length == 0) return;
+                CurrentChapter = chapters[e.Chapter];
+            });
+        }
+
         private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
         {
             _dispatcherQueue.TryEnqueue(() =>
@@ -262,6 +276,7 @@ namespace Screenbox.Core
                 SpuIndex = GetIndexFromTrackId(_vlcPlayer.Spu, _vlcPlayer.SpuDescription);
                 AudioTrackDescriptions = _vlcPlayer.AudioTrackDescription;
                 AudioTrackIndex = GetIndexFromTrackId(_vlcPlayer.AudioTrack, _vlcPlayer.AudioTrackDescription);
+                CurrentChapter = Chapters.Length > 0 ? Chapters[_vlcPlayer.Chapter] : default;
             });
         }
 
