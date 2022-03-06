@@ -231,7 +231,7 @@ namespace Screenbox.ViewModels
 
         private void OnOpenRequested(object sender, object e)
         {
-            _dispatcherQueue.TryEnqueue(() => Open(e));
+            Open(e);
         }
 
         private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
@@ -303,7 +303,6 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            PlayerHidden = false;
             if (_libVlc == null) return;
             Media? media = null;
             Uri? uri = null;
@@ -313,8 +312,8 @@ namespace Screenbox.ViewModels
             if (value is StorageFile file)
             {
                 uri = new Uri(file.Path);
-                if (!file.IsAvailable) return;
                 stream = await file.OpenStreamForReadAsync();
+                if (stream == null) return;
                 streamInput = new StreamMediaInput(stream);
                 media = new Media(_libVlc, streamInput);
             }
@@ -336,10 +335,11 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            if (uri.Segments.Length > 0)
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                MediaTitle = Uri.UnescapeDataString(uri.Segments.Last());
-            }
+                PlayerHidden = false;
+                MediaTitle = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            });
 
             var oldMedia = _media;
             var oldStream = _fileStream;
