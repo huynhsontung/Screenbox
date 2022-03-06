@@ -9,6 +9,7 @@ namespace Screenbox.Core
         Info,
         Warning,
         Error,
+        Success
     }
 
     internal class NotificationRaisedEventArgs : EventArgs
@@ -20,5 +21,9 @@ namespace Screenbox.Core
         public NotificationLevel Level { get; set; }
 
         public object? Content { get; set; }
+
+        public Uri? Link { get; set; }
+
+        public string? LinkText { get; set; }
     }
 }

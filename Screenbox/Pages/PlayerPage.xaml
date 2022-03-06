@@ -157,6 +157,11 @@
                         Text="2" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutSeparator />
+                <MenuFlyoutItem Command="{x:Bind ViewModel.SaveSnapshotCommand}" Text="Save current frame">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE71;" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
                 <ToggleMenuFlyoutItem
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
@@ -399,13 +404,20 @@
             <muxc:InfoBar
                 Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
                 Grid.Row="1"
-                Margin="12,12"
+                Margin="12,0,12,4"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
                 Content="{x:Bind ViewModel.Notification.Content, Mode=OneWay}"
                 IsOpen="{x:Bind ViewModel.Notification, Mode=OneWay, Converter={StaticResource ObjectToBooleanConverter}}"
                 Message="{x:Bind ViewModel.Notification.Message, Mode=OneWay}"
-                Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}" />
+                Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}">
+                <muxc:InfoBar.ActionButton>
+                    <HyperlinkButton
+                        Click="{x:Bind ViewModel.OpenSaveFolder}"
+                        Content="{x:Bind ViewModel.Notification.LinkText, Mode=OneWay}"
+                        NavigateUri="{x:Bind ViewModel.Notification.Link, Mode=OneWay}" />
+                </muxc:InfoBar.ActionButton>
+            </muxc:InfoBar>
 
             <Grid
                 x:Name="PlayerControls"

@@ -108,6 +108,8 @@ namespace Screenbox.Pages
                     return InfoBarSeverity.Error;
                 case NotificationLevel.Warning:
                     return InfoBarSeverity.Warning;
+                case NotificationLevel.Success:
+                    return InfoBarSeverity.Success;
                 default:
                     return InfoBarSeverity.Informational;
             }

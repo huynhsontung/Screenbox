@@ -35,6 +35,7 @@ namespace Screenbox.ViewModels
         public ICommand PlayPauseCommand { get; }
         public ICommand FullscreenCommand { get; }
         public ICommand OpenCommand { get; }
+        public ICommand SaveSnapshotCommand { get; }
         public ICommand ToggleCompactLayoutCommand { get; }
 
         public ObservablePlayer? MediaPlayer
@@ -115,6 +116,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _bufferingTimer;
+        private readonly DispatcherQueueTimer _notificationTimer;
         private readonly SystemMediaTransportControls _transportControl;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
@@ -137,6 +139,7 @@ namespace Screenbox.ViewModels
         private StreamMediaInput? _streamMediaInput;
         private bool _videoViewFocused;
         private bool _playerHidden;
+        private StorageFile? _savedFrame;
 
         public PlayerViewModel(
             IFilesService filesService,
@@ -155,15 +158,75 @@ namespace Screenbox.ViewModels
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
+            _notificationTimer = _dispatcherQueue.CreateTimer();
 
             PlayPauseCommand = new RelayCommand(PlayPause);
             FullscreenCommand = new RelayCommand<bool>(SetFullscreen);
             OpenCommand = new RelayCommand<object>(Open);
+            SaveSnapshotCommand = new RelayCommand(SaveSnapshot);
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
             InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
+        }
+
+        private async void SaveSnapshot()
+        {
+            if (MediaPlayer == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+            var tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync($"snapshot_{DateTimeOffset.Now.Ticks}");
+            if (tempFolder == null) return;
+            try
+            {
+                if (MediaPlayer.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
+                {
+                    var file = (await tempFolder.GetFilesAsync()).FirstOrDefault();
+                    if (file == null) return;
+                    var pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+                    var defaultSaveFolder = pictureLibrary?.SaveFolder;
+                    var destFolder =
+                        await defaultSaveFolder?.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
+                    if (destFolder == null) return;
+                    _savedFrame = await file.CopyAsync(destFolder);
+                    ShowNotification(new NotificationRaisedEventArgs
+                    {
+                        Level = NotificationLevel.Success,
+                        Title = "Frame saved",
+                        LinkText = file.Name
+                    }, 8);
+                }
+                else
+                {
+                    throw new Exception("VLC failed to save snapshot");
+                }
+            }
+            catch (Exception e)
+            {
+                ShowNotification(new NotificationRaisedEventArgs
+                {
+                    Level = NotificationLevel.Error,
+                    Title = "Failed to save frame",
+                    Message = e.Message
+                }, 8);
+
+                // TODO: track error
+            }
+            finally
+            {
+                await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
+            }
+        }
+
+        public async void OpenSaveFolder()
+        {
+            var savedFrame = _savedFrame;
+            if (savedFrame != null)
+            {
+                var saveFolder = await savedFrame.GetParentAsync();
+                var options = new FolderLauncherOptions();
+                options.ItemsToSelect.Add(savedFrame);
+                await Launcher.LaunchFolderAsync(saveFolder, options);
+            }
         }
 
         private void OnOpenRequested(object sender, object e)
@@ -180,7 +243,27 @@ namespace Screenbox.ViewModels
 
         private void OnNotificationRaised(object sender, NotificationRaisedEventArgs e)
         {
-            _dispatcherQueue.TryEnqueue(() => Notification = e);
+            ShowNotification(e);
+        }
+
+        private void ShowNotification(NotificationRaisedEventArgs notification, int ttl = default)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Notification = notification;
+            });
+
+            if (ttl <= 0) return;
+
+            void InvalidateNotification()
+            {
+                if (Notification == notification)
+                {
+                    Notification = null;
+                }
+            }
+
+            _notificationTimer.Debounce(InvalidateNotification, TimeSpan.FromSeconds(ttl));
         }
 
         private void ChangeVolume(double changeAmount)
