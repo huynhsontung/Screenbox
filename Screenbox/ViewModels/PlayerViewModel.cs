@@ -556,7 +556,7 @@ namespace Screenbox.ViewModels
 
         private bool SetWindowSize(double scalar = 0)
         {
-            if (scalar < 0) return false;
+            if (scalar < 0 || IsCompact) return false;
             var displayInformation = DisplayInformation.GetForCurrentView();
             var view = ApplicationView.GetForCurrentView();
             var maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
