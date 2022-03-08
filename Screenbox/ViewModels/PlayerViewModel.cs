@@ -297,7 +297,7 @@ namespace Screenbox.ViewModels
 
         private async void Open(object? value)
         {
-            if (MediaPlayer == null && value != null)
+            if (MediaPlayer == null)
             {
                 ToBeOpened = value;
                 return;
@@ -338,6 +338,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 PlayerHidden = false;
+                MediaPlayer.Time = 0;
                 MediaTitle = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             });
 
