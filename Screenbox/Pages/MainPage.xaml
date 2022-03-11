@@ -9,8 +9,10 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewmodels="using:Screenbox.ViewModels"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
+    
     <Page.Resources>
         <ResourceDictionary>
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />
@@ -21,7 +23,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="32" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -31,59 +32,105 @@
             FontSize="12"
             Text="Screenbox" />
 
-        <StackPanel
+        <StackPanel 
             Grid.Row="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <TextBlock
-                Margin="0,0,0,32"
-                HorizontalAlignment="Center"
-                FontStyle="Italic"
-                Opacity="0.5"
-                Text="This page is for testing purpose only" />
-            <Button
-                Margin="4"
-                Click="PickFileButtonClick"
-                Content="Pick file" />
-            <TextBlock
-                x:Name="FileNameText"
-                MaxWidth="350"
-                Margin="4"
-                TextTrimming="CharacterEllipsis" />
-            <TextBox
-                x:Name="UrlBox"
-                Width="350"
-                Margin="4"
-                Header="Url to open" />
-            <Button
-                Margin="4"
-                Click="OpenButtonClick"
-                Content="Open" />
-        </StackPanel>
+            Padding="15,10,10,10"
+            Spacing="5">
+            
+            <TextBlock Text="Video library" Margin="0,10,0,0" />
 
-        <Button
-            Grid.Row="2"
-            Width="64"
-            Height="52"
-            Margin="8"
-            HorizontalAlignment="Center">
-            <muxc:AnimatedIcon>
-                <muxc:AnimatedIcon.Source>
-                    <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
-                </muxc:AnimatedIcon.Source>
-                <muxc:AnimatedIcon.FallbackIconSource>
-                    <muxc:SymbolIconSource Symbol="Up" />
-                </muxc:AnimatedIcon.FallbackIconSource>
-            </muxc:AnimatedIcon>
+            <StackPanel 
+                Margin="0,-32,0,0"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Spacing="6">
+                <Button
+                    HorizontalAlignment="Right"
+                    ToolTipService.ToolTip="Restore video view">
+                    <muxc:AnimatedIcon Width="20">
+                        <muxc:AnimatedIcon.Source>
+                            <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
+                        </muxc:AnimatedIcon.Source>
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:SymbolIconSource Symbol="Up" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
+                    </muxc:AnimatedIcon>
 
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Click">
-                    <core:ChangePropertyAction
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:ChangePropertyAction
                         PropertyName="PlayerHidden"
                         TargetObject="{x:Bind ViewModel}"
                         Value="False" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
-        </Button>
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </Button>
+                
+                <Button
+                    Click="PickFileButtonClick"
+                    Content="Pick file"
+                    HorizontalAlignment="Right" />
+
+                <Button
+                    Content="Open from URL"
+                    HorizontalAlignment="Right">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Spacing="5" Width="300">
+                                <TextBox
+                                    x:Name="UrlBox"
+                                    Header="URL to open"
+                                    Margin="0,5,0,0" />
+
+                                <Button
+                                    Click="OpenButtonClick"
+                                    Content="Open" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+
+            <ListView 
+                Height="193"
+                Margin="-8,5,0,0"
+                SelectionMode="None"
+                x:Name="Videos"
+                IsItemClickEnabled="True"
+                ItemClick="VideosItemClick"
+                ScrollViewer.HorizontalScrollMode="Enabled"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodels:VideoViewModel">
+                        <ListViewItem 
+                            Padding="0"
+                            Margin="5,0"
+                            Width="205">
+                            <StackPanel 
+                                Orientation="Vertical"
+                                Padding="5"
+                                Background="{StaticResource LayerFillColorDefaultBrush}"
+                                BorderThickness="1"
+                                BorderBrush="{StaticResource CardStrokeColorDefaultBrush}"
+                                CornerRadius="5">
+                                <Border CornerRadius="3" Margin="3">
+                                    <Image Source="{x:Bind Thumbnail}" />
+                                </Border>
+
+                                <TextBlock Text="{x:Bind Title}" Margin="0,5,0,0" />
+                                <TextBlock Text="{x:Bind Location}" Margin="0,3,0,0" />
+                            </StackPanel>
+                        </ListViewItem>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
     </Grid>
 </Page>
