@@ -41,8 +41,8 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             _services = ConfigureServices();
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         public LibVLC InitializeLibVlc(string[] swapChainOptions)
@@ -123,7 +123,7 @@ namespace Screenbox
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
-                rootFrame.Navigate(typeof(PlayerPage));
+                rootFrame.Navigate(typeof(MainPage));
             }
             // Ensure the current window is active
             Window.Current.Activate();
