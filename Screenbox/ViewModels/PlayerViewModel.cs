@@ -771,7 +771,7 @@ namespace Screenbox.ViewModels
             }, TimeSpan.FromSeconds(3));
         }
 
-        private void OverrideVisibilityChange(int delay = 1000)
+        private void OverrideVisibilityChange(int delay = 400)
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
