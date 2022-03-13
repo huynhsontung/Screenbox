@@ -117,7 +117,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _notificationTimer;
-        private readonly SystemMediaTransportControls _transportControl;
+        private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
         private readonly IPlaylistService _playlistService;
@@ -144,17 +144,19 @@ namespace Screenbox.ViewModels
         public PlayerViewModel(
             IFilesService filesService,
             INotificationService notificationService,
-            IPlaylistService playlistService)
+            IPlaylistService playlistService,
+            ISystemMediaTransportControlsService transportControlsService)
         {
             _filesService = filesService;
             _notificationService = notificationService;
             _playlistService = playlistService;
+            _transportControlsService = transportControlsService;
             _mediaTitle = string.Empty;
             _playlistService.OpenRequested += OnOpenRequested;
             _notificationService.NotificationRaised += OnNotificationRaised;
             _notificationService.ProgressUpdated += OnProgressUpdated;
+            _transportControlsService.ButtonPressed += TransportControl_ButtonPressed;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _transportControl = SystemMediaTransportControls.GetForCurrentView();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
@@ -167,7 +169,6 @@ namespace Screenbox.ViewModels
             ToggleCompactLayoutCommand = new RelayCommand(ToggleCompactLayout);
 
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
-            InitSystemTransportControls();
             PropertyChanged += OnPropertyChanged;
         }
 
@@ -361,12 +362,12 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                if (SetWindowSize(1)) return;
-                SetWindowSize();
+                if (ResizeWindow(1)) return;
+                ResizeWindow();
             });
         }
 
-        private void SetPlaybackSpeed(float speed)
+        public void SetPlaybackSpeed(float speed)
         {
             if (MediaPlayer == null) return;
             MediaPlayer.Rate = speed;
@@ -403,7 +404,7 @@ namespace Screenbox.ViewModels
             _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
             MediaPlayer = new ObservablePlayer(_libVlc);
             MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
-            RegisterMediaPlayerPlaybackEvents(MediaPlayer);
+            _transportControlsService.RegisterPlaybackEvents(MediaPlayer);
             
             Open(ToBeOpened);
         }
@@ -475,10 +476,39 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            if (MediaPlayer == null) return;
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Pause:
+                    MediaPlayer.Pause();
+                    break;
+                case SystemMediaTransportControlsButton.Play:
+                    MediaPlayer.Play();
+                    break;
+                case SystemMediaTransportControlsButton.Stop:
+                    MediaPlayer.Stop();
+                    break;
+                //case SystemMediaTransportControlsButton.Previous:
+                //    Locator.PlaybackService.Previous();
+                //    break;
+                //case SystemMediaTransportControlsButton.Next:
+                //    Locator.PlaybackService.Next();
+                //    break;
+                case SystemMediaTransportControlsButton.FastForward:
+                    Seek(30000);
+                    break;
+                case SystemMediaTransportControlsButton.Rewind:
+                    Seek(-30000);
+                    break;
+            }
+        }
+
         public void Dispose()
         {
             MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
-            _transportControl.ButtonPressed -= TransportControl_ButtonPressed;
+            _transportControlsService.ButtonPressed -= TransportControl_ButtonPressed;
             _controlsVisibilityTimer.Stop();
             _bufferingTimer.Stop();
             _statusMessageTimer.Stop();
@@ -546,15 +576,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        public void OnPlaybackSpeedItemClick(object sender, RoutedEventArgs e)
-        {
-            var item = (RadioMenuFlyoutItem)sender;
-            var speedText = item.Text;
-            float.TryParse(speedText, out var speed);
-            SetPlaybackSpeed(speed);
-        }
-
-        private bool SetWindowSize(double scalar = 0)
+        private bool ResizeWindow(double scalar = 0)
         {
             if (scalar < 0 || IsCompact) return false;
             var displayInformation = DisplayInformation.GetForCurrentView();
@@ -707,10 +729,10 @@ namespace Screenbox.ViewModels
                 case VirtualKey.Number6:
                 case VirtualKey.Number7:
                 case VirtualKey.Number8:
-                    SetWindowSize(0.25 * (key - VirtualKey.Number0));
+                    ResizeWindow(0.25 * (key - VirtualKey.Number0));
                     return;
                 case VirtualKey.Number9:
-                    SetWindowSize(4);
+                    ResizeWindow(4);
                     return;
                 case (VirtualKey)190:   // Period (".")
                     JumpFrame(false);

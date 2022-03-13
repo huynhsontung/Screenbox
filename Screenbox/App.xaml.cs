@@ -67,6 +67,7 @@ namespace Screenbox
 
             services.AddTransient<PlayerViewModel>();
 
+            services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<IPlaylistService, PlaylistService>();
             services.AddSingleton<INotificationService, NotificationService>();

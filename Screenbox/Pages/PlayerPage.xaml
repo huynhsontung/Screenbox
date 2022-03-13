@@ -123,36 +123,36 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC57;" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="0.25" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="0.5" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="0.75" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
                         Text="1" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="1.25" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="1.5" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="1.75" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind ViewModel.OnPlaybackSpeedItemClick}"
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
                         Text="2" />
                 </MenuFlyoutSubItem>
@@ -190,6 +190,12 @@
             Background="Transparent"
             Canvas.ZIndex="2" />
 
+        <!--
+            Due to the current LibVLC limitation, there can only be one instance of the media player element per LibVLC instance.
+            This means the player will break if you navigate away from the PlayerPage.
+            Have an inline frame to load other pages without navigating away.
+            This will go away with LibVLC 4.x
+        -->
         <Frame x:Name="InlineFrame" Visibility="Collapsed">
             <Frame.Content>
                 <pages:MainPage DataContext="{x:Bind ViewModel}" />

@@ -91,6 +91,14 @@ namespace Screenbox.Pages
             view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
         }
 
+        private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (RadioMenuFlyoutItem)sender;
+            var speedText = item.Text;
+            float.TryParse(speedText, out var speed);
+            ViewModel.SetPlaybackSpeed(speed);
+        }
+
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
 
         private Symbol GetMuteToggleSymbol(bool isMute) => isMute ? Symbol.Mute : Symbol.Volume;
