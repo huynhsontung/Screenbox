@@ -9,38 +9,9 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace Screenbox.Core
 {
-    public class ObservablePlayer : ObservableObject, IDisposable
+    public partial class ObservablePlayer : ObservableObject, IDisposable
     {
         public MediaPlayer VlcPlayer => _vlcPlayer;
-
-        public double Length
-        {
-            get => _length;
-            private set => SetProperty(ref _length, value);
-        }
-
-        public double Time
-        {
-            get => _time;
-            set
-            {
-                if (value < 0) value = 0;
-                if (value > Length) value = Length;
-                SetProperty(ref _time, value);
-            }
-        }
-
-        public bool IsSeekable
-        {
-            get => _isSeekable;
-            private set => SetProperty(ref _isSeekable, value);
-        }
-
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            private set => SetProperty(ref _isPlaying, value);
-        }
 
         public bool IsMute
         {
@@ -66,24 +37,6 @@ namespace Screenbox.Core
                 _vlcPlayer.Volume = intVal;
                 IsMute = intVal == 0;
             }
-        }
-
-        public VLCState PlayerState
-        {
-            get => _state;
-            private set => SetProperty(ref _state, value);
-        }
-
-        public double BufferingProgress
-        {
-            get => _bufferingProgress;
-            private set => SetProperty(ref _bufferingProgress, value);
-        }
-
-        public bool ShouldLoop
-        {
-            get => _shouldLoop;
-            set => SetProperty(ref _shouldLoop, value);
         }
 
         public int SpuIndex
@@ -128,37 +81,11 @@ namespace Screenbox.Core
             }
         }
 
-        public TrackDescription[] SpuDescriptions
-        {
-            get => _spuDescriptions;
-            private set => SetProperty(ref _spuDescriptions, value);
-        }
-
-        public TrackDescription[] AudioTrackDescriptions
-        {
-            get => _audioTrackDescriptions;
-            private set => SetProperty(ref _audioTrackDescriptions, value);
-        }
-
-        public ChapterDescription[] Chapters
-        {
-            get => _chapters;
-            private set => SetProperty(ref _chapters, value);
-        }
-
-        public ChapterDescription CurrentChapter
-        {
-            get => _currentChapter;
-            private set => SetProperty(ref _currentChapter, value);
-        }
-
         public float Rate
         {
             get => _vlcPlayer.Rate;
             set => _vlcPlayer.SetRate(value);
         }
-
-        public VLCState State => _vlcPlayer.State;
 
         public string? CropGeometry
         {
@@ -170,23 +97,45 @@ namespace Screenbox.Core
 
         public bool ShouldUpdateTime { get; set; }
 
+        [ObservableProperty]
+        private double _length;
+
+        [ObservableProperty]
+        private double _time;
+
+        [ObservableProperty]
+        private bool _isSeekable;
+
+        [ObservableProperty]
+        private bool _isPlaying;
+
+        [ObservableProperty]
+        private VLCState _state;
+
+        [ObservableProperty]
+        private bool _shouldLoop;
+
+        [ObservableProperty]
+        private double _bufferingProgress;
+
+        [ObservableProperty]
+        private TrackDescription[] _spuDescriptions;
+
+        [ObservableProperty]
+        private TrackDescription[] _audioTrackDescriptions;
+
+        [ObservableProperty]
+        private ChapterDescription[] _chapters;
+
+        [ObservableProperty]
+        private ChapterDescription _currentChapter;
+
         private readonly MediaPlayer _vlcPlayer;
         private readonly DispatcherQueue _dispatcherQueue;
-        private double _length;
-        private double _time;
-        private bool _isSeekable;
-        private VLCState _state;
-        private bool _isPlaying;
         private double _volume;
         private bool _isMute;
-        private bool _shouldLoop;
-        private double _bufferingProgress;
-        private TrackDescription[] _spuDescriptions;
-        private TrackDescription[] _audioTrackDescriptions;
         private int _spuIndex;
         private int _audioTrackIndex;
-        private ChapterDescription[] _chapters;
-        private ChapterDescription _currentChapter;
 
         public ObservablePlayer(LibVLC libVlc)
         {
@@ -317,7 +266,7 @@ namespace Screenbox.Core
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                PlayerState = _vlcPlayer.State;
+                State = _vlcPlayer.State;
                 IsPlaying = _vlcPlayer.IsPlaying;
                 IsMute = _vlcPlayer.Mute;
             });

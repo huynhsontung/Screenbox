@@ -14,6 +14,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:Screenbox.Pages"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
+    toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
+    toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+    toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
+    toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
+    toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
     Background="Black"
     RequestedTheme="Dark"
     mc:Ignorable="d">
@@ -118,10 +124,7 @@
                     Icon="RepeatOne"
                     IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=TwoWay}"
                     Text="Loop" />
-                <MenuFlyoutSubItem Text="Playback speed">
-                    <MenuFlyoutSubItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC57;" />
-                    </MenuFlyoutSubItem.Icon>
+                <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="Playback speed">
                     <muxc:RadioMenuFlyoutItem
                         Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
@@ -157,24 +160,22 @@
                         Text="2" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{x:Bind ViewModel.SaveSnapshotCommand}" Text="Save current frame">
-                    <MenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE71;" />
-                    </MenuFlyoutItem.Icon>
-                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.SaveSnapshotCommand}"
+                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                            Glyph=&#xEE71;}"
+                    Text="Save current frame" />
                 <ToggleMenuFlyoutItem
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                            Glyph=&#xEE49;}"
                     IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
-                    Text="Picture in picture">
-                    <ToggleMenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE49;" />
-                    </ToggleMenuFlyoutItem.Icon>
-                </ToggleMenuFlyoutItem>
-                <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}" Text="Zoom to fit">
-                    <ToggleMenuFlyoutItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A6;" />
-                    </ToggleMenuFlyoutItem.Icon>
-                </ToggleMenuFlyoutItem>
+                    Text="Picture in picture" />
+                <ToggleMenuFlyoutItem
+                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                            Glyph=&#xE9A6;}"
+                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
+                    Text="Zoom to fit" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -421,7 +422,8 @@
                     <HyperlinkButton
                         Click="{x:Bind ViewModel.OpenSaveFolder}"
                         Content="{x:Bind ViewModel.Notification.LinkText, Mode=OneWay}"
-                        NavigateUri="{x:Bind ViewModel.Notification.Link, Mode=OneWay}" />
+                        NavigateUri="{x:Bind ViewModel.Notification.Link, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.Notification.Link, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
                 </muxc:InfoBar.ActionButton>
             </muxc:InfoBar>
 

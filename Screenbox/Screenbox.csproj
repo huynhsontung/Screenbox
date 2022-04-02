@@ -157,6 +157,7 @@
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\CommonVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToBooleanConverter.cs" />
+    <Compile Include="Core\MediaHandle.cs" />
     <Compile Include="Core\NotificationRaisedEventArgs.cs" />
     <Compile Include="Core\ObservablePlayer.cs" />
     <Compile Include="Core\ProgressUpdatedEventArgs.cs" />

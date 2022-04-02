@@ -35,7 +35,7 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
-            ConfigureTitleBar();
+            Window.Current.SetTitleBar(TitleBarElement);
         }
 
         public void FocusVideoView()
@@ -77,18 +77,6 @@ namespace Screenbox.Pages
             SeekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)PointerPressedEventHandler, true);
             SeekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
             SeekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
-        }
-
-        private void ConfigureTitleBar()
-        {
-            Window.Current.SetTitleBar(TitleBarElement);
-            var coreApp = CoreApplication.GetCurrentView();
-            coreApp.TitleBar.ExtendViewIntoTitleBar = true;
-
-            var view = ApplicationView.GetForCurrentView();
-            view.TitleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
-            view.TitleBar.InactiveBackgroundColor = Windows.UI.Colors.Transparent;
-            view.TitleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
         }
 
         private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
