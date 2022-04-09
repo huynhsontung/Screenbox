@@ -11,7 +11,7 @@
   <Identity
     Name="18496Starpine.Screenbox"
     Publisher="CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C"
-    Version="0.1.2.0" />
+    Version="0.1.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="13f69037-4fca-4b86-a6f5-a77c0969d41a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
