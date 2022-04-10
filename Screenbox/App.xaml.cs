@@ -124,7 +124,7 @@ namespace Screenbox
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
-                rootFrame.Navigate(typeof(MainPage));
+                rootFrame.Navigate(typeof(PlayerPage));
             }
             // Ensure the current window is active
             Window.Current.Activate();
