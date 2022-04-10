@@ -179,6 +179,7 @@
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="ViewModels\PlayerViewModel.cs" />
     <Compile Include="ViewModels\PlayerViewModel.Manipulation.cs" />
+    <Compile Include="ViewModels\VideoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

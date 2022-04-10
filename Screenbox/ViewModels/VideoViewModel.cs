@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +12,21 @@ namespace Screenbox.ViewModels
 {
     public class VideoViewModel
     {
-        public string Title { get; set; }
+        public string Title { get; }
 
-        public BitmapImage Thumbnail { get; set; }
+        public BitmapImage? Thumbnail { get; set; }
 
-        public string Location { get; set; }
+        public string Location { get; }
 
         public TimeSpan Duration { get; set; }
 
-        public StorageFile OriginalFile { get; set; }
+        public StorageFile OriginalFile { get; }
+
+        public VideoViewModel(StorageFile file)
+        {
+            OriginalFile = file;
+            Title = file.Name;
+            Location = file.Path;
+        }
     }
 }
