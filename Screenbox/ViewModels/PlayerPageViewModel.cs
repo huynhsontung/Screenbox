@@ -69,10 +69,11 @@ namespace Screenbox.ViewModels
 
         public object? ToBeOpened { get; set; }
 
+        public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
-        private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _notificationTimer;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
@@ -105,7 +106,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
-            _bufferingTimer = _dispatcherQueue.CreateTimer();
             _notificationTimer = _dispatcherQueue.CreateTimer();
 
             PropertyChanged += OnPropertyChanged;
@@ -117,10 +117,10 @@ namespace Screenbox.ViewModels
         [ICommand]
         private async Task SaveSnapshot()
         {
-            if (MediaPlayer.VlcPlayer == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
             try
             {
-                StorageFile file = _savedFrame = await _filesService.SaveSnapshot(MediaPlayer.VlcPlayer);
+                StorageFile file = _savedFrame = await _filesService.SaveSnapshot(VlcPlayer);
                 ShowNotification(new NotificationRaisedEventArgs
                 {
                     Level = NotificationLevel.Success,
@@ -290,7 +290,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 PlayerHidden = false;
-                MediaPlayer.Time = 0;
                 if (uri == null) return;
                 MediaTitle = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             });
@@ -373,12 +372,6 @@ namespace Screenbox.ViewModels
                     }
 
                     break;
-
-                case nameof(ObservablePlayer.BufferingProgress):
-                    _bufferingTimer.Debounce(
-                        () => BufferingVisible = mediaPlayer.BufferingProgress < 100,
-                        TimeSpan.FromSeconds(0.5));
-                    break;
             }
         }
 
@@ -389,11 +382,6 @@ namespace Screenbox.ViewModels
             {
                 _mediaPlayerService.Pause();
             }
-        }
-
-        public void OnSeekBarPointerEvent(bool pressed)
-        {
-            MediaPlayer.ShouldUpdateTime = !pressed;
         }
 
         private void ShowStatusMessage(string? message)
@@ -427,7 +415,6 @@ namespace Screenbox.ViewModels
         public void Dispose()
         {
             _controlsVisibilityTimer.Stop();
-            _bufferingTimer.Stop();
             _statusMessageTimer.Stop();
 
             _mediaHandle?.Dispose();
@@ -448,21 +435,21 @@ namespace Screenbox.ViewModels
 
         private void Seek(long amount)
         {
-            if (MediaPlayer.IsSeekable)
+            if (VlcPlayer?.IsSeekable ?? false)
             {
                 if (MediaPlayer.State == VLCState.Ended && amount > 0) return;
                 _mediaPlayerService.Seek(amount);
-                ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} / {HumanizedDurationConverter.Convert(MediaPlayer.Length)}");
+                ShowStatusMessage($"{HumanizedDurationConverter.Convert(VlcPlayer.Time)} / {HumanizedDurationConverter.Convert(VlcPlayer.Length)}");
             }
         }
 
         public bool JumpFrame(bool previous = false)
         {
-            if (MediaPlayer.State == VLCState.Paused && MediaPlayer.IsSeekable)
+            if (MediaPlayer.State == VLCState.Paused && (VlcPlayer?.IsSeekable ?? false))
             {
                 if (previous)
                 {
-                    _mediaPlayerService.SetTime(MediaPlayer.Time - _mediaPlayerService.FrameDuration);
+                    _mediaPlayerService.Seek(-_mediaPlayerService.FrameDuration);
                 }
                 else
                 {
@@ -524,7 +511,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
             }
 
-            if (!MediaPlayer.ShouldUpdateTime) return;
+            if (Messenger.Send<ChangeSeekBarInteractionRequestMessage>()) return;
             DelayHideControls();
         }
 
@@ -565,7 +552,7 @@ namespace Screenbox.ViewModels
         }
 
         public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
-            ? $"Chapter {MediaPlayer.VlcPlayer?.Chapter + 1}"
+            ? $"Chapter {VlcPlayer?.Chapter + 1}"
             : nullableName ?? string.Empty;
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -602,7 +589,7 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    _mediaPlayerService.SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
+                    _mediaPlayerService.SetTime((VlcPlayer?.Length ?? 0) * (0.1 * (key - VirtualKey.NumberPad0)));
                     break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
@@ -680,20 +667,6 @@ namespace Screenbox.ViewModels
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
-        }
-
-        public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
-        {
-            if (MediaPlayer.IsSeekable)
-            {
-                double newTime = args.NewValue;
-                if (args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying ||
-                    !MediaPlayer.ShouldUpdateTime &&
-                    newTime != MediaPlayer.Length)
-                {
-                    _mediaPlayerService.SetTime(newTime);
-                }
-            }
         }
     }
 }

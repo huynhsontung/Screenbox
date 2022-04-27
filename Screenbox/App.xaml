@@ -1,8 +1,19 @@
 ﻿<Application
     x:Class="Screenbox.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Screenbox.Converters"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
     <Application.Resources>
-        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+        <muxc:XamlControlsResources>
+            <muxc:XamlControlsResources.MergedDictionaries>
+                <ResourceDictionary>
+                    <converters:CommonVisibilityConverter x:Key="CommonVisibilityConverter" />
+                    <converters:CommonVisibilityConverter x:Key="InvertCommonVisibilityConverter" Invert="True" />
+                    <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
+                    <converters:ObjectToBooleanConverter x:Key="ObjectToBooleanConverter" />
+                </ResourceDictionary>
+            </muxc:XamlControlsResources.MergedDictionaries>
+        </muxc:XamlControlsResources>
     </Application.Resources>
 </Application>

@@ -149,10 +149,16 @@
     <Compile Include="Controls\ChapterProgressBar.xaml.cs">
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SeekBar.xaml.cs">
+      <DependentUpon>SeekBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
+    <Compile Include="Core\Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
+    <Compile Include="Core\Messages\ChangeSeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
@@ -187,6 +193,7 @@
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.Manipulation.cs" />
+    <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\VideoViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
   </ItemGroup>
@@ -264,6 +271,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\NoAnimationProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SeekBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

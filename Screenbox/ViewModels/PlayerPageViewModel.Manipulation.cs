@@ -1,6 +1,8 @@
 ﻿using System;
 using Windows.UI.Xaml.Input;
 using Screenbox.Converters;
+using Screenbox.Core.Messages;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Screenbox.ViewModels
 {
@@ -25,7 +27,7 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             ShowStatusMessage(null);
-            MediaPlayer.ShouldUpdateTime = true;
+            Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = false });
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -44,16 +46,17 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            if (MediaPlayer.IsSeekable)
+            if (VlcPlayer?.IsSeekable ?? false)
             {
                 _lockDirection = ManipulationLock.Horizontal;
-                MediaPlayer.ShouldUpdateTime = false;
+                Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = true });
                 var timeChange = horizontalChange * HorizontalChangePerPixel;
-                MediaPlayer.Time = _mediaPlayerService.Seek(timeChange);
+                long newTime = _mediaPlayerService.Seek(timeChange);
+                Messenger.Send(new ChangeTimeRequestMessage { Value = newTime });
 
-                var changeText = HumanizedDurationConverter.Convert(MediaPlayer.Time - _timeBeforeManipulation);
+                var changeText = HumanizedDurationConverter.Convert(newTime - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
-                ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} ({changeText})");
+                ShowStatusMessage($"{HumanizedDurationConverter.Convert(newTime)} ({changeText})");
             }
         }
 
@@ -61,7 +64,7 @@ namespace Screenbox.ViewModels
         {
             _overrideStatusTimeout = true;
             _lockDirection = ManipulationLock.None;
-            _timeBeforeManipulation = MediaPlayer.Time;
+            _timeBeforeManipulation = VlcPlayer?.Time ?? 0;
         }
     }
 }

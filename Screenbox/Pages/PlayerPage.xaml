@@ -5,11 +5,9 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:libvlcstructs="using:LibVLCSharp.Shared.Structures"
     xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -25,12 +23,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" />
-
             <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
             <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
             <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
@@ -48,9 +40,6 @@
                 <GradientStop Offset="1" Color="#00000000" />
                 <GradientStop Offset="0" Color="#99000000" />
             </LinearGradientBrush>
-            <converters:CommonVisibilityConverter x:Key="CommonVisibilityConverter" />
-            <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-            <converters:ObjectToBooleanConverter x:Key="ObjectToBooleanConverter" />
 
             <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
@@ -252,7 +241,7 @@
                 IsHitTestVisible="False"
                 IsTabStop="False"
                 KeyboardAcceleratorPlacementMode="Hidden"
-                MediaPlayer="{x:Bind ViewModel.MediaPlayer.VlcPlayer}"
+                MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
                 SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
                 <lvs:VideoView.KeyboardAccelerators>
                     <KeyboardAccelerator
@@ -392,29 +381,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <controls:ChapterProgressBar
-                    x:Name="PlayerProgressBar"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    AutomationProperties.AccessibilityView="Raw"
-                    Chapters="{x:Bind ViewModel.MediaPlayer.Chapters, Mode=OneWay}"
-                    Maximum="{x:Bind SeekBar.Maximum, Mode=OneWay}"
-                    Value="{x:Bind SeekBar.Value, Mode=OneWay}" />
-                <muxc:ProgressBar
-                    x:Name="BufferingProgressBar"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    AutomationProperties.AccessibilityView="Raw"
-                    Foreground="Orange"
-                    IsIndeterminate="True"
-                    Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
-                <Slider
+                <controls:SeekBar
                     x:Name="SeekBar"
                     Grid.Row="0"
                     Grid.Column="0"
@@ -422,15 +389,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="Transparent"
-                    Foreground="Transparent"
-                    IsEnabled="{x:Bind ViewModel.MediaPlayer.IsSeekable, Mode=OneWay, FallbackValue=False}"
-                    LargeChange="10000"
-                    Maximum="{x:Bind ViewModel.MediaPlayer.Length, Mode=OneWay, FallbackValue=0}"
-                    Minimum="0"
-                    SmallChange="1000"
-                    ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
-                    ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
-                    Value="{x:Bind ViewModel.MediaPlayer.Time, Mode=OneWay}" />
+                    Foreground="Transparent" />
 
                 <StackPanel
                     Grid.Row="1"
@@ -455,17 +414,17 @@
                         MinWidth="0"
                         Margin="8,0,0,0"
                         VerticalAlignment="Center">
-                        <Run Text="{x:Bind ViewModel.MediaPlayer.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                        <Run Text="{x:Bind SeekBar.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                         <Run Text=" / " />
-                        <Run Text="{x:Bind ViewModel.MediaPlayer.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+                        <Run Text="{x:Bind SeekBar.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
                     </TextBlock>
                     <TextBlock
                         MinWidth="0"
                         Margin="8,0,0,0"
                         VerticalAlignment="Center"
-                        Visibility="{x:Bind ViewModel.MediaPlayer.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                        Visibility="{x:Bind SeekBar.ViewModel.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
                         <Run Text="• " />
-                        <Run Text="{x:Bind ViewModel.GetChapterName(ViewModel.MediaPlayer.CurrentChapter.Name), Mode=OneWay}" />
+                        <Run Text="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}" />
                     </TextBlock>
                 </StackPanel>
 
@@ -596,10 +555,9 @@
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
-                        <Setter Target="SeekBar.Visibility" Value="Collapsed" />
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
-                        <Setter Target="PlayerProgressBar.(Grid.Row)" Value="2" />
-                        <Setter Target="BufferingProgressBar.(Grid.Row)" Value="2" />
+                        <Setter Target="SeekBar.(Grid.Row)" Value="2" />
+                        <Setter Target="SeekBar.ProgressOnly" Value="True" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
