@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using LibVLCSharp.Shared.Structures;
+using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -21,13 +22,13 @@ namespace Screenbox.Controls
             nameof(Value),
             typeof(double),
             typeof(ChapterProgressBar),
-            new PropertyMetadata(0, OnValueChanged));
+            new PropertyMetadata(0d, OnValueChanged));
 
         public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register(
             nameof(Maximum),
             typeof(double),
             typeof(ChapterProgressBar),
-            new PropertyMetadata(0, OnMaximumChanged));
+            new PropertyMetadata(0d, OnMaximumChanged));
 
         public static readonly DependencyProperty ChapterIndexProperty = DependencyProperty.Register(
             nameof(ChapterIndex),
@@ -59,13 +60,13 @@ namespace Screenbox.Controls
             private set => SetValue(ChapterIndexProperty, value);
         }
 
-        private ObservableCollection<ChapterProgressItem> ProgressItems { get; }
+        private ObservableCollection<ChapterViewModel> ProgressItems { get; }
 
         private const double Spacing = 1;
 
         public ChapterProgressBar()
         {
-            ProgressItems = new ObservableCollection<ChapterProgressItem>();
+            ProgressItems = new ObservableCollection<ChapterViewModel>();
             this.InitializeComponent();
             SizeChanged += OnSizeChanged;
         }
@@ -87,6 +88,9 @@ namespace Screenbox.Controls
             var view = (ChapterProgressBar)d;
             if (view.ProgressItems.Count == 1)
             {
+                if (view.ProgressItems[0].Width == 0)
+                    view.PopulateProgressItems();
+
                 view.ProgressItems[0].Maximum = (double)e.NewValue;
             }
         }
@@ -175,7 +179,7 @@ namespace Screenbox.Controls
             {
                 foreach (var chapterDescription in Chapters)
                 {
-                    var progressItem = new ChapterProgressItem
+                    var progressItem = new ChapterViewModel
                     {
                         Minimum = chapterDescription.TimeOffset,
                         Maximum = chapterDescription.Duration + chapterDescription.TimeOffset
@@ -189,7 +193,7 @@ namespace Screenbox.Controls
             else
             {
                 ChapterIndex = 0;
-                ProgressItems.Add(new ChapterProgressItem
+                ProgressItems.Add(new ChapterViewModel
                 {
                     Maximum = Maximum,
                     Width = ActualWidth
@@ -197,7 +201,7 @@ namespace Screenbox.Controls
             }
         }
 
-        private double GetItemWidth(ChapterProgressItem item)
+        private double GetItemWidth(ChapterViewModel item)
         {
             var availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
             return Maximum > 0 ? (item.Maximum - item.Minimum) / Maximum * availableWidth : 0;

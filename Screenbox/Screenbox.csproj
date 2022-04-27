@@ -146,7 +146,7 @@
     <Compile Include="Controls\ChapterProgressBar.xaml.cs">
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ChapterProgressItem.cs" />
+    <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">
       <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
     </Compile>
@@ -155,7 +155,7 @@
     <Compile Include="Converters\ObjectToBooleanConverter.cs" />
     <Compile Include="Core\MediaHandle.cs" />
     <Compile Include="Core\NotificationRaisedEventArgs.cs" />
-    <Compile Include="Core\ObservablePlayer.cs" />
+    <Compile Include="ViewModels\ObservablePlayer.cs" />
     <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -175,8 +175,8 @@
     <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="Services\WindowService.cs" />
-    <Compile Include="ViewModels\PlayerViewModel.cs" />
-    <Compile Include="ViewModels\PlayerViewModel.Manipulation.cs" />
+    <Compile Include="ViewModels\PlayerPageViewModel.cs" />
+    <Compile Include="ViewModels\PlayerPageViewModel.Manipulation.cs" />
     <Compile Include="ViewModels\VideoViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +280,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Diagnostics">
+      <Version>7.1.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Mvvm">
       <Version>7.1.2</Version>

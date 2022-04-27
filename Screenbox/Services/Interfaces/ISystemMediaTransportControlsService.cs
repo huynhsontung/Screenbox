@@ -1,6 +1,4 @@
-﻿using Windows.Foundation;
-using Windows.Media;
-using Screenbox.Core;
+﻿using Screenbox.ViewModels;
 
 namespace Screenbox.Services
 {

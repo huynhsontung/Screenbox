@@ -24,14 +24,14 @@ namespace Screenbox.Pages
         private const VirtualKey PeriodKey = (VirtualKey)190;
         private const VirtualKey CommaKey = (VirtualKey)188;
 
-        internal PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
+        internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
         private readonly IServiceScope _scope; 
 
         public PlayerPage()
         {
             _scope = App.Services.CreateScope();
-            DataContext = _scope.ServiceProvider.GetRequiredService<PlayerViewModel>();
+            DataContext = _scope.ServiceProvider.GetRequiredService<PlayerPageViewModel>();
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();

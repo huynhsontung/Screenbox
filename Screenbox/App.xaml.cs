@@ -47,7 +47,9 @@ namespace Screenbox
         {
             var services = new ServiceCollection();
 
-            services.AddTransient<PlayerViewModel>();
+            services.AddTransient<PlayerPageViewModel>();
+            services.AddTransient<ChapterViewModel>();
+            services.AddSingleton<ObservablePlayer>();
 
             services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<IFilesService, FilesService>();

@@ -6,6 +6,7 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:viewModels="using:Screenbox.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -15,7 +16,7 @@
                 <ResourceDictionary Source="NoAnimationProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="ItemTemplate" x:DataType="local:ChapterProgressItem">
+            <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
                 <muxc:ProgressBar
                     Width="{x:Bind Width, Mode=OneWay}"
                     Maximum="{x:Bind Maximum, Mode=OneWay}"

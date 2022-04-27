@@ -4,7 +4,7 @@ using Screenbox.Converters;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerViewModel
+    internal partial class PlayerPageViewModel
     {
         private enum ManipulationLock
         {
@@ -23,12 +23,11 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             StatusMessage = null;
-            if (MediaPlayer != null) MediaPlayer.ShouldUpdateTime = true;
+            MediaPlayer.ShouldUpdateTime = true;
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            if (MediaPlayer == null) return;
             var horizontalChange = e.Delta.Translation.X;
             var verticalChange = e.Delta.Translation.Y;
             var horizontalCumulative = e.Cumulative.Translation.X;

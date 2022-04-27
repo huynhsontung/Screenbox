@@ -28,13 +28,10 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerViewModel : ObservableObject, IDisposable
+    internal partial class PlayerPageViewModel : ObservableObject, IDisposable
     {
         [ObservableProperty]
         private string _mediaTitle;
-
-        [ObservableProperty]
-        private ObservablePlayer? _mediaPlayer;
 
         [ObservableProperty]
         private Size _viewSize;
@@ -66,6 +63,8 @@ namespace Screenbox.ViewModels
         [ObservableProperty]
         private bool _playerHidden;
 
+        public ObservablePlayer MediaPlayer { get; }
+
         public object? ToBeOpened { get; set; }
 
         private readonly DispatcherQueue _dispatcherQueue;
@@ -83,13 +82,15 @@ namespace Screenbox.ViewModels
         private bool _visibilityOverride;
         private StorageFile? _savedFrame;
 
-        public PlayerViewModel(
+        public PlayerPageViewModel(
+            ObservablePlayer player,
             IWindowService windowService,
             IFilesService filesService,
             INotificationService notificationService,
             IPlaylistService playlistService,
             ISystemMediaTransportControlsService transportControlsService)
         {
+            MediaPlayer = player;
             _windowService = windowService;
             _filesService = filesService;
             _notificationService = notificationService;
@@ -110,7 +111,7 @@ namespace Screenbox.ViewModels
         [ICommand]
         private async Task AddSubtitle()
         {
-            if (MediaPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+            if (MediaPlayer.VlcPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
             try
             {
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
@@ -128,7 +129,7 @@ namespace Screenbox.ViewModels
         [ICommand]
         private async Task SaveSnapshot()
         {
-            if (MediaPlayer == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+            if (MediaPlayer.VlcPlayer == null || !MediaPlayer.VlcPlayer.WillPlay) return;
             try
             {
                 StorageFile file = _savedFrame = await _filesService.SaveSnapshot(MediaPlayer.VlcPlayer);
@@ -198,7 +199,6 @@ namespace Screenbox.ViewModels
 
         private void ChangeVolume(double changeAmount)
         {
-            if (MediaPlayer == null) return;
             MediaPlayer.Volume += changeAmount;
             ShowStatusMessage($"Volume {MediaPlayer.Volume:F0}%");
         }
@@ -230,13 +230,12 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void Open(object? value)
         {
-            if (MediaPlayer == null)
+            if (_libVlc == null)
             {
                 ToBeOpened = value;
                 return;
             }
 
-            if (_libVlc == null) return;
             MediaHandle? mediaHandle = null;
             Uri? uri = null;
 
@@ -323,7 +322,6 @@ namespace Screenbox.ViewModels
 
         public void SetPlaybackSpeed(float speed)
         {
-            if (MediaPlayer == null) return;
             MediaPlayer.Rate = speed;
         }
 
@@ -349,7 +347,7 @@ namespace Screenbox.ViewModels
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _libVlc = InitializeLibVlc(e.SwapChainOptions);
-            MediaPlayer = new ObservablePlayer(_libVlc);
+            MediaPlayer.InitVlcPlayer(_libVlc);
             MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
             _transportControlsService.RegisterPlaybackEvents(MediaPlayer);
             
@@ -405,7 +403,7 @@ namespace Screenbox.ViewModels
 
         public void OnSeekBarPointerEvent(bool pressed)
         {
-            if (MediaPlayer != null) MediaPlayer.ShouldUpdateTime = !pressed;
+            MediaPlayer.ShouldUpdateTime = !pressed;
         }
 
         private void ShowStatusMessage(string message)
@@ -441,7 +439,6 @@ namespace Screenbox.ViewModels
             _bufferingTimer.Stop();
             _statusMessageTimer.Stop();
 
-            MediaPlayer?.Dispose();
             _mediaHandle?.Dispose();
             _libVlc?.Dispose();
         }
@@ -449,7 +446,6 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void PlayPause()
         {
-            if (MediaPlayer == null) return;
             if (MediaPlayer.State == VLCState.Ended)
             {
                 MediaPlayer.Replay();
@@ -461,7 +457,7 @@ namespace Screenbox.ViewModels
 
         private void Seek(long amount)
         {
-            if (MediaPlayer?.IsSeekable ?? false)
+            if (MediaPlayer.IsSeekable)
             {
                 if (MediaPlayer.State == VLCState.Ended && amount > 0) return;
                 MediaPlayer.Seek(amount);
@@ -471,7 +467,6 @@ namespace Screenbox.ViewModels
 
         public bool JumpFrame(bool previous = false)
         {
-            if (MediaPlayer == null) return false;
             if (MediaPlayer.State == VLCState.Paused && MediaPlayer.IsSeekable)
             {
                 if (previous)
@@ -496,7 +491,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if ((MediaPlayer?.IsPlaying ?? false) && !_visibilityOverride)
+            else if (MediaPlayer.IsPlaying && !_visibilityOverride)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -507,7 +502,7 @@ namespace Screenbox.ViewModels
         private bool ResizeWindow(double scalar = 0)
         {
             if (scalar < 0 || IsCompact) return false;
-            Size videoDimension = MediaPlayer?.Dimension ?? Size.Empty;
+            Size videoDimension = MediaPlayer.Dimension;
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)
             {
@@ -526,23 +521,20 @@ namespace Screenbox.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (MediaPlayer == null) return;
             if (!ZoomToFit && MediaPlayer.CropGeometry == null) return;
             MediaPlayer.CropGeometry = ZoomToFit ? $"{size.Width}:{size.Height}" : null;
         }
 
         public void OnPointerMoved()
         {
-            if (!_visibilityOverride)
+            if (_visibilityOverride) return;
+            if (ControlsHidden)
             {
-                if (ControlsHidden)
-                {
-                    ShowControls();
-                }
-
-                if (!(MediaPlayer?.ShouldUpdateTime ?? false)) return;
-                DelayHideControls();
+                ShowControls();
             }
+
+            if (!MediaPlayer.ShouldUpdateTime) return;
+            DelayHideControls();
         }
 
         public void OnDragOver(object sender, DragEventArgs e)
@@ -582,12 +574,11 @@ namespace Screenbox.ViewModels
         }
 
         public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
-            ? $"Chapter {MediaPlayer?.VlcPlayer.Chapter + 1}"
+            ? $"Chapter {MediaPlayer.VlcPlayer?.Chapter + 1}"
             : nullableName ?? string.Empty;
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (MediaPlayer == null) return;
             args.Handled = true;
             long seekAmount = 0;
             int volumeChange = 0;
@@ -684,7 +675,6 @@ namespace Screenbox.ViewModels
         {
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (MediaPlayer == null) return;
                 if (MediaPlayer.IsPlaying && VideoViewFocused)
                 {
                     HideControls();
@@ -703,7 +693,6 @@ namespace Screenbox.ViewModels
 
         public void OnAudioCaptionFlyoutOpening()
         {
-            if (MediaPlayer == null) return;
             MediaPlayer.UpdateSpuOptions();
             MediaPlayer.UpdateAudioTrackOptions();
         }

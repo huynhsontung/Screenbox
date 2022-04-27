@@ -12,7 +12,7 @@ namespace Screenbox.Pages
 {
     public sealed partial class MainPage : Page
     {
-        private PlayerViewModel ViewModel => (PlayerViewModel)DataContext;
+        private PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
         private StorageFile? _pickedFile;
         private readonly IFilesService _filesService;

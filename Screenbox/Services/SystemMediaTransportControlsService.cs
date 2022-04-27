@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Windows.Foundation;
 using Windows.Media;
 using Windows.System;
-using Screenbox.Core;
+using Microsoft.Toolkit.Diagnostics;
+using Screenbox.ViewModels;
 
 namespace Screenbox.Services
 {
@@ -34,12 +34,13 @@ namespace Screenbox.Services
 
         public void RegisterPlaybackEvents(ObservablePlayer player)
         {
+            Guard.IsNotNull(player.VlcPlayer, nameof(player.VlcPlayer));
             _player = player;
-            player.VlcPlayer.Paused += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
-            player.VlcPlayer.Stopped += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
-            player.VlcPlayer.Playing += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
-            player.VlcPlayer.EncounteredError += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
-            player.VlcPlayer.Opening += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
+            player.VlcPlayer.Paused += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
+            player.VlcPlayer.Stopped += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
+            player.VlcPlayer.Playing += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
+            player.VlcPlayer.EncounteredError += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
+            player.VlcPlayer.Opening += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
         }
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
