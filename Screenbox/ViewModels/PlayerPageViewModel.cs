@@ -115,24 +115,6 @@ namespace Screenbox.ViewModels
         }
 
         [ICommand]
-        private async Task AddSubtitle()
-        {
-            if (MediaPlayer.VlcPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
-            try
-            {
-                StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
-                if (file == null) return;
-
-                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file);
-                _mediaPlayerService.AddSubtitle(mrl);
-            }
-            catch (Exception e)
-            {
-                // TODO: Display to UI
-            }
-        }
-
-        [ICommand]
         private async Task SaveSnapshot()
         {
             if (MediaPlayer.VlcPlayer == null || !MediaPlayer.VlcPlayer.WillPlay) return;
@@ -698,12 +680,6 @@ namespace Screenbox.ViewModels
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
-        }
-
-        public void OnAudioCaptionFlyoutOpening()
-        {
-            MediaPlayer.UpdateSpuOptions();
-            MediaPlayer.UpdateAudioTrackOptions();
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)

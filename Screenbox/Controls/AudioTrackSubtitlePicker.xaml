@@ -1,0 +1,67 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.AudioTrackSubtitlePicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:structures="using:LibVLCSharp.Shared.Structures"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Flyout x:Key="AudioSubtitleListFlyout">
+                <StackPanel Orientation="Vertical">
+                    <ListView
+                        Width="220"
+                        ItemContainerTransitions="{x:Null}"
+                        ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
+                        <ListView.Header>
+                            <TextBlock FontWeight="SemiBold" Text="Audio" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="structures:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <MenuFlyoutSeparator Margin="0,4,0,10" IsTabStop="False" />
+                    <ListView
+                        Width="220"
+                        ItemContainerTransitions="{x:Null}"
+                        ItemsSource="{x:Bind ViewModel.SpuDescriptions, Mode=OneWay}"
+                        SelectedIndex="{x:Bind ViewModel.SpuIndex, Mode=TwoWay}">
+                        <ListView.Header>
+                            <TextBlock FontWeight="SemiBold" Text="Subtitles" />
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="structures:TrackDescription">
+                                <TextBlock Text="{x:Bind Name}" />
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Button
+                                Margin="0,4,0,0"
+                                HorizontalAlignment="Right"
+                                Command="{x:Bind ViewModel.AddSubtitleCommand}"
+                                Content="Add subtitle" />
+                        </ListView.Footer>
+                    </ListView>
+                </StackPanel>
+            </Flyout>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Button
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Click="{x:Bind ViewModel.OnAudioCaptionFlyoutOpening}"
+        Flyout="{StaticResource AudioSubtitleListFlyout}">
+        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
+        <Button.KeyboardAccelerators>
+            <KeyboardAccelerator Key="C" />
+        </Button.KeyboardAccelerators>
+    </Button>
+</UserControl>

@@ -15,30 +15,6 @@ namespace Screenbox.ViewModels
     {
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
-        public int SpuIndex
-        {
-            get => _spuIndex;
-            set
-            {
-                if (!SetProperty(ref _spuIndex, value)) return;
-                var spuDesc = SpuDescriptions;
-                if (value >= 0 && value < spuDesc.Length)
-                    VlcPlayer?.SetSpu(spuDesc[value].Id);
-            }
-        }
-
-        public int AudioTrackIndex
-        {
-            get => _audioTrackIndex;
-            set
-            {
-                if (!SetProperty(ref _audioTrackIndex, value)) return;
-                var audioDesc = AudioTrackDescriptions;
-                if (value >= 0 && value < audioDesc.Length)
-                    VlcPlayer?.SetSpu(audioDesc[value].Id);
-            }
-        }
-
         public bool ShouldUpdateTime { get; set; }
 
         [ObservableProperty]
@@ -63,12 +39,6 @@ namespace Screenbox.ViewModels
         private double _bufferingProgress;
 
         [ObservableProperty]
-        private TrackDescription[] _spuDescriptions;
-
-        [ObservableProperty]
-        private TrackDescription[] _audioTrackDescriptions;
-
-        [ObservableProperty]
         private ChapterDescription[] _chapters;
 
         [ObservableProperty]
@@ -76,47 +46,17 @@ namespace Screenbox.ViewModels
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IMediaPlayerService _mediaPlayerService;
-        private int _spuIndex;
-        private int _audioTrackIndex;
 
         public ObservablePlayer(IMediaPlayerService mediaPlayer)
         {
             _mediaPlayerService = mediaPlayer;
             _mediaPlayerService.VlcPlayerChanged += MediaPlayerServiceOnVlcPlayerChanged;
-            _spuDescriptions = Array.Empty<TrackDescription>();
-            _audioTrackDescriptions = Array.Empty<TrackDescription>();
             _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             ShouldUpdateTime = true;
             _bufferingProgress = 100;
             _state = VLCState.NothingSpecial;
-        }
-
-        public void UpdateSpuOptions()
-        {
-            if (VlcPlayer == null) return;
-            int spu = VlcPlayer.Spu;
-            SpuDescriptions = VlcPlayer.SpuDescription;
-            SpuIndex = GetIndexFromTrackId(spu, SpuDescriptions);
-        }
-
-        public void UpdateAudioTrackOptions()
-        {
-            if (VlcPlayer == null) return;
-            int audioTrack = VlcPlayer.AudioTrack;
-            AudioTrackDescriptions = VlcPlayer.AudioTrackDescription;
-            AudioTrackIndex = GetIndexFromTrackId(audioTrack, AudioTrackDescriptions);
-        }
-
-        private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
-        {
-            for (int i = 0; i < tracks.Length; i++)
-            {
-                if (tracks[i].Id == id) return i;
-            }
-
-            return -1;
         }
 
         private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)

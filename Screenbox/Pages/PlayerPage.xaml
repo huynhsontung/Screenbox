@@ -66,47 +66,6 @@
                 <Setter Property="Margin" Value="2,0" />
             </Style>
 
-            <Flyout x:Key="AudioCaptionFlyout">
-                <StackPanel Orientation="Vertical">
-                    <ListView
-                        Width="220"
-                        ItemContainerTransitions="{x:Null}"
-                        ItemsSource="{x:Bind ViewModel.MediaPlayer.AudioTrackDescriptions, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.AudioTrackIndex, Mode=TwoWay}">
-                        <ListView.Header>
-                            <TextBlock FontWeight="SemiBold" Text="Audio" />
-                        </ListView.Header>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                <TextBlock Text="{x:Bind Name}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <MenuFlyoutSeparator Margin="0,4,0,10" IsTabStop="False" />
-                    <ListView
-                        Width="220"
-                        ItemContainerTransitions="{x:Null}"
-                        ItemsSource="{x:Bind ViewModel.MediaPlayer.SpuDescriptions, Mode=OneWay}"
-                        SelectedIndex="{x:Bind ViewModel.MediaPlayer.SpuIndex, Mode=TwoWay}">
-                        <ListView.Header>
-                            <TextBlock FontWeight="SemiBold" Text="Subtitles" />
-                        </ListView.Header>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="libvlcstructs:TrackDescription">
-                                <TextBlock Text="{x:Bind Name}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.Footer>
-                            <Button
-                                Margin="0,4,0,0"
-                                HorizontalAlignment="Right"
-                                Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                                Content="Add subtitle" />
-                        </ListView.Footer>
-                    </ListView>
-                </StackPanel>
-            </Flyout>
-
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
                     Icon="RepeatOne"
@@ -515,15 +474,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button
-                        x:Name="AudioAndCaptionButton"
-                        Click="{x:Bind ViewModel.OnAudioCaptionFlyoutOpening}"
-                        Flyout="{StaticResource AudioCaptionFlyout}">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
-                        <Button.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="C" />
-                        </Button.KeyboardAccelerators>
-                    </Button>
+                    <controls:AudioTrackSubtitlePicker x:Name="AudioAndCaptionButton" />
 
                     <ToggleButton
                         x:Name="FullscreenButton"
