@@ -16,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
+using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -52,9 +53,6 @@ namespace Screenbox.ViewModels
         private bool _zoomToFit;
 
         [ObservableProperty]
-        private bool _bufferingVisible;
-
-        [ObservableProperty]
         private NotificationRaisedEventArgs? _notification;
 
         [ObservableProperty]
@@ -63,7 +61,14 @@ namespace Screenbox.ViewModels
         [ObservableProperty]
         private bool _playerHidden;
 
-        public ObservablePlayer MediaPlayer { get; }
+        [ObservableProperty]
+        private bool _isPlaying;
+
+        [ObservableProperty]
+        private VLCState _state;
+
+        [ObservableProperty]
+        private bool _shouldLoop;
 
         public object? ToBeOpened { get; set; }
 
@@ -85,15 +90,12 @@ namespace Screenbox.ViewModels
         private StorageFile? _savedFrame;
 
         public PlayerPageViewModel(
-            ObservablePlayer player,
             IMediaPlayerService mediaPlayerService,
             IWindowService windowService,
             IFilesService filesService,
             INotificationService notificationService,
             IPlaylistService playlistService)
         {
-            MediaPlayer = player;
-            MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
             _mediaPlayerService = mediaPlayerService;
             _windowService = windowService;
             _filesService = filesService;
@@ -339,33 +341,14 @@ namespace Screenbox.ViewModels
         {
             _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
             if (LibVlc != null) _notificationService.SetVLCDiaglogHandlers(LibVlc);
+            if (VlcPlayer != null) RegisterMediaPlayerEventHandlers(VlcPlayer);
             Open(ToBeOpened);
-        }
-
-        private void MediaPlayerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ObservablePlayer mediaPlayer = (ObservablePlayer)sender;
-            switch (e.PropertyName)
-            {
-                case nameof(ObservablePlayer.State):
-                    if (ControlsHidden && mediaPlayer.State != VLCState.Playing)
-                    {
-                        ShowControls();
-                    }
-
-                    if (!ControlsHidden && mediaPlayer.State == VLCState.Playing)
-                    {
-                        DelayHideControls();
-                    }
-
-                    break;
-            }
         }
 
         public void OnBackRequested()
         {
             PlayerHidden = true;
-            if (MediaPlayer.IsPlaying)
+            if (IsPlaying)
             {
                 _mediaPlayerService.Pause();
             }
@@ -396,6 +379,19 @@ namespace Screenbox.ViewModels
                         ShowControls();
                     }
                     break;
+
+                case nameof(State):
+                    if (ControlsHidden && State != VLCState.Playing)
+                    {
+                        ShowControls();
+                    }
+
+                    if (!ControlsHidden && State == VLCState.Playing)
+                    {
+                        DelayHideControls();
+                    }
+
+                    break;
             }
         }
 
@@ -410,7 +406,7 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void PlayPause()
         {
-            if (MediaPlayer.State == VLCState.Ended)
+            if (State == VLCState.Ended)
             {
                 _mediaPlayerService.Replay();
                 return;
@@ -423,7 +419,7 @@ namespace Screenbox.ViewModels
         {
             if (VlcPlayer?.IsSeekable ?? false)
             {
-                if (MediaPlayer.State == VLCState.Ended && amount > 0) return;
+                if (State == VLCState.Ended && amount > 0) return;
                 _mediaPlayerService.Seek(amount);
                 ShowStatusMessage($"{HumanizedDurationConverter.Convert(VlcPlayer.Time)} / {HumanizedDurationConverter.Convert(VlcPlayer.Length)}");
             }
@@ -431,7 +427,7 @@ namespace Screenbox.ViewModels
 
         public bool JumpFrame(bool previous = false)
         {
-            if (MediaPlayer.State == VLCState.Paused && (VlcPlayer?.IsSeekable ?? false))
+            if (State == VLCState.Paused && (VlcPlayer?.IsSeekable ?? false))
             {
                 if (previous)
                 {
@@ -455,7 +451,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (MediaPlayer.IsPlaying && !_visibilityOverride)
+            else if (IsPlaying && !_visibilityOverride)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -639,7 +635,7 @@ namespace Screenbox.ViewModels
         {
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (MediaPlayer.IsPlaying && VideoViewFocused)
+                if (IsPlaying && VideoViewFocused)
                 {
                     HideControls();
 
@@ -653,6 +649,43 @@ namespace Screenbox.ViewModels
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
+        }
+
+        private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
+        {
+            vlcPlayer.EndReached += OnEndReached;
+            vlcPlayer.Playing += OnStateChanged;
+            vlcPlayer.Paused += OnStateChanged;
+            vlcPlayer.Stopped += OnStateChanged;
+            vlcPlayer.EncounteredError += OnStateChanged;
+            vlcPlayer.Opening += OnStateChanged;
+        }
+
+        private void UpdateState()
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                State = VlcPlayer.State;
+                IsPlaying = VlcPlayer.IsPlaying;
+            });
+        }
+
+        private void OnStateChanged(object sender, EventArgs e)
+        {
+            UpdateState();
+        }
+
+        private void OnEndReached(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            if (ShouldLoop)
+            {
+                _dispatcherQueue.TryEnqueue(_mediaPlayerService.Replay);
+                return;
+            }
+
+            UpdateState();
         }
     }
 }

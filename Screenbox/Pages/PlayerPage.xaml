@@ -58,7 +58,7 @@
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
                     Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.MediaPlayer.ShouldLoop, Mode=TwoWay}"
+                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
                     Text="Loop" />
                 <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="Playback speed">
                     <muxc:RadioMenuFlyoutItem
@@ -331,7 +331,7 @@
                 VerticalAlignment="Center"
                 IsActive="True"
                 IsHitTestVisible="False"
-                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.MediaPlayer.State), Mode=OneWay}" />
+                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.State), Mode=OneWay}" />
 
             <muxc:InfoBar
                 Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
@@ -393,7 +393,7 @@
                             <KeyboardAccelerator Key="K" />
                             <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoViewButton}" />
                         </Button.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.IsPlaying), Mode=OneWay}" />
+                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
                     </Button>
                     <controls:VolumeControl
                         x:Name="MuteButton"

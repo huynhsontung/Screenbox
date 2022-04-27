@@ -176,7 +176,6 @@
     <Compile Include="Converters\ObjectToBooleanConverter.cs" />
     <Compile Include="Core\MediaHandle.cs" />
     <Compile Include="Core\NotificationRaisedEventArgs.cs" />
-    <Compile Include="ViewModels\ObservablePlayer.cs" />
     <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
