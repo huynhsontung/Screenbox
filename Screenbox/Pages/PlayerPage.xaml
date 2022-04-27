@@ -400,14 +400,12 @@
                         Height="40"
                         Background="Transparent"
                         BorderThickness="0" />
-                    <TextBlock
+                    <controls:TimeDisplay
                         MinWidth="0"
                         Margin="8,0,0,0"
-                        VerticalAlignment="Center">
-                        <Run Text="{x:Bind SeekBar.Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-                        <Run Text=" / " />
-                        <Run Text="{x:Bind SeekBar.Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-                    </TextBlock>
+                        VerticalAlignment="Center"
+                        Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
+                        Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
                     <TextBlock
                         MinWidth="0"
                         Margin="8,0,0,0"
