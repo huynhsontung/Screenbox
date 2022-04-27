@@ -45,7 +45,7 @@ namespace Screenbox.Core
             set
             {
                 if (!SetProperty(ref _spuIndex, value)) return;
-                var spuDesc = _vlcPlayer.SpuDescription;
+                var spuDesc = SpuDescriptions;
                 if (value >= 0 && value < spuDesc.Length)
                     _vlcPlayer.SetSpu(spuDesc[value].Id);
             }
@@ -209,10 +209,23 @@ namespace Screenbox.Core
             Time = VlcPlayer.Time = (long)time;
         }
 
-        public void AddSubtitle(string uri)
+        public void AddSubtitle(string mrl)
         {
-            VlcPlayer.AddSlave(MediaSlaveType.Subtitle, uri, true);
-            UpdateSpuOptions();
+            VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, true);
+        }
+
+        public void UpdateSpuOptions()
+        {
+            int spu = _vlcPlayer.Spu;
+            SpuDescriptions = _vlcPlayer.SpuDescription;
+            SpuIndex = GetIndexFromTrackId(spu, SpuDescriptions);
+        }
+
+        public void UpdateAudioTrackOptions()
+        {
+            int audioTrack = _vlcPlayer.AudioTrack;
+            AudioTrackDescriptions = _vlcPlayer.AudioTrackDescription;
+            AudioTrackIndex = GetIndexFromTrackId(audioTrack, AudioTrackDescriptions);
         }
 
         private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
@@ -243,18 +256,6 @@ namespace Screenbox.Core
                 UpdateAudioTrackOptions();
                 CurrentChapter = Chapters.Length > 0 ? Chapters[_vlcPlayer.Chapter] : default;
             });
-        }
-
-        private void UpdateSpuOptions()
-        {
-            SpuDescriptions = _vlcPlayer.SpuDescription;
-            SpuIndex = GetIndexFromTrackId(_vlcPlayer.Spu, _vlcPlayer.SpuDescription);
-        }
-
-        private void UpdateAudioTrackOptions()
-        {
-            AudioTrackDescriptions = _vlcPlayer.AudioTrackDescription;
-            AudioTrackIndex = GetIndexFromTrackId(_vlcPlayer.AudioTrack, _vlcPlayer.AudioTrackDescription);
         }
 
         private void RemoveMediaPlayerEventHandlers()

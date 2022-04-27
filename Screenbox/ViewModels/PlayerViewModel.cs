@@ -11,6 +11,7 @@ using Windows.Graphics.Display;
 using Windows.Media;
 using Windows.Media.Devices;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -107,23 +108,23 @@ namespace Screenbox.ViewModels
             PropertyChanged += OnPropertyChanged;
         }
 
-        //[ICommand]
-        //private async Task AddSubtitle()
-        //{
-        //    if (MediaPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
-        //    try
-        //    {
-        //        var subtitle = await _filesService.PickSubtitleAsync();
-        //        if (subtitle == null) return;
+        [ICommand]
+        private async Task AddSubtitle()
+        {
+            if (MediaPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+            try
+            {
+                var file = await _filesService.PickFileAsync(".srt", ".ass");
+                if (file == null) return;
 
-        //        _mediaHandle.SubtitleFiles.Add(subtitle);
-        //        MediaPlayer.AddSubtitle(subtitle.Path);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        // TODO: Display to UI
-        //    }
-        //}
+                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file);
+                MediaPlayer.AddSubtitle(mrl);
+            }
+            catch (Exception e)
+            {
+                // TODO: Display to UI
+            }
+        }
 
         [ICommand]
         private async Task SaveSnapshot()
@@ -781,6 +782,13 @@ namespace Screenbox.ViewModels
         {
             var coreWindow = Window.Current.CoreWindow;
             coreWindow.PointerCursor ??= _cursor;
+        }
+
+        public void OnAudioCaptionFlyoutOpening()
+        {
+            if (MediaPlayer == null) return;
+            MediaPlayer.UpdateSpuOptions();
+            MediaPlayer.UpdateAudioTrackOptions();
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)

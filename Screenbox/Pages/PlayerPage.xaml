@@ -113,6 +113,7 @@
                             <Button
                                 Margin="0,4,0,0"
                                 HorizontalAlignment="Right"
+                                Command="{x:Bind ViewModel.AddSubtitleCommand}"
                                 Content="Add subtitle" />
                         </ListView.Footer>
                     </ListView>
@@ -534,7 +535,10 @@
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
-                    <Button x:Name="AudioAndCaptionButton" Flyout="{StaticResource AudioCaptionFlyout}">
+                    <Button
+                        x:Name="AudioAndCaptionButton"
+                        Click="{x:Bind ViewModel.OnAudioCaptionFlyoutOpening}"
+                        Flyout="{StaticResource AudioCaptionFlyout}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="C" />

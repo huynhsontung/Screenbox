@@ -12,7 +12,6 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Media.Imaging;
 using LibVLCSharp.Shared;
-using Screenbox.Core;
 using Screenbox.ViewModels;
 
 namespace Screenbox.Services
@@ -71,20 +70,6 @@ namespace Screenbox.Services
             }
 
             return picker.PickSingleFileAsync();
-        }
-
-        // TODO: Add method to clean up subtitle files in temp
-        public async Task<StorageFile?> PickSubtitleAsync()
-        {
-            var tempFolder =
-                await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("Subtitles",
-                    CreationCollisionOption.OpenIfExists);
-
-            var subtitle = await PickFileAsync(".srt", ".ass");
-            if (subtitle == null) return null;
-            var properties = await subtitle.GetBasicPropertiesAsync();
-            if (properties.Size > 5e+6) throw new Exception("Subtitle file too big");
-            return await subtitle.CopyAsync(tempFolder, subtitle.Name, NameCollisionOption.GenerateUniqueName);
         }
 
         public async Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer)

@@ -16,7 +16,6 @@ namespace Screenbox.Services
 
         public Task<List<VideoViewModel>> LoadVideosFromLibraryAsync();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
-        public Task<StorageFile?> PickSubtitleAsync();
         public Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer);
     }
 }
