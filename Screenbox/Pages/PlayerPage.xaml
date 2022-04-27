@@ -56,10 +56,10 @@
 
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
+                    x:Uid="LoopMenu"
                     Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
-                    Text="Loop" />
-                <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="Playback speed">
+                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}" />
+                <MenuFlyoutSubItem x:Uid="PlaybackSpeedMenu" Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}">
                     <muxc:RadioMenuFlyoutItem
                         Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
@@ -96,21 +96,21 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
+                    x:Uid="SaveCurrentFrameMenu"
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                            Glyph=&#xEE71;}"
-                    Text="Save current frame" />
+                                            Glyph=&#xEE71;}" />
                 <ToggleMenuFlyoutItem
+                    x:Uid="PictureInPictureMenu"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                             Glyph=&#xEE49;}"
-                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
-                    Text="Picture in picture" />
+                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 <ToggleMenuFlyoutItem
+                    x:Uid="ZoomToFitMenu"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                             Glyph=&#xE9A6;}"
-                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
-                    Text="Zoom to fit" />
+                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -167,6 +167,7 @@
 
             <Button
                 x:Name="BackButton"
+                x:Uid="BackButton"
                 Grid.Row="0"
                 Width="52"
                 Height="52"
@@ -276,6 +277,7 @@
                 </Grid.ColumnDefinitions>
                 <controls:SeekBar
                     x:Name="SeekBar"
+                    x:Uid="SeekBar"
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
@@ -291,7 +293,8 @@
                     <Button
                         x:Name="PlayPauseButton"
                         Margin="0,0,2,0"
-                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}">
+                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}"
+                        ToolTipService.ToolTip="{x:Bind GetPlayPauseToolTip(ViewModel.IsPlaying), Mode=OneWay}">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="P" />
                             <KeyboardAccelerator Key="K" />
@@ -327,7 +330,8 @@
                     <Button
                         x:Name="AudioAndCaptionButton"
                         VerticalAlignment="Stretch"
-                        Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}">
+                        Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}"
+                        ToolTipService.ToolTip="{x:Bind GetAudioCaptionToolTip()}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="C" />
@@ -337,7 +341,8 @@
                     <ToggleButton
                         x:Name="FullscreenButton"
                         Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                        IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
+                        IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}"
+                        ToolTipService.ToolTip="{x:Bind GetFullscreenToolTip(ViewModel.IsFullscreen), Mode=OneWay}">
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />
                         </ToggleButton.KeyboardAccelerators>
@@ -346,6 +351,7 @@
 
                     <Button
                         x:Name="MoreButton"
+                        x:Uid="MoreButton"
                         Margin="2,0,0,0"
                         Flyout="{StaticResource VideoContextMenu}">
                         <SymbolIcon Symbol="More" />
@@ -353,6 +359,7 @@
 
                     <Button
                         x:Name="ExitCompactOverlayButton"
+                        x:Uid="ExitCompactOverlayButton"
                         Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                         Visibility="Collapsed">
                         <Button.KeyboardAccelerators>

@@ -9,6 +9,7 @@ using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Screenbox.Services;
+using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
@@ -78,7 +79,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                _notificationService.RaiseError("Failed to load subtitle", e.ToString());
+                _notificationService.RaiseError(Resources.FailedToLoadSubtitleNotificationTitle, e.ToString());
             }
         }
 

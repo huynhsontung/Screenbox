@@ -170,10 +170,16 @@
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
+    <Compile Include="Extensions\KeyboardAcceleratorExtension.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
     <Compile Include="Services\MediaService.cs" />
+    <Compile Include="Strings\en-US\Resources.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resw</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">
@@ -267,6 +273,10 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Strings\en-US\Resources.resw">
+      <Generator>ReswPlusAdvancedGenerator</Generator>
+      <LastGenOutput>Resources.generated.cs</LastGenOutput>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

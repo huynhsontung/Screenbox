@@ -18,6 +18,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Converters;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
@@ -183,7 +184,7 @@ namespace Screenbox.ViewModels
         }
 
         public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
-            ? $"Chapter {VlcPlayer?.Chapter + 1}"
+            ? Resources.ChapterName(VlcPlayer?.Chapter ?? 0 + 1)
             : nullableName ?? string.Empty;
 
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -246,7 +247,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                _notificationService.RaiseError("Failed to save frame", e.ToString());
+                _notificationService.RaiseError(Resources.FailedToSaveFrameNotificationTitle, e.ToString());
                 // TODO: track error
             }
         }

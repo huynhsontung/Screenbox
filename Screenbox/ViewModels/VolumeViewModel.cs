@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
@@ -99,7 +100,7 @@ namespace Screenbox.ViewModels
                 else
                 {
                     Volume = _mediaPlayerService.Volume;
-                    Messenger.Send(new UpdateStatusMessage($"Volume {Volume:F0}%"));
+                    Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
                 }
             });
         }

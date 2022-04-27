@@ -1,10 +1,12 @@
-﻿using Windows.Foundation;
+﻿using System.Linq;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Extensions;
 using Screenbox.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -63,6 +65,15 @@ namespace Screenbox.Pages
             var item = (RadioMenuFlyoutItem)sender;
             ViewModel.SetPlaybackSpeed(item.Text);
         }
+
+        private string GetPlayPauseToolTip(bool isPlaying) =>
+            $"{(isPlaying ? Strings.Resources.PauseButton : Strings.Resources.PlayButton)} ({PlayPauseButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
+
+        private string GetFullscreenToolTip(bool isFullscreen) =>
+            $"{(isFullscreen ? Strings.Resources.ExitFullscreenButton : Strings.Resources.EnterFullscreenButton)} ({FullscreenButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
+
+        private string GetAudioCaptionToolTip() =>
+            $"{Strings.Resources.AudioAndCaptionButton} ({AudioAndCaptionButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
 
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
 

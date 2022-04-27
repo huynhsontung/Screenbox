@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
@@ -49,7 +50,7 @@ namespace Screenbox.ViewModels
             void SetNotification()
             {
                 Reset();
-                Title = "Frame saved";
+                Title = Resources.FrameSavedNotificationTitle;
                 Severity = InfoBarSeverity.Success;
                 ActionButton = new HyperlinkButton
                 {
