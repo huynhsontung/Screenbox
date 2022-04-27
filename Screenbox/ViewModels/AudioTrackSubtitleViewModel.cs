@@ -47,13 +47,18 @@ namespace Screenbox.ViewModels
         private TrackDescription[] _audioTrackDescriptions;
 
         private readonly IMediaPlayerService _mediaPlayerService;
+        private readonly INotificationService _notificationService;
         private readonly IFilesService _filesService;
         private int _spuIndex;
         private int _audioTrackIndex;
 
-        public AudioTrackSubtitleViewModel(IMediaPlayerService mediaPlayerService, IFilesService filesService)
+        public AudioTrackSubtitleViewModel(
+            IMediaPlayerService mediaPlayerService,
+            INotificationService notificationService,
+            IFilesService filesService)
         {
             _mediaPlayerService = mediaPlayerService;
+            _notificationService = notificationService;
             _filesService = filesService;
             _spuDescriptions = Array.Empty<TrackDescription>();
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
@@ -73,7 +78,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                // TODO: Display to UI
+                _notificationService.RaiseError("Failed to load subtitle", e.ToString());
             }
         }
 
