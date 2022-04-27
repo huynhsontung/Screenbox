@@ -15,10 +15,12 @@ namespace Screenbox.Services
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
         }
 
-        public static void RegisterLibVLCLogging(LibVLC libVLC)
+        public static void RegisterLibVlcLogging(LibVLC libVlc)
         {
-            libVLC.Log -= LibVLC_Log;
-            libVLC.Log += LibVLC_Log;
+#if DEBUG
+            libVlc.Log -= LibVLC_Log;
+            libVlc.Log += LibVLC_Log;
+#endif
         }
 
         private static void LibVLC_Log(object sender, LogEventArgs e)

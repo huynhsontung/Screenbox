@@ -9,12 +9,10 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
@@ -71,6 +69,8 @@ namespace Screenbox.ViewModels
 
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
+        private LibVLC? LibVlc => _mediaPlayerService.LibVlc;
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
@@ -80,7 +80,6 @@ namespace Screenbox.ViewModels
         private readonly IPlaylistService _playlistService;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
-        private LibVLC? _libVlc;
         private MediaHandle? _mediaHandle;
         private bool _visibilityOverride;
         private StorageFile? _savedFrame;
@@ -223,7 +222,7 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void Open(object? value)
         {
-            if (_libVlc == null)
+            if (LibVlc == null)
             {
                 ToBeOpened = value;
                 return;
@@ -237,7 +236,7 @@ namespace Screenbox.ViewModels
                 uri = new Uri(file.Path);
                 if (file.Provider.Id == "network")
                 {
-                    Media media = new(_libVlc, uri);
+                    Media media = new(LibVlc, uri);
                     mediaHandle = new MediaHandle(media, uri);
                 }
                 else
@@ -248,7 +247,7 @@ namespace Screenbox.ViewModels
                         if (handle == null) return;
                         FileStream stream = new(handle, FileAccess.Read);
                         StreamMediaInput streamInput = new(stream);
-                        Media media = new(_libVlc, streamInput);
+                        Media media = new(LibVlc, streamInput);
                         mediaHandle = new MediaHandle(media, uri)
                         {
                             FileHandle = handle,
@@ -278,7 +277,7 @@ namespace Screenbox.ViewModels
             if (value is Uri uri1)
             {
                 uri = uri1;
-                Media media = new(_libVlc, uri);
+                Media media = new(LibVlc, uri);
                 mediaHandle = new MediaHandle(media, uri);
             }
 
@@ -338,21 +337,9 @@ namespace Screenbox.ViewModels
 
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
-            _libVlc = InitializeLibVlc(e.SwapChainOptions);
-            _mediaPlayerService.InitVlcPlayer(_libVlc);
-
+            _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
+            if (LibVlc != null) _notificationService.SetVLCDiaglogHandlers(LibVlc);
             Open(ToBeOpened);
-        }
-
-        private LibVLC InitializeLibVlc(string[] swapChainOptions)
-        {
-            string[] options = new string[swapChainOptions.Length + 1];
-            options[0] = "--no-osd";
-            swapChainOptions.CopyTo(options, 1);
-            LibVLC libVlc = new(true, options);
-            _notificationService.SetVLCDiaglogHandlers(libVlc);
-            LogService.RegisterLibVLCLogging(libVlc);
-            return libVlc;
         }
 
         private void MediaPlayerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -418,7 +405,6 @@ namespace Screenbox.ViewModels
             _statusMessageTimer.Stop();
 
             _mediaHandle?.Dispose();
-            _libVlc?.Dispose();
         }
 
         [ICommand]

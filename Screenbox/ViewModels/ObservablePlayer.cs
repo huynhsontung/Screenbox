@@ -5,7 +5,6 @@ using Windows.System;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Screenbox.Core;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -33,16 +32,11 @@ namespace Screenbox.ViewModels
             _state = VLCState.NothingSpecial;
         }
 
-        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, ValueChangedEventArgs<MediaPlayer?> e)
+        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, EventArgs e)
         {
-            if (e.OldValue != null)
+            if (_mediaPlayerService.VlcPlayer != null)
             {
-                RemoveMediaPlayerEventHandlers(e.OldValue);
-            }
-
-            if (e.NewValue != null)
-            {
-                RegisterMediaPlayerEventHandlers(e.NewValue);
+                RegisterMediaPlayerEventHandlers(_mediaPlayerService.VlcPlayer);
             }
         }
 
@@ -54,16 +48,6 @@ namespace Screenbox.ViewModels
             vlcPlayer.Stopped += OnStateChanged;
             vlcPlayer.EncounteredError += OnStateChanged;
             vlcPlayer.Opening += OnStateChanged;
-        }
-
-        private void RemoveMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
-        {
-            vlcPlayer.EndReached -= OnEndReached;
-            vlcPlayer.Playing -= OnStateChanged;
-            vlcPlayer.Paused -= OnStateChanged;
-            vlcPlayer.Stopped -= OnStateChanged;
-            vlcPlayer.EncounteredError -= OnStateChanged;
-            vlcPlayer.Opening -= OnStateChanged;
         }
 
         private void UpdateState()

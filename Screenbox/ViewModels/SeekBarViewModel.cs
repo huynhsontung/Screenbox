@@ -9,7 +9,6 @@ using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
@@ -92,16 +91,11 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, ValueChangedEventArgs<MediaPlayer?> e)
+        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, EventArgs e)
         {
-            if (e.OldValue != null)
+            if (_mediaPlayerService.VlcPlayer != null)
             {
-                RemoveMediaPlayerEventHandlers(e.OldValue);
-            }
-
-            if (e.NewValue != null)
-            {
-                RegisterMediaPlayerEventHandlers(e.NewValue);
+                RegisterMediaPlayerEventHandlers(_mediaPlayerService.VlcPlayer);
             }
         }
 
@@ -113,16 +107,6 @@ namespace Screenbox.ViewModels
             vlcPlayer.EndReached += OnEndReached;
             vlcPlayer.Buffering += OnBuffering;
             vlcPlayer.ChapterChanged += OnChapterChanged;
-        }
-
-        private void RemoveMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
-        {
-            vlcPlayer.LengthChanged -= OnLengthChanged;
-            vlcPlayer.TimeChanged -= OnTimeChanged;
-            vlcPlayer.SeekableChanged -= OnSeekableChanged;
-            vlcPlayer.EndReached -= OnEndReached;
-            vlcPlayer.Buffering -= OnBuffering;
-            vlcPlayer.ChapterChanged -= OnChapterChanged;
         }
 
         private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)

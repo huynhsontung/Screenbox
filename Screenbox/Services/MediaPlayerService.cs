@@ -7,15 +7,16 @@ using Windows.Media.Devices;
 using Windows.System;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
-using Screenbox.Core;
 
 namespace Screenbox.Services
 {
-    public class MediaPlayerService : IMediaPlayerService
+    public class MediaPlayerService : IMediaPlayerService, IDisposable
     {
-        public event EventHandler<ValueChangedEventArgs<MediaPlayer?>>? VlcPlayerChanged;
+        public event EventHandler? VlcPlayerChanged;
 
         public MediaPlayer? VlcPlayer { get; private set; }
+
+        public LibVLC? LibVlc { get; private set; }
 
         public double? NumericAspectRatio
         {
@@ -76,12 +77,13 @@ namespace Screenbox.Services
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
         }
 
-        public void InitVlcPlayer(LibVLC libVlc)
+        public void InitVlcPlayer(string[] swapChainOptions)
         {
-            MediaPlayer? oldValue = VlcPlayer;
+            LibVlc?.Dispose();
+            LibVlc = InitializeLibVlc(swapChainOptions);
             VlcPlayer?.Dispose();
-            VlcPlayer = new MediaPlayer(libVlc);
-            VlcPlayerChanged?.Invoke(this, new ValueChangedEventArgs<MediaPlayer?>(VlcPlayer, oldValue));
+            VlcPlayer = new MediaPlayer(LibVlc);
+            VlcPlayerChanged?.Invoke(this, EventArgs.Empty);
             RegisterPlaybackEvents();
         }
 
@@ -130,6 +132,23 @@ namespace Screenbox.Services
         public void AddSubtitle(string mrl)
         {
             VlcPlayer?.AddSlave(MediaSlaveType.Subtitle, mrl, true);
+        }
+
+        public void Dispose()
+        {
+            VlcPlayerChanged = null;
+            LibVlc?.Dispose();
+            VlcPlayer?.Dispose();
+        }
+
+        private LibVLC InitializeLibVlc(string[] swapChainOptions)
+        {
+            string[] options = new string[swapChainOptions.Length + 1];
+            options[0] = "--no-osd";
+            swapChainOptions.CopyTo(options, 1);
+            LibVLC libVlc = new(true, options);
+            LogService.RegisterLibVlcLogging(libVlc);
+            return libVlc;
         }
 
         private void RegisterPlaybackEvents()

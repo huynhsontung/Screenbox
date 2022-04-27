@@ -3,20 +3,20 @@
 using System;
 using Windows.Foundation;
 using LibVLCSharp.Shared;
-using Screenbox.Core;
 
 namespace Screenbox.Services;
 
 public interface IMediaPlayerService
 {
-    event EventHandler<ValueChangedEventArgs<MediaPlayer?>>? VlcPlayerChanged;
+    event EventHandler? VlcPlayerChanged;
     MediaPlayer? VlcPlayer { get; }
+    LibVLC? LibVlc { get; }
     double? NumericAspectRatio { get; }
     Size Dimension { get; }
     float Rate { get; set; }
     string? CropGeometry { get; set; }
     long FrameDuration { get; }
-    void InitVlcPlayer(LibVLC libVlc);
+    void InitVlcPlayer(string[] swapChainOptions);
     void Replay();
     void Play(Media media);
     void Play();
