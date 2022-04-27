@@ -1,8 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using Windows.Foundation;
-using Windows.Media.Devices;
 using Windows.System;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
@@ -89,9 +87,6 @@ namespace Screenbox.ViewModels
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
             _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-
-            // Notify VLC to auto detect new audio device on device changed
-            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
 
             ShouldUpdateTime = true;
             _bufferingProgress = 100;
@@ -237,14 +232,6 @@ namespace Screenbox.ViewModels
                 Chapters = VlcPlayer.FullChapterDescriptions();
                 CurrentChapter = Chapters.Length > 0 ? Chapters[VlcPlayer.Chapter] : default;
             });
-        }
-
-        private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
-        {
-            if (args.Role == AudioDeviceRole.Default)
-            {
-                _mediaPlayerService.SetOutputDevice();
-            }
         }
     }
 }

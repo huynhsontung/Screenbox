@@ -3,6 +3,7 @@
 using System;
 using Windows.Foundation;
 using Windows.Media;
+using Windows.Media.Devices;
 using Windows.System;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
@@ -70,6 +71,9 @@ namespace Screenbox.Services
             SystemMediaTransportControlsDisplayUpdater displayUpdater = _transportControl.DisplayUpdater;
             displayUpdater.ClearAll();
             displayUpdater.AppMediaId = "Modern VLC";
+
+            // Notify VLC to auto detect new audio device on device changed
+            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
         }
 
         public void InitVlcPlayer(LibVLC libVlc)
@@ -93,7 +97,7 @@ namespace Screenbox.Services
 
         public void Pause() => VlcPlayer?.Pause();
 
-        public void SetOutputDevice(string? deviceId = null)
+        public void SetAudioOutputDevice(string? deviceId = null)
         {
             if (VlcPlayer == null) return;
             deviceId ??= VlcPlayer.OutputDevice;
@@ -164,6 +168,14 @@ namespace Screenbox.Services
                 case SystemMediaTransportControlsButton.Rewind:
                     Seek(-30000);
                     break;
+            }
+        }
+
+        private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role == AudioDeviceRole.Default)
+            {
+                SetAudioOutputDevice();
             }
         }
     }

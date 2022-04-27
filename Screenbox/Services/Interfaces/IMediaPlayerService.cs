@@ -21,7 +21,7 @@ public interface IMediaPlayerService
     void Play(Media media);
     void Play();
     void Pause();
-    void SetOutputDevice(string? deviceId = null);
+    void SetAudioOutputDevice(string? deviceId = null);
     void NextFrame();
     void Stop();
     long SetTime(double time);
