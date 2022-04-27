@@ -165,15 +165,15 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\FilesService.cs" />
-    <Compile Include="Services\IFilesService.cs" />
+    <Compile Include="Services\Interfaces\IFilesService.cs" />
     <Compile Include="Pages\PlayerPage.xaml.cs">
       <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\INotificationService.cs" />
-    <Compile Include="Services\IPlaylistService.cs" />
-    <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
-    <Compile Include="Services\IWindowService.cs" />
+    <Compile Include="Services\Interfaces\INotificationService.cs" />
+    <Compile Include="Services\Interfaces\IPlaylistService.cs" />
+    <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
+    <Compile Include="Services\Interfaces\IWindowService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
