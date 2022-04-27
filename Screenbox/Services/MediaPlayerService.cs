@@ -4,6 +4,7 @@ using System;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Devices;
+using Windows.Storage.AccessCache;
 using Windows.System;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
@@ -85,6 +86,9 @@ namespace Screenbox.Services
             VlcPlayer = new MediaPlayer(LibVlc);
             VlcPlayerChanged?.Invoke(this, EventArgs.Empty);
             RegisterPlaybackEvents();
+
+            // Clear FA periodically because of 1000 items limit
+            StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
         public void Replay()

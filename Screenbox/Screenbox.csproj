@@ -164,8 +164,10 @@
     <Compile Include="Core\Messages\ChangeSeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
+    <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
+    <Compile Include="Services\MediaService.cs" />
     <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">

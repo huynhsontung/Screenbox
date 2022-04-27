@@ -1,7 +1,5 @@
-﻿using Windows.ApplicationModel.Core;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.System;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -26,12 +24,9 @@ namespace Screenbox.Pages
 
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
-        private readonly IServiceScope _scope; 
-
         public PlayerPage()
         {
-            _scope = App.Services.CreateScope();
-            DataContext = _scope.ServiceProvider.GetRequiredService<PlayerPageViewModel>();
+            DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
@@ -46,11 +41,6 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.ToBeOpened = e.Parameter;
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            _scope.Dispose();
         }
 
         private void FocusVideoViewOnEvents()

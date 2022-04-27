@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -21,7 +19,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Win32.SafeHandles;
 using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
@@ -29,7 +26,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>, IDisposable
+    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>
     {
         [ObservableProperty]
         private string _mediaTitle;
@@ -85,17 +82,19 @@ namespace Screenbox.ViewModels
         private readonly IPlaylistService _playlistService;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
-        private MediaHandle? _mediaHandle;
+        private readonly IMediaService _mediaService;
         private bool _visibilityOverride;
         private StorageFile? _savedFrame;
 
         public PlayerPageViewModel(
+            IMediaService mediaService,
             IMediaPlayerService mediaPlayerService,
             IWindowService windowService,
             IFilesService filesService,
             INotificationService notificationService,
             IPlaylistService playlistService)
         {
+            _mediaService = mediaService;
             _mediaPlayerService = mediaPlayerService;
             _windowService = windowService;
             _filesService = filesService;
@@ -220,88 +219,43 @@ namespace Screenbox.ViewModels
             }
         }
 
-        // TODO: Move to its own MediaService/PlaylistService
         [ICommand]
         private void Open(object? value)
         {
+            if (value == null) return;
             if (LibVlc == null)
             {
                 ToBeOpened = value;
                 return;
             }
 
-            MediaHandle? mediaHandle = null;
-            Uri? uri = null;
-
-            if (value is StorageFile file)
+            MediaHandle? handle;
+            try
             {
-                uri = new Uri(file.Path);
-                if (file.Provider.Id == "network")
+                handle = _mediaService.CreateMedia(value);
+            }
+            catch (Exception e)
+            {
+                ShowNotification(new NotificationRaisedEventArgs
                 {
-                    Media media = new(LibVlc, uri);
-                    mediaHandle = new MediaHandle(media, uri);
-                }
-                else
-                {
-                    try
-                    {
-                        SafeFileHandle? handle = file.CreateSafeFileHandle(FileAccess.Read, FileShare.Read, FileOptions.RandomAccess);
-                        if (handle == null) return;
-                        FileStream stream = new(handle, FileAccess.Read);
-                        StreamMediaInput streamInput = new(stream);
-                        Media media = new(LibVlc, streamInput);
-                        mediaHandle = new MediaHandle(media, uri)
-                        {
-                            FileHandle = handle,
-                            Stream = stream,
-                            StreamInput = streamInput
-                        };
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        ShowNotification(new NotificationRaisedEventArgs
-                        {
-                            Level = NotificationLevel.Error,
-                            Title = "Cannot open file",
-                            Message = "Access denied"
-                        }, 8);
-                        return;
-                    }
-                }
-            }
-
-            if (value is string str)
-            {
-                Uri.TryCreate(str, UriKind.Absolute, out uri);
-                value = uri;
-            }
-
-            if (value is Uri uri1)
-            {
-                uri = uri1;
-                Media media = new(LibVlc, uri);
-                mediaHandle = new MediaHandle(media, uri);
-            }
-
-            if (mediaHandle == null)
-            {
+                    Level = NotificationLevel.Error,
+                    Title = "Cannot open file",
+                    Message = e.Message
+                }, 8);
                 return;
             }
+
+            if (handle == null) return;
 
             _dispatcherQueue.TryEnqueue(() =>
             {
                 PlayerHidden = false;
-                if (uri == null) return;
-                MediaTitle = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+                MediaTitle = handle.Title;
             });
 
-            MediaHandle? oldMediaHandle = _mediaHandle;
-            _mediaHandle = mediaHandle;
-
-            mediaHandle.Media.ParsedChanged += OnMediaParsed;
-            _mediaPlayerService.Play(mediaHandle.Media);
-
-            oldMediaHandle?.Dispose();
+            handle.Media.ParsedChanged += OnMediaParsed;
+            _mediaPlayerService.Play(handle.Media);
+            _mediaService.SetActive(handle);
         }
 
         private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
@@ -393,14 +347,6 @@ namespace Screenbox.ViewModels
 
                     break;
             }
-        }
-
-        public void Dispose()
-        {
-            _controlsVisibilityTimer.Stop();
-            _statusMessageTimer.Stop();
-
-            _mediaHandle?.Dispose();
         }
 
         [ICommand]

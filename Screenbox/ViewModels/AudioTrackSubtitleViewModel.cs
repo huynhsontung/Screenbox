@@ -68,7 +68,7 @@ namespace Screenbox.ViewModels
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
                 if (file == null) return;
 
-                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file);
+                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
                 _mediaPlayerService.AddSubtitle(mrl);
             }
             catch (Exception e)
