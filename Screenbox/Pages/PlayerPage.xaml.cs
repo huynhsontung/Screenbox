@@ -40,7 +40,7 @@ namespace Screenbox.Pages
 
         public void FocusVideoView()
         {
-            FocusButton.Focus(FocusState.Programmatic);
+            VideoViewButton.Focus(FocusState.Programmatic);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -55,7 +55,6 @@ namespace Screenbox.Pages
 
         private void FocusVideoViewOnEvents()
         {
-            VideoViewButton.Click += (_, _) => FocusVideoView();
             VideoViewButton.Drop += (_, _) => FocusVideoView();
             Loaded += (_, _) => FocusVideoView();
             PageStates.CurrentStateChanged += (_, args) =>

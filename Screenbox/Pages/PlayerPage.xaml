@@ -186,13 +186,24 @@
             </Button>
 
             <Button
-                x:Name="FocusButton"
+                x:Name="VideoViewButton"
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Command="{x:Bind ViewModel.PlayPauseCommand}"
+                AllowDrop="True"
+                Background="Black"
+                Click="{x:Bind ViewModel.ToggleControlsVisibility}"
+                ContextFlyout="{StaticResource VideoContextMenu}"
+                DoubleTapped="{x:Bind ViewModel.ToggleFullscreen}"
+                DragOver="{x:Bind ViewModel.OnDragOver}"
+                Drop="{x:Bind ViewModel.OnDrop}"
+                ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+                ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
+                ManipulationMode="TranslateX,TranslateY"
+                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
                 Opacity="0"
+                PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
                 Style="{x:Null}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="GotFocus">
@@ -210,28 +221,6 @@
                 </interactivity:Interaction.Behaviors>
             </Button>
 
-            <Button
-                x:Name="VideoViewButton"
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                AllowDrop="True"
-                Background="Black"
-                Click="{x:Bind ViewModel.ToggleControlsVisibility}"
-                ContextFlyout="{StaticResource VideoContextMenu}"
-                DoubleTapped="{x:Bind ViewModel.ToggleFullscreen}"
-                DragOver="{x:Bind ViewModel.OnDragOver}"
-                Drop="{x:Bind ViewModel.OnDrop}"
-                IsTabStop="False"
-                ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-                ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
-                ManipulationMode="TranslateX,TranslateY"
-                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-                Opacity="0"
-                PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
-                Style="{x:Null}" />
-
             <lvs:VideoView
                 x:Name="VideoView"
                 Grid.Row="0"
@@ -247,39 +236,39 @@
                     <KeyboardAccelerator
                         Key="Left"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Left"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                         Modifiers="Control"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Left"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                         Modifiers="Shift"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Right"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Right"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                         Modifiers="Control"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Right"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                         Modifiers="Shift"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Up"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator
                         Key="Down"
                         Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind FocusButton}" />
+                        ScopeOwner="{x:Bind VideoViewButton}" />
                     <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                     <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                     <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
@@ -402,6 +391,7 @@
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="P" />
                             <KeyboardAccelerator Key="K" />
+                            <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoViewButton}" />
                         </Button.KeyboardAccelerators>
                         <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.IsPlaying), Mode=OneWay}" />
                     </Button>
