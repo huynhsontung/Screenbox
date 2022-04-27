@@ -2,6 +2,7 @@
 
 using System;
 using Windows.Foundation;
+using Windows.Media.Devices;
 using Windows.System;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
@@ -158,6 +159,9 @@ namespace Screenbox.Core
             _vlcPlayer.Buffering += OnBuffering;
             _vlcPlayer.ChapterChanged += OnChapterChanged;
 
+            // Notify VLC to auto detect new audio device on device changed
+            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+
             ShouldUpdateTime = true;
             _bufferingProgress = 100;
             _volume = 100;
@@ -208,6 +212,8 @@ namespace Screenbox.Core
             // Manually set time to eliminate infinite update loop
             Time = VlcPlayer.Time = (long)time;
         }
+
+        public void Seek(long amount) => SetTime(Time + amount);
 
         public void AddSubtitle(string mrl)
         {
@@ -341,9 +347,18 @@ namespace Screenbox.Core
             });
         }
 
+        private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role == AudioDeviceRole.Default)
+            {
+                SetOutputDevice();
+            }
+        }
+
         public void Dispose()
         {
             RemoveMediaPlayerEventHandlers();
+            MediaDevice.DefaultAudioRenderDeviceChanged -= MediaDevice_DefaultAudioRenderDeviceChanged;
             _vlcPlayer.Dispose();
         }
     }

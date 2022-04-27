@@ -53,6 +53,7 @@ namespace Screenbox
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<IPlaylistService, PlaylistService>();
             services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<IWindowService, WindowService>();
 
             return services.BuildServiceProvider(true);
         }

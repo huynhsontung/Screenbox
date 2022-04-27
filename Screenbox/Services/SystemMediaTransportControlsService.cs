@@ -15,6 +15,8 @@ namespace Screenbox.Services
         private readonly SystemMediaTransportControls _transportControl;
         private readonly SystemMediaTransportControlsDisplayUpdater _displayUpdater;
 
+        private ObservablePlayer? _player;
+
         public SystemMediaTransportControlsService()
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -34,6 +36,7 @@ namespace Screenbox.Services
 
         public void RegisterPlaybackEvents(ObservablePlayer player)
         {
+            _player = player;
             player.VlcPlayer.Paused += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
             player.VlcPlayer.Stopped += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
             player.VlcPlayer.Playing += (sender, args) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
@@ -43,7 +46,31 @@ namespace Screenbox.Services
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            ButtonPressed?.Invoke(sender, args);
+            if (_player == null) return;
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Pause:
+                    _player.Pause();
+                    break;
+                case SystemMediaTransportControlsButton.Play:
+                    _player.Play();
+                    break;
+                case SystemMediaTransportControlsButton.Stop:
+                    _player.Stop();
+                    break;
+                //case SystemMediaTransportControlsButton.Previous:
+                //    Locator.PlaybackService.Previous();
+                //    break;
+                //case SystemMediaTransportControlsButton.Next:
+                //    Locator.PlaybackService.Next();
+                //    break;
+                case SystemMediaTransportControlsButton.FastForward:
+                    _player.Seek(30000);
+                    break;
+                case SystemMediaTransportControlsButton.Rewind:
+                    _player.Seek(-30000);
+                    break;
+            }
         }
     }
 }
