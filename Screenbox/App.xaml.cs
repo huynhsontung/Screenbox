@@ -29,8 +29,6 @@ namespace Screenbox
 
         public static IServiceProvider Services => DerivedCurrent._services;
 
-        public LibVLC? LibVlc { get; private set; }
-
         private readonly IServiceProvider _services;
 
         /// <summary>
@@ -43,22 +41,6 @@ namespace Screenbox
             _services = ConfigureServices();
             InitializeComponent();
             Suspending += OnSuspending;
-        }
-
-        public LibVLC InitializeLibVlc(string[] swapChainOptions)
-        {
-            if (LibVlc == null)
-            {
-                var options = new string[swapChainOptions.Length + 1];
-                options[0] = "--no-osd";
-                swapChainOptions.CopyTo(options, 1);
-                LibVlc = new LibVLC(true, options);
-                var notificationService = _services.GetService<INotificationService>();
-                notificationService?.SetVLCDiaglogHandlers(LibVlc);
-                LogService.RegisterLibVLCLogging(LibVlc);
-            }
-
-            return LibVlc;
         }
 
         private static IServiceProvider ConfigureServices()
@@ -115,6 +97,7 @@ namespace Screenbox
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             var rootFrame = InitRootFrame();
+            LibVLCSharp.Shared.Core.Initialize();
 
             if (e.PrelaunchActivated == false)
             {

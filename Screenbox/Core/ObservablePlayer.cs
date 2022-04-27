@@ -209,6 +209,12 @@ namespace Screenbox.Core
             Time = VlcPlayer.Time = (long)time;
         }
 
+        public void AddSubtitle(string uri)
+        {
+            VlcPlayer.AddSlave(MediaSlaveType.Subtitle, uri, true);
+            UpdateSpuOptions();
+        }
+
         private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
         {
             for (int i = 0; i < tracks.Length; i++)
@@ -233,12 +239,22 @@ namespace Screenbox.Core
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                SpuDescriptions = _vlcPlayer.SpuDescription;
-                SpuIndex = GetIndexFromTrackId(_vlcPlayer.Spu, _vlcPlayer.SpuDescription);
-                AudioTrackDescriptions = _vlcPlayer.AudioTrackDescription;
-                AudioTrackIndex = GetIndexFromTrackId(_vlcPlayer.AudioTrack, _vlcPlayer.AudioTrackDescription);
+                UpdateSpuOptions();
+                UpdateAudioTrackOptions();
                 CurrentChapter = Chapters.Length > 0 ? Chapters[_vlcPlayer.Chapter] : default;
             });
+        }
+
+        private void UpdateSpuOptions()
+        {
+            SpuDescriptions = _vlcPlayer.SpuDescription;
+            SpuIndex = GetIndexFromTrackId(_vlcPlayer.Spu, _vlcPlayer.SpuDescription);
+        }
+
+        private void UpdateAudioTrackOptions()
+        {
+            AudioTrackDescriptions = _vlcPlayer.AudioTrackDescription;
+            AudioTrackIndex = GetIndexFromTrackId(_vlcPlayer.AudioTrack, _vlcPlayer.AudioTrackDescription);
         }
 
         private void RemoveMediaPlayerEventHandlers()

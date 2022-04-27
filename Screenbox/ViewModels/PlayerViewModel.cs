@@ -107,6 +107,24 @@ namespace Screenbox.ViewModels
             PropertyChanged += OnPropertyChanged;
         }
 
+        //[ICommand]
+        //private async Task AddSubtitle()
+        //{
+        //    if (MediaPlayer == null || _mediaHandle == null || !MediaPlayer.VlcPlayer.WillPlay) return;
+        //    try
+        //    {
+        //        var subtitle = await _filesService.PickSubtitleAsync();
+        //        if (subtitle == null) return;
+
+        //        _mediaHandle.SubtitleFiles.Add(subtitle);
+        //        MediaPlayer.AddSubtitle(subtitle.Path);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // TODO: Display to UI
+        //    }
+        //}
+
         [ICommand]
         private async Task SaveSnapshot()
         {
@@ -224,29 +242,37 @@ namespace Screenbox.ViewModels
             if (value is StorageFile file)
             {
                 uri = new Uri(file.Path);
-                try
+                if (file.Provider.Id == "network")
                 {
-                    var handle = file.CreateSafeFileHandle(FileAccess.Read, FileShare.Read, FileOptions.RandomAccess);
-                    if (handle == null) return;
-                    var stream = new FileStream(handle, FileAccess.Read);
-                    var streamInput = new StreamMediaInput(stream);
-                    var media = new Media(_libVlc, streamInput);
-                    mediaHandle = new MediaHandle(media, uri)
-                    {
-                        FileHandle = handle,
-                        Stream = stream,
-                        StreamInput = streamInput
-                    };
+                    var media = new Media(_libVlc, uri);
+                    mediaHandle = new MediaHandle(media, uri);
                 }
-                catch (UnauthorizedAccessException)
+                else
                 {
-                    ShowNotification(new NotificationRaisedEventArgs
+                    try
                     {
-                        Level = NotificationLevel.Error,
-                        Title = "Cannot open file",
-                        Message = "Access denied"
-                    }, 8);
-                    return;
+                        var handle = file.CreateSafeFileHandle(FileAccess.Read, FileShare.Read, FileOptions.RandomAccess);
+                        if (handle == null) return;
+                        var stream = new FileStream(handle, FileAccess.Read);
+                        var streamInput = new StreamMediaInput(stream);
+                        var media = new Media(_libVlc, streamInput);
+                        mediaHandle = new MediaHandle(media, uri)
+                        {
+                            FileHandle = handle,
+                            Stream = stream,
+                            StreamInput = streamInput
+                        };
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        ShowNotification(new NotificationRaisedEventArgs
+                        {
+                            Level = NotificationLevel.Error,
+                            Title = "Cannot open file",
+                            Message = "Access denied"
+                        }, 8);
+                        return;
+                    }
                 }
             }
 
@@ -329,12 +355,24 @@ namespace Screenbox.ViewModels
 
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
-            _libVlc = App.DerivedCurrent.InitializeLibVlc(e.SwapChainOptions);
+            _libVlc = InitializeLibVlc(e.SwapChainOptions);
             MediaPlayer = new ObservablePlayer(_libVlc);
             MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
             _transportControlsService.RegisterPlaybackEvents(MediaPlayer);
             
             Open(ToBeOpened);
+
+        }
+
+        private LibVLC InitializeLibVlc(string[] swapChainOptions)
+        {
+            var options = new string[swapChainOptions.Length + 1];
+            options[0] = "--no-osd";
+            swapChainOptions.CopyTo(options, 1);
+            var libVlc = new LibVLC(true, options);
+            _notificationService.SetVLCDiaglogHandlers(libVlc);
+            LogService.RegisterLibVLCLogging(libVlc);
+            return libVlc;
         }
 
         private void MediaPlayerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -443,6 +481,7 @@ namespace Screenbox.ViewModels
 
             MediaPlayer?.Dispose();
             _mediaHandle?.Dispose();
+            _libVlc?.Dispose();
         }
 
         [ICommand]

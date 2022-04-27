@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -14,6 +16,7 @@ namespace Screenbox.Services
 
         public Task<List<VideoViewModel>> LoadVideosFromLibraryAsync();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
+        public Task<StorageFile?> PickSubtitleAsync();
         public Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer);
     }
 }

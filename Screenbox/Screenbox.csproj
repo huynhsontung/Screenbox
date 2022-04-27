@@ -269,7 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LibVLCSharp">
-      <Version>3.6.6</Version>
+      <Version>3.6.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>4.5.0</Version>

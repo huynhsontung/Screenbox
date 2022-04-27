@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Media.Imaging;
 using LibVLCSharp.Shared;
@@ -57,10 +58,10 @@ namespace Screenbox.Services
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
         {
-            var picker = new Windows.Storage.Pickers.FileOpenPicker
+            var picker = new FileOpenPicker
             {
-                ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
-                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.VideosLibrary
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.VideosLibrary
             };
 
             IEnumerable<string> fileTypes = formats.Length == 0 ? SupportedFormats : formats;
@@ -70,6 +71,20 @@ namespace Screenbox.Services
             }
 
             return picker.PickSingleFileAsync();
+        }
+
+        // TODO: Add method to clean up subtitle files in temp
+        public async Task<StorageFile?> PickSubtitleAsync()
+        {
+            var tempFolder =
+                await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("Subtitles",
+                    CreationCollisionOption.OpenIfExists);
+
+            var subtitle = await PickFileAsync(".srt", ".ass");
+            if (subtitle == null) return null;
+            var properties = await subtitle.GetBasicPropertiesAsync();
+            if (properties.Size > 5e+6) throw new Exception("Subtitle file too big");
+            return await subtitle.CopyAsync(tempFolder, subtitle.Name, NameCollisionOption.GenerateUniqueName);
         }
 
         public async Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer)
