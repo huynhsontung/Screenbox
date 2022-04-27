@@ -203,7 +203,6 @@
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
-    <Compile Include="ViewModels\PlayerPageViewModel.Manipulation.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\VideoViewModel.cs" />
     <Compile Include="ViewModels\VideoViewViewModel.cs" />

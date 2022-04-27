@@ -8,12 +8,14 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Converters;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
@@ -62,6 +64,13 @@ namespace Screenbox.ViewModels
 
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
+        private enum ManipulationLock
+        {
+            None,
+            Horizontal,
+            Vertical
+        }
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
@@ -72,6 +81,9 @@ namespace Screenbox.ViewModels
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IMediaService _mediaService;
         private bool _visibilityOverride;
+        private ManipulationLock _lockDirection;
+        private double _timeBeforeManipulation;
+        private bool _overrideStatusTimeout;
 
         public PlayerPageViewModel(
             IMediaService mediaService,
@@ -100,44 +112,14 @@ namespace Screenbox.ViewModels
             IsActive = true;
         }
 
-        [ICommand]
-        private async Task SaveSnapshot()
-        {
-            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
-            try
-            {
-                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
-                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
-            }
-            catch (Exception e)
-            {
-                _notificationService.RaiseError("Failed to save frame", e.ToString());
-                // TODO: track error
-            }
-        }
-
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
         }
 
-        [ICommand]
-        private async Task ToggleCompactLayout()
+        public void SetPlaybackSpeed(string speedText)
         {
-            if (IsCompact)
-            {
-                await _windowService.ExitCompactLayout();
-            }
-            else
-            {
-                await _windowService.EnterCompactLayout(new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240));
-            }
-
-            IsCompact = _windowService.IsCompact;
-        }
-
-        public void SetPlaybackSpeed(float speed)
-        {
+            float.TryParse(speedText, out float speed);
             _mediaPlayerService.Rate = speed;
         }
 
@@ -165,6 +147,121 @@ namespace Screenbox.ViewModels
             {
                 _mediaPlayerService.Pause();
             }
+        }
+
+        public void ToggleControlsVisibility()
+        {
+            if (ControlsHidden)
+            {
+                ShowControls();
+                DelayHideControls();
+            }
+            else if (IsPlaying && !_visibilityOverride)
+            {
+                HideControls();
+                // Keep hiding even when pointer moved right after
+                OverrideVisibilityChange();
+            }
+        }
+
+        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
+        {
+            ViewSize = args.NewSize;
+            SetCropGeometry(ViewSize);
+        }
+
+        public void OnPointerMoved()
+        {
+            if (_visibilityOverride) return;
+            if (ControlsHidden)
+            {
+                ShowControls();
+            }
+
+            if (Messenger.Send<ChangeSeekBarInteractionRequestMessage>()) return;
+            DelayHideControls();
+        }
+
+        public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
+            ? $"Chapter {VlcPlayer?.Chapter + 1}"
+            : nullableName ?? string.Empty;
+
+        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            _overrideStatusTimeout = false;
+            if (_lockDirection == ManipulationLock.None) return;
+            OverrideVisibilityChange(100);
+            ShowStatusMessage(null);
+            Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = false });
+        }
+
+        public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            const double horizontalChangePerPixel = 200;
+            double horizontalChange = e.Delta.Translation.X;
+            double verticalChange = e.Delta.Translation.Y;
+            double horizontalCumulative = e.Cumulative.Translation.X;
+            double verticalCumulative = e.Cumulative.Translation.Y;
+            if (Math.Abs(horizontalCumulative) < 50 && Math.Abs(verticalCumulative) < 50) return;
+
+            if (_lockDirection == ManipulationLock.Vertical ||
+                _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
+            {
+                _lockDirection = ManipulationLock.Vertical;
+                _mediaPlayerService.Volume += (int)-verticalChange;
+                return;
+            }
+
+            if (VlcPlayer?.IsSeekable ?? false)
+            {
+                _lockDirection = ManipulationLock.Horizontal;
+                Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = true });
+                double timeChange = horizontalChange * horizontalChangePerPixel;
+                long newTime = _mediaPlayerService.Seek(timeChange);
+                Messenger.Send(new ChangeTimeRequestMessage { Value = newTime });
+
+                string changeText = HumanizedDurationConverter.Convert(newTime - _timeBeforeManipulation);
+                if (changeText[0] != '-') changeText = '+' + changeText;
+                ShowStatusMessage($"{HumanizedDurationConverter.Convert(newTime)} ({changeText})");
+            }
+        }
+
+        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            _overrideStatusTimeout = true;
+            _lockDirection = ManipulationLock.None;
+            _timeBeforeManipulation = VlcPlayer?.Time ?? 0;
+        }
+
+        [ICommand]
+        private async Task SaveSnapshot()
+        {
+            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
+            try
+            {
+                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
+                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
+            }
+            catch (Exception e)
+            {
+                _notificationService.RaiseError("Failed to save frame", e.ToString());
+                // TODO: track error
+            }
+        }
+
+        [ICommand]
+        private async Task ToggleCompactLayout()
+        {
+            if (IsCompact)
+            {
+                await _windowService.ExitCompactLayout();
+            }
+            else
+            {
+                await _windowService.EnterCompactLayout(new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240));
+            }
+
+            IsCompact = _windowService.IsCompact;
         }
 
         private void ShowStatusMessage(string? message)
@@ -208,48 +305,11 @@ namespace Screenbox.ViewModels
             }
         }
 
-        public void ToggleControlsVisibility()
-        {
-            if (ControlsHidden)
-            {
-                ShowControls();
-                DelayHideControls();
-            }
-            else if (IsPlaying && !_visibilityOverride)
-            {
-                HideControls();
-                // Keep hiding even when pointer moved right after
-                OverrideVisibilityChange();
-            }
-        }
-
-        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            ViewSize = args.NewSize;
-            SetCropGeometry(ViewSize);
-        }
-
         private void SetCropGeometry(Size size)
         {
             if (!ZoomToFit && _mediaPlayerService.CropGeometry == null) return;
             _mediaPlayerService.CropGeometry = ZoomToFit ? $"{size.Width}:{size.Height}" : null;
         }
-
-        public void OnPointerMoved()
-        {
-            if (_visibilityOverride) return;
-            if (ControlsHidden)
-            {
-                ShowControls();
-            }
-
-            if (Messenger.Send<ChangeSeekBarInteractionRequestMessage>()) return;
-            DelayHideControls();
-        }
-
-        public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
-            ? $"Chapter {VlcPlayer?.Chapter + 1}"
-            : nullableName ?? string.Empty;
 
         private void ShowControls()
         {

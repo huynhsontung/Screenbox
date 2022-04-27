@@ -61,9 +61,7 @@ namespace Screenbox.Pages
         private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
         {
             var item = (RadioMenuFlyoutItem)sender;
-            var speedText = item.Text;
-            float.TryParse(speedText, out var speed);
-            ViewModel.SetPlaybackSpeed(speed);
+            ViewModel.SetPlaybackSpeed(item.Text);
         }
 
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
