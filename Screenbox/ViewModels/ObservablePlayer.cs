@@ -8,38 +8,14 @@ using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Screenbox.Core;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    public partial class ObservablePlayer : ObservableObject, IDisposable
+    public partial class ObservablePlayer : ObservableObject
     {
-        public MediaPlayer? VlcPlayer { get; private set; }
-
-        public bool IsMute
-        {
-            get => _isMute;
-            set
-            {
-                if (SetProperty(ref _isMute, value) && VlcPlayer != null && VlcPlayer.Mute != value)
-                {
-                    VlcPlayer.Mute = value;
-                }
-            }
-        }
-
-        public double Volume
-        {
-            get => _volume;
-            set
-            {
-                if (value > 100) value = 100;
-                if (value < 0) value = 0;
-                var intVal = (int)value;
-                if (!SetProperty(ref _volume, value) || VlcPlayer == null || VlcPlayer.Volume == intVal) return;
-                VlcPlayer.Volume = intVal;
-                IsMute = intVal == 0;
-            }
-        }
+        public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
         public int SpuIndex
         {
@@ -64,42 +40,6 @@ namespace Screenbox.ViewModels
                     VlcPlayer?.SetSpu(audioDesc[value].Id);
             }
         }
-
-        public double? NumericAspectRatio
-        {
-            get
-            {
-                uint px = 0, py = 0;
-                return (VlcPlayer?.Size(0, ref px, ref py) ?? false) && py != 0 ? (double)px / py : null;
-            }
-        }
-
-        public Size Dimension
-        {
-            get
-            {
-                uint px = 0, py = 0;
-                return VlcPlayer?.Size(0, ref px, ref py) ?? false ? new Size(px, py) : Size.Empty;
-            }
-        }
-
-        public float Rate
-        {
-            get => VlcPlayer?.Rate ?? default;
-            set => VlcPlayer?.SetRate(value);
-        }
-
-        public string? CropGeometry
-        {
-            get => VlcPlayer?.CropGeometry;
-            set
-            {
-                if (VlcPlayer != null)
-                    VlcPlayer.CropGeometry = value;
-            }
-        }
-
-        public long FrameDuration => VlcPlayer?.Fps != 0 ? (long)Math.Ceiling(1000.0 / VlcPlayer?.Fps ?? 1) : 0;
 
         public bool ShouldUpdateTime { get; set; }
 
@@ -137,13 +77,14 @@ namespace Screenbox.ViewModels
         private ChapterDescription _currentChapter;
 
         private readonly DispatcherQueue _dispatcherQueue;
-        private double _volume;
-        private bool _isMute;
+        private readonly IMediaPlayerService _mediaPlayerService;
         private int _spuIndex;
         private int _audioTrackIndex;
 
-        public ObservablePlayer()
+        public ObservablePlayer(IMediaPlayerService mediaPlayer)
         {
+            _mediaPlayerService = mediaPlayer;
+            _mediaPlayerService.VlcPlayerChanged += MediaPlayerServiceOnVlcPlayerChanged;
             _spuDescriptions = Array.Empty<TrackDescription>();
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
             _chapters = Array.Empty<ChapterDescription>();
@@ -154,76 +95,7 @@ namespace Screenbox.ViewModels
 
             ShouldUpdateTime = true;
             _bufferingProgress = 100;
-            _volume = 100;
             _state = VLCState.NothingSpecial;
-        }
-
-        public void InitVlcPlayer(LibVLC libVlc)
-        {
-            DisposeVlcPlayer();
-            MediaPlayer vlcPlayer = VlcPlayer = new MediaPlayer(libVlc);
-            vlcPlayer.LengthChanged += OnLengthChanged;
-            vlcPlayer.TimeChanged += OnTimeChanged;
-            vlcPlayer.SeekableChanged += OnSeekableChanged;
-            vlcPlayer.VolumeChanged += OnVolumeChanged;
-            vlcPlayer.Muted += OnStateChanged;
-            vlcPlayer.EndReached += OnEndReached;
-            vlcPlayer.Playing += OnStateChanged;
-            vlcPlayer.Paused += OnStateChanged;
-            vlcPlayer.Stopped += OnStateChanged;
-            vlcPlayer.EncounteredError += OnStateChanged;
-            vlcPlayer.Opening += OnStateChanged;
-            vlcPlayer.Buffering += OnBuffering;
-            vlcPlayer.ChapterChanged += OnChapterChanged;
-        }
-
-        public void Replay()
-        {
-            Stop();
-            Play();
-        }
-
-        public void Play(Media media)
-        {
-            if (VlcPlayer == null) return;
-            media.ParsedChanged += OnMediaParsed;
-            VlcPlayer?.Play(media);
-        }
-
-        public void Play() => VlcPlayer?.Play();
-
-        public void Pause() => VlcPlayer?.Pause();
-
-        public void SetOutputDevice(string? deviceId = null)
-        {
-            if (VlcPlayer == null) return;
-            deviceId ??= VlcPlayer.OutputDevice;
-            if (deviceId == null) return;
-            VlcPlayer.SetOutputDevice(deviceId);
-        }
-
-        public void NextFrame() => VlcPlayer?.NextFrame();
-
-        public void Stop() => VlcPlayer?.Stop();
-
-        public void SetTime(double time)
-        {
-            if (VlcPlayer == null) return;
-            time = Math.Clamp(time, 0, Length);
-            if (State == VLCState.Ended)
-            {
-                Replay();
-            }
-
-            // Manually set time to eliminate infinite update loop
-            Time = VlcPlayer.Time = (long)time;
-        }
-
-        public void Seek(long amount) => SetTime(Time + amount);
-
-        public void AddSubtitle(string mrl)
-        {
-            VlcPlayer?.AddSlave(MediaSlaveType.Subtitle, mrl, true);
         }
 
         public void UpdateSpuOptions()
@@ -241,8 +113,6 @@ namespace Screenbox.ViewModels
             AudioTrackDescriptions = VlcPlayer.AudioTrackDescription;
             AudioTrackIndex = GetIndexFromTrackId(audioTrack, AudioTrackDescriptions);
         }
-
-        public void Dispose() => DisposeVlcPlayer();
 
         private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
         {
@@ -264,26 +134,39 @@ namespace Screenbox.ViewModels
             });
         }
 
-        private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
+        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, ValueChangedEventArgs<MediaPlayer?> e)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
+            if (e.OldValue != null)
             {
-                UpdateSpuOptions();
-                UpdateAudioTrackOptions();
-                CurrentChapter = Chapters.Length > 0 ? Chapters[VlcPlayer.Chapter] : default;
-            });
+                RemoveMediaPlayerEventHandlers(e.OldValue);
+            }
+
+            if (e.NewValue != null)
+            {
+                RegisterMediaPlayerEventHandlers(e.NewValue);
+            }
         }
 
-        private void RemoveMediaPlayerEventHandlers()
+        private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
         {
-            if (VlcPlayer == null) return;
-            MediaPlayer vlcPlayer = VlcPlayer;
+            vlcPlayer.LengthChanged += OnLengthChanged;
+            vlcPlayer.TimeChanged += OnTimeChanged;
+            vlcPlayer.SeekableChanged += OnSeekableChanged;
+            vlcPlayer.EndReached += OnEndReached;
+            vlcPlayer.Playing += OnStateChanged;
+            vlcPlayer.Paused += OnStateChanged;
+            vlcPlayer.Stopped += OnStateChanged;
+            vlcPlayer.EncounteredError += OnStateChanged;
+            vlcPlayer.Opening += OnStateChanged;
+            vlcPlayer.Buffering += OnBuffering;
+            vlcPlayer.ChapterChanged += OnChapterChanged;
+        }
+
+        private void RemoveMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
+        {
             vlcPlayer.LengthChanged -= OnLengthChanged;
             vlcPlayer.TimeChanged -= OnTimeChanged;
             vlcPlayer.SeekableChanged -= OnSeekableChanged;
-            vlcPlayer.VolumeChanged -= OnVolumeChanged;
-            vlcPlayer.Muted -= OnStateChanged;
             vlcPlayer.EndReached -= OnEndReached;
             vlcPlayer.Playing -= OnStateChanged;
             vlcPlayer.Paused -= OnStateChanged;
@@ -291,6 +174,7 @@ namespace Screenbox.ViewModels
             vlcPlayer.EncounteredError -= OnStateChanged;
             vlcPlayer.Opening -= OnStateChanged;
             vlcPlayer.Buffering -= OnBuffering;
+            vlcPlayer.ChapterChanged -= OnChapterChanged;
         }
 
         private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
@@ -305,23 +189,12 @@ namespace Screenbox.ViewModels
             {
                 State = VlcPlayer.State;
                 IsPlaying = VlcPlayer.IsPlaying;
-                IsMute = VlcPlayer.Mute;
             });
         }
 
         private void OnStateChanged(object sender, EventArgs e)
         {
             UpdateState();
-        }
-
-        private void OnVolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Volume = VlcPlayer.Volume;
-                IsMute = VlcPlayer.Mute;
-            });
         }
 
         private void OnSeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
@@ -343,7 +216,7 @@ namespace Screenbox.ViewModels
 
             if (ShouldLoop)
             {
-                _dispatcherQueue.TryEnqueue(Replay);
+                _dispatcherQueue.TryEnqueue(_mediaPlayerService.Replay);
                 return;
             }
 
@@ -362,6 +235,7 @@ namespace Screenbox.ViewModels
             {
                 Length = e.Length;
                 Chapters = VlcPlayer.FullChapterDescriptions();
+                CurrentChapter = Chapters.Length > 0 ? Chapters[VlcPlayer.Chapter] : default;
             });
         }
 
@@ -369,14 +243,8 @@ namespace Screenbox.ViewModels
         {
             if (args.Role == AudioDeviceRole.Default)
             {
-                SetOutputDevice();
+                _mediaPlayerService.SetOutputDevice();
             }
-        }
-
-        private void DisposeVlcPlayer()
-        {
-            RemoveMediaPlayerEventHandlers();
-            VlcPlayer?.Dispose();
         }
     }
 }

@@ -20,15 +20,17 @@ using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Win32.SafeHandles;
 using Screenbox.Converters;
 using Screenbox.Core;
+using Screenbox.Core.Messages;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableObject, IDisposable
+    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>, IDisposable
     {
         [ObservableProperty]
         private string _mediaTitle;
@@ -72,11 +74,11 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _notificationTimer;
-        private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
         private readonly IPlaylistService _playlistService;
         private readonly IWindowService _windowService;
+        private readonly IMediaPlayerService _mediaPlayerService;
         private LibVLC? _libVlc;
         private MediaHandle? _mediaHandle;
         private bool _visibilityOverride;
@@ -84,18 +86,19 @@ namespace Screenbox.ViewModels
 
         public PlayerPageViewModel(
             ObservablePlayer player,
+            IMediaPlayerService mediaPlayerService,
             IWindowService windowService,
             IFilesService filesService,
             INotificationService notificationService,
-            IPlaylistService playlistService,
-            ISystemMediaTransportControlsService transportControlsService)
+            IPlaylistService playlistService)
         {
             MediaPlayer = player;
+            MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
+            _mediaPlayerService = mediaPlayerService;
             _windowService = windowService;
             _filesService = filesService;
             _notificationService = notificationService;
             _playlistService = playlistService;
-            _transportControlsService = transportControlsService;
             _mediaTitle = string.Empty;
             _notificationService.NotificationRaised += OnNotificationRaised;
             _notificationService.ProgressUpdated += OnProgressUpdated;
@@ -106,6 +109,9 @@ namespace Screenbox.ViewModels
             _notificationTimer = _dispatcherQueue.CreateTimer();
 
             PropertyChanged += OnPropertyChanged;
+
+            // Activate the view model's messenger
+            IsActive = true;
         }
 
         [ICommand]
@@ -118,7 +124,7 @@ namespace Screenbox.ViewModels
                 if (file == null) return;
 
                 string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file);
-                MediaPlayer.AddSubtitle(mrl);
+                _mediaPlayerService.AddSubtitle(mrl);
             }
             catch (Exception e)
             {
@@ -165,6 +171,11 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public void Receive(UpdateStatusMessage message)
+        {
+            _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
+        }
+
         private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
         {
             LogService.Log(e.Title);
@@ -199,8 +210,8 @@ namespace Screenbox.ViewModels
 
         private void ChangeVolume(double changeAmount)
         {
-            MediaPlayer.Volume += changeAmount;
-            ShowStatusMessage($"Volume {MediaPlayer.Volume:F0}%");
+            ChangeVolumeMessage message = new(changeAmount, isOffset: true);
+            Messenger.Send(message);
         }
 
         [ICommand]
@@ -218,7 +229,7 @@ namespace Screenbox.ViewModels
             {
                 ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
                 preferences.ViewSizePreference = ViewSizePreference.Custom;
-                preferences.CustomSize = new Size(240 * (MediaPlayer?.NumericAspectRatio ?? 1), 240);
+                preferences.CustomSize = new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240);
                 if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
                 {
                     IsCompact = true;
@@ -306,7 +317,7 @@ namespace Screenbox.ViewModels
             _mediaHandle = mediaHandle;
 
             mediaHandle.Media.ParsedChanged += OnMediaParsed;
-            MediaPlayer?.Play(mediaHandle.Media);
+            _mediaPlayerService.Play(mediaHandle.Media);
 
             oldMediaHandle?.Dispose();
         }
@@ -322,7 +333,7 @@ namespace Screenbox.ViewModels
 
         public void SetPlaybackSpeed(float speed)
         {
-            MediaPlayer.Rate = speed;
+            _mediaPlayerService.Rate = speed;
         }
 
         [ICommand]
@@ -347,12 +358,9 @@ namespace Screenbox.ViewModels
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _libVlc = InitializeLibVlc(e.SwapChainOptions);
-            MediaPlayer.InitVlcPlayer(_libVlc);
-            MediaPlayer.PropertyChanged += MediaPlayerOnPropertyChanged;
-            _transportControlsService.RegisterPlaybackEvents(MediaPlayer);
-            
-            Open(ToBeOpened);
+            _mediaPlayerService.InitVlcPlayer(_libVlc);
 
+            Open(ToBeOpened);
         }
 
         private LibVLC InitializeLibVlc(string[] swapChainOptions)
@@ -395,9 +403,9 @@ namespace Screenbox.ViewModels
         public void OnBackRequested()
         {
             PlayerHidden = true;
-            if (MediaPlayer?.IsPlaying ?? false)
+            if (MediaPlayer.IsPlaying)
             {
-                MediaPlayer.Pause();
+                _mediaPlayerService.Pause();
             }
         }
 
@@ -406,9 +414,10 @@ namespace Screenbox.ViewModels
             MediaPlayer.ShouldUpdateTime = !pressed;
         }
 
-        private void ShowStatusMessage(string message)
+        private void ShowStatusMessage(string? message)
         {
             StatusMessage = message;
+            if (_overrideStatusTimeout || message == null) return;
             _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
         }
 
@@ -448,11 +457,11 @@ namespace Screenbox.ViewModels
         {
             if (MediaPlayer.State == VLCState.Ended)
             {
-                MediaPlayer.Replay();
+                _mediaPlayerService.Replay();
                 return;
             }
 
-            MediaPlayer.Pause();
+            _mediaPlayerService.Pause();
         }
 
         private void Seek(long amount)
@@ -460,7 +469,7 @@ namespace Screenbox.ViewModels
             if (MediaPlayer.IsSeekable)
             {
                 if (MediaPlayer.State == VLCState.Ended && amount > 0) return;
-                MediaPlayer.Seek(amount);
+                _mediaPlayerService.Seek(amount);
                 ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} / {HumanizedDurationConverter.Convert(MediaPlayer.Length)}");
             }
         }
@@ -471,11 +480,11 @@ namespace Screenbox.ViewModels
             {
                 if (previous)
                 {
-                    MediaPlayer.SetTime(MediaPlayer.Time - MediaPlayer.FrameDuration);
+                    _mediaPlayerService.SetTime(MediaPlayer.Time - _mediaPlayerService.FrameDuration);
                 }
                 else
                 {
-                    MediaPlayer.NextFrame();
+                    _mediaPlayerService.NextFrame();
                 }
 
                 return true;
@@ -502,7 +511,7 @@ namespace Screenbox.ViewModels
         private bool ResizeWindow(double scalar = 0)
         {
             if (scalar < 0 || IsCompact) return false;
-            Size videoDimension = MediaPlayer.Dimension;
+            Size videoDimension = _mediaPlayerService.Dimension;
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)
             {
@@ -521,8 +530,8 @@ namespace Screenbox.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (!ZoomToFit && MediaPlayer.CropGeometry == null) return;
-            MediaPlayer.CropGeometry = ZoomToFit ? $"{size.Width}:{size.Height}" : null;
+            if (!ZoomToFit && _mediaPlayerService.CropGeometry == null) return;
+            _mediaPlayerService.CropGeometry = ZoomToFit ? $"{size.Width}:{size.Height}" : null;
         }
 
         public void OnPointerMoved()
@@ -611,7 +620,7 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    MediaPlayer.SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
+                    _mediaPlayerService.SetTime(MediaPlayer.Length * (0.1 * (key - VirtualKey.NumberPad0)));
                     break;
                 case VirtualKey.Number0:
                 case VirtualKey.Number1:
@@ -699,14 +708,14 @@ namespace Screenbox.ViewModels
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
         {
-            if (MediaPlayer?.IsSeekable ?? false)
+            if (MediaPlayer.IsSeekable)
             {
                 double newTime = args.NewValue;
                 if (args.OldValue == MediaPlayer.Time || !MediaPlayer.IsPlaying ||
                     !MediaPlayer.ShouldUpdateTime &&
                     newTime != MediaPlayer.Length)
                 {
-                    MediaPlayer.SetTime(newTime);
+                    _mediaPlayerService.SetTime(newTime);
                 }
             }
         }

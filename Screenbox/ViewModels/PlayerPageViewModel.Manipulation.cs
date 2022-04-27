@@ -17,12 +17,14 @@ namespace Screenbox.ViewModels
 
         private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;
+        private bool _overrideStatusTimeout;
 
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
+            _overrideStatusTimeout = false;
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
-            StatusMessage = null;
+            ShowStatusMessage(null);
             MediaPlayer.ShouldUpdateTime = true;
         }
 
@@ -38,8 +40,7 @@ namespace Screenbox.ViewModels
                 _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
             {
                 _lockDirection = ManipulationLock.Vertical;
-                MediaPlayer.Volume += -verticalChange;
-                StatusMessage = $"Volume {MediaPlayer.Volume:F0}%";
+                ChangeVolume(-verticalChange);
                 return;
             }
 
@@ -48,18 +49,19 @@ namespace Screenbox.ViewModels
                 _lockDirection = ManipulationLock.Horizontal;
                 MediaPlayer.ShouldUpdateTime = false;
                 var timeChange = horizontalChange * HorizontalChangePerPixel;
-                MediaPlayer.SetTime(MediaPlayer.Time + timeChange);
+                MediaPlayer.Time = _mediaPlayerService.Seek(timeChange);
 
                 var changeText = HumanizedDurationConverter.Convert(MediaPlayer.Time - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
-                StatusMessage = $"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} ({changeText})";
+                ShowStatusMessage($"{HumanizedDurationConverter.Convert(MediaPlayer.Time)} ({changeText})");
             }
         }
 
         public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
+            _overrideStatusTimeout = true;
             _lockDirection = ManipulationLock.None;
-            _timeBeforeManipulation = MediaPlayer?.Time ?? 0;
+            _timeBeforeManipulation = MediaPlayer.Time;
         }
     }
 }

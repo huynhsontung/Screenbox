@@ -89,7 +89,7 @@ namespace Screenbox.Controls
             if (view.ProgressItems.Count == 1)
             {
                 if (view.ProgressItems[0].Width == 0)
-                    view.PopulateProgressItems();
+                    view.ProgressItems[0].Width = view.ActualWidth;
 
                 view.ProgressItems[0].Maximum = (double)e.NewValue;
             }

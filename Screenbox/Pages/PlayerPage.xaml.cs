@@ -89,8 +89,6 @@ namespace Screenbox.Pages
 
         private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
 
-        private Symbol GetMuteToggleSymbol(bool isMute) => isMute ? Symbol.Mute : Symbol.Volume;
-
         private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
 
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>

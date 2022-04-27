@@ -66,19 +66,6 @@
                 <Setter Property="Margin" Value="2,0" />
             </Style>
 
-            <Flyout x:Key="VolumeFlyout">
-                <StackPanel Orientation="Horizontal">
-                    <ToggleButton
-                        Margin="0,0,8,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        IsChecked="{x:Bind ViewModel.MediaPlayer.IsMute, Mode=TwoWay}">
-                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.IsMute), Mode=OneWay}" />
-                    </ToggleButton>
-                    <Slider Width="150" Value="{x:Bind ViewModel.MediaPlayer.Volume, Mode=TwoWay}" />
-                </StackPanel>
-            </Flyout>
-
             <Flyout x:Key="AudioCaptionFlyout">
                 <StackPanel Orientation="Vertical">
                     <ListView
@@ -484,7 +471,7 @@
                     SmallChange="1000"
                     ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
                     ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
-                    Value="{x:Bind ViewModel.MediaPlayer.Time, Mode=TwoWay}" />
+                    Value="{x:Bind ViewModel.MediaPlayer.Time, Mode=OneWay}" />
 
                 <StackPanel
                     Grid.Row="1"
@@ -500,18 +487,11 @@
                         </Button.KeyboardAccelerators>
                         <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.MediaPlayer.IsPlaying), Mode=OneWay}" />
                     </Button>
-                    <muxc:ToggleSplitButton
+                    <controls:VolumeControl
                         x:Name="MuteButton"
                         Height="40"
                         Background="Transparent"
-                        BorderThickness="0"
-                        Flyout="{StaticResource VolumeFlyout}"
-                        IsChecked="{x:Bind ViewModel.MediaPlayer.IsMute, Mode=TwoWay}">
-                        <muxc:SplitButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="M" />
-                        </muxc:SplitButton.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.MediaPlayer.IsMute), Mode=OneWay}" />
-                    </muxc:ToggleSplitButton>
+                        BorderThickness="0" />
                     <TextBlock
                         MinWidth="0"
                         Margin="8,0,0,0"

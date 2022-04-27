@@ -49,13 +49,14 @@ namespace Screenbox
 
             services.AddTransient<PlayerPageViewModel>();
             services.AddTransient<ChapterViewModel>();
+            services.AddTransient<VolumeViewModel>();
             services.AddSingleton<ObservablePlayer>();
 
-            services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<IPlaylistService, PlaylistService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
+            services.AddSingleton<IMediaPlayerService, MediaPlayerService>();
 
             return services.BuildServiceProvider(true);
         }
