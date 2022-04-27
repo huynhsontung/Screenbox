@@ -1,0 +1,104 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.VideoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:lvs="using:LibVLCSharp.Platforms.UWP"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Button
+            x:Name="VideoViewButton"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            AllowDrop="True"
+            Background="Black"
+            DragOver="{x:Bind ViewModel.OnDragOver}"
+            Drop="{x:Bind ViewModel.OnDrop}"
+            Opacity="0"
+            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+            Style="{x:Null}" />
+
+        <lvs:VideoView
+            x:Name="VlcVideoView"
+            Canvas.ZIndex="0"
+            Initialized="{x:Bind ViewModel.OnInitialized}"
+            IsHitTestVisible="False"
+            IsTabStop="False"
+            KeyboardAcceleratorPlacementMode="Hidden"
+            MediaPlayer="{x:Bind ViewModel.VlcPlayer}">
+            <lvs:VideoView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Control"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Left"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Shift"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Control"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Right"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Shift"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Up"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Down"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator
+                    Key="Space"
+                    Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
+                    ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind local:VideoView.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind local:VideoView.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+            </lvs:VideoView.KeyboardAccelerators>
+        </lvs:VideoView>
+    </Grid>
+</UserControl>

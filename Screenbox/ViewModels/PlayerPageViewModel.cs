@@ -1,26 +1,19 @@
 ﻿#nullable enable
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
-using LibVLCSharp.Platforms.UWP;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Converters;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
@@ -59,16 +52,15 @@ namespace Screenbox.ViewModels
         private bool _isPlaying;
 
         [ObservableProperty]
+        private bool _isOpening;
+
+        [ObservableProperty]
         private VLCState _state;
 
         [ObservableProperty]
         private bool _shouldLoop;
 
-        public object? ToBeOpened { get; set; }
-
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
-
-        private LibVLC? LibVlc => _mediaPlayerService.LibVlc;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
@@ -90,7 +82,9 @@ namespace Screenbox.ViewModels
             IPlaylistService playlistService)
         {
             _mediaService = mediaService;
+            _mediaService.CurrentMediaChanged += OnMediaChanged;
             _mediaPlayerService = mediaPlayerService;
+            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _windowService = windowService;
             _filesService = filesService;
             _notificationService = notificationService;
@@ -130,67 +124,16 @@ namespace Screenbox.ViewModels
         [ICommand]
         private async Task ToggleCompactLayout()
         {
-            ApplicationView? view = ApplicationView.GetForCurrentView();
             if (IsCompact)
             {
-                if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
-                {
-                    IsCompact = false;
-                }
+                await _windowService.ExitCompactLayout();
             }
             else
             {
-                ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
-                preferences.ViewSizePreference = ViewSizePreference.Custom;
-                preferences.CustomSize = new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240);
-                if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
-                {
-                    IsCompact = true;
-                }
-            }
-        }
-
-        [ICommand]
-        private void Open(object? value)
-        {
-            if (value == null) return;
-            if (LibVlc == null)
-            {
-                ToBeOpened = value;
-                return;
+                await _windowService.EnterCompactLayout(new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240));
             }
 
-            MediaHandle? handle;
-            try
-            {
-                handle = _mediaService.CreateMedia(value);
-            }
-            catch (Exception e)
-            {
-                _notificationService.RaiseError("Cannot open file", e.ToString());
-                return;
-            }
-
-            if (handle == null) return;
-
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                PlayerHidden = false;
-                MediaTitle = handle.Title;
-            });
-
-            handle.Media.ParsedChanged += OnMediaParsed;
-            _mediaPlayerService.Play(handle.Media);
-            _mediaService.SetActive(handle);
-        }
-
-        private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                if (ResizeWindow(1)) return;
-                ResizeWindow();
-            });
+            IsCompact = _windowService.IsCompact;
         }
 
         public void SetPlaybackSpeed(float speed)
@@ -199,30 +142,20 @@ namespace Screenbox.ViewModels
         }
 
         [ICommand]
-        private void Fullscreen(bool value)
+        public void ToggleFullscreen()
         {
+            if (IsCompact) return;
             ApplicationView? view = ApplicationView.GetForCurrentView();
-            if (view.IsFullScreenMode && !value)
+            if (view.IsFullScreenMode)
             {
                 view.ExitFullScreenMode();
             }
-
-            if (!view.IsFullScreenMode && value)
+            else
             {
                 view.TryEnterFullScreenMode();
             }
 
             IsFullscreen = view.IsFullScreenMode;
-        }
-
-        public void ToggleFullscreen() => Fullscreen(!IsFullscreen);
-
-        public void OnInitialized(object sender, InitializedEventArgs e)
-        {
-            _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
-            if (LibVlc != null) _notificationService.SetVlcDialogHandlers(LibVlc);
-            if (VlcPlayer != null) RegisterMediaPlayerEventHandlers(VlcPlayer);
-            Open(ToBeOpened);
         }
 
         public void OnBackRequested()
@@ -275,47 +208,6 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [ICommand]
-        private void PlayPause()
-        {
-            if (State == VLCState.Ended)
-            {
-                _mediaPlayerService.Replay();
-                return;
-            }
-
-            _mediaPlayerService.Pause();
-        }
-
-        private void Seek(long amount)
-        {
-            if (VlcPlayer?.IsSeekable ?? false)
-            {
-                if (State == VLCState.Ended && amount > 0) return;
-                _mediaPlayerService.Seek(amount);
-                ShowStatusMessage($"{HumanizedDurationConverter.Convert(VlcPlayer.Time)} / {HumanizedDurationConverter.Convert(VlcPlayer.Length)}");
-            }
-        }
-
-        public bool JumpFrame(bool previous = false)
-        {
-            if (State == VLCState.Paused && (VlcPlayer?.IsSeekable ?? false))
-            {
-                if (previous)
-                {
-                    _mediaPlayerService.Seek(-_mediaPlayerService.FrameDuration);
-                }
-                else
-                {
-                    _mediaPlayerService.NextFrame();
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
         public void ToggleControlsVisibility()
         {
             if (ControlsHidden)
@@ -329,20 +221,6 @@ namespace Screenbox.ViewModels
                 // Keep hiding even when pointer moved right after
                 OverrideVisibilityChange();
             }
-        }
-
-        private bool ResizeWindow(double scalar = 0)
-        {
-            if (scalar < 0 || IsCompact) return false;
-            Size videoDimension = _mediaPlayerService.Dimension;
-            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
-            if (actualScalar > 0)
-            {
-                ShowStatusMessage($"Scale {actualScalar * 100:0.##}%");
-                return true;
-            }
-
-            return false;
         }
 
         public void OnSizeChanged(object sender, SizeChangedEventArgs args)
@@ -369,127 +247,9 @@ namespace Screenbox.ViewModels
             DelayHideControls();
         }
 
-        public void OnDragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = "Open";
-        }
-
-        public async void OnDrop(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems))
-            {
-                IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
-                if (items.Count > 0)
-                {
-                    Open(items[0]);
-                    return;
-                }
-            }
-
-            if (e.DataView.Contains(StandardDataFormats.WebLink))
-            {
-                Uri? uri = await e.DataView.GetWebLinkAsync();
-                if (uri.IsFile)
-                {
-                    Open(uri);
-                    return;
-                }
-            }
-        }
-
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            _mediaPlayerService.Volume += mouseWheelDelta / 25;
-        }
-
         public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
             ? $"Chapter {VlcPlayer?.Chapter + 1}"
             : nullableName ?? string.Empty;
-
-        public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = true;
-            long seekAmount = 0;
-            int volumeChange = 0;
-            int direction = 0;
-            VirtualKey key = sender.Key;
-
-            switch (key)
-            {
-                case VirtualKey.Left when VideoViewFocused:
-                case VirtualKey.J:
-                    direction = -1;
-                    break;
-                case VirtualKey.Right when VideoViewFocused:
-                case VirtualKey.L:
-                    direction = 1;
-                    break;
-                case VirtualKey.Up when VideoViewFocused:
-                    volumeChange = 10;
-                    break;
-                case VirtualKey.Down when VideoViewFocused:
-                    volumeChange = -10;
-                    break;
-                case VirtualKey.NumberPad0:
-                case VirtualKey.NumberPad1:
-                case VirtualKey.NumberPad2:
-                case VirtualKey.NumberPad3:
-                case VirtualKey.NumberPad4:
-                case VirtualKey.NumberPad5:
-                case VirtualKey.NumberPad6:
-                case VirtualKey.NumberPad7:
-                case VirtualKey.NumberPad8:
-                case VirtualKey.NumberPad9:
-                    _mediaPlayerService.SetTime((VlcPlayer?.Length ?? 0) * (0.1 * (key - VirtualKey.NumberPad0)));
-                    break;
-                case VirtualKey.Number0:
-                case VirtualKey.Number1:
-                case VirtualKey.Number2:
-                case VirtualKey.Number3:
-                case VirtualKey.Number4:
-                case VirtualKey.Number5:
-                case VirtualKey.Number6:
-                case VirtualKey.Number7:
-                case VirtualKey.Number8:
-                    ResizeWindow(0.25 * (key - VirtualKey.Number0));
-                    return;
-                case VirtualKey.Number9:
-                    ResizeWindow(4);
-                    return;
-                case (VirtualKey)190:   // Period (".")
-                    JumpFrame(false);
-                    return;
-                case (VirtualKey)188:   // Comma (",")
-                    JumpFrame(true);
-                    return;
-            }
-
-            switch (sender.Modifiers)
-            {
-                case VirtualKeyModifiers.Control:
-                    seekAmount = 10000;
-                    break;
-                case VirtualKeyModifiers.Shift:
-                    seekAmount = 1000;
-                    break;
-                case VirtualKeyModifiers.None:
-                    seekAmount = 5000;
-                    break;
-            }
-
-            if (seekAmount * direction != 0)
-            {
-                Seek(seekAmount * direction);
-            }
-
-            if (volumeChange != 0)
-            {
-                _mediaPlayerService.Volume += volumeChange;
-            }
-        }
 
         private void ShowControls()
         {
@@ -523,6 +283,21 @@ namespace Screenbox.ViewModels
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
         }
 
+        private void OnMediaChanged(object sender, EventArgs e)
+        {
+            if (_mediaService.CurrentMedia?.Title == null) return;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                PlayerHidden = false;
+                MediaTitle = _mediaService.CurrentMedia.Title;
+            });
+        }
+
+        private void OnVlcPlayerChanged(object sender, EventArgs e)
+        {
+            if (VlcPlayer != null) RegisterMediaPlayerEventHandlers(VlcPlayer);
+        }
+
         private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
         {
             vlcPlayer.EndReached += OnEndReached;
@@ -539,6 +314,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 State = VlcPlayer.State;
+                IsOpening = State == VLCState.Opening;
                 IsPlaying = VlcPlayer.IsPlaying;
             });
         }

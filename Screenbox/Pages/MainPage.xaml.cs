@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using System;
+using System.Windows.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Diagnostics;
 using Screenbox.Services;
 using Screenbox.ViewModels;
 
@@ -12,6 +14,8 @@ namespace Screenbox.Pages
 {
     public sealed partial class MainPage : Page
     {
+        public ICommand? OpenCommand { get; set; }
+
         private PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
         private StorageFile? _pickedFile;
@@ -32,23 +36,26 @@ namespace Screenbox.Pages
 
         private void OpenButtonClick(object sender, RoutedEventArgs e)
         {
+            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
             if (!string.IsNullOrWhiteSpace(UrlBox.Text))
-                ViewModel.OpenCommand.Execute(UrlBox.Text);
+                OpenCommand.Execute(UrlBox.Text);
         }
 
         private async void PickFileButtonClick(object sender, RoutedEventArgs e)
         {
+            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
             _pickedFile = await _filesService.PickFileAsync();
             
             if (_pickedFile != null)
-                ViewModel.OpenCommand.Execute(_pickedFile);
+                OpenCommand.Execute(_pickedFile);
         }
 
         private void VideosItemClick(object sender, ItemClickEventArgs e)
         {
+            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
             if (e.ClickedItem is VideoViewModel item)
             {
-                ViewModel.OpenCommand.Execute(item.OriginalFile);
+                OpenCommand.Execute(item.OriginalFile);
             }
         }
     }

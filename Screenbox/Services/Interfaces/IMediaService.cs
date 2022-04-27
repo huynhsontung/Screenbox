@@ -1,11 +1,14 @@
 ﻿#nullable enable
 
+using System;
 using Screenbox.Core;
 
 namespace Screenbox.Services;
 
 internal interface IMediaService
 {
+    public event EventHandler? CurrentMediaChanged;
+
     /// <summary>
     /// There can only be one active Media instance at a time.
     /// </summary>

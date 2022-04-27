@@ -135,7 +135,7 @@
         -->
         <Frame x:Name="InlineFrame" Visibility="Collapsed">
             <Frame.Content>
-                <pages:MainPage DataContext="{x:Bind ViewModel}" />
+                <pages:MainPage DataContext="{x:Bind ViewModel}" OpenCommand="{x:Bind VideoView.ViewModel.OpenCommand}" />
             </Frame.Content>
         </Frame>
 
@@ -185,26 +185,20 @@
                 </muxc:AnimatedIcon>
             </Button>
 
-            <Button
-                x:Name="VideoViewButton"
+            <controls:VideoView
+                x:Name="VideoView"
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                AllowDrop="True"
-                Background="Black"
                 Click="{x:Bind ViewModel.ToggleControlsVisibility}"
                 ContextFlyout="{StaticResource VideoContextMenu}"
                 DoubleTapped="{x:Bind ViewModel.ToggleFullscreen}"
-                DragOver="{x:Bind ViewModel.OnDragOver}"
-                Drop="{x:Bind ViewModel.OnDrop}"
                 ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
                 ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
                 ManipulationMode="TranslateX,TranslateY"
                 ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-                Opacity="0"
-                PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
-                Style="{x:Null}">
+                SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="GotFocus">
                         <core:ChangePropertyAction
@@ -219,82 +213,7 @@
                             Value="False" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-            </Button>
-
-            <lvs:VideoView
-                x:Name="VideoView"
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Canvas.ZIndex="0"
-                Initialized="{x:Bind ViewModel.OnInitialized}"
-                IsHitTestVisible="False"
-                IsTabStop="False"
-                KeyboardAcceleratorPlacementMode="Hidden"
-                MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-                SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
-                <lvs:VideoView.KeyboardAccelerators>
-                    <KeyboardAccelerator
-                        Key="Left"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Left"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        Modifiers="Control"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Left"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        Modifiers="Shift"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Right"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Right"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        Modifiers="Control"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Right"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        Modifiers="Shift"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Up"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator
-                        Key="Down"
-                        Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
-                        ScopeOwner="{x:Bind VideoViewButton}" />
-                    <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                    <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                </lvs:VideoView.KeyboardAccelerators>
-            </lvs:VideoView>
+            </controls:VideoView>
 
             <Border
                 x:Name="StatusMessage"
@@ -322,7 +241,6 @@
             </Border>
 
             <muxc:ProgressRing
-                x:Name="BufferingIndicator"
                 Grid.Row="0"
                 Grid.RowSpan="3"
                 Width="52"
@@ -331,7 +249,7 @@
                 VerticalAlignment="Center"
                 IsActive="True"
                 IsHitTestVisible="False"
-                Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.State), Mode=OneWay}" />
+                Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
 
             <controls:NotificationView
                 Grid.Row="1"
@@ -374,11 +292,10 @@
                     <Button
                         x:Name="PlayPauseButton"
                         Margin="0,0,2,0"
-                        Command="{x:Bind ViewModel.PlayPauseCommand}">
+                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="P" />
                             <KeyboardAccelerator Key="K" />
-                            <KeyboardAccelerator Key="Space" ScopeOwner="{x:Bind VideoViewButton}" />
                         </Button.KeyboardAccelerators>
                         <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
                     </Button>
@@ -420,8 +337,7 @@
 
                     <ToggleButton
                         x:Name="FullscreenButton"
-                        Command="{x:Bind ViewModel.FullscreenCommand}"
-                        CommandParameter="{x:Bind FullscreenButton.IsChecked, Mode=OneWay}"
+                        Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                         IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />

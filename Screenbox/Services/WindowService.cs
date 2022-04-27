@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
@@ -11,7 +12,34 @@ namespace Screenbox.Services
 {
     internal class WindowService : IWindowService
     {
+        public bool IsCompact { get; private set; }
+
         private CoreCursor? _cursor;
+
+        public async Task ExitCompactLayout()
+        {
+            ApplicationView? view = ApplicationView.GetForCurrentView();
+            if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
+            {
+                IsCompact = false;
+            }
+        }
+
+        public async Task EnterCompactLayout(Size viewSize)
+        {
+            ApplicationView? view = ApplicationView.GetForCurrentView();
+            ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+            if (!viewSize.IsEmpty)
+            {
+                preferences.ViewSizePreference = ViewSizePreference.Custom;
+                preferences.CustomSize = viewSize;
+            }
+
+            if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
+            {
+                IsCompact = true;
+            }
+        }
 
         public double ResizeWindow(Size videoDimension, double scalar = 0)
         {

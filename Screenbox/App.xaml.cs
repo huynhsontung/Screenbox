@@ -14,6 +14,8 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Controls;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Screenbox.ViewModels;
@@ -48,6 +50,7 @@ namespace Screenbox
             var services = new ServiceCollection();
 
             services.AddTransient<PlayerPageViewModel>();
+            services.AddTransient<VideoViewViewModel>();
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<VolumeViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();
@@ -90,7 +93,8 @@ namespace Screenbox
             }
             else if (rootFrame.Content is PlayerPage playerPage)
             {
-                playerPage.ViewModel.OpenCommand.Execute(file);
+                VideoView? view = playerPage.FindDescendant<VideoView>();
+                view?.ViewModel.OpenCommand.Execute(file);
             }
 
             Window.Current.Activate();
