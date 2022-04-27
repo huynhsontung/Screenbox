@@ -84,7 +84,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && VlcPlayer != null)
             {
                 double newTime = args.NewValue;
-                if (args.OldValue == Time || !VlcPlayer.IsPlaying || !ShouldUpdateTime && newTime != Length)
+                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || !ShouldUpdateTime) && newTime != Length)
                 {
                     _mediaPlayerService.SetTime(newTime);
                 }
@@ -143,6 +143,7 @@ namespace Screenbox.ViewModels
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
+                Time = 0;
                 Length = e.Length;
                 Chapters = VlcPlayer.FullChapterDescriptions();
                 CurrentChapter = Chapters.Length > 0 ? Chapters[VlcPlayer.Chapter] : default;
