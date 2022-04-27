@@ -6,7 +6,6 @@ namespace Screenbox.Services
 {
     internal interface ISystemMediaTransportControlsService
     {
-        event TypedEventHandler<SystemMediaTransportControls, SystemMediaTransportControlsButtonPressedEventArgs> ButtonPressed;
         void RegisterPlaybackEvents(ObservablePlayer player);
     }
 }

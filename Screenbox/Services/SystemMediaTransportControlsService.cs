@@ -9,8 +9,6 @@ namespace Screenbox.Services
 {
     internal class SystemMediaTransportControlsService : ISystemMediaTransportControlsService
     {
-        public event TypedEventHandler<SystemMediaTransportControls, SystemMediaTransportControlsButtonPressedEventArgs>? ButtonPressed;
-
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly SystemMediaTransportControls _transportControl;
         private readonly SystemMediaTransportControlsDisplayUpdater _displayUpdater;
