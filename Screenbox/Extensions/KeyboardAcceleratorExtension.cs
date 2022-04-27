@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System.Text;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 
@@ -12,28 +13,28 @@ namespace Screenbox.Extensions
             if (ka == null) return string.Empty;
             if (ka.Modifiers != VirtualKeyModifiers.None)
             {
-                string modifier = string.Empty;
+                StringBuilder builder = new(16);
                 if ((ka.Modifiers & VirtualKeyModifiers.Control) != 0)
                 {
-                    modifier = "Ctrl";
+                    builder.Append("Ctrl+");
                 }
                 
                 if ((ka.Modifiers & VirtualKeyModifiers.Windows) != 0)
                 {
-                    modifier += modifier.Length > 0 ? "+Win" : "Win";
+                    builder.Append(builder.Length > 0 ? "+Win+" : "Win+");
                 }
 
                 if ((ka.Modifiers & VirtualKeyModifiers.Menu) != 0)
                 {
-                    modifier += modifier.Length > 0 ? "+Menu" : "Menu";
+                    builder.Append(builder.Length > 0 ? "+Menu+" : "Menu+");
                 }
 
                 if ((ka.Modifiers & VirtualKeyModifiers.Shift) != 0)
                 {
-                    modifier += modifier.Length > 0 ? "+Shift" : "Shift";
+                    builder.Append(builder.Length > 0 ? "+Shift+" : "Shift+");
                 }
 
-                return modifier.Length > 0 ? $"{modifier}+{ka.Key}" : ka.Key.ToString();
+                return builder.Append(ka.Key.ToString()).ToString();
             }
 
             return ka.Key.ToString();
