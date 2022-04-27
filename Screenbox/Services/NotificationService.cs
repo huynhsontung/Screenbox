@@ -18,25 +18,19 @@ namespace Screenbox.Services
 
         private string? _progressTitle;
 
-        public void RaiseNotification(NotificationLevel level, string? title, string? message, object? content = default)
+        public void RaiseNotification(NotificationLevel level, string title, string message)
         {
-            var eventArgs = new NotificationRaisedEventArgs
-            {
-                Level = level,
-                Title = title,
-                Message = message,
-                Content = content
-            };
+            NotificationRaisedEventArgs eventArgs = new(level, title, message);
             NotificationRaised?.Invoke(this, eventArgs);
         }
 
-        public void RaiseError(string? title, string? message) => RaiseNotification(NotificationLevel.Error, title, message);
+        public void RaiseError(string title, string message) => RaiseNotification(NotificationLevel.Error, title, message);
 
-        public void RaiseWarning(string? title, string? message) => RaiseNotification(NotificationLevel.Warning, title, message);
+        public void RaiseWarning(string title, string message) => RaiseNotification(NotificationLevel.Warning, title, message);
 
-        public void RaiseInfo(string? title, string? message) => RaiseNotification(NotificationLevel.Info, title, message);
+        public void RaiseInfo(string title, string message) => RaiseNotification(NotificationLevel.Info, title, message);
 
-        public void SetVLCDiaglogHandlers(LibVLC libVlc)
+        public void SetVlcDialogHandlers(LibVLC libVlc)
         {
             if (libVlc.DialogHandlersSet)
             {
@@ -48,7 +42,7 @@ namespace Screenbox.Services
 
         private Task DisplayErrorMessage(string? title, string? text)
         {
-            return Task.Run(() => RaiseError(title, text));
+            return Task.Run(() => RaiseError(title ?? string.Empty, text ?? string.Empty));
         }
 
         private Task DisplayProgress(Dialog dialog, string? title, string? text, bool indeterminate, float position, string? cancelText, CancellationToken token)

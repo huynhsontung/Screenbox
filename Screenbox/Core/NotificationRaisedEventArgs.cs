@@ -14,16 +14,17 @@ namespace Screenbox.Core
 
     internal class NotificationRaisedEventArgs : EventArgs
     {
-        public string? Title { get; set; }
+        public string Title { get; set; }
 
-        public string? Message { get; set; }
+        public string Message { get; set; }
 
         public NotificationLevel Level { get; set; }
 
-        public object? Content { get; set; }
-
-        public Uri? Link { get; set; }
-
-        public string? LinkText { get; set; }
+        public NotificationRaisedEventArgs(NotificationLevel level, string title, string message)
+        {
+            Level = level;
+            Title = title;
+            Message = message;
+        }
     }
 }

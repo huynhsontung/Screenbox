@@ -52,6 +52,7 @@ namespace Screenbox
             services.AddTransient<VolumeViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();
             services.AddTransient<SeekBarViewModel>();
+            services.AddTransient<NotificationViewModel>();
 
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<IPlaylistService, PlaylistService>();

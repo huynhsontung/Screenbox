@@ -333,24 +333,11 @@
                 IsHitTestVisible="False"
                 Visibility="{x:Bind GetBufferingVisibilityIndicator(ViewModel.State), Mode=OneWay}" />
 
-            <muxc:InfoBar
-                Title="{x:Bind ViewModel.Notification.Title, Mode=OneWay}"
+            <controls:NotificationView
                 Grid.Row="1"
                 Margin="12,0,12,4"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Content="{x:Bind ViewModel.Notification.Content, Mode=OneWay}"
-                IsOpen="{x:Bind ViewModel.Notification, Mode=OneWay, Converter={StaticResource ObjectToBooleanConverter}}"
-                Message="{x:Bind ViewModel.Notification.Message, Mode=OneWay}"
-                Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Notification.Level), Mode=OneWay}">
-                <muxc:InfoBar.ActionButton>
-                    <HyperlinkButton
-                        Click="{x:Bind ViewModel.OpenSaveFolder}"
-                        Content="{x:Bind ViewModel.Notification.LinkText, Mode=OneWay}"
-                        NavigateUri="{x:Bind ViewModel.Notification.Link, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.Notification.Link, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
-                </muxc:InfoBar.ActionButton>
-            </muxc:InfoBar>
+                VerticalAlignment="Bottom" />
 
             <Grid
                 x:Name="PlayerControls"

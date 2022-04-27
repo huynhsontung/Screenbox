@@ -50,9 +50,6 @@ namespace Screenbox.ViewModels
         private bool _zoomToFit;
 
         [ObservableProperty]
-        private NotificationRaisedEventArgs? _notification;
-
-        [ObservableProperty]
         private bool _videoViewFocused;
 
         [ObservableProperty]
@@ -76,7 +73,6 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
-        private readonly DispatcherQueueTimer _notificationTimer;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
         private readonly IPlaylistService _playlistService;
@@ -84,7 +80,6 @@ namespace Screenbox.ViewModels
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IMediaService _mediaService;
         private bool _visibilityOverride;
-        private StorageFile? _savedFrame;
 
         public PlayerPageViewModel(
             IMediaService mediaService,
@@ -101,12 +96,9 @@ namespace Screenbox.ViewModels
             _notificationService = notificationService;
             _playlistService = playlistService;
             _mediaTitle = string.Empty;
-            _notificationService.NotificationRaised += OnNotificationRaised;
-            _notificationService.ProgressUpdated += OnProgressUpdated;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
-            _notificationTimer = _dispatcherQueue.CreateTimer();
 
             PropertyChanged += OnPropertyChanged;
 
@@ -120,74 +112,19 @@ namespace Screenbox.ViewModels
             if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
             try
             {
-                StorageFile file = _savedFrame = await _filesService.SaveSnapshot(VlcPlayer);
-                ShowNotification(new NotificationRaisedEventArgs
-                {
-                    Level = NotificationLevel.Success,
-                    Title = "Frame saved",
-                    LinkText = file.Name
-                }, 8);
+                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
+                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
             }
             catch (Exception e)
             {
-                ShowNotification(new NotificationRaisedEventArgs
-                {
-                    Level = NotificationLevel.Error,
-                    Title = "Failed to save frame",
-                    Message = e.Message
-                }, 8);
-
+                _notificationService.RaiseError("Failed to save frame", e.ToString());
                 // TODO: track error
-            }
-        }
-
-        public async void OpenSaveFolder()
-        {
-            StorageFile? savedFrame = _savedFrame;
-            if (savedFrame != null)
-            {
-                StorageFolder? saveFolder = await savedFrame.GetParentAsync();
-                FolderLauncherOptions options = new();
-                options.ItemsToSelect.Add(savedFrame);
-                await Launcher.LaunchFolderAsync(saveFolder, options);
             }
         }
 
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
-        }
-
-        private void OnProgressUpdated(object sender, ProgressUpdatedEventArgs e)
-        {
-            LogService.Log(e.Title);
-            LogService.Log(e.Text);
-            LogService.Log(e.Value);
-        }
-
-        private void OnNotificationRaised(object sender, NotificationRaisedEventArgs e)
-        {
-            ShowNotification(e);
-        }
-
-        private void ShowNotification(NotificationRaisedEventArgs notification, int ttl = default)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Notification = notification;
-            });
-
-            if (ttl <= 0) return;
-
-            void InvalidateNotification()
-            {
-                if (Notification == notification)
-                {
-                    Notification = null;
-                }
-            }
-
-            _notificationTimer.Debounce(InvalidateNotification, TimeSpan.FromSeconds(ttl));
         }
 
         private void ChangeVolume(double changeAmount)
@@ -236,12 +173,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                ShowNotification(new NotificationRaisedEventArgs
-                {
-                    Level = NotificationLevel.Error,
-                    Title = "Cannot open file",
-                    Message = e.Message
-                }, 8);
+                _notificationService.RaiseError("Cannot open file", e.ToString());
                 return;
             }
 
@@ -294,7 +226,7 @@ namespace Screenbox.ViewModels
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
-            if (LibVlc != null) _notificationService.SetVLCDiaglogHandlers(LibVlc);
+            if (LibVlc != null) _notificationService.SetVlcDialogHandlers(LibVlc);
             if (VlcPlayer != null) RegisterMediaPlayerEventHandlers(VlcPlayer);
             Open(ToBeOpened);
         }

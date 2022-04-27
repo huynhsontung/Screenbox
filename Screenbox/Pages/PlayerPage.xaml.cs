@@ -80,21 +80,6 @@ namespace Screenbox.Pages
         private Visibility GetBufferingVisibilityIndicator(VLCState state) =>
             state is VLCState.Buffering or VLCState.Opening ? Visibility.Visible : Visibility.Collapsed;
 
-        private InfoBarSeverity ConvertInfoBarSeverity(NotificationLevel level)
-        {
-            switch (level)
-            {
-                case NotificationLevel.Error:
-                    return InfoBarSeverity.Error;
-                case NotificationLevel.Warning:
-                    return InfoBarSeverity.Warning;
-                case NotificationLevel.Success:
-                    return InfoBarSeverity.Success;
-                default:
-                    return InfoBarSeverity.Informational;
-            }
-        }
-
         private string GetHeightAsVec3(Size viewSize) => $"0,{viewSize.Height},0";
     }
 }
