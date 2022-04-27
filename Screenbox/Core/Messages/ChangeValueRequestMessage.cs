@@ -4,10 +4,20 @@ using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.Core.Messages
 {
-    internal class ChangeValueRequestMessage<T> : RequestMessage<T>
+    public class ChangeValueRequestMessage<T> : RequestMessage<T>
     {
-        public bool IsChangeRequest { get; set; }
+        public bool IsChangeRequest { get; }
 
-        public T? Value { get; set; }
+        public T? Value { get; }
+
+        public ChangeValueRequestMessage()
+        {
+        }
+
+        public ChangeValueRequestMessage(T value)
+        {
+            Value = value;
+            IsChangeRequest = true;
+        }
     }
 }

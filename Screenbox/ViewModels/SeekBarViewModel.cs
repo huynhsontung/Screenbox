@@ -16,8 +16,8 @@ namespace Screenbox.ViewModels
 {
     internal partial class SeekBarViewModel :
         ObservableRecipient,
-        IRecipient<ChangeSeekBarInteractionRequestMessage>,
-        IRecipient<ChangeTimeRequestMessage>
+        IRecipient<SeekBarInteractionRequestMessage>,
+        IRecipient<TimeRequestMessage>
     {
         [ObservableProperty] private double _length;
 
@@ -31,13 +31,12 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private ChapterDescription _currentChapter;
 
-        private bool ShouldUpdateTime { get; set; }
-
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly IMediaPlayerService _mediaPlayerService;
+        private bool _shouldUpdateTime;
 
         public SeekBarViewModel(IMediaPlayerService mediaPlayer)
         {
@@ -47,28 +46,28 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
 
-            ShouldUpdateTime = true;
+            _shouldUpdateTime = true;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        public void Receive(ChangeSeekBarInteractionRequestMessage message)
+        public void Receive(SeekBarInteractionRequestMessage message)
         {
-            if (message.Value is bool value)
+            if (message.IsChangeRequest)
             {
-                ShouldUpdateTime = !value;
+                _shouldUpdateTime = !message.Value;
             }
 
-            message.Reply(!ShouldUpdateTime);
+            message.Reply(!_shouldUpdateTime);
         }
 
-        public void Receive(ChangeTimeRequestMessage message)
+        public void Receive(TimeRequestMessage message)
         {
-            if (message.Value is double value)
+            if (message.IsChangeRequest)
             {
                 // Assume UI thread
-                Time = value;
+                Time = message.Value;
             }
 
             message.Reply(Time);
@@ -76,7 +75,7 @@ namespace Screenbox.ViewModels
 
         public void OnSeekBarPointerEvent(bool pressed)
         {
-            ShouldUpdateTime = !pressed;
+            _shouldUpdateTime = !pressed;
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
@@ -84,7 +83,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && VlcPlayer != null)
             {
                 double newTime = args.NewValue;
-                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || !ShouldUpdateTime) && newTime != Length)
+                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || !_shouldUpdateTime) && newTime != Length)
                 {
                     _mediaPlayerService.SetTime(newTime);
                 }
@@ -132,7 +131,7 @@ namespace Screenbox.ViewModels
 
         private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
         {
-            if (ShouldUpdateTime)
+            if (_shouldUpdateTime)
             {
                 _dispatcherQueue.TryEnqueue(() => Time = e.Time);
             }
@@ -153,7 +152,7 @@ namespace Screenbox.ViewModels
         private void OnEndReached(object sender, EventArgs e)
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            if (ShouldUpdateTime)
+            if (_shouldUpdateTime)
             {
                 _dispatcherQueue.TryEnqueue(() => Time = VlcPlayer.Length);
             }

@@ -165,8 +165,8 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
-    <Compile Include="Core\Messages\ChangeTimeRequestMessage.cs" />
-    <Compile Include="Core\Messages\ChangeSeekBarInteractionRequestMessage.cs" />
+    <Compile Include="Core\Messages\TimeRequestMessage.cs" />
+    <Compile Include="Core\Messages\SeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />

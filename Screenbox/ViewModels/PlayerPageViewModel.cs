@@ -178,7 +178,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
             }
 
-            if (Messenger.Send<ChangeSeekBarInteractionRequestMessage>()) return;
+            if (Messenger.Send<SeekBarInteractionRequestMessage>()) return;
             DelayHideControls();
         }
 
@@ -192,7 +192,7 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             ShowStatusMessage(null);
-            Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = false });
+            Messenger.Send(new SeekBarInteractionRequestMessage(false));
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -202,7 +202,6 @@ namespace Screenbox.ViewModels
             double verticalChange = e.Delta.Translation.Y;
             double horizontalCumulative = e.Cumulative.Translation.X;
             double verticalCumulative = e.Cumulative.Translation.Y;
-            if (Math.Abs(horizontalCumulative) < 50 && Math.Abs(verticalCumulative) < 50) return;
 
             if (_lockDirection == ManipulationLock.Vertical ||
                 _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
@@ -212,13 +211,16 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            if (VlcPlayer?.IsSeekable ?? false)
+            if ((_lockDirection == ManipulationLock.Horizontal ||
+                 _lockDirection == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
+                (VlcPlayer?.IsSeekable ?? false))
             {
                 _lockDirection = ManipulationLock.Horizontal;
-                Messenger.Send(new ChangeSeekBarInteractionRequestMessage { Value = true });
+                Messenger.Send(new SeekBarInteractionRequestMessage(true));
                 double timeChange = horizontalChange * horizontalChangePerPixel;
-                long newTime = _mediaPlayerService.Seek(timeChange);
-                Messenger.Send(new ChangeTimeRequestMessage { Value = newTime });
+                double currentTime = Messenger.Send(new TimeRequestMessage());
+                double newTime = currentTime + timeChange;
+                Messenger.Send(new TimeRequestMessage(newTime));
 
                 string changeText = HumanizedDurationConverter.Convert(newTime - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
