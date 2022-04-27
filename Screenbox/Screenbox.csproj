@@ -163,7 +163,6 @@
     </Compile>
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\ChangeTimeRequestMessage.cs" />
-    <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\ChangeSeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />

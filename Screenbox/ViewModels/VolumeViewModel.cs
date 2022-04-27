@@ -11,31 +11,33 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    public partial class VolumeViewModel : ObservableRecipient, IRecipient<ChangeVolumeMessage>
+    public class VolumeViewModel : ObservableRecipient
     {
         public bool IsMute
         {
             get => _isMute;
             set
             {
-                if (SetProperty(ref _isMute, value) && VlcPlayer != null && VlcPlayer.Mute != value)
+                SetProperty(ref _isMute, value);
+                if (VlcPlayer != null && VlcPlayer.Mute != value)
                 {
                     VlcPlayer.Mute = value;
                 }
             }
         }
 
-        public double Volume
+        public int Volume
         {
             get => _volume;
             set
             {
-                if (value > 100) value = 100;
-                if (value < 0) value = 0;
-                var intVal = (int)value;
-                if (!SetProperty(ref _volume, value) || VlcPlayer == null || VlcPlayer.Volume == intVal) return;
-                VlcPlayer.Volume = intVal;
-                IsMute = intVal == 0;
+                int intVal = Math.Clamp(value, 0, 100);
+                SetProperty(ref _volume, value);
+                if (_mediaPlayerService.Volume != intVal)
+                {
+                    _mediaPlayerService.Volume = intVal;
+                    IsMute = intVal == 0;
+                }
             }
         }
 
@@ -43,43 +45,36 @@ namespace Screenbox.ViewModels
 
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly DispatcherQueue _dispatcherQueue;
-        private double _volume;
+        private int _volume;
+        private bool _mediaChangedVolumeOverride;
         private bool _isMute;
 
         public VolumeViewModel(IMediaPlayerService mediaPlayer)
         {
             _mediaPlayerService = mediaPlayer;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _volume = 100;
 
-            _mediaPlayerService.VlcPlayerChanged += MediaPlayerServiceOnVlcPlayerChanged;
+            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
 
-            // Activate the view model's messenger
-            IsActive = true;
+            // View model doesn't receive any messages
+            //IsActive = true;
         }
 
-        public void Receive(ChangeVolumeMessage message)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                if (message.IsOffset)
-                {
-                    Volume += message.Volume;
-                }
-                else
-                {
-                    Volume = message.Volume;
-                }
-
-                Messenger.Send(new UpdateStatusMessage($"Volume {Volume:F0}%"));
-            });
-        }
-
-        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, EventArgs e)
+        private void OnVlcPlayerChanged(object sender, EventArgs e)
         {
             MediaPlayer? mediaPlayer = _mediaPlayerService.VlcPlayer;
             if (mediaPlayer == null) return;
             mediaPlayer.VolumeChanged += OnVolumeChanged;
             mediaPlayer.Muted += OnMuted;
+            mediaPlayer.MediaChanged += OnMediaChanged;
+        }
+
+        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
+        {
+            // Volume automatically reset to 100 on media parsed
+            // Set a flag to override that behavior
+            _mediaChangedVolumeOverride = true;
         }
 
         private void OnMuted(object sender, EventArgs e)
@@ -96,8 +91,16 @@ namespace Screenbox.ViewModels
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
-                Volume = VlcPlayer.Volume;
-                IsMute = VlcPlayer.Mute;
+                if (_mediaChangedVolumeOverride)
+                {
+                    Volume = _volume; // set volume value from VM
+                    _mediaChangedVolumeOverride = false;
+                }
+                else
+                {
+                    Volume = _mediaPlayerService.Volume;
+                    Messenger.Send(new UpdateStatusMessage($"Volume {Volume:F0}%"));
+                }
             });
         }
     }

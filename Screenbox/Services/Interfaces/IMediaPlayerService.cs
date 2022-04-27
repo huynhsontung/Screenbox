@@ -11,6 +11,7 @@ public interface IMediaPlayerService
     event EventHandler? VlcPlayerChanged;
     MediaPlayer? VlcPlayer { get; }
     LibVLC? LibVlc { get; }
+    int Volume { get; set; }
     double? NumericAspectRatio { get; }
     Size Dimension { get; }
     float Rate { get; set; }

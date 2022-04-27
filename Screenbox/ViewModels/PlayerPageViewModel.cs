@@ -127,12 +127,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
         }
 
-        private void ChangeVolume(double changeAmount)
-        {
-            ChangeVolumeMessage message = new(changeAmount, isOffset: true);
-            Messenger.Send(message);
-        }
-
         [ICommand]
         private async Task ToggleCompactLayout()
         {
@@ -408,7 +402,7 @@ namespace Screenbox.ViewModels
         {
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            ChangeVolume(mouseWheelDelta / 25.0);
+            _mediaPlayerService.Volume += mouseWheelDelta / 25;
         }
 
         public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
@@ -493,7 +487,7 @@ namespace Screenbox.ViewModels
 
             if (volumeChange != 0)
             {
-                ChangeVolume(volumeChange);
+                _mediaPlayerService.Volume += volumeChange;
             }
         }
 

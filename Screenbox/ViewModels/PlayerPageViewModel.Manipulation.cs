@@ -42,7 +42,7 @@ namespace Screenbox.ViewModels
                 _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
             {
                 _lockDirection = ManipulationLock.Vertical;
-                ChangeVolume(-verticalChange);
+                _mediaPlayerService.Volume += (int)-verticalChange;
                 return;
             }
 

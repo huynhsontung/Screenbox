@@ -19,6 +19,18 @@ namespace Screenbox.Services
 
         public LibVLC? LibVlc { get; private set; }
 
+        public int Volume
+        {
+            get => VlcPlayer?.Volume ?? 100;
+            set
+            {
+                if (VlcPlayer == null) return;
+                // VLC is fine with taking volume >100. It will amplify the audio signal.
+                value = Math.Clamp(value, 0, 100);
+                VlcPlayer.Volume = value;
+            }
+        }
+
         public double? NumericAspectRatio
         {
             get
