@@ -15,5 +15,13 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<AudioTrackSubtitleViewModel>();
         }
+
+        public static Flyout GetFlyout()
+        {
+            AudioTrackSubtitlePicker control = new();
+            Flyout flyout = new() { Content = control };
+            flyout.Opening += (_, _) => control.ViewModel.OnAudioCaptionFlyoutOpening();
+            return flyout;
+        }
     }
 }
