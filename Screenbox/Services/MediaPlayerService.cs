@@ -5,7 +5,6 @@ using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Devices;
 using Windows.Storage.AccessCache;
-using Windows.System;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 
@@ -67,12 +66,10 @@ namespace Screenbox.Services
 
         public long FrameDuration => VlcPlayer?.Fps != 0 ? (long)Math.Ceiling(1000.0 / VlcPlayer?.Fps ?? 1) : 0;
 
-        private readonly DispatcherQueue _dispatcherQueue;
         private readonly SystemMediaTransportControls _transportControl;
 
         public MediaPlayerService()
         {
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _transportControl = SystemMediaTransportControls.GetForCurrentView();
 
             _transportControl.ButtonPressed += TransportControl_ButtonPressed;
@@ -175,11 +172,11 @@ namespace Screenbox.Services
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             
-            VlcPlayer.Paused += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused);
-            VlcPlayer.Stopped += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped);
-            VlcPlayer.Playing += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing);
-            VlcPlayer.EncounteredError += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed);
-            VlcPlayer.Opening += (_, _) => _dispatcherQueue.TryEnqueue(() => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing);
+            VlcPlayer.Paused += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused;
+            VlcPlayer.Stopped += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped;
+            VlcPlayer.Playing += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing;
+            VlcPlayer.EncounteredError += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
+            VlcPlayer.Opening += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing;
         }
 
         private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
