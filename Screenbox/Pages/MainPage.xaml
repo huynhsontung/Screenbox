@@ -92,7 +92,7 @@
                 SelectionMode="None">
 
                 <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodels:VideoViewModel">
+                    <DataTemplate x:DataType="viewmodels:MediaViewModel">
                         <Grid
                             Width="200"
                             Height="180"

@@ -32,7 +32,6 @@ namespace Screenbox.ViewModels
         private readonly IWindowService _windowService;
         private readonly INotificationService _notificationService;
         private readonly DispatcherQueue _dispatcherQueue;
-        private object? _toBeOpened;
 
         public VideoViewViewModel(
             IMediaPlayerService mediaPlayerService,
@@ -42,39 +41,13 @@ namespace Screenbox.ViewModels
         {
             _mediaPlayerService = mediaPlayerService;
             _mediaService = mediaService;
+            _mediaService.CurrentMediaChanged += OnCurrentMediaChanged;
             _windowService = windowService;
             _notificationService = notificationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model does not receive any message
             //IsActive = true;
-        }
-
-        [ICommand]
-        public void Open(object? value)
-        {
-            if (value == null) return;
-            if (LibVlc == null)
-            {
-                _toBeOpened = value;
-                return;
-            }
-
-            MediaHandle? handle;
-            try
-            {
-                handle = _mediaService.CreateMedia(value);
-            }
-            catch (Exception e)
-            {
-                _notificationService.RaiseError("Cannot open file", e.ToString());
-                return;
-            }
-
-            if (handle == null) return;
-            handle.Media.ParsedChanged += OnMediaParsed;
-            _mediaPlayerService.Play(handle.Media);
-            _mediaService.SetActive(handle);
         }
 
         public void OnDragOver(object sender, DragEventArgs e)
@@ -90,7 +63,7 @@ namespace Screenbox.ViewModels
                 IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    Open(items[0]);
+                    Play(items);
                     return;
                 }
             }
@@ -100,7 +73,7 @@ namespace Screenbox.ViewModels
                 Uri? uri = await e.DataView.GetWebLinkAsync();
                 if (uri.IsFile)
                 {
-                    Open(uri);
+                    Play(uri);
                     return;
                 }
             }
@@ -110,7 +83,6 @@ namespace Screenbox.ViewModels
         {
             _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
             if (LibVlc != null) _notificationService.SetVlcDialogHandlers(LibVlc);
-            Open(_toBeOpened);
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -215,6 +187,17 @@ namespace Screenbox.ViewModels
             }
 
             _mediaPlayerService.Pause();
+        }
+
+        private void OnCurrentMediaChanged(object sender, MediaChangedEventArgs e)
+        {
+            e.Handle.Media.ParsedChanged += OnMediaParsed;
+        }
+
+        private void Play(object? value)
+        {
+            if (value == null) return;
+            Messenger.Send(new PlayMediaMessage(value));
         }
 
         private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)

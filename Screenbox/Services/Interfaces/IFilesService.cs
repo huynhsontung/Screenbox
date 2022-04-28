@@ -14,7 +14,7 @@ namespace Screenbox.Services
     {
         public ImmutableArray<string> SupportedFormats { get; }
 
-        public Task<List<VideoViewModel>> LoadVideosFromLibraryAsync();
+        public Task<List<MediaViewModel>> LoadVideosFromLibraryAsync();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer);
     }

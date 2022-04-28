@@ -5,7 +5,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.Messages;
 using Screenbox.Extensions;
 using Screenbox.ViewModels;
 
@@ -36,7 +38,10 @@ namespace Screenbox.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            VideoView.ViewModel.OpenCommand.Execute(e.Parameter);
+            if (e.Parameter != null)
+            {
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(e.Parameter));
+            }
         }
 
         private void FocusVideoViewOnEvents()

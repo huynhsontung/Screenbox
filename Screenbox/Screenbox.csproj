@@ -152,6 +152,9 @@
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PlaylistView.xaml.cs">
+      <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
     </Compile>
@@ -164,7 +167,9 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\MediaChangedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
+    <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
     <Compile Include="Core\Messages\SeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
@@ -209,8 +214,9 @@
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
+    <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
-    <Compile Include="ViewModels\VideoViewModel.cs" />
+    <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\VideoViewViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
   </ItemGroup>
@@ -296,6 +302,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\NotificationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlaylistView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

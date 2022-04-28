@@ -14,8 +14,10 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
+using Screenbox.Core.Messages;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Screenbox.ViewModels;
@@ -56,6 +58,7 @@ namespace Screenbox
             services.AddTransient<AudioTrackSubtitleViewModel>();
             services.AddTransient<SeekBarViewModel>();
             services.AddTransient<NotificationViewModel>();
+            services.AddTransient<PlaylistViewModel>();
 
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<IPlaylistService, PlaylistService>();
@@ -84,17 +87,14 @@ namespace Screenbox
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
-            var file = args.Files[0];
-            // TODO: Handle multiple files (playlist)
             var rootFrame = InitRootFrame();
             if (rootFrame.Content is not PlayerPage)
             {
-                rootFrame.Navigate(typeof(PlayerPage), file);
+                rootFrame.Navigate(typeof(PlayerPage), args.Files);
             }
-            else if (rootFrame.Content is PlayerPage playerPage)
+            else if (rootFrame.Content is PlayerPage)
             {
-                VideoView? view = playerPage.FindDescendant<VideoView>();
-                view?.ViewModel.OpenCommand.Execute(file);
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(args.Files));
             }
 
             Window.Current.Activate();

@@ -16,6 +16,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Converters;
+using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
@@ -346,13 +347,12 @@ namespace Screenbox.ViewModels
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
         }
 
-        private void OnMediaChanged(object sender, EventArgs e)
+        private void OnMediaChanged(object sender, MediaChangedEventArgs e)
         {
-            if (_mediaService.CurrentMedia?.Title == null) return;
             _dispatcherQueue.TryEnqueue(() =>
             {
                 PlayerHidden = false;
-                MediaTitle = _mediaService.CurrentMedia.Title;
+                MediaTitle = e.Handle.Title;
             });
         }
 
@@ -363,7 +363,7 @@ namespace Screenbox.ViewModels
 
         private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
         {
-            vlcPlayer.EndReached += OnEndReached;
+            vlcPlayer.EndReached += OnStateChanged;
             vlcPlayer.Playing += OnStateChanged;
             vlcPlayer.Paused += OnStateChanged;
             vlcPlayer.Stopped += OnStateChanged;
@@ -384,18 +384,6 @@ namespace Screenbox.ViewModels
 
         private void OnStateChanged(object sender, EventArgs e)
         {
-            UpdateState();
-        }
-
-        private void OnEndReached(object sender, EventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            if (ShouldLoop)
-            {
-                _dispatcherQueue.TryEnqueue(_mediaPlayerService.Replay);
-                return;
-            }
-
             UpdateState();
         }
     }

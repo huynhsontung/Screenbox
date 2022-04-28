@@ -21,9 +21,9 @@ namespace Screenbox.Services
         public ImmutableArray<string> SupportedFormats { get; } = ImmutableArray.Create(".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv");
 
         // TODO: Service should not return a ViewModel
-        public async Task<List<VideoViewModel>> LoadVideosFromLibraryAsync()
+        public async Task<List<MediaViewModel>> LoadVideosFromLibraryAsync()
         {
-            var videos = new List<VideoViewModel>();
+            var videos = new List<MediaViewModel>();
             var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
             foreach (StorageFolder folder in library.Folders)
             {
@@ -44,7 +44,7 @@ namespace Screenbox.Services
 
                     var videoProperties = await file.Properties.GetVideoPropertiesAsync();
 
-                    videos.Add(new VideoViewModel(file)
+                    videos.Add(new MediaViewModel(file)
                     {
                         Duration = videoProperties?.Duration ?? default,
                         Thumbnail = image

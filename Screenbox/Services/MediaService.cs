@@ -10,7 +10,7 @@ namespace Screenbox.Services
 {
     internal class MediaService : IMediaService
     {
-        public event EventHandler? CurrentMediaChanged;
+        public event EventHandler<MediaChangedEventArgs>? CurrentMediaChanged;
 
         /// <summary>
         /// There can only be one active Media instance at a time.
@@ -28,7 +28,7 @@ namespace Screenbox.Services
         {
             CurrentMedia?.Dispose();
             CurrentMedia = mediaHandle;
-            CurrentMediaChanged?.Invoke(this, EventArgs.Empty);
+            CurrentMediaChanged?.Invoke(this, new MediaChangedEventArgs(mediaHandle));
         } 
 
         public MediaHandle? CreateMedia(object source)

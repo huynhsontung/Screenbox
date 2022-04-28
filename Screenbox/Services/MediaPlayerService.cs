@@ -109,7 +109,11 @@ namespace Screenbox.Services
             Play();
         }
 
-        public void Play(Media media) => VlcPlayer?.Play(media);
+        public void Play(Media media)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            VlcPlayer.Play(media);
+        }
 
         public void Play() => VlcPlayer?.Play();
 

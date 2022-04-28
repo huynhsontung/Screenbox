@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
 using System;
-using System.Windows.Input;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Diagnostics;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.ViewModels;
 
@@ -14,8 +14,6 @@ namespace Screenbox.Pages
 {
     public sealed partial class MainPage : Page
     {
-        public ICommand? OpenCommand { get; set; }
-
         private PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
         private StorageFile? _pickedFile;
@@ -36,26 +34,23 @@ namespace Screenbox.Pages
 
         private void OpenButtonClick(object sender, RoutedEventArgs e)
         {
-            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
             if (!string.IsNullOrWhiteSpace(UrlBox.Text))
-                OpenCommand.Execute(UrlBox.Text);
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(UrlBox.Text));
         }
 
         private async void PickFileButtonClick(object sender, RoutedEventArgs e)
         {
-            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
             _pickedFile = await _filesService.PickFileAsync();
             
             if (_pickedFile != null)
-                OpenCommand.Execute(_pickedFile);
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(_pickedFile));
         }
 
         private void VideosItemClick(object sender, ItemClickEventArgs e)
         {
-            Guard.IsNotNull(OpenCommand, nameof(OpenCommand));
-            if (e.ClickedItem is VideoViewModel item)
+            if (e.ClickedItem is MediaViewModel item)
             {
-                OpenCommand.Execute(item.OriginalFile);
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(item.Source));
             }
         }
     }

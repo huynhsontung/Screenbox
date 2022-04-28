@@ -134,11 +134,15 @@
         -->
         <Frame x:Name="InlineFrame" Visibility="Collapsed">
             <Frame.Content>
-                <pages:MainPage DataContext="{x:Bind ViewModel}" OpenCommand="{x:Bind VideoView.ViewModel.OpenCommand}" />
+                <pages:MainPage DataContext="{x:Bind ViewModel}" />
             </Frame.Content>
         </Frame>
 
         <Grid x:Name="LayoutRoot" PointerMoved="{x:Bind ViewModel.OnPointerMoved}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -147,6 +151,7 @@
             <Border
                 x:Name="Header"
                 Grid.Row="0"
+                Grid.Column="0"
                 MinHeight="32"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -169,6 +174,7 @@
                 x:Name="BackButton"
                 x:Uid="BackButton"
                 Grid.Row="0"
+                Grid.Column="0"
                 Width="52"
                 Height="52"
                 Margin="12"
@@ -189,6 +195,7 @@
                 x:Name="VideoView"
                 Grid.Row="0"
                 Grid.RowSpan="3"
+                Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Click="{x:Bind ViewModel.ToggleControlsVisibility}"
@@ -215,9 +222,15 @@
                 </interactivity:Interaction.Behaviors>
             </controls:VideoView>
 
+            <controls:PlaylistView
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Grid.Column="1" />
+
             <Border
                 x:Name="StatusMessage"
                 Grid.Row="1"
+                Grid.Column="0"
                 Margin="24,4"
                 Padding="10"
                 HorizontalAlignment="Left"
@@ -243,6 +256,7 @@
             <muxc:ProgressRing
                 Grid.Row="0"
                 Grid.RowSpan="3"
+                Grid.Column="0"
                 Width="52"
                 Height="52"
                 HorizontalAlignment="Center"
@@ -253,6 +267,7 @@
 
             <controls:NotificationView
                 Grid.Row="1"
+                Grid.Column="0"
                 Margin="12,0,12,4"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom" />
@@ -260,6 +275,7 @@
             <Grid
                 x:Name="PlayerControls"
                 Grid.Row="2"
+                Grid.Column="0"
                 Padding="12,20,12,12"
                 Background="{StaticResource PlayerControlsBackground}"
                 XYFocusKeyboardNavigation="Enabled">

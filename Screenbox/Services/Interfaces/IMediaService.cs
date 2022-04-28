@@ -7,7 +7,7 @@ namespace Screenbox.Services;
 
 internal interface IMediaService
 {
-    public event EventHandler? CurrentMediaChanged;
+    public event EventHandler<MediaChangedEventArgs>? CurrentMediaChanged;
 
     /// <summary>
     /// There can only be one active Media instance at a time.
