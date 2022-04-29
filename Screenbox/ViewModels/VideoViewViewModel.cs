@@ -15,7 +15,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Converters;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
@@ -28,20 +27,17 @@ namespace Screenbox.ViewModels
         private LibVLC? LibVlc => _mediaPlayerService.LibVlc;
 
         private readonly IMediaPlayerService _mediaPlayerService;
-        private readonly IMediaService _mediaService;
         private readonly IWindowService _windowService;
         private readonly INotificationService _notificationService;
         private readonly DispatcherQueue _dispatcherQueue;
 
         public VideoViewViewModel(
             IMediaPlayerService mediaPlayerService,
-            IMediaService mediaService,
             IWindowService windowService,
             INotificationService notificationService)
         {
             _mediaPlayerService = mediaPlayerService;
-            _mediaService = mediaService;
-            _mediaService.CurrentMediaChanged += OnCurrentMediaChanged;
+            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _windowService = windowService;
             _notificationService = notificationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -189,9 +185,17 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.Pause();
         }
 
-        private void OnCurrentMediaChanged(object sender, MediaChangedEventArgs e)
+        private void OnVlcPlayerChanged(object sender, EventArgs e)
         {
-            e.Handle.Media.ParsedChanged += OnMediaParsed;
+            if (VlcPlayer != null)
+            {
+                VlcPlayer.MediaChanged += OnMediaChanged;
+            }
+        }
+
+        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
+        {
+            e.Media.ParsedChanged += OnMediaParsed;
         }
 
         private void Play(object? value)

@@ -167,7 +167,6 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\MediaChangedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />

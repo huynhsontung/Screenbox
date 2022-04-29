@@ -10,13 +10,6 @@ namespace Screenbox.Services
 {
     internal class MediaService : IMediaService
     {
-        public event EventHandler<MediaChangedEventArgs>? CurrentMediaChanged;
-
-        /// <summary>
-        /// There can only be one active Media instance at a time.
-        /// </summary>
-        public MediaHandle? CurrentMedia { get; private set; }
-
         private readonly IMediaPlayerService _mediaPlayerService;
 
         public MediaService(IMediaPlayerService mediaPlayerService)
@@ -24,14 +17,27 @@ namespace Screenbox.Services
             _mediaPlayerService = mediaPlayerService;
         }
 
-        public void SetActive(MediaHandle mediaHandle)
-        {
-            CurrentMedia?.Dispose();
-            CurrentMedia = mediaHandle;
-            CurrentMediaChanged?.Invoke(this, new MediaChangedEventArgs(mediaHandle));
-        } 
-
         public MediaHandle? CreateMedia(object source)
+        {
+            switch (source)
+            {
+                case IStorageFile file:
+                    return CreateMedia(file);
+                case string str:
+                    return CreateMedia(str);
+                case Uri uri:
+                    return CreateMedia(uri);
+                default:
+                    return null;
+            }
+        }
+
+        public MediaHandle? CreateMedia(string str)
+        {
+            return Uri.TryCreate(str, UriKind.Absolute, out Uri uri) ? CreateMedia(uri) : null;
+        }
+
+        public MediaHandle? CreateMedia(IStorageFile file)
         {
             LibVLC? libVlc = _mediaPlayerService.LibVlc;
             if (libVlc == null)
@@ -39,33 +45,24 @@ namespace Screenbox.Services
                 return null;
             }
 
-            MediaHandle? mediaHandle = null;
-            Uri? uri = null;
+            Uri uri = new(file.Path);
+            if (StorageApplicationPermissions.FutureAccessList.Entries.Count > 995) // Limit 1000
+                StorageApplicationPermissions.FutureAccessList.Clear();
+            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
+            Media media = new(libVlc, mrl, FromType.FromPath);
+            return new MediaHandle(media, uri);
+        }
 
-            if (source is StorageFile file)
+        public MediaHandle? CreateMedia(Uri uri)
+        {
+            LibVLC? libVlc = _mediaPlayerService.LibVlc;
+            if (libVlc == null)
             {
-                uri = new Uri(file.Path);
-                if (StorageApplicationPermissions.FutureAccessList.Entries.Count > 995) // Limit 1000
-                    StorageApplicationPermissions.FutureAccessList.Clear();
-                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
-                Media media = new (libVlc, mrl, FromType.FromPath);
-                mediaHandle = new MediaHandle(media, uri);
+                return null;
             }
 
-            if (source is string str)
-            {
-                Uri.TryCreate(str, UriKind.Absolute, out uri);
-                source = uri;
-            }
-
-            if (source is Uri uri1)
-            {
-                uri = uri1;
-                Media media = new(libVlc, uri);
-                mediaHandle = new MediaHandle(media, uri);
-            }
-
-            return mediaHandle;
+            Media media = new(libVlc, uri);
+            return new MediaHandle(media, uri);
         }
     }
 }

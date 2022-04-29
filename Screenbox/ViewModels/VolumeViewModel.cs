@@ -12,7 +12,7 @@ using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    public class VolumeViewModel : ObservableRecipient
+    internal class VolumeViewModel : ObservableRecipient
     {
         public bool IsMute
         {

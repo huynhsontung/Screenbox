@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -10,11 +9,11 @@ namespace Screenbox.ViewModels
 {
     internal partial class MediaViewModel : ObservableObject
     {
-        public string Title { get; }
+        public string? Title { get; set; }
 
         public BitmapImage? Thumbnail { get; set; }
 
-        public string Location { get; }
+        public string? Location { get; set; }
 
         public TimeSpan Duration { get; set; }
 
@@ -22,18 +21,9 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private bool _isPlaying;
 
-        public MediaViewModel(string title, string path)
+        public MediaViewModel(object source)
         {
-            Title = title;
-            Location = path;
-            Source = path;
-        }
-
-        public MediaViewModel(Uri uri)
-        {
-            Title = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : uri.ToString();
-            Location = uri.ToString();
-            Source = uri;
+            Source = source;
         }
 
         public MediaViewModel(IStorageFile file)

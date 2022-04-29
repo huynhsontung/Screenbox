@@ -50,7 +50,7 @@ namespace Screenbox.Pages
         {
             if (e.ClickedItem is MediaViewModel item)
             {
-                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(item.Source));
+                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(item));
             }
         }
     }

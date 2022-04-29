@@ -3,14 +3,16 @@
 using System;
 using Windows.Foundation;
 using LibVLCSharp.Shared;
+using Screenbox.Core;
 
 namespace Screenbox.Services;
 
-public interface IMediaPlayerService
+internal interface IMediaPlayerService
 {
     event EventHandler? VlcPlayerChanged;
     MediaPlayer? VlcPlayer { get; }
     LibVLC? LibVlc { get; }
+    MediaHandle? CurrentMedia { get; }
     int Volume { get; set; }
     double? NumericAspectRatio { get; }
     Size Dimension { get; }
@@ -19,7 +21,7 @@ public interface IMediaPlayerService
     long FrameDuration { get; }
     void InitVlcPlayer(string[] swapChainOptions);
     void Replay();
-    void Play(Media media);
+    void Play(MediaHandle media);
     void Play();
     void Pause();
     void SetAudioOutputDevice(string? deviceId = null);

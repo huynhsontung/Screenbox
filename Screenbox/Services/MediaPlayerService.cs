@@ -7,16 +7,19 @@ using Windows.Media.Devices;
 using Windows.Storage.AccessCache;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
+using Screenbox.Core;
 
 namespace Screenbox.Services
 {
-    public class MediaPlayerService : IMediaPlayerService, IDisposable
+    internal class MediaPlayerService : IMediaPlayerService, IDisposable
     {
         public event EventHandler? VlcPlayerChanged;
 
         public MediaPlayer? VlcPlayer { get; private set; }
 
         public LibVLC? LibVlc { get; private set; }
+
+        public MediaHandle? CurrentMedia { get; private set; }
 
         public int Volume
         {
@@ -106,10 +109,11 @@ namespace Screenbox.Services
             Play();
         }
 
-        public void Play(Media media)
+        public void Play(MediaHandle media)
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            VlcPlayer.Play(media);
+            CurrentMedia = media;
+            VlcPlayer.Play(media.Media);
         }
 
         public void Play() => VlcPlayer?.Play();

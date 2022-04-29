@@ -16,7 +16,6 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Converters;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
@@ -81,22 +80,18 @@ namespace Screenbox.ViewModels
         private readonly IPlaylistService _playlistService;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
-        private readonly IMediaService _mediaService;
         private bool _visibilityOverride;
         private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
 
         public PlayerPageViewModel(
-            IMediaService mediaService,
             IMediaPlayerService mediaPlayerService,
             IWindowService windowService,
             IFilesService filesService,
             INotificationService notificationService,
             IPlaylistService playlistService)
         {
-            _mediaService = mediaService;
-            _mediaService.CurrentMediaChanged += OnMediaChanged;
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _windowService = windowService;
@@ -347,28 +342,28 @@ namespace Screenbox.ViewModels
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
         }
 
-        private void OnMediaChanged(object sender, MediaChangedEventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                PlayerHidden = false;
-                MediaTitle = e.Handle.Title;
-            });
-        }
-
         private void OnVlcPlayerChanged(object sender, EventArgs e)
         {
-            if (VlcPlayer != null) RegisterMediaPlayerEventHandlers(VlcPlayer);
+            if (VlcPlayer == null) return;
+            VlcPlayer.EndReached += OnStateChanged;
+            VlcPlayer.Playing += OnStateChanged;
+            VlcPlayer.Paused += OnStateChanged;
+            VlcPlayer.Stopped += OnStateChanged;
+            VlcPlayer.EncounteredError += OnStateChanged;
+            VlcPlayer.Opening += OnOpening;
         }
 
-        private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
+        private void OnOpening(object sender, EventArgs e)
         {
-            vlcPlayer.EndReached += OnStateChanged;
-            vlcPlayer.Playing += OnStateChanged;
-            vlcPlayer.Paused += OnStateChanged;
-            vlcPlayer.Stopped += OnStateChanged;
-            vlcPlayer.EncounteredError += OnStateChanged;
-            vlcPlayer.Opening += OnStateChanged;
+            UpdateState();
+            if (_mediaPlayerService.CurrentMedia != null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    PlayerHidden = false;
+                    MediaTitle = _mediaPlayerService.CurrentMedia.Title;
+                });
+            }
         }
 
         private void UpdateState()

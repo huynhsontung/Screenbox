@@ -10,7 +10,6 @@ using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -45,22 +44,19 @@ namespace Screenbox.ViewModels
 
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IMediaService _mediaService;
-        private readonly INotificationService _notificationService;
         private readonly DispatcherQueue _dispatcherQueue;
         private MediaViewModel? _currentlyPlaying;
-        private object? _toBeOpened;
+        private MediaViewModel? _toBeOpened;
 
         public PlaylistViewModel(
             IMediaPlayerService mediaPlayerService,
-            IMediaService mediaService,
-            INotificationService notificationService)
+            IMediaService mediaService)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _mediaService = mediaService;
-            _notificationService = notificationService;
 
             // Activate the view model's messenger
             IsActive = true;
@@ -103,15 +99,12 @@ namespace Screenbox.ViewModels
             MediaViewModel? media = Playlist.FirstOrDefault();
             if (media != null)
             {
-                PlaySingle(media.Source);
-                CurrentlyPlaying = media;
+                PlaySingle(media);
             }
         }
 
         private void Play(object value)
         {
-            if (value is not IStorageFile or string or Uri) return;
-
             Playlist.Clear();
             MediaViewModel vm;
             switch (value)
@@ -119,42 +112,35 @@ namespace Screenbox.ViewModels
                 case IStorageFile file:
                     vm = new MediaViewModel(file);
                     break;
-                case string str:
-                    vm = new MediaViewModel(str, str);
+                case MediaViewModel vmValue:
+                    vm = vmValue;
                     break;
                 default:
-                    Uri uri = (Uri)value;
-                    vm = new MediaViewModel(uri);
+                    vm = new MediaViewModel(value);
                     break;
             }
 
+            PlaySingle(vm);
             Playlist.Add(vm);
-            PlaySingle(vm.Source);
-            CurrentlyPlaying = vm;
         }
 
-        private void PlaySingle(object value)
+        private void PlaySingle(MediaViewModel vm)
         {
             if (VlcPlayer == null)
             {
-                _toBeOpened = value;
+                _toBeOpened = vm;
                 return;
             }
 
-            MediaHandle? handle;
-            try
+            using (MediaHandle? handle = _mediaService.CreateMedia(vm.Source))
             {
-                handle = _mediaService.CreateMedia(value);
-            }
-            catch (Exception e)
-            {
-                _notificationService.RaiseError("Cannot open file", e.ToString());
-                return;
+                if (handle == null) return;
+                vm.Title ??= handle.Title;
+                vm.Location ??= handle.Uri.ToString();
+                _mediaPlayerService.Play(handle);
             }
 
-            if (handle == null) return;
-            _mediaService.SetActive(handle);
-            _mediaPlayerService.Play(handle.Media);
+            CurrentlyPlaying = vm;
         }
 
         private void PlayNext()
@@ -164,8 +150,7 @@ namespace Screenbox.ViewModels
             if (index >= 0 && index < Playlist.Count - 1)
             {
                 MediaViewModel next = Playlist[index + 1];
-                CurrentlyPlaying = next;
-                PlaySingle(next.Source);
+                PlaySingle(next);
             }
         }
 
