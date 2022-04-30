@@ -22,15 +22,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
-            <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
-
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
                 <GradientStop Offset="1" Color="#99000000" />
@@ -39,20 +30,6 @@
                 <GradientStop Offset="1" Color="#00000000" />
                 <GradientStop Offset="0" Color="#99000000" />
             </LinearGradientBrush>
-
-            <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="2,0" />
-            </Style>
-
-            <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Margin" Value="2,0" />
-            </Style>
 
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
@@ -162,9 +139,9 @@
                 </Border.RenderTransform>
                 <TextBlock
                     x:Name="TitleText"
-                    Margin="80,0,90,0"
+                    Margin="76,0,90,0"
                     VerticalAlignment="Center"
-                    FontSize="28"
+                    FontSize="22"
                     FontWeight="SemiBold"
                     Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis" />
@@ -175,10 +152,12 @@
                 x:Uid="BackButton"
                 Grid.Row="0"
                 Grid.Column="0"
-                Width="52"
-                Height="52"
+                Width="50"
+                Height="50"
                 Margin="12"
                 HorizontalAlignment="Left"
+                Background="Transparent"
+                BorderThickness="0"
                 Canvas.ZIndex="2"
                 Click="{x:Bind ViewModel.OnBackRequested}">
                 <Button.RenderTransform>
@@ -225,7 +204,8 @@
             <controls:PlaylistView
                 Grid.Row="1"
                 Grid.RowSpan="2"
-                Grid.Column="1" />
+                Grid.Column="1"
+                Width="360" />
 
             <Border
                 x:Name="StatusMessage"
@@ -279,9 +259,32 @@
                 Padding="12,20,12,12"
                 Background="{StaticResource PlayerControlsBackground}"
                 XYFocusKeyboardNavigation="Enabled">
-                <Grid.RenderTransform>
-                    <TranslateTransform x:Name="PlayerControlsTranslate" />
-                </Grid.RenderTransform>
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
+                        <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+                        <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
+                        <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
+                        <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
+                        <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                        <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                        <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
+
+                        <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="Margin" Value="2,0" />
+                        </Style>
+
+                        <Style BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="Margin" Value="2,0" />
+                        </Style>
+                    </ResourceDictionary>
+                </Grid.Resources>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

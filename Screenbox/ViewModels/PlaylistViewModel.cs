@@ -6,9 +6,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
@@ -37,6 +40,8 @@ namespace Screenbox.ViewModels
                 }
             }
         }
+
+        [ObservableProperty] private bool _multipleSelect;
 
         [ObservableProperty] private bool _shouldLoop;
 
@@ -74,7 +79,16 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void AddToQueue(IReadOnlyList<IStorageItem> files)
+        public void OnItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            ListViewItem item = (ListViewItem)sender;
+            if (item.Content is MediaViewModel selectedMedia && CurrentlyPlaying != selectedMedia)
+            {
+                PlaySingle(selectedMedia);
+            }
+        }
+
+        private void Enqueue(IReadOnlyList<IStorageItem> files)
         {
             foreach (IStorageItem item in files)
             {
@@ -91,10 +105,20 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private void Dequeue(ICollection<MediaViewModel> list)
+        {
+            foreach (MediaViewModel item in list)
+            {
+                if (item == CurrentlyPlaying) continue;
+                Playlist.Remove(item);
+            }
+        }
+
         private void Play(IReadOnlyList<IStorageItem> files)
         {
             Playlist.Clear();
-            AddToQueue(files);
+
+            Enqueue(files);
 
             MediaViewModel? media = Playlist.FirstOrDefault();
             if (media != null)
@@ -124,6 +148,7 @@ namespace Screenbox.ViewModels
             Playlist.Add(vm);
         }
 
+        [ICommand]
         private void PlaySingle(MediaViewModel vm)
         {
             if (VlcPlayer == null)
