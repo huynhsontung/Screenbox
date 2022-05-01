@@ -31,6 +31,42 @@
                 <GradientStop Offset="0" Color="#99000000" />
             </LinearGradientBrush>
 
+            <MenuFlyout x:Key="PlaybackSpeedFlyout">
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="0.25" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="0.5" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="0.75" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    IsChecked="True"
+                    Text="1" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="1.25" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="1.5" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="1.75" />
+                <muxc:RadioMenuFlyoutItem
+                    Click="{x:Bind PlaybackSpeedItem_Click}"
+                    GroupName="SpeedGroup"
+                    Text="2" />
+            </MenuFlyout>
+
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
                     x:Uid="LoopMenu"
@@ -109,7 +145,10 @@
             Have an inline frame to load other pages without navigating away.
             This will go away with LibVLC 4.x
         -->
-        <Frame x:Name="InlineFrame" Visibility="Collapsed">
+        <Frame
+            x:Name="InlineFrame"
+            x:Load="False"
+            Visibility="Collapsed">
             <Frame.Content>
                 <pages:MainPage DataContext="{x:Bind ViewModel}" />
             </Frame.Content>
@@ -160,9 +199,6 @@
                 BorderThickness="0"
                 Canvas.ZIndex="2"
                 Click="{x:Bind ViewModel.OnBackRequested}">
-                <Button.RenderTransform>
-                    <TranslateTransform x:Name="BackButtonTranslate" />
-                </Button.RenderTransform>
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
                         <animatedvisuals:AnimatedBackVisualSource />
@@ -205,7 +241,8 @@
                 Grid.Row="1"
                 Grid.RowSpan="2"
                 Grid.Column="1"
-                Width="360" />
+                Width="360"
+                Visibility="Collapsed" />
 
             <Border
                 x:Name="StatusMessage"
@@ -270,6 +307,9 @@
                         <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
                         <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
 
+                        <SolidColorBrush x:Key="CommandBarBackgroundOpen" Color="Transparent" />
+                        <SolidColorBrush x:Key="CommandBarBorderBrushOpen" Color="Transparent" />
+
                         <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="BorderThickness" Value="0" />
@@ -283,6 +323,14 @@
                             <Setter Property="Height" Value="40" />
                             <Setter Property="Margin" Value="2,0" />
                         </Style>
+
+                        <Style BasedOn="{StaticResource DefaultAppBarButtonStyle}" TargetType="AppBarButton">
+                            <Setter Property="Width" Value="48" />
+                        </Style>
+
+                        <Style BasedOn="{StaticResource DefaultAppBarToggleButtonStyle}" TargetType="AppBarToggleButton">
+                            <Setter Property="Width" Value="48" />
+                        </Style>
                     </ResourceDictionary>
                 </Grid.Resources>
                 <Grid.RowDefinitions>
@@ -290,103 +338,149 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+
                 <controls:SeekBar
                     x:Name="SeekBar"
                     x:Uid="SeekBar"
                     Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     Foreground="Transparent" />
 
-                <StackPanel
+                <CommandBar
+                    x:Name="ControlCommandBar"
                     Grid.Row="1"
-                    Grid.Column="0"
-                    Orientation="Horizontal">
-                    <Button
-                        x:Name="PlayPauseButton"
-                        Margin="0,0,2,0"
-                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}"
-                        ToolTipService.ToolTip="{x:Bind GetPlayPauseToolTip(ViewModel.IsPlaying), Mode=OneWay}">
-                        <Button.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="P" />
-                            <KeyboardAccelerator Key="K" />
-                        </Button.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
-                    </Button>
-                    <controls:VolumeControl
-                        x:Name="MuteButton"
-                        Height="40"
-                        Background="Transparent"
-                        BorderThickness="0" />
-                    <controls:TimeDisplay
-                        MinWidth="0"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Center"
-                        Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
-                        Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
-                    <TextBlock
-                        MinWidth="0"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Center"
-                        Visibility="{x:Bind SeekBar.ViewModel.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
-                        <Run Text="• " />
-                        <Run Text="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}" />
-                    </TextBlock>
-                </StackPanel>
+                    VerticalContentAlignment="Center"
+                    Background="Transparent"
+                    DefaultLabelPosition="Collapsed">
+                    <CommandBar.Content>
+                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                            <AppBarButton
+                                x:Name="PlayPauseButton"
+                                Margin="0,0,2,0"
+                                Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}"
+                                Label="Play"
+                                LabelPosition="Collapsed">
+                                <AppBarButton.Icon>
+                                    <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
+                                </AppBarButton.Icon>
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="P" />
+                                    <KeyboardAccelerator Key="K" />
+                                </Button.KeyboardAccelerators>
+                            </AppBarButton>
 
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-                    <Button
+                            <Button
+                                x:Name="PreviousButton"
+                                Margin="0"
+                                BorderThickness="0,0,1,0"
+                                CornerRadius="4,0, 0, 4">
+                                <SymbolIcon Symbol="Previous" />
+                            </Button>
+                            <Button
+                                x:Name="NextButton"
+                                Margin="0"
+                                CornerRadius="0,4, 4, 0">
+                                <SymbolIcon Symbol="Next" />
+                            </Button>
+
+                            <controls:VolumeControl
+                                x:Name="MuteButton"
+                                Height="40"
+                                Margin="2,0,0,0"
+                                Background="Transparent"
+                                BorderThickness="0" />
+                            <controls:TimeDisplay
+                                MinWidth="0"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
+                                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
+                            <TextBlock
+                                MinWidth="0"
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind SeekBar.ViewModel.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                                <Run Text="• " />
+                                <Run Text="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}" />
+                            </TextBlock>
+                        </StackPanel>
+                    </CommandBar.Content>
+
+                    <AppBarButton
                         x:Name="AudioAndCaptionButton"
-                        VerticalAlignment="Stretch"
                         Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}"
-                        ToolTipService.ToolTip="{x:Bind GetAudioCaptionToolTip()}">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
-                        <Button.KeyboardAccelerators>
+                        Label="{x:Bind GetAudioCaptionToolTip()}">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
+                        </AppBarButton.Icon>
+                        <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="C" />
-                        </Button.KeyboardAccelerators>
-                    </Button>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
 
-                    <ToggleButton
+                    <AppBarToggleButton
                         x:Name="FullscreenButton"
                         Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                         IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind GetFullscreenToolTip(ViewModel.IsFullscreen), Mode=OneWay}">
-                        <ToggleButton.KeyboardAccelerators>
+                        Label="{x:Bind GetFullscreenToolTip(ViewModel.IsFullscreen), Mode=OneWay}">
+                        <AppBarToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />
-                        </ToggleButton.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
-                    </ToggleButton>
+                        </AppBarToggleButton.KeyboardAccelerators>
+                        <AppBarToggleButton.Icon>
+                            <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
+                        </AppBarToggleButton.Icon>
+                    </AppBarToggleButton>
 
-                    <Button
-                        x:Name="MoreButton"
-                        x:Uid="MoreButton"
-                        Margin="2,0,0,0"
-                        Flyout="{StaticResource VideoContextMenu}">
-                        <SymbolIcon Symbol="More" />
-                    </Button>
-
-                    <Button
+                    <AppBarButton
                         x:Name="ExitCompactOverlayButton"
                         x:Uid="ExitCompactOverlayButton"
                         Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                         Visibility="Collapsed">
-                        <Button.KeyboardAccelerators>
+                        <AppBarButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Escape" />
-                        </Button.KeyboardAccelerators>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
-                    </Button>
-                </StackPanel>
+                        </AppBarButton.KeyboardAccelerators>
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+
+                    <AppBarToggleButton
+                        x:Name="RepeatButton"
+                        Icon="RepeatOne"
+                        IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
+                        Label="Loop" />
+
+                    <AppBarButton
+                        x:Name="PlaybackSpeedButton"
+                        Flyout="{StaticResource PlaybackSpeedFlyout}"
+                        Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                                Glyph=&#xEC57;}"
+                        Label="Playback speed" />
+
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton
+                            x:Name="SaveSnapshotButton"
+                            Command="{x:Bind ViewModel.SaveSnapshotCommand}"
+                            Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                                    Glyph=&#xEE71;}"
+                            Label="Save current frame" />
+                        <AppBarToggleButton
+                            x:Name="CompactLayoutToggle"
+                            Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                            Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                                    Glyph=&#xEE49;}"
+                            IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
+                            Label="Picture in picture" />
+                        <AppBarToggleButton
+                            x:Name="ZoomToFitToggle"
+                            Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                                    Glyph=&#xE9A6;}"
+                            IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
+                            Label="Zoom to fit" />
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
             </Grid>
 
             <animations:Implicit.ShowAnimations>
@@ -476,7 +570,10 @@
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
                         <Setter Target="TitleText.Margin" Value="13,0,0,0" />
                         <Setter Target="MuteButton.Visibility" Value="Collapsed" />
-                        <Setter Target="MoreButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaybackSpeedButton.Visibility" Value="Collapsed" />
+                        <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ControlCommandBar.OverflowButtonVisibility" Value="Collapsed" />
+                        <Setter Target="ControlCommandBar.IsDynamicOverflowEnabled" Value="False" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
