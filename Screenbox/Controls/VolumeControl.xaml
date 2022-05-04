@@ -6,42 +6,31 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <Flyout x:Key="VolumeFlyout">
-                <StackPanel Orientation="Horizontal">
-                    <ToggleButton
-                        Margin="0,0,8,0"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
-                        ToolTipService.ToolTip="{x:Bind GetMuteUnmuteToolTip(ViewModel.IsMute), Mode=OneWay}">
-                        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
-                    </ToggleButton>
-                    <Slider
-                        x:Uid="VolumeSlider"
-                        Width="150"
-                        Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
-                </StackPanel>
-            </Flyout>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
-    <controls:ToggleSplitButton
-        x:Name="MuteButton"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-        Background="{x:Bind Background, Mode=OneWay}"
-        BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
-        Flyout="{StaticResource VolumeFlyout}"
-        IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
-        ToolTipService.ToolTip="{x:Bind GetMuteUnmuteToolTip(ViewModel.IsMute), Mode=OneWay}">
-        <controls:SplitButton.KeyboardAccelerators>
-            <KeyboardAccelerator Key="M" />
-        </controls:SplitButton.KeyboardAccelerators>
-        <SymbolIcon Symbol="{x:Bind GetMuteToggleSymbol(ViewModel.IsMute), Mode=OneWay}" />
-    </controls:ToggleSplitButton>
+    <StackPanel Orientation="Horizontal">
+        <ToggleButton
+            Margin="0,0,8,0"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            BorderThickness="0"
+            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}">
+            <FontIcon Glyph="{x:Bind GetMuteToggleGlyph(ViewModel.IsMute), Mode=OneWay}" />
+        </ToggleButton>
+        <Slider
+            x:Name="VolumeSlider"
+            x:Uid="VolumeSlider"
+            Width="150"
+            IsThumbToolTipEnabled="False"
+            Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
+        <TextBlock
+            Width="28"
+            Margin="16,0,0,0"
+            VerticalAlignment="Center"
+            Text="{x:Bind VolumeSlider.Value, Mode=OneWay}" />
+    </StackPanel>
 </UserControl>

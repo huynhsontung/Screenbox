@@ -11,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:Screenbox.Pages"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
@@ -31,12 +32,17 @@
                 <GradientStop Offset="0" Color="#99000000" />
             </LinearGradientBrush>
 
+            <Style TargetType="FontIcon">
+                <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
             <MenuFlyout x:Key="VideoContextMenu">
                 <ToggleMenuFlyoutItem
-                    x:Uid="LoopMenu"
                     Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}" />
-                <MenuFlyoutSubItem x:Uid="PlaybackSpeedMenu" Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}">
+                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
+                    Text="{x:Bind strings:Resources.Loop}" />
+                <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
                         Click="{x:Bind PlaybackSpeedItem_Click}"
                         GroupName="SpeedGroup"
@@ -71,104 +77,107 @@
                         GroupName="SpeedGroup"
                         Text="2" />
                 </MenuFlyoutSubItem>
-                <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    x:Uid="SaveCurrentFrameMenu"
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                            Glyph=&#xEE71;}" />
+                                            Glyph=&#xEE71;}"
+                    Text="{x:Bind strings:Resources.SaveCurrentFrame}" />
                 <ToggleMenuFlyoutItem
-                    x:Uid="PictureInPictureMenu"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                             Glyph=&#xEE49;}"
-                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
+                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.PictureInPicture}" />
                 <ToggleMenuFlyoutItem
-                    x:Uid="ZoomToFitMenu"
                     Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                             Glyph=&#xE9A6;}"
-                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}" />
+                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
+                    Text="{x:Bind strings:Resources.ZoomToFit}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
-        <Border
-            x:Name="TitleBarElement"
-            Grid.Row="0"
-            MinHeight="52"
-            Margin="64,0,0,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Background="Transparent"
-            Canvas.ZIndex="2" />
-
         <!--
             Due to the current LibVLC limitation, there can only be one instance of the media player element per LibVLC instance.
             This means the player will break if you navigate away from the PlayerPage.
             Have an inline frame to load other pages without navigating away.
             This will go away with LibVLC 4.x
         -->
-        <Frame x:Name="InlineFrame" Visibility="Collapsed">
+        <Frame
+            x:Name="InlineFrame"
+            x:Load="False"
+            Visibility="Collapsed">
             <Frame.Content>
                 <pages:MainPage DataContext="{x:Bind ViewModel}" />
             </Frame.Content>
         </Frame>
 
         <Grid x:Name="LayoutRoot" PointerMoved="{x:Bind ViewModel.OnPointerMoved}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Border
-                x:Name="Header"
+
+            <Grid
+                x:Name="TitleBarArea"
                 Grid.Row="0"
-                Grid.Column="0"
-                MinHeight="32"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="{StaticResource TitleBarBackground}"
-                Canvas.ZIndex="1">
-                <Border.RenderTransform>
-                    <TranslateTransform x:Name="HeaderTranslate" />
-                </Border.RenderTransform>
+                Canvas.ZIndex="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                    <ColumnDefinition />
+                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+                </Grid.ColumnDefinitions>
+                <Border
+                    x:Name="TitleBarElement"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Height="64"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Background="Transparent"
+                    Canvas.ZIndex="2" />
+
+                <Border
+                    x:Name="Header"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    MinHeight="32"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{StaticResource TitleBarBackground}" />
+
                 <TextBlock
                     x:Name="TitleText"
-                    Margin="76,0,90,0"
+                    Grid.Column="1"
+                    Margin="70,0,90,0"
                     VerticalAlignment="Center"
-                    FontSize="22"
+                    Canvas.ZIndex="1"
+                    FontSize="20"
                     FontWeight="SemiBold"
                     Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
                     TextTrimming="CharacterEllipsis" />
-            </Border>
 
-            <Button
-                x:Name="BackButton"
-                x:Uid="BackButton"
-                Grid.Row="0"
-                Grid.Column="0"
-                Width="50"
-                Height="50"
-                Margin="12"
-                HorizontalAlignment="Left"
-                Background="Transparent"
-                BorderThickness="0"
-                Canvas.ZIndex="2"
-                Click="{x:Bind ViewModel.OnBackRequested}">
-                <Button.RenderTransform>
-                    <TranslateTransform x:Name="BackButtonTranslate" />
-                </Button.RenderTransform>
-                <muxc:AnimatedIcon>
-                    <muxc:AnimatedIcon.Source>
-                        <animatedvisuals:AnimatedBackVisualSource />
-                    </muxc:AnimatedIcon.Source>
-                </muxc:AnimatedIcon>
-            </Button>
+                <Button
+                    x:Name="BackButton"
+                    Grid.Column="1"
+                    Width="46"
+                    Height="46"
+                    Margin="8"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Canvas.ZIndex="99"
+                    Click="{x:Bind ViewModel.OnBackRequested}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
+                    <muxc:AnimatedIcon>
+                        <muxc:AnimatedIcon.Source>
+                            <animatedvisuals:AnimatedBackVisualSource />
+                        </muxc:AnimatedIcon.Source>
+                    </muxc:AnimatedIcon>
+                </Button>
+            </Grid>
 
             <controls:VideoView
                 x:Name="VideoView"
@@ -200,12 +209,6 @@
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </controls:VideoView>
-
-            <controls:PlaylistView
-                Grid.Row="1"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                Width="360" />
 
             <Border
                 x:Name="StatusMessage"
@@ -256,7 +259,7 @@
                 x:Name="PlayerControls"
                 Grid.Row="2"
                 Grid.Column="0"
-                Padding="12,20,12,12"
+                Padding="8,20,8,12"
                 Background="{StaticResource PlayerControlsBackground}"
                 XYFocusKeyboardNavigation="Enabled">
                 <Grid.Resources>
@@ -274,6 +277,7 @@
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="BorderThickness" Value="0" />
                             <Setter Property="Height" Value="40" />
+                            <Setter Property="Width" Value="42" />
                             <Setter Property="Margin" Value="2,0" />
                         </Style>
 
@@ -281,6 +285,7 @@
                             <Setter Property="Background" Value="Transparent" />
                             <Setter Property="BorderThickness" Value="0" />
                             <Setter Property="Height" Value="40" />
+                            <Setter Property="Width" Value="42" />
                             <Setter Property="Margin" Value="2,0" />
                         </Style>
                     </ResourceDictionary>
@@ -296,14 +301,14 @@
                 </Grid.ColumnDefinitions>
                 <controls:SeekBar
                     x:Name="SeekBar"
-                    x:Uid="SeekBar"
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="Transparent"
-                    Foreground="Transparent" />
+                    Foreground="Transparent"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.Seek}" />
 
                 <StackPanel
                     Grid.Row="1"
@@ -312,28 +317,67 @@
                     <Button
                         x:Name="PlayPauseButton"
                         Margin="0,0,2,0"
-                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}"
-                        ToolTipService.ToolTip="{x:Bind GetPlayPauseToolTip(ViewModel.IsPlaying), Mode=OneWay}">
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.PlayPauseToggle(ViewModel.IsPlaying), Mode=OneWay}"
+                        AccessKey="P"
+                        Command="{x:Bind VideoView.ViewModel.PlayPauseCommand}">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="P" />
                             <KeyboardAccelerator Key="K" />
                         </Button.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetPlayPauseSymbol(ViewModel.IsPlaying), Mode=OneWay}" />
+                        <FontIcon Glyph="{x:Bind GetPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
                     </Button>
-                    <controls:VolumeControl
+
+                    <Button
+                        x:Name="PreviousButton"
+                        Margin="2,0,0,0"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
+                        BorderThickness="0,0,1,0"
+                        CornerRadius="4,0,0,4">
+                        <FontIcon Glyph="&#xE100;" />
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="PageUp" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+                    <Button
+                        x:Name="NextButton"
+                        Margin="0,0,2,0"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
+                        CornerRadius="0,4,4,0">
+                        <FontIcon Glyph="&#xE101;" />
+                        <Button.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="PageDown" />
+                        </Button.KeyboardAccelerators>
+                    </Button>
+
+                    <muxc:ToggleSplitButton
                         x:Name="MuteButton"
                         Height="40"
+                        Margin="2,0"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(VolumeControl.ViewModel.IsMute), Mode=OneWay}"
+                        AccessKey="M"
                         Background="Transparent"
-                        BorderThickness="0" />
+                        BorderThickness="0"
+                        IsChecked="{x:Bind VolumeControl.ViewModel.IsMute, Mode=TwoWay}">
+                        <muxc:SplitButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="M" />
+                        </muxc:SplitButton.KeyboardAccelerators>
+                        <muxc:SplitButton.Flyout>
+                            <Flyout>
+                                <controls:VolumeControl x:Name="VolumeControl" />
+                            </Flyout>
+                        </muxc:SplitButton.Flyout>
+                        <FontIcon Glyph="{x:Bind VolumeControl.GetMuteToggleGlyph(VolumeControl.ViewModel.IsMute), Mode=OneWay}" />
+                    </muxc:ToggleSplitButton>
+
                     <controls:TimeDisplay
                         MinWidth="0"
-                        Margin="8,0,0,0"
+                        Margin="6,0,0,0"
                         VerticalAlignment="Center"
                         Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                         Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
                     <TextBlock
                         MinWidth="0"
-                        Margin="8,0,0,0"
+                        Margin="8,0,8,0"
                         VerticalAlignment="Center"
                         Visibility="{x:Bind SeekBar.ViewModel.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
                         <Run Text="• " />
@@ -346,12 +390,23 @@
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
+                    <ToggleButton
+                        x:Name="RepeatButton"
+                        controls:AcceleratorService.ToolTip="Repeat"
+                        IsThreeState="True">
+                        <FontIcon Glyph="&#xf5e7;" />
+                        <ToggleButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="R" Modifiers="Control" />
+                        </ToggleButton.KeyboardAccelerators>
+                    </ToggleButton>
+
                     <Button
                         x:Name="AudioAndCaptionButton"
                         VerticalAlignment="Stretch"
-                        Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}"
-                        ToolTipService.ToolTip="{x:Bind GetAudioCaptionToolTip()}">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xED1F;" />
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
+                        AccessKey="C"
+                        Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}">
+                        <FontIcon Glyph="&#xED1F;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="C" />
                         </Button.KeyboardAccelerators>
@@ -359,32 +414,33 @@
 
                     <ToggleButton
                         x:Name="FullscreenButton"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
+                        AccessKey="F"
                         Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                        IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}"
-                        ToolTipService.ToolTip="{x:Bind GetFullscreenToolTip(ViewModel.IsFullscreen), Mode=OneWay}">
+                        IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />
                         </ToggleButton.KeyboardAccelerators>
-                        <SymbolIcon Symbol="{x:Bind GetFullscreenToggleSymbol(ViewModel.IsFullscreen), Mode=OneWay}" />
+                        <FontIcon Glyph="{x:Bind GetFullscreenToggleGlyph(ViewModel.IsFullscreen), Mode=OneWay}" />
                     </ToggleButton>
 
                     <Button
                         x:Name="MoreButton"
-                        x:Uid="MoreButton"
                         Margin="2,0,0,0"
-                        Flyout="{StaticResource VideoContextMenu}">
-                        <SymbolIcon Symbol="More" />
+                        Flyout="{StaticResource VideoContextMenu}"
+                        ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
+                        <FontIcon Glyph="&#xE10C;" />
                     </Button>
 
                     <Button
                         x:Name="ExitCompactOverlayButton"
-                        x:Uid="ExitCompactOverlayButton"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ExitCompactOverlay}"
                         Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                         Visibility="Collapsed">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Escape" />
                         </Button.KeyboardAccelerators>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEE47;" />
+                        <FontIcon Glyph="&#xEE47;" />
                     </Button>
                 </StackPanel>
             </Grid>
@@ -412,45 +468,31 @@
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Normal" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="Compact" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Full" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="PlayerHidden" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="PlayerVisible" />
-            </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="PageStates">
                 <VisualState x:Name="PlayerVisible" />
                 <VisualState x:Name="PlayerHidden">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="InlineFrame.Visibility" Value="Visible" />
                         <Setter Target="LayoutRoot.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleBarElement.Height" Value="32" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
                 <VisualStateGroup.Transitions>
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.167"
-                        From="Hidden"
-                        To="Normal">
+                    <VisualTransition GeneratedDuration="0:0:0.167" From="Hidden">
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseOut" />
                         </VisualTransition.GeneratedEasingFunction>
                     </VisualTransition>
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.3"
-                        From="Normal"
-                        To="Hidden">
+                    <VisualTransition GeneratedDuration="0:0:0.3" To="Hidden">
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseIn" />
                         </VisualTransition.GeneratedEasingFunction>
@@ -460,6 +502,7 @@
                 <VisualState x:Name="Hidden">
                     <VisualState.Setters>
                         <Setter Target="Header.Opacity" Value="0" />
+                        <Setter Target="TitleText.Opacity" Value="0" />
                         <Setter Target="BackButton.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                     </VisualState.Setters>
@@ -468,13 +511,18 @@
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Full" />
                 <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarElement.MinHeight" Value="32" />
+                        <Setter Target="TitleBarElement.Height" Value="32" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="12" />
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
                         <Setter Target="TitleText.Margin" Value="13,0,0,0" />
+                        <Setter Target="PreviousButton.Visibility" Value="Collapsed" />
+                        <Setter Target="NextButton.Visibility" Value="Collapsed" />
                         <Setter Target="MuteButton.Visibility" Value="Collapsed" />
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />

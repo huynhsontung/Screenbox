@@ -143,6 +143,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
       <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
     </Compile>
@@ -174,7 +175,6 @@
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
-    <Compile Include="Extensions\KeyboardAcceleratorExtension.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />

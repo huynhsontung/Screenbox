@@ -117,22 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ZoomToFitMenu.Text" xml:space="preserve">
+  <data name="ZoomToFit" xml:space="preserve">
     <value>Zoom to fit</value>
   </data>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
     <value>Frame saved</value>
   </data>
-  <data name="PictureInPictureMenu.Text" xml:space="preserve">
+  <data name="PictureInPicture" xml:space="preserve">
     <value>Picture in picture</value>
   </data>
-  <data name="SaveCurrentFrameMenu.Text" xml:space="preserve">
+  <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Save current frame</value>
   </data>
-  <data name="LoopMenu.Text" xml:space="preserve">
+  <data name="Loop" xml:space="preserve">
     <value>Loop</value>
   </data>
-  <data name="PlaybackSpeedMenu.Text" xml:space="preserve">
+  <data name="PlaybackSpeed" xml:space="preserve">
     <value>Playback speed</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
@@ -149,40 +149,46 @@
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
     <value>Failed to load subtitle</value>
   </data>
-  <data name="BackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
-  <data name="PlayButton" xml:space="preserve">
-    <value>Play</value>
-  </data>
-  <data name="PauseButton" xml:space="preserve">
-    <value>Pause</value>
-  </data>
-  <data name="MuteButton" xml:space="preserve">
+  <data name="MuteToggle_Variant0" xml:space="preserve">
     <value>Mute</value>
   </data>
-  <data name="UnmuteButton" xml:space="preserve">
+  <data name="MuteToggle_Variant1" xml:space="preserve">
     <value>Unmute</value>
   </data>
-  <data name="EnterFullscreenButton" xml:space="preserve">
+  <data name="FullscreenToggle_Variant0" xml:space="preserve">
     <value>Fullscreen</value>
   </data>
-  <data name="AudioAndCaptionButton" xml:space="preserve">
+  <data name="AudioAndCaption" xml:space="preserve">
     <value>Audio &amp; captions</value>
   </data>
-  <data name="ExitFullscreenButton" xml:space="preserve">
+  <data name="FullscreenToggle_Variant1" xml:space="preserve">
     <value>Exit fullscreen</value>
   </data>
-  <data name="VolumeSlider.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
-  <data name="SeekBar.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="Seek" xml:space="preserve">
     <value>Seek</value>
   </data>
-  <data name="MoreButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>More</value>
-  </data>
-  <data name="ExitCompactOverlayButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ExitCompactOverlay" xml:space="preserve">
     <value>Exit picture in picture</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="PlayPauseToggle_Variant0" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayPauseToggle_Variant1" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>More</value>
   </data>
 </root>

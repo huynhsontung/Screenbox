@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
-using Screenbox.Extensions;
 using Screenbox.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -22,13 +21,18 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
+        internal PlaylistViewModel PlaylistViewModel { get; }
+
         public PlayerPage()
         {
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            PlaylistViewModel = App.Services.GetRequiredService<PlaylistViewModel>();
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
-            Window.Current.SetTitleBar(TitleBarElement);
+            SetTitleBar();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         public void FocusVideoView()
@@ -44,12 +48,25 @@ namespace Screenbox.Pages
             }
         }
 
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.PlayerHidden) && !ViewModel.PlayerHidden)
+            {
+                SetTitleBar();
+            }
+        }
+
+        private void SetTitleBar()
+        {
+            Window.Current.SetTitleBar(TitleBarElement);
+        }
+
         private void FocusVideoViewOnEvents()
         {
             Loaded += (_, _) => FocusVideoView();
             PageStates.CurrentStateChanged += (_, args) =>
             {
-                if (args.NewState.Name == "PlayerVisible")
+                if (args.NewState == null || args.NewState.Name == "PlayerVisible")
                     FocusVideoView();
             };
         }
@@ -71,18 +88,9 @@ namespace Screenbox.Pages
             ViewModel.SetPlaybackSpeed(item.Text);
         }
 
-        private string GetPlayPauseToolTip(bool isPlaying) =>
-            $"{(isPlaying ? Strings.Resources.PauseButton : Strings.Resources.PlayButton)} ({PlayPauseButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
+        private string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
 
-        private string GetFullscreenToolTip(bool isFullscreen) =>
-            $"{(isFullscreen ? Strings.Resources.ExitFullscreenButton : Strings.Resources.EnterFullscreenButton)} ({FullscreenButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
-
-        private string GetAudioCaptionToolTip() =>
-            $"{Strings.Resources.AudioAndCaptionButton} ({AudioAndCaptionButton.KeyboardAccelerators.FirstOrDefault()?.ToShortcut()})";
-
-        private Symbol GetPlayPauseSymbol(bool isPlaying) => isPlaying ? Symbol.Pause : Symbol.Play;
-
-        private Symbol GetFullscreenToggleSymbol(bool isFullscreen) => isFullscreen ? Symbol.BackToWindow : Symbol.FullScreen;
+        private string GetFullscreenToggleGlyph(bool isFullscreen) => isFullscreen ? "\uE1D8" : "\uE1D9";
 
         private string GetHeightAsVec3(Size viewSize) => $"0,{viewSize.Height},0";
     }

@@ -21,16 +21,40 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
+            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
+        <Grid
+            x:Name="AppTitleBar"
             Grid.Row="0"
-            Margin="13,0,0,0"
-            VerticalAlignment="Center"
-            FontSize="12"
-            Text="Screenbox" />
+            Background="Transparent">
+            <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
+            <!--
+                Using padding columns instead of Margin ensures that the background
+                paints the area under the caption control buttons (for transparent buttons).
+            -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                <ColumnDefinition />
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+            </Grid.ColumnDefinitions>
+            <Image
+                Grid.Column="1"
+                Width="18"
+                Height="18"
+                Margin="18,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Source="ms-appx:///Assets/StoreLogo.png" />
+            <TextBlock
+                x:Name="AppTitleTextBlock"
+                Grid.Column="1"
+                Margin="54,0,0,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="Screenbox" />
+        </Grid>
 
         <StackPanel
             Grid.Row="1"
