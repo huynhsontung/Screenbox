@@ -120,9 +120,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
+            <Border
+                x:Name="Header"
+                Grid.Row="0"
+                Height="70"
+                MinHeight="32"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{StaticResource TitleBarBackground}"
+                Canvas.ZIndex="3" />
+
             <Grid
                 x:Name="TitleBarArea"
                 Grid.Row="0"
+                VerticalAlignment="Top"
                 Canvas.ZIndex="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
@@ -133,25 +144,15 @@
                     x:Name="TitleBarElement"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
-                    Height="64"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Background="Transparent"
-                    Canvas.ZIndex="2" />
-
-                <Border
-                    x:Name="Header"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    MinHeight="32"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Background="{StaticResource TitleBarBackground}" />
+                    Background="Transparent"
+                    Canvas.ZIndex="2" />
 
                 <TextBlock
                     x:Name="TitleText"
                     Grid.Column="1"
-                    Margin="70,0,90,0"
+                    Margin="74,0,90,0"
                     VerticalAlignment="Center"
                     Canvas.ZIndex="1"
                     FontSize="20"
@@ -164,7 +165,7 @@
                     Grid.Column="1"
                     Width="46"
                     Height="46"
-                    Margin="8"
+                    Margin="6"
                     HorizontalAlignment="Left"
                     Background="Transparent"
                     BorderThickness="0"
@@ -259,7 +260,7 @@
                 x:Name="PlayerControls"
                 Grid.Row="2"
                 Grid.Column="0"
-                Padding="8,20,8,12"
+                Padding="6,20,6,12"
                 Background="{StaticResource PlayerControlsBackground}"
                 XYFocusKeyboardNavigation="Enabled">
                 <Grid.Resources>
@@ -421,7 +422,7 @@
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />
                         </ToggleButton.KeyboardAccelerators>
-                        <FontIcon Glyph="{x:Bind GetFullscreenToggleGlyph(ViewModel.IsFullscreen), Mode=OneWay}" />
+                        <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE1D9;" />
                     </ToggleButton>
 
                     <Button
@@ -463,10 +464,10 @@
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="Hidden" />
+                <core:GoToStateAction StateName="ControlsHidden" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Normal" />
+                <core:GoToStateAction StateName="ControlsVisible" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
@@ -498,8 +499,8 @@
                         </VisualTransition.GeneratedEasingFunction>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
-                <VisualState x:Name="Normal" />
-                <VisualState x:Name="Hidden">
+                <VisualState x:Name="ControlsVisible" />
+                <VisualState x:Name="ControlsHidden">
                     <VisualState.Setters>
                         <Setter Target="Header.Opacity" Value="0" />
                         <Setter Target="TitleText.Opacity" Value="0" />
@@ -509,12 +510,25 @@
                 </VisualState>
             </VisualStateGroup>
             <VisualStateGroup x:Name="LayoutGroup">
-                <VisualState x:Name="Full" />
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="Fullscreen">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleBarArea.Height" Value="68" />
+                        <Setter Target="FullscreenButtonIcon.Glyph" Value="&#xE1D8;" />
+                        <Setter Target="TitleText.Margin" Value="20,0,90,0" />
+                        <Setter Target="PlayerControls.Padding" Value="20" />
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="Compact">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="Header.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Height" Value="32" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
@@ -525,6 +539,7 @@
                         <Setter Target="NextButton.Visibility" Value="Collapsed" />
                         <Setter Target="MuteButton.Visibility" Value="Collapsed" />
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
+                        <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />

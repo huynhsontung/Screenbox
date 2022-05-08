@@ -90,8 +90,6 @@ namespace Screenbox.Pages
 
         private string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
 
-        private string GetFullscreenToggleGlyph(bool isFullscreen) => isFullscreen ? "\uE1D8" : "\uE1D9";
-
         private string GetHeightAsVec3(Size viewSize) => $"0,{viewSize.Height},0";
     }
 }
