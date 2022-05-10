@@ -318,6 +318,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region PlayQueue
+        /// <summary>
+        ///   Looks up a localized string similar to: Play queue
+        /// </summary>
+        public static string PlayQueue
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlayQueue");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -350,6 +363,7 @@ namespace Screenbox.Strings{
             Next,
             Previous,
             More,
+            PlayQueue,
         }
 
         private static ResourceLoader _resourceLoader;

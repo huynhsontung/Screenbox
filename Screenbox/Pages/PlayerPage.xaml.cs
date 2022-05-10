@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -32,6 +33,8 @@ namespace Screenbox.Pages
             FocusVideoViewOnEvents();
             SetTitleBar();
 
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
@@ -46,6 +49,13 @@ namespace Screenbox.Pages
             {
                 WeakReferenceMessenger.Default.Send(new PlayMediaMessage(e.Parameter));
             }
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            // Get the size of the caption controls and set padding.
+            LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)

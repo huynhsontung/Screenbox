@@ -191,4 +191,7 @@
   <data name="More" xml:space="preserve">
     <value>More</value>
   </data>
+  <data name="PlayQueue" xml:space="preserve">
+    <value>Play queue</value>
+  </data>
 </root>

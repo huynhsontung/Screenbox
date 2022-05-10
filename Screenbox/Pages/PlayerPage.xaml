@@ -121,7 +121,7 @@
             </Grid.RowDefinitions>
 
             <Border
-                x:Name="Header"
+                x:Name="HeaderBackground"
                 Grid.Row="0"
                 Height="70"
                 MinHeight="32"
@@ -137,39 +137,27 @@
                 Canvas.ZIndex="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
                 </Grid.ColumnDefinitions>
                 <Border
                     x:Name="TitleBarElement"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
+                    Grid.ColumnSpan="5"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Background="Transparent"
-                    Canvas.ZIndex="2" />
-
-                <TextBlock
-                    x:Name="TitleText"
-                    Grid.Column="1"
-                    Margin="74,0,90,0"
-                    VerticalAlignment="Center"
-                    Canvas.ZIndex="1"
-                    FontSize="20"
-                    FontWeight="SemiBold"
-                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
-                    TextTrimming="CharacterEllipsis" />
+                    Background="Transparent" />
 
                 <Button
                     x:Name="BackButton"
                     Grid.Column="1"
                     Width="46"
                     Height="46"
-                    Margin="6"
-                    HorizontalAlignment="Left"
+                    Margin="6,6,2,6"
                     Background="Transparent"
                     BorderThickness="0"
-                    Canvas.ZIndex="99"
                     Click="{x:Bind ViewModel.OnBackRequested}"
                     ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
                     <muxc:AnimatedIcon>
@@ -178,6 +166,35 @@
                         </muxc:AnimatedIcon.Source>
                     </muxc:AnimatedIcon>
                 </Button>
+
+                <Button
+                    x:Name="PlayQueueButton"
+                    Grid.Column="2"
+                    Width="46"
+                    Height="46"
+                    Margin="2,6,6,6"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
+                    <SymbolIcon Symbol="MusicInfo" />
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <controls:PlaylistView Width="420" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <TextBlock
+                    x:Name="TitleText"
+                    Grid.Column="3"
+                    Margin="36,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    IsHitTestVisible="False"
+                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
             </Grid>
 
             <controls:VideoView
@@ -488,12 +505,12 @@
             </VisualStateGroup>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
                 <VisualStateGroup.Transitions>
-                    <VisualTransition GeneratedDuration="0:0:0.167" From="Hidden">
+                    <VisualTransition GeneratedDuration="0:0:0.167" From="ControlsHidden">
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseOut" />
                         </VisualTransition.GeneratedEasingFunction>
                     </VisualTransition>
-                    <VisualTransition GeneratedDuration="0:0:0.3" To="Hidden">
+                    <VisualTransition GeneratedDuration="0:0:0.3" To="ControlsHidden">
                         <VisualTransition.GeneratedEasingFunction>
                             <QuadraticEase EasingMode="EaseIn" />
                         </VisualTransition.GeneratedEasingFunction>
@@ -502,9 +519,8 @@
                 <VisualState x:Name="ControlsVisible" />
                 <VisualState x:Name="ControlsHidden">
                     <VisualState.Setters>
-                        <Setter Target="Header.Opacity" Value="0" />
-                        <Setter Target="TitleText.Opacity" Value="0" />
-                        <Setter Target="BackButton.Opacity" Value="0" />
+                        <Setter Target="HeaderBackground.Opacity" Value="0" />
+                        <Setter Target="TitleBarArea.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
@@ -516,10 +532,10 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarArea.Height" Value="68" />
+                        <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
                         <Setter Target="FullscreenButtonIcon.Glyph" Value="&#xE1D8;" />
-                        <Setter Target="TitleText.Margin" Value="20,0,90,0" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                 </VisualState>
@@ -528,8 +544,9 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Header.Height" Value="NaN" />
+                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Height" Value="32" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="12" />

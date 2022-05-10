@@ -82,7 +82,7 @@ namespace Screenbox
         private void SetMinWindowSize()
         {
             var view = ApplicationView.GetForCurrentView();
-            view.SetPreferredMinSize(new Size(390, 240));
+            view.SetPreferredMinSize(new Size(480, 270));
         }
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
