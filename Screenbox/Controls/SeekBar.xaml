@@ -50,6 +50,6 @@
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
             Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InvertCommonVisibilityConverter}}"
-            Value="{x:Bind ViewModel.Time, Mode=OneWay}" />
+            Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
     </Grid>
 </UserControl>
