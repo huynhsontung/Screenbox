@@ -47,12 +47,12 @@ namespace Screenbox.Controls
             if (_showRemaining)
             {
                 RemainingText.Visibility = Visibility.Visible;
-                LengthText.Visibility = Visibility.Collapsed;
+                TimeText.Visibility = Visibility.Collapsed;
             }
             else
             {
                 RemainingText.Visibility = Visibility.Collapsed;
-                LengthText.Visibility = Visibility.Visible;
+                TimeText.Visibility = Visibility.Visible;
             }
         }
     }

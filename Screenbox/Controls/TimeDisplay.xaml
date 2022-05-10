@@ -11,14 +11,17 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal">
-        <TextBlock Margin="0,0,6,0">
+        <TextBlock x:Name="TimeText" Margin="0,0,6,0">
             <Run Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
             <Run Text=" /" />
         </TextBlock>
-        <TextBlock x:Name="LengthText" Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
         <TextBlock
             x:Name="RemainingText"
-            Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}"
-            Visibility="Collapsed" />
+            Margin="0,0,6,0"
+            Visibility="Collapsed">
+            <Run Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}" />
+            <Run Text=" /" />
+        </TextBlock>
+        <TextBlock Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
     </StackPanel>
 </UserControl>
