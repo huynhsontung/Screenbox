@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using Windows.Storage;
 using Windows.System;
@@ -37,13 +38,28 @@ namespace Screenbox.ViewModels
                 if (value != null)
                 {
                     value.IsPlaying = true;
+                    _currentIndex = Playlist.IndexOf(value);
                 }
+                else
+                {
+                    _currentIndex = -1;
+                }
+
+                NextCommand.NotifyCanExecuteChanged();
+                PreviousCommand.NotifyCanExecuteChanged();
             }
         }
+
+        public IRelayCommand NextCommand { get; }
+
+        public IRelayCommand PreviousCommand { get; }
+
 
         [ObservableProperty] private bool _multipleSelect;
 
         [ObservableProperty] private bool _shouldLoop;
+
+        [ObservableProperty] private bool _hasMultipleInQueue;
 
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
@@ -52,6 +68,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private MediaViewModel? _currentlyPlaying;
         private MediaViewModel? _toBeOpened;
+        private int _currentIndex;
 
         public PlaylistViewModel(
             IMediaPlayerService mediaPlayerService,
@@ -62,6 +79,11 @@ namespace Screenbox.ViewModels
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _mediaService = mediaService;
+
+            NextCommand = new RelayCommand(PlayNext, CanPlayNext);
+            PreviousCommand = new RelayCommand(PlayPrevious, CanPlayPrevious);
+
+            Playlist.CollectionChanged += PlaylistOnCollectionChanged;
 
             // Activate the view model's messenger
             IsActive = true;
@@ -86,6 +108,15 @@ namespace Screenbox.ViewModels
             {
                 PlaySingle(selectedMedia);
             }
+        }
+
+        private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _currentIndex = CurrentlyPlaying != null ? Playlist.IndexOf(CurrentlyPlaying) : -1;
+
+            NextCommand.NotifyCanExecuteChanged();
+            PreviousCommand.NotifyCanExecuteChanged();
+            HasMultipleInQueue = Playlist.Count > 1;
         }
 
         private void Enqueue(IReadOnlyList<IStorageItem> files)
@@ -168,14 +199,33 @@ namespace Screenbox.ViewModels
             CurrentlyPlaying = vm;
         }
 
+        private bool CanPlayNext()
+        {
+            return _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
+        }
+
         private void PlayNext()
         {
-            if (CurrentlyPlaying == null) return;
-            int index = Playlist.IndexOf(CurrentlyPlaying);
+            int index = _currentIndex;
             if (index >= 0 && index < Playlist.Count - 1)
             {
                 MediaViewModel next = Playlist[index + 1];
                 PlaySingle(next);
+            }
+        }
+
+        private bool CanPlayPrevious()
+        {
+            return _currentIndex >= 1 && _currentIndex < Playlist.Count;
+        }
+
+        private void PlayPrevious()
+        {
+            int index = _currentIndex;
+            if (index >= 1 && index < Playlist.Count)
+            {
+                MediaViewModel previous = Playlist[index - 1];
+                PlaySingle(previous);
             }
         }
 

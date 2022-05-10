@@ -109,7 +109,7 @@
             x:Load="False"
             Visibility="Collapsed">
             <Frame.Content>
-                <pages:MainPage DataContext="{x:Bind ViewModel}" />
+                <pages:MainPage x:Name="MainPage" DataContext="{x:Bind ViewModel}" />
             </Frame.Content>
         </Frame>
 
@@ -290,6 +290,7 @@
                         <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
                         <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
                         <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
+                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
 
                         <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button">
                             <Setter Property="Background" Value="Transparent" />
@@ -350,7 +351,9 @@
                         Margin="2,0,0,0"
                         controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                         BorderThickness="0,0,1,0"
-                        CornerRadius="4,0,0,4">
+                        Command="{x:Bind PlaylistViewModel.PreviousCommand}"
+                        CornerRadius="4,0,0,4"
+                        Visibility="Collapsed">
                         <FontIcon Glyph="&#xE100;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="PageUp" />
@@ -360,7 +363,9 @@
                         x:Name="NextButton"
                         Margin="0,0,2,0"
                         controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
-                        CornerRadius="0,4,4,0">
+                        Command="{x:Bind PlaylistViewModel.NextCommand}"
+                        CornerRadius="0,4,4,0"
+                        Visibility="Collapsed">
                         <FontIcon Glyph="&#xE101;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="PageDown" />
@@ -486,20 +491,37 @@
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="ControlsVisible" />
             </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="True">
+                <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind MainPage}" />
+                <core:GoToStateAction StateName="PlayerHidden" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">
+                <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind}" />
+                <core:GoToStateAction StateName="PlayerVisible" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="Fullscreen" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" Value="False">
+                <core:GoToStateAction StateName="Normal" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="Compact" />
+                <core:GoToStateAction StateName="PreviousNextHidden" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.IsCompact, Mode=OneWay}" Value="False">
+                <core:GoToStateAction StateName="Normal" />
+                <core:CallMethodAction MethodName="SetPreviousNextButtonVisibility" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="PageStates">
                 <VisualState x:Name="PlayerVisible" />
                 <VisualState x:Name="PlayerHidden">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="InlineFrame.Visibility" Value="Visible" />
                         <Setter Target="LayoutRoot.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
-                        <Setter Target="TitleBarElement.Height" Value="32" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -525,12 +547,18 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <VisualStateGroup x:Name="PreviousNextVisibility">
+                <VisualState x:Name="PreviousNextHidden" />
+                <VisualState x:Name="PreviousNextVisible">
+                    <VisualState.Setters>
+                        <Setter Target="PreviousButton.Visibility" Value="Visible" />
+                        <Setter Target="NextButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="Fullscreen">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
@@ -540,9 +568,6 @@
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Compact">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
@@ -552,8 +577,6 @@
                         <Setter Target="TitleText.FontSize" Value="12" />
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
                         <Setter Target="TitleText.Margin" Value="13,0,0,0" />
-                        <Setter Target="PreviousButton.Visibility" Value="Collapsed" />
-                        <Setter Target="NextButton.Visibility" Value="Collapsed" />
                         <Setter Target="MuteButton.Visibility" Value="Collapsed" />
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />

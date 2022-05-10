@@ -30,10 +30,14 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
         }
 
+        public void SetTitleBar()
+        {
+            Window.Current.SetTitleBar(AppTitleBar);
+        }
+
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             SetTitleBar();
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             var videos = await _filesService.LoadVideosFromLibraryAsync();
             Videos.ItemsSource = videos;
         }
@@ -43,19 +47,6 @@ namespace Screenbox.Pages
             // Get the size of the caption controls and set padding.
             LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
-        }
-
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.PlayerHidden) && ViewModel.PlayerHidden)
-            {
-                SetTitleBar();
-            }
-        }
-
-        private void SetTitleBar()
-        {
-            Window.Current.SetTitleBar(AppTitleBar);
         }
 
         private void OpenButtonClick(object sender, RoutedEventArgs e)

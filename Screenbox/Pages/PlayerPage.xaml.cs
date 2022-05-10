@@ -35,12 +35,24 @@ namespace Screenbox.Pages
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+            PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
         }
 
         public void FocusVideoView()
         {
             VideoView.Focus(FocusState.Programmatic);
+        }
+
+        public void SetPreviousNextButtonVisibility()
+        {
+            if (ViewModel.IsCompact) return;
+            VisualStateManager.GoToState(this,
+                PlaylistViewModel.HasMultipleInQueue ? "PreviousNextVisible" : "PreviousNextHidden", true);
+        }
+
+        public void SetTitleBar()
+        {
+            Window.Current.SetTitleBar(TitleBarElement);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -51,24 +63,19 @@ namespace Screenbox.Pages
             }
         }
 
+        private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlaylistViewModel.HasMultipleInQueue))
+            {
+                SetPreviousNextButtonVisibility();
+            }
+        }
+
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             // Get the size of the caption controls and set padding.
             LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
-        }
-
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.PlayerHidden) && !ViewModel.PlayerHidden)
-            {
-                SetTitleBar();
-            }
-        }
-
-        private void SetTitleBar()
-        {
-            Window.Current.SetTitleBar(TitleBarElement);
         }
 
         private void FocusVideoViewOnEvents()
