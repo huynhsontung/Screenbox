@@ -61,7 +61,6 @@ namespace Screenbox
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage
 
             services.AddSingleton<IFilesService, FilesService>();
-            services.AddSingleton<IPlaylistService, PlaylistService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaPlayerService, MediaPlayerService>();

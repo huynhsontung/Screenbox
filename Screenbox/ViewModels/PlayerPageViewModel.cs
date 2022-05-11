@@ -74,7 +74,6 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly IFilesService _filesService;
         private readonly INotificationService _notificationService;
-        private readonly IPlaylistService _playlistService;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
         private bool _visibilityOverride;
@@ -86,15 +85,13 @@ namespace Screenbox.ViewModels
             IMediaPlayerService mediaPlayerService,
             IWindowService windowService,
             IFilesService filesService,
-            INotificationService notificationService,
-            IPlaylistService playlistService)
+            INotificationService notificationService)
         {
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _windowService = windowService;
             _filesService = filesService;
             _notificationService = notificationService;
-            _playlistService = playlistService;
             _mediaTitle = string.Empty;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
