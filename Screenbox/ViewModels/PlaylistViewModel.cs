@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -65,12 +67,15 @@ namespace Screenbox.ViewModels
 
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IMediaService _mediaService;
+        private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private MediaViewModel? _currentlyPlaying;
         private MediaViewModel? _toBeOpened;
+        private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
 
         public PlaylistViewModel(
+            IFilesService filesService,
             IMediaPlayerService mediaPlayerService,
             IMediaService mediaService)
         {
@@ -79,9 +84,10 @@ namespace Screenbox.ViewModels
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _mediaService = mediaService;
+            _filesService = filesService;
 
-            NextCommand = new RelayCommand(PlayNext, CanPlayNext);
-            PreviousCommand = new RelayCommand(PlayPrevious, CanPlayPrevious);
+            NextCommand = new AsyncRelayCommand(PlayNextAsync, CanPlayNext);
+            PreviousCommand = new AsyncRelayCommand(PlayPreviousAsync, CanPlayPrevious);
 
             Playlist.CollectionChanged += PlaylistOnCollectionChanged;
 
@@ -89,10 +95,16 @@ namespace Screenbox.ViewModels
             IsActive = true;
         }
 
-        public void Receive(PlayMediaMessage message)
+        public async void Receive(PlayMediaMessage message)
         {
             if (message.Value is IReadOnlyList<IStorageItem> files)
             {
+                _neighboringFilesQuery = message.NeighboringFilesQuery;
+                if (_neighboringFilesQuery == null && files.Count == 1 && files[0] is StorageFile file)
+                {
+                    _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
+                }
+
                 Play(files);
             }
             else
@@ -116,7 +128,7 @@ namespace Screenbox.ViewModels
 
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
-            HasMultipleInQueue = Playlist.Count > 1;
+            HasMultipleInQueue = _neighboringFilesQuery != null || Playlist.Count > 1;
         }
 
         private void Enqueue(IReadOnlyList<IStorageItem> files)
@@ -201,31 +213,53 @@ namespace Screenbox.ViewModels
 
         private bool CanPlayNext()
         {
-            return _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
+            return _neighboringFilesQuery != null || _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
         }
 
-        private void PlayNext()
+        private async Task PlayNextAsync()
         {
-            int index = _currentIndex;
-            if (index >= 0 && index < Playlist.Count - 1)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && Playlist[0].Source is IStorageFile file)
             {
-                MediaViewModel next = Playlist[index + 1];
-                PlaySingle(next);
+                StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
+                if (nextFile != null)
+                {
+                    Play(nextFile);
+                }
+            }
+            else
+            {
+                int index = _currentIndex;
+                if (index >= 0 && index < Playlist.Count - 1)
+                {
+                    MediaViewModel next = Playlist[index + 1];
+                    PlaySingle(next);
+                }
             }
         }
 
         private bool CanPlayPrevious()
         {
-            return _currentIndex >= 1 && _currentIndex < Playlist.Count;
+            return _neighboringFilesQuery != null || _currentIndex >= 1 && _currentIndex < Playlist.Count;
         }
 
-        private void PlayPrevious()
+        private async Task PlayPreviousAsync()
         {
-            int index = _currentIndex;
-            if (index >= 1 && index < Playlist.Count)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && Playlist[0].Source is IStorageFile file)
             {
-                MediaViewModel previous = Playlist[index - 1];
-                PlaySingle(previous);
+                StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
+                if (previousFile != null)
+                {
+                    Play(previousFile);
+                }
+            }
+            else
+            {
+                int index = _currentIndex;
+                if (index >= 1 && index < Playlist.Count)
+                {
+                    MediaViewModel previous = Playlist[index - 1];
+                    PlaySingle(previous);
+                }
             }
         }
 
@@ -251,9 +285,9 @@ namespace Screenbox.ViewModels
                 {
                     _mediaPlayerService.Replay();
                 }
-                else
+                else if (Playlist.Count > 1)
                 {
-                    PlayNext();
+                    _ = PlayNextAsync();
                 }
             });
         }

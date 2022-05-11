@@ -90,14 +90,11 @@ namespace Screenbox
             var rootFrame = InitRootFrame();
             if (rootFrame.Content is not PlayerPage)
             {
-                rootFrame.Navigate(typeof(PlayerPage), args.Files);
-            }
-            else if (rootFrame.Content is PlayerPage)
-            {
-                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(args.Files));
+                rootFrame.Navigate(typeof(PlayerPage));
             }
 
             Window.Current.Activate();
+            WeakReferenceMessenger.Default.Send(new PlayMediaMessage(args.Files, args.NeighboringFilesQuery));
         }
 
         /// <summary>
