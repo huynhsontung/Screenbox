@@ -88,7 +88,6 @@ namespace Screenbox.ViewModels
             INotificationService notificationService)
         {
             _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
             _windowService = windowService;
             _filesService = filesService;
             _notificationService = notificationService;
@@ -97,6 +96,12 @@ namespace Screenbox.ViewModels
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
 
+            _mediaPlayerService.EndReached += OnStateChanged;
+            _mediaPlayerService.Playing += OnStateChanged;
+            _mediaPlayerService.Paused += OnStateChanged;
+            _mediaPlayerService.Stopped += OnStateChanged;
+            _mediaPlayerService.EncounteredError += OnStateChanged;
+            _mediaPlayerService.Opening += OnOpening;
             PropertyChanged += OnPropertyChanged;
 
             // Activate the view model's messenger
@@ -334,17 +339,6 @@ namespace Screenbox.ViewModels
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
-        }
-
-        private void OnVlcPlayerChanged(object sender, EventArgs e)
-        {
-            if (VlcPlayer == null) return;
-            VlcPlayer.EndReached += OnStateChanged;
-            VlcPlayer.Playing += OnStateChanged;
-            VlcPlayer.Paused += OnStateChanged;
-            VlcPlayer.Stopped += OnStateChanged;
-            VlcPlayer.EncounteredError += OnStateChanged;
-            VlcPlayer.Opening += OnOpening;
         }
 
         private void OnOpening(object sender, EventArgs e)

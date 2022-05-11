@@ -13,7 +13,22 @@ namespace Screenbox.Services
 {
     internal class MediaPlayerService : IMediaPlayerService, IDisposable
     {
-        public event EventHandler? VlcPlayerChanged;
+        public event EventHandler? PlayerInitialized;
+        public event EventHandler<MediaPlayerMediaChangedEventArgs>? MediaChanged;
+        public event EventHandler<MediaPlayerLengthChangedEventArgs>? LengthChanged;
+        public event EventHandler<MediaPlayerTimeChangedEventArgs>? TimeChanged;
+        public event EventHandler<MediaPlayerSeekableChangedEventArgs>? SeekableChanged;
+        public event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
+        public event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
+        public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged;
+        public event EventHandler? Muted;
+        public event EventHandler? Unmuted;
+        public event EventHandler? EndReached;
+        public event EventHandler? Playing;
+        public event EventHandler? Paused;
+        public event EventHandler? Stopped;
+        public event EventHandler? EncounteredError;
+        public event EventHandler? Opening;
 
         public MediaPlayer? VlcPlayer { get; private set; }
 
@@ -96,8 +111,9 @@ namespace Screenbox.Services
             LibVlc = InitializeLibVlc(swapChainOptions);
             VlcPlayer?.Dispose();
             VlcPlayer = new MediaPlayer(LibVlc);
-            VlcPlayerChanged?.Invoke(this, EventArgs.Empty);
+            RegisterEventForwarding(VlcPlayer);
             RegisterPlaybackEvents();
+            PlayerInitialized?.Invoke(this, EventArgs.Empty);
 
             // Clear FA periodically because of 1000 items limit
             StorageApplicationPermissions.FutureAccessList.Clear();
@@ -157,7 +173,6 @@ namespace Screenbox.Services
 
         public void Dispose()
         {
-            VlcPlayerChanged = null;
             LibVlc?.Dispose();
             VlcPlayer?.Dispose();
         }
@@ -170,6 +185,25 @@ namespace Screenbox.Services
             LibVLC libVlc = new(true, options);
             LogService.RegisterLibVlcLogging(libVlc);
             return libVlc;
+        }
+
+        private void RegisterEventForwarding(MediaPlayer player)
+        {
+            player.MediaChanged += (s, e) => MediaChanged?.Invoke(s, e);
+            player.LengthChanged += (s, e) => LengthChanged?.Invoke(s, e);
+            player.TimeChanged += (s, e) => TimeChanged?.Invoke(s, e);
+            player.SeekableChanged += (s, e) => SeekableChanged?.Invoke(s, e);
+            player.ChapterChanged += (s, e) => ChapterChanged?.Invoke(s, e);
+            player.Buffering += (s, e) => Buffering?.Invoke(s, e);
+            player.VolumeChanged += (s, e) => VolumeChanged?.Invoke(s, e);
+            player.Muted += (s, e) => Muted?.Invoke(s, e);
+            player.Unmuted += (s, e) => Unmuted?.Invoke(s, e);
+            player.EndReached += (s, e) => EndReached?.Invoke(s, e);
+            player.Playing += (s, e) => Playing?.Invoke(s, e);
+            player.Paused += (s, e) => Paused?.Invoke(s, e);
+            player.Stopped += (s, e) => Stopped?.Invoke(s, e);
+            player.EncounteredError += (s, e) => EncounteredError?.Invoke(s, e);
+            player.Opening += (s, e) => Opening?.Invoke(s, e);
         }
 
         private void RegisterPlaybackEvents()

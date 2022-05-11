@@ -56,19 +56,13 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _volume = 100;
 
-            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
+            _mediaPlayerService.VolumeChanged += OnVolumeChanged;
+            _mediaPlayerService.Muted += OnMuted;
+            _mediaPlayerService.Unmuted += OnUnmuted;
+            _mediaPlayerService.MediaChanged += OnMediaChanged;
 
             // View model doesn't receive any messages
             //IsActive = true;
-        }
-
-        private void OnVlcPlayerChanged(object sender, EventArgs e)
-        {
-            MediaPlayer? mediaPlayer = _mediaPlayerService.VlcPlayer;
-            if (mediaPlayer == null) return;
-            mediaPlayer.VolumeChanged += OnVolumeChanged;
-            mediaPlayer.Muted += OnMuted;
-            mediaPlayer.MediaChanged += OnMediaChanged;
         }
 
         private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
@@ -80,10 +74,17 @@ namespace Screenbox.ViewModels
 
         private void OnMuted(object sender, EventArgs e)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
-                IsMute = VlcPlayer.Mute;
+                IsMute = true;
+            });
+        }
+
+        private void OnUnmuted(object sender, EventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsMute = false;
             });
         }
 

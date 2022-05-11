@@ -9,7 +9,22 @@ namespace Screenbox.Services;
 
 internal interface IMediaPlayerService
 {
-    event EventHandler? VlcPlayerChanged;
+    event EventHandler? PlayerInitialized;
+    event EventHandler? EndReached;
+    event EventHandler? Playing;
+    event EventHandler? Paused;
+    event EventHandler? Stopped;
+    event EventHandler? EncounteredError;
+    event EventHandler? Opening;
+    event EventHandler<MediaPlayerMediaChangedEventArgs>? MediaChanged;
+    event EventHandler<MediaPlayerLengthChangedEventArgs>? LengthChanged;
+    event EventHandler<MediaPlayerTimeChangedEventArgs>? TimeChanged;
+    event EventHandler<MediaPlayerSeekableChangedEventArgs>? SeekableChanged;
+    event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
+    event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
+    event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged;
+    event EventHandler? Muted;
+    event EventHandler? Unmuted;
     MediaPlayer? VlcPlayer { get; }
     LibVLC? LibVlc { get; }
     MediaHandle? CurrentMedia { get; }

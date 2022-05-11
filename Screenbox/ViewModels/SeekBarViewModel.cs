@@ -41,10 +41,16 @@ namespace Screenbox.ViewModels
         public SeekBarViewModel(IMediaPlayerService mediaPlayer)
         {
             _mediaPlayerService = mediaPlayer;
-            _mediaPlayerService.VlcPlayerChanged += MediaPlayerServiceOnVlcPlayerChanged;
             _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
+
+            _mediaPlayerService.LengthChanged += OnLengthChanged;
+            _mediaPlayerService.TimeChanged += OnTimeChanged;
+            _mediaPlayerService.SeekableChanged += OnSeekableChanged;
+            _mediaPlayerService.EndReached += OnEndReached;
+            _mediaPlayerService.Buffering += OnBuffering;
+            _mediaPlayerService.ChapterChanged += OnChapterChanged;
 
             _shouldUpdateTime = true;
 
@@ -88,24 +94,6 @@ namespace Screenbox.ViewModels
                     _mediaPlayerService.SetTime(newTime);
                 }
             }
-        }
-
-        private void MediaPlayerServiceOnVlcPlayerChanged(object sender, EventArgs e)
-        {
-            if (_mediaPlayerService.VlcPlayer != null)
-            {
-                RegisterMediaPlayerEventHandlers(_mediaPlayerService.VlcPlayer);
-            }
-        }
-
-        private void RegisterMediaPlayerEventHandlers(MediaPlayer vlcPlayer)
-        {
-            vlcPlayer.LengthChanged += OnLengthChanged;
-            vlcPlayer.TimeChanged += OnTimeChanged;
-            vlcPlayer.SeekableChanged += OnSeekableChanged;
-            vlcPlayer.EndReached += OnEndReached;
-            vlcPlayer.Buffering += OnBuffering;
-            vlcPlayer.ChapterChanged += OnChapterChanged;
         }
 
         private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)

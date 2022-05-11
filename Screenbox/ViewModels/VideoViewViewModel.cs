@@ -37,7 +37,7 @@ namespace Screenbox.ViewModels
             INotificationService notificationService)
         {
             _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
+            _mediaPlayerService.MediaChanged += OnMediaChanged;
             _windowService = windowService;
             _notificationService = notificationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -183,14 +183,6 @@ namespace Screenbox.ViewModels
             }
 
             _mediaPlayerService.Pause();
-        }
-
-        private void OnVlcPlayerChanged(object sender, EventArgs e)
-        {
-            if (VlcPlayer != null)
-            {
-                VlcPlayer.MediaChanged += OnMediaChanged;
-            }
         }
 
         private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)

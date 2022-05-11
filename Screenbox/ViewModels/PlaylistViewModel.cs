@@ -81,7 +81,8 @@ namespace Screenbox.ViewModels
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.VlcPlayerChanged += OnVlcPlayerChanged;
+            _mediaPlayerService.PlayerInitialized += OnPlayerInitialized;
+            _mediaPlayerService.EndReached += OnEndReached;
             _mediaService = mediaService;
             _filesService = filesService;
 
@@ -299,10 +300,9 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void OnVlcPlayerChanged(object sender, EventArgs e)
+        private void OnPlayerInitialized(object sender, EventArgs e)
         {
             if (VlcPlayer == null) return;
-            VlcPlayer.EndReached += OnEndReached;
             if (_toBeOpened != null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
