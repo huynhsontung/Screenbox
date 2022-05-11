@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -36,7 +37,6 @@ namespace Screenbox.ViewModels
                     _currentlyPlaying.IsPlaying = false;
                 }
 
-                SetProperty(ref _currentlyPlaying, value);
                 if (value != null)
                 {
                     value.IsPlaying = true;
@@ -47,8 +47,7 @@ namespace Screenbox.ViewModels
                     _currentIndex = -1;
                 }
 
-                NextCommand.NotifyCanExecuteChanged();
-                PreviousCommand.NotifyCanExecuteChanged();
+                SetProperty(ref _currentlyPlaying, value);
             }
         }
 
@@ -59,9 +58,9 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private bool _multipleSelect;
 
-        [ObservableProperty] private bool _shouldLoop;
+        [ObservableProperty] private bool _canSkip;
 
-        [ObservableProperty] private bool _hasMultipleInQueue;
+        [ObservableProperty] private RepeatMode _repeatMode;
 
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
@@ -89,6 +88,7 @@ namespace Screenbox.ViewModels
             NextCommand = new AsyncRelayCommand(PlayNextAsync, CanPlayNext);
             PreviousCommand = new AsyncRelayCommand(PlayPreviousAsync, CanPlayPrevious);
 
+            PropertyChanged += OnPropertyChanged;
             Playlist.CollectionChanged += PlaylistOnCollectionChanged;
 
             // Activate the view model's messenger
@@ -122,13 +122,25 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(CurrentlyPlaying):
+                case nameof(RepeatMode):
+                    NextCommand.NotifyCanExecuteChanged();
+                    PreviousCommand.NotifyCanExecuteChanged();
+                    break;
+            }
+        }
+
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             _currentIndex = CurrentlyPlaying != null ? Playlist.IndexOf(CurrentlyPlaying) : -1;
 
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
-            HasMultipleInQueue = _neighboringFilesQuery != null || Playlist.Count > 1;
+            CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
         }
 
         private void Enqueue(IReadOnlyList<IStorageItem> files)
@@ -213,12 +225,24 @@ namespace Screenbox.ViewModels
 
         private bool CanPlayNext()
         {
-            return _neighboringFilesQuery != null || _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
+            if (Playlist.Count == 1)
+            {
+                return _neighboringFilesQuery != null;
+            }
+
+            if (RepeatMode == RepeatMode.All)
+            {
+                return true;
+            }
+
+            return _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
         }
 
         private async Task PlayNextAsync()
         {
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && Playlist[0].Source is IStorageFile file)
+            if (Playlist.Count == 0 || CurrentlyPlaying == null) return;
+            int index = _currentIndex;
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && CurrentlyPlaying.Source is IStorageFile file)
             {
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
@@ -226,25 +250,37 @@ namespace Screenbox.ViewModels
                     Play(nextFile);
                 }
             }
-            else
+            else if (index == Playlist.Count - 1 && RepeatMode == RepeatMode.All)
             {
-                int index = _currentIndex;
-                if (index >= 0 && index < Playlist.Count - 1)
-                {
-                    MediaViewModel next = Playlist[index + 1];
-                    PlaySingle(next);
-                }
+                PlaySingle(Playlist[0]);
+            }
+            else if (index >= 0 && index < Playlist.Count - 1)
+            {
+                MediaViewModel next = Playlist[index + 1];
+                PlaySingle(next);
             }
         }
 
         private bool CanPlayPrevious()
         {
-            return _neighboringFilesQuery != null || _currentIndex >= 1 && _currentIndex < Playlist.Count;
+            if (Playlist.Count == 1)
+            {
+                return _neighboringFilesQuery != null;
+            }
+
+            if (RepeatMode == RepeatMode.All)
+            {
+                return true;
+            }
+
+            return _currentIndex >= 1 && _currentIndex < Playlist.Count;
         }
 
         private async Task PlayPreviousAsync()
         {
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && Playlist[0].Source is IStorageFile file)
+            if (Playlist.Count == 0 || CurrentlyPlaying == null) return;
+            int index = _currentIndex;
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && CurrentlyPlaying.Source is IStorageFile file)
             {
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
@@ -252,14 +288,14 @@ namespace Screenbox.ViewModels
                     Play(previousFile);
                 }
             }
-            else
+            else if (index == 0 && RepeatMode == RepeatMode.All)
             {
-                int index = _currentIndex;
-                if (index >= 1 && index < Playlist.Count)
-                {
-                    MediaViewModel previous = Playlist[index - 1];
-                    PlaySingle(previous);
-                }
+                PlaySingle(Playlist.Last());
+            }
+            else if (index >= 1 && index < Playlist.Count)
+            {
+                MediaViewModel previous = Playlist[index - 1];
+                PlaySingle(previous);
             }
         }
 
@@ -281,13 +317,17 @@ namespace Screenbox.ViewModels
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
-                if (ShouldLoop)
+                switch (RepeatMode)
                 {
-                    _mediaPlayerService.Replay();
-                }
-                else if (Playlist.Count > 1)
-                {
-                    _ = PlayNextAsync();
+                    case RepeatMode.All when _currentIndex == Playlist.Count - 1:
+                        PlaySingle(Playlist[0]);
+                        break;
+                    case RepeatMode.One:
+                        _mediaPlayerService.Replay();
+                        break;
+                    default:
+                        if (Playlist.Count > 1) _ = PlayNextAsync();
+                        break;
                 }
             });
         }

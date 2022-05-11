@@ -5,6 +5,7 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -23,6 +24,8 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
+
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
                 <GradientStop Offset="1" Color="#99000000" />
@@ -38,10 +41,6 @@
             </Style>
 
             <MenuFlyout x:Key="VideoContextMenu">
-                <ToggleMenuFlyoutItem
-                    Icon="RepeatOne"
-                    IsChecked="{x:Bind ViewModel.ShouldLoop, Mode=TwoWay}"
-                    Text="{x:Bind strings:Resources.Loop}" />
                 <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
                         Click="{x:Bind PlaybackSpeedItem_Click}"
@@ -415,9 +414,10 @@
                     Orientation="Horizontal">
                     <ToggleButton
                         x:Name="RepeatButton"
-                        controls:AcceleratorService.ToolTip="Repeat"
+                        controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(PlaylistViewModel.RepeatMode), Mode=OneWay}"
+                        IsChecked="{x:Bind PlaylistViewModel.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                         IsThreeState="True">
-                        <FontIcon Glyph="&#xf5e7;" />
+                        <FontIcon Glyph="{x:Bind GetRepeatModeGlyph(PlaylistViewModel.RepeatMode), Mode=OneWay}" />
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="R" Modifiers="Control" />
                         </ToggleButton.KeyboardAccelerators>

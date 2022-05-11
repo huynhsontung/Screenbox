@@ -60,9 +60,6 @@ namespace Screenbox.ViewModels
         [ObservableProperty]
         private VLCState _state;
 
-        [ObservableProperty]
-        private bool _shouldLoop;
-
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
         private enum ManipulationLock

@@ -194,4 +194,13 @@
   <data name="PlayQueue" xml:space="preserve">
     <value>Play queue</value>
   </data>
+  <data name="RepeatMode_Variant0" xml:space="preserve">
+    <value>Repeat: Off</value>
+  </data>
+  <data name="RepeatMode_Variant1" xml:space="preserve">
+    <value>Repeat: All</value>
+  </data>
+  <data name="RepeatMode_Variant2" xml:space="preserve">
+    <value>Repeat: One</value>
+  </data>
 </root>

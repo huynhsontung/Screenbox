@@ -168,6 +168,7 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\WindowService.cs" />
+    <Compile Include="ViewModels\RepeatMode.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />

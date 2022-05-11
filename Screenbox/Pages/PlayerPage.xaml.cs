@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -47,7 +48,7 @@ namespace Screenbox.Pages
         {
             if (ViewModel.IsCompact) return;
             VisualStateManager.GoToState(this,
-                PlaylistViewModel.HasMultipleInQueue ? "PreviousNextVisible" : "PreviousNextHidden", true);
+                PlaylistViewModel.CanSkip ? "PreviousNextVisible" : "PreviousNextHidden", true);
         }
 
         public void SetTitleBar()
@@ -65,7 +66,7 @@ namespace Screenbox.Pages
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(PlaylistViewModel.HasMultipleInQueue))
+            if (e.PropertyName == nameof(PlaylistViewModel.CanSkip))
             {
                 SetPreviousNextButtonVisibility();
             }
@@ -106,6 +107,21 @@ namespace Screenbox.Pages
         }
 
         private string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
+
+        private string GetRepeatModeGlyph(RepeatMode repeatMode)
+        {
+            switch (repeatMode)
+            {
+                case RepeatMode.Off:
+                    return "\uf5e7";
+                case RepeatMode.All:
+                    return "\ue8ee";
+                case RepeatMode.One:
+                    return "\ue8ed";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
+            }
+        }
 
         private string GetHeightAsVec3(Size viewSize) => $"0,{viewSize.Height},0";
     }

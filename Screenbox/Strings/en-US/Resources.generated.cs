@@ -91,6 +91,31 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region RepeatMode
+        /// <summary>
+        ///   Get the variant version of the string similar to: Repeat: Off
+        /// </summary>
+        public static string RepeatMode(object variantId)
+        {
+            try
+            {
+                return RepeatMode(Convert.ToInt64(variantId));
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        ///   Get the variant version of the string similar to: Repeat: Off
+        /// </summary>
+        public static string RepeatMode(long variantId)
+        {
+            return _resourceLoader.GetString("RepeatMode_Variant" + variantId);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -345,6 +370,7 @@ namespace Screenbox.Strings{
             MuteToggle,
             FullscreenToggle,
             PlayPauseToggle,
+            RepeatMode,
             ZoomToFit,
             FrameSavedNotificationTitle,
             PictureInPicture,
