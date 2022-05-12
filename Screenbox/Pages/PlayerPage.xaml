@@ -178,8 +178,11 @@
                     ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                     <SymbolIcon Symbol="MusicInfo" />
                     <Button.Flyout>
-                        <Flyout Placement="BottomEdgeAlignedLeft">
-                            <controls:PlaylistView Width="420" />
+                        <Flyout Placement="BottomEdgeAlignedLeft" ShouldConstrainToRootBounds="False">
+                            <controls:PlaylistView
+                                Width="420"
+                                MinHeight="200"
+                                MaxHeight="500" />
                         </Flyout>
                     </Button.Flyout>
                 </Button>
@@ -322,6 +325,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Grid.ColumnSpan="2"
+                    Margin="12,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -427,12 +431,16 @@
                         x:Name="AudioAndCaptionButton"
                         VerticalAlignment="Stretch"
                         controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
-                        AccessKey="C"
-                        Flyout="{x:Bind controls:AudioTrackSubtitlePicker.GetFlyout()}">
+                        AccessKey="C">
                         <FontIcon Glyph="&#xED1F;" />
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="C" />
                         </Button.KeyboardAccelerators>
+                        <Button.Flyout>
+                            <Flyout Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}" ShouldConstrainToRootBounds="False">
+                                <controls:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" />
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
 
                     <ToggleButton
@@ -585,6 +593,7 @@
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.ProgressOnly" Value="True" />
+                        <Setter Target="SeekBar.Margin" Value="0" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
