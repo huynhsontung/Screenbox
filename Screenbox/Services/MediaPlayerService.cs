@@ -20,7 +20,7 @@ namespace Screenbox.Services
         public event EventHandler<MediaPlayerSeekableChangedEventArgs>? SeekableChanged;
         public event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
         public event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
-        public event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged;
+        public event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
         public event EventHandler? Muted;
         public event EventHandler? Unmuted;
         public event EventHandler? EndReached;
