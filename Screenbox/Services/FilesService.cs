@@ -37,64 +37,29 @@ namespace Screenbox.Services
 
         public async Task<StorageFile?> GetNextFileAsync(IStorageFile currentFile, StorageFileQueryResult neighboringFilesQuery)
         {
-            const uint numberOfItemsToPage = 20;
-
             // Due to limitations with NeighboringFilesQuery, manually find the next supported file
             uint startIndex = await neighboringFilesQuery.FindStartIndexAsync(currentFile);
             if (startIndex == uint.MaxValue) return null;
             startIndex += 1;
-            IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(startIndex, numberOfItemsToPage);
-            while (files.Count > 0)
-            {
-                StorageFile? result =
-                    files.FirstOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
-                if (result != null) return result;
-                startIndex += numberOfItemsToPage;
-                files = await neighboringFilesQuery.GetFilesAsync(startIndex, numberOfItemsToPage);
-            }
 
-            return null;
+            // The following line return a native vector view.
+            // It does not fetch all the files in the directory at once.
+            // No need for manual paging!
+            IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(startIndex, uint.MaxValue);
+            return files.FirstOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
         }
 
         public async Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile, StorageFileQueryResult neighboringFilesQuery)
         {
-            const uint numberOfItemsToPage = 20;
-
             // Due to limitations with NeighboringFilesQuery, manually find the previous supported file
             uint startIndex = await neighboringFilesQuery.FindStartIndexAsync(currentFile);
             if (startIndex == uint.MaxValue) return null;
-            uint actualNumberOfItemsToPage = numberOfItemsToPage;
-            if (startIndex < 1 + numberOfItemsToPage)
-            {
-                actualNumberOfItemsToPage = startIndex;
-                startIndex = 0;
-            }
-            else
-            {
-                startIndex -= 1 + numberOfItemsToPage;
-            }
 
-            IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(startIndex, actualNumberOfItemsToPage);
-            while (files.Count > 0)
-            {
-                StorageFile? result =
-                    files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
-                if (result != null) return result;
-                if (startIndex == 0) return null;
-                if (startIndex < numberOfItemsToPage)
-                {
-                    actualNumberOfItemsToPage = startIndex;
-                    startIndex = 0;
-                }
-                else
-                {
-                    startIndex -= numberOfItemsToPage;
-                }
-                
-                files = await neighboringFilesQuery.GetFilesAsync(startIndex, actualNumberOfItemsToPage);
-            }
-
-            return null;
+            // The following line return a native vector view.
+            // It does not fetch all the files in the directory at once.
+            // No need for manual paging!
+            IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, startIndex);
+            return files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
         }
 
         // TODO: Service should not return a ViewModel
