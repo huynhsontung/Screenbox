@@ -2,7 +2,6 @@
 
 using System;
 using Windows.Foundation;
-using Windows.Media;
 using Windows.Media.Devices;
 using Windows.Storage.AccessCache;
 using LibVLCSharp.Shared;
@@ -84,23 +83,8 @@ namespace Screenbox.Services
 
         public long FrameDuration => VlcPlayer?.Fps != 0 ? (long)Math.Ceiling(1000.0 / VlcPlayer?.Fps ?? 1) : 0;
 
-        private readonly SystemMediaTransportControls _transportControl;
-
         public MediaPlayerService()
         {
-            _transportControl = SystemMediaTransportControls.GetForCurrentView();
-
-            _transportControl.ButtonPressed += TransportControl_ButtonPressed;
-            _transportControl.IsEnabled = true;
-            _transportControl.IsPlayEnabled = true;
-            _transportControl.IsPauseEnabled = true;
-            _transportControl.IsStopEnabled = true;
-            _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
-
-            SystemMediaTransportControlsDisplayUpdater displayUpdater = _transportControl.DisplayUpdater;
-            displayUpdater.ClearAll();
-            displayUpdater.AppMediaId = "Modern VLC";
-
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
         }
@@ -112,7 +96,6 @@ namespace Screenbox.Services
             VlcPlayer?.Dispose();
             VlcPlayer = new MediaPlayer(LibVlc);
             RegisterEventForwarding(VlcPlayer);
-            RegisterPlaybackEvents();
             PlayerInitialized?.Invoke(this, EventArgs.Empty);
 
             // Clear FA periodically because of 1000 items limit
@@ -204,45 +187,6 @@ namespace Screenbox.Services
             player.Stopped += (s, e) => Stopped?.Invoke(s, e);
             player.EncounteredError += (s, e) => EncounteredError?.Invoke(s, e);
             player.Opening += (s, e) => Opening?.Invoke(s, e);
-        }
-
-        private void RegisterPlaybackEvents()
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            
-            VlcPlayer.Paused += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Paused;
-            VlcPlayer.Stopped += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Stopped;
-            VlcPlayer.Playing += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Playing;
-            VlcPlayer.EncounteredError += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Closed;
-            VlcPlayer.Opening += (_, _) => _transportControl.PlaybackStatus = MediaPlaybackStatus.Changing;
-        }
-
-        private void TransportControl_ButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            switch (args.Button)
-            {
-                case SystemMediaTransportControlsButton.Pause:
-                    Pause();
-                    break;
-                case SystemMediaTransportControlsButton.Play:
-                    Play();
-                    break;
-                case SystemMediaTransportControlsButton.Stop:
-                    Stop();
-                    break;
-                //case SystemMediaTransportControlsButton.Previous:
-                //    Locator.PlaybackService.Previous();
-                //    break;
-                //case SystemMediaTransportControlsButton.Next:
-                //    Locator.PlaybackService.Next();
-                //    break;
-                case SystemMediaTransportControlsButton.FastForward:
-                    Seek(30000);
-                    break;
-                case SystemMediaTransportControlsButton.Rewind:
-                    Seek(-30000);
-                    break;
-            }
         }
 
         private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)

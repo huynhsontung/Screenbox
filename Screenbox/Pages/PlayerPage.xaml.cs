@@ -25,10 +25,13 @@ namespace Screenbox.Pages
 
         internal PlaylistViewModel PlaylistViewModel { get; }
 
+        private readonly SystemMediaTransportControlsViewModel _systemMediaTransportControlsViewModel;  // unused. just for holding reference
+
         public PlayerPage()
         {
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
             PlaylistViewModel = App.Services.GetRequiredService<PlaylistViewModel>();
+            _systemMediaTransportControlsViewModel = App.Services.GetRequiredService<SystemMediaTransportControlsViewModel>();
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
