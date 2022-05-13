@@ -58,8 +58,31 @@
               <uap:FileType ContentType="video/x-flv">.flv</uap:FileType>
               <uap:FileType ContentType="video/x-ms-wmv">.wmv</uap:FileType>
               <uap:FileType ContentType="video/x-msvideo">.avi</uap:FileType>
+              <uap:FileType ContentType="video/3gpp">.3gp</uap:FileType>
+              <uap:FileType ContentType="video/3gpp2">.3g2</uap:FileType>
+              <uap:FileType ContentType="video/mp4">.m4v</uap:FileType>
+              <uap:FileType ContentType="video/mpeg">.mpg</uap:FileType>
+              <uap:FileType ContentType="video/mpeg">.mpeg</uap:FileType>
+              <uap:FileType ContentType="video/webm">.webm</uap:FileType>
             </uap:SupportedFileTypes>
             <uap:DisplayName>Videos</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="audios">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
+              <uap:FileType ContentType="audio/midi">.mid</uap:FileType>
+              <uap:FileType ContentType="audio/midi">.midi</uap:FileType>
+              <uap:FileType ContentType="audio/aac">.aac</uap:FileType>
+              <uap:FileType ContentType="audio/wav">.wav</uap:FileType>
+              <uap:FileType ContentType="audio/wma">.wma</uap:FileType>
+              <uap:FileType ContentType="audio/ogg">.ogg</uap:FileType>
+              <uap:FileType ContentType="audio/ogg">.oga</uap:FileType>
+              <uap:FileType ContentType="audio/webm">.weba</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>Audios</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
           </uap:FileTypeAssociation>
         </uap:Extension>

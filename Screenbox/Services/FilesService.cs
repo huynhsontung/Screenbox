@@ -18,7 +18,11 @@ namespace Screenbox.Services
 {
     internal class FilesService : IFilesService
     {
-        private ImmutableArray<string> SupportedFormats { get; } = ImmutableArray.Create(".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv");
+        private ImmutableArray<string> SupportedFormats { get; } = ImmutableArray.Create(
+            // Video formats
+            ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm",
+            // Audio formats
+            ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba");
 
         public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
         {
