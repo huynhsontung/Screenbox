@@ -30,25 +30,7 @@ namespace Screenbox.ViewModels
         public MediaViewModel? CurrentlyPlaying
         {
             get => _currentlyPlaying;
-            private set
-            {
-                if (_currentlyPlaying != null)
-                {
-                    _currentlyPlaying.IsPlaying = false;
-                }
-
-                if (value != null)
-                {
-                    value.IsPlaying = true;
-                    _currentIndex = Playlist.IndexOf(value);
-                }
-                else
-                {
-                    _currentIndex = -1;
-                }
-
-                SetProperty(ref _currentlyPlaying, value);
-            }
+            private set => SetProperty(ref _currentlyPlaying, value);
         }
 
         public IRelayCommand NextCommand { get; }
@@ -129,8 +111,7 @@ namespace Screenbox.ViewModels
             {
                 case nameof(CurrentlyPlaying):
                 case nameof(RepeatMode):
-                    NextCommand.NotifyCanExecuteChanged();
-                    PreviousCommand.NotifyCanExecuteChanged();
+                    UpdateCanPreviousOrNext();
                     break;
             }
         }
@@ -139,8 +120,7 @@ namespace Screenbox.ViewModels
         {
             _currentIndex = CurrentlyPlaying != null ? Playlist.IndexOf(CurrentlyPlaying) : -1;
 
-            NextCommand.NotifyCanExecuteChanged();
-            PreviousCommand.NotifyCanExecuteChanged();
+            UpdateCanPreviousOrNext();
             CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
         }
 
@@ -200,8 +180,8 @@ namespace Screenbox.ViewModels
                     break;
             }
 
-            PlaySingle(vm);
             Playlist.Add(vm);
+            PlaySingle(vm);
         }
 
         [ICommand]
@@ -221,6 +201,15 @@ namespace Screenbox.ViewModels
                 _mediaPlayerService.Play(handle);
             }
 
+            if (CurrentlyPlaying != null)
+            {
+                CurrentlyPlaying.IsPlaying = false;
+            }
+
+            vm.IsPlaying = true;
+            // Setting current index here to handle updating playlist before calling PlaySingle
+            // If playlist is updated after, CollectionChanged handler will update the index
+            _currentIndex = Playlist.IndexOf(vm);
             CurrentlyPlaying = vm;
         }
 
@@ -330,6 +319,12 @@ namespace Screenbox.ViewModels
                         break;
                 }
             });
+        }
+
+        private void UpdateCanPreviousOrNext()
+        {
+            NextCommand.NotifyCanExecuteChanged();
+            PreviousCommand.NotifyCanExecuteChanged();
         }
     }
 }
