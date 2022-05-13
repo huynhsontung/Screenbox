@@ -12,6 +12,7 @@
                     <converters:CommonVisibilityConverter x:Key="InvertCommonVisibilityConverter" Invert="True" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:ObjectToBooleanConverter x:Key="ObjectToBooleanConverter" />
+                    <converters:MediaTypeGlyphConverter x:Key="MediaTypeGlyphConverter" />
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>

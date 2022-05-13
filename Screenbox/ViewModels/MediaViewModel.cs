@@ -19,11 +19,17 @@ namespace Screenbox.ViewModels
 
         public object Source { get; }
 
+        public MediaType MediaType { get; set; }
+
         [ObservableProperty] private bool _isPlaying;
 
         public MediaViewModel(object source)
         {
             Source = source;
+            if (source is Uri or string)
+            {
+                MediaType = MediaType.Network;
+            }
         }
 
         public MediaViewModel(IStorageFile file)
@@ -31,6 +37,24 @@ namespace Screenbox.ViewModels
             Source = file;
             Title = file.Name;
             Location = file.Path;
+
+            if (file.ContentType.StartsWith("video"))
+            {
+                MediaType = MediaType.Video;
+            }
+
+            if (file.ContentType.StartsWith("audio"))
+            {
+                MediaType = MediaType.Audio;
+            }
         }
+    }
+
+    public enum MediaType
+    {
+        Unknown,
+        Audio,
+        Video,
+        Network
     }
 }
