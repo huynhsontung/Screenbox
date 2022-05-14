@@ -327,4 +327,11 @@ namespace Screenbox.ViewModels
             PreviousCommand.NotifyCanExecuteChanged();
         }
     }
+
+    public enum RepeatMode
+    {
+        Off,
+        All,
+        One
+    }
 }
