@@ -1,16 +1,17 @@
 ﻿#nullable enable
 
+using Screenbox.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Windows.ApplicationModel.Core;
-using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Services;
-using Screenbox.ViewModels;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
 {
@@ -18,28 +19,46 @@ namespace Screenbox.Pages
     {
         private PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
-        private StorageFile? _pickedFile;
-        private readonly IFilesService _filesService;
+        private readonly Dictionary<string, Type> _pages;
 
         public MainPage()
         {
-            _filesService = App.Services.GetRequiredService<IFilesService>();
             InitializeComponent();
             Loaded += MainPage_Loaded;
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+
+            _pages = new()
+            {
+                { "home", typeof(HomePage) },
+                { "videos", typeof(VideosPage) },
+                { "settings", typeof(SettingsPage) }
+            };
         }
 
-        public void SetTitleBar()
+        private void SetTitleBar()
         {
-            Window.Current.SetTitleBar(AppTitleBar);
+            Window.Current.SetTitleBar(TitleBarElement);
         }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
+        private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             SetTitleBar();
-            var videos = await _filesService.LoadVideosFromLibraryAsync();
-            Videos.ItemsSource = videos;
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+            Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
+            NavView.SelectedItem = NavView.MenuItems[0];
+        }
+
+        private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.PlayerHidden) && ViewModel.PlayerHidden)
+            {
+                SetTitleBar();
+            }
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -49,25 +68,95 @@ namespace Screenbox.Pages
             RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
         }
 
-        private void OpenButtonClick(object sender, RoutedEventArgs e)
+        private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(UrlBox.Text))
-                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(UrlBox.Text));
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        private async void PickFileButtonClick(object sender, RoutedEventArgs e)
+        private void NavView_SelectionChanged(muxc.NavigationView sender, muxc.NavigationViewSelectionChangedEventArgs args)
         {
-            _pickedFile = await _filesService.PickFileAsync();
-            
-            if (_pickedFile != null)
-                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(_pickedFile));
-        }
-
-        private void VideosItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem is MediaViewModel item)
+            if (args.IsSettingsSelected)
             {
-                WeakReferenceMessenger.Default.Send(new PlayMediaMessage(item));
+                NavView_Navigate("settings", args.RecommendedNavigationTransitionInfo);
+            }
+            else if (args.SelectedItemContainer != null)
+            {
+                var navItemTag = args.SelectedItemContainer.Tag.ToString();
+                NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+            }
+        }
+
+        private void NavView_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
+        {
+            Type pageType = navItemTag == "settings" ? typeof(SettingsPage) : _pages.GetValueOrDefault(navItemTag);
+            // Get the page type before navigation so you can prevent duplicate
+            // entries in the backstack.
+            Type? preNavPageType = ContentFrame.CurrentSourcePageType;
+
+            // Only navigate if the selected page isn't currently loaded.
+            if (!(pageType is null) && !Type.Equals(preNavPageType, pageType))
+            {
+                ContentFrame.Navigate(pageType, null, transitionInfo);
+            }
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = TryGoBack();
+            }
+        }
+
+        private void NavView_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)
+        {
+            TryGoBack();
+        }
+
+        private void CoreWindow_PointerPressed(CoreWindow sender, PointerEventArgs e)
+        {
+            // Handle mouse back button.
+            if (e.CurrentPoint.Properties.IsXButton1Pressed)
+            {
+                e.Handled = TryGoBack();
+            }
+        }
+
+        private bool TryGoBack()
+        {
+            if (!ContentFrame.CanGoBack)
+                return false;
+
+            // Don't go back if the nav pane is overlayed.
+            if (NavView.IsPaneOpen &&
+                (NavView.DisplayMode == muxc.NavigationViewDisplayMode.Compact ||
+                 NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
+                return false;
+
+            ContentFrame.GoBack();
+            return true;
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            NavView.IsBackEnabled = ContentFrame.CanGoBack;
+
+            if (ContentFrame.SourcePageType == typeof(SettingsPage))
+            {
+                // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
+                NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
+                NavView.Header = "Settings";
+            }
+            else if (ContentFrame.SourcePageType != null)
+            {
+                var item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
+
+                NavView.SelectedItem = NavView.MenuItems
+                    .OfType<muxc.NavigationViewItem>()
+                    .First(n => n.Tag.Equals(item.Key));
+
+                NavView.Header =
+                    ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
         }
     }

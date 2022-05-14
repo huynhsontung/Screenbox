@@ -9,26 +9,23 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:viewmodels="using:Screenbox.ViewModels"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="Transparent"
     mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
-            <Style BasedOn="{StaticResource DefaultButtonStyle}" TargetType="Button" />
+            <Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
         <Grid
             x:Name="AppTitleBar"
-            Grid.Row="0"
-            Background="Transparent">
+            Height="46"
+            Margin="60,0,0,0"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            Canvas.ZIndex="1">
             <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
             <!--
                 Using padding columns instead of Margin ensures that the background
@@ -36,9 +33,14 @@
             -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                <ColumnDefinition />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
+            <Border
+                x:Name="TitleBarElement"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Background="Transparent" />
             <Image
                 Grid.Column="1"
                 Width="18"
@@ -46,109 +48,68 @@
                 Margin="18,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                IsHitTestVisible="False"
                 Source="ms-appx:///Assets/StoreLogo.png" />
             <TextBlock
                 x:Name="AppTitleTextBlock"
                 Grid.Column="1"
                 Margin="54,0,0,0"
                 VerticalAlignment="Center"
+                IsHitTestVisible="False"
                 Style="{StaticResource CaptionTextBlockStyle}"
                 Text="Screenbox" />
+
+            <Button
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                ToolTipService.ToolTip="Restore video view">
+                <muxc:AnimatedIcon Width="20">
+                    <muxc:AnimatedIcon.Source>
+                        <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
+                    </muxc:AnimatedIcon.Source>
+                    <muxc:AnimatedIcon.FallbackIconSource>
+                        <muxc:SymbolIconSource Symbol="Up" />
+                    </muxc:AnimatedIcon.FallbackIconSource>
+                </muxc:AnimatedIcon>
+
+                <interactivity:Interaction.Behaviors>
+                    <core:EventTriggerBehavior EventName="Click">
+                        <core:ChangePropertyAction
+                            PropertyName="PlayerHidden"
+                            TargetObject="{x:Bind ViewModel}"
+                            Value="False" />
+                    </core:EventTriggerBehavior>
+                </interactivity:Interaction.Behaviors>
+            </Button>
         </Grid>
 
-        <StackPanel
-            Grid.Row="1"
-            Padding="15,10,10,10"
-            Spacing="5">
+        <muxc:NavigationView
+            x:Name="NavView"
+            BackRequested="NavView_BackRequested"
+            Canvas.ZIndex="0"
+            IsTitleBarAutoPaddingEnabled="False"
+            SelectionChanged="NavView_SelectionChanged">
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem
+                    Content="Home"
+                    Icon="Home"
+                    Tag="home" />
+                <muxc:NavigationViewItem Content="Videos" Tag="videos">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xe8b2;" />
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem
+                    Content="Music"
+                    Icon="Audio"
+                    Tag="music" />
+            </muxc:NavigationView.MenuItems>
 
-            <TextBlock Margin="0,10,0,0" Text="Video library" />
-
-            <StackPanel
-                Margin="0,-32,0,0"
-                HorizontalAlignment="Right"
-                Orientation="Horizontal"
-                Spacing="6">
-                <Button HorizontalAlignment="Right" ToolTipService.ToolTip="Restore video view">
-                    <muxc:AnimatedIcon Width="20">
-                        <muxc:AnimatedIcon.Source>
-                            <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
-                        </muxc:AnimatedIcon.Source>
-                        <muxc:AnimatedIcon.FallbackIconSource>
-                            <muxc:SymbolIconSource Symbol="Up" />
-                        </muxc:AnimatedIcon.FallbackIconSource>
-                    </muxc:AnimatedIcon>
-
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:ChangePropertyAction
-                                PropertyName="PlayerHidden"
-                                TargetObject="{x:Bind ViewModel}"
-                                Value="False" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </Button>
-
-                <Button
-                    HorizontalAlignment="Right"
-                    Click="PickFileButtonClick"
-                    Content="Pick file" />
-
-                <Button HorizontalAlignment="Right" Content="Open from URL">
-                    <Button.Flyout>
-                        <Flyout>
-                            <StackPanel Width="300" Spacing="5">
-                                <TextBox
-                                    x:Name="UrlBox"
-                                    Margin="0,5,0,0"
-                                    Header="URL to open" />
-
-                                <Button Click="OpenButtonClick" Content="Open" />
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-            </StackPanel>
-
-            <GridView
-                x:Name="Videos"
-                IsItemClickEnabled="True"
-                ItemClick="VideosItemClick"
-                SelectionMode="None">
-
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="viewmodels:MediaViewModel">
-                        <Grid
-                            Width="200"
-                            Height="180"
-                            Padding="5"
-                            Background="{StaticResource LayerFillColorDefaultBrush}"
-                            BorderBrush="{StaticResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Border
-                                Grid.Row="0"
-                                Margin="3"
-                                CornerRadius="3">
-                                <Image Source="{x:Bind Thumbnail}" />
-                            </Border>
-
-                            <TextBlock
-                                Grid.Row="1"
-                                Margin="0,5,0,0"
-                                Text="{x:Bind Title}" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Margin="0,3,0,0"
-                                Text="{x:Bind Location}" />
-                        </Grid>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
-        </StackPanel>
+            <Frame
+                x:Name="ContentFrame"
+                Padding="12,0,12,24"
+                Navigated="ContentFrame_Navigated"
+                NavigationFailed="ContentFrame_NavigationFailed" />
+        </muxc:NavigationView>
     </Grid>
 </Page>

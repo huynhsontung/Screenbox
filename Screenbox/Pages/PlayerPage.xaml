@@ -14,12 +14,12 @@
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
+    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
-    Background="Black"
     RequestedTheme="Dark"
     mc:Ignorable="d">
     <Page.Resources>
@@ -112,7 +112,10 @@
             </Frame.Content>
         </Frame>
 
-        <Grid x:Name="LayoutRoot" PointerMoved="{x:Bind ViewModel.OnPointerMoved}">
+        <Grid
+            x:Name="LayoutRoot"
+            Background="Black"
+            PointerMoved="{x:Bind ViewModel.OnPointerMoved}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -163,6 +166,9 @@
                         <muxc:AnimatedIcon.Source>
                             <animatedvisuals:AnimatedBackVisualSource />
                         </muxc:AnimatedIcon.Source>
+                        <muxc:AnimatedIcon.FallbackIconSource>
+                            <muxc:FontIconSource Glyph="&#xe70d;" />
+                        </muxc:AnimatedIcon.FallbackIconSource>
                     </muxc:AnimatedIcon>
                 </Button>
 
@@ -500,7 +506,6 @@
                 <core:GoToStateAction StateName="ControlsVisible" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="True">
-                <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind MainPage}" />
                 <core:GoToStateAction StateName="PlayerHidden" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">

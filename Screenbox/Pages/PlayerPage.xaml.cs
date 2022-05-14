@@ -38,6 +38,8 @@ namespace Screenbox.Pages
             SetTitleBar();
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
         }
