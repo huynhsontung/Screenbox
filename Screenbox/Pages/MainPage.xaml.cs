@@ -30,10 +30,11 @@ namespace Screenbox.Pages
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            _pages = new()
+            _pages = new Dictionary<string, Type>
             {
                 { "home", typeof(HomePage) },
                 { "videos", typeof(VideosPage) },
+                { "music", typeof(MusicPage) },
                 { "settings", typeof(SettingsPage) }
             };
         }
@@ -158,6 +159,35 @@ namespace Screenbox.Pages
                 NavView.Header =
                     ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
+        }
+
+        private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
+        {
+            switch (args.DisplayMode)
+            {
+                case muxc.NavigationViewDisplayMode.Minimal:
+                    VisualStateManager.GoToState(this, "Minimal", true);
+                    break;
+                case muxc.NavigationViewDisplayMode.Expanded when sender.IsPaneOpen:
+                    VisualStateManager.GoToState(this, "Expanded", true);
+                    break;
+                case muxc.NavigationViewDisplayMode.Expanded:
+                case muxc.NavigationViewDisplayMode.Compact:
+                    VisualStateManager.GoToState(this, "Compact", true);
+                    break;
+            }
+        }
+
+        private void NavView_OnPaneOpening(muxc.NavigationView sender, object args)
+        {
+            if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
+                VisualStateManager.GoToState(this, "Expanded", true);
+        }
+
+        private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
+        {
+            if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
+                VisualStateManager.GoToState(this, "Compact", true);
         }
     }
 }

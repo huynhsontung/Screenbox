@@ -22,9 +22,7 @@
         <Grid
             x:Name="AppTitleBar"
             Height="46"
-            Margin="60,0,0,0"
             VerticalAlignment="Top"
-            Background="Transparent"
             Canvas.ZIndex="1">
             <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
             <!--
@@ -36,28 +34,33 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
+
             <Border
                 x:Name="TitleBarElement"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
+                Margin="44,0,0,0"
                 Background="Transparent" />
-            <Image
+
+            <StackPanel
+                x:Name="AppTitle"
                 Grid.Column="1"
-                Width="18"
-                Height="18"
-                Margin="18,0,0,0"
-                HorizontalAlignment="Left"
+                Margin="58,0,0,0"
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
-                Source="ms-appx:///Assets/StoreLogo.png" />
-            <TextBlock
-                x:Name="AppTitleTextBlock"
-                Grid.Column="1"
-                Margin="54,0,0,0"
-                VerticalAlignment="Center"
-                IsHitTestVisible="False"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                Text="Screenbox" />
+                Orientation="Horizontal">
+                <Image
+                    Width="18"
+                    Height="18"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Source="ms-appx:///Assets/StoreLogo.png" />
+                <TextBlock
+                    Margin="12,0,0,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="Screenbox" />
+            </StackPanel>
 
             <Button
                 Grid.Column="1"
@@ -87,7 +90,10 @@
             x:Name="NavView"
             BackRequested="NavView_BackRequested"
             Canvas.ZIndex="0"
+            DisplayModeChanged="NavView_OnDisplayModeChanged"
             IsTitleBarAutoPaddingEnabled="False"
+            PaneClosing="NavView_OnPaneClosing"
+            PaneOpening="NavView_OnPaneOpening"
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
@@ -111,5 +117,22 @@
                 Navigated="ContentFrame_Navigated"
                 NavigationFailed="ContentFrame_NavigationFailed" />
         </muxc:NavigationView>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="TitleBarMarginStates">
+                <VisualState x:Name="Expanded" />
+                <VisualState x:Name="Compact">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitle.Margin" Value="74,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Minimal">
+                    <VisualState.Setters>
+                        <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
+                        <Setter Target="AppTitle.Margin" Value="98,0,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
