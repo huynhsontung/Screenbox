@@ -4,7 +4,6 @@ using Screenbox.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -35,6 +34,7 @@ namespace Screenbox.Pages
                 { "home", typeof(HomePage) },
                 { "videos", typeof(VideosPage) },
                 { "music", typeof(MusicPage) },
+                { "queue", typeof(PlayQueuePage) },
                 { "settings", typeof(SettingsPage) }
             };
         }
@@ -150,14 +150,7 @@ namespace Screenbox.Pages
             }
             else if (ContentFrame.SourcePageType != null)
             {
-                var item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
-
-                NavView.SelectedItem = NavView.MenuItems
-                    .OfType<muxc.NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Key));
-
-                NavView.Header =
-                    ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
+                NavView.Header = ((muxc.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
             }
         }
 

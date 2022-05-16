@@ -109,7 +109,15 @@
                     Content="Music"
                     Icon="Audio"
                     Tag="music" />
+                <muxc:NavigationViewItemSeparator />
+                <muxc:NavigationViewItem
+                    Content="Play queue"
+                    Icon="MusicInfo"
+                    Tag="queue" />
             </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.AutoSuggestBox>
+                <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" />
+            </muxc:NavigationView.AutoSuggestBox>
 
             <Frame
                 x:Name="ContentFrame"
