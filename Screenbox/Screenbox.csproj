@@ -183,6 +183,7 @@
     <Compile Include="Pages\MusicPage.xaml.cs">
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ContentPage.cs" />
     <Compile Include="Pages\PlayQueuePage.xaml.cs">
       <DependentUpon>PlayQueuePage.xaml</DependentUpon>
     </Compile>
