@@ -452,6 +452,7 @@
                         IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}">
                         <ToggleButton.KeyboardAccelerators>
                             <KeyboardAccelerator Key="F" />
+                            <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                         </ToggleButton.KeyboardAccelerators>
                         <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE1D9;" />
                     </ToggleButton>
