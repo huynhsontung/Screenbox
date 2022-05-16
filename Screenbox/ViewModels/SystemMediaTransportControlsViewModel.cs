@@ -164,18 +164,14 @@ namespace Screenbox.ViewModels
                             displayUpdater.VideoProperties.Title = item.Title ?? string.Empty;
                         }
                         break;
-                    case MediaType.Unknown:
-                    case MediaType.Network:
-                    default:
-                        await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Unknown, file);
-                        break;
                 }
             }
-            else
+            
+            // DisplayUpdater can only have type of Video, Audio, or Image
+            if (displayUpdater.Type == MediaPlaybackType.Unknown)
             {
+                displayUpdater.Type = MediaPlaybackType.Video;
                 displayUpdater.VideoProperties.Title = item.Title;
-                displayUpdater.MusicProperties.Title = item.Title;
-                displayUpdater.Type = MediaPlaybackType.Unknown;
             }
 
             displayUpdater.Update();
