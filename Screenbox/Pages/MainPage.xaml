@@ -14,7 +14,9 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>
+            <!--<Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>-->
+            <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
+            <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -121,7 +123,7 @@
 
             <Frame
                 x:Name="ContentFrame"
-                Padding="12,0,12,24"
+                Padding="56,12,36,24"
                 Navigated="ContentFrame_Navigated"
                 NavigationFailed="ContentFrame_NavigationFailed" />
         </muxc:NavigationView>
@@ -138,6 +140,7 @@
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="98,0,0,0" />
+                        <Setter Target="ContentFrame.Padding" Value="12,12,12,24" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
