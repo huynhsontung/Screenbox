@@ -46,6 +46,7 @@ namespace Screenbox.ViewModels
             _bufferingTimer = _dispatcherQueue.CreateTimer();
 
             _mediaPlayerService.LengthChanged += OnLengthChanged;
+            _mediaPlayerService.Stopped += OnStopped;
             _mediaPlayerService.TimeChanged += OnTimeChanged;
             _mediaPlayerService.SeekableChanged += OnSeekableChanged;
             _mediaPlayerService.EndReached += OnEndReached;
@@ -144,6 +145,17 @@ namespace Screenbox.ViewModels
             {
                 _dispatcherQueue.TryEnqueue(() => Time = VlcPlayer.Length);
             }
+        }
+
+        private void OnStopped(object sender, EventArgs e)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsSeekable = false;
+                Time = 0;
+                Length = 0;
+            });
         }
     }
 }

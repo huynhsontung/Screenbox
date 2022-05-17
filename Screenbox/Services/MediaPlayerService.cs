@@ -133,7 +133,7 @@ namespace Screenbox.Services
 
         public long SetTime(double time)
         {
-            if (VlcPlayer == null) return -1;
+            if (VlcPlayer == null || VlcPlayer.Length < 0) return -1;
             time = Math.Clamp(time, 0, VlcPlayer.Length);
             if (VlcPlayer.State == VLCState.Ended)
             {

@@ -32,7 +32,8 @@
             IsHitTestVisible="False"
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
-            MediaPlayer="{x:Bind ViewModel.VlcPlayer}">
+            MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
+            Opacity="{x:Bind ViewModel.ViewOpacity, Mode=OneWay}">
             <lvs:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Left"

@@ -26,6 +26,8 @@ namespace Screenbox.ViewModels
 
         private LibVLC? LibVlc => _mediaPlayerService.LibVlc;
 
+        [ObservableProperty] private double _viewOpacity;
+        
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IWindowService _windowService;
         private readonly INotificationService _notificationService;
@@ -37,6 +39,8 @@ namespace Screenbox.ViewModels
             INotificationService notificationService)
         {
             _mediaPlayerService = mediaPlayerService;
+            _mediaPlayerService.Stopped += OnStopped;
+            _mediaPlayerService.Playing += OnPlaying;
             _mediaPlayerService.MediaChanged += OnMediaChanged;
             _windowService = windowService;
             _notificationService = notificationService;
@@ -183,6 +187,16 @@ namespace Screenbox.ViewModels
             }
 
             _mediaPlayerService.Pause();
+        }
+
+        private void OnPlaying(object sender, EventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() => ViewOpacity = 1.0);
+        }
+
+        private void OnStopped(object sender, EventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() => ViewOpacity = 0.0);
         }
 
         private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
