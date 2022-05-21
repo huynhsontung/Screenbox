@@ -10,12 +10,12 @@
     mc:Ignorable="d">
 
     <local:ContentPage.Header>
-        <Grid>
+        <Grid Margin="0,0,40,0">
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="Play queue" />
-            <muxc:SplitButton Margin="0,0,40,0" HorizontalAlignment="Right">
+            <muxc:SplitButton HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8da;" />
                     <TextBlock Text="Open file(s)" />

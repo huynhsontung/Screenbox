@@ -19,7 +19,7 @@ namespace Screenbox.ViewModels
     {
         [ObservableProperty] private string _urlText;
 
-        public List<MediaViewModel> Videos { get; private set; }
+        [ObservableProperty] private List<MediaViewModel> _videos;
 
         private readonly IFilesService _filesService;
 
@@ -27,12 +27,12 @@ namespace Screenbox.ViewModels
         {
             _filesService = filesService;
             _urlText = string.Empty;
-            Videos = new(0);
+            _videos = new List<MediaViewModel>(0);
         }
 
         public async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            var videos = await _filesService.LoadVideosFromLibraryAsync();
+            List<MediaViewModel> videos = await _filesService.LoadVideosFromLibraryAsync();
             Videos = videos;
         }
 
