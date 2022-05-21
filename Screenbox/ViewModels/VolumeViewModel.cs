@@ -32,6 +32,7 @@ namespace Screenbox.ViewModels
             get => _volume;
             set
             {
+                if (value < 0) return;
                 int intVal = Math.Clamp(value, 0, 100);
                 SetProperty(ref _volume, value);
                 if (_mediaPlayerService.Volume != intVal)
@@ -90,7 +91,7 @@ namespace Screenbox.ViewModels
 
         private void OnVolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            if (e.Volume < 0) return;
             _dispatcherQueue.TryEnqueue(() =>
             {
                 if (_mediaChangedVolumeOverride)
@@ -100,7 +101,7 @@ namespace Screenbox.ViewModels
                 }
                 else
                 {
-                    Volume = _mediaPlayerService.Volume;
+                    Volume = (int)e.Volume;
                     Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
                 }
             });

@@ -99,7 +99,7 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.EndReached += OnStateChanged;
             _mediaPlayerService.Playing += OnStateChanged;
             _mediaPlayerService.Paused += OnStateChanged;
-            _mediaPlayerService.Stopped += OnStateChanged;
+            _mediaPlayerService.Stopped += OnStopped;
             _mediaPlayerService.EncounteredError += OnStateChanged;
             _mediaPlayerService.Opening += OnOpening;
             PropertyChanged += OnPropertyChanged;
@@ -352,6 +352,12 @@ namespace Screenbox.ViewModels
                     MediaTitle = _mediaPlayerService.CurrentMedia.Title;
                 });
             }
+        }
+
+        private void OnStopped(object sender, EventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() => MediaTitle = string.Empty);
+            UpdateState();
         }
 
         private void UpdateState()
