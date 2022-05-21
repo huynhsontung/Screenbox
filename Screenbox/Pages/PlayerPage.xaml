@@ -179,11 +179,12 @@
                     ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                     <SymbolIcon Symbol="MusicInfo" />
                     <Button.Flyout>
-                        <Flyout Placement="BottomEdgeAlignedLeft" ShouldConstrainToRootBounds="False">
+                        <Flyout Placement="BottomEdgeAlignedLeft">
                             <controls:PlaylistView
                                 Width="420"
                                 MinHeight="200"
-                                MaxHeight="500" />
+                                MaxHeight="500"
+                                IsFlyout="True" />
                         </Flyout>
                     </Button.Flyout>
                 </Button>

@@ -7,39 +7,45 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:viewModels="using:Screenbox.ViewModels"
     x:Name="Control"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.Resources>
+            <ThemeShadow x:Name="SharedShadow" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
 
         <StackPanel
             x:Name="ActionButtonRow"
             Grid.Row="0"
-            Grid.Column="0"
             Height="48"
-            Orientation="Horizontal"
-            Spacing="12">
-            <Button VerticalAlignment="Center">
+            HorizontalAlignment="Left"
+            Orientation="Horizontal">
+            <Button
+                Margin="0,0,12,0"
+                VerticalAlignment="Center"
+                Command="{x:Bind ViewModel.ClearCommand}"
+                IsEnabled="{x:Bind ViewModel.Playlist.Count, Converter={StaticResource ObjectToBooleanConverter}, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe74d;" />
                     <TextBlock Text="Clear" />
                 </StackPanel>
             </Button>
 
-            <ToggleButton VerticalAlignment="Center" IsChecked="{x:Bind ViewModel.MultipleSelect, Mode=TwoWay}">
+            <ToggleButton
+                x:Name="MultiSelectToggle"
+                VerticalAlignment="Center"
+                IsEnabled="{x:Bind ViewModel.Playlist.Count, Converter={StaticResource ObjectToBooleanConverter}, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe762;" />
                     <TextBlock Text="Multi-select" />
@@ -47,67 +53,120 @@
             </ToggleButton>
         </StackPanel>
 
-        <CommandBar
+        <Border
             x:Name="SelectionCommandRow"
             Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            VerticalContentAlignment="Center"
-            DefaultLabelPosition="Right"
-            IsDynamicOverflowEnabled="False"
+            Background="{StaticResource AcrylicInAppFillColorDefaultBrush}"
+            BorderBrush="{StaticResource CardStrokeColorDefaultSolidBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Shadow="{StaticResource SharedShadow}"
+            Translation="0,0,32"
             Visibility="Collapsed">
-            <AppBarButton Icon="Upload" Label="Play next" />
-            <AppBarButton Icon="Clear" Label="Remove">
-                <AppBarButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="Delete" />
-                </AppBarButton.KeyboardAccelerators>
-            </AppBarButton>
-            <CommandBar.Content>
-                <StackPanel Margin="8,0" Orientation="Horizontal">
-                    <CheckBox VerticalAlignment="Center" Content="0 items selected" />
-                    <TextBlock
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Center"
-                        Text="•" />
-                    <HyperlinkButton
-                        Padding="6,5,6,6"
-                        VerticalAlignment="Center"
-                        Content="Clear">
-                        <interactivity:Interaction.Behaviors>
-                            <core:EventTriggerBehavior EventName="Click">
-                                <core:ChangePropertyAction
-                                    PropertyName="MultipleSelect"
-                                    TargetObject="{x:Bind ViewModel}"
-                                    Value="False" />
-                                <core:ChangePropertyAction
-                                    PropertyName="SelectedItem"
-                                    TargetObject="{x:Bind PlaylistListView}"
-                                    Value="{x:Null}" />
-                            </core:EventTriggerBehavior>
-                        </interactivity:Interaction.Behaviors>
-                    </HyperlinkButton>
-                </StackPanel>
-            </CommandBar.Content>
-        </CommandBar>
+            <CommandBar
+                VerticalContentAlignment="Center"
+                DefaultLabelPosition="Right"
+                IsDynamicOverflowEnabled="False"
+                SizeChanged="CommandBar_OnSizeChanged">
+                <AppBarButton
+                    x:Name="PlayNextButton"
+                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Label="{x:Bind strings:Resources.PlayNext}">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xf8ad;" />
+                    </AppBarButton.Icon>
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Click">
+                            <core:ChangePropertyAction
+                                PropertyName="SelectedItem"
+                                TargetObject="{x:Bind PlaylistListView}"
+                                Value="{x:Null}" />
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                </AppBarButton>
+                <AppBarButton
+                    x:Name="RemoveSelectedButton"
+                    Command="{x:Bind ViewModel.RemoveSelectedCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Icon="Delete"
+                    Label="{x:Bind strings:Resources.Remove}">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Delete" />
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton
+                    x:Name="MoveUpButton"
+                    Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Label="{x:Bind strings:Resources.MoveUp}"
+                    Visibility="Collapsed">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xe74a;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    x:Name="MoveDownButton"
+                    Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Label="{x:Bind strings:Resources.MoveDown}"
+                    Visibility="Collapsed">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xe74b;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Width="40"
+                    Click="ClearSelection_OnClick"
+                    Icon="Clear"
+                    Label="{x:Bind strings:Resources.ClearSelection}"
+                    LabelPosition="Collapsed" />
+                <CommandBar.Content>
+                    <StackPanel Margin="8,0" Orientation="Horizontal">
+                        <CheckBox
+                            x:Name="SelectionCheckBox"
+                            VerticalAlignment="Center"
+                            Click="SelectionCheckBox_OnClick"
+                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}" />
+                    </StackPanel>
+                </CommandBar.Content>
+            </CommandBar>
+        </Border>
 
         <ListView
             x:Name="PlaylistListView"
             Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
             Margin="0,8,0,0"
             AllowDrop="True"
             CanDragItems="True"
             CanReorderItems="True"
             ContainerContentChanging="PlaylistListView_OnContainerContentChanging"
+            DragOver="{x:Bind ViewModel.OnDragOver}"
+            Drop="{x:Bind ViewModel.OnDrop}"
             ItemsSource="{x:Bind ViewModel.Playlist}"
+            SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <UserControl>
                         <Grid Padding="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <FontIcon
+                                x:Name="IsPlayingIcon"
+                                Grid.Column="0"
+                                FontFamily="ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons"
+                                FontSize="16"
+                                Glyph="A"
+                                ToolTipService.ToolTip="{x:Bind strings:Resources.IsPlaying}"
+                                Visibility="Collapsed" />
+
                             <FontIcon
                                 x:Name="ItemIcon"
+                                Grid.Column="1"
                                 Margin="8"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
@@ -117,6 +176,7 @@
 
                             <Button
                                 x:Name="PlayButton"
+                                Grid.Column="1"
                                 Padding="8"
                                 Background="Transparent"
                                 BorderThickness="0"
@@ -132,7 +192,8 @@
 
                             <TextBlock
                                 x:Name="TitleText"
-                                Margin="38,0,0,0"
+                                Grid.Column="2"
+                                Margin="12,0,0,0"
                                 VerticalAlignment="Center"
                                 Text="{x:Bind Title}" />
 
@@ -146,6 +207,8 @@
                                         <VisualState.Setters>
                                             <Setter Target="ItemIcon.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
                                             <Setter Target="TitleText.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
+                                            <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
+                                            <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
@@ -166,17 +229,61 @@
             </ListView.ItemTemplate>
         </ListView>
 
+        <interactivity:Interaction.Behaviors>
+            <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="True">
+                <core:GoToStateAction StateName="Multiple" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+            <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="False">
+                <core:GoToStateAction StateName="Extended" TargetObject="{x:Bind}" />
+            </core:DataTriggerBehavior>
+        </interactivity:Interaction.Behaviors>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SelectionModes">
                 <VisualState x:Name="Extended" />
                 <VisualState x:Name="Multiple">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.MultipleSelect, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
                         <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MultipleSingleSelected">
+                    <VisualState.Setters>
+                        <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
+                        <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
+                        <Setter Target="MoveUpButton.Visibility" Value="Visible" />
+                        <Setter Target="MoveDownButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="LayoutGroup">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="Compact">
+                    <VisualState.Setters>
+                        <Setter Target="MoveUpButton.Width" Value="40" />
+                        <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />
+                        <Setter Target="MoveDownButton.Width" Value="40" />
+                        <Setter Target="MoveDownButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="MoveDownButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveDown}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Minimal">
+                    <VisualState.Setters>
+                        <Setter Target="MoveUpButton.Width" Value="40" />
+                        <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />
+                        <Setter Target="MoveDownButton.Width" Value="40" />
+                        <Setter Target="MoveDownButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="MoveDownButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveDown}" />
+                        <Setter Target="RemoveSelectedButton.Width" Value="40" />
+                        <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="RemoveSelectedButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.Remove}" />
+                        <Setter Target="PlayNextButton.Width" Value="40" />
+                        <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.PlayNext}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

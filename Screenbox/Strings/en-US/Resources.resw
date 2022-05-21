@@ -203,4 +203,34 @@
   <data name="RepeatMode_Variant2" xml:space="preserve">
     <value>Repeat: One</value>
   </data>
+  <data name="ItemsSelected_One" xml:space="preserve">
+    <value>{0} item selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ItemsSelected_Other" xml:space="preserve">
+    <value>{0} items selected</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AddToQueue" xml:space="preserve">
+    <value>Add to queue</value>
+  </data>
+  <data name="ClearSelection" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="PlayNext" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Move down</value>
+  </data>
+  <data name="IsPlaying" xml:space="preserve">
+    <value>Is playing</value>
+    <comment>Tool tip on which item is currently playing</comment>
+  </data>
 </root>

@@ -7,9 +7,11 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
@@ -34,15 +36,17 @@ namespace Screenbox.ViewModels
         }
 
         public IRelayCommand NextCommand { get; }
-
         public IRelayCommand PreviousCommand { get; }
-
-
-        [ObservableProperty] private bool _multipleSelect;
+        public IRelayCommand PlayNextCommand { get; }
+        public IRelayCommand RemoveSelectedCommand { get; }
+        public IRelayCommand MoveSelectedItemUpCommand { get; }
+        public IRelayCommand MoveSelectedItemDownCommand { get; }
 
         [ObservableProperty] private bool _canSkip;
 
         [ObservableProperty] private RepeatMode _repeatMode;
+
+        [ObservableProperty] private int _selectionCount;
 
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
@@ -70,6 +74,10 @@ namespace Screenbox.ViewModels
 
             NextCommand = new AsyncRelayCommand(PlayNextAsync, CanPlayNext);
             PreviousCommand = new AsyncRelayCommand(PlayPreviousAsync, CanPlayPrevious);
+            PlayNextCommand = new RelayCommand<IList<object>>(PlayNext, HasSelection);
+            RemoveSelectedCommand = new RelayCommand<IList<object>>(RemoveSelected, HasSelection);
+            MoveSelectedItemUpCommand = new RelayCommand<IList<object>>(MoveSelectedItemUp, HasSelection);
+            MoveSelectedItemDownCommand = new RelayCommand<IList<object>>(MoveSelectedItemDown, HasSelection);
 
             PropertyChanged += OnPropertyChanged;
             Playlist.CollectionChanged += PlaylistOnCollectionChanged;
@@ -96,6 +104,28 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public void OnDragOver(object sender, DragEventArgs e)
+        {
+            if (e.Handled) return;
+            e.Handled = true;
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null)
+            {
+                e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
+            }
+        }
+
+        public async void OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Handled || !e.DataView.Contains(StandardDataFormats.StorageItems)) return;
+            e.Handled = true;
+            IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+            if (items?.Count > 0)
+            {
+                Enqueue(items);
+            }
+        }
+
         public void OnItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             ListViewItem item = (ListViewItem)sender;
@@ -104,6 +134,19 @@ namespace Screenbox.ViewModels
                 PlaySingle(selectedMedia);
             }
         }
+
+        public void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListViewBase listView = (ListViewBase)sender;
+            SelectionCount = listView.SelectedItems.Count;
+            
+            PlayNextCommand.NotifyCanExecuteChanged();
+            RemoveSelectedCommand.NotifyCanExecuteChanged();
+            MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
+            MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
+        }
+
+        private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -138,15 +181,6 @@ namespace Screenbox.ViewModels
                 {
                     Playlist.Add(new MediaViewModel(storageFile));
                 }
-            }
-        }
-
-        private void Dequeue(ICollection<MediaViewModel> list)
-        {
-            foreach (MediaViewModel item in list)
-            {
-                if (item == CurrentlyPlaying) continue;
-                Playlist.Remove(item);
             }
         }
 
@@ -211,6 +245,62 @@ namespace Screenbox.ViewModels
             // If playlist is updated after, CollectionChanged handler will update the index
             _currentIndex = Playlist.IndexOf(vm);
             CurrentlyPlaying = vm;
+        }
+
+        [ICommand]
+        private void Clear()
+        {
+            _mediaPlayerService.Stop();
+            CurrentlyPlaying = null;
+            Playlist.Clear();
+        }
+
+        private void RemoveSelected(IList<object>? selectedItems)
+        {
+            if (selectedItems == null) return;
+            List<object> copy = selectedItems.ToList();
+            foreach (MediaViewModel item in copy)
+            {
+                if (CurrentlyPlaying == item)
+                {
+                    _mediaPlayerService.Stop();
+                    CurrentlyPlaying = null;
+                }
+
+                Playlist.Remove(item);
+            }
+        }
+
+        private void PlayNext(IList<object>? selectedItems)
+        {
+            if (selectedItems == null) return;
+            List<object> reverse = selectedItems.Reverse().ToList();
+            foreach (MediaViewModel item in reverse)
+            {
+                Playlist.Insert(_currentIndex + 1, new MediaViewModel(item));
+            }
+        }
+
+        private void MoveSelectedItemUp(IList<object>? selectedItems)
+        {
+            if (selectedItems == null || selectedItems.Count != 1) return;
+            MediaViewModel item = (MediaViewModel)selectedItems[0];
+            int index = Playlist.IndexOf(item);
+            if (index <= 0) return;
+            Playlist.RemoveAt(index);
+            Playlist.Insert(index - 1, item);
+            selectedItems.Add(item);
+        }
+
+        private void MoveSelectedItemDown(IList<object>? selectedItems)
+        {
+            if (selectedItems == null || selectedItems.Count != 1) return;
+            MediaViewModel item = (MediaViewModel)selectedItems[0];
+            int index = Playlist.IndexOf(item);
+            if (index == -1 || index >= Playlist.Count - 1) return;
+            Playlist.RemoveAt(index);
+            Playlist.Insert(index + 1, item);
+            selectedItems.Add(item);
         }
 
         private bool CanPlayNext()

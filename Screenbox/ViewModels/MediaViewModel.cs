@@ -23,6 +23,16 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private bool _isPlaying;
 
+        public MediaViewModel(MediaViewModel source)
+        {
+            Title = source.Title;
+            Thumbnail = source.Thumbnail;
+            Location = source.Location;
+            Duration = source.Duration;
+            Source = source.Source;
+            MediaType = source.MediaType;
+        }
+
         public MediaViewModel(object source)
         {
             Source = source;

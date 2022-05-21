@@ -14,7 +14,7 @@ namespace Screenbox.Converters
                 return Invert ? !b : b;
             }
 
-            var result = value is string s ? !string.IsNullOrEmpty(s) : value != null;
+            bool result = value is string s ? !string.IsNullOrEmpty(s) : System.Convert.ToBoolean(value);
 
             return Invert ? !result : result;
         }

@@ -116,6 +116,16 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region ItemsSelected
+        /// <summary>
+        ///   Get the pluralized version of the string similar to: {0} item selected
+        /// </summary>
+        public static string ItemsSelected(int pluralCount)
+        {
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "ItemsSelected", (double)pluralCount, false), pluralCount);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -356,6 +366,97 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region AddToQueue
+        /// <summary>
+        ///   Looks up a localized string similar to: Add to queue
+        /// </summary>
+        public static string AddToQueue
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToQueue");
+            }
+        }
+        #endregion
+
+        #region ClearSelection
+        /// <summary>
+        ///   Looks up a localized string similar to: Clear selection
+        /// </summary>
+        public static string ClearSelection
+        {
+            get
+            {
+                return _resourceLoader.GetString("ClearSelection");
+            }
+        }
+        #endregion
+
+        #region Remove
+        /// <summary>
+        ///   Looks up a localized string similar to: Remove
+        /// </summary>
+        public static string Remove
+        {
+            get
+            {
+                return _resourceLoader.GetString("Remove");
+            }
+        }
+        #endregion
+
+        #region PlayNext
+        /// <summary>
+        ///   Looks up a localized string similar to: Play next
+        /// </summary>
+        public static string PlayNext
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlayNext");
+            }
+        }
+        #endregion
+
+        #region MoveUp
+        /// <summary>
+        ///   Looks up a localized string similar to: Move up
+        /// </summary>
+        public static string MoveUp
+        {
+            get
+            {
+                return _resourceLoader.GetString("MoveUp");
+            }
+        }
+        #endregion
+
+        #region MoveDown
+        /// <summary>
+        ///   Looks up a localized string similar to: Move down
+        /// </summary>
+        public static string MoveDown
+        {
+            get
+            {
+                return _resourceLoader.GetString("MoveDown");
+            }
+        }
+        #endregion
+
+        #region IsPlaying
+        /// <summary>
+        ///   Looks up a localized string similar to: Is playing
+        /// </summary>
+        public static string IsPlaying
+        {
+            get
+            {
+                return _resourceLoader.GetString("IsPlaying");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -371,6 +472,7 @@ namespace Screenbox.Strings{
             FullscreenToggle,
             PlayPauseToggle,
             RepeatMode,
+            ItemsSelected,
             ZoomToFit,
             FrameSavedNotificationTitle,
             PictureInPicture,
@@ -390,6 +492,13 @@ namespace Screenbox.Strings{
             Previous,
             More,
             PlayQueue,
+            AddToQueue,
+            ClearSelection,
+            Remove,
+            PlayNext,
+            MoveUp,
+            MoveDown,
+            IsPlaying,
         }
 
         private static ResourceLoader _resourceLoader;
