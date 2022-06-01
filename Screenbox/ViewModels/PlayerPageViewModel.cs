@@ -349,7 +349,8 @@ namespace Screenbox.ViewModels
                 _dispatcherQueue.TryEnqueue(() =>
                 {
                     PlayerHidden = false;
-                    MediaTitle = _mediaPlayerService.CurrentMedia.Title;
+                    MediaViewModel? current = Messenger.Send<PlayingItemRequestMessage>().Response;
+                    MediaTitle = current?.Name ?? string.Empty;
                 });
             }
         }

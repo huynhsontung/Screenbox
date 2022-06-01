@@ -19,7 +19,7 @@
             <TextBlock
                 Grid.Column="0"
                 Style="{StaticResource TitleTextBlockStyle}"
-                Text="Videos" />
+                Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
 
             <Button
                 Grid.Column="1"
@@ -48,47 +48,5 @@
         </Grid>
     </local:ContentPage.Header>
 
-    <Grid>
-        <GridView
-            IsItemClickEnabled="True"
-            ItemClick="{x:Bind ViewModel.VideosItemClick}"
-            ItemsSource="{x:Bind ViewModel.Videos, Mode=OneWay}"
-            Loaded="{x:Bind ViewModel.OnLoaded}"
-            SelectionMode="None">
-
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="viewmodels:MediaViewModel">
-                    <Grid
-                        Width="200"
-                        Height="180"
-                        Padding="5"
-                        Background="{StaticResource LayerFillColorDefaultBrush}"
-                        BorderBrush="{StaticResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Border
-                            Grid.Row="0"
-                            Margin="3"
-                            CornerRadius="3">
-                            <Image Source="{x:Bind Thumbnail}" />
-                        </Border>
-
-                        <TextBlock
-                            Grid.Row="1"
-                            Margin="0,5,0,0"
-                            Text="{x:Bind Title}" />
-                        <TextBlock
-                            Grid.Row="2"
-                            Margin="0,3,0,0"
-                            Text="{x:Bind Location}" />
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-    </Grid>
+    <Frame x:Name="FolderViewFrame" />
 </local:ContentPage>

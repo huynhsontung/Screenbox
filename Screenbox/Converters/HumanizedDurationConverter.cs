@@ -7,15 +7,20 @@ namespace Screenbox.Converters
     {
         public static string Convert(double value)
         {
-            var negative = value < 0;
-            value = Math.Abs(value);
-            var hours = (long)(value / 3.6e+6);
-            var duration = TimeSpan.FromMilliseconds(value);
-            return (negative ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
+            TimeSpan duration = TimeSpan.FromMilliseconds(value);
+            return Convert(duration);
+        }
+
+        public static string Convert(TimeSpan duration)
+        {
+            int hours = (int)duration.TotalHours;
+            return (duration < TimeSpan.Zero ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
         }
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (value is TimeSpan duration)
+                return Convert(duration);
             return Convert(System.Convert.ToDouble(value));
         }
 

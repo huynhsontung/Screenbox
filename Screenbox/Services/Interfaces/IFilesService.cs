@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.UI.Xaml.Media.Imaging;
 using LibVLCSharp.Shared;
 using Screenbox.ViewModels;
 
@@ -15,10 +16,10 @@ namespace Screenbox.Services
         public Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file);
         public Task<StorageFile?> GetNextFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
-
         public Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
-        public Task<List<MediaViewModel>> LoadVideosFromLibraryAsync();
+        public Task<BitmapImage?> GetThumbnailAsync(StorageFile file);
+        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder);
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer);
     }

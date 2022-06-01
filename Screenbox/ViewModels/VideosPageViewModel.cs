@@ -6,10 +6,12 @@ using Screenbox.Core.Messages;
 using Screenbox.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -19,7 +21,9 @@ namespace Screenbox.ViewModels
     {
         [ObservableProperty] private string _urlText;
 
-        [ObservableProperty] private List<MediaViewModel> _videos;
+        [ObservableProperty] private string _titleText;
+
+        [ObservableProperty] private bool _canGoBack;
 
         private readonly IFilesService _filesService;
 
@@ -27,13 +31,7 @@ namespace Screenbox.ViewModels
         {
             _filesService = filesService;
             _urlText = string.Empty;
-            _videos = new List<MediaViewModel>(0);
-        }
-
-        public async void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            List<MediaViewModel> videos = await _filesService.LoadVideosFromLibraryAsync();
-            Videos = videos;
+            _titleText = Strings.Resources.Videos;
         }
 
         public void OpenButtonClick(object sender, RoutedEventArgs e)
@@ -48,14 +46,6 @@ namespace Screenbox.ViewModels
 
             if (pickedFile != null)
                 Messenger.Send(new PlayMediaMessage(pickedFile));
-        }
-
-        public void VideosItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem is MediaViewModel item)
-            {
-                Messenger.Send(new PlayMediaMessage(item));
-            }
         }
     }
 }

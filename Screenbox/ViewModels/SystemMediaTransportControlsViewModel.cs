@@ -72,8 +72,8 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(_playlistViewModel.CurrentlyPlaying) when _playlistViewModel.CurrentlyPlaying != null:
-                    await UpdateTransportControlsDisplay(_playlistViewModel.CurrentlyPlaying);
+                case nameof(_playlistViewModel.PlayingItem) when _playlistViewModel.PlayingItem != null:
+                    await UpdateTransportControlsDisplay(_playlistViewModel.PlayingItem);
                     break;
                 case nameof(_playlistViewModel.RepeatMode):
                     _transportControls.AutoRepeatMode = Convert(_playlistViewModel.RepeatMode);
@@ -152,18 +152,17 @@ namespace Screenbox.ViewModels
             SystemMediaTransportControlsDisplayUpdater displayUpdater = _transportControls.DisplayUpdater;
             if (item.Source is StorageFile file)
             {
-                switch (item.MediaType)
+                if (file.ContentType.StartsWith("audio"))
                 {
-                    case MediaType.Audio:
-                        await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
-                        break;
-                    case MediaType.Video:
-                        await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
-                        if (string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
-                        {
-                            displayUpdater.VideoProperties.Title = item.Title ?? string.Empty;
-                        }
-                        break;
+                    await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
+                }
+                else if (file.ContentType.StartsWith("video"))
+                {
+                    await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
+                    if (string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
+                    {
+                        displayUpdater.VideoProperties.Title = item.Name;
+                    }
                 }
             }
             
@@ -171,7 +170,7 @@ namespace Screenbox.ViewModels
             if (displayUpdater.Type == MediaPlaybackType.Unknown)
             {
                 displayUpdater.Type = MediaPlaybackType.Video;
-                displayUpdater.VideoProperties.Title = item.Title;
+                displayUpdater.VideoProperties.Title = item.Name;
             }
 
             displayUpdater.Update();

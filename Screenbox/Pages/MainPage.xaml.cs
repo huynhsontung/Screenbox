@@ -126,13 +126,19 @@ namespace Screenbox.Pages
 
         private bool TryGoBack()
         {
-            if (!ContentFrame.CanGoBack)
-                return false;
-
             // Don't go back if the nav pane is overlayed.
             if (NavView.IsPaneOpen &&
                 (NavView.DisplayMode == muxc.NavigationViewDisplayMode.Compact ||
                  NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
+                return false;
+
+            if (ContentFrame.Content is ContentPage page && page.CanGoBack)
+            {
+                page.GoBack();
+                return true;
+            }
+
+            if (!ContentFrame.CanGoBack)
                 return false;
 
             ContentFrame.GoBack();

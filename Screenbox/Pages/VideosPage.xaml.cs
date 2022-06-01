@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -30,6 +31,24 @@ namespace Screenbox.Pages
         {
             DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
             this.InitializeComponent();
+            FolderViewFrame.Navigated += FolderViewFrame_Navigated;
+        }
+
+        private void FolderViewFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            CanGoBack = FolderViewFrame.CanGoBack;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            FolderViewFrame.Navigate(typeof(FolderViewPage), null, new SuppressNavigationTransitionInfo());
+        }
+
+        public override void GoBack()
+        {
+            FolderViewFrame.GoBack();
+            CanGoBack = FolderViewFrame.CanGoBack;
         }
     }
 }

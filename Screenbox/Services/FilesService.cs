@@ -66,39 +66,27 @@ namespace Screenbox.Services
             return files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
         }
 
-        // TODO: Service should not return a ViewModel
-        public async Task<List<MediaViewModel>> LoadVideosFromLibraryAsync()
+        public async Task<BitmapImage?> GetThumbnailAsync(StorageFile file)
         {
-            var videos = new List<MediaViewModel>();
-            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            foreach (StorageFolder folder in library.Folders)
+            StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+            if (source != null)
             {
-                // TODO: Handle folders
-                var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, SupportedFormats);
-
-                IReadOnlyList<StorageFile> files = await folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
-                foreach (StorageFile file in files)
-                {
-                    var itemThumbnail = await file.GetThumbnailAsync(ThumbnailMode.VideosView);
-                    BitmapImage? image = null;
-
-                    if (itemThumbnail != null)
-                    {
-                        image = new BitmapImage();
-                        await image.SetSourceAsync(itemThumbnail);
-                    }
-
-                    var videoProperties = await file.Properties.GetVideoPropertiesAsync();
-
-                    videos.Add(new MediaViewModel(file)
-                    {
-                        Duration = videoProperties?.Duration ?? default,
-                        Thumbnail = image
-                    });
-                }
+                BitmapImage thumbnail = new();
+                await thumbnail.SetSourceAsync(source);
+                return thumbnail;
             }
 
-            return videos;
+            return null;
+        }
+
+        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder)
+        {
+            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, SupportedFormats)
+            {
+                IndexerOption = IndexerOption.UseIndexerWhenAvailable
+            };
+
+            return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
         }
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)

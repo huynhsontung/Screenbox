@@ -233,4 +233,7 @@
     <value>Is playing</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
+  <data name="Videos" xml:space="preserve">
+    <value>Videos</value>
+  </data>
 </root>

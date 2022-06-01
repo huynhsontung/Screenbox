@@ -168,15 +168,19 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\MediaTypeGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
+    <Compile Include="Core\Messages\PlayingItemRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
     <Compile Include="Core\Messages\SeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
+    <Compile Include="Pages\FolderViewPage.xaml.cs">
+      <DependentUpon>FolderViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -227,11 +231,13 @@
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\WindowService.cs" />
+    <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
+    <Compile Include="ViewModels\StorageItemViewModel.cs" />
     <Compile Include="ViewModels\SystemMediaTransportControlsViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\VideoViewViewModel.cs" />
@@ -347,6 +353,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VolumeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FolderViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

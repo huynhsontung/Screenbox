@@ -172,7 +172,7 @@
                                 VerticalAlignment="Center"
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 FontSize="16"
-                                Glyph="{x:Bind MediaType, Converter={StaticResource MediaTypeGlyphConverter}}" />
+                                Glyph="{x:Bind Glyph}" />
 
                             <Button
                                 x:Name="PlayButton"
@@ -195,7 +195,7 @@
                                 Grid.Column="2"
                                 Margin="12,0,0,0"
                                 VerticalAlignment="Center"
-                                Text="{x:Bind Title}" />
+                                Text="{x:Bind Name}" />
 
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PlayingState">

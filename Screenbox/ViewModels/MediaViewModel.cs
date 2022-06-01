@@ -1,70 +1,113 @@
 ﻿#nullable enable
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
     internal partial class MediaViewModel : ObservableObject
     {
-        public string? Title { get; set; }
+        public string Name { get; }
 
-        public BitmapImage? Thumbnail { get; set; }
-
-        public string? Location { get; set; }
-
-        public TimeSpan Duration { get; set; }
+        public string Location { get; }
 
         public object Source { get; }
 
-        public MediaType MediaType { get; set; }
+        public string Glyph { get; }
 
-        [ObservableProperty] private bool _isPlaying;
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+            set
+            {
+                SetProperty(ref _isPlaying, value);
+                if (_linkedFile != null)
+                {
+                    _linkedFile.IsPlaying = value;
+                }
+            }
+        }
+
+        private bool _isPlaying;
+
+        [ObservableProperty] private TimeSpan? _duration;
+        [ObservableProperty] private BitmapImage? _thumbnail;
+        [ObservableProperty] private VideoProperties? _videoProperties;
+        [ObservableProperty] private MusicProperties? _musicProperties;
+
+        private readonly StorageItemViewModel? _linkedFile;
 
         public MediaViewModel(MediaViewModel source)
         {
-            Title = source.Title;
+            _linkedFile = source._linkedFile;
+            Name = source.Name;
             Thumbnail = source.Thumbnail;
             Location = source.Location;
             Duration = source.Duration;
             Source = source.Source;
-            MediaType = source.MediaType;
+            Glyph = source.Glyph;
         }
 
-        public MediaViewModel(object source)
+        public MediaViewModel(StorageItemViewModel file)
         {
-            Source = source;
-            if (source is Uri or string)
-            {
-                MediaType = MediaType.Network;
-            }
+            _linkedFile = file;
+            Name = file.Name;
+            Location = file.Path;
+            Source = file.StorageItem;
+            Glyph = file.Glyph;
+        }
+
+        public MediaViewModel(Uri uri)
+        {
+            Source = uri;
+            Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            Location = uri.ToString();
+            Glyph = "\ue774";   // Globe icon
         }
 
         public MediaViewModel(IStorageFile file)
         {
             Source = file;
-            Title = file.Name;
+            Name = file.Name;
             Location = file.Path;
+            Glyph = StorageItemViewModel.GetGlyph(file);
+        }
 
+        public async Task LoadDetailsAsync()
+        {
+            if (Source is not StorageFile file) return;
             if (file.ContentType.StartsWith("video"))
             {
-                MediaType = MediaType.Video;
+                VideoProperties = await file.Properties.GetVideoPropertiesAsync();
+                if (VideoProperties != null && VideoProperties.Duration != TimeSpan.Zero)
+                {
+                    Duration = VideoProperties.Duration;
+                }
             }
-
-            if (file.ContentType.StartsWith("audio"))
+            else if (file.ContentType.StartsWith("audio"))
             {
-                MediaType = MediaType.Audio;
+                MusicProperties = await file.Properties.GetMusicPropertiesAsync();
+                if (MusicProperties != null && MusicProperties.Duration != TimeSpan.Zero)
+                {
+                    Duration = MusicProperties.Duration;
+                }
             }
         }
-    }
 
-    public enum MediaType
-    {
-        Unknown,
-        Audio,
-        Video,
-        Network
+        public async Task LoadThumbnailAsync()
+        {
+            if (Thumbnail == null && Source is StorageFile file)
+            {
+                IFilesService filesService = App.Services.GetRequiredService<IFilesService>();
+                Thumbnail = await filesService.GetThumbnailAsync(file);
+            }
+        }
     }
 }

@@ -25,14 +25,14 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlaylistViewModel : ObservableRecipient, IRecipient<PlayMediaMessage>
+    internal partial class PlaylistViewModel : ObservableRecipient, IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
-        public MediaViewModel? CurrentlyPlaying
+        public MediaViewModel? PlayingItem
         {
-            get => _currentlyPlaying;
-            private set => SetProperty(ref _currentlyPlaying, value);
+            get => _playingItem;
+            private set => SetProperty(ref _playingItem, value);
         }
 
         public IRelayCommand NextCommand { get; }
@@ -54,7 +54,7 @@ namespace Screenbox.ViewModels
         private readonly IMediaService _mediaService;
         private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
-        private MediaViewModel? _currentlyPlaying;
+        private MediaViewModel? _playingItem;
         private MediaViewModel? _toBeOpened;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
@@ -104,6 +104,11 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public void Receive(PlayingItemRequestMessage message)
+        {
+            message.Reply(PlayingItem);
+        }
+
         public void OnDragOver(object sender, DragEventArgs e)
         {
             if (e.Handled) return;
@@ -129,7 +134,7 @@ namespace Screenbox.ViewModels
         public void OnItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             ListViewItem item = (ListViewItem)sender;
-            if (item.Content is MediaViewModel selectedMedia && CurrentlyPlaying != selectedMedia)
+            if (item.Content is MediaViewModel selectedMedia && PlayingItem != selectedMedia)
             {
                 PlaySingle(selectedMedia);
             }
@@ -152,7 +157,7 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(CurrentlyPlaying):
+                case nameof(PlayingItem):
                 case nameof(RepeatMode):
                     UpdateCanPreviousOrNext();
                     break;
@@ -161,7 +166,7 @@ namespace Screenbox.ViewModels
 
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _currentIndex = CurrentlyPlaying != null ? Playlist.IndexOf(CurrentlyPlaying) : -1;
+            _currentIndex = PlayingItem != null ? Playlist.IndexOf(PlayingItem) : -1;
 
             UpdateCanPreviousOrNext();
             CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
@@ -209,9 +214,11 @@ namespace Screenbox.ViewModels
                 case MediaViewModel vmValue:
                     vm = vmValue;
                     break;
-                default:
-                    vm = new MediaViewModel(value);
+                case Uri uri:
+                    vm = new MediaViewModel(uri);
                     break;
+                default:
+                    throw new ArgumentException("Unsupported media type", nameof(value));
             }
 
             Playlist.Add(vm);
@@ -230,28 +237,26 @@ namespace Screenbox.ViewModels
             using (MediaHandle? handle = _mediaService.CreateMedia(vm.Source))
             {
                 if (handle == null) return;
-                vm.Title ??= handle.Title;
-                vm.Location ??= handle.Uri.ToString();
                 _mediaPlayerService.Play(handle);
             }
 
-            if (CurrentlyPlaying != null)
+            if (PlayingItem != null)
             {
-                CurrentlyPlaying.IsPlaying = false;
+                PlayingItem.IsPlaying = false;
             }
 
             vm.IsPlaying = true;
             // Setting current index here to handle updating playlist before calling PlaySingle
             // If playlist is updated after, CollectionChanged handler will update the index
             _currentIndex = Playlist.IndexOf(vm);
-            CurrentlyPlaying = vm;
+            PlayingItem = vm;
         }
 
         [ICommand]
         private void Clear()
         {
             _mediaPlayerService.Stop();
-            CurrentlyPlaying = null;
+            PlayingItem = null;
             Playlist.Clear();
         }
 
@@ -261,10 +266,10 @@ namespace Screenbox.ViewModels
             List<object> copy = selectedItems.ToList();
             foreach (MediaViewModel item in copy)
             {
-                if (CurrentlyPlaying == item)
+                if (PlayingItem == item)
                 {
                     _mediaPlayerService.Stop();
-                    CurrentlyPlaying = null;
+                    PlayingItem = null;
                 }
 
                 Playlist.Remove(item);
@@ -320,9 +325,9 @@ namespace Screenbox.ViewModels
 
         private async Task PlayNextAsync()
         {
-            if (Playlist.Count == 0 || CurrentlyPlaying == null) return;
+            if (Playlist.Count == 0 || PlayingItem == null) return;
             int index = _currentIndex;
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && CurrentlyPlaying.Source is IStorageFile file)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && PlayingItem.Source is IStorageFile file)
             {
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
@@ -358,9 +363,9 @@ namespace Screenbox.ViewModels
 
         private async Task PlayPreviousAsync()
         {
-            if (Playlist.Count == 0 || CurrentlyPlaying == null) return;
+            if (Playlist.Count == 0 || PlayingItem == null) return;
             int index = _currentIndex;
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && CurrentlyPlaying.Source is IStorageFile file)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && PlayingItem.Source is IStorageFile file)
             {
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)

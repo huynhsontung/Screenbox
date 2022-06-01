@@ -457,6 +457,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Videos
+        /// <summary>
+        ///   Looks up a localized string similar to: Videos
+        /// </summary>
+        public static string Videos
+        {
+            get
+            {
+                return _resourceLoader.GetString("Videos");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -499,6 +512,7 @@ namespace Screenbox.Strings{
             MoveUp,
             MoveDown,
             IsPlaying,
+            Videos,
         }
 
         private static ResourceLoader _resourceLoader;
