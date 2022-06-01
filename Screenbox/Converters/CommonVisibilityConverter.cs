@@ -19,12 +19,10 @@ namespace Screenbox.Converters
                     return GetVisibility(collection.Count > 0);
                 case bool b:
                     return GetVisibility(b);
+                case string s:
+                    return GetVisibility(!string.IsNullOrEmpty(s));
                 default:
-                {
-                    var result = value is string s ? !string.IsNullOrEmpty(s) : value != null;
-
-                    return GetVisibility(result);
-                }
+                    return GetVisibility(value != null);
             }
         }
 
