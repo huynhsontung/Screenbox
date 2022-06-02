@@ -7,21 +7,56 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Tapped="TimeDisplay_OnTapped"
     mc:Ignorable="d">
-
     <StackPanel Orientation="Horizontal">
-        <TextBlock x:Name="TimeText" Margin="0,0,6,0">
-            <Run Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-            <Run Text=" /" />
-        </TextBlock>
+        <StackPanel
+            Background="Transparent"
+            Orientation="Horizontal"
+            Tapped="TimeDisplay_OnTapped">
+            <TextBlock x:Name="TimeText" Margin="0,0,4,0">
+                <Run Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" /><Run Text=" /" />
+            </TextBlock>
+            <TextBlock
+                x:Name="RemainingText"
+                Margin="0,0,4,0"
+                Visibility="Collapsed">
+                <Run Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}" /><Run Text=" /" />
+            </TextBlock>
+            <TextBlock Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+        </StackPanel>
         <TextBlock
-            x:Name="RemainingText"
-            Margin="0,0,6,0"
+            x:Name="NameText"
+            MinWidth="0"
+            Margin="4,0,0,0"
+            VerticalAlignment="Center"
             Visibility="Collapsed">
-            <Run Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}" />
-            <Run Text=" /" />
+            <Run Text="• " /><Run Text="{x:Bind TitleName, Mode=OneWay}" /><Run x:Name="Separator" Text=": " /><Run Text="{x:Bind ChapterName, Mode=OneWay}" />
         </TextBlock>
-        <TextBlock Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="TimeTextVisibility">
+                <VisualState x:Name="ShowElapsed" />
+                <VisualState x:Name="ShowRemaining">
+                    <VisualState.Setters>
+                        <Setter Target="TimeText.Visibility" Value="Collapsed" />
+                        <Setter Target="RemainingText.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="NameStates">
+                <VisualState x:Name="None" />
+                <VisualState x:Name="Both">
+                    <VisualState.Setters>
+                        <Setter Target="NameText.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Either">
+                    <VisualState.Setters>
+                        <Setter Target="NameText.Visibility" Value="Visible" />
+                        <Setter Target="Separator.Text" Value="{x:Null}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </StackPanel>
 </UserControl>

@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -10,6 +11,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
@@ -58,6 +60,9 @@ namespace Screenbox.ViewModels
         private bool _isOpening;
 
         [ObservableProperty]
+        private string? _titleName;
+
+        [ObservableProperty]
         private VLCState _state;
 
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
@@ -102,6 +107,8 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.Stopped += OnStopped;
             _mediaPlayerService.EncounteredError += OnStateChanged;
             _mediaPlayerService.Opening += OnOpening;
+            _mediaPlayerService.TitleChanged += OnTitleChanged;
+            _mediaPlayerService.LengthChanged += OnLengthChanged;
             PropertyChanged += OnPropertyChanged;
 
             // Activate the view model's messenger
@@ -178,9 +185,13 @@ namespace Screenbox.ViewModels
             DelayHideControls();
         }
 
-        public string GetChapterName(string? nullableName) => string.IsNullOrEmpty(nullableName)
-            ? Resources.ChapterName(VlcPlayer?.Chapter ?? 0 + 1)
-            : nullableName ?? string.Empty;
+        public string? GetChapterName(string? nullableName)
+        {
+            if (VlcPlayer is not { ChapterCount: > 1 }) return null;
+            return string.IsNullOrEmpty(nullableName)
+                ? Resources.ChapterName(VlcPlayer.Chapter + 1)
+                : nullableName;
+        }
 
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
@@ -353,6 +364,25 @@ namespace Screenbox.ViewModels
                     MediaTitle = current?.Name ?? string.Empty;
                 });
             }
+        }
+
+        private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                TrackDescription[] titles = VlcPlayer.TitleDescription;
+                TitleName = titles.Length == 1 ? default : titles.FirstOrDefault(title => title.Id == VlcPlayer.Title).Name;
+            });
+        }
+
+        private void OnTitleChanged(object sender, MediaPlayerTitleChangedEventArgs e)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                TitleName = VlcPlayer.TitleDescription.FirstOrDefault(title => title.Id == e.Title).Name;
+            });
         }
 
         private void OnStopped(object sender, EventArgs e)

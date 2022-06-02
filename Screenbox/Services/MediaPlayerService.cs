@@ -19,6 +19,7 @@ namespace Screenbox.Services
         public event EventHandler<MediaPlayerSeekableChangedEventArgs>? SeekableChanged;
         public event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
         public event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
+        public event EventHandler<MediaPlayerTitleChangedEventArgs>? TitleChanged;
         public event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
         public event EventHandler? Muted;
         public event EventHandler? Unmuted;
@@ -177,6 +178,7 @@ namespace Screenbox.Services
             player.TimeChanged += (s, e) => TimeChanged?.Invoke(s, e);
             player.SeekableChanged += (s, e) => SeekableChanged?.Invoke(s, e);
             player.ChapterChanged += (s, e) => ChapterChanged?.Invoke(s, e);
+            player.TitleChanged += (s, e) => TitleChanged?.Invoke(s, e);
             player.Buffering += (s, e) => Buffering?.Invoke(s, e);
             player.VolumeChanged += (s, e) => VolumeChanged?.Invoke(s, e);
             player.Muted += (s, e) => Muted?.Invoke(s, e);

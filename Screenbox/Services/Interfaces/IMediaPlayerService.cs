@@ -22,7 +22,8 @@ internal interface IMediaPlayerService
     event EventHandler<MediaPlayerSeekableChangedEventArgs>? SeekableChanged;
     event EventHandler<MediaPlayerBufferingEventArgs>? Buffering;
     event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
-    event EventHandler<MediaPlayerVolumeChangedEventArgs> VolumeChanged;
+    event EventHandler<MediaPlayerTitleChangedEventArgs>? TitleChanged;
+    event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
     event EventHandler? Muted;
     event EventHandler? Unmuted;
     MediaPlayer? VlcPlayer { get; }

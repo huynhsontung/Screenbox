@@ -19,6 +19,16 @@ namespace Screenbox.Controls
             typeof(double),
             typeof(TimeDisplay),
             new PropertyMetadata(0d));
+        public static readonly DependencyProperty TitleNameProperty = DependencyProperty.Register(
+            nameof(TitleName),
+            typeof(string),
+            typeof(TimeDisplay),
+            new PropertyMetadata(string.Empty, OnNameChanged));
+        public static readonly DependencyProperty ChapterNameProperty = DependencyProperty.Register(
+            nameof(ChapterName),
+            typeof(string),
+            typeof(TimeDisplay),
+            new PropertyMetadata(string.Empty, OnNameChanged));
 
         public double Time
         {
@@ -32,6 +42,18 @@ namespace Screenbox.Controls
             set => SetValue(LengthProperty, value);
         }
 
+        public string TitleName
+        {
+            get => (string)GetValue(TitleNameProperty);
+            set => SetValue(TitleNameProperty, value);
+        }
+
+        public string ChapterName
+        {
+            get => (string)GetValue(ChapterNameProperty);
+            set => SetValue(ChapterNameProperty, value);
+        }
+
         private bool _showRemaining;
 
         public TimeDisplay()
@@ -39,21 +61,29 @@ namespace Screenbox.Controls
             this.InitializeComponent();
         }
 
+        private static void OnNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            TimeDisplay view = (TimeDisplay)d;
+            if (string.IsNullOrEmpty(view.TitleName) && string.IsNullOrEmpty(view.ChapterName))
+            {
+                VisualStateManager.GoToState(view, "None", false);
+            }
+            else if (string.IsNullOrEmpty(view.TitleName) || string.IsNullOrEmpty(view.ChapterName))
+            {
+                VisualStateManager.GoToState(view, "Either", false);
+            }
+            else
+            {
+                VisualStateManager.GoToState(view, "Both", false);
+            }
+        }
+
         private string GetRemainingTime(double currentTime) => HumanizedDurationConverter.Convert(currentTime - Length);
 
         private void TimeDisplay_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             _showRemaining = !_showRemaining;
-            if (_showRemaining)
-            {
-                RemainingText.Visibility = Visibility.Visible;
-                TimeText.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                RemainingText.Visibility = Visibility.Collapsed;
-                TimeText.Visibility = Visibility.Visible;
-            }
+            VisualStateManager.GoToState(this, _showRemaining ? "ShowRemaining" : "ShowElapsed", true);
         }
     }
 }

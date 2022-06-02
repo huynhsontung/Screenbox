@@ -401,16 +401,10 @@
                         MinWidth="0"
                         Margin="6,0,0,0"
                         VerticalAlignment="Center"
+                        ChapterName="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}"
                         Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
-                        Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}" />
-                    <TextBlock
-                        MinWidth="0"
-                        Margin="8,0,8,0"
-                        VerticalAlignment="Center"
-                        Visibility="{x:Bind SeekBar.ViewModel.Chapters, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
-                        <Run Text="• " />
-                        <Run Text="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}" />
-                    </TextBlock>
+                        Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
+                        TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel
