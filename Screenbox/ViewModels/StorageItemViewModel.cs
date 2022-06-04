@@ -4,7 +4,9 @@ using System;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using Screenbox.Converters;
 
 namespace Screenbox.ViewModels
 {
@@ -25,6 +27,7 @@ namespace Screenbox.ViewModels
         public bool IsFile { get; }
 
         [ObservableProperty] private bool _isPlaying;
+        [ObservableProperty] private string? _captionText;
         [ObservableProperty] private IReadOnlyList<IStorageItem>? _folderItems;
 
         public StorageItemViewModel(IStorageItem storageItem)
@@ -39,6 +42,7 @@ namespace Screenbox.ViewModels
             {
                 IsFile = true;
                 Media = new MediaViewModel(file);
+                Media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
 
@@ -46,6 +50,7 @@ namespace Screenbox.ViewModels
         {
             if (StorageItem is not StorageFolder folder || FolderItems != null) return;
             FolderItems = await folder.GetItemsAsync();
+            CaptionText = Strings.Resources.ItemsCount(FolderItems.Count);
         }
 
         public static string GetGlyph(IStorageItem item)
@@ -66,5 +71,16 @@ namespace Screenbox.ViewModels
 
             return glyph;
         }
+
+        private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Media.VideoProperties))
+            {
+                CaptionText = Media?.VideoProperties == null || Media.VideoProperties.Duration == default
+                    ? null
+                    : HumanizedDurationConverter.Convert(Media.VideoProperties.Duration);
+            }
+        }
+
     }
 }

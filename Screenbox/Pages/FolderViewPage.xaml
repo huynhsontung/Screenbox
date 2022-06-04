@@ -23,8 +23,9 @@
                         Height="180"
                         Padding="4">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="54" />
+                            <RowDefinition Height="118" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid
                             Grid.Row="0"
@@ -43,32 +44,21 @@
                                 Stretch="UniformToFill" />
                         </Grid>
 
-                        <Grid Grid.Row="1" Margin="4,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                FontWeight="SemiBold"
-                                MaxLines="2"
-                                Text="{x:Bind Name}"
-                                TextWrapping="Wrap" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="4,0"
+                            FontWeight="SemiBold"
+                            MaxLines="2"
+                            Text="{x:Bind Name}"
+                            TextWrapping="Wrap" />
 
-                            <TextBlock
-                                Grid.Row="1"
-                                x:Phase="2"
-                                Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind Media.Duration, Converter={StaticResource HumanizedDurationConverter}, FallbackValue={x:Null}, Mode=OneWay}" />
-
-                            <TextBlock
-                                Grid.Row="1"
-                                x:Phase="2"
-                                Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind strings:Resources.ItemsCount(FolderItems.Count), FallbackValue={x:Null}, Mode=OneWay}" />
-                        </Grid>
+                        <TextBlock
+                            Grid.Row="2"
+                            Margin="4,0"
+                            x:Phase="2"
+                            Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind CaptionText, Mode=OneWay}" />
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
