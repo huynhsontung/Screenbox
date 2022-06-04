@@ -33,15 +33,5 @@ namespace Screenbox.Pages
         {
             Frame.Navigate(typeof(FolderViewPage), e.Breadcrumbs, new SuppressNavigationTransitionInfo());
         }
-
-        private async void GridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase != 0) return;
-            if (args.Item is StorageItemViewModel itemViewModel && itemViewModel.Media != null)
-            {
-                await itemViewModel.Media.LoadDetailsAsync();
-                await itemViewModel.Media.LoadThumbnailAsync();
-            }
-        }
     }
 }

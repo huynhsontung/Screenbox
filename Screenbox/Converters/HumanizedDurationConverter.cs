@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters
@@ -17,8 +19,9 @@ namespace Screenbox.Converters
             return (duration < TimeSpan.Zero ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
         }
 
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object? Convert(object? value, Type targetType, object parameter, string language)
         {
+            if (value == null) return null;
             if (value is TimeSpan duration)
                 return Convert(duration);
             return Convert(System.Convert.ToDouble(value));

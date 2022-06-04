@@ -3,7 +3,6 @@
 using System;
 using Windows.Storage;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Windows.Storage.FileProperties;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,7 +25,7 @@ namespace Screenbox.ViewModels
         public bool IsFile { get; }
 
         [ObservableProperty] private bool _isPlaying;
-        [ObservableProperty] private IReadOnlyList<IStorageItem> _folderItems;
+        [ObservableProperty] private IReadOnlyList<IStorageItem>? _folderItems;
 
         public StorageItemViewModel(IStorageItem storageItem)
         {
@@ -35,7 +34,6 @@ namespace Screenbox.ViewModels
             Path = storageItem.Path;
             DateCreated = storageItem.DateCreated;
             Glyph = GetGlyph(storageItem);
-            _folderItems = new List<IStorageItem>(0);
 
             if (storageItem is IStorageFile file)
             {
@@ -46,7 +44,7 @@ namespace Screenbox.ViewModels
 
         public async Task LoadFolderContentAsync()
         {
-            if (StorageItem is not StorageFolder folder) return;
+            if (StorageItem is not StorageFolder folder || FolderItems != null) return;
             FolderItems = await folder.GetItemsAsync();
         }
 

@@ -126,6 +126,16 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region ItemsCount
+        /// <summary>
+        ///   Get the pluralized version of the string similar to: {0} item
+        /// </summary>
+        public static string ItemsCount(int pluralCount)
+        {
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "ItemsCount", (double)pluralCount, true), pluralCount);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -499,6 +509,7 @@ namespace Screenbox.Strings{
             PlayPauseToggle,
             RepeatMode,
             ItemsSelected,
+            ItemsCount,
             ZoomToFit,
             FrameSavedNotificationTitle,
             PictureInPicture,

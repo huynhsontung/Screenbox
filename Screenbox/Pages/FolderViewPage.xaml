@@ -11,7 +11,6 @@
 
     <Grid>
         <GridView
-            ContainerContentChanging="GridView_ContainerContentChanging"
             IsItemClickEnabled="True"
             ItemClick="{x:Bind ViewModel.VideosItemClick}"
             ItemsSource="{x:Bind ViewModel.Items}"
@@ -44,23 +43,32 @@
                                 Stretch="UniformToFill" />
                         </Grid>
 
-                        <StackPanel
-                            Grid.Row="1"
-                            Margin="4,0"
-                            Orientation="Vertical">
+                        <Grid Grid.Row="1" Margin="4,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
                             <TextBlock
+                                Grid.Row="0"
                                 FontWeight="SemiBold"
                                 MaxLines="2"
                                 Text="{x:Bind Name}"
                                 TextWrapping="Wrap" />
 
                             <TextBlock
-                                x:Phase="1"
+                                Grid.Row="1"
+                                x:Phase="2"
                                 Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
                                 Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind Media.Duration, Converter={StaticResource HumanizedDurationConverter}, FallbackValue={x:Null}}"
-                                Visibility="{x:Bind Media.Duration, Converter={StaticResource CommonVisibilityConverter}, FallbackValue=Collapsed}" />
-                        </StackPanel>
+                                Text="{x:Bind Media.Duration, Converter={StaticResource HumanizedDurationConverter}, FallbackValue={x:Null}, Mode=OneWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                x:Phase="2"
+                                Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind strings:Resources.ItemsCount(FolderItems.Count), FallbackValue={x:Null}, Mode=OneWay}" />
+                        </Grid>
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>

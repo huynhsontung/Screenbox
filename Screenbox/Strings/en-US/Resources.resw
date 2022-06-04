@@ -239,4 +239,15 @@
   <data name="EmptyFolder" xml:space="preserve">
     <value>This folder is empty</value>
   </data>
+  <data name="ItemsCount_One" xml:space="preserve">
+    <value>{0} item</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ItemsCount_Other" xml:space="preserve">
+    <value>{0} items</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ItemsCount_None" xml:space="preserve">
+    <value>Empty</value>
+  </data>
 </root>

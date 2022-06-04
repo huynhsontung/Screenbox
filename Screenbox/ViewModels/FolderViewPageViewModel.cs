@@ -72,16 +72,27 @@ namespace Screenbox.ViewModels
             IReadOnlyCollection<StorageFolder> subfolders = await folder.GetFoldersAsync();
             foreach (StorageFolder subfolder in subfolders)
             {
-                Items.Add(new StorageItemViewModel(subfolder));
+                StorageItemViewModel item = new(subfolder);
+                Items.Add(item);
             }
 
             IReadOnlyList<StorageFile> files = await _filesService.GetSupportedFilesAsync(folder);
             foreach (StorageFile file in files)
             {
-                Items.Add(new StorageItemViewModel(file));
+                StorageItemViewModel item = new(file);
+                Items.Add(item);
             }
 
             IsEmpty = Items.Count == 0;
+            foreach (StorageItemViewModel item in Items)
+            {
+                await item.LoadFolderContentAsync();
+                if (item.Media != null)
+                {
+                    await item.Media.LoadDetailsAsync();
+                    await item.Media.LoadThumbnailAsync();
+                }
+            }
         }
 
         private async Task LoadVideosFromLibraryAsync()
