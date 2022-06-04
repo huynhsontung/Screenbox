@@ -31,7 +31,7 @@
                             Grid.Row="0"
                             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                            BorderThickness="2"
+                            BorderThickness="1"
                             CornerRadius="4">
                             <FontIcon
                                 HorizontalAlignment="Center"

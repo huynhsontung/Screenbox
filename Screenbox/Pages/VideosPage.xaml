@@ -19,6 +19,7 @@
 
             <TextBlock
                 Grid.Column="0"
+                MaxLines="2"
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
 
