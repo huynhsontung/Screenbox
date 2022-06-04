@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:viewmodels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
 
@@ -64,5 +65,10 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="{x:Bind strings:Resources.EmptyFolder}"
+            Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource CommonVisibilityConverter}, Mode=OneWay}" />
     </Grid>
 </Page>

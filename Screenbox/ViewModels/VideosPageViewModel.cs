@@ -8,12 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Search;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace Screenbox.ViewModels
 {
@@ -23,7 +21,7 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private string _titleText;
 
-        [ObservableProperty] private bool _canGoBack;
+        public ObservableCollection<string> Breadcrumbs { get; }
 
         private readonly IFilesService _filesService;
 
@@ -32,6 +30,7 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _urlText = string.Empty;
             _titleText = Strings.Resources.Videos;
+            Breadcrumbs = new ObservableCollection<string>();
         }
 
         public void OpenButtonClick(object sender, RoutedEventArgs e)
@@ -46,6 +45,35 @@ namespace Screenbox.ViewModels
 
             if (pickedFile != null)
                 Messenger.Send(new PlayMediaMessage(pickedFile));
+        }
+
+        public void OnFolderViewFrameNavigated(object sender, NavigationEventArgs e)
+        {
+            IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
+            UpdateBreadcrumbs(crumbs);
+        }
+
+        public void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
+        {
+            Breadcrumbs.Clear();
+            if (crumbs == null) return;
+            TitleText = crumbs.LastOrDefault()?.DisplayName ?? Strings.Resources.Videos;
+            foreach (StorageFolder storageFolder in crumbs)
+            {
+                Breadcrumbs.Add(storageFolder.DisplayName);
+            }
+        }
+
+        public async Task<IReadOnlyList<StorageFolder>?> GetInitialBreadcrumbsAsync()
+        {
+            StorageLibrary? library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            if (library == null || library.Folders.Count <= 0) return null;
+            if (library.Folders.Count == 1)
+            {
+                return new[] { library.Folders[0] };
+            }
+
+            return null;
         }
     }
 }

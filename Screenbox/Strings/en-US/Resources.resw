@@ -236,4 +236,7 @@
   <data name="Videos" xml:space="preserve">
     <value>Videos</value>
   </data>
+  <data name="EmptyFolder" xml:space="preserve">
+    <value>This folder is empty</value>
+  </data>
 </root>

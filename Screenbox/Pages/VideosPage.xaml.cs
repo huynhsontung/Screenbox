@@ -1,20 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Screenbox.ViewModels;
-using System;
+﻿#nullable enable
+
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Microsoft.Extensions.DependencyInjection;
+using Screenbox.ViewModels;
+using Windows.Storage;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -31,24 +24,25 @@ namespace Screenbox.Pages
         {
             DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
             this.InitializeComponent();
-            FolderViewFrame.Navigated += FolderViewFrame_Navigated;
         }
 
-        private void FolderViewFrame_Navigated(object sender, NavigationEventArgs e)
-        {
-            CanGoBack = FolderViewFrame.CanGoBack;
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            FolderViewFrame.Navigate(typeof(FolderViewPage), null, new SuppressNavigationTransitionInfo());
+            FolderViewFrame.Navigate(typeof(FolderViewPage), await ViewModel.GetInitialBreadcrumbsAsync(),
+                new SuppressNavigationTransitionInfo());
         }
 
         public override void GoBack()
         {
-            FolderViewFrame.GoBack();
-            CanGoBack = FolderViewFrame.CanGoBack;
+            FolderViewFrame.GoBack(new SuppressNavigationTransitionInfo());
+        }
+
+        private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            if (FolderViewFrame.Content is not FolderViewPage view) return;
+            IReadOnlyList<StorageFolder> crumbs = view.ViewModel.Breadcrumbs.Take(args.Index + 1).ToArray();
+            FolderViewFrame.Navigate(typeof(FolderViewPage), crumbs, new SuppressNavigationTransitionInfo());
         }
     }
 }

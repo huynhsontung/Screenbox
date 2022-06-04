@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core;
@@ -10,10 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Screenbox.ViewModels
 {
@@ -23,22 +22,23 @@ namespace Screenbox.ViewModels
 
         public ObservableCollection<StorageItemViewModel> Items { get; }
 
-        public StorageFolder? Folder { get; private set; }
+        public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
-        [ObservableProperty] private IReadOnlyList<StorageFolder> _breadcrumbs;
+        [ObservableProperty] private bool _isEmpty;
 
         private readonly IFilesService _filesService;
 
         public FolderViewPageViewModel(IFilesService filesService)
         {
             _filesService = filesService;
-            _breadcrumbs = Array.Empty<StorageFolder>();
+            Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
         }
 
-        public async Task OnNavigatedTo(object parameter)
+        public async Task OnNavigatedTo(object? parameter)
         {
-            Breadcrumbs = parameter as IReadOnlyList<StorageFolder> ?? Array.Empty<StorageFolder>();
+            Guard.IsNotNull(parameter, nameof(parameter));
+            Breadcrumbs = (IReadOnlyList<StorageFolder>)parameter;
             if (Breadcrumbs.Count > 0)
             {
                 await FetchFolderContentAsync(Breadcrumbs.Last());
@@ -67,8 +67,6 @@ namespace Screenbox.ViewModels
 
         private async Task FetchFolderContentAsync(StorageFolder folder)
         {
-            Folder = folder;
-
             // TODO: Virtualize data fetching
             Items.Clear();
             IReadOnlyCollection<StorageFolder> subfolders = await folder.GetFoldersAsync();
@@ -82,17 +80,19 @@ namespace Screenbox.ViewModels
             {
                 Items.Add(new StorageItemViewModel(file));
             }
+
+            IsEmpty = Items.Count == 0;
         }
 
         private async Task LoadVideosFromLibraryAsync()
         {
-            var library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            if (library.Folders.Count <= 0) return;
+            StorageLibrary? library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            if (library == null || library.Folders.Count <= 0) return;
 
             if (library.Folders.Count == 1)
             {
                 StorageFolder folder = library.Folders[0];
-                Breadcrumbs = new StorageFolder[] { folder };
+                Breadcrumbs = new[] { folder };
                 await FetchFolderContentAsync(folder);
             }
             else

@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:viewmodels="using:Screenbox.ViewModels"
+    CanGoBack="{x:Bind FolderViewFrame.CanGoBack, Mode=OneWay}"
     mc:Ignorable="d">
     <local:ContentPage.Header>
         <Grid Margin="0,0,40,0">
@@ -48,5 +49,19 @@
         </Grid>
     </local:ContentPage.Header>
 
-    <Frame x:Name="FolderViewFrame" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <muxc:BreadcrumbBar
+            Grid.Row="0"
+            VerticalAlignment="Top"
+            ItemClicked="BreadcrumbBar_OnItemClicked"
+            ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+        <Frame
+            x:Name="FolderViewFrame"
+            Grid.Row="1"
+            Navigated="{x:Bind ViewModel.OnFolderViewFrameNavigated}" />
+    </Grid>
 </local:ContentPage>

@@ -470,6 +470,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region EmptyFolder
+        /// <summary>
+        ///   Looks up a localized string similar to: This folder is empty
+        /// </summary>
+        public static string EmptyFolder
+        {
+            get
+            {
+                return _resourceLoader.GetString("EmptyFolder");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -513,6 +526,7 @@ namespace Screenbox.Strings{
             MoveDown,
             IsPlaying,
             Videos,
+            EmptyFolder,
         }
 
         private static ResourceLoader _resourceLoader;

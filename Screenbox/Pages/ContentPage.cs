@@ -19,7 +19,7 @@ namespace Screenbox.Pages
             set => SetValue(HeaderProperty, value);
         }
 
-        public bool CanGoBack { get; protected set; }
+        public bool CanGoBack { get; set; }
 
         public virtual void GoBack()
         {
