@@ -101,7 +101,7 @@ namespace Screenbox.ViewModels
                 }
                 else
                 {
-                    Volume = (int)e.Volume;
+                    Volume = _mediaPlayerService.Volume;
                     Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
                 }
             });
