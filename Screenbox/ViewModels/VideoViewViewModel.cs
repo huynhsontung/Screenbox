@@ -114,10 +114,10 @@ namespace Screenbox.ViewModels
                     direction = 1;
                     break;
                 case VirtualKey.Up:
-                    volumeChange = 10;
+                    volumeChange = 5;
                     break;
                 case VirtualKey.Down:
-                    volumeChange = -10;
+                    volumeChange = -5;
                     break;
                 case VirtualKey.NumberPad0:
                 case VirtualKey.NumberPad1:
