@@ -29,6 +29,11 @@ namespace Screenbox.Controls
             typeof(string),
             typeof(TimeDisplay),
             new PropertyMetadata(string.Empty, OnNameChanged));
+        public static readonly DependencyProperty TextBlockStyleProperty = DependencyProperty.Register(
+            nameof(TextBlockStyle),
+            typeof(Style),
+            typeof(TimeDisplay),
+            new PropertyMetadata(null));
 
         public double Time
         {
@@ -52,6 +57,12 @@ namespace Screenbox.Controls
         {
             get => (string)GetValue(ChapterNameProperty);
             set => SetValue(ChapterNameProperty, value);
+        }
+
+        public Style TextBlockStyle
+        {
+            get => (Style)GetValue(TextBlockStyleProperty);
+            set => SetValue(TextBlockStyleProperty, value);
         }
 
         private bool _showRemaining;

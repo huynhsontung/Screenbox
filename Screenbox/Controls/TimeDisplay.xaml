@@ -13,22 +13,27 @@
             Background="Transparent"
             Orientation="Horizontal"
             Tapped="TimeDisplay_OnTapped">
-            <TextBlock x:Name="TimeText" Margin="0,0,4,0">
+            <TextBlock
+                x:Name="TimeText"
+                Margin="0,0,4,0"
+                Style="{x:Bind TextBlockStyle, Mode=OneWay}">
                 <Run Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" /><Run Text=" /" />
             </TextBlock>
             <TextBlock
                 x:Name="RemainingText"
                 Margin="0,0,4,0"
+                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
                 Visibility="Collapsed">
                 <Run Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}" /><Run Text=" /" />
             </TextBlock>
-            <TextBlock Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+            <TextBlock Style="{x:Bind TextBlockStyle, Mode=OneWay}" Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
         </StackPanel>
         <TextBlock
             x:Name="NameText"
             MinWidth="0"
             Margin="4,0,0,0"
             VerticalAlignment="Center"
+            Style="{x:Bind TextBlockStyle, Mode=OneWay}"
             Visibility="Collapsed">
             <Run Text="• " /><Run Text="{x:Bind TitleName, Mode=OneWay}" /><Run x:Name="Separator" Text=": " /><Run Text="{x:Bind ChapterName, Mode=OneWay}" />
         </TextBlock>
