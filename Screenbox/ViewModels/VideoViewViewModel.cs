@@ -131,20 +131,18 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad9:
                     _mediaPlayerService.SetTime((VlcPlayer?.Length ?? 0) * (0.1 * (key - VirtualKey.NumberPad0)));
                     break;
-                case VirtualKey.Number0:
                 case VirtualKey.Number1:
+                    ResizeWindow(0.5);
+                    break;
                 case VirtualKey.Number2:
+                    ResizeWindow(1);
+                    break;
                 case VirtualKey.Number3:
+                    ResizeWindow(2);
+                    break;
                 case VirtualKey.Number4:
-                case VirtualKey.Number5:
-                case VirtualKey.Number6:
-                case VirtualKey.Number7:
-                case VirtualKey.Number8:
-                    ResizeWindow(0.25 * (key - VirtualKey.Number0));
-                    return;
-                case VirtualKey.Number9:
-                    ResizeWindow(4);
-                    return;
+                    ResizeWindow(0);
+                    break;
                 case (VirtualKey)190:   // Period (".")
                     JumpFrame(false);
                     return;

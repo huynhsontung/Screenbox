@@ -12,15 +12,19 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid
+        Background="{x:Bind Background, Mode=OneWay}"
+        BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
+        BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
+        CornerRadius="{x:Bind CornerRadius, Mode=OneWay}">
         <Button
             x:Name="VideoViewButton"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowDrop="True"
-            Background="Black"
             DragOver="{x:Bind ViewModel.OnDragOver}"
             Drop="{x:Bind ViewModel.OnDrop}"
+            IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
             Opacity="0"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Style="{x:Null}" />
@@ -77,16 +81,10 @@
                     ScopeOwner="{x:Bind VideoViewButton}" />
                 <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number5" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number6" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="Number9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
