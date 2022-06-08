@@ -43,9 +43,8 @@ namespace Screenbox.ViewModels
         public IRelayCommand MoveSelectedItemDownCommand { get; }
 
         [ObservableProperty] private bool _canSkip;
-
         [ObservableProperty] private RepeatMode _repeatMode;
-
+        [ObservableProperty] private string _repeatModeGlyph;
         [ObservableProperty] private int _selectionCount;
 
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
@@ -71,6 +70,7 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.EndReached += OnEndReached;
             _mediaService = mediaService;
             _filesService = filesService;
+            _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
             NextCommand = new AsyncRelayCommand(PlayNextAsync, CanPlayNext);
             PreviousCommand = new AsyncRelayCommand(PlayPreviousAsync, CanPlayPrevious);
@@ -159,6 +159,7 @@ namespace Screenbox.ViewModels
             {
                 case nameof(PlayingItem):
                 case nameof(RepeatMode):
+                    RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
                     UpdateCanPreviousOrNext();
                     break;
             }
@@ -420,6 +421,21 @@ namespace Screenbox.ViewModels
         {
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
+        }
+
+        private static string GetRepeatModeGlyph(RepeatMode repeatMode)
+        {
+            switch (repeatMode)
+            {
+                case RepeatMode.Off:
+                    return "\uf5e7";
+                case RepeatMode.All:
+                    return "\ue8ee";
+                case RepeatMode.One:
+                    return "\ue8ed";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
+            }
         }
     }
 

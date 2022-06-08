@@ -103,7 +103,8 @@ namespace Screenbox.ViewModels
             switch (key)
             {
                 case VirtualKey.Space:
-                    PlayPause();
+                    // Intentionally ignore checking if state is Ended
+                    _mediaPlayerService.Pause();
                     return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
@@ -175,18 +176,6 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [ICommand]
-        private void PlayPause()
-        {
-            if (VlcPlayer?.State == VLCState.Ended)
-            {
-                _mediaPlayerService.Replay();
-                return;
-            }
-
-            _mediaPlayerService.Pause();
-        }
-
         private void OnPlaying(object sender, EventArgs e)
         {
             _dispatcherQueue.TryEnqueue(() => ViewOpacity = 1.0);
@@ -219,7 +208,7 @@ namespace Screenbox.ViewModels
 
         private bool ResizeWindow(double scalar = 0)
         {
-            if (scalar < 0 || _windowService.IsCompact) return false;
+            if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
             Size videoDimension = _mediaPlayerService.Dimension;
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)

@@ -7,25 +7,65 @@ using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Screenbox.Core;
 
 namespace Screenbox.Services
 {
     internal class WindowService : IWindowService
     {
-        public bool IsCompact { get; private set; }
+        public event EventHandler<ViewModeChangedEventArgs>? ViewModeChanged;
+
+        public WindowViewMode ViewMode
+        {
+            get => _viewMode;
+            set
+            {
+                WindowViewMode oldValue = _viewMode;
+                if (oldValue != value)
+                {
+                    _viewMode = value;
+                    ViewModeChanged?.Invoke(this, new ViewModeChangedEventArgs(value, oldValue));
+                }
+            }
+        }
 
         private CoreCursor? _cursor;
+        private WindowViewMode _viewMode;
 
-        public async Task ExitCompactLayout()
+        public bool TryEnterFullScreen()
+        {
+            ApplicationView? view = ApplicationView.GetForCurrentView();
+            if (view.TryEnterFullScreenMode())
+            {
+                ViewMode = WindowViewMode.FullScreen;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void ExitFullScreen()
+        {
+            ApplicationView? view = ApplicationView.GetForCurrentView();
+            view?.ExitFullScreenMode();
+            if (ViewMode == WindowViewMode.FullScreen)
+                ViewMode = WindowViewMode.Default;
+        }
+
+        public async Task<bool> TryExitCompactLayoutAsync()
         {
             ApplicationView? view = ApplicationView.GetForCurrentView();
             if (await view.TryEnterViewModeAsync(ApplicationViewMode.Default))
             {
-                IsCompact = false;
+                if (ViewMode == WindowViewMode.Compact)
+                    ViewMode = WindowViewMode.Default;
+                return true;
             }
+
+            return false;
         }
 
-        public async Task EnterCompactLayout(Size viewSize)
+        public async Task<bool> TryEnterCompactLayoutAsync(Size viewSize)
         {
             ApplicationView? view = ApplicationView.GetForCurrentView();
             ViewModePreferences? preferences = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
@@ -37,8 +77,11 @@ namespace Screenbox.Services
 
             if (await view.TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, preferences))
             {
-                IsCompact = true;
+                ViewMode = WindowViewMode.Compact;
+                return true;
             }
+
+            return false;
         }
 
         public double ResizeWindow(Size videoDimension, double scalar = 0)
@@ -93,5 +136,12 @@ namespace Screenbox.Services
             var coreWindow = Window.Current.CoreWindow;
             coreWindow.PointerCursor ??= _cursor;
         }
+    }
+
+    public enum WindowViewMode
+    {
+        Default,
+        Compact,
+        FullScreen
     }
 }

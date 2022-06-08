@@ -60,6 +60,7 @@ namespace Screenbox
             services.AddTransient<NotificationViewModel>();
             services.AddTransient<VideosPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
+            services.AddTransient<PlayerControlsViewModel>();
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
@@ -83,8 +84,8 @@ namespace Screenbox
 
         private void SetMinWindowSize()
         {
-            var view = ApplicationView.GetForCurrentView();
-            view.SetPreferredMinSize(new Size(480, 270));
+            //var view = ApplicationView.GetForCurrentView();
+            //view.SetPreferredMinSize(new Size(480, 270));
         }
 
         protected override void OnFileActivated(FileActivatedEventArgs args)

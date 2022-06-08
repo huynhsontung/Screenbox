@@ -24,11 +24,13 @@ internal interface IMediaPlayerService
     event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
     event EventHandler<MediaPlayerTitleChangedEventArgs>? TitleChanged;
     event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
+    event EventHandler<PlayerStateChangedEventArgs>? StateChanged;
     event EventHandler? Muted;
     event EventHandler? Unmuted;
     MediaPlayer? VlcPlayer { get; }
     LibVLC? LibVlc { get; }
     MediaHandle? CurrentMedia { get; }
+    VLCState State { get; }
     int Volume { get; set; }
     double? NumericAspectRatio { get; }
     Size Dimension { get; }

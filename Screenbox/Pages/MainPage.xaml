@@ -63,29 +63,6 @@
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="Screenbox" />
             </StackPanel>
-
-            <Button
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                ToolTipService.ToolTip="Restore video view">
-                <muxc:AnimatedIcon Width="20">
-                    <muxc:AnimatedIcon.Source>
-                        <animatedVisuals:AnimatedChevronUpDownSmallVisualSource />
-                    </muxc:AnimatedIcon.Source>
-                    <muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:SymbolIconSource Symbol="Up" />
-                    </muxc:AnimatedIcon.FallbackIconSource>
-                </muxc:AnimatedIcon>
-
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <core:ChangePropertyAction
-                            PropertyName="PlayerHidden"
-                            TargetObject="{x:Bind ViewModel}"
-                            Value="False" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </Button>
         </Grid>
 
         <muxc:NavigationView

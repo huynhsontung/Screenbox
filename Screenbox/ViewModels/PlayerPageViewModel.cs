@@ -18,6 +18,7 @@ using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Converters;
+using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
@@ -31,9 +32,6 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty]
         private Size _viewSize;
-
-        [ObservableProperty]
-        private bool _isFullscreen;
 
         [ObservableProperty]
         private bool _controlsHidden;
@@ -64,6 +62,8 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty]
         private VLCState _state;
+
+        [ObservableProperty] private WindowViewMode _viewMode;
 
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
@@ -101,18 +101,25 @@ namespace Screenbox.ViewModels
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
 
-            _mediaPlayerService.EndReached += OnStateChanged;
-            _mediaPlayerService.Playing += OnStateChanged;
-            _mediaPlayerService.Paused += OnStateChanged;
             _mediaPlayerService.Stopped += OnStopped;
-            _mediaPlayerService.EncounteredError += OnStateChanged;
             _mediaPlayerService.Opening += OnOpening;
+            _mediaPlayerService.StateChanged += MediaPlayerServiceOnStateChanged;
             _mediaPlayerService.TitleChanged += OnTitleChanged;
             _mediaPlayerService.LengthChanged += OnLengthChanged;
+            _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             PropertyChanged += OnPropertyChanged;
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                ViewMode = e.NewValue;
+                IsCompact = ViewMode == WindowViewMode.Compact;
+            });
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -120,27 +127,15 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
         }
 
+        public void RequestPlay(object source)
+        {
+            Messenger.Send(new PlayMediaMessage(source));
+        }
+
         public void SetPlaybackSpeed(string speedText)
         {
             float.TryParse(speedText, out float speed);
             _mediaPlayerService.Rate = speed;
-        }
-
-        [ICommand]
-        public void ToggleFullscreen()
-        {
-            if (IsCompact) return;
-            ApplicationView? view = ApplicationView.GetForCurrentView();
-            if (view.IsFullScreenMode)
-            {
-                view.ExitFullScreenMode();
-            }
-            else
-            {
-                view.TryEnterFullScreenMode();
-            }
-
-            IsFullscreen = view.IsFullScreenMode;
         }
 
         public void OnBackRequested()
@@ -159,7 +154,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride)
+            else if (IsPlaying && !_visibilityOverride && !PlayerHidden)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -183,14 +178,6 @@ namespace Screenbox.ViewModels
 
             if (Messenger.Send<SeekBarInteractionRequestMessage>()) return;
             DelayHideControls();
-        }
-
-        public string? GetChapterName(string? nullableName)
-        {
-            if (VlcPlayer is not { ChapterCount: > 1 }) return null;
-            return string.IsNullOrEmpty(nullableName)
-                ? Resources.ChapterName(VlcPlayer.Chapter + 1)
-                : nullableName;
         }
 
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
@@ -258,21 +245,6 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [ICommand]
-        private async Task ToggleCompactLayout()
-        {
-            if (IsCompact)
-            {
-                await _windowService.ExitCompactLayout();
-            }
-            else
-            {
-                await _windowService.EnterCompactLayout(new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240));
-            }
-
-            IsCompact = _windowService.IsCompact;
-        }
-
         private void ShowStatusMessage(string? message)
         {
             StatusMessage = message;
@@ -334,6 +306,7 @@ namespace Screenbox.ViewModels
 
         private void DelayHideControls()
         {
+            if (PlayerHidden) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
                 if (IsPlaying && VideoViewFocused)
@@ -354,7 +327,6 @@ namespace Screenbox.ViewModels
 
         private void OnOpening(object sender, EventArgs e)
         {
-            UpdateState();
             if (_mediaPlayerService.CurrentMedia != null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
@@ -388,23 +360,16 @@ namespace Screenbox.ViewModels
         private void OnStopped(object sender, EventArgs e)
         {
             _dispatcherQueue.TryEnqueue(() => MediaTitle = string.Empty);
-            UpdateState();
         }
 
-        private void UpdateState()
+        private void MediaPlayerServiceOnStateChanged(object sender, PlayerStateChangedEventArgs e)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
-                State = VlcPlayer.State;
+                State = e.NewValue;
                 IsOpening = State == VLCState.Opening;
-                IsPlaying = VlcPlayer.IsPlaying;
+                IsPlaying = State == VLCState.Playing;
             });
-        }
-
-        private void OnStateChanged(object sender, EventArgs e)
-        {
-            UpdateState();
         }
     }
 }

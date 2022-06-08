@@ -162,6 +162,9 @@
     <Compile Include="Controls\TimeDisplay.xaml.cs">
       <DependentUpon>TimeDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PlayerControls.xaml.cs">
+      <DependentUpon>PlayerControls.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\VideoView.xaml.cs">
       <DependentUpon>VideoView.xaml</DependentUpon>
     </Compile>
@@ -177,7 +180,9 @@
     <Compile Include="Core\Messages\SeekBarInteractionRequestMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
+    <Compile Include="Core\PlayerStateChangedEventArgs.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
+    <Compile Include="Core\ViewModeChangedEventArgs.cs" />
     <Compile Include="Pages\FolderViewPage.xaml.cs">
       <DependentUpon>FolderViewPage.xaml</DependentUpon>
     </Compile>
@@ -239,6 +244,7 @@
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
     <Compile Include="ViewModels\SystemMediaTransportControlsViewModel.cs" />
+    <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\VideoViewViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
@@ -341,6 +347,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TimeDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PlayerControls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

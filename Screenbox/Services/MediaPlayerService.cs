@@ -21,6 +21,7 @@ namespace Screenbox.Services
         public event EventHandler<MediaPlayerChapterChangedEventArgs>? ChapterChanged;
         public event EventHandler<MediaPlayerTitleChangedEventArgs>? TitleChanged;
         public event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
+        public event EventHandler<PlayerStateChangedEventArgs>? StateChanged; 
         public event EventHandler? Muted;
         public event EventHandler? Unmuted;
         public event EventHandler? EndReached;
@@ -83,6 +84,22 @@ namespace Screenbox.Services
         }
 
         public long FrameDuration => VlcPlayer?.Fps != 0 ? (long)Math.Ceiling(1000.0 / VlcPlayer?.Fps ?? 1) : 0;
+
+        public VLCState State
+        {
+            get => _state;
+            private set
+            {
+                VLCState oldValue = _state;
+                if (oldValue != value)
+                {
+                    _state = value;
+                    StateChanged?.Invoke(this, new PlayerStateChangedEventArgs(value, oldValue));
+                }
+            }
+        }
+
+        private VLCState _state;
 
         public MediaPlayerService()
         {
@@ -171,6 +188,13 @@ namespace Screenbox.Services
             return libVlc;
         }
 
+        private void UpdateStateAndFireEvent(EventHandler? handler, object sender, EventArgs e)
+        {
+            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            State = VlcPlayer.State;
+            handler?.Invoke(sender, e);
+        }
+
         private void RegisterEventForwarding(MediaPlayer player)
         {
             player.MediaChanged += (s, e) => MediaChanged?.Invoke(s, e);
@@ -183,12 +207,12 @@ namespace Screenbox.Services
             player.VolumeChanged += (s, e) => VolumeChanged?.Invoke(s, e);
             player.Muted += (s, e) => Muted?.Invoke(s, e);
             player.Unmuted += (s, e) => Unmuted?.Invoke(s, e);
-            player.EndReached += (s, e) => EndReached?.Invoke(s, e);
-            player.Playing += (s, e) => Playing?.Invoke(s, e);
-            player.Paused += (s, e) => Paused?.Invoke(s, e);
-            player.Stopped += (s, e) => Stopped?.Invoke(s, e);
-            player.EncounteredError += (s, e) => EncounteredError?.Invoke(s, e);
-            player.Opening += (s, e) => Opening?.Invoke(s, e);
+            player.EndReached += (s, e) => UpdateStateAndFireEvent(EndReached, s, e);
+            player.Playing += (s, e) => UpdateStateAndFireEvent(Playing, s, e);
+            player.Paused += (s, e) => UpdateStateAndFireEvent(Paused, s, e);
+            player.Stopped += (s, e) => UpdateStateAndFireEvent(Stopped, s, e);
+            player.EncounteredError += (s, e) => UpdateStateAndFireEvent(EncounteredError, s, e);
+            player.Opening += (s, e) => UpdateStateAndFireEvent(Opening, s, e);
         }
 
         private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
