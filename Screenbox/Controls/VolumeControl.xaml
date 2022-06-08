@@ -20,6 +20,9 @@
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
             ToolTipService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}">
             <FontIcon Glyph="{x:Bind GetMuteToggleGlyph(ViewModel.IsMute), Mode=OneWay}" />
+            <ToggleButton.KeyboardAccelerators>
+                <KeyboardAccelerator Key="M" />
+            </ToggleButton.KeyboardAccelerators>
         </ToggleButton>
         <Slider
             x:Name="VolumeSlider"
