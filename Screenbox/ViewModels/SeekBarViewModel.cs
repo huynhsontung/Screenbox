@@ -16,7 +16,7 @@ namespace Screenbox.ViewModels
 {
     internal partial class SeekBarViewModel :
         ObservableRecipient,
-        IRecipient<SeekBarInteractionRequestMessage>,
+        IRecipient<TimeChangeOverrideMessage>,
         IRecipient<TimeRequestMessage>
     {
         [ObservableProperty] private double _length;
@@ -36,7 +36,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly IMediaPlayerService _mediaPlayerService;
-        private bool _shouldUpdateTime;
+        private bool _timeChangeOverride;
 
         public SeekBarViewModel(IMediaPlayerService mediaPlayer)
         {
@@ -53,20 +53,13 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.Buffering += OnBuffering;
             _mediaPlayerService.ChapterChanged += OnChapterChanged;
 
-            _shouldUpdateTime = true;
-
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        public void Receive(SeekBarInteractionRequestMessage message)
+        public void Receive(TimeChangeOverrideMessage message)
         {
-            if (message.IsChangeRequest)
-            {
-                _shouldUpdateTime = !message.Value;
-            }
-
-            message.Reply(!_shouldUpdateTime);
+            _timeChangeOverride = message.Value;
         }
 
         public void Receive(TimeRequestMessage message)
@@ -82,7 +75,7 @@ namespace Screenbox.ViewModels
 
         public void OnSeekBarPointerEvent(bool pressed)
         {
-            _shouldUpdateTime = !pressed;
+            _timeChangeOverride = pressed;
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
@@ -90,7 +83,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && VlcPlayer != null)
             {
                 double newTime = args.NewValue;
-                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || !_shouldUpdateTime) && newTime != Length)
+                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || _timeChangeOverride) && newTime != Length)
                 {
                     _mediaPlayerService.SetTime(newTime);
                 }
@@ -120,7 +113,7 @@ namespace Screenbox.ViewModels
 
         private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
         {
-            if (_shouldUpdateTime)
+            if (!_timeChangeOverride)
             {
                 _dispatcherQueue.TryEnqueue(() => Time = e.Time);
             }
@@ -141,7 +134,7 @@ namespace Screenbox.ViewModels
         private void OnEndReached(object sender, EventArgs e)
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            if (_shouldUpdateTime)
+            if (!_timeChangeOverride)
             {
                 _dispatcherQueue.TryEnqueue(() => Time = VlcPlayer.Length);
             }

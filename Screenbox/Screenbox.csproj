@@ -179,7 +179,7 @@
     <Compile Include="Core\Messages\PlayingItemRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
-    <Compile Include="Core\Messages\SeekBarInteractionRequestMessage.cs" />
+    <Compile Include="Core\Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\PlayerStateChangedEventArgs.cs" />

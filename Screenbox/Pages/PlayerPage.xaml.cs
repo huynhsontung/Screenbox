@@ -10,7 +10,6 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.UI.Xaml.Controls;
 using Screenbox.Controls;
 using Screenbox.Services;
 using Screenbox.ViewModels;
@@ -82,15 +81,22 @@ namespace Screenbox.Pages
 
         private void RegisterSeekBarPointerHandlers()
         {
-            void PointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
-            {
-                FocusVideoView();
-            }
-
             SeekBar? seekBar = PlayerControls.FindDescendant<SeekBar>();
             Guard.IsNotNull(seekBar, nameof(seekBar));
-            seekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
-            seekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
+            seekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)SeekBarPointerPressedEventHandler, true);
+            seekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
+            seekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
+        }
+
+        private void SeekBarPointerPressedEventHandler(object s, PointerRoutedEventArgs e)
+        {
+            ViewModel.SeekBarPointerPressed = true;
+        }
+
+        private void SeekBarPointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
+        {
+            ViewModel.SeekBarPointerPressed = false;
+            FocusVideoView();
         }
 
         private void VideoView_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)

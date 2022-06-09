@@ -60,6 +60,8 @@ namespace Screenbox.ViewModels
 
         public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
+        public bool SeekBarPointerPressed { get; set; }
+
         private enum ManipulationLock
         {
             None,
@@ -164,7 +166,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
             }
 
-            if (Messenger.Send<SeekBarInteractionRequestMessage>()) return;
+            if (SeekBarPointerPressed) return;
             DelayHideControls();
         }
 
@@ -174,7 +176,7 @@ namespace Screenbox.ViewModels
             if (_lockDirection == ManipulationLock.None) return;
             OverrideVisibilityChange(100);
             ShowStatusMessage(null);
-            Messenger.Send(new SeekBarInteractionRequestMessage(false));
+            Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
         public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
@@ -198,7 +200,7 @@ namespace Screenbox.ViewModels
                 (VlcPlayer?.IsSeekable ?? false))
             {
                 _lockDirection = ManipulationLock.Horizontal;
-                Messenger.Send(new SeekBarInteractionRequestMessage(true));
+                Messenger.Send(new TimeChangeOverrideMessage(true));
                 double timeChange = horizontalChange * horizontalChangePerPixel;
                 double currentTime = Messenger.Send(new TimeRequestMessage());
                 double newTime = currentTime + timeChange;
