@@ -195,7 +195,6 @@
                 HorizontalContentAlignment="Left"
                 VerticalContentAlignment="Top"
                 Background="Transparent"
-                ToolTipService.ToolTip="Restore video view"
                 Visibility="Collapsed">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="I" />
@@ -208,6 +207,9 @@
                         <muxc:SymbolIconSource Symbol="Up" />
                     </muxc:AnimatedIcon.FallbackIconSource>
                 </muxc:AnimatedIcon>
+                <ToolTipService.ToolTip>
+                    <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
+                </ToolTipService.ToolTip>
 
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="Click">

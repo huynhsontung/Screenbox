@@ -493,6 +493,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region RestoreView
+        /// <summary>
+        ///   Looks up a localized string similar to: Restore video view
+        /// </summary>
+        public static string RestoreView
+        {
+            get
+            {
+                return _resourceLoader.GetString("RestoreView");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -538,6 +551,7 @@ namespace Screenbox.Strings{
             IsPlaying,
             Videos,
             EmptyFolder,
+            RestoreView,
         }
 
         private static ResourceLoader _resourceLoader;

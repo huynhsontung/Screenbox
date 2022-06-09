@@ -250,4 +250,7 @@
   <data name="ItemsCount_None" xml:space="preserve">
     <value>Empty</value>
   </data>
+  <data name="RestoreView" xml:space="preserve">
+    <value>Restore video view</value>
+  </data>
 </root>
