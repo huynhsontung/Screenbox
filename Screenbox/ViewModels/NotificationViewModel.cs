@@ -16,7 +16,7 @@ using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class NotificationViewModel : ObservableRecipient, IRecipient<RaiseFrameSavedNotificationMessage>
+    internal partial class NotificationViewModel : ObservableRecipient, IRecipient<RaiseFrameSavedNotificationMessage>, IRecipient<ErrorMessage>
     {
         [ObservableProperty] private InfoBarSeverity _severity;
 
@@ -43,6 +43,22 @@ namespace Screenbox.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(ErrorMessage message)
+        {
+            void SetNotification()
+            {
+                Reset();
+                Title = message.Title;
+                Message = message.Message;
+                Severity = InfoBarSeverity.Error;
+
+                IsOpen = true;
+                _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            }
+
+            _dispatcherQueue.TryEnqueue(SetNotification);
         }
 
         public void Receive(RaiseFrameSavedNotificationMessage message)

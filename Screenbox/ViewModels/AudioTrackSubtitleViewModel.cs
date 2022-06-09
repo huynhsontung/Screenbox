@@ -8,12 +8,14 @@ using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
+using Microsoft.Toolkit.Mvvm.Messaging;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class AudioTrackSubtitleViewModel : ObservableObject
+    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient
     {
         private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
@@ -48,18 +50,15 @@ namespace Screenbox.ViewModels
         private TrackDescription[] _audioTrackDescriptions;
 
         private readonly IMediaPlayerService _mediaPlayerService;
-        private readonly INotificationService _notificationService;
         private readonly IFilesService _filesService;
         private int _spuIndex;
         private int _audioTrackIndex;
 
         public AudioTrackSubtitleViewModel(
             IMediaPlayerService mediaPlayerService,
-            INotificationService notificationService,
             IFilesService filesService)
         {
             _mediaPlayerService = mediaPlayerService;
-            _notificationService = notificationService;
             _filesService = filesService;
             _spuDescriptions = Array.Empty<TrackDescription>();
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
@@ -79,7 +78,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                _notificationService.RaiseError(Resources.FailedToLoadSubtitleNotificationTitle, e.ToString());
+                Messenger.Send(new ErrorMessage(Resources.FailedToLoadSubtitleNotificationTitle, e.ToString()));
             }
         }
 

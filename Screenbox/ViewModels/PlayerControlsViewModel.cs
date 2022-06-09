@@ -38,21 +38,18 @@ namespace Screenbox.ViewModels
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IFilesService _filesService;
-        private readonly INotificationService _notificationService;
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
             IFilesService filesService,
             IWindowService windowService,
-            IMediaPlayerService mediaPlayerService,
-            INotificationService notificationService)
+            IMediaPlayerService mediaPlayerService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _windowService = windowService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _mediaPlayerService = mediaPlayerService;
-            _notificationService = notificationService;
             _mediaPlayerService.StateChanged += MediaPlayerServiceOnStateChanged;
             _mediaPlayerService.TitleChanged += OnTitleChanged;
             _playPauseGlyph = GetPlayPauseGlyph(false);
@@ -177,7 +174,7 @@ namespace Screenbox.ViewModels
             }
             catch (Exception e)
             {
-                _notificationService.RaiseError(Resources.FailedToSaveFrameNotificationTitle, e.ToString());
+                Messenger.Send(new ErrorMessage(Resources.FailedToSaveFrameNotificationTitle, e.ToString()));
                 // TODO: track error
             }
         }
