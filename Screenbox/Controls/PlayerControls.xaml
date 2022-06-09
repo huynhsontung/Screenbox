@@ -274,7 +274,7 @@
 
             <Button
                 x:Name="CompactVolumeButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(VolumeControl.ViewModel.IsMute), Mode=OneWay}"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 Style="{StaticResource SmallPlayerButtonStyle}"
                 Visibility="Collapsed">
