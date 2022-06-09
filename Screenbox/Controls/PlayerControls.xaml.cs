@@ -1,6 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -15,10 +16,22 @@ namespace Screenbox.Controls
             typeof(PlayerControls),
             new PropertyMetadata(false));
 
+        public static readonly DependencyProperty VideoContextMenuProperty = DependencyProperty.Register(
+            nameof(VideoContextMenu),
+            typeof(MenuFlyout),
+            typeof(PlayerControls),
+            new PropertyMetadata(default(MenuFlyout)));
+
+        public MenuFlyout VideoContextMenu
+        {
+            get => (MenuFlyout)GetValue(VideoContextMenuProperty);
+            private set => SetValue(VideoContextMenuProperty, value);
+        }
+
         public bool IsMinimal
         {
-            get { return (bool)GetValue(IsMinimalProperty); }
-            set { SetValue(IsMinimalProperty, value); }
+            get => (bool)GetValue(IsMinimalProperty);
+            set => SetValue(IsMinimalProperty, value);
         }
 
         internal PlayerControlsViewModel ViewModel => (PlayerControlsViewModel)DataContext;
@@ -27,8 +40,15 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerControlsViewModel>();
+            VideoContextMenu = NormalVideoContextMenu;
 
             VisualStateManager.GoToState(this, "Normal", false);
+        }
+
+        private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
+        {
+            RadioMenuFlyoutItem item = (RadioMenuFlyoutItem)sender;
+            ViewModel.SetPlaybackSpeed(item.Text);
         }
     }
 }

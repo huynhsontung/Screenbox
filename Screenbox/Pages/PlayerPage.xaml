@@ -34,60 +34,6 @@
             </LinearGradientBrush>
 
             <ThemeShadow x:Name="SharedShadow" />
-
-            <MenuFlyout x:Key="VideoContextMenu">
-                <MenuFlyoutSubItem Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="0.25" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="0.5" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="0.75" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        IsChecked="True"
-                        Text="1" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="1.25" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="1.5" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="1.75" />
-                    <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
-                        GroupName="SpeedGroup"
-                        Text="2" />
-                </MenuFlyoutSubItem>
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.SaveSnapshotCommand}"
-                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                            Glyph=&#xEE71;}"
-                    Text="{x:Bind strings:Resources.SaveCurrentFrame}" />
-                <ToggleMenuFlyoutItem
-                    Command="{x:Bind PlayerControls.ViewModel.ToggleCompactLayoutCommand}"
-                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                            Glyph=&#xEE49;}"
-                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.PictureInPicture}" />
-                <ToggleMenuFlyoutItem
-                    Icon="{toolkit:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                            Glyph=&#xE9A6;}"
-                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
-                    Text="{x:Bind strings:Resources.ZoomToFit}" />
-            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -216,7 +162,7 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Click="{x:Bind ViewModel.ToggleControlsVisibility}"
-                ContextFlyout="{StaticResource VideoContextMenu}"
+                ContextFlyout="{x:Bind PlayerControls.VideoContextMenu, Mode=OneWay}"
                 DoubleTapped="VideoView_OnDoubleTapped"
                 ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
                 ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
@@ -324,7 +270,6 @@
                 Grid.Column="0"
                 Padding="6,20,6,12"
                 Background="{StaticResource PlayerControlsBackground}"
-                ContextFlyout="{StaticResource VideoContextMenu}"
                 IsMinimal="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" />
         </Grid>
 

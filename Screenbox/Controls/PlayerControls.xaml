@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -68,6 +69,60 @@
             <Flyout x:Key="VolumeControlFlyout">
                 <local:VolumeControl x:Name="VolumeControl" />
             </Flyout>
+
+            <MenuFlyout x:Name="NormalVideoContextMenu">
+                <MenuFlyoutSubItem Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="0.25" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="0.5" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="0.75" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        IsChecked="True"
+                        Text="1" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="1.25" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="1.5" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="1.75" />
+                    <muxc:RadioMenuFlyoutItem
+                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        GroupName="SpeedGroup"
+                        Text="2" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.SaveSnapshotCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xEE71;}"
+                    Text="{x:Bind strings:Resources.SaveCurrentFrame}" />
+                <ToggleMenuFlyoutItem
+                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xEE49;}"
+                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.PictureInPicture}" />
+                <ToggleMenuFlyoutItem
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xE9A6;}"
+                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
+                    Text="{x:Bind strings:Resources.ZoomToFit}" />
+            </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -232,7 +287,7 @@
             <Button
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
-                Flyout="{x:Bind ContextFlyout, Mode=OneWay}"
+                Flyout="{x:Bind VideoContextMenu, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                 <FontIcon Glyph="&#xE10C;" />

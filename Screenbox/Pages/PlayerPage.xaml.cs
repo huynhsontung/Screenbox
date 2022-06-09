@@ -93,12 +93,6 @@ namespace Screenbox.Pages
             seekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)PointerReleasedEventHandler, true);
         }
 
-        private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
-        {
-            var item = (RadioMenuFlyoutItem)sender;
-            ViewModel.SetPlaybackSpeed(item.Text);
-        }
-
         private void VideoView_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             PlayerControls.ViewModel.ToggleFullscreenCommand.Execute(null);

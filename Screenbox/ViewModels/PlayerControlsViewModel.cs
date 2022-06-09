@@ -1,21 +1,19 @@
 ﻿#nullable enable
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.System;
-using Windows.UI.ViewManagement;
 using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.Structures;
-using Microsoft.AppCenter.Utils.Synchronization;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core;
+using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
 
@@ -29,6 +27,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private bool _showPreviousNext;
+        [ObservableProperty] private bool _zoomToFit;
         [ObservableProperty] private string? _titleName;
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
@@ -38,21 +37,28 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
+        private readonly IFilesService _filesService;
+        private readonly INotificationService _notificationService;
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
+            IFilesService filesService,
             IWindowService windowService,
-            IMediaPlayerService mediaPlayerService)
+            IMediaPlayerService mediaPlayerService,
+            INotificationService notificationService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _filesService = filesService;
             _windowService = windowService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _mediaPlayerService = mediaPlayerService;
+            _notificationService = notificationService;
             _mediaPlayerService.StateChanged += MediaPlayerServiceOnStateChanged;
             _mediaPlayerService.TitleChanged += OnTitleChanged;
             _playPauseGlyph = GetPlayPauseGlyph(false);
             PlaylistViewModel = playlistViewModel;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
+            PropertyChanged += OnPropertyChanged;
         }
 
         public string? GetChapterName(string? nullableName)
@@ -61,6 +67,20 @@ namespace Screenbox.ViewModels
             return string.IsNullOrEmpty(nullableName)
                 ? Resources.ChapterName(VlcPlayer.Chapter + 1)
                 : nullableName;
+        }
+
+        public void SetPlaybackSpeed(string speedText)
+        {
+            float.TryParse(speedText, out float speed);
+            _mediaPlayerService.Rate = speed;
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ZoomToFit))
+            {
+                Messenger.Send(new ZoomToFitChangedMessage(ZoomToFit));
+            }
         }
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -143,6 +163,23 @@ namespace Screenbox.ViewModels
             }
 
             _mediaPlayerService.Pause();
+        }
+
+
+        [ICommand]
+        private async Task SaveSnapshot()
+        {
+            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
+            try
+            {
+                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
+                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
+            }
+            catch (Exception e)
+            {
+                _notificationService.RaiseError(Resources.FailedToSaveFrameNotificationTitle, e.ToString());
+                // TODO: track error
+            }
         }
 
         private void UpdatePlayState(VLCState newState)

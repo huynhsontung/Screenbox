@@ -5,27 +5,23 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
-using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>
+    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>, IRecipient<ZoomToFitChangedMessage>
     {
         [ObservableProperty]
         private string _mediaTitle;
@@ -41,9 +37,6 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty]
         private string? _statusMessage;
-
-        [ObservableProperty]
-        private bool _zoomToFit;
 
         [ObservableProperty]
         private bool _videoViewFocused;
@@ -77,25 +70,20 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
-        private readonly IFilesService _filesService;
-        private readonly INotificationService _notificationService;
         private readonly IWindowService _windowService;
         private readonly IMediaPlayerService _mediaPlayerService;
         private bool _visibilityOverride;
         private ManipulationLock _lockDirection;
         private double _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
+        private bool _zoomToFit;
 
         public PlayerPageViewModel(
             IMediaPlayerService mediaPlayerService,
-            IWindowService windowService,
-            IFilesService filesService,
-            INotificationService notificationService)
+            IWindowService windowService)
         {
             _mediaPlayerService = mediaPlayerService;
             _windowService = windowService;
-            _filesService = filesService;
-            _notificationService = notificationService;
             _mediaTitle = string.Empty;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -122,6 +110,12 @@ namespace Screenbox.ViewModels
             });
         }
 
+        public void Receive(ZoomToFitChangedMessage message)
+        {
+            _zoomToFit = message.Value;
+            SetCropGeometry(ViewSize);
+        }
+
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
@@ -130,12 +124,6 @@ namespace Screenbox.ViewModels
         public void RequestPlay(object source)
         {
             Messenger.Send(new PlayMediaMessage(source));
-        }
-
-        public void SetPlaybackSpeed(string speedText)
-        {
-            float.TryParse(speedText, out float speed);
-            _mediaPlayerService.Rate = speed;
         }
 
         public void OnBackRequested()
@@ -229,22 +217,6 @@ namespace Screenbox.ViewModels
             _timeBeforeManipulation = VlcPlayer?.Time ?? 0;
         }
 
-        [ICommand]
-        private async Task SaveSnapshot()
-        {
-            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
-            try
-            {
-                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
-                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
-            }
-            catch (Exception e)
-            {
-                _notificationService.RaiseError(Resources.FailedToSaveFrameNotificationTitle, e.ToString());
-                // TODO: track error
-            }
-        }
-
         private void ShowStatusMessage(string? message)
         {
             StatusMessage = message;
@@ -256,10 +228,6 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(ZoomToFit):
-                    SetCropGeometry(ViewSize);
-                    break;
-
                 case nameof(VideoViewFocused):
                     if (VideoViewFocused)
                     {
@@ -288,8 +256,8 @@ namespace Screenbox.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (!ZoomToFit && _mediaPlayerService.CropGeometry == null) return;
-            _mediaPlayerService.CropGeometry = ZoomToFit ? $"{size.Width}:{size.Height}" : null;
+            if (!_zoomToFit && _mediaPlayerService.CropGeometry == null) return;
+            _mediaPlayerService.CropGeometry = _zoomToFit && size != default ? $"{size.Width}:{size.Height}" : null;
         }
 
         private void ShowControls()

@@ -174,6 +174,7 @@
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
+    <Compile Include="Core\Messages\ZoomToFitChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayingItemRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
