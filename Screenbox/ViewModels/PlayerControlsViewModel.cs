@@ -72,6 +72,11 @@ namespace Screenbox.ViewModels
             _mediaPlayerService.Rate = speed;
         }
 
+        private void UpdateShowPreviousNext()
+        {
+            ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
+        }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ZoomToFit))
@@ -84,7 +89,7 @@ namespace Screenbox.ViewModels
         {
             if (e.PropertyName == nameof(PlaylistViewModel.CanSkip))
             {
-                ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
+                UpdateShowPreviousNext();
             }
         }
 
@@ -112,6 +117,8 @@ namespace Screenbox.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            UpdateShowPreviousNext();
         }
 
         private void OnTitleChanged(object sender, MediaPlayerTitleChangedEventArgs e)
