@@ -25,7 +25,6 @@ namespace Screenbox.Services
 
         private static void LibVLC_Log(object sender, LogEventArgs e)
         {
-            if (e.Level == LogLevel.Debug) return;
             Log(e.FormattedLog, "LibVLC");
         }
     }
