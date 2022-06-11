@@ -122,6 +122,11 @@
                                        Glyph=&#xE9A6;}"
                     IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
                     Text="{x:Bind strings:Resources.ZoomToFit}" />
+                <MenuFlyoutItem
+                    Click="MenuFlyoutItem_OnClick"
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xEC15;}"
+                    Text="Cast" />
             </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>

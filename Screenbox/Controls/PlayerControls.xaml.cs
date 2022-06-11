@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using System.Collections.ObjectModel;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -49,6 +52,11 @@ namespace Screenbox.Controls
         {
             RadioMenuFlyoutItem item = (RadioMenuFlyoutItem)sender;
             ViewModel.SetPlaybackSpeed(item.Text);
+        }
+
+        private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            await RendererPicker.StartCastingAsync();
         }
     }
 }

@@ -95,5 +95,6 @@
     <uap3:Capability Name="backgroundMediaPlayback"/>
     <uap:Capability Name="videosLibrary"/>
     <uap:Capability Name="musicLibrary"/>
+    <Capability Name="privateNetworkClientServer"/>
   </Capabilities>
 </Package>

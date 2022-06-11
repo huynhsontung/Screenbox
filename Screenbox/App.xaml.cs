@@ -61,6 +61,7 @@ namespace Screenbox
             services.AddTransient<VideosPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
+            services.AddTransient<RendererPickerViewModel>();
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
@@ -69,8 +70,9 @@ namespace Screenbox
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaPlayerService, MediaPlayerService>();
             services.AddSingleton<IMediaService, MediaService>();
+            services.AddSingleton<ICastService, CastService>();
 
-            return services.BuildServiceProvider(true);
+            return services.BuildServiceProvider();
         }
 
         private static void ConfigureAppCenter()

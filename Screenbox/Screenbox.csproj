@@ -156,6 +156,9 @@
     <Compile Include="Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RendererPicker.xaml.cs">
+      <DependentUpon>RendererPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
     </Compile>
@@ -172,6 +175,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\ErrorMessage.cs" />
@@ -183,6 +187,7 @@
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\PlayerStateChangedEventArgs.cs" />
+    <Compile Include="Core\RendererEventArgs.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
     <Compile Include="Pages\FolderViewPage.xaml.cs">
@@ -204,6 +209,8 @@
     <Compile Include="Pages\VideosPage.xaml.cs">
       <DependentUpon>VideosPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\CastService.cs" />
+    <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
     <Compile Include="Services\MediaPlayerService.cs" />
@@ -242,6 +249,7 @@
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\RendererPickerViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
@@ -341,6 +349,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RendererPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

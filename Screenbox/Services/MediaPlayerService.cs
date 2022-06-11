@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.Media.Devices;
 using Windows.Storage.AccessCache;
@@ -180,10 +181,19 @@ namespace Screenbox.Services
 
         private LibVLC InitializeLibVlc(string[] swapChainOptions)
         {
-            string[] options = new string[swapChainOptions.Length + 1];
-            options[0] = "--no-osd";
-            swapChainOptions.CopyTo(options, 1);
-            LibVLC libVlc = new(true, options);
+            List<string> options = new(swapChainOptions.Length + 4)
+            {
+#if DEBUG
+                "--verbose=3",
+#else
+                "--verbose=0",
+#endif
+                "--aout=winstore",
+                //"--sout-chromecast-conversion-quality=0",
+                "--no-osd"
+            };
+            options.AddRange(swapChainOptions);
+            LibVLC libVlc = new(true, options.ToArray());
             LogService.RegisterLibVlcLogging(libVlc);
             return libVlc;
         }
