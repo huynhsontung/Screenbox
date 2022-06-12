@@ -35,7 +35,7 @@
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
                 Command="{x:Bind ViewModel.ClearCommand}"
-                IsEnabled="{x:Bind ViewModel.Playlist.Count, Converter={StaticResource ObjectToBooleanConverter}, Mode=OneWay}">
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe74d;" />
                     <TextBlock Text="Clear" />
@@ -45,7 +45,7 @@
             <ToggleButton
                 x:Name="MultiSelectToggle"
                 VerticalAlignment="Center"
-                IsEnabled="{x:Bind ViewModel.Playlist.Count, Converter={StaticResource ObjectToBooleanConverter}, Mode=OneWay}">
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe762;" />
                     <TextBlock Text="Multi-select" />

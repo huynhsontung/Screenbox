@@ -43,6 +43,7 @@ namespace Screenbox.ViewModels
         public IRelayCommand MoveSelectedItemDownCommand { get; }
 
         [ObservableProperty] private bool _canSkip;
+        [ObservableProperty] private bool _hasItems;
         [ObservableProperty] private RepeatMode _repeatMode;
         [ObservableProperty] private string _repeatModeGlyph;
         [ObservableProperty] private int _selectionCount;
@@ -80,7 +81,7 @@ namespace Screenbox.ViewModels
             MoveSelectedItemDownCommand = new RelayCommand<IList<object>>(MoveSelectedItemDown, HasSelection);
 
             PropertyChanged += OnPropertyChanged;
-            Playlist.CollectionChanged += PlaylistOnCollectionChanged;
+            Playlist.CollectionChanged += OnCollectionChanged;
 
             // Activate the view model's messenger
             IsActive = true;
@@ -165,12 +166,13 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             _currentIndex = PlayingItem != null ? Playlist.IndexOf(PlayingItem) : -1;
 
             UpdateCanPreviousOrNext();
             CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
+            HasItems = Playlist.Count > 0;
         }
 
         private void Enqueue(IReadOnlyList<IStorageItem> files)
