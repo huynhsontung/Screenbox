@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Windows.UI.Core;
+﻿#nullable enable
+
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.ViewModels;
@@ -39,6 +39,8 @@ namespace Screenbox.Controls
 
         internal PlayerControlsViewModel ViewModel => (PlayerControlsViewModel)DataContext;
 
+        private Flyout? _castFlyout;
+
         public PlayerControls()
         {
             this.InitializeComponent();
@@ -54,9 +56,10 @@ namespace Screenbox.Controls
             ViewModel.SetPlaybackSpeed(item.Text);
         }
 
-        private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
         {
-            await RendererPicker.StartCastingAsync();
+            _castFlyout ??= CastControl.GetFlyout();
+            _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
         }
     }
 }

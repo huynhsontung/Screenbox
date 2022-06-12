@@ -1,48 +1,76 @@
 ﻿#nullable enable
 
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using Screenbox.Core;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class RendererPickerViewModel : ObservableObject
+    internal partial class CastControlViewModel : ObservableObject
     {
         public ObservableCollection<Renderer> Renderers { get; }
 
+        public IRelayCommand CastCommand { get; }
+
         [ObservableProperty] private Renderer? _selectedRenderer;
-        [ObservableProperty] private bool _isDiscovering;
+        [ObservableProperty] private Renderer? _castingDevice;
+        [ObservableProperty] private bool _isCasting;
 
         private readonly ICastService _castService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public RendererPickerViewModel(ICastService castService)
+        public CastControlViewModel(ICastService castService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _castService = castService;
             _castService.RendererFound += CastServiceOnRendererFound;
             _castService.RendererLost += CastServiceOnRendererLost;
             Renderers = new ObservableCollection<Renderer>();
-        }
-
-        public void StartCasting()
-        {
-            if (_selectedRenderer == null) return;
-            _castService.SetActiveRenderer(_selectedRenderer);
+            CastCommand = new RelayCommand(Cast, CanCast);
+            PropertyChanged += OnPropertyChanged;
         }
 
         public void StartDiscovering()
         {
+            if (IsCasting) return;
             _castService.Start();
-            IsDiscovering = true;
         }
 
         public void StopDiscovering()
         {
             _castService.Stop();
-            IsDiscovering = false;
+            SelectedRenderer = null;
+            Renderers.Clear();
+        }
+
+        private void Cast()
+        {
+            if (_selectedRenderer == null) return;
+            _castService.SetActiveRenderer(_selectedRenderer);
+            CastingDevice = _selectedRenderer;
+            IsCasting = true;
+        }
+
+        private bool CanCast() => _selectedRenderer != null && _selectedRenderer.IsAvailable;
+
+        [ICommand]
+        private void StopCasting()
+        {
+            _castService.SetActiveRenderer(null);
+            IsCasting = false;
+            StartDiscovering();
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedRenderer))
+            {
+                CastCommand.NotifyCanExecuteChanged();
+            }
         }
 
         private void CastServiceOnRendererLost(object sender, RendererLostEventArgs e)

@@ -8,15 +8,15 @@ namespace Screenbox.Core
     {
         public bool IsAvailable { get; private set; }
 
-        public string Name => _item.Name;
+        public string Name { get; }
         
-        public string Type => _item.Type;
+        public string Type { get; }
 
-        public string? IconUri => _item.IconUri;
+        public string? IconUri { get; }
 
-        public bool CanRenderVideo => _item.CanRenderVideo;
+        public bool CanRenderVideo { get; }
 
-        public bool CanRenderAudio => _item.CanRenderAudio;
+        public bool CanRenderAudio { get; }
 
         internal RendererItem? Target => IsAvailable ? _item : null;
 
@@ -25,6 +25,11 @@ namespace Screenbox.Core
         internal Renderer(RendererItem item)
         {
             _item = item;
+            Name = item.Name;
+            Type = item.Type;
+            IconUri = item.IconUri;
+            CanRenderVideo = item.CanRenderVideo;
+            CanRenderAudio = item.CanRenderAudio;
             IsAvailable = true;
         }
 

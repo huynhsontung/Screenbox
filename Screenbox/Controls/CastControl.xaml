@@ -1,0 +1,127 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.CastControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    xmlns:converters="using:Screenbox.Converters"
+    xmlns:core="using:Screenbox.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="280"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:RendererGlyphConverter x:Key="RendererGlyphConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="120" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            x:Name="TitleText"
+            Grid.Row="0"
+            Margin="0,0,0,12"
+            Style="{StaticResource SubtitleTextBlockStyle}"
+            Text="Cast to a device" />
+        <controls:ProgressBar
+            x:Name="DiscoverProgressBar"
+            Grid.Row="1"
+            IsIndeterminate="True" />
+        <ListView
+            x:Name="RendererList"
+            Grid.Row="2"
+            ItemsSource="{x:Bind ViewModel.Renderers}"
+            SelectedItem="{x:Bind ViewModel.SelectedRenderer, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="core:Renderer">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon
+                            Margin="0,0,8,0"
+                            FontSize="16"
+                            Glyph="{x:Bind Converter={StaticResource RendererGlyphConverter}}" />
+                        <TextBlock Text="{x:Bind Name}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid
+            x:Name="CastingView"
+            Grid.Row="2"
+            Margin="24,0"
+            VerticalAlignment="Center"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <FontIcon
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Margin="0,0,16,0"
+                FontSize="32"
+                Glyph="{x:Bind ViewModel.CastingDevice, Converter={StaticResource RendererGlyphConverter}, Mode=OneWay}" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="Casting to" />
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="{x:Bind ViewModel.CastingDevice.Name, Mode=OneWay, FallbackValue={x:Null}}" />
+        </Grid>
+
+        <Button
+            x:Name="CastButton"
+            Grid.Row="3"
+            HorizontalAlignment="Right"
+            Command="{x:Bind ViewModel.CastCommand}"
+            Content="Cast"
+            Style="{StaticResource AccentButtonStyle}" />
+
+        <Button
+            x:Name="StopCastingButton"
+            Grid.Row="3"
+            HorizontalAlignment="Right"
+            Command="{x:Bind ViewModel.StopCastingCommand}"
+            Content="Stop casting"
+            Visibility="Collapsed" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="LayoutStates">
+                <VisualState x:Name="Discovering" />
+                <VisualState x:Name="Casting">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsCasting, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CastingView.Visibility" Value="Visible" />
+                        <Setter Target="StopCastingButton.Visibility" Value="Visible" />
+                        <Setter Target="TitleText.Visibility" Value="Collapsed" />
+                        <Setter Target="DiscoverProgressBar.Visibility" Value="Collapsed" />
+                        <Setter Target="RendererList.Visibility" Value="Collapsed" />
+                        <Setter Target="CastButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</UserControl>

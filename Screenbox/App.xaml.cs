@@ -61,7 +61,7 @@ namespace Screenbox
             services.AddTransient<VideosPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
-            services.AddTransient<RendererPickerViewModel>();
+            services.AddTransient<CastControlViewModel>();
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 

@@ -147,6 +147,9 @@
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
       <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CastControl.xaml.cs">
+      <DependentUpon>CastControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ChapterProgressBar.xaml.cs">
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
@@ -155,9 +158,6 @@
     </Compile>
     <Compile Include="Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\RendererPicker.xaml.cs">
-      <DependentUpon>RendererPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
@@ -174,6 +174,7 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
@@ -249,7 +250,7 @@
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
-    <Compile Include="ViewModels\RendererPickerViewModel.cs" />
+    <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
@@ -336,6 +337,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CastControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -349,10 +354,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlaylistView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\RendererPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

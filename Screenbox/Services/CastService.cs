@@ -30,6 +30,7 @@ namespace Screenbox.Services
 
         public bool Start()
         {
+            Stop();
             LibVLC? libVlc = _mediaPlayerService.LibVlc;
             Guard.IsNotNull(libVlc, nameof(libVlc));
             _discoverer = new RendererDiscoverer(libVlc);
@@ -40,11 +41,12 @@ namespace Screenbox.Services
 
         public void Stop()
         {
-            Guard.IsNotNull(_discoverer, nameof(_discoverer));
+            if (_discoverer == null) return;
             _discoverer.Stop();
             _discoverer.ItemAdded -= DiscovererOnItemAdded;
             _discoverer.ItemDeleted -= DiscovererOnItemDeleted;
             _discoverer.Dispose();
+            _discoverer = null;
             foreach (Renderer renderer in _renderers)
             {
                 renderer.Dispose();
