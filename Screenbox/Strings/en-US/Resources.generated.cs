@@ -506,6 +506,58 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Cast
+        /// <summary>
+        ///   Looks up a localized string similar to: Cast
+        /// </summary>
+        public static string Cast
+        {
+            get
+            {
+                return _resourceLoader.GetString("Cast");
+            }
+        }
+        #endregion
+
+        #region StopCast
+        /// <summary>
+        ///   Looks up a localized string similar to: Stop casting
+        /// </summary>
+        public static string StopCast
+        {
+            get
+            {
+                return _resourceLoader.GetString("StopCast");
+            }
+        }
+        #endregion
+
+        #region CastingTo
+        /// <summary>
+        ///   Looks up a localized string similar to: Casting to
+        /// </summary>
+        public static string CastingTo
+        {
+            get
+            {
+                return _resourceLoader.GetString("CastingTo");
+            }
+        }
+        #endregion
+
+        #region CastToDevice
+        /// <summary>
+        ///   Looks up a localized string similar to: Cast to a device
+        /// </summary>
+        public static string CastToDevice
+        {
+            get
+            {
+                return _resourceLoader.GetString("CastToDevice");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -552,6 +604,10 @@ namespace Screenbox.Strings{
             Videos,
             EmptyFolder,
             RestoreView,
+            Cast,
+            StopCast,
+            CastingTo,
+            CastToDevice,
         }
 
         private static ResourceLoader _resourceLoader;

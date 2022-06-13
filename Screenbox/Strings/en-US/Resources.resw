@@ -253,4 +253,16 @@
   <data name="RestoreView" xml:space="preserve">
     <value>Restore video view</value>
   </data>
+  <data name="Cast" xml:space="preserve">
+    <value>Cast</value>
+  </data>
+  <data name="StopCast" xml:space="preserve">
+    <value>Stop casting</value>
+  </data>
+  <data name="CastingTo" xml:space="preserve">
+    <value>Casting to</value>
+  </data>
+  <data name="CastToDevice" xml:space="preserve">
+    <value>Cast to a device</value>
+  </data>
 </root>

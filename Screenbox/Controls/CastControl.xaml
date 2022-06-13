@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     Width="280"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -30,7 +31,7 @@
             Grid.Row="0"
             Margin="0,0,0,12"
             Style="{StaticResource SubtitleTextBlockStyle}"
-            Text="Cast to a device" />
+            Text="{x:Bind strings:Resources.CastToDevice}" />
         <controls:ProgressBar
             x:Name="DiscoverProgressBar"
             Grid.Row="1"
@@ -80,11 +81,12 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="Casting to" />
+                Text="{x:Bind strings:Resources.CastingTo}" />
 
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="1"
+                MaxLines="2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.CastingDevice.Name, Mode=OneWay, FallbackValue={x:Null}}" />
         </Grid>
@@ -94,7 +96,7 @@
             Grid.Row="3"
             HorizontalAlignment="Right"
             Command="{x:Bind ViewModel.CastCommand}"
-            Content="Cast"
+            Content="{x:Bind strings:Resources.Cast}"
             Style="{StaticResource AccentButtonStyle}" />
 
         <Button
@@ -102,7 +104,7 @@
             Grid.Row="3"
             HorizontalAlignment="Right"
             Command="{x:Bind ViewModel.StopCastingCommand}"
-            Content="Stop casting"
+            Content="{x:Bind strings:Resources.StopCast}"
             Visibility="Collapsed" />
 
         <VisualStateManager.VisualStateGroups>
