@@ -41,7 +41,7 @@ namespace Screenbox.ViewModels
             _mediaPlayerService = mediaPlayerService;
             _mediaPlayerService.Stopped += OnStopped;
             _mediaPlayerService.Playing += OnPlaying;
-            _mediaPlayerService.MediaChanged += OnMediaChanged;
+            _mediaPlayerService.MediaParsed += OnMediaParsed;
             _windowService = windowService;
             _notificationService = notificationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -184,11 +184,6 @@ namespace Screenbox.ViewModels
         private void OnStopped(object sender, EventArgs e)
         {
             _dispatcherQueue.TryEnqueue(() => ViewOpacity = 0.0);
-        }
-
-        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
-        {
-            e.Media.ParsedChanged += OnMediaParsed;
         }
 
         private void Play(object? value)

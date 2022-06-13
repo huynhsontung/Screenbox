@@ -297,15 +297,15 @@ namespace Screenbox.ViewModels
 
         private void OnOpening(object sender, EventArgs e)
         {
-            if (_mediaPlayerService.CurrentMedia != null)
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                _dispatcherQueue.TryEnqueue(() =>
+                MediaViewModel? current = Messenger.Send<PlayingItemRequestMessage>().Response;
+                MediaTitle = current?.Name ?? string.Empty;
+                if (current != null)
                 {
                     PlayerHidden = false;
-                    MediaViewModel? current = Messenger.Send<PlayingItemRequestMessage>().Response;
-                    MediaTitle = current?.Name ?? string.Empty;
-                });
-            }
+                }
+            });
         }
 
         private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)

@@ -13,7 +13,8 @@ namespace Screenbox.Services
 {
     internal class MediaPlayerService : IMediaPlayerService, IDisposable
     {
-        public event EventHandler? PlayerInitialized;
+        public event EventHandler<EventArgs>? PlayerInitialized;
+        public event EventHandler<MediaParsedChangedEventArgs>? MediaParsed;
         public event EventHandler<MediaPlayerMediaChangedEventArgs>? MediaChanged;
         public event EventHandler<MediaPlayerLengthChangedEventArgs>? LengthChanged;
         public event EventHandler<MediaPlayerTimeChangedEventArgs>? TimeChanged;
@@ -23,20 +24,18 @@ namespace Screenbox.Services
         public event EventHandler<MediaPlayerTitleChangedEventArgs>? TitleChanged;
         public event EventHandler<MediaPlayerVolumeChangedEventArgs>? VolumeChanged;
         public event EventHandler<PlayerStateChangedEventArgs>? StateChanged; 
-        public event EventHandler? Muted;
-        public event EventHandler? Unmuted;
-        public event EventHandler? EndReached;
-        public event EventHandler? Playing;
-        public event EventHandler? Paused;
-        public event EventHandler? Stopped;
-        public event EventHandler? EncounteredError;
-        public event EventHandler? Opening;
+        public event EventHandler<EventArgs>? Muted;
+        public event EventHandler<EventArgs>? Unmuted;
+        public event EventHandler<EventArgs>? EndReached;
+        public event EventHandler<EventArgs>? Playing;
+        public event EventHandler<EventArgs>? Paused;
+        public event EventHandler<EventArgs>? Stopped;
+        public event EventHandler<EventArgs>? EncounteredError;
+        public event EventHandler<EventArgs>? Opening;
 
         public MediaPlayer? VlcPlayer { get; private set; }
 
         public LibVLC? LibVlc { get; private set; }
-
-        public MediaHandle? CurrentMedia { get; private set; }
 
         public int Volume
         {
@@ -130,7 +129,6 @@ namespace Screenbox.Services
         public void Play(MediaHandle media)
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            CurrentMedia = media;
             VlcPlayer.Play(media.Media);
         }
 
@@ -198,7 +196,7 @@ namespace Screenbox.Services
             return libVlc;
         }
 
-        private void UpdateStateAndFireEvent(EventHandler? handler, object sender, EventArgs e)
+        private void UpdateStateAndFireEvent(EventHandler<EventArgs>? handler, object sender, EventArgs e)
         {
             Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             State = VlcPlayer.State;
@@ -207,16 +205,20 @@ namespace Screenbox.Services
 
         private void RegisterEventForwarding(MediaPlayer player)
         {
-            player.MediaChanged += (s, e) => MediaChanged?.Invoke(s, e);
-            player.LengthChanged += (s, e) => LengthChanged?.Invoke(s, e);
-            player.TimeChanged += (s, e) => TimeChanged?.Invoke(s, e);
-            player.SeekableChanged += (s, e) => SeekableChanged?.Invoke(s, e);
-            player.ChapterChanged += (s, e) => ChapterChanged?.Invoke(s, e);
-            player.TitleChanged += (s, e) => TitleChanged?.Invoke(s, e);
-            player.Buffering += (s, e) => Buffering?.Invoke(s, e);
-            player.VolumeChanged += (s, e) => VolumeChanged?.Invoke(s, e);
-            player.Muted += (s, e) => Muted?.Invoke(s, e);
-            player.Unmuted += (s, e) => Unmuted?.Invoke(s, e);
+            player.MediaChanged += (s, e) =>
+            {
+                MediaChanged?.Invoke(s, e);
+                e.Media.ParsedChanged += MediaParsed;
+            };
+            player.LengthChanged += LengthChanged;
+            player.TimeChanged += TimeChanged;
+            player.SeekableChanged += SeekableChanged;
+            player.ChapterChanged += ChapterChanged;
+            player.TitleChanged += TitleChanged;
+            player.Buffering += Buffering;
+            player.VolumeChanged += VolumeChanged;
+            player.Muted += Muted;
+            player.Unmuted += Unmuted;
             player.EndReached += (s, e) => UpdateStateAndFireEvent(EndReached, s, e);
             player.Playing += (s, e) => UpdateStateAndFireEvent(Playing, s, e);
             player.Paused += (s, e) => UpdateStateAndFireEvent(Paused, s, e);
