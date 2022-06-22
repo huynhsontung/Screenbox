@@ -10,19 +10,19 @@ using Screenbox.ViewModels;
 
 namespace Screenbox.Controls
 {
-    public sealed partial class VideoView : UserControl
+    public sealed partial class PlayerElement : UserControl
     {
         public event RoutedEventHandler? Click;
 
-        internal VideoViewViewModel ViewModel => (VideoViewViewModel)DataContext;
+        internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
 
         private const VirtualKey PeriodKey = (VirtualKey)190;
         private const VirtualKey CommaKey = (VirtualKey)188;
 
-        public VideoView()
+        public PlayerElement()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<VideoViewViewModel>();
+            DataContext = App.Services.GetRequiredService<PlayerElementViewModel>();
             VideoViewButton.Click += (sender, args) => Click?.Invoke(sender, args);
             VideoViewButton.Drop += (_, _) => VideoViewButton.Focus(FocusState.Programmatic);
         }

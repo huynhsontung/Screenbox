@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Screenbox.Controls.VideoView"
+    x:Class="Screenbox.Controls.PlayerElement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -95,8 +95,8 @@
                 <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:VideoView.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:VideoView.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PeriodKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.CommaKey}" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
             </lvs:VideoView.KeyboardAccelerators>
         </lvs:VideoView>
     </Grid>

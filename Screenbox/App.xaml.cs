@@ -52,7 +52,7 @@ namespace Screenbox
             var services = new ServiceCollection();
 
             services.AddTransient<PlayerPageViewModel>();
-            services.AddTransient<VideoViewViewModel>();
+            services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<VolumeViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();

@@ -22,7 +22,7 @@ using Windows.Devices.Enumeration;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class VideoViewViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
+    internal partial class PlayerElementViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
     {
         internal VlcMediaPlayer? MediaPlayer => _libVlcService.MediaPlayer;
 
@@ -34,7 +34,7 @@ namespace Screenbox.ViewModels
         private Size _viewSize;
         private bool _zoomToFit;
 
-        public VideoViewViewModel(
+        public PlayerElementViewModel(
             LibVlcService libVlcService,
             IWindowService windowService)
         {

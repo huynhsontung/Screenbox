@@ -168,8 +168,8 @@
     <Compile Include="Controls\PlayerControls.xaml.cs">
       <DependentUpon>PlayerControls.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\VideoView.xaml.cs">
-      <DependentUpon>VideoView.xaml</DependentUpon>
+    <Compile Include="Controls\PlayerElement.xaml.cs">
+      <DependentUpon>PlayerElement.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
@@ -260,7 +260,7 @@
     <Compile Include="ViewModels\SystemMediaTransportControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
-    <Compile Include="ViewModels\VideoViewViewModel.cs" />
+    <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -372,7 +372,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\VideoView.xaml">
+    <Page Include="Controls\PlayerElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

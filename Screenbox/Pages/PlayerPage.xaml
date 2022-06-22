@@ -154,7 +154,7 @@
                     TextTrimming="CharacterEllipsis" />
             </Grid>
 
-            <controls:VideoView
+            <controls:PlayerElement
                 x:Name="VideoView"
                 Grid.Row="0"
                 Grid.RowSpan="3"
@@ -182,7 +182,7 @@
                             Value="False" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-            </controls:VideoView>
+            </controls:PlayerElement>
 
             <Button
                 x:Name="RestorePlayerButton"
