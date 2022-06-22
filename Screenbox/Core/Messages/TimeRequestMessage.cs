@@ -1,12 +1,14 @@
-﻿namespace Screenbox.Core.Messages
+﻿using System;
+
+namespace Screenbox.Core.Messages
 {
-    internal class TimeRequestMessage : ChangeValueRequestMessage<double>
+    internal class TimeRequestMessage : ChangeValueRequestMessage<TimeSpan>
     {
         public TimeRequestMessage()
         {
         }
 
-        public TimeRequestMessage(double value) : base(value)
+        public TimeRequestMessage(TimeSpan value) : base(value)
         {
         }
     }

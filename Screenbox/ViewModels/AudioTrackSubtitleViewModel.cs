@@ -3,7 +3,6 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -12,12 +11,13 @@ using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
     internal partial class AudioTrackSubtitleViewModel : ObservableRecipient
     {
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
+        private MediaPlayer? VlcPlayer => _mediaPlayer?.VlcPlayer;
 
         public int SpuIndex
         {
@@ -49,19 +49,22 @@ namespace Screenbox.ViewModels
         [ObservableProperty]
         private TrackDescription[] _audioTrackDescriptions;
 
-        private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IFilesService _filesService;
+        private VlcMediaPlayer? _mediaPlayer;
         private int _spuIndex;
         private int _audioTrackIndex;
 
-        public AudioTrackSubtitleViewModel(
-            IMediaPlayerService mediaPlayerService,
-            IFilesService filesService)
+        public AudioTrackSubtitleViewModel(IFilesService filesService, LibVlcService libVlcService)
         {
-            _mediaPlayerService = mediaPlayerService;
+            libVlcService.Initialized += LibVlcService_Initialized;
             _filesService = filesService;
             _spuDescriptions = Array.Empty<TrackDescription>();
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
+        }
+
+        private void LibVlcService_Initialized(LibVlcService sender, Core.MediaPlayerInitializedEventArgs args)
+        {
+            _mediaPlayer = (VlcMediaPlayer)args.MediaPlayer;
         }
 
         [ICommand]
@@ -73,8 +76,7 @@ namespace Screenbox.ViewModels
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
                 if (file == null) return;
 
-                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
-                _mediaPlayerService.AddSubtitle(mrl);
+                _mediaPlayer?.AddSubtitle(file);
             }
             catch (Exception e)
             {

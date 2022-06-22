@@ -176,11 +176,15 @@
     </Compile>
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
+    <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
+    <Compile Include="Core\Playback\IMediaPlayer.cs" />
+    <Compile Include="Core\Playback\VlcMediaPlayer.cs" />
     <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\ErrorMessage.cs" />
-    <Compile Include="Core\Messages\ZoomToFitChangedMessage.cs" />
+    <Compile Include="Core\Messages\ChangeZoomToFitMessage.cs" />
     <Compile Include="Core\Messages\PlayingItemRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
@@ -213,8 +217,7 @@
     <Compile Include="Services\CastService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
-    <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
-    <Compile Include="Services\MediaPlayerService.cs" />
+    <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>

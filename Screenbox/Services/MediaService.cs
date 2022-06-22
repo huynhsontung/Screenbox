@@ -10,11 +10,14 @@ namespace Screenbox.Services
 {
     internal class MediaService : IMediaService
     {
-        private readonly IMediaPlayerService _mediaPlayerService;
+        private readonly LibVlcService _libVlcService;
 
-        public MediaService(IMediaPlayerService mediaPlayerService)
+        public MediaService(LibVlcService libVlcService)
         {
-            _mediaPlayerService = mediaPlayerService;
+            _libVlcService = libVlcService;
+
+            // Clear FA periodically because of 1000 items limit
+            StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
         public MediaHandle? CreateMedia(object source)
@@ -39,7 +42,7 @@ namespace Screenbox.Services
 
         public MediaHandle? CreateMedia(IStorageFile file)
         {
-            LibVLC? libVlc = _mediaPlayerService.LibVlc;
+            LibVLC? libVlc = _libVlcService.LibVlc;
             if (libVlc == null)
             {
                 return null;
@@ -55,7 +58,7 @@ namespace Screenbox.Services
 
         public MediaHandle? CreateMedia(Uri uri)
         {
-            LibVLC? libVlc = _mediaPlayerService.LibVlc;
+            LibVLC? libVlc = _libVlcService.LibVlc;
             if (libVlc == null)
             {
                 return null;

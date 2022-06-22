@@ -10,44 +10,49 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
-using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Converters;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Core.Playback;
+using Microsoft.Toolkit.Diagnostics;
+using Windows.Media.Devices;
+using Windows.Devices.Enumeration;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class VideoViewViewModel : ObservableRecipient
+    internal partial class VideoViewViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
     {
-        public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
+        internal VlcMediaPlayer? MediaPlayer => _libVlcService.MediaPlayer;
 
-        private LibVLC? LibVlc => _mediaPlayerService.LibVlc;
+        //[ObservableProperty] private double _viewOpacity;
 
-        [ObservableProperty] private double _viewOpacity;
-        
-        private readonly IMediaPlayerService _mediaPlayerService;
+        private readonly LibVlcService _libVlcService;
         private readonly IWindowService _windowService;
-        private readonly INotificationService _notificationService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private Size _viewSize;
+        private bool _zoomToFit;
 
         public VideoViewViewModel(
-            IMediaPlayerService mediaPlayerService,
-            IWindowService windowService,
-            INotificationService notificationService)
+            LibVlcService libVlcService,
+            IWindowService windowService)
         {
-            _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.Stopped += OnStopped;
-            _mediaPlayerService.Playing += OnPlaying;
-            _mediaPlayerService.MediaParsed += OnMediaParsed;
+            _libVlcService = libVlcService;
             _windowService = windowService;
-            _notificationService = notificationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
+            // Notify VLC to auto detect new audio device on device changed
+            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+
             // View model does not receive any message
-            //IsActive = true;
+            IsActive = true;
+        }
+
+        public void Receive(ChangeZoomToFitMessage message)
+        {
+            _zoomToFit = message.Value;
+            SetCropGeometry(_viewSize);
         }
 
         public void OnDragOver(object sender, DragEventArgs e)
@@ -81,19 +86,21 @@ namespace Screenbox.ViewModels
 
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
-            _mediaPlayerService.InitVlcPlayer(e.SwapChainOptions);
-            if (LibVlc != null) _notificationService.SetVlcDialogHandlers(LibVlc);
+            _libVlcService.Initialize(e.SwapChainOptions);
+            Guard.IsNotNull(MediaPlayer, nameof(MediaPlayer));
+            MediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            _mediaPlayerService.Volume += mouseWheelDelta / 25;
+            Messenger.Send(new ChangeVolumeMessage(mouseWheelDelta / 25, true));
         }
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            if (MediaPlayer == null) return;
             args.Handled = true;
             long seekAmount = 0;
             int volumeChange = 0;
@@ -104,7 +111,7 @@ namespace Screenbox.ViewModels
             {
                 case VirtualKey.Space:
                     // Intentionally ignore checking if state is Ended
-                    _mediaPlayerService.Pause();
+                    MediaPlayer.Pause();
                     return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
@@ -130,7 +137,7 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    _mediaPlayerService.SetTime((VlcPlayer?.Length ?? 0) * (0.1 * (key - VirtualKey.NumberPad0)));
+                    MediaPlayer.Position = (MediaPlayer?.NaturalDuration ?? default) * (0.1 * (key - VirtualKey.NumberPad0));
                     break;
                 case VirtualKey.Number1:
                     ResizeWindow(0.5);
@@ -172,18 +179,14 @@ namespace Screenbox.ViewModels
 
             if (volumeChange != 0)
             {
-                _mediaPlayerService.Volume += volumeChange;
+                Messenger.Send(new ChangeVolumeMessage(volumeChange, true));
             }
         }
 
-        private void OnPlaying(object sender, EventArgs e)
+        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
-            _dispatcherQueue.TryEnqueue(() => ViewOpacity = 1.0);
-        }
-
-        private void OnStopped(object sender, EventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() => ViewOpacity = 0.0);
+            _viewSize = args.NewSize;
+            SetCropGeometry(_viewSize);
         }
 
         private void Play(object? value)
@@ -192,7 +195,7 @@ namespace Screenbox.ViewModels
             Messenger.Send(new PlayMediaMessage(value));
         }
 
-        private void OnMediaParsed(object sender, MediaParsedChangedEventArgs e)
+        private void OnVideoSizeChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
@@ -203,8 +206,8 @@ namespace Screenbox.ViewModels
 
         private bool ResizeWindow(double scalar = 0)
         {
-            if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
-            Size videoDimension = _mediaPlayerService.Dimension;
+            if (MediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            Size videoDimension = new(MediaPlayer.NaturalVideoWidth, MediaPlayer.NaturalVideoHeight);
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)
             {
@@ -217,32 +220,68 @@ namespace Screenbox.ViewModels
 
         private void Seek(long amount)
         {
-            if (VlcPlayer?.IsSeekable ?? false)
+            if (MediaPlayer?.CanSeek ?? false)
             {
-                if (VlcPlayer.State == VLCState.Ended && amount > 0) return;
-                _mediaPlayerService.Seek(amount);
+                MediaPlayer.Position += TimeSpan.FromMilliseconds(amount);
                 Messenger.Send(new UpdateStatusMessage(
-                    $"{HumanizedDurationConverter.Convert(VlcPlayer.Time)} / {HumanizedDurationConverter.Convert(VlcPlayer.Length)}"));
+                    $"{HumanizedDurationConverter.Convert(MediaPlayer.Position)} / {HumanizedDurationConverter.Convert(MediaPlayer.NaturalDuration)}"));
             }
         }
 
         private bool JumpFrame(bool previous = false)
         {
-            if ((VlcPlayer?.IsSeekable ?? false) && VlcPlayer.State == VLCState.Paused)
+            if ((MediaPlayer?.CanSeek ?? false) && MediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
             {
                 if (previous)
                 {
-                    _mediaPlayerService.Seek(-_mediaPlayerService.FrameDuration);
+                    MediaPlayer.StepBackwardOneFrame();
                 }
                 else
                 {
-                    _mediaPlayerService.NextFrame();
+                    MediaPlayer.StepForwardOneFrame();
                 }
 
                 return true;
             }
 
             return false;
+        }
+
+        private void SetCropGeometry(Size size)
+        {
+            if (MediaPlayer == null) return;
+            Rect defaultSize = new Rect(0, 0, 1, 1);
+            if (!_zoomToFit && MediaPlayer.NormalizedSourceRect == defaultSize) return;
+            if (_zoomToFit)
+            {
+                double leftOffset = 0.5, topOffset = 0.5;
+                double widthRatio = size.Width / MediaPlayer.NaturalVideoWidth;
+                double heightRatio = size.Height / MediaPlayer.NaturalVideoHeight;
+                double ratio = Math.Max(widthRatio, heightRatio);
+                double width = size.Width / ratio / MediaPlayer.NaturalVideoWidth;
+                double height = size.Height / ratio / MediaPlayer.NaturalVideoHeight;
+                leftOffset -= width / 2;
+                topOffset -= height / 2;
+
+                MediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
+            }
+            else
+            {
+                MediaPlayer.NormalizedSourceRect = defaultSize;
+            }
+        }
+
+        private async void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role == AudioDeviceRole.Default && MediaPlayer != null)
+            {
+                // Relying on VLC's auto output device detection
+                //MediaPlayer.AudioDevice = null;
+
+                string deviceId = args.Id;
+                DeviceInformation device = await DeviceInformation.CreateFromIdAsync(deviceId);
+                //MediaPlayer.AudioDevice = device;
+            }
         }
     }
 }

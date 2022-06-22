@@ -16,6 +16,8 @@ using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
+using Screenbox.Core.Playback;
+using LibVLCSharp.Shared.Structures;
 
 namespace Screenbox.ViewModels
 {
@@ -31,27 +33,25 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string? _titleName;
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
-
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
+        [ObservableProperty] private ChapterDescription _currentChapter;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
-        private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IFilesService _filesService;
+        private IMediaPlayer? _mediaPlayer;
+        private MediaPlayer? _vlcPlayer;
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
+            LibVlcService libVlcService,
             IFilesService filesService,
-            IWindowService windowService,
-            IMediaPlayerService mediaPlayerService)
+            IWindowService windowService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _windowService = windowService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.StateChanged += MediaPlayerServiceOnStateChanged;
-            _mediaPlayerService.TitleChanged += OnTitleChanged;
+            libVlcService.Initialized += LibVlcService_Initialized;
             _playPauseGlyph = GetPlayPauseGlyph(false);
             PlaylistViewModel = playlistViewModel;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
@@ -60,16 +60,17 @@ namespace Screenbox.ViewModels
 
         public string? GetChapterName(string? nullableName)
         {
-            if (VlcPlayer is not { ChapterCount: > 1 }) return null;
+            if (_vlcPlayer is not { ChapterCount: > 1 }) return null;
             return string.IsNullOrEmpty(nullableName)
-                ? Resources.ChapterName(VlcPlayer.Chapter + 1)
+                ? Resources.ChapterName(_vlcPlayer.Chapter + 1)
                 : nullableName;
         }
 
         public void SetPlaybackSpeed(string speedText)
         {
+            if (_mediaPlayer == null) return;
             float.TryParse(speedText, out float speed);
-            _mediaPlayerService.Rate = speed;
+            _mediaPlayer.PlaybackRate = speed;
         }
 
         private void UpdateShowPreviousNext()
@@ -77,11 +78,31 @@ namespace Screenbox.ViewModels
             ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
         }
 
+        private void LibVlcService_Initialized(LibVlcService sender, MediaPlayerInitializedEventArgs args)
+        {
+            _mediaPlayer = args.MediaPlayer;
+            VlcMediaPlayer player = (VlcMediaPlayer)args.MediaPlayer;
+            _vlcPlayer = player.VlcPlayer;
+            player.PlaybackStateChanged += OnPlaybackStateChanged;
+            player.VlcPlayer.TitleChanged += OnTitleChanged;
+        }
+
+        private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
+        {
+            Guard.IsNotNull(_vlcPlayer, nameof(_vlcPlayer));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                var chapters = _vlcPlayer.FullChapterDescriptions();
+                if (chapters.Length == 0) return;
+                CurrentChapter = chapters[e.Chapter];
+            });
+        }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ZoomToFit))
             {
-                Messenger.Send(new ZoomToFitChangedMessage(ZoomToFit));
+                Messenger.Send(new ChangeZoomToFitMessage(ZoomToFit));
             }
         }
 
@@ -93,9 +114,13 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void MediaPlayerServiceOnStateChanged(object sender, PlayerStateChangedEventArgs e)
+        private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() => UpdatePlayState(e.NewValue));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsPlaying = sender.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing;
+                PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
+            });
         }
 
         private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
@@ -123,10 +148,10 @@ namespace Screenbox.ViewModels
 
         private void OnTitleChanged(object sender, MediaPlayerTitleChangedEventArgs e)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
+            Guard.IsNotNull(_vlcPlayer, nameof(_vlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
-                TitleName = VlcPlayer.TitleDescription.FirstOrDefault(title => title.Id == e.Title).Name;
+                TitleName = _vlcPlayer.TitleDescription.FirstOrDefault(title => title.Id == e.Title).Name;
             });
         }
 
@@ -137,9 +162,14 @@ namespace Screenbox.ViewModels
             {
                 await _windowService.TryExitCompactLayoutAsync();
             }
+            else if (_mediaPlayer?.NaturalVideoHeight > 0)
+            {
+                double aspectRatio = _mediaPlayer.NaturalVideoWidth / _mediaPlayer.NaturalVideoHeight;
+                await _windowService.TryEnterCompactLayoutAsync(new Size(240 * aspectRatio, 240));
+            }
             else
             {
-                await _windowService.TryEnterCompactLayoutAsync(new Size(240 * (_mediaPlayerService.NumericAspectRatio ?? 1), 240));
+                await _windowService.TryEnterCompactLayoutAsync(new Size(240, 240));
             }
         }
 
@@ -160,23 +190,24 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void PlayPause()
         {
-            if (_mediaPlayerService.State == VLCState.Ended)
+            if (IsPlaying)
             {
-                _mediaPlayerService.Replay();
-                return;
+                _mediaPlayer?.Pause();
             }
-
-            _mediaPlayerService.Pause();
+            else
+            {
+                _mediaPlayer?.Play();
+            }
         }
 
 
         [ICommand]
         private async Task SaveSnapshot()
         {
-            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
+            if (_vlcPlayer == null || !_vlcPlayer.WillPlay) return;
             try
             {
-                StorageFile file = await _filesService.SaveSnapshot(VlcPlayer);
+                StorageFile file = await _filesService.SaveSnapshot(_vlcPlayer);
                 Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
             }
             catch (Exception e)
@@ -184,12 +215,6 @@ namespace Screenbox.ViewModels
                 Messenger.Send(new ErrorMessage(Resources.FailedToSaveFrameNotificationTitle, e.ToString()));
                 // TODO: track error
             }
-        }
-
-        private void UpdatePlayState(VLCState newState)
-        {
-            IsPlaying = newState == VLCState.Playing;
-            PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
         }
 
         private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";

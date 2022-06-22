@@ -65,10 +65,10 @@ namespace Screenbox
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
+            services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
-            services.AddSingleton<IMediaPlayerService, MediaPlayerService>();
             services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
 

@@ -167,8 +167,7 @@
                 ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
                 ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
                 ManipulationMode="TranslateX,TranslateY"
-                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-                SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
+                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="GotFocus">
                         <core:ChangePropertyAction

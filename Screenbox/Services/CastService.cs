@@ -13,25 +13,25 @@ namespace Screenbox.Services
         public event EventHandler<RendererFoundEventArgs>? RendererFound;
         public event EventHandler<RendererLostEventArgs>? RendererLost; 
 
-        private readonly IMediaPlayerService _mediaPlayerService;
+        private readonly LibVlcService _libVlcService;
         private readonly List<Renderer> _renderers;
         private RendererDiscoverer? _discoverer;
 
-        public CastService(IMediaPlayerService mediaPlayerService)
+        public CastService(LibVlcService libVlcService)
         {
-            _mediaPlayerService = mediaPlayerService;
+            _libVlcService = libVlcService;
             _renderers = new List<Renderer>();
         }
 
         public bool SetActiveRenderer(Renderer? renderer)
         {
-            return _mediaPlayerService.VlcPlayer?.SetRenderer(renderer?.Target) ?? false;
+            return _libVlcService.MediaPlayer?.VlcPlayer.SetRenderer(renderer?.Target) ?? false;
         }
 
         public bool Start()
         {
             Stop();
-            LibVLC? libVlc = _mediaPlayerService.LibVlc;
+            LibVLC? libVlc = _libVlcService.LibVlc;
             Guard.IsNotNull(libVlc, nameof(libVlc));
             _discoverer = new RendererDiscoverer(libVlc);
             _discoverer.ItemAdded += DiscovererOnItemAdded;

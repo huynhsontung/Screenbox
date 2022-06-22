@@ -3,14 +3,13 @@
 using System;
 using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
-using LibVLCSharp.Shared;
 using LibVLCSharp.Shared.Structures;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Core.Playback;
+using Microsoft.Toolkit.Uwp.UI;
 
 namespace Screenbox.ViewModels
 {
@@ -29,32 +28,44 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private ChapterDescription[] _chapters;
 
-        [ObservableProperty] private ChapterDescription _currentChapter;
-
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
+        private IMediaPlayer? _mediaPlayer;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
-        private readonly IMediaPlayerService _mediaPlayerService;
         private bool _timeChangeOverride;
 
-        public SeekBarViewModel(IMediaPlayerService mediaPlayer)
+        public SeekBarViewModel(LibVlcService libVlcService)
         {
-            _mediaPlayerService = mediaPlayer;
             _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
-
-            _mediaPlayerService.LengthChanged += OnLengthChanged;
-            _mediaPlayerService.Stopped += OnStopped;
-            _mediaPlayerService.TimeChanged += OnTimeChanged;
-            _mediaPlayerService.SeekableChanged += OnSeekableChanged;
-            _mediaPlayerService.EndReached += OnEndReached;
-            _mediaPlayerService.Buffering += OnBuffering;
-            _mediaPlayerService.ChapterChanged += OnChapterChanged;
+            libVlcService.Initialized += LibVlcService_Initialized;
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        private void LibVlcService_Initialized(LibVlcService sender, object? args)
+        {
+            if (sender.MediaPlayer == null) return;
+            IMediaPlayer player = _mediaPlayer = sender.MediaPlayer;
+            player.NaturalDurationChanged += OnLengthChanged;
+            player.PositionChanged += OnTimeChanged;
+            player.MediaEnded += OnEndReached;
+            player.BufferingStarted += OnBufferingStarted;
+            player.BufferingEnded += OnBufferingEnded;
+        }
+
+        private void OnBufferingEnded(IMediaPlayer sender, object? args)
+        {
+            _bufferingTimer.Stop();
+            _dispatcherQueue.TryEnqueue(() => BufferingVisible = false);
+        }
+
+        private void OnBufferingStarted(IMediaPlayer sender, object? args)
+        {
+            // Only show buffering if it takes more than 0.5s
+            _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
         }
 
         public void Receive(TimeChangeOverrideMessage message)
@@ -67,10 +78,10 @@ namespace Screenbox.ViewModels
             if (message.IsChangeRequest)
             {
                 // Assume UI thread
-                Time = message.Value;
+                Time = message.Value.TotalMilliseconds;
             }
 
-            message.Reply(Time);
+            message.Reply(TimeSpan.FromMilliseconds(Time));
         }
 
         public void OnSeekBarPointerEvent(bool pressed)
@@ -80,75 +91,54 @@ namespace Screenbox.ViewModels
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
         {
-            if (IsSeekable && VlcPlayer != null)
+            if (IsSeekable && _mediaPlayer != null)
             {
                 double newTime = args.NewValue;
-                if ((args.OldValue == Time || !VlcPlayer.IsPlaying || _timeChangeOverride) && newTime != Length)
+                bool isPlaying = _mediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing;
+                if (args.OldValue == Time || !isPlaying || _timeChangeOverride)
                 {
-                    _mediaPlayerService.SetTime(newTime);
+                    _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
                 }
             }
         }
 
-        private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                var chapters = Chapters;
-                if (chapters.Length == 0) return;
-                CurrentChapter = chapters[e.Chapter];
-            });
-        }
-
-        private void OnBuffering(object sender, MediaPlayerBufferingEventArgs e)
-        {
-            // Only show buffering if it takes more than 0.5s
-            _bufferingTimer.Debounce(() => BufferingVisible = e.Cache < 100, TimeSpan.FromSeconds(0.5));
-        }
-
-        private void OnSeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() => IsSeekable = e.Seekable != 0);
-        }
-
-        private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+        private void OnTimeChanged(IMediaPlayer sender, object? args)
         {
             if (!_timeChangeOverride)
             {
-                _dispatcherQueue.TryEnqueue(() => Time = e.Time);
+                _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
             }
         }
 
-        private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
+        private void OnLengthChanged(IMediaPlayer sender, object? args)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
                 Time = 0;
-                Length = e.Length;
-                Chapters = VlcPlayer.FullChapterDescriptions();
-                CurrentChapter = Chapters.Length > 0 ? Chapters[VlcPlayer.Chapter] : default;
+                Length = sender.NaturalDuration.TotalMilliseconds;
+                IsSeekable = sender.CanSeek;
+                // TODO: Dont directly use Vlc media player to get chapter info
+                VlcMediaPlayer mediaPlayer = (VlcMediaPlayer)sender;
+                Chapters = mediaPlayer.VlcPlayer.FullChapterDescriptions();
             });
         }
 
-        private void OnEndReached(object sender, EventArgs e)
+        private void OnEndReached(IMediaPlayer sender, object? args)
         {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             if (!_timeChangeOverride)
             {
-                _dispatcherQueue.TryEnqueue(() => Time = VlcPlayer.Length);
+                _dispatcherQueue.TryEnqueue(() => Time = Length);
             }
         }
 
-        private void OnStopped(object sender, EventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                IsSeekable = false;
-                Time = 0;
-                Length = 0;
-            });
-        }
+        //private void OnStopped(object sender, EventArgs e)
+        //{
+        //    _dispatcherQueue.TryEnqueue(() =>
+        //    {
+        //        IsSeekable = false;
+        //        Time = 0;
+        //        Length = 0;
+        //    });
+        //}
     }
 }
