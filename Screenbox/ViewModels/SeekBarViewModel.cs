@@ -7,7 +7,6 @@ using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using Screenbox.Services;
 using Screenbox.Core.Playback;
 using Microsoft.Toolkit.Uwp.UI;
 
@@ -16,7 +15,8 @@ namespace Screenbox.ViewModels
     internal partial class SeekBarViewModel :
         ObservableRecipient,
         IRecipient<TimeChangeOverrideMessage>,
-        IRecipient<TimeRequestMessage>
+        IRecipient<TimeRequestMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private double _length;
 
@@ -34,26 +34,24 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _bufferingTimer;
         private bool _timeChangeOverride;
 
-        public SeekBarViewModel(LibVlcService libVlcService)
+        public SeekBarViewModel()
         {
             _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
-            libVlcService.Initialized += LibVlcService_Initialized;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        private void LibVlcService_Initialized(LibVlcService sender, object? args)
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            if (sender.MediaPlayer == null) return;
-            IMediaPlayer player = _mediaPlayer = sender.MediaPlayer;
-            player.NaturalDurationChanged += OnLengthChanged;
-            player.PositionChanged += OnTimeChanged;
-            player.MediaEnded += OnEndReached;
-            player.BufferingStarted += OnBufferingStarted;
-            player.BufferingEnded += OnBufferingEnded;
+            _mediaPlayer = message.Value;
+            _mediaPlayer.NaturalDurationChanged += OnLengthChanged;
+            _mediaPlayer.PositionChanged += OnTimeChanged;
+            _mediaPlayer.MediaEnded += OnEndReached;
+            _mediaPlayer.BufferingStarted += OnBufferingStarted;
+            _mediaPlayer.BufferingEnded += OnBufferingEnded;
         }
 
         private void OnBufferingEnded(IMediaPlayer sender, object? args)

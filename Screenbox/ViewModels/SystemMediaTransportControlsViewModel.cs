@@ -7,12 +7,13 @@ using Windows.Media;
 using Windows.Storage;
 using Windows.System;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Screenbox.Services;
 using Screenbox.Core.Playback;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal class SystemMediaTransportControlsViewModel : ObservableObject
+    internal class SystemMediaTransportControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly SystemMediaTransportControls _transportControls;
@@ -20,11 +21,8 @@ namespace Screenbox.ViewModels
         private IMediaPlayer? _mediaPlayer;
         private DateTime _lastUpdated;
 
-        public SystemMediaTransportControlsViewModel(
-            LibVlcService libVlcService,
-            PlaylistViewModel playlistViewModel)
+        public SystemMediaTransportControlsViewModel(PlaylistViewModel playlistViewModel)
         {
-            libVlcService.Initialized += LibVlcService_Initialized;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playlistViewModel = playlistViewModel;
             _playlistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
@@ -46,11 +44,13 @@ namespace Screenbox.ViewModels
             displayUpdater.Update();
 
             _lastUpdated = DateTime.MinValue;
-        }
 
-        private void LibVlcService_Initialized(LibVlcService sender, Core.MediaPlayerInitializedEventArgs args)
+            IsActive = true;
+        }
+        
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            _mediaPlayer = args.MediaPlayer;
+            _mediaPlayer = message.Value;
             _mediaPlayer.PositionChanged += OnTimeChanged;
             RegisterPlaybackEvents(_mediaPlayer);
         }

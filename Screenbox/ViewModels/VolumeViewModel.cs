@@ -4,13 +4,14 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
-using Screenbox.Services;
 using Screenbox.Strings;
 using System;
 
 namespace Screenbox.ViewModels
 {
-    internal class VolumeViewModel : ObservableRecipient, IRecipient<ChangeVolumeMessage>
+    internal class VolumeViewModel : ObservableRecipient,
+        IRecipient<ChangeVolumeMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         public bool IsMute
         {
@@ -42,18 +43,17 @@ namespace Screenbox.ViewModels
         private bool _isMute;
         private IMediaPlayer? _mediaPlayer;
 
-        public VolumeViewModel(LibVlcService libVlcService)
+        public VolumeViewModel()
         {
-            libVlcService.Initialized += LibVlcService_Initialized;
             _volume = 100;
 
             // View model doesn't receive any messages
             IsActive = true;
         }
 
-        private void LibVlcService_Initialized(LibVlcService sender, Core.MediaPlayerInitializedEventArgs args)
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            _mediaPlayer = args.MediaPlayer;
+            _mediaPlayer = message.Value;
             _mediaPlayer.VolumeChanged += OnVolumeChanged;
             _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }

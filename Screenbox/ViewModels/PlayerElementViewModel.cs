@@ -89,6 +89,7 @@ namespace Screenbox.ViewModels
             _libVlcService.Initialize(e.SwapChainOptions);
             Guard.IsNotNull(MediaPlayer, nameof(MediaPlayer));
             MediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
+            Messenger.Send(new MediaPlayerChangedMessage(MediaPlayer));
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)

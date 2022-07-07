@@ -108,9 +108,9 @@ namespace Screenbox.Core.Playback
             get => _normalizedSourceRect;
             set
             {
-                if (value == DefaultSourceRect)
+                if (value == _defaultSourceRect)
                 {
-                    _normalizedSourceRect = DefaultSourceRect;
+                    _normalizedSourceRect = _defaultSourceRect;
                     VlcPlayer.CropGeometry = null;
                 }
                 else
@@ -161,7 +161,7 @@ namespace Screenbox.Core.Playback
 
         internal MediaPlayer VlcPlayer { get; }
 
-        private readonly Rect DefaultSourceRect;
+        private readonly Rect _defaultSourceRect;
         private Media? _media;
         private object? _source;
         private Rect _normalizedSourceRect;
@@ -172,8 +172,8 @@ namespace Screenbox.Core.Playback
         public VlcMediaPlayer(LibVLC libVlc)
         {
             VlcPlayer = new MediaPlayer(libVlc);
-            DefaultSourceRect = new Rect(0, 0, 1, 1);
-            _normalizedSourceRect = DefaultSourceRect;
+            _defaultSourceRect = new Rect(0, 0, 1, 1);
+            _normalizedSourceRect = _defaultSourceRect;
 
             VlcPlayer.TimeChanged += (s, e) => PositionChanged?.Invoke(this, null);
             VlcPlayer.EncounteredError += (s, e) => MediaFailed?.Invoke(this, null);

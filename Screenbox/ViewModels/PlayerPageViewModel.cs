@@ -16,32 +16,17 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>
+    internal partial class PlayerPageViewModel : ObservableRecipient,
+        IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
     {
-        [ObservableProperty]
-        private string _mediaTitle;
-
-        [ObservableProperty]
-        private bool _controlsHidden;
-
-        [ObservableProperty]
-        private bool _isCompact;
-
-        [ObservableProperty]
-        private string? _statusMessage;
-
-        [ObservableProperty]
-        private bool _videoViewFocused;
-
-        [ObservableProperty]
-        private bool _playerHidden;
-
-        [ObservableProperty]
-        private bool _isPlaying;
-
-        [ObservableProperty]
-        private bool _isOpening;
-
+        [ObservableProperty] private string _mediaTitle;
+        [ObservableProperty] private bool _controlsHidden;
+        [ObservableProperty] private bool _isCompact;
+        [ObservableProperty] private string? _statusMessage;
+        [ObservableProperty] private bool _videoViewFocused;
+        [ObservableProperty] private bool _playerHidden;
+        [ObservableProperty] private bool _isPlaying;
+        [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private WindowViewMode _viewMode;
 
         public bool SeekBarPointerPressed { get; set; }
@@ -63,30 +48,19 @@ namespace Screenbox.ViewModels
         private TimeSpan _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
 
-        public PlayerPageViewModel(LibVlcService libVlcService, IWindowService windowService)
+        public PlayerPageViewModel(IWindowService windowService)
         {
             _windowService = windowService;
             _mediaTitle = string.Empty;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
-            libVlcService.Initialized += LibVlcService_Initialized;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             PropertyChanged += OnPropertyChanged;
 
             // Activate the view model's messenger
             IsActive = true;
-        }
-
-        private void LibVlcService_Initialized(LibVlcService sender, object? args)
-        {
-            IMediaPlayer? player = _mediaPlayer = sender.MediaPlayer;
-            if (player != null)
-            {
-                player.MediaOpened += OnOpening;
-                player.PlaybackStateChanged += OnStateChanged;
-            }
         }
 
         private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
@@ -96,6 +70,13 @@ namespace Screenbox.ViewModels
                 ViewMode = e.NewValue;
                 IsCompact = ViewMode == WindowViewMode.Compact;
             });
+        }
+
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
+            _mediaPlayer.MediaOpened += OnOpening;
+            _mediaPlayer.PlaybackStateChanged += OnStateChanged;
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -214,6 +195,7 @@ namespace Screenbox.ViewModels
                     {
                         ShowControls();
                     }
+
                     break;
             }
         }

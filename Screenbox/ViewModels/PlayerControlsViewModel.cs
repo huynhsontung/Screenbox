@@ -21,7 +21,7 @@ using LibVLCSharp.Shared.Structures;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerControlsViewModel : ObservableRecipient
+    internal partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
         public PlaylistViewModel PlaylistViewModel { get; }
 
@@ -43,7 +43,6 @@ namespace Screenbox.ViewModels
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
-            LibVlcService libVlcService,
             IFilesService filesService,
             IWindowService windowService)
         {
@@ -51,11 +50,24 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _windowService = windowService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            libVlcService.Initialized += LibVlcService_Initialized;
             _playPauseGlyph = GetPlayPauseGlyph(false);
             PlaylistViewModel = playlistViewModel;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
             PropertyChanged += OnPropertyChanged;
+
+            IsActive = true;
+        }
+        
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
+            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+
+            if (_mediaPlayer is VlcMediaPlayer vlcPlayer)
+            {
+                _vlcPlayer = vlcPlayer.VlcPlayer;
+                vlcPlayer.VlcPlayer.TitleChanged += OnTitleChanged;
+            }
         }
 
         public string? GetChapterName(string? nullableName)
@@ -76,15 +88,6 @@ namespace Screenbox.ViewModels
         private void UpdateShowPreviousNext()
         {
             ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
-        }
-
-        private void LibVlcService_Initialized(LibVlcService sender, MediaPlayerInitializedEventArgs args)
-        {
-            _mediaPlayer = args.MediaPlayer;
-            VlcMediaPlayer player = (VlcMediaPlayer)args.MediaPlayer;
-            _vlcPlayer = player.VlcPlayer;
-            player.PlaybackStateChanged += OnPlaybackStateChanged;
-            player.VlcPlayer.TitleChanged += OnTitleChanged;
         }
 
         private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
@@ -164,7 +167,7 @@ namespace Screenbox.ViewModels
             }
             else if (_mediaPlayer?.NaturalVideoHeight > 0)
             {
-                double aspectRatio = _mediaPlayer.NaturalVideoWidth / _mediaPlayer.NaturalVideoHeight;
+                double aspectRatio = _mediaPlayer.NaturalVideoWidth / (double)_mediaPlayer.NaturalVideoHeight;
                 await _windowService.TryEnterCompactLayoutAsync(new Size(240 * aspectRatio, 240));
             }
             else

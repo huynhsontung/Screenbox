@@ -15,7 +15,7 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient
+    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
         private MediaPlayer? VlcPlayer => _mediaPlayer?.VlcPlayer;
 
@@ -54,17 +54,18 @@ namespace Screenbox.ViewModels
         private int _spuIndex;
         private int _audioTrackIndex;
 
-        public AudioTrackSubtitleViewModel(IFilesService filesService, LibVlcService libVlcService)
+        public AudioTrackSubtitleViewModel(IFilesService filesService)
         {
-            libVlcService.Initialized += LibVlcService_Initialized;
             _filesService = filesService;
             _spuDescriptions = Array.Empty<TrackDescription>();
             _audioTrackDescriptions = Array.Empty<TrackDescription>();
+
+            IsActive = true;
         }
 
-        private void LibVlcService_Initialized(LibVlcService sender, Core.MediaPlayerInitializedEventArgs args)
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            _mediaPlayer = (VlcMediaPlayer)args.MediaPlayer;
+            _mediaPlayer = (VlcMediaPlayer)message.Value;
         }
 
         [ICommand]

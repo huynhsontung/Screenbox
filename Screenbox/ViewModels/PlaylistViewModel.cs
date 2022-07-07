@@ -24,7 +24,8 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlaylistViewModel : ObservableRecipient, IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>
+    internal partial class PlaylistViewModel : ObservableRecipient,
+        IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>, IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
@@ -57,13 +58,11 @@ namespace Screenbox.ViewModels
         private int _currentIndex;
 
         public PlaylistViewModel(
-            LibVlcService libVlcService,
             IFilesService filesService,
             IMediaService mediaService)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            libVlcService.Initialized += LibVlcService_Initialized;
             _mediaService = mediaService;
             _filesService = filesService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
@@ -80,6 +79,20 @@ namespace Screenbox.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
+            _mediaPlayer.MediaEnded += OnEndReached;
+
+            if (_toBeOpened != null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    PlaySingle(_toBeOpened);
+                });
+            }
         }
 
         public async void Receive(PlayMediaMessage message)
@@ -148,20 +161,6 @@ namespace Screenbox.ViewModels
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
-
-        private void LibVlcService_Initialized(LibVlcService sender, MediaPlayerInitializedEventArgs args)
-        {
-            _mediaPlayer = args.MediaPlayer;
-            _mediaPlayer.MediaEnded += OnEndReached;
-
-            if (_toBeOpened != null)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    PlaySingle(_toBeOpened);
-                });
-            }
-        }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
