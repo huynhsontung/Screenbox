@@ -159,10 +159,11 @@ namespace Screenbox.Core.Playback
 
         public bool CanPause => VlcPlayer.CanPause;
 
+        public PlaybackItem? PlaybackItem { get; private set; }
+
         internal MediaPlayer VlcPlayer { get; }
 
         private readonly Rect _defaultSourceRect;
-        private Media? _media;
         private object? _source;
         private Rect _normalizedSourceRect;
         private uint _naturalWidth;
@@ -237,19 +238,11 @@ namespace Screenbox.Core.Playback
             if (source == null)
             {
                 VlcPlayer.Stop();
-                _media = null;
+                PlaybackItem = null;
             }
             else
             {
-                // Assuming Source is always MediaHandle
-                // TODO: Support general objects
-                MediaHandle handle = (MediaHandle)source;
-                _media = handle.Media;
-                if (!_media.IsParsed)
-                {
-                    _media.Parse();
-                }
-
+                PlaybackItem = (PlaybackItem)source;
                 _readyToPlay = true;
             }
         }
@@ -273,11 +266,11 @@ namespace Screenbox.Core.Playback
 
         public void Play()
         {
-            if (_media == null) return;
+            if (PlaybackItem?.Source == null) return;
             if (_readyToPlay)
             {
                 _readyToPlay = false;
-                VlcPlayer.Play(_media);
+                VlcPlayer.Play(PlaybackItem.Source);
             }
             else
             {

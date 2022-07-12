@@ -2,14 +2,15 @@
 
 using System;
 using Windows.Storage;
+using LibVLCSharp.Shared;
 using Screenbox.Core;
 
 namespace Screenbox.Services;
 
 internal interface IMediaService
 {
-    MediaHandle? CreateMedia(object source);
-    MediaHandle? CreateMedia(string source);
-    MediaHandle? CreateMedia(IStorageFile source);
-    MediaHandle? CreateMedia(Uri source);
+    Media? CreateMedia(object source);
+    Media? CreateMedia(string source);
+    Media? CreateMedia(IStorageFile source);
+    Media? CreateMedia(Uri source);
 }

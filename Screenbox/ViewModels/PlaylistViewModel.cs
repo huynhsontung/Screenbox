@@ -14,6 +14,7 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -245,13 +246,12 @@ namespace Screenbox.ViewModels
                 return;
             }
 
-            using (MediaHandle? handle = _mediaService.CreateMedia(vm.Source))
-            {
-                if (handle == null)
-                    return;
-                _mediaPlayer.Source = handle;
-                _mediaPlayer.Play();
-            }
+            Media? media = _mediaService.CreateMedia(vm.Source);
+            if (media == null)
+                return;
+            
+            _mediaPlayer.Source = PlaybackItem.GetFromVlcMedia(media);
+            _mediaPlayer.Play();
 
             if (PlayingItem != null)
             {

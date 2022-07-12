@@ -8,16 +8,19 @@ using Windows.Media.Playback;
 namespace Screenbox.Core.Playback
 {
     public class PlaybackAudioTrackList : ObservableTrackList<AudioTrack>
-    {        
+    {
+        private readonly Media _media;
+
         public PlaybackAudioTrackList(Media media)
         {
-            if (media.IsParsed)
+            _media = media;
+            if (_media.IsParsed)
             {
-                AddVlcMediaTracks(media.Tracks);
+                AddVlcMediaTracks(_media.Tracks);
             }
             else
             {
-                media.ParsedChanged += Media_ParsedChanged;
+                _media.ParsedChanged += Media_ParsedChanged;
             }
         }
 
@@ -36,8 +39,7 @@ namespace Screenbox.Core.Playback
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
-            Media media = (Media)sender;
-            AddVlcMediaTracks(media.Tracks);
+            AddVlcMediaTracks(_media.Tracks);
         }
 
         private void AddVlcMediaTracks(MediaTrack[] tracks)

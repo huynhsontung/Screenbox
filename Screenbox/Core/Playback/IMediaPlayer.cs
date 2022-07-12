@@ -44,6 +44,7 @@ namespace Screenbox.Core.Playback
         double PlaybackRate { get; set; }
         Rect NormalizedSourceRect { get; set; }
         double Volume { get; set; }
+        public PlaybackItem? PlaybackItem { get; }
 
         void Close();
         void Play();

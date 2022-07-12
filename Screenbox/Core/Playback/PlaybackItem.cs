@@ -7,7 +7,7 @@ using Microsoft.Toolkit.Diagnostics;
 
 namespace Screenbox.Core.Playback
 {
-    internal class PlaybackItem
+    public class PlaybackItem
     {
         public Media Source { get; }
 
@@ -19,7 +19,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan StartTime { get; set; }
 
-        public TimeSpan Duration => TimeSpan.FromMilliseconds(Source.Duration);
+        public TimeSpan? Duration => Source.IsParsed ? TimeSpan.FromMilliseconds(Source.Duration) : null;
 
         private static readonly Dictionary<string, PlaybackItem> Items = new();
 
@@ -29,6 +29,7 @@ namespace Screenbox.Core.Playback
             Items[media.Mrl] = this;
             AudioTracks = new PlaybackAudioTrackList(media);
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
+            StartTime = TimeSpan.Zero;
         }
 
         public static PlaybackItem GetFromVlcMedia(Media media)
@@ -36,5 +37,7 @@ namespace Screenbox.Core.Playback
             Guard.IsNotNullOrEmpty(media.Mrl, nameof(media.Mrl));
             return Items.TryGetValue(media.Mrl, out PlaybackItem? item) ? item : new PlaybackItem(media);
         }
+
+        // TODO: Implement clean up queue
     }
 }
