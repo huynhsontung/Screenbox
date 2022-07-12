@@ -19,6 +19,7 @@ using Screenbox.Core.Playback;
 using Microsoft.Toolkit.Diagnostics;
 using Windows.Media.Devices;
 using Windows.Devices.Enumeration;
+using Windows.Media.Playback;
 
 namespace Screenbox.ViewModels
 {
@@ -111,8 +112,15 @@ namespace Screenbox.ViewModels
             switch (key)
             {
                 case VirtualKey.Space:
-                    // Intentionally ignore checking if state is Ended
-                    MediaPlayer.Pause();
+                    switch (MediaPlayer.PlaybackState)
+                    {
+                        case MediaPlaybackState.Playing:
+                            MediaPlayer.Pause();
+                            break;
+                        case MediaPlaybackState.Paused or MediaPlaybackState.None:
+                            MediaPlayer.Play();
+                            break;
+                    }
                     return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
