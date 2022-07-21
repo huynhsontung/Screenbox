@@ -558,6 +558,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Disable
+        /// <summary>
+        ///   Looks up a localized string similar to: Disable
+        /// </summary>
+        public static string Disable
+        {
+            get
+            {
+                return _resourceLoader.GetString("Disable");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -608,6 +621,7 @@ namespace Screenbox.Strings{
             StopCast,
             CastingTo,
             CastToDevice,
+            Disable,
         }
 
         private static ResourceLoader _resourceLoader;

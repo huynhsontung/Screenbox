@@ -8,6 +8,8 @@ namespace Screenbox.Core.Playback
 {
     public class AudioTrack : IMediaTrack
     {
+        internal int VlcTrackId { get; }
+
         public string Id { get; }
 
         public string? Label { get; set; }
@@ -23,9 +25,11 @@ namespace Screenbox.Core.Playback
         public AudioTrack(MediaTrack audioTrack)
         {
             Guard.IsTrue(audioTrack.TrackType == TrackType.Audio, nameof(audioTrack.TrackType));
+            VlcTrackId = audioTrack.Id;
             Id = audioTrack.Id.ToString();
-            Language = Label = audioTrack.Language;
-            Name = audioTrack.Language ?? audioTrack.Id.ToString();
+            Language = audioTrack.Language;
+            Name = audioTrack.Description ?? audioTrack.Language ?? audioTrack.Id.ToString();
+            Label = audioTrack.Description ?? audioTrack.Language;
         }
 
         //public AudioTrack(Windows.Media.Core.AudioTrack audioTrack)

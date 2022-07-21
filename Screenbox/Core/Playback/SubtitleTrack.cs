@@ -8,6 +8,8 @@ namespace Screenbox.Core.Playback
 {
     public class SubtitleTrack : IMediaTrack
     {
+        internal int VlcSpu { get; set; }
+
         public string Id { get; }
 
         public string? Label { get; set; }
@@ -19,9 +21,10 @@ namespace Screenbox.Core.Playback
         public SubtitleTrack(MediaTrack textTrack)
         {
             Guard.IsTrue(textTrack.TrackType == TrackType.Text, nameof(textTrack.TrackType));
+            VlcSpu = textTrack.Id;
             Id = textTrack.Id.ToString();
             Language = textTrack.Language;
-            Label = textTrack.Language;
+            Label = textTrack.Description ?? textTrack.Language;
         }
     }
 }

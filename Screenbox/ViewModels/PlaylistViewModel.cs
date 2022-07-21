@@ -249,7 +249,7 @@ namespace Screenbox.ViewModels
             Media? media = _mediaService.CreateMedia(vm.Source);
             if (media == null)
                 return;
-            
+
             _mediaPlayer.Source = PlaybackItem.GetFromVlcMedia(media);
             _mediaPlayer.Play();
 

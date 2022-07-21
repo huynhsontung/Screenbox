@@ -4,6 +4,7 @@ using LibVLCSharp.Shared;
 using System;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -151,9 +152,9 @@ namespace Screenbox.Core.Playback
             _ => MediaPlaybackState.None
         };
 
-        public uint NaturalVideoHeight => _naturalHeight;
+        public uint NaturalVideoHeight { get; private set; }
 
-        public uint NaturalVideoWidth => _naturalWidth;
+        public uint NaturalVideoWidth { get; private set; }
 
         public bool CanSeek => VlcPlayer.IsSeekable;
 
@@ -166,8 +167,6 @@ namespace Screenbox.Core.Playback
         private readonly Rect _defaultSourceRect;
         private object? _source;
         private Rect _normalizedSourceRect;
-        private uint _naturalWidth;
-        private uint _naturalHeight;
         private bool _readyToPlay;
 
         public VlcMediaPlayer(LibVLC libVlc)
@@ -187,6 +186,16 @@ namespace Screenbox.Core.Playback
             VlcPlayer.EndReached += VlcPlayer_EndReached;
             VlcPlayer.Buffering += VlcPlayer_Buffering;
             VlcPlayer.Opening += VlcPlayer_Opening;
+            VlcPlayer.ESAdded += VlcPlayer_ESAdded;
+        }
+
+        private void VlcPlayer_ESAdded(object sender, MediaPlayerESAddedEventArgs e)
+        {
+            if (PlaybackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
+            if (e.Type == TrackType.Text)
+            {
+                PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id);
+            }
         }
 
         private void VlcPlayer_LengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
@@ -194,10 +203,10 @@ namespace Screenbox.Core.Playback
             NaturalDurationChanged?.Invoke(this, null);
             uint px = 0, py = 0;
             VlcPlayer.Size(0, ref px, ref py);
-            if (_naturalWidth != px || _naturalHeight != py)
+            if (NaturalVideoWidth != px || NaturalVideoHeight != py)
             {
-                _naturalWidth = px;
-                _naturalHeight = py;
+                NaturalVideoWidth = px;
+                NaturalVideoHeight = py;
                 NaturalVideoSizeChanged?.Invoke(this, null);
             }
         }
@@ -238,17 +247,45 @@ namespace Screenbox.Core.Playback
             if (source == null)
             {
                 VlcPlayer.Stop();
+                if (PlaybackItem != null) RemoveItemHandlers(PlaybackItem);
                 PlaybackItem = null;
             }
             else
             {
                 PlaybackItem = (PlaybackItem)source;
+                RegisterItemHandlers(PlaybackItem);
                 _readyToPlay = true;
             }
         }
 
+        private void RemoveItemHandlers(PlaybackItem item)
+        {
+            item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
+            item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
+        }
+
+        private void RegisterItemHandlers(PlaybackItem item)
+        {
+            RemoveItemHandlers(item);
+            item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
+            item.AudioTracks.SelectedIndexChanged += AudioTracksOnSelectedIndexChanged;
+        }
+
+        private void AudioTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            PlaybackAudioTrackList trackList = (PlaybackAudioTrackList)sender;
+            VlcPlayer.SetAudioTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        }
+
+        private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            PlaybackSubtitleTrackList trackList = (PlaybackSubtitleTrackList)sender;
+            VlcPlayer.SetSpu(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcSpu);
+        }
+
         public void AddSubtitle(IStorageFile file)
         {
+            if (PlaybackItem == null) return;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
             VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, true);
         }

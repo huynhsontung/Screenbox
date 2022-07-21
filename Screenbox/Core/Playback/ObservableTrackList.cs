@@ -23,6 +23,7 @@ namespace Screenbox.Core.Playback
             get => _selectedIndex;
             set
             {
+                if (value == _selectedIndex) return;
                 _selectedIndex = value;
                 SelectedIndexChanged?.Invoke(this, null);
             }
@@ -36,6 +37,7 @@ namespace Screenbox.Core.Playback
         {
             TrackList = new ObservableCollection<T>();
             TrackList.CollectionChanged += TrackList_CollectionChanged;
+            _selectedIndex = -1;
         }
 
         private void TrackList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

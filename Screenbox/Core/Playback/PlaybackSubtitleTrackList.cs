@@ -1,4 +1,6 @@
-﻿using LibVLCSharp.Shared;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Playback
 {
@@ -9,7 +11,7 @@ namespace Screenbox.Core.Playback
         public PlaybackSubtitleTrackList(Media media)
         {
             _media = media;
-            if (_media.IsParsed)
+            if (_media.Tracks.Length > 0)
             {
                 AddVlcMediaTracks(_media.Tracks);
             }
@@ -17,6 +19,23 @@ namespace Screenbox.Core.Playback
             {
                 _media.ParsedChanged += Media_ParsedChanged;
             }
+        }
+
+        internal async void NotifyTrackAdded(int trackId)
+        {
+            // Run in new thread due to VLC thread safety
+            await Task.Run(() =>
+            {
+                foreach (MediaTrack track in _media.Tracks)
+                {
+                    if (track.TrackType == TrackType.Text && track.Id == trackId)
+                    {
+                        TrackList.Add(new SubtitleTrack(track));
+                        SelectedIndex = Count - 1;
+                        return;
+                    }
+                }
+            });
         }
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)

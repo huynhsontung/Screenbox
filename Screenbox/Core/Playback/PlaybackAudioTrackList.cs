@@ -14,7 +14,7 @@ namespace Screenbox.Core.Playback
         public PlaybackAudioTrackList(Media media)
         {
             _media = media;
-            if (_media.IsParsed)
+            if (_media.Tracks.Length > 0)
             {
                 AddVlcMediaTracks(_media.Tracks);
             }
@@ -22,6 +22,8 @@ namespace Screenbox.Core.Playback
             {
                 _media.ParsedChanged += Media_ParsedChanged;
             }
+
+            SelectedIndex = 0;
         }
 
         //public PlaybackAudioTrackList(MediaPlaybackItem playbackItem)
