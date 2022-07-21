@@ -181,8 +181,9 @@
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
-    <Compile Include="Core\Playback\ObservableTrackList.cs" />
+    <Compile Include="Core\Playback\SingleSelectTrackList.cs" />
     <Compile Include="Core\Playback\PlaybackAudioTrackList.cs" />
+    <Compile Include="Core\Playback\PlaybackChapterList.cs" />
     <Compile Include="Core\Playback\PlaybackItem.cs" />
     <Compile Include="Core\Playback\PlaybackSubtitleTrackList.cs" />
     <Compile Include="Core\Playback\SubtitleTrack.cs" />

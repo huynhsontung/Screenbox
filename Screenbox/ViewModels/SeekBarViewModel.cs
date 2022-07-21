@@ -1,9 +1,10 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
+using Windows.Media.Core;
 using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
-using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
@@ -26,7 +27,7 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private bool _bufferingVisible;
 
-        [ObservableProperty] private ChapterDescription[] _chapters;
+        [ObservableProperty] private IReadOnlyCollection<ChapterCue>? _chapters;
 
         private IMediaPlayer? _mediaPlayer;
 
@@ -36,7 +37,6 @@ namespace Screenbox.ViewModels
 
         public SeekBarViewModel()
         {
-            _chapters = Array.Empty<ChapterDescription>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
 
@@ -115,9 +115,7 @@ namespace Screenbox.ViewModels
                 Time = 0;
                 Length = sender.NaturalDuration.TotalMilliseconds;
                 IsSeekable = sender.CanSeek;
-                // TODO: Dont directly use Vlc media player to get chapter info
-                VlcMediaPlayer mediaPlayer = (VlcMediaPlayer)sender;
-                Chapters = mediaPlayer.VlcPlayer.FullChapterDescriptions();
+                Chapters = sender.PlaybackItem?.Chapters;
             });
         }
 

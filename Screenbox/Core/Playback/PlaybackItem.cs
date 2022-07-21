@@ -17,9 +17,11 @@ namespace Screenbox.Core.Playback
 
         public PlaybackSubtitleTrackList SubtitleTracks { get; }
 
+        public PlaybackChapterList Chapters { get; }
+
         public TimeSpan StartTime { get; set; }
 
-        public TimeSpan? Duration => Source.IsParsed ? TimeSpan.FromMilliseconds(Source.Duration) : null;
+        public TimeSpan? Duration => Source.Duration > 0 ? TimeSpan.FromMilliseconds(Source.Duration) : null;
 
         private static readonly Dictionary<string, PlaybackItem> Items = new();
 
@@ -29,6 +31,7 @@ namespace Screenbox.Core.Playback
             Items[media.Mrl] = this;
             AudioTracks = new PlaybackAudioTrackList(media);
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
+            Chapters = new PlaybackChapterList();
             StartTime = TimeSpan.Zero;
         }
 

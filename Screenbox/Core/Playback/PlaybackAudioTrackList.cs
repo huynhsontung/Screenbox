@@ -7,7 +7,7 @@ using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
-    public class PlaybackAudioTrackList : ObservableTrackList<AudioTrack>
+    public class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
     {
         private readonly Media _media;
 

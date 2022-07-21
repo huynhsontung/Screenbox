@@ -2,12 +2,15 @@
 
 using LibVLCSharp.Shared;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using LibVLCSharp.Shared.Structures;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.Playback
@@ -26,6 +29,7 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, object?>? NaturalDurationChanged;
         public event TypedEventHandler<IMediaPlayer, object?>? NaturalVideoSizeChanged;
         public event TypedEventHandler<IMediaPlayer, object?>? PositionChanged;
+        public event TypedEventHandler<IMediaPlayer, object?>? ChapterChanged;
         public event TypedEventHandler<IMediaPlayer, object?>? PlaybackStateChanged;
         public event TypedEventHandler<IMediaPlayer, object?>? PlaybackRateChanged;
 
@@ -37,6 +41,17 @@ namespace Screenbox.Core.Playback
                 _source = value;
                 ProcessSource(value);
                 SourceChanged?.Invoke(this, null);
+            }
+        }
+
+        public ChapterCue? Chapter
+        {
+            get => _chapter;
+            set
+            {
+                if (value == _chapter) return;
+                _chapter = value;
+                ChapterChanged?.Invoke(this, null);
             }
         }
 
@@ -166,6 +181,7 @@ namespace Screenbox.Core.Playback
 
         private readonly Rect _defaultSourceRect;
         private object? _source;
+        private ChapterCue? _chapter;
         private Rect _normalizedSourceRect;
         private bool _readyToPlay;
 
@@ -182,11 +198,23 @@ namespace Screenbox.Core.Playback
             VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
             VlcPlayer.Paused += (s, e) => PlaybackStateChanged?.Invoke(this, null);
             VlcPlayer.Playing += (s, e) => PlaybackStateChanged?.Invoke(this, null);
+            VlcPlayer.ChapterChanged += VlcPlayer_ChapterChanged;
             VlcPlayer.LengthChanged += VlcPlayer_LengthChanged;
             VlcPlayer.EndReached += VlcPlayer_EndReached;
             VlcPlayer.Buffering += VlcPlayer_Buffering;
             VlcPlayer.Opening += VlcPlayer_Opening;
             VlcPlayer.ESAdded += VlcPlayer_ESAdded;
+        }
+
+        private void VlcPlayer_ChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
+        {
+            if (PlaybackItem == null || e.Chapter < 0 || e.Chapter >= PlaybackItem.Chapters.Count)
+            {
+                Chapter = null;
+                return;
+            }
+
+            Chapter = PlaybackItem.Chapters[e.Chapter];
         }
 
         private void VlcPlayer_ESAdded(object sender, MediaPlayerESAddedEventArgs e)
@@ -200,14 +228,41 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_LengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
         {
-            NaturalDurationChanged?.Invoke(this, null);
-            uint px = 0, py = 0;
-            VlcPlayer.Size(0, ref px, ref py);
-            if (NaturalVideoWidth != px || NaturalVideoHeight != py)
+            try
             {
-                NaturalVideoWidth = px;
-                NaturalVideoHeight = py;
-                NaturalVideoSizeChanged?.Invoke(this, null);
+                // Update video dimension
+                uint px = 0, py = 0;
+                VlcPlayer.Size(0, ref px, ref py);
+                if (NaturalVideoWidth != px || NaturalVideoHeight != py)
+                {
+                    NaturalVideoWidth = px;
+                    NaturalVideoHeight = py;
+                    NaturalVideoSizeChanged?.Invoke(this, null);
+                }
+
+                if (PlaybackItem == null) return;
+
+                // Update chapter list
+                if (VlcPlayer.ChapterCount > 0)
+                {
+                    List<ChapterDescription> chapterDescriptions = new();
+                    for (int i = 0; i < VlcPlayer.TitleCount; i++)
+                    {
+                        chapterDescriptions.AddRange(VlcPlayer.FullChapterDescriptions(i));
+                    }
+
+                    PlaybackItem.Chapters.Load(chapterDescriptions);
+                }
+                else
+                {
+                    PlaybackItem.Chapters.Load(VlcPlayer.FullChapterDescriptions());
+                }
+
+                Chapter = PlaybackItem.Chapters.FirstOrDefault();
+            }
+            finally
+            {
+                NaturalDurationChanged?.Invoke(this, null);
             }
         }
 

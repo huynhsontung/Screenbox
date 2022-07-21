@@ -17,7 +17,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
 using Screenbox.Core.Playback;
-using LibVLCSharp.Shared.Structures;
 
 namespace Screenbox.ViewModels
 {
@@ -33,7 +32,6 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string? _titleName;
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
-        [ObservableProperty] private ChapterDescription _currentChapter;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
@@ -62,20 +60,13 @@ namespace Screenbox.ViewModels
         {
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+            _mediaPlayer.ChapterChanged += OnChapterChanged;
 
             if (_mediaPlayer is VlcMediaPlayer vlcPlayer)
             {
                 _vlcPlayer = vlcPlayer.VlcPlayer;
                 vlcPlayer.VlcPlayer.TitleChanged += OnTitleChanged;
             }
-        }
-
-        public string? GetChapterName(string? nullableName)
-        {
-            if (_vlcPlayer is not { ChapterCount: > 1 }) return null;
-            return string.IsNullOrEmpty(nullableName)
-                ? Resources.ChapterName(_vlcPlayer.Chapter + 1)
-                : nullableName;
         }
 
         public void SetPlaybackSpeed(string speedText)
@@ -88,17 +79,6 @@ namespace Screenbox.ViewModels
         private void UpdateShowPreviousNext()
         {
             ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
-        }
-
-        private void OnChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
-        {
-            Guard.IsNotNull(_vlcPlayer, nameof(_vlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                var chapters = _vlcPlayer.FullChapterDescriptions();
-                if (chapters.Length == 0) return;
-                CurrentChapter = chapters[e.Chapter];
-            });
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -123,6 +103,14 @@ namespace Screenbox.ViewModels
             {
                 IsPlaying = sender.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing;
                 PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
+            });
+        }
+
+        private void OnChapterChanged(IMediaPlayer sender, object? args)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                ChapterName = sender.Chapter?.Title;
             });
         }
 

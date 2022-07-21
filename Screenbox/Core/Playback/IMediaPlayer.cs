@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
 
@@ -26,6 +27,7 @@ namespace Screenbox.Core.Playback
         event TypedEventHandler<IMediaPlayer, object?>? NaturalDurationChanged;
         event TypedEventHandler<IMediaPlayer, object?>? NaturalVideoSizeChanged;
         event TypedEventHandler<IMediaPlayer, object?>? PositionChanged;
+        event TypedEventHandler<IMediaPlayer, object?>? ChapterChanged;
         event TypedEventHandler<IMediaPlayer, object?>? PlaybackStateChanged;
         event TypedEventHandler<IMediaPlayer, object?>? PlaybackRateChanged;
 
@@ -41,6 +43,7 @@ namespace Screenbox.Core.Playback
         uint NaturalVideoWidth { get; }
         TimeSpan Position { get; set; }
         TimeSpan NaturalDuration { get; }
+        ChapterCue? Chapter { get; }
         double PlaybackRate { get; set; }
         Rect NormalizedSourceRect { get; set; }
         double Volume { get; set; }

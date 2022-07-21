@@ -4,7 +4,7 @@ using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Playback
 {
-    public class PlaybackSubtitleTrackList : ObservableTrackList<SubtitleTrack>
+    public class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
         private readonly Media _media;
 

@@ -2,17 +2,14 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using Windows.Foundation;
 using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public class ObservableTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList, INotifyCollectionChanged
+    public class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList
     {
         public event TypedEventHandler<ISingleSelectMediaTrackList, object?>? SelectedIndexChanged;
-        public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public T this[int index] => TrackList[index];
 
@@ -29,20 +26,14 @@ namespace Screenbox.Core.Playback
             }
         }
 
-        protected ObservableCollection<T> TrackList { get; }
+        protected List<T> TrackList { get; }
 
         private int _selectedIndex;
 
-        public ObservableTrackList()
+        public SingleSelectTrackList()
         {
-            TrackList = new ObservableCollection<T>();
-            TrackList.CollectionChanged += TrackList_CollectionChanged;
+            TrackList = new List<T>();
             _selectedIndex = -1;
-        }
-
-        private void TrackList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            CollectionChanged?.Invoke(this, e);
         }
 
         public IEnumerator<T> GetEnumerator()
