@@ -2,13 +2,11 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
-using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
@@ -29,7 +27,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private bool _showPreviousNext;
         [ObservableProperty] private bool _zoomToFit;
-        [ObservableProperty] private string? _titleName;
+        [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
 
@@ -37,7 +35,6 @@ namespace Screenbox.ViewModels
         private readonly IWindowService _windowService;
         private readonly IFilesService _filesService;
         private IMediaPlayer? _mediaPlayer;
-        private MediaPlayer? _vlcPlayer;
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
@@ -61,12 +58,6 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.ChapterChanged += OnChapterChanged;
-
-            if (_mediaPlayer is VlcMediaPlayer vlcPlayer)
-            {
-                _vlcPlayer = vlcPlayer.VlcPlayer;
-                vlcPlayer.VlcPlayer.TitleChanged += OnTitleChanged;
-            }
         }
 
         public void SetPlaybackSpeed(string speedText)
@@ -137,15 +128,6 @@ namespace Screenbox.ViewModels
             UpdateShowPreviousNext();
         }
 
-        private void OnTitleChanged(object sender, MediaPlayerTitleChangedEventArgs e)
-        {
-            Guard.IsNotNull(_vlcPlayer, nameof(_vlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                TitleName = _vlcPlayer.TitleDescription.FirstOrDefault(title => title.Id == e.Title).Name;
-            });
-        }
-
         [ICommand]
         private async Task ToggleCompactLayout()
         {
@@ -195,16 +177,18 @@ namespace Screenbox.ViewModels
         [ICommand]
         private async Task SaveSnapshot()
         {
-            if (_vlcPlayer == null || !_vlcPlayer.WillPlay) return;
-            try
+            if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
             {
-                StorageFile file = await _filesService.SaveSnapshot(_vlcPlayer);
-                Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(Resources.FailedToSaveFrameNotificationTitle, e.ToString()));
-                // TODO: track error
+                try
+                {
+                    StorageFile file = await _filesService.SaveSnapshot(_mediaPlayer);
+                    Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
+                }
+                catch (Exception e)
+                {
+                    Messenger.Send(new ErrorMessage(Resources.FailedToSaveFrameNotificationTitle, e.ToString()));
+                    // TODO: track error
+                }
             }
         }
 

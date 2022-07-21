@@ -11,8 +11,7 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Media.Imaging;
-using LibVLCSharp.Shared;
-using Screenbox.ViewModels;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.Services
 {
@@ -81,7 +80,7 @@ namespace Screenbox.Services
 
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder)
         {
-            var queryOptions = new QueryOptions(CommonFileQuery.DefaultQuery, SupportedFormats)
+            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats)
             {
                 IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
@@ -91,14 +90,14 @@ namespace Screenbox.Services
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
         {
-            var picker = new FileOpenPicker
+            FileOpenPicker picker = new()
             {
                 ViewMode = PickerViewMode.Thumbnail,
                 SuggestedStartLocation = PickerLocationId.VideosLibrary
             };
 
             IEnumerable<string> fileTypes = formats.Length == 0 ? SupportedFormats : formats;
-            foreach (var fileType in fileTypes)
+            foreach (string? fileType in fileTypes)
             {
                 picker.FileTypeFilter.Add(fileType);
             }
@@ -106,21 +105,27 @@ namespace Screenbox.Services
             return picker.PickSingleFileAsync();
         }
 
-        public async Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer)
+        public async Task<StorageFile> SaveSnapshot(IMediaPlayer mediaPlayer)
         {
-            var tempFolder =
-                await ApplicationData.Current.TemporaryFolder.CreateFolderAsync($"snapshot_{DateTimeOffset.Now.Ticks}",
+            if (mediaPlayer is not VlcMediaPlayer player)
+            {
+                throw new NotImplementedException("Not supported on non VLC players");
+            }
+
+            StorageFolder? tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
+                    $"snapshot_{DateTimeOffset.Now.Ticks}",
                     CreationCollisionOption.FailIfExists);
 
             try
             {
-                if (mediaPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
+                if (player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
                 {
-                    var file = (await tempFolder.GetFilesAsync()).First();
-                    var pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-                    var defaultSaveFolder = pictureLibrary.SaveFolder;
-                    var destFolder =
-                        await defaultSaveFolder.CreateFolderAsync("Screenbox", CreationCollisionOption.OpenIfExists);
+                    StorageFile? file = (await tempFolder.GetFilesAsync()).First();
+                    StorageLibrary? pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+                    StorageFolder? defaultSaveFolder = pictureLibrary.SaveFolder;
+                    StorageFolder? destFolder =
+                        await defaultSaveFolder.CreateFolderAsync("Screenbox",
+                            CreationCollisionOption.OpenIfExists);
                     return await file.CopyAsync(destFolder);
                 }
 
