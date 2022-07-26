@@ -43,9 +43,6 @@ namespace Screenbox.ViewModels
             _windowService = windowService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-            // Notify VLC to auto detect new audio device on device changed
-            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
-
             // View model does not receive any message
             IsActive = true;
         }
@@ -277,19 +274,6 @@ namespace Screenbox.ViewModels
             else
             {
                 MediaPlayer.NormalizedSourceRect = defaultSize;
-            }
-        }
-
-        private async void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
-        {
-            if (args.Role == AudioDeviceRole.Default && MediaPlayer != null)
-            {
-                // Relying on VLC's auto output device detection
-                //MediaPlayer.AudioDevice = null;
-
-                string deviceId = args.Id;
-                DeviceInformation device = await DeviceInformation.CreateFromIdAsync(deviceId);
-                //MediaPlayer.AudioDevice = device;
             }
         }
     }

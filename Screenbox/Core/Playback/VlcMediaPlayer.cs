@@ -7,6 +7,7 @@ using System.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
+using Windows.Media.Devices;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -204,6 +205,9 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Buffering += VlcPlayer_Buffering;
             VlcPlayer.Opening += VlcPlayer_Opening;
             VlcPlayer.ESAdded += VlcPlayer_ESAdded;
+
+            // Notify VLC to auto detect new audio device on device changed
+            MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
         }
 
         private void VlcPlayer_ChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
@@ -387,6 +391,14 @@ namespace Screenbox.Core.Playback
         {
             VlcPlayer.Stop();
             VlcPlayer.Play();
+        }
+
+        private void MediaDevice_DefaultAudioRenderDeviceChanged(object sender, DefaultAudioRenderDeviceChangedEventArgs args)
+        {
+            if (args.Role == AudioDeviceRole.Default)
+            {
+                VlcPlayer.SetOutputDevice(args.Id);
+            }
         }
     }
 }
