@@ -1,18 +1,14 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
-using Screenbox.Core;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
-using Windows.Foundation;
 
 namespace Screenbox.Services
 {
     internal class LibVlcService : IDisposable
     {
-        public event TypedEventHandler<LibVlcService, MediaPlayerInitializedEventArgs>? Initialized;
-
         public VlcMediaPlayer? MediaPlayer { get; private set; }
 
         public LibVLC? LibVlc { get; private set; }
@@ -30,7 +26,6 @@ namespace Screenbox.Services
             LibVlc = InitializeLibVlc(swapChainOptions);
             MediaPlayer?.Close();
             MediaPlayer = new VlcMediaPlayer(LibVlc);
-            Initialized?.Invoke(this, new MediaPlayerInitializedEventArgs(MediaPlayer));
         }
 
         private LibVLC InitializeLibVlc(string[] swapChainOptions)
