@@ -2,15 +2,9 @@
 
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.Structures;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
@@ -18,47 +12,22 @@ using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableRecipient, IRecipient<UpdateStatusMessage>, IRecipient<ZoomToFitChangedMessage>
+    internal partial class PlayerPageViewModel : ObservableRecipient,
+        IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
     {
-        [ObservableProperty]
-        private string _mediaTitle;
-
-        [ObservableProperty]
-        private Size _viewSize;
-
-        [ObservableProperty]
-        private bool _controlsHidden;
-
-        [ObservableProperty]
-        private bool _isCompact;
-
-        [ObservableProperty]
-        private string? _statusMessage;
-
-        [ObservableProperty]
-        private bool _videoViewFocused;
-
-        [ObservableProperty]
-        private bool _playerHidden;
-
-        [ObservableProperty]
-        private bool _isPlaying;
-
-        [ObservableProperty]
-        private bool _isOpening;
-
-        [ObservableProperty]
-        private string? _titleName;
-
-        [ObservableProperty]
-        private VLCState _state;
-
+        [ObservableProperty] private string _mediaTitle;
+        [ObservableProperty] private bool _controlsHidden;
+        [ObservableProperty] private bool _isCompact;
+        [ObservableProperty] private string? _statusMessage;
+        [ObservableProperty] private bool _videoViewFocused;
+        [ObservableProperty] private bool _playerHidden;
+        [ObservableProperty] private bool _isPlaying;
+        [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private WindowViewMode _viewMode;
-
-        public MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
 
         public bool SeekBarPointerPressed { get; set; }
 
@@ -73,29 +42,20 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly IWindowService _windowService;
-        private readonly IMediaPlayerService _mediaPlayerService;
+        private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private ManipulationLock _lockDirection;
-        private double _timeBeforeManipulation;
+        private TimeSpan _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
-        private bool _zoomToFit;
 
-        public PlayerPageViewModel(
-            IMediaPlayerService mediaPlayerService,
-            IWindowService windowService)
+        public PlayerPageViewModel(IWindowService windowService)
         {
-            _mediaPlayerService = mediaPlayerService;
             _windowService = windowService;
             _mediaTitle = string.Empty;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
 
-            _mediaPlayerService.Stopped += OnStopped;
-            _mediaPlayerService.Opening += OnOpening;
-            _mediaPlayerService.StateChanged += MediaPlayerServiceOnStateChanged;
-            _mediaPlayerService.TitleChanged += OnTitleChanged;
-            _mediaPlayerService.LengthChanged += OnLengthChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             PropertyChanged += OnPropertyChanged;
 
@@ -112,10 +72,11 @@ namespace Screenbox.ViewModels
             });
         }
 
-        public void Receive(ZoomToFitChangedMessage message)
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            _zoomToFit = message.Value;
-            SetCropGeometry(ViewSize);
+            _mediaPlayer = message.Value;
+            _mediaPlayer.MediaOpened += OnOpening;
+            _mediaPlayer.PlaybackStateChanged += OnStateChanged;
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -133,7 +94,7 @@ namespace Screenbox.ViewModels
             PlayerHidden = true;
             if (IsPlaying)
             {
-                _mediaPlayerService.Pause();
+                _mediaPlayer?.Pause();
             }
         }
 
@@ -150,12 +111,6 @@ namespace Screenbox.ViewModels
                 // Keep hiding even when pointer moved right after
                 OverrideVisibilityChange();
             }
-        }
-
-        public void OnSizeChanged(object sender, SizeChangedEventArgs args)
-        {
-            ViewSize = args.NewSize;
-            SetCropGeometry(ViewSize);
         }
 
         public void OnPointerMoved()
@@ -191,19 +146,19 @@ namespace Screenbox.ViewModels
                 _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
             {
                 _lockDirection = ManipulationLock.Vertical;
-                _mediaPlayerService.Volume += (int)-verticalChange;
+                Messenger.Send(new ChangeVolumeMessage((int)-verticalChange, true));
                 return;
             }
 
             if ((_lockDirection == ManipulationLock.Horizontal ||
                  _lockDirection == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
-                (VlcPlayer?.IsSeekable ?? false))
+                (_mediaPlayer?.CanSeek ?? false))
             {
                 _lockDirection = ManipulationLock.Horizontal;
                 Messenger.Send(new TimeChangeOverrideMessage(true));
                 double timeChange = horizontalChange * horizontalChangePerPixel;
-                double currentTime = Messenger.Send(new TimeRequestMessage());
-                double newTime = currentTime + timeChange;
+                TimeSpan currentTime = Messenger.Send(new TimeRequestMessage());
+                TimeSpan newTime = currentTime + TimeSpan.FromMilliseconds(timeChange);
                 Messenger.Send(new TimeRequestMessage(newTime));
 
                 string changeText = HumanizedDurationConverter.Convert(newTime - _timeBeforeManipulation);
@@ -216,7 +171,8 @@ namespace Screenbox.ViewModels
         {
             _overrideStatusTimeout = true;
             _lockDirection = ManipulationLock.None;
-            _timeBeforeManipulation = VlcPlayer?.Time ?? 0;
+            if (_mediaPlayer != null)
+                _timeBeforeManipulation = _mediaPlayer.Position;
         }
 
         private void ShowStatusMessage(string? message)
@@ -239,27 +195,9 @@ namespace Screenbox.ViewModels
                     {
                         ShowControls();
                     }
-                    break;
-
-                case nameof(State):
-                    if (ControlsHidden && State != VLCState.Playing)
-                    {
-                        ShowControls();
-                    }
-
-                    if (!ControlsHidden && State == VLCState.Playing)
-                    {
-                        DelayHideControls();
-                    }
 
                     break;
             }
-        }
-
-        private void SetCropGeometry(Size size)
-        {
-            if (!_zoomToFit && _mediaPlayerService.CropGeometry == null) return;
-            _mediaPlayerService.CropGeometry = _zoomToFit && size != default ? $"{size.Width}:{size.Height}" : null;
         }
 
         private void ShowControls()
@@ -295,7 +233,7 @@ namespace Screenbox.ViewModels
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
         }
 
-        private void OnOpening(object sender, EventArgs e)
+        private void OnOpening(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
@@ -308,37 +246,23 @@ namespace Screenbox.ViewModels
             });
         }
 
-        private void OnLengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                TrackDescription[] titles = VlcPlayer.TitleDescription;
-                TitleName = titles.Length == 1 ? default : titles.FirstOrDefault(title => title.Id == VlcPlayer.Title).Name;
-            });
-        }
-
-        private void OnTitleChanged(object sender, MediaPlayerTitleChangedEventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                TitleName = VlcPlayer.TitleDescription.FirstOrDefault(title => title.Id == e.Title).Name;
-            });
-        }
-
-        private void OnStopped(object sender, EventArgs e)
-        {
-            _dispatcherQueue.TryEnqueue(() => MediaTitle = string.Empty);
-        }
-
-        private void MediaPlayerServiceOnStateChanged(object sender, PlayerStateChangedEventArgs e)
+        private void OnStateChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                State = e.NewValue;
-                IsOpening = State == VLCState.Opening;
-                IsPlaying = State == VLCState.Playing;
+                var state = sender.PlaybackState;
+                IsOpening = state == Windows.Media.Playback.MediaPlaybackState.Opening;
+                IsPlaying = state == Windows.Media.Playback.MediaPlaybackState.Playing;
+
+                if (ControlsHidden && !IsPlaying)
+                {
+                    ShowControls();
+                }
+
+                if (!ControlsHidden && IsPlaying)
+                {
+                    DelayHideControls();
+                }
             });
         }
     }

@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:structures="using:LibVLCSharp.Shared.Structures"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -14,31 +13,21 @@
         <ListView
             Width="220"
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.AudioTrackDescriptions, Mode=OneWay}"
+            ItemsSource="{x:Bind ViewModel.AudioTracks}"
             SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
             <ListView.Header>
                 <TextBlock FontWeight="SemiBold" Text="Audio" />
             </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="structures:TrackDescription">
-                    <TextBlock Text="{x:Bind Name}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
         </ListView>
         <MenuFlyoutSeparator Margin="0,4,0,10" IsTabStop="False" />
         <ListView
             Width="220"
             ItemContainerTransitions="{x:Null}"
-            ItemsSource="{x:Bind ViewModel.SpuDescriptions, Mode=OneWay}"
-            SelectedIndex="{x:Bind ViewModel.SpuIndex, Mode=TwoWay}">
+            ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
+            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}">
             <ListView.Header>
                 <TextBlock FontWeight="SemiBold" Text="Subtitles" />
             </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="structures:TrackDescription">
-                    <TextBlock Text="{x:Bind Name}" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
             <ListView.Footer>
                 <Button
                     Margin="0,4,0,0"

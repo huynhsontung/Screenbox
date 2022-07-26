@@ -6,35 +6,28 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Storage;
 using Windows.System;
-using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Services;
+using Screenbox.Core.Playback;
+using Microsoft.Toolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal class SystemMediaTransportControlsViewModel : ObservableObject
+    internal class SystemMediaTransportControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
-
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly SystemMediaTransportControls _transportControls;
-        private readonly IMediaPlayerService _mediaPlayerService;
         private readonly PlaylistViewModel _playlistViewModel;
+        private IMediaPlayer? _mediaPlayer;
         private DateTime _lastUpdated;
 
-        public SystemMediaTransportControlsViewModel(
-            IMediaPlayerService mediaPlayerService, PlaylistViewModel playlistViewModel)
+        public SystemMediaTransportControlsViewModel(PlaylistViewModel playlistViewModel)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playlistViewModel = playlistViewModel;
             _playlistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
             _playlistViewModel.NextCommand.CanExecuteChanged += NextCommandOnCanExecuteChanged;
             _playlistViewModel.PreviousCommand.CanExecuteChanged += PreviousCommandOnCanExecuteChanged;
-            _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.PlayerInitialized += OnPlayerInitialized;
-            _mediaPlayerService.TimeChanged += OnTimeChanged;
 
             _transportControls = SystemMediaTransportControls.GetForCurrentView();
             _transportControls.ButtonPressed += TransportControlsButtonPressed;
@@ -51,6 +44,15 @@ namespace Screenbox.ViewModels
             displayUpdater.Update();
 
             _lastUpdated = DateTime.MinValue;
+
+            IsActive = true;
+        }
+        
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
+            _mediaPlayer.PositionChanged += OnTimeChanged;
+            RegisterPlaybackEvents(_mediaPlayer);
         }
 
         private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
@@ -81,56 +83,71 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void OnPlayerInitialized(object sender, EventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
-            RegisterPlaybackEvents(VlcPlayer);
-        }
-
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
         {
-            _mediaPlayerService.SetTime(args.RequestedPlaybackPosition.TotalMilliseconds);
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.Position = args.RequestedPlaybackPosition;
         }
 
-        private void OnTimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+        private void OnTimeChanged(IMediaPlayer sender, object? args)
         {
             if (DateTime.Now - _lastUpdated < TimeSpan.FromSeconds(5)) return;
             _lastUpdated = DateTime.Now;
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             SystemMediaTransportControlsTimelineProperties timelineProps = new()
             {
                 StartTime = TimeSpan.Zero,
                 MinSeekTime = TimeSpan.Zero,
-                Position = TimeSpan.FromMilliseconds(e.Time),
-                MaxSeekTime = TimeSpan.FromMilliseconds(VlcPlayer.Length),
-                EndTime = TimeSpan.FromMilliseconds(VlcPlayer.Length)
+                Position = sender.Position,
+                MaxSeekTime = sender.NaturalDuration,
+                EndTime = sender.NaturalDuration
             };
 
             _transportControls.UpdateTimelineProperties(timelineProps);
         }
 
-        private void RegisterPlaybackEvents(MediaPlayer vlcPlayer)
+        private void RegisterPlaybackEvents(IMediaPlayer player)
         {
-            vlcPlayer.Paused += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Paused;
-            vlcPlayer.EndReached += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
-            vlcPlayer.Stopped += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
-            vlcPlayer.Playing += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
-            vlcPlayer.EncounteredError += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
-            vlcPlayer.Opening += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Changing;
+            player.PlaybackStateChanged += (sender, _) =>
+            {
+                switch (sender.PlaybackState)
+                {
+                    case Windows.Media.Playback.MediaPlaybackState.None:
+                        _transportControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
+                        break;
+                    case Windows.Media.Playback.MediaPlaybackState.Opening:
+                        _transportControls.PlaybackStatus = MediaPlaybackStatus.Changing;
+                        break;
+                    case Windows.Media.Playback.MediaPlaybackState.Buffering:
+                        _transportControls.PlaybackStatus = MediaPlaybackStatus.Changing;
+                        break;
+                    case Windows.Media.Playback.MediaPlaybackState.Playing:
+                        _transportControls.PlaybackStatus = MediaPlaybackStatus.Playing;
+                        break;
+                    case Windows.Media.Playback.MediaPlaybackState.Paused:
+                        _transportControls.PlaybackStatus = MediaPlaybackStatus.Paused;
+                        break;
+                    default:
+                        break;
+                }
+            };
+
+            player.MediaEnded += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Stopped;
+            player.MediaFailed += (_, _) => _transportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
         }
 
         private void TransportControlsButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
+            if (_mediaPlayer == null) return;
             switch (args.Button)
             {
                 case SystemMediaTransportControlsButton.Pause:
-                    _mediaPlayerService.Pause();
+                    _mediaPlayer.Pause();
                     break;
                 case SystemMediaTransportControlsButton.Play:
-                    _mediaPlayerService.Play();
+                    _mediaPlayer.Play();
                     break;
                 case SystemMediaTransportControlsButton.Stop:
-                    _mediaPlayerService.Stop();
+                    _mediaPlayer.Source = null;
                     break;
                 case SystemMediaTransportControlsButton.Previous:
                     _playlistViewModel.PreviousCommand.Execute(null);
@@ -139,10 +156,10 @@ namespace Screenbox.ViewModels
                     _playlistViewModel.NextCommand.Execute(null);
                     break;
                 case SystemMediaTransportControlsButton.FastForward:
-                    _mediaPlayerService.Seek(30000);
+                    _mediaPlayer.Position += TimeSpan.FromSeconds(10);
                     break;
                 case SystemMediaTransportControlsButton.Rewind:
-                    _mediaPlayerService.Seek(-30000);
+                    _mediaPlayer.Position -= TimeSpan.FromSeconds(10);
                     break;
             }
         }

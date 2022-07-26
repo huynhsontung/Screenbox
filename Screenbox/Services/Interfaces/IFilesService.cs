@@ -6,8 +6,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.UI.Xaml.Media.Imaging;
-using LibVLCSharp.Shared;
-using Screenbox.ViewModels;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.Services
 {
@@ -21,6 +20,6 @@ namespace Screenbox.Services
         public Task<BitmapImage?> GetThumbnailAsync(StorageFile file);
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder);
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
-        public Task<StorageFile> SaveSnapshot(MediaPlayer mediaPlayer);
+        public Task<StorageFile> SaveSnapshot(IMediaPlayer mediaPlayer);
     }
 }

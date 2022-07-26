@@ -1,9 +1,11 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Windows.Media.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using LibVLCSharp.Shared.Structures;
 using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -14,7 +16,7 @@ namespace Screenbox.Controls
     {
         public static readonly DependencyProperty ChaptersProperty = DependencyProperty.Register(
             nameof(Chapters),
-            typeof(ICollection<ChapterDescription>),
+            typeof(IReadOnlyCollection<ChapterCue>),
             typeof(ChapterProgressBar),
             new PropertyMetadata(null, OnChaptersChanged));
 
@@ -36,9 +38,9 @@ namespace Screenbox.Controls
             typeof(ChapterProgressBar),
             new PropertyMetadata(-1));
 
-        public ICollection<ChapterDescription> Chapters
+        public IReadOnlyCollection<ChapterCue>? Chapters
         {
-            get => (ICollection<ChapterDescription>)GetValue(ChaptersProperty);
+            get => (IReadOnlyCollection<ChapterCue>?)GetValue(ChaptersProperty);
             set => SetValue(ChaptersProperty, value);
         }
 
@@ -73,19 +75,19 @@ namespace Screenbox.Controls
 
         private static void OnChaptersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var view = (ChapterProgressBar)d;
+            ChapterProgressBar view = (ChapterProgressBar)d;
             view.PopulateProgressItems();
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var view = (ChapterProgressBar)d;
+            ChapterProgressBar view = (ChapterProgressBar)d;
             view.UpdateProgress();
         }
 
         private static void OnMaximumChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var view = (ChapterProgressBar)d;
+            ChapterProgressBar view = (ChapterProgressBar)d;
             if (view.ProgressItems.Count == 1)
             {
                 if (view.ProgressItems[0].Width == 0)
@@ -98,7 +100,7 @@ namespace Screenbox.Controls
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (Maximum == 0) return;
-            foreach (var item in ProgressItems)
+            foreach (ChapterViewModel item in ProgressItems)
             {
                 item.Width = GetItemWidth(item);
             }
@@ -117,7 +119,7 @@ namespace Screenbox.Controls
             // progress item, on every value change, which is expensive.
             // So we do all the logic below just to update 1 item at a time.
 
-            var activeIndex = ChapterIndex;
+            int activeIndex = ChapterIndex;
 
             // Find the chapter to change value to minimize UI update
             if (activeIndex == -1 ||
@@ -131,7 +133,7 @@ namespace Screenbox.Controls
                 }
                 else
                 {
-                    for (var i = 0; i < ProgressItems.Count; i++)
+                    for (int i = 0; i < ProgressItems.Count; i++)
                     {
                         if (Value <= ProgressItems[i].Maximum)
                         {
@@ -148,16 +150,16 @@ namespace Screenbox.Controls
                 // activeIndex == -1 when Value > total duration of all chapters
                 if (activeIndex == -1 || ChapterIndex == -1)
                 {
-                    foreach (var item in ProgressItems)
+                    foreach (ChapterViewModel item in ProgressItems)
                     {
                         item.Value = Value;
                     }
                 }
                 else
                 {
-                    var from = Math.Min(activeIndex, ChapterIndex);
-                    var to = Math.Max(activeIndex, ChapterIndex);
-                    for (var i = from; i <= to; i++)
+                    int from = Math.Min(activeIndex, ChapterIndex);
+                    int to = Math.Max(activeIndex, ChapterIndex);
+                    for (int i = from; i <= to; i++)
                     {
                         ProgressItems[i].Value = Value;
                     }
@@ -177,12 +179,12 @@ namespace Screenbox.Controls
             ProgressItems.Clear();
             if (Chapters?.Count > 0)
             {
-                foreach (var chapterDescription in Chapters)
+                foreach (ChapterCue cue in Chapters)
                 {
-                    var progressItem = new ChapterViewModel
+                    ChapterViewModel progressItem = new()
                     {
-                        Minimum = chapterDescription.TimeOffset,
-                        Maximum = chapterDescription.Duration + chapterDescription.TimeOffset
+                        Minimum = cue.StartTime.TotalMilliseconds,
+                        Maximum = (cue.Duration + cue.StartTime).TotalMilliseconds
                     };
 
                     // This assumes Maximum is updated before this function is called
@@ -203,7 +205,7 @@ namespace Screenbox.Controls
 
         private double GetItemWidth(ChapterViewModel item)
         {
-            var availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
+            double availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
             return Maximum > 0 ? (item.Maximum - item.Minimum) / Maximum * availableWidth : 0;
         }
     }

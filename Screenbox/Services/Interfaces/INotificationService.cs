@@ -15,6 +15,5 @@ namespace Screenbox.Services
         void RaiseInfo(string title, string message);
         void RaiseNotification(NotificationLevel level, string title, string message);
         void RaiseWarning(string title, string message);
-        void SetVlcDialogHandlers(LibVLC libVlc);
     }
 }

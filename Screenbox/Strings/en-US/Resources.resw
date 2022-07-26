@@ -265,4 +265,7 @@
   <data name="CastToDevice" xml:space="preserve">
     <value>Cast to a device</value>
   </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Disable</value>
+  </data>
 </root>

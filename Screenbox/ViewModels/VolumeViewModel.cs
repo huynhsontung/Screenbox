@@ -1,28 +1,26 @@
 ﻿#nullable enable
 
-using System;
-using Windows.System;
-using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using Screenbox.Services;
+using Screenbox.Core.Playback;
 using Screenbox.Strings;
+using System;
 
 namespace Screenbox.ViewModels
 {
-    internal class VolumeViewModel : ObservableRecipient
+    internal class VolumeViewModel : ObservableRecipient,
+        IRecipient<ChangeVolumeMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         public bool IsMute
         {
             get => _isMute;
             set
             {
-                SetProperty(ref _isMute, value);
-                if (VlcPlayer != null && VlcPlayer.Mute != value)
+                if (SetProperty(ref _isMute, value) && _mediaPlayer != null)
                 {
-                    VlcPlayer.Mute = value;
+                    _mediaPlayer.IsMuted = value;
                 }
             }
         }
@@ -32,79 +30,63 @@ namespace Screenbox.ViewModels
             get => _volume;
             set
             {
-                if (value < 0) return;
-                int intVal = Math.Clamp(value, 0, 100);
-                SetProperty(ref _volume, value);
-                if (_mediaPlayerService.Volume != intVal)
+                value = Math.Clamp(value, 0, 100);
+                if (SetProperty(ref _volume, value) && _mediaPlayer != null)
                 {
-                    _mediaPlayerService.Volume = intVal;
-                    IsMute = intVal == 0;
+                    _mediaPlayer.Volume = value / 100d;
+                    IsMute = value == 0;
                 }
             }
         }
 
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
-
-        private readonly IMediaPlayerService _mediaPlayerService;
-        private readonly DispatcherQueue _dispatcherQueue;
         private int _volume;
-        private bool _mediaChangedVolumeOverride;
         private bool _isMute;
+        private IMediaPlayer? _mediaPlayer;
 
-        public VolumeViewModel(IMediaPlayerService mediaPlayer)
+        public VolumeViewModel()
         {
-            _mediaPlayerService = mediaPlayer;
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _volume = 100;
 
-            _mediaPlayerService.VolumeChanged += OnVolumeChanged;
-            _mediaPlayerService.Muted += OnMuted;
-            _mediaPlayerService.Unmuted += OnUnmuted;
-            _mediaPlayerService.MediaChanged += OnMediaChanged;
-
             // View model doesn't receive any messages
-            //IsActive = true;
+            IsActive = true;
         }
 
-        private void OnMediaChanged(object sender, MediaPlayerMediaChangedEventArgs e)
+        public void Receive(MediaPlayerChangedMessage message)
         {
-            // Volume automatically reset to 100 on media parsed
-            // Set a flag to override that behavior
-            _mediaChangedVolumeOverride = true;
+            _mediaPlayer = message.Value;
+            _mediaPlayer.VolumeChanged += OnVolumeChanged;
+            _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
-        private void OnMuted(object sender, EventArgs e)
+        public void Receive(ChangeVolumeMessage message)
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            if (message.IsOffset)
             {
-                IsMute = true;
-            });
+                Volume += message.Value;
+            }
+            else
+            {
+                Volume = message.Value;
+            }
+
+            Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
         }
 
-        private void OnUnmuted(object sender, EventArgs e)
+        private void OnVolumeChanged(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            double normalizedVolume = Volume / 100d;
+            if (sender.Volume != normalizedVolume)
             {
-                IsMute = false;
-            });
+                sender.Volume = normalizedVolume;
+            }
         }
 
-        private void OnVolumeChanged(object sender, MediaPlayerVolumeChangedEventArgs e)
+        private void OnIsMutedChanged(IMediaPlayer sender, object? args)
         {
-            if (e.Volume < 0) return;
-            _dispatcherQueue.TryEnqueue(() =>
+            if (sender.IsMuted != IsMute)
             {
-                if (_mediaChangedVolumeOverride)
-                {
-                    Volume = _volume; // set volume value from VM
-                    _mediaChangedVolumeOverride = false;
-                }
-                else
-                {
-                    Volume = _mediaPlayerService.Volume;
-                    Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
-                }
-            });
+                sender.IsMuted = IsMute;
+            }
         }
     }
 }

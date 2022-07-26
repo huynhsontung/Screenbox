@@ -15,17 +15,18 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
+using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlaylistViewModel : ObservableRecipient, IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>
+    internal partial class PlaylistViewModel : ObservableRecipient,
+        IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>, IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
@@ -48,12 +49,10 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string _repeatModeGlyph;
         [ObservableProperty] private int _selectionCount;
 
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
-
-        private readonly IMediaPlayerService _mediaPlayerService;
         private readonly IMediaService _mediaService;
         private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private IMediaPlayer? _mediaPlayer;
         private MediaViewModel? _playingItem;
         private MediaViewModel? _toBeOpened;
         private StorageFileQueryResult? _neighboringFilesQuery;
@@ -61,14 +60,10 @@ namespace Screenbox.ViewModels
 
         public PlaylistViewModel(
             IFilesService filesService,
-            IMediaPlayerService mediaPlayerService,
             IMediaService mediaService)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _mediaPlayerService = mediaPlayerService;
-            _mediaPlayerService.PlayerInitialized += OnPlayerInitialized;
-            _mediaPlayerService.EndReached += OnEndReached;
             _mediaService = mediaService;
             _filesService = filesService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
@@ -85,6 +80,20 @@ namespace Screenbox.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
+            _mediaPlayer.MediaEnded += OnEndReached;
+
+            if (_toBeOpened != null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    PlaySingle(_toBeOpened);
+                });
+            }
         }
 
         public async void Receive(PlayMediaMessage message)
@@ -231,17 +240,18 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void PlaySingle(MediaViewModel vm)
         {
-            if (VlcPlayer == null)
+            if (_mediaPlayer == null)
             {
                 _toBeOpened = vm;
                 return;
             }
 
-            using (MediaHandle? handle = _mediaService.CreateMedia(vm.Source))
-            {
-                if (handle == null) return;
-                _mediaPlayerService.Play(handle);
-            }
+            Media? media = _mediaService.CreateMedia(vm.Source);
+            if (media == null)
+                return;
+
+            _mediaPlayer.Source = PlaybackItem.GetFromVlcMedia(media);
+            _mediaPlayer.Play();
 
             if (PlayingItem != null)
             {
@@ -258,7 +268,7 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void Clear()
         {
-            _mediaPlayerService.Stop();
+            if (_mediaPlayer != null) _mediaPlayer.Source = null;
             PlayingItem = null;
             Playlist.Clear();
         }
@@ -271,7 +281,7 @@ namespace Screenbox.ViewModels
             {
                 if (PlayingItem == item)
                 {
-                    _mediaPlayerService.Stop();
+                    if (_mediaPlayer != null) _mediaPlayer.Source = null;
                     PlayingItem = null;
                 }
 
@@ -387,21 +397,8 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void OnPlayerInitialized(object sender, EventArgs e)
+        private void OnEndReached(IMediaPlayer sender, object? args)
         {
-            if (VlcPlayer == null) return;
-            if (_toBeOpened != null)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    PlaySingle(_toBeOpened);
-                });
-            }
-        }
-
-        private void OnEndReached(object sender, EventArgs e)
-        {
-            Guard.IsNotNull(VlcPlayer, nameof(VlcPlayer));
             _dispatcherQueue.TryEnqueue(() =>
             {
                 switch (RepeatMode)
@@ -410,7 +407,7 @@ namespace Screenbox.ViewModels
                         PlaySingle(Playlist[0]);
                         break;
                     case RepeatMode.One:
-                        _mediaPlayerService.Replay();
+                        sender.Position = TimeSpan.Zero;
                         break;
                     default:
                         if (Playlist.Count > 1) _ = PlayNextAsync();

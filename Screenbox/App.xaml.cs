@@ -52,7 +52,7 @@ namespace Screenbox
             var services = new ServiceCollection();
 
             services.AddTransient<PlayerPageViewModel>();
-            services.AddTransient<VideoViewViewModel>();
+            services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<VolumeViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();
@@ -65,10 +65,10 @@ namespace Screenbox
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
+            services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
-            services.AddSingleton<IMediaPlayerService, MediaPlayerService>();
             services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
 

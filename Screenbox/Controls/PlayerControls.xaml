@@ -223,7 +223,7 @@
                 MinWidth="0"
                 Margin="6,0,0,0"
                 VerticalAlignment="Center"
-                ChapterName="{x:Bind ViewModel.GetChapterName(SeekBar.ViewModel.CurrentChapter.Name), Mode=OneWay}"
+                ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
                 TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />

@@ -168,19 +168,31 @@
     <Compile Include="Controls\PlayerControls.xaml.cs">
       <DependentUpon>PlayerControls.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\VideoView.xaml.cs">
-      <DependentUpon>VideoView.xaml</DependentUpon>
+    <Compile Include="Controls\PlayerElement.xaml.cs">
+      <DependentUpon>PlayerElement.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
+    <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
+    <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
+    <Compile Include="Core\Playback\AudioTrack.cs" />
+    <Compile Include="Core\Playback\IMediaPlayer.cs" />
+    <Compile Include="Core\Playback\SingleSelectTrackList.cs" />
+    <Compile Include="Core\Playback\PlaybackAudioTrackList.cs" />
+    <Compile Include="Core\Playback\PlaybackChapterList.cs" />
+    <Compile Include="Core\Playback\PlaybackItem.cs" />
+    <Compile Include="Core\Playback\PlaybackSubtitleTrackList.cs" />
+    <Compile Include="Core\Playback\SubtitleTrack.cs" />
+    <Compile Include="Core\Playback\VlcMediaPlayer.cs" />
     <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
     <Compile Include="Core\Messages\ErrorMessage.cs" />
-    <Compile Include="Core\Messages\ZoomToFitChangedMessage.cs" />
+    <Compile Include="Core\Messages\ChangeZoomToFitMessage.cs" />
     <Compile Include="Core\Messages\PlayingItemRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
     <Compile Include="Core\Messages\TimeRequestMessage.cs" />
@@ -213,8 +225,7 @@
     <Compile Include="Services\CastService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
-    <Compile Include="Services\Interfaces\IMediaPlayerService.cs" />
-    <Compile Include="Services\MediaPlayerService.cs" />
+    <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
@@ -229,7 +240,6 @@
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\CommonVisibilityConverter.cs" />
     <Compile Include="Converters\ObjectToBooleanConverter.cs" />
-    <Compile Include="Core\MediaHandle.cs" />
     <Compile Include="Core\NotificationRaisedEventArgs.cs" />
     <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
@@ -257,7 +267,7 @@
     <Compile Include="ViewModels\SystemMediaTransportControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
-    <Compile Include="ViewModels\VideoViewViewModel.cs" />
+    <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -369,7 +379,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\VideoView.xaml">
+    <Page Include="Controls\PlayerElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

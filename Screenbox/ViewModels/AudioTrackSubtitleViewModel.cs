@@ -1,33 +1,31 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
-using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.Structures;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
 using Microsoft.Toolkit.Mvvm.Messaging;
+using Screenbox.Core.Playback;
+using AudioTrack = Screenbox.Core.Playback.AudioTrack;
+using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient
+    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
-        private MediaPlayer? VlcPlayer => _mediaPlayerService.VlcPlayer;
-
-        public int SpuIndex
+        public int SubtitleTrackIndex
         {
-            get => _spuIndex;
+            get => _subtitleTrackIndex;
             set
             {
-                if (!SetProperty(ref _spuIndex, value)) return;
-                var spuDesc = SpuDescriptions;
-                if (value >= 0 && value < spuDesc.Length)
-                    VlcPlayer?.SetSpu(spuDesc[value].Id);
+                if (!SetProperty(ref _subtitleTrackIndex, value)) return;
+                if (ItemSubtitleTrackList != null && value >= 0 && value < SubtitleTracks.Count)
+                    ItemSubtitleTrackList.SelectedIndex = value - 1;
             }
         }
 
@@ -37,44 +35,48 @@ namespace Screenbox.ViewModels
             set
             {
                 if (!SetProperty(ref _audioTrackIndex, value)) return;
-                var audioDesc = AudioTrackDescriptions;
-                if (value >= 0 && value < audioDesc.Length)
-                    VlcPlayer?.SetSpu(audioDesc[value].Id);
+                if (ItemAudioTrackList != null && value >= 0 && value < AudioTracks.Count)
+                    ItemAudioTrackList.SelectedIndex = value;
             }
         }
 
-        [ObservableProperty]
-        private TrackDescription[] _spuDescriptions;
+        public ObservableCollection<string> SubtitleTracks { get; }
 
-        [ObservableProperty]
-        private TrackDescription[] _audioTrackDescriptions;
+        public ObservableCollection<string> AudioTracks { get; }
 
-        private readonly IMediaPlayerService _mediaPlayerService;
+        private PlaybackSubtitleTrackList? ItemSubtitleTrackList => _mediaPlayer?.PlaybackItem?.SubtitleTracks;
+
+        private PlaybackAudioTrackList? ItemAudioTrackList => _mediaPlayer?.PlaybackItem?.AudioTracks;
+
         private readonly IFilesService _filesService;
-        private int _spuIndex;
+        private IMediaPlayer? _mediaPlayer;
+        private int _subtitleTrackIndex;
         private int _audioTrackIndex;
 
-        public AudioTrackSubtitleViewModel(
-            IMediaPlayerService mediaPlayerService,
-            IFilesService filesService)
+        public AudioTrackSubtitleViewModel(IFilesService filesService)
         {
-            _mediaPlayerService = mediaPlayerService;
             _filesService = filesService;
-            _spuDescriptions = Array.Empty<TrackDescription>();
-            _audioTrackDescriptions = Array.Empty<TrackDescription>();
+            SubtitleTracks = new ObservableCollection<string>();
+            AudioTracks = new ObservableCollection<string>();
+
+            IsActive = true;
+        }
+
+        public void Receive(MediaPlayerChangedMessage message)
+        {
+            _mediaPlayer = message.Value;
         }
 
         [ICommand]
         private async Task AddSubtitle()
         {
-            if (VlcPlayer == null || !VlcPlayer.WillPlay) return;
+            if (_mediaPlayer?.Source == null) return;
             try
             {
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
                 if (file == null) return;
 
-                string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
-                _mediaPlayerService.AddSubtitle(mrl);
+                _mediaPlayer?.AddSubtitle(file);
             }
             catch (Exception e)
             {
@@ -84,34 +86,37 @@ namespace Screenbox.ViewModels
 
         public void OnAudioCaptionFlyoutOpening()
         {
-            UpdateSpuOptions();
-            UpdateAudioTrackOptions();
+            UpdateSubtitleTrackList();
+            UpdateAudioTrackList();
+            SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? -1;
+            AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         }
 
-        private void UpdateSpuOptions()
+        private void UpdateAudioTrackList()
         {
-            if (VlcPlayer == null) return;
-            int spu = VlcPlayer.Spu;
-            SpuDescriptions = VlcPlayer.SpuDescription;
-            SpuIndex = GetIndexFromTrackId(spu, SpuDescriptions);
-        }
+            if (ItemAudioTrackList == null) return;
+            AudioTracks.Clear();
+            if (ItemAudioTrackList.Count <= 0) return;
 
-        private void UpdateAudioTrackOptions()
-        {
-            if (VlcPlayer == null) return;
-            int audioTrack = VlcPlayer.AudioTrack;
-            AudioTrackDescriptions = VlcPlayer.AudioTrackDescription;
-            AudioTrackIndex = GetIndexFromTrackId(audioTrack, AudioTrackDescriptions);
-        }
-
-        private static int GetIndexFromTrackId(int id, TrackDescription[] tracks)
-        {
-            for (int i = 0; i < tracks.Length; i++)
+            for (int index = 0; index < ItemAudioTrackList.Count; index++)
             {
-                if (tracks[i].Id == id) return i;
+                AudioTrack audioTrack = ItemAudioTrackList[index];
+                AudioTracks.Add(audioTrack.Label ?? $"Track {index + 1}");
             }
+        }
 
-            return -1;
+        private void UpdateSubtitleTrackList()
+        {
+            if (ItemSubtitleTrackList == null) return;
+            SubtitleTracks.Clear();
+            if (ItemSubtitleTrackList.Count <= 0) return;
+
+            SubtitleTracks.Add(Resources.Disable);
+            for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
+            {
+                SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
+                SubtitleTracks.Add(subtitleTrack.Label ?? $"Track {index + 1}");
+            }
         }
     }
 }

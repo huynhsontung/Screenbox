@@ -154,7 +154,7 @@
                     TextTrimming="CharacterEllipsis" />
             </Grid>
 
-            <controls:VideoView
+            <controls:PlayerElement
                 x:Name="VideoView"
                 Grid.Row="0"
                 Grid.RowSpan="3"
@@ -167,8 +167,7 @@
                 ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
                 ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
                 ManipulationMode="TranslateX,TranslateY"
-                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
-                SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
+                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}">
                 <interactivity:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="GotFocus">
                         <core:ChangePropertyAction
@@ -183,7 +182,7 @@
                             Value="False" />
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
-            </controls:VideoView>
+            </controls:PlayerElement>
 
             <Button
                 x:Name="RestorePlayerButton"
