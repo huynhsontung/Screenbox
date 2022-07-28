@@ -38,10 +38,12 @@
                                 VerticalAlignment="Center"
                                 FontSize="32"
                                 Glyph="{x:Bind Glyph}" />
-                            <Image
-                                x:Phase="1"
-                                Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                                Stretch="UniformToFill" />
+                            <Border CornerRadius="4">
+                                <Image
+                                    x:Phase="1"
+                                    Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                                    Stretch="UniformToFill" />
+                            </Border>
                         </Grid>
 
                         <TextBlock

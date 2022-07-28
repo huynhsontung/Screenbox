@@ -20,7 +20,6 @@
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
-    RequestedTheme="Dark"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -57,6 +56,7 @@
             x:Name="LayoutRoot"
             Background="Black"
             PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
+            RequestedTheme="Dark"
             Translation="0,0,8">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -375,6 +375,7 @@
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -186,7 +186,7 @@
                                 <FontIcon
                                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                                     FontSize="16"
-                                    Foreground="{ThemeResource SystemAccentColorLight2}"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                     Glyph="&#xE768;" />
                             </Button>
 
@@ -205,10 +205,10 @@
                                             <StateTrigger IsActive="{Binding IsPlaying}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="ItemIcon.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
-                                            <Setter Target="TitleText.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
+                                            <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                            <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
-                                            <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource SystemAccentColorLight2}" />
+                                            <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
