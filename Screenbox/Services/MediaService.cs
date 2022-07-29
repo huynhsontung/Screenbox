@@ -4,7 +4,7 @@ using System;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using LibVLCSharp.Shared;
-using Screenbox.Core;
+using Microsoft.Toolkit.Diagnostics;
 
 namespace Screenbox.Services
 {
@@ -36,29 +36,20 @@ namespace Screenbox.Services
             return Uri.TryCreate(str, UriKind.Absolute, out Uri uri) ? CreateMedia(uri) : null;
         }
 
-        public Media? CreateMedia(IStorageFile file)
+        public Media CreateMedia(IStorageFile file)
         {
-            LibVLC? libVlc = _libVlcService.LibVlc;
-            if (libVlc == null)
-            {
-                return null;
-            }
-
-            Uri uri = new(file.Path);
+            Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
+            LibVLC libVlc = _libVlcService.LibVlc;
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count > 995) // Limit 1000
                 StorageApplicationPermissions.FutureAccessList.Clear();
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
             return new Media(libVlc, mrl, FromType.FromPath);
         }
 
-        public Media? CreateMedia(Uri uri)
+        public Media CreateMedia(Uri uri)
         {
-            LibVLC? libVlc = _libVlcService.LibVlc;
-            if (libVlc == null)
-            {
-                return null;
-            }
-
+            Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
+            LibVLC libVlc = _libVlcService.LibVlc;
             return new Media(libVlc, uri);
         }
     }

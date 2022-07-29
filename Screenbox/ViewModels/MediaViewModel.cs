@@ -8,6 +8,7 @@ using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Screenbox.Core.Playback;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -19,6 +20,8 @@ namespace Screenbox.ViewModels
         public string Location { get; }
 
         public object Source { get; }
+
+        public PlaybackItem Item { get; }
 
         public string Glyph { get; }
 
@@ -53,28 +56,22 @@ namespace Screenbox.ViewModels
             Duration = source.Duration;
             Source = source.Source;
             Glyph = source.Glyph;
-        }
-
-        public MediaViewModel(StorageItemViewModel file)
-        {
-            _linkedFile = file;
-            Name = file.Name;
-            Location = file.Path;
-            Source = file.StorageItem;
-            Glyph = file.Glyph;
+            Item = source.Item;
         }
 
         public MediaViewModel(Uri uri)
         {
             Source = uri;
+            Item = PlaybackItem.GetFromUri(uri);
             Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             Location = uri.ToString();
             Glyph = "\ue774";   // Globe icon
         }
 
-        public MediaViewModel(IStorageFile file)
+        public MediaViewModel(StorageFile file)
         {
             Source = file;
+            Item = PlaybackItem.GetFromStorageFile(file);
             Name = file.Name;
             Location = file.Path;
             Glyph = StorageItemViewModel.GetGlyph(file);

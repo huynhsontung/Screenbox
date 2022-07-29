@@ -38,7 +38,7 @@ namespace Screenbox.ViewModels
             DateCreated = storageItem.DateCreated;
             Glyph = GetGlyph(storageItem);
 
-            if (storageItem is IStorageFile file)
+            if (storageItem is StorageFile file)
             {
                 IsFile = true;
                 Media = new MediaViewModel(file);

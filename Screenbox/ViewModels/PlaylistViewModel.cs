@@ -49,22 +49,18 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string _repeatModeGlyph;
         [ObservableProperty] private int _selectionCount;
 
-        private readonly IMediaService _mediaService;
         private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private IMediaPlayer? _mediaPlayer;
         private MediaViewModel? _playingItem;
-        private MediaViewModel? _toBeOpened;
+        private PlayMediaMessage? _delayPlayMessage;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
 
-        public PlaylistViewModel(
-            IFilesService filesService,
-            IMediaService mediaService)
+        public PlaylistViewModel(IFilesService filesService)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _mediaService = mediaService;
             _filesService = filesService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
@@ -87,17 +83,23 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.MediaEnded += OnEndReached;
 
-            if (_toBeOpened != null)
+            if (_delayPlayMessage != null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
-                    PlaySingle(_toBeOpened);
+                    Receive(_delayPlayMessage);
                 });
             }
         }
 
         public async void Receive(PlayMediaMessage message)
         {
+            if (_mediaPlayer == null)
+            {
+                _delayPlayMessage = message;
+                return;
+            }
+
             if (message.Value is IReadOnlyList<IStorageItem> files)
             {
                 _neighboringFilesQuery = message.NeighboringFilesQuery;
@@ -194,7 +196,7 @@ namespace Screenbox.ViewModels
                 //    folder.GetFilesAsync()
                 //}
 
-                if (item is IStorageFile storageFile)
+                if (item is StorageFile storageFile)
                 {
                     Playlist.Add(new MediaViewModel(storageFile));
                 }
@@ -220,7 +222,7 @@ namespace Screenbox.ViewModels
             MediaViewModel vm;
             switch (value)
             {
-                case IStorageFile file:
+                case StorageFile file:
                     vm = new MediaViewModel(file);
                     break;
                 case MediaViewModel vmValue:
@@ -240,17 +242,8 @@ namespace Screenbox.ViewModels
         [ICommand]
         private void PlaySingle(MediaViewModel vm)
         {
-            if (_mediaPlayer == null)
-            {
-                _toBeOpened = vm;
-                return;
-            }
-
-            Media? media = _mediaService.CreateMedia(vm.Source);
-            if (media == null)
-                return;
-
-            _mediaPlayer.Source = PlaybackItem.GetFromVlcMedia(media);
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.Source = vm.Item;
             _mediaPlayer.Play();
 
             if (PlayingItem != null)
@@ -292,7 +285,7 @@ namespace Screenbox.ViewModels
         private void PlayNext(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
-            List<object> reverse = selectedItems.Reverse().ToList();
+            IEnumerable<object> reverse = selectedItems.Reverse();
             foreach (MediaViewModel item in reverse)
             {
                 Playlist.Insert(_currentIndex + 1, new MediaViewModel(item));
