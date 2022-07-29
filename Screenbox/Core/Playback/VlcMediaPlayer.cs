@@ -205,9 +205,28 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Buffering += VlcPlayer_Buffering;
             VlcPlayer.Opening += VlcPlayer_Opening;
             VlcPlayer.ESAdded += VlcPlayer_ESAdded;
+            VlcPlayer.ESSelected += VlcPlayer_ESSelected;
 
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+        }
+
+        private void VlcPlayer_ESSelected(object sender, MediaPlayerESSelectedEventArgs e)
+        {
+            if (PlaybackItem == null || e.Type != TrackType.Text) return;
+            // VLC sometimes auto selects a subtitle track.
+            // Update subtitle track index accordingly.
+            int spu = e.Id;
+            if (spu < 0) return;
+
+            for (int i = 0; i < PlaybackItem.SubtitleTracks.Count; i++)
+            {
+                if (PlaybackItem.SubtitleTracks[i].VlcSpu == spu)
+                {
+                    PlaybackItem.SubtitleTracks.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void VlcPlayer_ChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
