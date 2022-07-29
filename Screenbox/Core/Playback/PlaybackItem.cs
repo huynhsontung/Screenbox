@@ -25,8 +25,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan? Duration => Source.Duration > 0 ? TimeSpan.FromMilliseconds(Source.Duration) : null;
 
-        private static readonly Dictionary<Uri, PlaybackItem> ItemsWithUri = new();
-        private static readonly Dictionary<StorageFile, PlaybackItem> ItemsWithStorage = new();
+        private static readonly Dictionary<string, PlaybackItem> Items = new();
 
         private PlaybackItem(Media media)
         {
@@ -39,7 +38,8 @@ namespace Screenbox.Core.Playback
 
         public static PlaybackItem GetFromStorageFile(StorageFile file)
         {
-            if (ItemsWithStorage.TryGetValue(file, out PlaybackItem? item))
+            string path = file.Path;
+            if (!string.IsNullOrEmpty(path) && Items.TryGetValue(path, out PlaybackItem? item))
             {
                 return item;
             }
@@ -47,13 +47,14 @@ namespace Screenbox.Core.Playback
             IMediaService mediaService = App.Services.GetRequiredService<IMediaService>();
             Media media = mediaService.CreateMedia(file);
             item = new PlaybackItem(media);
-            ItemsWithStorage.Add(file, item);
+            if (!string.IsNullOrEmpty(path)) Items.Add(path, item);
             return item;
         }
 
         public static PlaybackItem GetFromUri(Uri uri)
         {
-            if (ItemsWithUri.TryGetValue(uri, out PlaybackItem? item))
+            string uriString = uri.ToString();
+            if (Items.TryGetValue(uriString, out PlaybackItem? item))
             {
                 return item;
             }
@@ -61,7 +62,7 @@ namespace Screenbox.Core.Playback
             IMediaService mediaService = App.Services.GetRequiredService<IMediaService>();
             Media media = mediaService.CreateMedia(uri);
             item = new PlaybackItem(media);
-            ItemsWithUri.Add(uri, item);
+            Items.Add(uriString, item);
             return item;
         }
 
