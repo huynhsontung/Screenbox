@@ -21,8 +21,6 @@ namespace Screenbox.ViewModels
 
         public object Source { get; }
 
-        public PlaybackItem Item { get; }
-
         public string Glyph { get; }
 
         public bool IsPlaying
@@ -38,7 +36,12 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public PlaybackItem Item => _item ??= Source is StorageFile file
+            ? PlaybackItem.GetFromStorageFile(file)
+            : PlaybackItem.GetFromUri((Uri)Source);
+
         private bool _isPlaying;
+        private PlaybackItem? _item;
 
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
@@ -50,19 +53,18 @@ namespace Screenbox.ViewModels
         public MediaViewModel(MediaViewModel source)
         {
             _linkedFile = source._linkedFile;
+            _item = source._item;
             Name = source.Name;
             Thumbnail = source.Thumbnail;
             Location = source.Location;
             Duration = source.Duration;
             Source = source.Source;
             Glyph = source.Glyph;
-            Item = source.Item;
         }
 
         public MediaViewModel(Uri uri)
         {
             Source = uri;
-            Item = PlaybackItem.GetFromUri(uri);
             Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             Location = uri.ToString();
             Glyph = "\ue774";   // Globe icon
@@ -71,7 +73,6 @@ namespace Screenbox.ViewModels
         public MediaViewModel(StorageFile file)
         {
             Source = file;
-            Item = PlaybackItem.GetFromStorageFile(file);
             Name = file.Name;
             Location = file.Path;
             Glyph = StorageItemViewModel.GetGlyph(file);
