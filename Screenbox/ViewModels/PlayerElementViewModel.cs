@@ -17,9 +17,8 @@ using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
 using Microsoft.Toolkit.Diagnostics;
-using Windows.Media.Devices;
-using Windows.Devices.Enumeration;
 using Windows.Media.Playback;
+using Windows.System.Display;
 
 namespace Screenbox.ViewModels
 {
@@ -34,6 +33,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private Size _viewSize;
         private bool _zoomToFit;
+        private DisplayRequest? _displayRequest;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -87,6 +87,7 @@ namespace Screenbox.ViewModels
             _libVlcService.Initialize(e.SwapChainOptions);
             Guard.IsNotNull(MediaPlayer, nameof(MediaPlayer));
             MediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
+            MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             Messenger.Send(new MediaPlayerChangedMessage(MediaPlayer));
         }
 
@@ -199,6 +200,31 @@ namespace Screenbox.ViewModels
         {
             if (value == null) return;
             Messenger.Send(new PlayMediaMessage(value));
+        }
+
+        private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
+        {
+            if (sender.NaturalVideoHeight > 0 &&
+                sender.PlaybackState == MediaPlaybackState.Playing &&
+                _displayRequest == null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    DisplayRequest request = _displayRequest = new DisplayRequest();
+                    request.RequestActive();
+                });
+            }
+
+            if ((sender.NaturalVideoHeight <= 0 ||
+                sender.PlaybackState != MediaPlaybackState.Playing) &&
+                _displayRequest != null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    _displayRequest.RequestRelease();
+                    _displayRequest = null;
+                });
+            }
         }
 
         private void OnVideoSizeChanged(IMediaPlayer sender, object? args)

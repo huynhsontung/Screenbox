@@ -292,6 +292,7 @@ namespace Screenbox.Core.Playback
         private void VlcPlayer_EndReached(object sender, EventArgs e)
         {
             MediaEnded?.Invoke(this, null);
+            PlaybackStateChanged?.Invoke(this, null);
             if (IsLoopingEnabled)
                 Replay();
         }
