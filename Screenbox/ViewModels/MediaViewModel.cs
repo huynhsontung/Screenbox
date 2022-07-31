@@ -62,12 +62,17 @@ namespace Screenbox.ViewModels
             Glyph = source.Glyph;
         }
 
+        public MediaViewModel(StorageItemViewModel linkedVm, StorageFile file) : this(file)
+        {
+            _linkedFile = linkedVm;
+        }
+
         public MediaViewModel(Uri uri)
         {
             Source = uri;
             Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             Location = uri.ToString();
-            Glyph = "\ue774";   // Globe icon
+            Glyph = "\ue774"; // Globe icon
         }
 
         public MediaViewModel(StorageFile file)

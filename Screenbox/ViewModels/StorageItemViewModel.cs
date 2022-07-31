@@ -41,7 +41,7 @@ namespace Screenbox.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = new MediaViewModel(file);
+                Media = new MediaViewModel(this, file);
                 Media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
