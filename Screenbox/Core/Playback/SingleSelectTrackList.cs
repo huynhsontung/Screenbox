@@ -7,7 +7,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList
+    public class SingleSelectTrackList<T> : IReadOnlyList<T>, ISingleSelectMediaTrackList where T : IMediaTrack
     {
         public event TypedEventHandler<ISingleSelectMediaTrackList, object?>? SelectedIndexChanged;
 

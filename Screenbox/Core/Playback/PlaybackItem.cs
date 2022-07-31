@@ -17,6 +17,8 @@ namespace Screenbox.Core.Playback
 
         public PlaybackAudioTrackList AudioTracks { get; }
 
+        public PlaybackVideoTrackList VideoTracks { get; }
+
         public PlaybackSubtitleTrackList SubtitleTracks { get; }
 
         public PlaybackChapterList Chapters { get; }
@@ -31,6 +33,7 @@ namespace Screenbox.Core.Playback
         {
             Source = media;
             AudioTracks = new PlaybackAudioTrackList(media);
+            VideoTracks = new PlaybackVideoTrackList(media);
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
             Chapters = new PlaybackChapterList();
             StartTime = TimeSpan.Zero;

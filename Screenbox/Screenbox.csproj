@@ -181,12 +181,14 @@
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
+    <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />
     <Compile Include="Core\Playback\SingleSelectTrackList.cs" />
     <Compile Include="Core\Playback\PlaybackAudioTrackList.cs" />
     <Compile Include="Core\Playback\PlaybackChapterList.cs" />
     <Compile Include="Core\Playback\PlaybackItem.cs" />
     <Compile Include="Core\Playback\PlaybackSubtitleTrackList.cs" />
     <Compile Include="Core\Playback\SubtitleTrack.cs" />
+    <Compile Include="Core\Playback\VideoTrack.cs" />
     <Compile Include="Core\Playback\VlcMediaPlayer.cs" />
     <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />

@@ -81,6 +81,7 @@ namespace Screenbox.ViewModels
         public async Task LoadDetailsAsync()
         {
             if (Source is not StorageFile file) return;
+            if (VideoProperties != null || MusicProperties != null) return;
             if (file.ContentType.StartsWith("video"))
             {
                 VideoProperties = await file.Properties.GetVideoPropertiesAsync();
