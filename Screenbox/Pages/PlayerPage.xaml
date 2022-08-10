@@ -5,6 +5,7 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -16,7 +17,7 @@
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
-    toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+    toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
@@ -54,7 +55,6 @@
 
         <Grid
             x:Name="LayoutRoot"
-            Background="Black"
             PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
             RequestedTheme="Dark"
             Translation="0,0,8">
@@ -142,16 +142,28 @@
                     </Button.Flyout>
                 </Button>
 
-                <TextBlock
-                    x:Name="TitleText"
+                <StackPanel
+                    x:Name="TitleTextPanel"
                     Grid.Column="3"
                     Margin="36,0,0,0"
                     VerticalAlignment="Center"
-                    FontSize="20"
-                    FontWeight="SemiBold"
-                    IsHitTestVisible="False"
-                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
-                    TextTrimming="CharacterEllipsis" />
+                    Orientation="Vertical">
+                    <TextBlock
+                        x:Name="TitleText"
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        IsHitTestVisible="False"
+                        Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <TextBlock
+                        x:Name="SubtitleText"
+                        IsHitTestVisible="False"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind ViewModel.AudioOnly, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                        <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
+                    </TextBlock>
+                </StackPanel>
             </Grid>
 
             <controls:PlayerElement
@@ -183,6 +195,35 @@
                     </core:EventTriggerBehavior>
                 </interactivity:Interaction.Behaviors>
             </controls:PlayerElement>
+
+            <controls1:ConstrainedBox
+                x:Name="AlbumArt"
+                Grid.Row="1"
+                Grid.Column="0"
+                MinWidth="64"
+                MaxWidth="300"
+                Margin="32,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                AspectRatio="1:1"
+                Visibility="Collapsed">
+                <Grid
+                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Shadow="{StaticResource SharedShadow}"
+                    Translation="0,0,32">
+                    <FontIcon
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="64"
+                        Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
+                    <Border CornerRadius="{x:Bind CornerRadius}">
+                        <Image Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                    </Border>
+                </Grid>
+            </controls1:ConstrainedBox>
 
             <Button
                 x:Name="RestorePlayerButton"
@@ -314,6 +355,19 @@
                 </VisualState>
             </VisualStateGroup>
 
+            <VisualStateGroup x:Name="ContentStates">
+                <VisualState x:Name="Video" />
+                <VisualState x:Name="AudioOnly">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.AudioOnly, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="VideoView.Visibility" Value="Collapsed" />
+                        <Setter Target="AlbumArt.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="Fullscreen">
@@ -333,7 +387,10 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="12" />
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
-                        <Setter Target="TitleText.Margin" Value="13,0,0,0" />
+                        <Setter Target="SubtitleText.FontSize" Value="12" />
+                        <Setter Target="TitleTextPanel.Margin" Value="13,0,0,0" />
+                        <Setter Target="TitleTextPanel.Orientation" Value="Horizontal" />
+                        <Setter Target="TitleTextPanel.Spacing" Value="14" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
@@ -349,11 +406,14 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="14" />
                         <Setter Target="TitleText.FontWeight" Value="SemiBold" />
-                        <Setter Target="TitleText.Margin" Value="16,4,10,0" />
-                        <Setter Target="TitleText.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="TitleTextPanel.Margin" Value="16,4,10,0" />
+                        <Setter Target="TitleTextPanel.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
+                        <Setter Target="AlbumArt.(Grid.Row)" Value="0" />
+                        <Setter Target="AlbumArt.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="AlbumArt.Margin" Value="0" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
@@ -369,7 +429,7 @@
                         <Setter Target="LayoutRoot.Margin" Value="8,0,8,8" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
-                        <Setter Target="LayoutRoot.Height" Value="114" />
+                        <Setter Target="LayoutRoot.Height" Value="128" />
                         <Setter Target="LayoutRoot.Width" Value="484" />
                         <Setter Target="LayoutRoot.CornerRadius" Value="8" />
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />

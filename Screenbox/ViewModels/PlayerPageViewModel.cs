@@ -19,7 +19,8 @@ namespace Screenbox.ViewModels
     internal partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
     {
-        [ObservableProperty] private string _mediaTitle;
+        [ObservableProperty] private string? _mediaTitle;
+        [ObservableProperty] private bool _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private string? _statusMessage;
@@ -28,6 +29,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private WindowViewMode _viewMode;
+        [ObservableProperty] private MediaViewModel? _media;
 
         public bool SeekBarPointerPressed { get; set; }
 
@@ -51,7 +53,6 @@ namespace Screenbox.ViewModels
         public PlayerPageViewModel(IWindowService windowService)
         {
             _windowService = windowService;
-            _mediaTitle = string.Empty;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
@@ -235,15 +236,23 @@ namespace Screenbox.ViewModels
 
         private void OnOpening(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            _dispatcherQueue.TryEnqueue(LoadMediaInfo);
+        }
+
+        private async void LoadMediaInfo()
+        {
+            MediaViewModel? current = Media = Messenger.Send<PlayingItemRequestMessage>().Response;
+            if (current == null) return;
+
+            PlayerHidden = false;
+            MediaTitle = current.Name;
+            await current.LoadDetailsAsync();
+            await current.LoadThumbnailAsync();
+            AudioOnly = current.MusicProperties != null;
+            if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
             {
-                MediaViewModel? current = Messenger.Send<PlayingItemRequestMessage>().Response;
-                MediaTitle = current?.Name ?? string.Empty;
-                if (current != null)
-                {
-                    PlayerHidden = false;
-                }
-            });
+                MediaTitle = current.MusicProperties?.Title;
+            }
         }
 
         private void OnStateChanged(IMediaPlayer sender, object? args)
