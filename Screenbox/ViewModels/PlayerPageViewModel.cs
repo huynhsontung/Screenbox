@@ -19,7 +19,9 @@ namespace Screenbox.ViewModels
     internal partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
     {
+        [ObservableProperty] private double _miniPreviewWidth;  // 162 for normal, 109 for audio only
         [ObservableProperty] private string? _mediaTitle;
+        [ObservableProperty] private bool _showSubtitle;
         [ObservableProperty] private bool _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private bool _isCompact;
@@ -93,10 +95,6 @@ namespace Screenbox.ViewModels
         public void OnBackRequested()
         {
             PlayerHidden = true;
-            if (IsPlaying)
-            {
-                _mediaPlayer?.Pause();
-            }
         }
 
         public void ToggleControlsVisibility()
@@ -106,7 +104,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride && !PlayerHidden)
+            else if (IsPlaying && !_visibilityOverride && !PlayerHidden && !AudioOnly)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -215,10 +213,10 @@ namespace Screenbox.ViewModels
 
         private void DelayHideControls()
         {
-            if (PlayerHidden) return;
+            if (PlayerHidden || AudioOnly) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (IsPlaying && VideoViewFocused)
+                if (IsPlaying && VideoViewFocused && !AudioOnly)
                 {
                     HideControls();
 
@@ -249,6 +247,8 @@ namespace Screenbox.ViewModels
             await current.LoadDetailsAsync();
             await current.LoadThumbnailAsync();
             AudioOnly = current.MusicProperties != null;
+            ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
+            MiniPreviewWidth = AudioOnly ? 109 : 162;
             if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
             {
                 MediaTitle = current.MusicProperties?.Title;

@@ -160,7 +160,7 @@
                         x:Name="SubtitleText"
                         IsHitTestVisible="False"
                         TextTrimming="CharacterEllipsis"
-                        Visibility="{x:Bind ViewModel.AudioOnly, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                        Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
                         <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
                     </TextBlock>
                 </StackPanel>
@@ -197,7 +197,7 @@
             </controls:PlayerElement>
 
             <controls1:ConstrainedBox
-                x:Name="AlbumArt"
+                x:Name="AlbumArtPanel"
                 Grid.Row="1"
                 Grid.Column="0"
                 MinWidth="64"
@@ -206,8 +206,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 AspectRatio="1:1"
+                IsHitTestVisible="False"
                 Visibility="Collapsed">
                 <Grid
+                    x:Name="AlbumArt"
                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
@@ -215,9 +217,10 @@
                     Shadow="{StaticResource SharedShadow}"
                     Translation="0,0,32">
                     <FontIcon
+                        x:Name="AlbumArtGlyph"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontSize="64"
+                        FontSize="80"
                         Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
                     <Border CornerRadius="{x:Bind CornerRadius}">
                         <Image Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
@@ -362,8 +365,8 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.AudioOnly, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="VideoView.Visibility" Value="Collapsed" />
-                        <Setter Target="AlbumArt.Visibility" Value="Visible" />
+                        <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -411,9 +414,10 @@
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
-                        <Setter Target="AlbumArt.(Grid.Row)" Value="0" />
-                        <Setter Target="AlbumArt.(Grid.RowSpan)" Value="3" />
-                        <Setter Target="AlbumArt.Margin" Value="0" />
+                        <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
+                        <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="AlbumArtPanel.Margin" Value="0" />
+                        <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
@@ -422,7 +426,7 @@
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
-                        <Setter Target="FirstColumn.Width" Value="162" />
+                        <Setter Target="FirstColumn.Width" Value="{x:Bind ViewModel.MiniPreviewWidth, Mode=OneWay}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.HorizontalAlignment" Value="Right" />
