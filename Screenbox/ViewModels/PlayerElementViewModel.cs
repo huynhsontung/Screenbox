@@ -218,6 +218,7 @@ namespace Screenbox.ViewModels
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
+                    _displayRequest?.RequestRelease();
                     DisplayRequest request = _displayRequest = new DisplayRequest();
                     request.RequestActive();
                 });
@@ -229,7 +230,7 @@ namespace Screenbox.ViewModels
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
-                    _displayRequest.RequestRelease();
+                    _displayRequest?.RequestRelease();
                     _displayRequest = null;
                 });
             }
