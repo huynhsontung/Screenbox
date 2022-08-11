@@ -2,7 +2,7 @@
 
 using Windows.Media.Core;
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Core.Playback
 {

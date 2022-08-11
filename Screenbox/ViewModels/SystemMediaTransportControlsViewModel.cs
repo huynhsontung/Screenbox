@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Storage;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Playback;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels

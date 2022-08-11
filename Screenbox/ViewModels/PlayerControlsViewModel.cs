@@ -7,9 +7,9 @@ using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -128,8 +128,8 @@ namespace Screenbox.ViewModels
             UpdateShowPreviousNext();
         }
 
-        [ICommand]
-        private async Task ToggleCompactLayout()
+        [RelayCommand]
+        private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
             {
@@ -146,7 +146,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [ICommand]
+        [RelayCommand]
         private void ToggleFullscreen()
         {
             if (IsCompact) return;
@@ -160,7 +160,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [ICommand]
+        [RelayCommand]
         private void PlayPause()
         {
             if (IsPlaying)
@@ -173,9 +173,8 @@ namespace Screenbox.ViewModels
             }
         }
 
-
-        [ICommand]
-        private async Task SaveSnapshot()
+        [RelayCommand]
+        private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
             {

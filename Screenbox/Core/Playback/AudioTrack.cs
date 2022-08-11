@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback

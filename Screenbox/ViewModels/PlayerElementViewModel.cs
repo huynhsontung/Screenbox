@@ -10,13 +10,13 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Converters;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Windows.Media.Playback;
 using Windows.System.Display;
 

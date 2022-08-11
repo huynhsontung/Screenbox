@@ -3,8 +3,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core;
 using Screenbox.Services;
 
@@ -13,8 +13,6 @@ namespace Screenbox.ViewModels
     internal partial class CastControlViewModel : ObservableObject
     {
         public ObservableCollection<Renderer> Renderers { get; }
-
-        public IRelayCommand CastCommand { get; }
 
         [ObservableProperty] private Renderer? _selectedRenderer;
         [ObservableProperty] private Renderer? _castingDevice;
@@ -30,7 +28,6 @@ namespace Screenbox.ViewModels
             _castService.RendererFound += CastServiceOnRendererFound;
             _castService.RendererLost += CastServiceOnRendererLost;
             Renderers = new ObservableCollection<Renderer>();
-            CastCommand = new RelayCommand(Cast, CanCast);
             PropertyChanged += OnPropertyChanged;
         }
 
@@ -47,6 +44,7 @@ namespace Screenbox.ViewModels
             Renderers.Clear();
         }
 
+        [RelayCommand(CanExecute = nameof(CanCast))]
         private void Cast()
         {
             if (_selectedRenderer == null) return;
@@ -55,9 +53,9 @@ namespace Screenbox.ViewModels
             IsCasting = true;
         }
 
-        private bool CanCast() => _selectedRenderer != null && _selectedRenderer.IsAvailable;
+        private bool CanCast() => _selectedRenderer is { IsAvailable: true };
 
-        [ICommand]
+        [RelayCommand]
         private void StopCasting()
         {
             _castService.SetActiveRenderer(null);

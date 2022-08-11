@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.ViewModels;
 
 namespace Screenbox.Core.Messages

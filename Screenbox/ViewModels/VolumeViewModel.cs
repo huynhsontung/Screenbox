@@ -1,46 +1,19 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Strings;
-using System;
 
 namespace Screenbox.ViewModels
 {
-    internal class VolumeViewModel : ObservableRecipient,
+    internal partial class VolumeViewModel : ObservableRecipient,
         IRecipient<ChangeVolumeMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
-        public bool IsMute
-        {
-            get => _isMute;
-            set
-            {
-                if (SetProperty(ref _isMute, value) && _mediaPlayer != null)
-                {
-                    _mediaPlayer.IsMuted = value;
-                }
-            }
-        }
-
-        public int Volume
-        {
-            get => _volume;
-            set
-            {
-                value = Math.Clamp(value, 0, 100);
-                if (SetProperty(ref _volume, value) && _mediaPlayer != null)
-                {
-                    _mediaPlayer.Volume = value / 100d;
-                    IsMute = value == 0;
-                }
-            }
-        }
-
-        private int _volume;
-        private bool _isMute;
+        [ObservableProperty] private int _volume;
+        [ObservableProperty] private bool _isMute;
         private IMediaPlayer? _mediaPlayer;
 
         public VolumeViewModel()
@@ -70,6 +43,19 @@ namespace Screenbox.ViewModels
             }
 
             Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
+        }
+
+        partial void OnVolumeChanged(int value)
+        {
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.Volume = value / 100d;
+            IsMute = value == 0;
+        }
+
+        partial void OnIsMuteChanged(bool value)
+        {
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.IsMuted = value;
         }
 
         private void OnVolumeChanged(IMediaPlayer sender, object? args)
