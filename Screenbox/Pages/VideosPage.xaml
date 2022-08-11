@@ -40,7 +40,8 @@
                             <TextBox
                                 x:Name="UrlBox"
                                 Margin="0,5,0,0"
-                                Header="URL to open" />
+                                Header="URL to open"
+                                Text="{x:Bind ViewModel.UrlText, Mode=TwoWay}" />
 
                             <Button Click="{x:Bind ViewModel.OpenButtonClick}" Content="Open" />
                         </StackPanel>

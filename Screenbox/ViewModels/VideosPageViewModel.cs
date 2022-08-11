@@ -35,8 +35,10 @@ namespace Screenbox.ViewModels
 
         public void OpenButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(UrlText))
-                Messenger.Send(new PlayMediaMessage(UrlText));
+            if (!string.IsNullOrWhiteSpace(UrlText) && Uri.TryCreate(UrlText, UriKind.Absolute, out Uri uri))
+            {
+                Messenger.Send(new PlayMediaMessage(uri));
+            }
         }
 
         public async void PickFileButtonClick(object sender, RoutedEventArgs e)
