@@ -129,7 +129,7 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
-        private async Task ToggleCompactLayout()
+        private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
             {
@@ -173,9 +173,8 @@ namespace Screenbox.ViewModels
             }
         }
 
-
         [RelayCommand]
-        private async Task SaveSnapshot()
+        private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
             {
