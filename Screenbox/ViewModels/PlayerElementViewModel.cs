@@ -66,7 +66,15 @@ namespace Screenbox.ViewModels
                 IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                 if (items.Count > 0)
                 {
-                    Play(items);
+                    if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                    {
+                        MediaPlayer?.AddSubtitle(file);
+                    }
+                    else
+                    {
+                        Play(items);
+                    }
+
                     return;
                 }
             }
