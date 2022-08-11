@@ -224,6 +224,7 @@
     <Compile Include="Pages\VideosPage.xaml.cs">
       <DependentUpon>VideosPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Secrets.cs" />
     <Compile Include="Services\CastService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
@@ -469,11 +470,6 @@
     <PackageReference Include="VideoLAN.LibVLC.UWP">
       <Version>3.3.2</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Secrets.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

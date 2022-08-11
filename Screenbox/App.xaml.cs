@@ -4,19 +4,14 @@ using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using LibVLCSharp.Shared;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Controls;
 using Screenbox.Core.Messages;
 using Screenbox.Pages;
 using Screenbox.Services;
@@ -78,8 +73,7 @@ namespace Screenbox
         private static void ConfigureAppCenter()
         {
 #if !DEBUG
-            var secrets = ResourceLoader.GetForViewIndependentUse("Secrets");
-            AppCenter.Start(secrets.GetString("AppCenterApiKey"),
+            AppCenter.Start(Secrets.AppCenterApiKey,
                 typeof(Analytics), typeof(Crashes));
 #endif
         }
