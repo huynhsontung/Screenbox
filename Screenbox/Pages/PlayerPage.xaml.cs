@@ -6,6 +6,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
@@ -122,6 +123,13 @@ namespace Screenbox.Pages
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+
+            if (e.PropertyName == nameof(PlayerPageViewModel.AudioOnly))
+            {
+                PlayerControls.Background = ViewModel.AudioOnly
+                    ? null
+                    : (Brush)Resources["PlayerControlsBackground"];
             }
         }
     }

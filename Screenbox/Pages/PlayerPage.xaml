@@ -366,6 +366,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="HeaderBackground.Background" Value="Transparent" />
+                        <Setter Target="PlayerControls.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
@@ -394,6 +396,9 @@
                         <Setter Target="TitleTextPanel.Margin" Value="13,0,0,0" />
                         <Setter Target="TitleTextPanel.Orientation" Value="Horizontal" />
                         <Setter Target="TitleTextPanel.Spacing" Value="14" />
+                        <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
+                        <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
+                        <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
                         <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
@@ -418,6 +423,8 @@
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
+                        <Setter Target="AlbumArt.CornerRadius" Value="6" />
+                        <Setter Target="AlbumArt.BorderThickness" Value="0" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
