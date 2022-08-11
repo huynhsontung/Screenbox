@@ -4,12 +4,12 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Strings;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Playback;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
@@ -67,7 +67,7 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
         }
 
-        [ICommand]
+        [RelayCommand]
         private async Task AddSubtitle()
         {
             if (_mediaPlayer?.Source == null) return;

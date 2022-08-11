@@ -2,7 +2,7 @@
 
 using System;
 using Windows.UI.Xaml.Data;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Screenbox.ViewModels;
 
 namespace Screenbox.Converters

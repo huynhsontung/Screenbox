@@ -4,7 +4,7 @@ using System;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Services
 {

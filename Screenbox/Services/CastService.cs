@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Diagnostics;
+using CommunityToolkit.Diagnostics;
 using Screenbox.Core;
 
 namespace Screenbox.Services

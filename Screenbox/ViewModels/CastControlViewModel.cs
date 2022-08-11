@@ -3,8 +3,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.System;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core;
 using Screenbox.Services;
 
@@ -57,7 +57,7 @@ namespace Screenbox.ViewModels
 
         private bool CanCast() => _selectedRenderer != null && _selectedRenderer.IsAvailable;
 
-        [ICommand]
+        [RelayCommand]
         private void StopCasting()
         {
             _castService.SetActiveRenderer(null);

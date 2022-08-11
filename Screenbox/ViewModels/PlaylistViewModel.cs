@@ -15,9 +15,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Shared;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -239,7 +239,7 @@ namespace Screenbox.ViewModels
             PlaySingle(vm);
         }
 
-        [ICommand]
+        [RelayCommand]
         private void PlaySingle(MediaViewModel vm)
         {
             if (_mediaPlayer == null) return;
@@ -258,7 +258,7 @@ namespace Screenbox.ViewModels
             PlayingItem = vm;
         }
 
-        [ICommand]
+        [RelayCommand]
         private void Clear()
         {
             if (_mediaPlayer != null) _mediaPlayer.Source = null;
