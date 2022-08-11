@@ -43,7 +43,7 @@ namespace Screenbox.Services
             if (StorageApplicationPermissions.FutureAccessList.Entries.Count > 995) // Limit 1000
                 StorageApplicationPermissions.FutureAccessList.Clear();
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
-            return new Media(libVlc, mrl, FromType.FromPath);
+            return new Media(libVlc, mrl, FromType.FromLocation);
         }
 
         public Media CreateMedia(Uri uri)
