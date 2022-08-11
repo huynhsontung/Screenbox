@@ -58,6 +58,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
+            MiniPreviewWidth = 162;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             PropertyChanged += OnPropertyChanged;
