@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
@@ -33,14 +34,9 @@ namespace Screenbox.ViewModels
 
         public void Receive(ChangeVolumeMessage message)
         {
-            if (message.IsOffset)
-            {
-                Volume += message.Value;
-            }
-            else
-            {
-                Volume = message.Value;
-            }
+            Volume = message.IsOffset ?
+                Math.Clamp(Volume + message.Value, 0, 100) :
+                Math.Clamp(message.Value, 0, 100);
 
             Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
         }
