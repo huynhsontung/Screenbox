@@ -14,11 +14,9 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using LibVLCSharp.Shared;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
@@ -35,13 +33,6 @@ namespace Screenbox.ViewModels
             get => _playingItem;
             private set => SetProperty(ref _playingItem, value);
         }
-
-        public IRelayCommand NextCommand { get; }
-        public IRelayCommand PreviousCommand { get; }
-        public IRelayCommand PlayNextCommand { get; }
-        public IRelayCommand RemoveSelectedCommand { get; }
-        public IRelayCommand MoveSelectedItemUpCommand { get; }
-        public IRelayCommand MoveSelectedItemDownCommand { get; }
 
         [ObservableProperty] private bool _canSkip;
         [ObservableProperty] private bool _hasItems;
@@ -63,13 +54,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
-
-            NextCommand = new AsyncRelayCommand(PlayNextAsync, CanPlayNext);
-            PreviousCommand = new AsyncRelayCommand(PlayPreviousAsync, CanPlayPrevious);
-            PlayNextCommand = new RelayCommand<IList<object>>(PlayNext, HasSelection);
-            RemoveSelectedCommand = new RelayCommand<IList<object>>(RemoveSelected, HasSelection);
-            MoveSelectedItemUpCommand = new RelayCommand<IList<object>>(MoveSelectedItemUp, HasSelection);
-            MoveSelectedItemDownCommand = new RelayCommand<IList<object>>(MoveSelectedItemDown, HasSelection);
 
             PropertyChanged += OnPropertyChanged;
             Playlist.CollectionChanged += OnCollectionChanged;
@@ -266,6 +250,7 @@ namespace Screenbox.ViewModels
             Playlist.Clear();
         }
 
+        [RelayCommand(CanExecute = nameof(HasSelection))]
         private void RemoveSelected(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
@@ -282,6 +267,7 @@ namespace Screenbox.ViewModels
             }
         }
 
+        [RelayCommand(CanExecute = nameof(HasSelection))]
         private void PlayNext(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
@@ -292,6 +278,7 @@ namespace Screenbox.ViewModels
             }
         }
 
+        [RelayCommand(CanExecute = nameof(HasSelection))]
         private void MoveSelectedItemUp(IList<object>? selectedItems)
         {
             if (selectedItems == null || selectedItems.Count != 1) return;
@@ -303,6 +290,7 @@ namespace Screenbox.ViewModels
             selectedItems.Add(item);
         }
 
+        [RelayCommand(CanExecute = nameof(HasSelection))]
         private void MoveSelectedItemDown(IList<object>? selectedItems)
         {
             if (selectedItems == null || selectedItems.Count != 1) return;
@@ -314,7 +302,7 @@ namespace Screenbox.ViewModels
             selectedItems.Add(item);
         }
 
-        private bool CanPlayNext()
+        private bool CanNext()
         {
             if (Playlist.Count == 1)
             {
@@ -329,7 +317,8 @@ namespace Screenbox.ViewModels
             return _currentIndex >= 0 && _currentIndex < Playlist.Count - 1;
         }
 
-        private async Task PlayNextAsync()
+        [RelayCommand(CanExecute = nameof(CanNext))]
+        private async Task NextAsync()
         {
             if (Playlist.Count == 0 || PlayingItem == null) return;
             int index = _currentIndex;
@@ -352,7 +341,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private bool CanPlayPrevious()
+        private bool CanPrevious()
         {
             if (Playlist.Count == 1)
             {
@@ -367,7 +356,8 @@ namespace Screenbox.ViewModels
             return _currentIndex >= 1 && _currentIndex < Playlist.Count;
         }
 
-        private async Task PlayPreviousAsync()
+        [RelayCommand(CanExecute = nameof(CanPrevious))]
+        private async Task PreviousAsync()
         {
             if (Playlist.Count == 0 || PlayingItem == null) return;
             int index = _currentIndex;
@@ -403,7 +393,7 @@ namespace Screenbox.ViewModels
                         sender.Position = TimeSpan.Zero;
                         break;
                     default:
-                        if (Playlist.Count > 1) _ = PlayNextAsync();
+                        if (Playlist.Count > 1) _ = NextAsync();
                         break;
                 }
             });

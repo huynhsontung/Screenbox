@@ -23,26 +23,13 @@ namespace Screenbox.ViewModels
 
         public string Glyph { get; }
 
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            set
-            {
-                SetProperty(ref _isPlaying, value);
-                if (_linkedFile != null)
-                {
-                    _linkedFile.IsPlaying = value;
-                }
-            }
-        }
-
         public PlaybackItem Item => _item ??= Source is StorageFile file
             ? PlaybackItem.GetFromStorageFile(file)
             : PlaybackItem.GetFromUri((Uri)Source);
 
-        private bool _isPlaying;
         private PlaybackItem? _item;
 
+        [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private VideoProperties? _videoProperties;
@@ -111,6 +98,14 @@ namespace Screenbox.ViewModels
             {
                 IFilesService filesService = App.Services.GetRequiredService<IFilesService>();
                 Thumbnail = await filesService.GetThumbnailAsync(file);
+            }
+        }
+
+        partial void OnIsPlayingChanged(bool value)
+        {
+            if (_linkedFile != null)
+            {
+                _linkedFile.IsPlaying = value;
             }
         }
     }

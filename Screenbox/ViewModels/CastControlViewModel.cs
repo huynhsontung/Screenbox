@@ -14,8 +14,6 @@ namespace Screenbox.ViewModels
     {
         public ObservableCollection<Renderer> Renderers { get; }
 
-        public IRelayCommand CastCommand { get; }
-
         [ObservableProperty] private Renderer? _selectedRenderer;
         [ObservableProperty] private Renderer? _castingDevice;
         [ObservableProperty] private bool _isCasting;
@@ -30,7 +28,6 @@ namespace Screenbox.ViewModels
             _castService.RendererFound += CastServiceOnRendererFound;
             _castService.RendererLost += CastServiceOnRendererLost;
             Renderers = new ObservableCollection<Renderer>();
-            CastCommand = new RelayCommand(Cast, CanCast);
             PropertyChanged += OnPropertyChanged;
         }
 
@@ -47,6 +44,7 @@ namespace Screenbox.ViewModels
             Renderers.Clear();
         }
 
+        [RelayCommand(CanExecute = nameof(CanCast))]
         private void Cast()
         {
             if (_selectedRenderer == null) return;
@@ -55,7 +53,7 @@ namespace Screenbox.ViewModels
             IsCasting = true;
         }
 
-        private bool CanCast() => _selectedRenderer != null && _selectedRenderer.IsAvailable;
+        private bool CanCast() => _selectedRenderer is { IsAvailable: true };
 
         [RelayCommand]
         private void StopCasting()

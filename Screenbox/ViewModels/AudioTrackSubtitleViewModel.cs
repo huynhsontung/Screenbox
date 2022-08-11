@@ -18,28 +18,6 @@ namespace Screenbox.ViewModels
 {
     internal partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
-        public int SubtitleTrackIndex
-        {
-            get => _subtitleTrackIndex;
-            set
-            {
-                if (!SetProperty(ref _subtitleTrackIndex, value)) return;
-                if (ItemSubtitleTrackList != null && value >= 0 && value < SubtitleTracks.Count)
-                    ItemSubtitleTrackList.SelectedIndex = value - 1;
-            }
-        }
-
-        public int AudioTrackIndex
-        {
-            get => _audioTrackIndex;
-            set
-            {
-                if (!SetProperty(ref _audioTrackIndex, value)) return;
-                if (ItemAudioTrackList != null && value >= 0 && value < AudioTracks.Count)
-                    ItemAudioTrackList.SelectedIndex = value;
-            }
-        }
-
         public ObservableCollection<string> SubtitleTracks { get; }
 
         public ObservableCollection<string> AudioTracks { get; }
@@ -48,10 +26,10 @@ namespace Screenbox.ViewModels
 
         private PlaybackAudioTrackList? ItemAudioTrackList => _mediaPlayer?.PlaybackItem?.AudioTracks;
 
+        [ObservableProperty] private int _subtitleTrackIndex;
+        [ObservableProperty] private int _audioTrackIndex;
         private readonly IFilesService _filesService;
         private IMediaPlayer? _mediaPlayer;
-        private int _subtitleTrackIndex;
-        private int _audioTrackIndex;
 
         public AudioTrackSubtitleViewModel(IFilesService filesService)
         {
@@ -65,6 +43,18 @@ namespace Screenbox.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
+        }
+
+        partial void OnSubtitleTrackIndexChanged(int value)
+        {
+            if (ItemSubtitleTrackList != null && value >= 0 && value < SubtitleTracks.Count)
+                ItemSubtitleTrackList.SelectedIndex = value - 1;
+        }
+
+        partial void OnAudioTrackIndexChanged(int value)
+        {
+            if (ItemAudioTrackList != null && value >= 0 && value < AudioTracks.Count)
+                ItemAudioTrackList.SelectedIndex = value;
         }
 
         [RelayCommand]
