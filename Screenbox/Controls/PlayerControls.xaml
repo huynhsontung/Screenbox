@@ -178,7 +178,6 @@
                 x:Name="PreviousButton"
                 Margin="2,0,0,0"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
-                BorderThickness="0,0,1,0"
                 Command="{x:Bind ViewModel.PlaylistViewModel.PreviousCommand}"
                 CornerRadius="4,0,0,4"
                 Style="{StaticResource PlayerButtonStyle}"
