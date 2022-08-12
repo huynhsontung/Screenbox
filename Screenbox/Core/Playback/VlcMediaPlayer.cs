@@ -199,6 +199,7 @@ namespace Screenbox.Core.Playback
             VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
             VlcPlayer.Paused += (s, e) => PlaybackStateChanged?.Invoke(this, null);
             VlcPlayer.Playing += (s, e) => PlaybackStateChanged?.Invoke(this, null);
+            VlcPlayer.Stopped += (s, e) => PlaybackStateChanged?.Invoke(this, null);
             VlcPlayer.ChapterChanged += VlcPlayer_ChapterChanged;
             VlcPlayer.LengthChanged += VlcPlayer_LengthChanged;
             VlcPlayer.EndReached += VlcPlayer_EndReached;

@@ -52,6 +52,21 @@ namespace Screenbox.ViewModels
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
+            _mediaPlayer.SourceChanged += OnSourceChanged;
+        }
+
+        private void OnSourceChanged(IMediaPlayer sender, object? args)
+        {
+            if (sender.Source == null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    IsSeekable = false;
+                    Time = 0;
+                    Length = 0;
+                    Chapters = null;
+                });
+            }
         }
 
         private void OnBufferingEnded(IMediaPlayer sender, object? args)
@@ -126,15 +141,5 @@ namespace Screenbox.ViewModels
                 _dispatcherQueue.TryEnqueue(() => Time = Length);
             }
         }
-
-        //private void OnStopped(object sender, EventArgs e)
-        //{
-        //    _dispatcherQueue.TryEnqueue(() =>
-        //    {
-        //        IsSeekable = false;
-        //        Time = 0;
-        //        Length = 0;
-        //    });
-        //}
     }
 }

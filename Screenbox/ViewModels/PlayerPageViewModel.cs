@@ -61,7 +61,6 @@ namespace Screenbox.ViewModels
             MiniPreviewWidth = 162;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            PropertyChanged += OnPropertyChanged;
 
             // Activate the view model's messenger
             IsActive = true;
@@ -81,6 +80,7 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.MediaOpened += OnOpening;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
+            _mediaPlayer.SourceChanged += OnSourceChanged;
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -175,29 +175,23 @@ namespace Screenbox.ViewModels
                 _timeBeforeManipulation = _mediaPlayer.Position;
         }
 
+        partial void OnVideoViewFocusedChanged(bool value)
+        {
+            if (value)
+            {
+                DelayHideControls();
+            }
+            else
+            {
+                ShowControls();
+            }
+        }
+
         private void ShowStatusMessage(string? message)
         {
             StatusMessage = message;
             if (_overrideStatusTimeout || message == null) return;
             _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(VideoViewFocused):
-                    if (VideoViewFocused)
-                    {
-                        DelayHideControls();
-                    }
-                    else
-                    {
-                        ShowControls();
-                    }
-
-                    break;
-            }
         }
 
         private void ShowControls()
@@ -274,6 +268,16 @@ namespace Screenbox.ViewModels
                     DelayHideControls();
                 }
             });
+        }
+
+        private void OnSourceChanged(IMediaPlayer sender, object? args)
+        {
+            if (sender.Source == null)
+            {
+                MediaTitle = null;
+                ShowSubtitle = false;
+                Media = null;
+            }
         }
     }
 }
