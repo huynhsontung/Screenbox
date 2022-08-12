@@ -28,7 +28,6 @@ namespace Screenbox.ViewModels
             _castService.RendererFound += CastServiceOnRendererFound;
             _castService.RendererLost += CastServiceOnRendererLost;
             Renderers = new ObservableCollection<Renderer>();
-            PropertyChanged += OnPropertyChanged;
         }
 
         public void StartDiscovering()
@@ -42,6 +41,11 @@ namespace Screenbox.ViewModels
             _castService.Stop();
             SelectedRenderer = null;
             Renderers.Clear();
+        }
+
+        partial void OnSelectedRendererChanged(Renderer? renderer)
+        {
+            CastCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand(CanExecute = nameof(CanCast))]
@@ -61,14 +65,6 @@ namespace Screenbox.ViewModels
             _castService.SetActiveRenderer(null);
             IsCasting = false;
             StartDiscovering();
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SelectedRenderer))
-            {
-                CastCommand.NotifyCanExecuteChanged();
-            }
         }
 
         private void CastServiceOnRendererLost(object sender, RendererLostEventArgs e)

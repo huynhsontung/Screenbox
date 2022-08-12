@@ -48,7 +48,6 @@ namespace Screenbox.ViewModels
             _playPauseGlyph = GetPlayPauseGlyph(false);
             PlaylistViewModel = playlistViewModel;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
-            PropertyChanged += OnPropertyChanged;
 
             IsActive = true;
         }
@@ -67,17 +66,14 @@ namespace Screenbox.ViewModels
             _mediaPlayer.PlaybackRate = speed;
         }
 
+        partial void OnZoomToFitChanged(bool zoomToFit)
+        {
+            Messenger.Send(new ChangeZoomToFitMessage(ZoomToFit));
+        }
+
         private void UpdateShowPreviousNext()
         {
             ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ZoomToFit))
-            {
-                Messenger.Send(new ChangeZoomToFitMessage(ZoomToFit));
-            }
         }
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
