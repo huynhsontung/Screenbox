@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml.Input;
@@ -72,6 +71,10 @@ namespace Screenbox.ViewModels
             {
                 ViewMode = e.NewValue;
                 IsCompact = ViewMode == WindowViewMode.Compact;
+                if (ViewMode == WindowViewMode.Default)
+                {
+                    PlayerHidden = false;
+                }
             });
         }
 
