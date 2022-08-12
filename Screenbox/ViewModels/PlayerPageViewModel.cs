@@ -238,7 +238,6 @@ namespace Screenbox.ViewModels
             if (current == null) return;
 
             PlayerHidden = false;
-            MediaTitle = current.Name;
             await current.LoadDetailsAsync();
             await current.LoadThumbnailAsync();
             AudioOnly = current.MusicProperties != null;
@@ -247,6 +246,10 @@ namespace Screenbox.ViewModels
             if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
             {
                 MediaTitle = current.MusicProperties?.Title;
+            }
+            else
+            {
+                MediaTitle = current.Name;
             }
         }
 
