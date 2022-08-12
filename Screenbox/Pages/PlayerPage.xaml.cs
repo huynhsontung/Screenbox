@@ -116,6 +116,7 @@ namespace Screenbox.Pages
                         break;
                     case WindowViewMode.Compact:
                         VisualStateManager.GoToState(this, "Compact", true);
+                        SetTitleBar();
                         break;
                     case WindowViewMode.FullScreen:
                         VisualStateManager.GoToState(this, "Fullscreen", true);

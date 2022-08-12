@@ -399,7 +399,7 @@
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
-                        <Setter Target="PlayerControls.Padding" Value="4,4,4,0" />
+                        <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
                 </VisualState>

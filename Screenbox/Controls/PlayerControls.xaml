@@ -345,6 +345,7 @@
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
+                        <Setter Target="PlayPauseButton.Margin" Value="2,0,2,0" />
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.ProgressOnly" Value="True" />
                         <Setter Target="SeekBar.Margin" Value="0" />
