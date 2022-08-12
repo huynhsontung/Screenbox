@@ -154,6 +154,7 @@
                                 <ColumnDefinition Width="32" />
                                 <ColumnDefinition Width="32" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <FontIcon
                                 x:Name="IsPlayingIcon"
@@ -197,6 +198,13 @@
                                 VerticalAlignment="Center"
                                 Text="{x:Bind Name}" />
 
+                            <TextBlock
+                                x:Name="DurationText"
+                                Grid.Column="3"
+                                Margin="16,0,8,0"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="PlayingState">
                                     <VisualState x:Name="NotPlaying" />
@@ -207,6 +215,7 @@
                                         <VisualState.Setters>
                                             <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                            <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                                             <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                         </VisualState.Setters>
