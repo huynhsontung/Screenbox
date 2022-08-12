@@ -80,11 +80,8 @@ namespace Screenbox.Services
 
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder)
         {
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats)
-            {
-                IndexerOption = IndexerOption.UseIndexerWhenAvailable
-            };
-
+            // Don't use indexer when querying. Potential incomplete result.
+            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
             return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
         }
 
