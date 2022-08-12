@@ -170,7 +170,7 @@ namespace Screenbox.ViewModels
             HasItems = Playlist.Count > 0;
         }
 
-        private void Enqueue(IReadOnlyList<IStorageItem> files)
+        private async void Enqueue(IReadOnlyList<IStorageItem> files)
         {
             foreach (IStorageItem item in files)
             {
@@ -185,6 +185,8 @@ namespace Screenbox.ViewModels
                     Playlist.Add(new MediaViewModel(storageFile));
                 }
             }
+
+            await Task.WhenAll(Playlist.Select(media => media.LoadDetailsAsync()));
         }
 
         private void Play(IReadOnlyList<IStorageItem> files)
