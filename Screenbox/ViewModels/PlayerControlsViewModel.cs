@@ -57,6 +57,7 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.ChapterChanged += OnChapterChanged;
+            _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
         public void SetPlaybackSpeed(string speedText)
@@ -84,11 +85,16 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
+        {
+            SaveSnapshotCommand.NotifyCanExecuteChanged();
+        }
+
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                IsPlaying = sender.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing;
+                IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
                 PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
             });
         }
@@ -169,7 +175,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSaveSnapshot))]
         private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
@@ -185,6 +191,11 @@ namespace Screenbox.ViewModels
                     // TODO: track error
                 }
             }
+        }
+
+        private bool CanSaveSnapshot()
+        {
+            return _mediaPlayer?.NaturalVideoHeight > 0;
         }
 
         private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
