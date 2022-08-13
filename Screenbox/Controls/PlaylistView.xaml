@@ -151,7 +151,7 @@
                     <UserControl>
                         <Grid Padding="0,6">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition x:Name="FirstColumn" Width="32" />
                                 <ColumnDefinition Width="32" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -218,6 +218,18 @@
                                             <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                                             <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+
+                                <VisualStateGroup x:Name="SelectionStates">
+                                    <VisualState x:Name="Extended" />
+                                    <VisualState x:Name="Multiple">
+                                        <VisualState.StateTriggers>
+                                            <StateTrigger IsActive="{Binding ElementName=MultiSelectToggle, Path=IsChecked}" />
+                                        </VisualState.StateTriggers>
+                                        <VisualState.Setters>
+                                            <Setter Target="FirstColumn.Width" Value="0" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
