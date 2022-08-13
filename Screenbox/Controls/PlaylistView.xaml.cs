@@ -49,6 +49,7 @@ namespace Screenbox.Controls
             args.ItemContainer.LostFocus -= ItemContainerOnLostFocus;
 
             args.ItemContainer.DoubleTapped -= ItemContainerOnDoubleTapped;
+            args.ItemContainer.SizeChanged -= ItemContainerOnSizeChanged;
 
             // Registering events
             args.ItemContainer.PointerEntered += ItemContainerOnPointerEntered;
@@ -60,6 +61,27 @@ namespace Screenbox.Controls
             args.ItemContainer.LostFocus += ItemContainerOnLostFocus;
 
             args.ItemContainer.DoubleTapped += ItemContainerOnDoubleTapped;
+            args.ItemContainer.SizeChanged += ItemContainerOnSizeChanged;
+        }
+
+        private void ItemContainerOnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ListViewItem item = (ListViewItem)sender;
+            if (item.ContentTemplateRoot is not Control control) return;
+            if (item.Content is MediaViewModel media && media.MusicProperties == null)
+            {
+                VisualStateManager.GoToState(control, "Minimal", true);
+                return;
+            }
+
+            if (e.NewSize.Width > 620)
+            {
+                VisualStateManager.GoToState(control, "Full", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(control, "Compact", true);
+            }
         }
 
         private void ItemContainerOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)

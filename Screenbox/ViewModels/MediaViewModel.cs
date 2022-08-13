@@ -15,8 +15,6 @@ namespace Screenbox.ViewModels
 {
     internal partial class MediaViewModel : ObservableObject
     {
-        public string Name { get; }
-
         public string Location { get; }
 
         public object Source { get; }
@@ -29,6 +27,7 @@ namespace Screenbox.ViewModels
 
         private PlaybackItem? _item;
 
+        [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
@@ -41,7 +40,7 @@ namespace Screenbox.ViewModels
         {
             _linkedFile = source._linkedFile;
             _item = source._item;
-            Name = source.Name;
+            _name = source._name;
             Thumbnail = source.Thumbnail;
             Location = source.Location;
             Duration = source.Duration;
@@ -57,7 +56,7 @@ namespace Screenbox.ViewModels
         public MediaViewModel(Uri uri)
         {
             Source = uri;
-            Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
         }
@@ -65,7 +64,7 @@ namespace Screenbox.ViewModels
         public MediaViewModel(StorageFile file)
         {
             Source = file;
-            Name = file.Name;
+            _name = file.Name;
             Location = file.Path;
             Glyph = StorageItemViewModel.GetGlyph(file);
         }
@@ -77,17 +76,33 @@ namespace Screenbox.ViewModels
             if (file.ContentType.StartsWith("video"))
             {
                 VideoProperties = await file.Properties.GetVideoPropertiesAsync();
-                if (VideoProperties != null && VideoProperties.Duration != TimeSpan.Zero)
+                if (VideoProperties != null)
                 {
-                    Duration = VideoProperties.Duration;
+                    if (VideoProperties.Duration != TimeSpan.Zero)
+                    {
+                        Duration = VideoProperties.Duration;
+                    }
+
+                    if (!string.IsNullOrEmpty(VideoProperties.Title))
+                    {
+                        Name = VideoProperties.Title;
+                    }
                 }
             }
             else if (file.ContentType.StartsWith("audio"))
             {
                 MusicProperties = await file.Properties.GetMusicPropertiesAsync();
-                if (MusicProperties != null && MusicProperties.Duration != TimeSpan.Zero)
+                if (MusicProperties != null)
                 {
-                    Duration = MusicProperties.Duration;
+                    if (MusicProperties.Duration != TimeSpan.Zero)
+                    {
+                        Duration = MusicProperties.Duration;
+                    }
+
+                    if (!string.IsNullOrEmpty(MusicProperties.Title))
+                    {
+                        Name = MusicProperties.Title;
+                    }
                 }
             }
         }

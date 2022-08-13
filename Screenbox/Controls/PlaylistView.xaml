@@ -151,9 +151,11 @@
                     <UserControl>
                         <Grid Padding="0,6">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition x:Name="FirstColumn" Width="32" />
+                                <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                                 <ColumnDefinition Width="32" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition x:Name="ArtistColumn" Width="0" />
+                                <ColumnDefinition x:Name="AlbumColumn" Width="0" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <FontIcon
@@ -194,14 +196,33 @@
                             <TextBlock
                                 x:Name="TitleText"
                                 Grid.Column="2"
-                                Margin="12,0,0,0"
+                                Margin="12,0,10,0"
                                 VerticalAlignment="Center"
-                                Text="{x:Bind Name}" />
+                                Text="{x:Bind Name, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis" />
+
+                            <TextBlock
+                                x:Name="ArtistText"
+                                Grid.Column="3"
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
+                                TextTrimming="CharacterEllipsis"
+                                Visibility="Collapsed" />
+
+                            <TextBlock
+                                x:Name="AlbumText"
+                                Grid.Column="4"
+                                Margin="10,0"
+                                VerticalAlignment="Center"
+                                Text="{x:Bind MusicProperties.Album, Mode=OneWay, FallbackValue={}}"
+                                TextTrimming="CharacterEllipsis"
+                                Visibility="Collapsed" />
 
                             <TextBlock
                                 x:Name="DurationText"
-                                Grid.Column="3"
-                                Margin="16,0,8,0"
+                                Grid.Column="5"
+                                Margin="10,0,8,0"
                                 VerticalAlignment="Center"
                                 Text="{x:Bind Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
 
@@ -216,6 +237,8 @@
                                             <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                            <Setter Target="ArtistText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                            <Setter Target="AlbumText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                                             <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                         </VisualState.Setters>
@@ -223,13 +246,30 @@
                                 </VisualStateGroup>
 
                                 <VisualStateGroup x:Name="SelectionStates">
-                                    <VisualState x:Name="Extended" />
                                     <VisualState x:Name="Multiple">
                                         <VisualState.StateTriggers>
                                             <StateTrigger IsActive="{Binding ElementName=MultiSelectToggle, Path=IsChecked}" />
                                         </VisualState.StateTriggers>
                                         <VisualState.Setters>
-                                            <Setter Target="FirstColumn.Width" Value="0" />
+                                            <Setter Target="IndicatorColumn.Width" Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+
+                                <VisualStateGroup x:Name="DetailsLevels">
+                                    <VisualState x:Name="Minimal" />
+                                    <VisualState x:Name="Compact">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArtistColumn.Width" Value="*" />
+                                            <Setter Target="ArtistText.Visibility" Value="Visible" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Full">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArtistColumn.Width" Value="*" />
+                                            <Setter Target="AlbumColumn.Width" Value="*" />
+                                            <Setter Target="ArtistText.Visibility" Value="Visible" />
+                                            <Setter Target="AlbumText.Visibility" Value="Visible" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
