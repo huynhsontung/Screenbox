@@ -182,7 +182,7 @@ namespace Screenbox.ViewModels
             {
                 try
                 {
-                    StorageFile file = await _filesService.SaveSnapshot(_mediaPlayer);
+                    StorageFile file = await _filesService.SaveSnapshotAsync(_mediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
                 catch (Exception e)

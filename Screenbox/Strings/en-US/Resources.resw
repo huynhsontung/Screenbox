@@ -268,4 +268,10 @@
   <data name="Disable" xml:space="preserve">
     <value>Disable</value>
   </data>
+  <data name="Music" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="ShuffleAndPlay" xml:space="preserve">
+    <value>Shuffle and play</value>
+  </data>
 </root>

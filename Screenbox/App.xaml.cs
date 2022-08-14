@@ -46,6 +46,7 @@ namespace Screenbox
         {
             var services = new ServiceCollection();
 
+            services.AddTransient<MusicPageViewModel>();
             services.AddTransient<PlayerPageViewModel>();
             services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<ChapterViewModel>();

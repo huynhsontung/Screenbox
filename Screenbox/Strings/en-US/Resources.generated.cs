@@ -571,6 +571,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Music
+        /// <summary>
+        ///   Looks up a localized string similar to: Music
+        /// </summary>
+        public static string Music
+        {
+            get
+            {
+                return _resourceLoader.GetString("Music");
+            }
+        }
+        #endregion
+
+        #region ShuffleAndPlay
+        /// <summary>
+        ///   Looks up a localized string similar to: Shuffle and play
+        /// </summary>
+        public static string ShuffleAndPlay
+        {
+            get
+            {
+                return _resourceLoader.GetString("ShuffleAndPlay");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -622,6 +648,8 @@ namespace Screenbox.Strings{
             CastingTo,
             CastToDevice,
             Disable,
+            Music,
+            ShuffleAndPlay,
         }
 
         private static ResourceLoader _resourceLoader;
