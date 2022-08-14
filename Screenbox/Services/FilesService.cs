@@ -102,7 +102,7 @@ namespace Screenbox.Services
             return picker.PickSingleFileAsync();
         }
 
-        public async Task<StorageFile> SaveSnapshot(IMediaPlayer mediaPlayer)
+        public async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer)
         {
             if (mediaPlayer is not VlcMediaPlayer player)
             {

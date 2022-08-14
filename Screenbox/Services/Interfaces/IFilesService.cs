@@ -20,6 +20,6 @@ namespace Screenbox.Services
         public Task<BitmapImage?> GetThumbnailAsync(StorageFile file);
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder);
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
-        public Task<StorageFile> SaveSnapshot(IMediaPlayer mediaPlayer);
+        public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer);
     }
 }
