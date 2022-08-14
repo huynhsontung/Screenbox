@@ -23,6 +23,9 @@ namespace Screenbox.Services
             // Audio formats
             ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba");
 
+        private ImmutableArray<string> SupportedAudioFormats { get; } = ImmutableArray.Create(
+            ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba");
+
         public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
         {
             try
@@ -83,6 +86,13 @@ namespace Screenbox.Services
             // Don't use indexer when querying. Potential incomplete result.
             QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
             return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
+        }
+
+        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync()
+        {
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats);
+            StorageFileQueryResult result = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
+            return result.GetFilesAsync();
         }
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
