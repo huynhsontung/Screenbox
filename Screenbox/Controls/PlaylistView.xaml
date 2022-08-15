@@ -198,6 +198,8 @@
                                 Grid.Column="2"
                                 Margin="12,0,10,0"
                                 VerticalAlignment="Center"
+                                MaxLines="1"
+                                Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind Name, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis" />
 
@@ -206,6 +208,8 @@
                                 Grid.Column="3"
                                 Margin="10,0"
                                 VerticalAlignment="Center"
+                                MaxLines="1"
+                                Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
                                 TextTrimming="CharacterEllipsis"
                                 Visibility="Collapsed" />
@@ -215,6 +219,8 @@
                                 Grid.Column="4"
                                 Margin="10,0"
                                 VerticalAlignment="Center"
+                                MaxLines="1"
+                                Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind MusicProperties.Album, Mode=OneWay, FallbackValue={}}"
                                 TextTrimming="CharacterEllipsis"
                                 Visibility="Collapsed" />
@@ -224,6 +230,8 @@
                                 Grid.Column="5"
                                 Margin="10,0,8,0"
                                 VerticalAlignment="Center"
+                                MaxLines="1"
+                                Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
 
                             <VisualStateManager.VisualStateGroups>
