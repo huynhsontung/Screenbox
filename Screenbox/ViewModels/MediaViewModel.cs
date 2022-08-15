@@ -33,6 +33,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private VideoProperties? _videoProperties;
         [ObservableProperty] private MusicProperties? _musicProperties;
+        [ObservableProperty] private string? _genre;
 
         private readonly StorageItemViewModel? _linkedFile;
 
@@ -102,6 +103,11 @@ namespace Screenbox.ViewModels
                     if (!string.IsNullOrEmpty(MusicProperties.Title))
                     {
                         Name = MusicProperties.Title;
+                    }
+
+                    if (MusicProperties.Genre.Count > 0)
+                    {
+                        Genre = MusicProperties.Genre[0];
                     }
                 }
             }

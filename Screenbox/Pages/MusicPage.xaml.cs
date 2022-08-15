@@ -67,17 +67,21 @@ namespace Screenbox.Pages
             if (item.ContentTemplateRoot is not Control control) return;
             if (item.Content is MediaViewModel media && media.MusicProperties == null)
             {
-                VisualStateManager.GoToState(control, "Minimal", true);
+                VisualStateManager.GoToState(control, "Level0", true);
                 return;
             }
 
-            if (e.NewSize.Width > 620)
+            if (e.NewSize.Width > 800)
             {
-                VisualStateManager.GoToState(control, "Full", true);
+                VisualStateManager.GoToState(control, "Level3", true);
+            }
+            else if (e.NewSize.Width > 620)
+            {
+                VisualStateManager.GoToState(control, "Level2", true);
             }
             else
             {
-                VisualStateManager.GoToState(control, "Compact", true);
+                VisualStateManager.GoToState(control, "Level1", true);
             }
         }
 

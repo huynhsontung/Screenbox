@@ -86,9 +86,10 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                                 <ColumnDefinition Width="32" />
-                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="1.6*" />
                                 <ColumnDefinition x:Name="ArtistColumn" Width="0" />
                                 <ColumnDefinition x:Name="AlbumColumn" Width="0" />
+                                <ColumnDefinition x:Name="GenreColumn" Width="0" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <FontIcon
@@ -119,7 +120,7 @@
                             <TextBlock
                                 x:Name="TitleText"
                                 Grid.Column="2"
-                                Margin="12,0,8,0"
+                                Margin="8,0,8,0"
                                 VerticalAlignment="Center"
                                 MaxLines="1"
                                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -155,9 +156,19 @@
                             </HyperlinkButton>
 
                             <TextBlock
-                                x:Name="DurationText"
+                                x:Name="GenreText"
                                 Grid.Column="5"
-                                Margin="10,0,8,0"
+                                Margin="4,0"
+                                VerticalAlignment="Center"
+                                MaxLines="1"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind Genre, Mode=OneWay}"
+                                Visibility="Collapsed" />
+
+                            <TextBlock
+                                x:Name="DurationText"
+                                Grid.Column="6"
+                                Margin="8,0,8,0"
                                 VerticalAlignment="Center"
                                 MaxLines="1"
                                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -193,19 +204,29 @@
                                 </VisualStateGroup>
 
                                 <VisualStateGroup x:Name="DetailsLevels">
-                                    <VisualState x:Name="Minimal" />
-                                    <VisualState x:Name="Compact">
+                                    <VisualState x:Name="Level0" />
+                                    <VisualState x:Name="Level1">
                                         <VisualState.Setters>
                                             <Setter Target="ArtistColumn.Width" Value="*" />
                                             <Setter Target="ArtistText.Visibility" Value="Visible" />
                                         </VisualState.Setters>
                                     </VisualState>
-                                    <VisualState x:Name="Full">
+                                    <VisualState x:Name="Level2">
                                         <VisualState.Setters>
                                             <Setter Target="ArtistColumn.Width" Value="*" />
                                             <Setter Target="AlbumColumn.Width" Value="*" />
                                             <Setter Target="ArtistText.Visibility" Value="Visible" />
                                             <Setter Target="AlbumText.Visibility" Value="Visible" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Level3">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArtistColumn.Width" Value="*" />
+                                            <Setter Target="AlbumColumn.Width" Value="*" />
+                                            <Setter Target="GenreColumn.Width" Value="*" />
+                                            <Setter Target="ArtistText.Visibility" Value="Visible" />
+                                            <Setter Target="AlbumText.Visibility" Value="Visible" />
+                                            <Setter Target="GenreText.Visibility" Value="Visible" />
                                         </VisualState.Setters>
                                     </VisualState>
                                 </VisualStateGroup>
