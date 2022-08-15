@@ -186,6 +186,7 @@
                                             <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="ArtistText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="AlbumText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                                            <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                             <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                                             <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                                         </VisualState.Setters>
