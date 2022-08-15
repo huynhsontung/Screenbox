@@ -29,7 +29,7 @@ namespace Screenbox.Pages
         private async void MusicPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             await ViewModel.FetchSongsAsync();
-            SongsSource.Source = ViewModel.Songs;
+            SongsSource.Source = ViewModel.GroupedSongs;
         }
 
         private void SongListView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

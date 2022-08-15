@@ -15,7 +15,9 @@ namespace Screenbox.ViewModels
 {
     internal partial class MusicPageViewModel : ObservableRecipient
     {
-        public IEnumerable<IGrouping<string, MediaViewModel>>? Songs { get; private set; }
+        public IEnumerable<IGrouping<string, MediaViewModel>>? GroupedSongs { get; private set; }
+
+        public List<MediaViewModel>? Songs { get; private set; }
 
         private readonly IFilesService _filesService;
 
@@ -27,15 +29,16 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void Play(MediaViewModel media)
         {
-            Messenger.Send(new PlayMediaMessage(media));
+            if (Songs == null) return;
+            Messenger.Send(new QueuePlaylistMessage(Songs, media));
         }
 
         public async Task FetchSongsAsync()
         {
             IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync();
-            MediaViewModel[] media = files.Select(f => new MediaViewModel(f)).ToArray();
+            List<MediaViewModel> media = Songs = files.Select(f => new MediaViewModel(f)).ToList();
             await Task.WhenAll(media.Select(m => m.LoadDetailsAsync()));
-            Songs = media.GroupBy(GroupByFirstLetter);
+            GroupedSongs = media.GroupBy(GroupByFirstLetter);
         }
 
         private string GroupByFirstLetter(MediaViewModel media)

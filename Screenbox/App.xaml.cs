@@ -94,7 +94,7 @@ namespace Screenbox
             }
 
             Window.Current.Activate();
-            WeakReferenceMessenger.Default.Send(new PlayMediaMessage(args.Files, args.NeighboringFilesQuery));
+            WeakReferenceMessenger.Default.Send(new PlayFilesWithNeighborsMessage(args.Files, args.NeighboringFilesQuery));
         }
 
         /// <summary>

@@ -24,7 +24,11 @@ using Screenbox.Core.Playback;
 namespace Screenbox.ViewModels
 {
     internal partial class PlaylistViewModel : ObservableRecipient,
-        IRecipient<PlayMediaMessage>, IRecipient<PlayingItemRequestMessage>, IRecipient<MediaPlayerChangedMessage>
+        IRecipient<PlayMediaMessage>,
+        IRecipient<PlayFilesWithNeighborsMessage>,
+        IRecipient<QueuePlaylistMessage>,
+        IRecipient<PlayingItemRequestMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
@@ -44,7 +48,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private IMediaPlayer? _mediaPlayer;
         private MediaViewModel? _playingItem;
-        private PlayMediaMessage? _delayPlayMessage;
+        private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
 
@@ -67,37 +71,48 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.MediaEnded += OnEndReached;
 
-            if (_delayPlayMessage != null)
+            if (_delayPlay != null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
-                    Receive(_delayPlayMessage);
+                    Play(_delayPlay);
                 });
             }
         }
 
-        public async void Receive(PlayMediaMessage message)
+        public async void Receive(PlayFilesWithNeighborsMessage message)
         {
-            if (_mediaPlayer == null)
+            IReadOnlyList<IStorageItem> files = message.Value;
+            _neighboringFilesQuery = message.NeighboringFilesQuery;
+            if (_neighboringFilesQuery == null && files.Count == 1 && files[0] is StorageFile file)
             {
-                _delayPlayMessage = message;
-                return;
+                _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
             }
 
-            if (message.Value is IReadOnlyList<IStorageItem> files)
+            if (_mediaPlayer == null)
             {
-                _neighboringFilesQuery = message.NeighboringFilesQuery;
-                if (_neighboringFilesQuery == null && files.Count == 1 && files[0] is StorageFile file)
-                {
-                    _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
-                }
-
-                Play(files);
+                _delayPlay = files;
             }
             else
             {
-                Play(message.Value);
+                Play(files);
             }
+        }
+
+        public void Receive(QueuePlaylistMessage message)
+        {
+            Play(message.Value, message.Target);
+        }
+
+        public void Receive(PlayMediaMessage message)
+        {
+            if (_mediaPlayer == null)
+            {
+                _delayPlay = message.Value;
+                return;
+            }
+
+            Play(message.Value);
         }
 
         public void Receive(PlayingItemRequestMessage message)
@@ -200,6 +215,17 @@ namespace Screenbox.ViewModels
             {
                 PlaySingle(media);
             }
+        }
+
+        private void Play(IEnumerable<MediaViewModel> mediaList, MediaViewModel target)
+        {
+            Playlist.Clear();
+            foreach (MediaViewModel media in mediaList)
+            {
+                Playlist.Add(media);
+            }
+
+            PlaySingle(target);
         }
 
         private void Play(object value)

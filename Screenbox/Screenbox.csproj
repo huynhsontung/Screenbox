@@ -179,6 +179,8 @@
     <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
+    <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
+    <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
     <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />
