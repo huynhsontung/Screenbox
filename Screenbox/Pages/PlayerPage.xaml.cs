@@ -7,7 +7,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI;
@@ -53,14 +52,6 @@ namespace Screenbox.Pages
         public void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
-        }
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            if (e.Parameter != null)
-            {
-                ViewModel.RequestPlay(e.Parameter);
-            }
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -131,6 +122,16 @@ namespace Screenbox.Pages
                 PlayerControls.Background = ViewModel.AudioOnly
                     ? null
                     : (Brush)Resources["PlayerControlsBackground"];
+
+                if (ViewModel.PlayerHidden)
+                {
+                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
+                }
+            }
+
+            if (e.PropertyName == nameof(PlayerPageViewModel.PlayerHidden) && ViewModel.PlayerHidden)
+            {
+                VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
             }
         }
     }

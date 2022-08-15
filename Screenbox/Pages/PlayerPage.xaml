@@ -331,6 +331,7 @@
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">
                 <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind}" />
                 <core:GoToStateAction StateName="Normal" />
+                <core:GoToStateAction StateName="NoPreview" />
             </core:DataTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
@@ -369,6 +370,20 @@
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
                         <Setter Target="PlayerControls.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="PreviewWidths">
+                <VisualState x:Name="NoPreview" />
+                <VisualState x:Name="VideoPreview">
+                    <VisualState.Setters>
+                        <Setter Target="FirstColumn.Width" Value="162" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="AudioPreview">
+                    <VisualState.Setters>
+                        <Setter Target="FirstColumn.Width" Value="109" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -433,7 +448,6 @@
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
-                        <Setter Target="FirstColumn.Width" Value="{x:Bind ViewModel.MiniPreviewWidth, Mode=OneWay}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.HorizontalAlignment" Value="Right" />

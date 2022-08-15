@@ -18,7 +18,6 @@ namespace Screenbox.ViewModels
     internal partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
     {
-        [ObservableProperty] private double _miniPreviewWidth;  // 162 for normal, 109 for audio only
         [ObservableProperty] private string? _mediaTitle;
         [ObservableProperty] private bool _showSubtitle;
         [ObservableProperty] private bool _audioOnly;
@@ -57,7 +56,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
-            MiniPreviewWidth = 162;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
@@ -89,11 +87,6 @@ namespace Screenbox.ViewModels
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
-        }
-
-        public void RequestPlay(object source)
-        {
-            Messenger.Send(new PlayMediaMessage(source));
         }
 
         public void OnBackRequested()
@@ -232,20 +225,19 @@ namespace Screenbox.ViewModels
 
         private void OnOpening(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(LoadMediaInfo);
+            _dispatcherQueue.TryEnqueue(ProcessOpeningMedia);
         }
 
-        private async void LoadMediaInfo()
+        private async void ProcessOpeningMedia()
         {
             MediaViewModel? current = Media = Messenger.Send<PlayingItemRequestMessage>().Response;
             if (current == null) return;
 
-            PlayerHidden = false;
             await current.LoadDetailsAsync();
             await current.LoadThumbnailAsync();
             AudioOnly = current.MusicProperties != null;
             ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
-            MiniPreviewWidth = AudioOnly ? 109 : 162;
+            if (!AudioOnly) PlayerHidden = false;
             if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
             {
                 MediaTitle = current.MusicProperties?.Title;
