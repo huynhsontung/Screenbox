@@ -138,7 +138,7 @@
                                     VerticalAlignment="Center"
                                     MaxLines="1"
                                     Style="{StaticResource CaptionTextBlockStyle}"
-                                    Text="{x:Bind MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
+                                    Text="{x:Bind Artists[0].Name, Mode=OneWay, FallbackValue={}}"
                                     TextTrimming="CharacterEllipsis" />
                             </HyperlinkButton>
 

@@ -597,6 +597,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region UnknownArtist
+        /// <summary>
+        ///   Looks up a localized string similar to: Unknown artist
+        /// </summary>
+        public static string UnknownArtist
+        {
+            get
+            {
+                return _resourceLoader.GetString("UnknownArtist");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -650,6 +663,7 @@ namespace Screenbox.Strings{
             Disable,
             Music,
             ShuffleAndPlay,
+            UnknownArtist,
         }
 
         private static ResourceLoader _resourceLoader;

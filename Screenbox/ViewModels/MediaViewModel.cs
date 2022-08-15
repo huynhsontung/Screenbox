@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -34,6 +35,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private VideoProperties? _videoProperties;
         [ObservableProperty] private MusicProperties? _musicProperties;
         [ObservableProperty] private string? _genre;
+        [ObservableProperty] private ArtistViewModel[]? _artists;
 
         private readonly StorageItemViewModel? _linkedFile;
 
@@ -109,6 +111,12 @@ namespace Screenbox.ViewModels
                     {
                         Genre = MusicProperties.Genre[0];
                     }
+
+                    string[] contributingArtistsKey = { "System.Music.Artist" };
+                    IDictionary<string, object> contributingArtistsProperty =
+                        await MusicProperties.RetrievePropertiesAsync(contributingArtistsKey);
+                    string[]? contributingArtists = contributingArtistsProperty["System.Music.Artist"] as string[];
+                    Artists = ArtistViewModel.GetArtistList(this, contributingArtists);
                 }
             }
         }

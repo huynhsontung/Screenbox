@@ -274,4 +274,7 @@
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Shuffle and play</value>
   </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Unknown artist</value>
+  </data>
 </root>
