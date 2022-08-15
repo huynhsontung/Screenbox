@@ -52,6 +52,7 @@
         <Button
             Grid.Row="0"
             Margin="0,16,0,0"
+            Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
             <StackPanel Orientation="Horizontal" Spacing="8">
                 <FontIcon Glyph="&#xe8b1;" />
