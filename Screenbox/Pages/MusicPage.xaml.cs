@@ -28,7 +28,7 @@ namespace Screenbox.Pages
 
         private async void MusicPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Loading", true);
+            VisualStateManager.GoToState(this, "Fetching", true);
             await ViewModel.FetchSongsAsync();
             SongsSource.Source = ViewModel.GroupedSongs;
             VisualStateManager.GoToState(this, ViewModel.GroupedSongs?.Count > 0 ? "Normal" : "NoContent", true);
@@ -61,29 +61,49 @@ namespace Screenbox.Pages
 
             args.ItemContainer.DoubleTapped += ItemContainerOnDoubleTapped;
             args.ItemContainer.SizeChanged += ItemContainerOnSizeChanged;
+
+            args.RegisterUpdateCallback(ContainerUpdateCallback);
         }
 
-        private void ItemContainerOnSizeChanged(object sender, SizeChangedEventArgs e)
+        private static async void ContainerUpdateCallback(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.Item is MediaViewModel media)
+            {
+                await media.LoadDetailsAsync();
+                if (args.ItemContainer.ContentTemplateRoot is Control control)
+                {
+                    UpdateDetailsLevel(control, media);
+                }
+            }
+        }
+
+        private static void ItemContainerOnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ListViewItem item = (ListViewItem)sender;
             if (item.ContentTemplateRoot is not Control control) return;
-            if (item.Content is MediaViewModel media && media.MusicProperties == null)
+            if (item.Content is not MediaViewModel media) return;
+            UpdateDetailsLevel(control, media);
+        }
+
+        private static void UpdateDetailsLevel(Control templateRoot, MediaViewModel media)
+        {
+            if (media.MusicProperties == null)
             {
-                VisualStateManager.GoToState(control, "Level0", true);
+                VisualStateManager.GoToState(templateRoot, "Level0", true);
                 return;
             }
 
-            if (e.NewSize.Width > 800)
+            if (templateRoot.ActualWidth > 800)
             {
-                VisualStateManager.GoToState(control, "Level3", true);
+                VisualStateManager.GoToState(templateRoot, "Level3", true);
             }
-            else if (e.NewSize.Width > 620)
+            else if (templateRoot.ActualWidth > 620)
             {
-                VisualStateManager.GoToState(control, "Level2", true);
+                VisualStateManager.GoToState(templateRoot, "Level2", true);
             }
             else
             {
-                VisualStateManager.GoToState(control, "Level1", true);
+                VisualStateManager.GoToState(templateRoot, "Level1", true);
             }
         }
 

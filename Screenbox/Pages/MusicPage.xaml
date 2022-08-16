@@ -140,7 +140,7 @@
                                 <ColumnDefinition x:Name="ArtistColumn" Width="0" />
                                 <ColumnDefinition x:Name="AlbumColumn" Width="0" />
                                 <ColumnDefinition x:Name="GenreColumn" Width="0" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="40" />
                             </Grid.ColumnDefinitions>
                             <FontIcon
                                 x:Name="IsPlayingIcon"
@@ -172,6 +172,7 @@
                                 Grid.Column="2"
                                 Margin="8,0,8,0"
                                 VerticalAlignment="Center"
+                                x:Phase="1"
                                 MaxLines="1"
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind Name, Mode=OneWay}"
@@ -185,6 +186,7 @@
                                 Visibility="Collapsed">
                                 <TextBlock
                                     VerticalAlignment="Center"
+                                    x:Phase="1"
                                     MaxLines="1"
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     Text="{x:Bind Artists[0].Name, Mode=OneWay, FallbackValue={}}"
@@ -199,6 +201,7 @@
                                 Visibility="Collapsed">
                                 <TextBlock
                                     VerticalAlignment="Center"
+                                    x:Phase="1"
                                     MaxLines="1"
                                     Style="{StaticResource CaptionTextBlockStyle}"
                                     Text="{x:Bind Album.Name, Mode=OneWay, FallbackValue={}}"
@@ -210,6 +213,7 @@
                                 Grid.Column="5"
                                 Margin="4,0"
                                 VerticalAlignment="Center"
+                                x:Phase="1"
                                 MaxLines="1"
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind Genre, Mode=OneWay}"
@@ -219,7 +223,9 @@
                                 x:Name="DurationText"
                                 Grid.Column="6"
                                 Margin="8,0,8,0"
+                                HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
+                                x:Phase="1"
                                 MaxLines="1"
                                 Style="{StaticResource CaptionTextBlockStyle}"
                                 Text="{x:Bind Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
@@ -300,7 +306,7 @@
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Normal" />
-                <VisualState x:Name="Loading">
+                <VisualState x:Name="Fetching">
                     <VisualState.Setters>
                         <Setter Target="ShufflePlayButton.Visibility" Value="Collapsed" />
                         <Setter Target="LoadingIndicator.Visibility" Value="Visible" />

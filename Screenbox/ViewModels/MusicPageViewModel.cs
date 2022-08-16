@@ -46,7 +46,6 @@ namespace Screenbox.ViewModels
             if (GroupedSongs != null) return;
             IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync();
             List<MediaViewModel> media = _songs = files.Select(f => new MediaViewModel(f)).ToList();
-            await Task.WhenAll(media.Select(m => m.LoadDetailsAsync()));
             GroupedSongs = media.GroupBy(GroupByFirstLetter).ToList();
         }
 
