@@ -19,29 +19,23 @@ namespace Screenbox.ViewModels
             RelatedSongs = new List<MediaViewModel>();
         }
 
-        public static ArtistViewModel[] GetArtistList(MediaViewModel song, string[]? contributingArtists)
+        public static ArtistViewModel GetArtistForSong(MediaViewModel song, string? artistName)
         {
-            if (contributingArtists == null || contributingArtists.Length == 0)
+            // Assume each song will only call this method once for each contributing artist
+            if (string.IsNullOrEmpty(artistName))
             {
                 ArtistViewModel unknownArtist = AllArtists[Strings.Resources.UnknownArtist];
                 unknownArtist.RelatedSongs.Add(song);
-                return new[] { unknownArtist };
+                return unknownArtist;
             }
 
-            ArtistViewModel[] artistList = new ArtistViewModel[contributingArtists.Length];
-            for (int i = 0; i < contributingArtists.Length; i++)
+            if (!AllArtists.TryGetValue(artistName, out ArtistViewModel artist))
             {
-                string contributingArtist = contributingArtists[i];
-                if (!AllArtists.TryGetValue(contributingArtist, out ArtistViewModel artist))
-                {
-                    artist = AllArtists[contributingArtist] = new ArtistViewModel(contributingArtist);
-                }
-
-                artist.RelatedSongs.Add(song);
-                artistList[i] = artist;
+                artist = AllArtists[artistName] = new ArtistViewModel(artistName);
             }
 
-            return artistList;
+            artist.RelatedSongs.Add(song);
+            return artist;
         }
 
         public override string ToString()

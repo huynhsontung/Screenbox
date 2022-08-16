@@ -115,8 +115,16 @@ namespace Screenbox.ViewModels
                     string[] contributingArtistsKey = { "System.Music.Artist" };
                     IDictionary<string, object> contributingArtistsProperty =
                         await MusicProperties.RetrievePropertiesAsync(contributingArtistsKey);
-                    string[]? contributingArtists = contributingArtistsProperty["System.Music.Artist"] as string[];
-                    Artists = ArtistViewModel.GetArtistList(this, contributingArtists);
+                    if (contributingArtistsProperty["System.Music.Artist"] is not string[] contributingArtists ||
+                        contributingArtists.Length == 0)
+                    {
+                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, null) };
+                    }
+                    else
+                    {
+                        Artists = contributingArtists.Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                            .ToArray();
+                    }
                 }
             }
         }
