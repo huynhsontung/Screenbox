@@ -185,6 +185,22 @@ namespace Screenbox.Pages
                     VisualStateManager.GoToState(this, "Compact", true);
                     break;
             }
+
+            if (ContentFrame.Content is Control frameContent)
+            {
+                switch (args.DisplayMode)
+                {
+                    case muxc.NavigationViewDisplayMode.Minimal:
+                        VisualStateManager.GoToState(frameContent, "Minimal", true);
+                        break;
+                    case muxc.NavigationViewDisplayMode.Expanded:
+                        VisualStateManager.GoToState(frameContent, "Expanded", true);
+                        break;
+                    case muxc.NavigationViewDisplayMode.Compact:
+                        VisualStateManager.GoToState(frameContent, "Compact", true);
+                        break;
+                }
+            }
         }
 
         private void NavView_OnPaneOpening(muxc.NavigationView sender, object args)

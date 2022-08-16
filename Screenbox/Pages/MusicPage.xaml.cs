@@ -1,8 +1,11 @@
 ﻿#nullable enable
 
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.ViewModels;
@@ -32,11 +35,15 @@ namespace Screenbox.Pages
             await ViewModel.FetchSongsAsync();
             SongsSource.Source = ViewModel.GroupedSongs;
             VisualStateManager.GoToState(this, ViewModel.GroupedSongs?.Count > 0 ? "Normal" : "NoContent", true);
+            if (SongListView.Items != null)
+            {
+                SongListView.Items.VectorChanged += SongListView_OnItemsVectorChanged;
+            }
         }
 
         private void SongListView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            if (args.Phase > 0) return;
+            if (args.Phase > 0 || args.InRecycleQueue) return;
 
             // Remove handlers to prevent duplicated triggering
             args.ItemContainer.PointerEntered -= ItemContainerOnPointerEntered;
@@ -63,6 +70,10 @@ namespace Screenbox.Pages
             args.ItemContainer.SizeChanged += ItemContainerOnSizeChanged;
 
             args.RegisterUpdateCallback(ContainerUpdateCallback);
+            UpdateAlternateLayout(args.ItemContainer, args.ItemIndex);
+
+            // There is no lightweight styling for ListViewItem padding
+            args.ItemContainer.Padding = new Thickness(0);
         }
 
         private static async void ContainerUpdateCallback(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -104,6 +115,47 @@ namespace Screenbox.Pages
             else
             {
                 VisualStateManager.GoToState(templateRoot, "Level1", true);
+            }
+        }
+
+        private void SongListView_OnItemsVectorChanged(IObservableVector<object> sender, IVectorChangedEventArgs args)
+        {
+            // If the index is at the end we can ignore
+            if (args.Index == (sender.Count - 1))
+            {
+                return;
+            }
+
+            // Only need to handle Inserted and Removed because we'll handle everything else in the
+            // SongListView_OnContainerContentChanging method
+            if (args.CollectionChange is CollectionChange.ItemInserted or CollectionChange.ItemRemoved)
+            {
+                ListViewBase listViewBase = SongListView;
+                for (int i = (int)args.Index; i < sender.Count; i++)
+                {
+                    if (listViewBase.ContainerFromIndex(i) is SelectorItem itemContainer)
+                    {
+                        UpdateAlternateLayout(itemContainer, i);
+                    }
+                }
+            }
+        }
+
+        private void UpdateAlternateLayout(SelectorItem itemContainer, int itemIndex)
+        {
+            if (itemIndex < 0) return;
+            if (itemContainer.ContentTemplateRoot is not UserControl templateRoot) return;
+            if (templateRoot.Content is not Grid control) return;
+            if (itemIndex % 2 == 0)
+            {
+                control.Background = (Brush)Resources["SystemControlBackgroundListLowBrush"];
+                control.Background.Opacity = 0.4;
+                control.BorderThickness = new Thickness(1);
+            }
+            else
+            {
+                control.Background = null;
+                control.BorderThickness = new Thickness(0);
             }
         }
 
