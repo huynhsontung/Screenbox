@@ -28,8 +28,10 @@ namespace Screenbox.Pages
 
         private async void MusicPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            VisualStateManager.GoToState(this, "Loading", true);
             await ViewModel.FetchSongsAsync();
             SongsSource.Source = ViewModel.GroupedSongs;
+            VisualStateManager.GoToState(this, ViewModel.GroupedSongs?.Count > 0 ? "Normal" : "NoContent", true);
         }
 
         private void SongListView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
