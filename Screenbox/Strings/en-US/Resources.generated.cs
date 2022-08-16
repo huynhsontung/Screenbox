@@ -610,6 +610,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region UnknownAlbum
+        /// <summary>
+        ///   Looks up a localized string similar to: Unknown album
+        /// </summary>
+        public static string UnknownAlbum
+        {
+            get
+            {
+                return _resourceLoader.GetString("UnknownAlbum");
+            }
+        }
+        #endregion
+
+        #region UnknownGenre
+        /// <summary>
+        ///   Looks up a localized string similar to: Unknown genre
+        /// </summary>
+        public static string UnknownGenre
+        {
+            get
+            {
+                return _resourceLoader.GetString("UnknownGenre");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -664,6 +690,8 @@ namespace Screenbox.Strings{
             Music,
             ShuffleAndPlay,
             UnknownArtist,
+            UnknownAlbum,
+            UnknownGenre,
         }
 
         private static ResourceLoader _resourceLoader;

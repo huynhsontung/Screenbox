@@ -36,6 +36,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private MusicProperties? _musicProperties;
         [ObservableProperty] private string? _genre;
         [ObservableProperty] private ArtistViewModel[]? _artists;
+        [ObservableProperty] private AlbumViewModel? _album;
 
         private readonly StorageItemViewModel? _linkedFile;
 
@@ -107,10 +108,8 @@ namespace Screenbox.ViewModels
                         Name = MusicProperties.Title;
                     }
 
-                    if (MusicProperties.Genre.Count > 0)
-                    {
-                        Genre = MusicProperties.Genre[0];
-                    }
+                    Genre = MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                    Album = AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
 
                     string[] contributingArtistsKey = { "System.Music.Artist" };
                     IDictionary<string, object> contributingArtistsProperty =
@@ -118,7 +117,7 @@ namespace Screenbox.ViewModels
                     if (contributingArtistsProperty["System.Music.Artist"] is not string[] contributingArtists ||
                         contributingArtists.Length == 0)
                     {
-                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, null) };
+                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
                     }
                     else
                     {

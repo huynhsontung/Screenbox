@@ -19,7 +19,7 @@ namespace Screenbox.ViewModels
             RelatedSongs = new List<MediaViewModel>();
         }
 
-        public static ArtistViewModel GetArtistForSong(MediaViewModel song, string? artistName)
+        public static ArtistViewModel GetArtistForSong(MediaViewModel song, string artistName)
         {
             // Assume each song will only call this method once for each contributing artist
             if (string.IsNullOrEmpty(artistName))

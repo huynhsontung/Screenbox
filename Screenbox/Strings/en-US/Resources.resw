@@ -277,4 +277,10 @@
   <data name="UnknownArtist" xml:space="preserve">
     <value>Unknown artist</value>
   </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Unknown album</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Unknown genre</value>
+  </data>
 </root>
