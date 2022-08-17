@@ -25,7 +25,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
-        [ObservableProperty] private bool _playerHidden;
+        [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private WindowViewMode _viewMode;
@@ -71,7 +71,7 @@ namespace Screenbox.ViewModels
                 IsCompact = ViewMode == WindowViewMode.Compact;
                 if (ViewMode == WindowViewMode.Default)
                 {
-                    PlayerHidden = false;
+                    PlayerVisible = true;
                 }
             });
         }
@@ -91,7 +91,7 @@ namespace Screenbox.ViewModels
 
         public void OnBackRequested()
         {
-            PlayerHidden = true;
+            PlayerVisible = false;
         }
 
         public void ToggleControlsVisibility()
@@ -101,7 +101,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride && !PlayerHidden && !AudioOnly)
+            else if (IsPlaying && !_visibilityOverride && PlayerVisible && !AudioOnly)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -204,7 +204,7 @@ namespace Screenbox.ViewModels
 
         private void DelayHideControls()
         {
-            if (PlayerHidden || AudioOnly) return;
+            if (!PlayerVisible || AudioOnly) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
                 if (IsPlaying && VideoViewFocused && !AudioOnly)
@@ -237,7 +237,7 @@ namespace Screenbox.ViewModels
             await current.LoadThumbnailAsync();
             AudioOnly = current.MusicProperties != null;
             ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
-            if (!AudioOnly) PlayerHidden = false;
+            if (!AudioOnly) PlayerVisible = true;
             if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
             {
                 MediaTitle = current.MusicProperties?.Title;

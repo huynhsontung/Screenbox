@@ -35,6 +35,7 @@ namespace Screenbox.Pages
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
             SetTitleBar();
+            UpdatePreviewVisualState();
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
@@ -123,13 +124,22 @@ namespace Screenbox.Pages
                     ? null
                     : (Brush)Resources["PlayerControlsBackground"];
 
-                if (ViewModel.PlayerHidden)
-                {
-                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
-                }
+                UpdatePreviewVisualState();
             }
 
-            if (e.PropertyName == nameof(PlayerPageViewModel.PlayerHidden) && ViewModel.PlayerHidden)
+            if (e.PropertyName == nameof(PlayerPageViewModel.PlayerVisible))
+            {
+                UpdatePreviewVisualState();
+            }
+        }
+
+        private void UpdatePreviewVisualState()
+        {
+            if (ViewModel.PlayerVisible)
+            {
+                VisualStateManager.GoToState(this, "NoPreview", true);
+            }
+            else
             {
                 VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
             }

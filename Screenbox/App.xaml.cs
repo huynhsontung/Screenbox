@@ -46,7 +46,6 @@ namespace Screenbox
         {
             var services = new ServiceCollection();
 
-            services.AddTransient<PlayerPageViewModel>();
             services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<VolumeViewModel>();
@@ -58,6 +57,7 @@ namespace Screenbox
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
+            services.AddSingleton<PlayerPageViewModel>(); // Shared with MainPage
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
@@ -88,9 +88,9 @@ namespace Screenbox
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
             var rootFrame = InitRootFrame();
-            if (rootFrame.Content is not PlayerPage)
+            if (rootFrame.Content is not MainPage)
             {
-                rootFrame.Navigate(typeof(PlayerPage));
+                rootFrame.Navigate(typeof(MainPage));
             }
 
             Window.Current.Activate();
@@ -115,7 +115,7 @@ namespace Screenbox
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
-                rootFrame.Navigate(typeof(PlayerPage));
+                rootFrame.Navigate(typeof(MainPage));
             }
             // Ensure the current window is active
             Window.Current.Activate();

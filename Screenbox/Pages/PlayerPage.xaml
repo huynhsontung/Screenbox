@@ -37,286 +37,269 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid>
-        <!--
-            Due to the current LibVLC limitation, there can only be one instance of the media player element per LibVLC instance.
-            This means the player will break if you navigate away from the PlayerPage.
-            Have an inline frame to load other pages without navigating away.
-            This will go away with LibVLC 4.x
-        -->
-        <Frame
-            x:Name="InlineFrame"
-            x:Load="False"
-            Visibility="Collapsed">
-            <Frame.Content>
-                <pages:MainPage x:Name="MainPage" DataContext="{x:Bind ViewModel}" />
-            </Frame.Content>
-        </Frame>
+    <Grid
+        x:Name="LayoutRoot"
+        PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
+        RequestedTheme="Dark"
+        Translation="0,0,8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="FirstColumn" Width="*" />
+            <ColumnDefinition x:Name="SecondColumn" Width="0" />
+        </Grid.ColumnDefinitions>
+
+        <Border
+            x:Name="HeaderBackground"
+            Grid.Row="0"
+            Grid.Column="0"
+            Height="70"
+            MinHeight="32"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{StaticResource TitleBarBackground}"
+            Canvas.ZIndex="3" />
 
         <Grid
-            x:Name="LayoutRoot"
-            PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
-            RequestedTheme="Dark"
-            Translation="0,0,8">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            x:Name="TitleBarArea"
+            Grid.Row="0"
+            Grid.Column="0"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="3">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="FirstColumn" Width="*" />
-                <ColumnDefinition x:Name="SecondColumn" Width="0" />
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
-
             <Border
-                x:Name="HeaderBackground"
-                Grid.Row="0"
+                x:Name="TitleBarElement"
                 Grid.Column="0"
-                Height="70"
-                MinHeight="32"
+                Grid.ColumnSpan="5"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{StaticResource TitleBarBackground}"
-                Canvas.ZIndex="3" />
-
-            <Grid
-                x:Name="TitleBarArea"
-                Grid.Row="0"
-                Grid.Column="0"
-                VerticalAlignment="Top"
-                Canvas.ZIndex="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-                </Grid.ColumnDefinitions>
-                <Border
-                    x:Name="TitleBarElement"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="5"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    Background="Transparent" />
-
-                <Button
-                    x:Name="BackButton"
-                    Grid.Column="1"
-                    Width="46"
-                    Height="46"
-                    Margin="6,6,2,6"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Click="{x:Bind ViewModel.OnBackRequested}"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
-                    <muxc:AnimatedIcon>
-                        <muxc:AnimatedIcon.Source>
-                            <animatedvisuals:AnimatedBackVisualSource />
-                        </muxc:AnimatedIcon.Source>
-                        <muxc:AnimatedIcon.FallbackIconSource>
-                            <muxc:FontIconSource Glyph="&#xe70d;" />
-                        </muxc:AnimatedIcon.FallbackIconSource>
-                    </muxc:AnimatedIcon>
-                </Button>
-
-                <Button
-                    x:Name="PlayQueueButton"
-                    Grid.Column="2"
-                    Width="46"
-                    Height="46"
-                    Margin="2,6,6,6"
-                    HorizontalAlignment="Right"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
-                    <SymbolIcon Symbol="MusicInfo" />
-                    <Button.Flyout>
-                        <Flyout Placement="BottomEdgeAlignedLeft">
-                            <controls:PlaylistView
-                                Width="420"
-                                MinHeight="200"
-                                MaxHeight="500"
-                                IsFlyout="True" />
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
-
-                <StackPanel
-                    x:Name="TitleTextPanel"
-                    Grid.Column="3"
-                    Margin="36,0,0,0"
-                    VerticalAlignment="Center"
-                    Orientation="Vertical">
-                    <TextBlock
-                        x:Name="TitleText"
-                        FontSize="20"
-                        FontWeight="SemiBold"
-                        IsHitTestVisible="False"
-                        Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
-                        TextTrimming="CharacterEllipsis" />
-
-                    <TextBlock
-                        x:Name="SubtitleText"
-                        IsHitTestVisible="False"
-                        TextTrimming="CharacterEllipsis"
-                        Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
-                        <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-
-            <controls:PlayerElement
-                x:Name="VideoView"
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Click="{x:Bind ViewModel.ToggleControlsVisibility}"
-                ContextFlyout="{x:Bind PlayerControls.VideoContextMenu, Mode=OneWay}"
-                DoubleTapped="VideoView_OnDoubleTapped"
-                ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-                ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
-                ManipulationMode="TranslateX,TranslateY"
-                ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}">
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="GotFocus">
-                        <core:ChangePropertyAction
-                            PropertyName="VideoViewFocused"
-                            TargetObject="{x:Bind ViewModel}"
-                            Value="True" />
-                    </core:EventTriggerBehavior>
-                    <core:EventTriggerBehavior EventName="LostFocus">
-                        <core:ChangePropertyAction
-                            PropertyName="VideoViewFocused"
-                            TargetObject="{x:Bind ViewModel}"
-                            Value="False" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
-            </controls:PlayerElement>
-
-            <controls1:ConstrainedBox
-                x:Name="AlbumArtPanel"
-                Grid.Row="1"
-                Grid.Column="0"
-                MinWidth="64"
-                MaxWidth="300"
-                Margin="32,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                AspectRatio="1:1"
-                IsHitTestVisible="False"
-                Visibility="Collapsed">
-                <Grid
-                    x:Name="AlbumArt"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="8"
-                    Shadow="{StaticResource SharedShadow}"
-                    Translation="0,0,32">
-                    <FontIcon
-                        x:Name="AlbumArtGlyph"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="80"
-                        Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
-                    <Border CornerRadius="{x:Bind CornerRadius}">
-                        <Image Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
-                    </Border>
-                </Grid>
-            </controls1:ConstrainedBox>
+                Background="Transparent" />
 
             <Button
-                x:Name="RestorePlayerButton"
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Left"
-                VerticalContentAlignment="Top"
+                x:Name="BackButton"
+                Grid.Column="1"
+                Width="46"
+                Height="46"
+                Margin="6,6,2,6"
                 Background="Transparent"
-                Visibility="Collapsed">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="I" />
-                </Button.KeyboardAccelerators>
-                <muxc:AnimatedIcon Width="20">
+                BorderThickness="0"
+                Click="{x:Bind ViewModel.OnBackRequested}"
+                ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
+                <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
-                        <animatedvisuals:AnimatedChevronUpDownSmallVisualSource />
+                        <animatedvisuals:AnimatedBackVisualSource />
                     </muxc:AnimatedIcon.Source>
                     <muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:SymbolIconSource Symbol="Up" />
+                        <muxc:FontIconSource Glyph="&#xe70d;" />
                     </muxc:AnimatedIcon.FallbackIconSource>
                 </muxc:AnimatedIcon>
-                <ToolTipService.ToolTip>
-                    <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
-                </ToolTipService.ToolTip>
-
-                <interactivity:Interaction.Behaviors>
-                    <core:EventTriggerBehavior EventName="Click">
-                        <core:ChangePropertyAction
-                            PropertyName="PlayerHidden"
-                            TargetObject="{x:Bind ViewModel}"
-                            Value="False" />
-                    </core:EventTriggerBehavior>
-                </interactivity:Interaction.Behaviors>
             </Button>
 
-            <Border
-                x:Name="StatusMessage"
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="24,4"
-                Padding="10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                CornerRadius="6"
-                IsHitTestVisible="False"
-                Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
-                <animations:Implicit.ShowAnimations>
-                    <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
-                </animations:Implicit.ShowAnimations>
+            <Button
+                x:Name="PlayQueueButton"
+                Grid.Column="2"
+                Width="46"
+                Height="46"
+                Margin="2,6,6,6"
+                HorizontalAlignment="Right"
+                Background="Transparent"
+                BorderThickness="0"
+                ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
+                <SymbolIcon Symbol="MusicInfo" />
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft">
+                        <controls:PlaylistView
+                            Width="420"
+                            MinHeight="200"
+                            MaxHeight="500"
+                            IsFlyout="True" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
 
-                <animations:Implicit.HideAnimations>
-                    <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
-                </animations:Implicit.HideAnimations>
+            <StackPanel
+                x:Name="TitleTextPanel"
+                Grid.Column="3"
+                Margin="36,0,0,0"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
                 <TextBlock
-                    x:Name="StatusMessageText"
+                    x:Name="TitleText"
                     FontSize="20"
                     FontWeight="SemiBold"
-                    Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
-            </Border>
+                    IsHitTestVisible="False"
+                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                    TextTrimming="CharacterEllipsis" />
 
-            <muxc:ProgressRing
-                Grid.Row="0"
-                Grid.RowSpan="3"
-                Grid.Column="0"
-                Width="52"
-                Height="52"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                IsActive="True"
-                IsHitTestVisible="False"
-                Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
-
-            <controls:NotificationView
-                Grid.Row="1"
-                Grid.Column="0"
-                Margin="12,0,12,4"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom" />
-
-            <controls:PlayerControls
-                x:Name="PlayerControls"
-                Grid.Row="2"
-                Grid.Column="0"
-                Padding="6,20,6,12"
-                Background="{StaticResource PlayerControlsBackground}"
-                IsMinimal="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" />
+                <TextBlock
+                    x:Name="SubtitleText"
+                    IsHitTestVisible="False"
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                    <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
+                </TextBlock>
+            </StackPanel>
         </Grid>
+
+        <controls:PlayerElement
+            x:Name="VideoView"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Click="{x:Bind ViewModel.ToggleControlsVisibility}"
+            ContextFlyout="{x:Bind PlayerControls.VideoContextMenu, Mode=OneWay}"
+            DoubleTapped="VideoView_OnDoubleTapped"
+            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
+            ManipulationMode="TranslateX,TranslateY"
+            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="GotFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="True" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="LostFocus">
+                    <core:ChangePropertyAction
+                        PropertyName="VideoViewFocused"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="False" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </controls:PlayerElement>
+
+        <controls1:ConstrainedBox
+            x:Name="AlbumArtPanel"
+            Grid.Row="1"
+            Grid.Column="0"
+            MinWidth="64"
+            MaxWidth="300"
+            Margin="32,0,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            AspectRatio="1:1"
+            IsHitTestVisible="False"
+            Visibility="Collapsed">
+            <Grid
+                x:Name="AlbumArt"
+                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Shadow="{StaticResource SharedShadow}"
+                Translation="0,0,32">
+                <FontIcon
+                    x:Name="AlbumArtGlyph"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="80"
+                    Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
+                <Border CornerRadius="{x:Bind CornerRadius}">
+                    <Image Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                </Border>
+            </Grid>
+        </controls1:ConstrainedBox>
+
+        <Button
+            x:Name="RestorePlayerButton"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            VerticalContentAlignment="Top"
+            Background="Transparent"
+            Visibility="Collapsed">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="I" />
+            </Button.KeyboardAccelerators>
+            <muxc:AnimatedIcon Width="20">
+                <muxc:AnimatedIcon.Source>
+                    <animatedvisuals:AnimatedChevronUpDownSmallVisualSource />
+                </muxc:AnimatedIcon.Source>
+                <muxc:AnimatedIcon.FallbackIconSource>
+                    <muxc:SymbolIconSource Symbol="Up" />
+                </muxc:AnimatedIcon.FallbackIconSource>
+            </muxc:AnimatedIcon>
+            <ToolTipService.ToolTip>
+                <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
+            </ToolTipService.ToolTip>
+
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="Click">
+                    <core:ChangePropertyAction
+                        PropertyName="PlayerVisible"
+                        TargetObject="{x:Bind ViewModel}"
+                        Value="True" />
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </Button>
+
+        <Border
+            x:Name="StatusMessage"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="24,4"
+            Padding="10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            CornerRadius="6"
+            IsHitTestVisible="False"
+            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
+            </animations:Implicit.ShowAnimations>
+
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
+            </animations:Implicit.HideAnimations>
+            <TextBlock
+                x:Name="StatusMessageText"
+                FontSize="20"
+                FontWeight="SemiBold"
+                Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
+        </Border>
+
+        <muxc:ProgressRing
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Width="52"
+            Height="52"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="True"
+            IsHitTestVisible="False"
+            Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
+
+        <controls:NotificationView
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="12,0,12,4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom" />
+
+        <controls:PlayerControls
+            x:Name="PlayerControls"
+            Grid.Row="2"
+            Grid.Column="0"
+            Padding="6,20,6,12"
+            Background="{StaticResource PlayerControlsBackground}"
+            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource InvertObjectToBooleanConverter}, Mode=OneWay}" />
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">
@@ -325,10 +308,10 @@
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="ControlsVisible" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="True">
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Mini" />
             </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerHidden, Mode=OneWay}" Value="False">
+            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="True">
                 <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind}" />
                 <core:GoToStateAction StateName="Normal" />
                 <core:GoToStateAction StateName="NoPreview" />
@@ -374,7 +357,7 @@
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="PreviewWidths">
+            <VisualStateGroup x:Name="PreviewWindowGroup">
                 <VisualState x:Name="NoPreview" />
                 <VisualState x:Name="VideoPreview">
                     <VisualState.Setters>
@@ -420,7 +403,6 @@
                 </VisualState>
                 <VisualState x:Name="Mini">
                     <VisualState.Setters>
-                        <Setter Target="InlineFrame.Visibility" Value="Visible" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
