@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
-
     <local:ContentPage.Header>
         <Grid Margin="0,0,40,0">
             <TextBlock
@@ -25,6 +24,18 @@
     </local:ContentPage.Header>
 
     <Grid>
-        <controls:PlaylistView />
+        <controls:PlaylistView x:Name="PlaylistView" Padding="0,0,36,0" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="NavigationViewStates">
+                <VisualState x:Name="Expanded" />
+                <VisualState x:Name="Compact" />
+                <VisualState x:Name="Minimal">
+                    <VisualState.Setters>
+                        <Setter Target="PlaylistView.Padding" Value="0,0,12,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </local:ContentPage>

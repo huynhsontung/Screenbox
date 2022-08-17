@@ -15,7 +15,7 @@ namespace Screenbox.ViewModels
 {
     internal partial class MusicPageViewModel : ObservableRecipient
     {
-        public List<IGrouping<string, MediaViewModel>>? GroupedSongs { get; private set; }
+        [ObservableProperty] private List<IGrouping<string, MediaViewModel>>? _groupedSongs;
 
         private readonly IFilesService _filesService;
         private List<MediaViewModel>? _songs;

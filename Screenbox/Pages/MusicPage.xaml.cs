@@ -33,7 +33,6 @@ namespace Screenbox.Pages
         {
             VisualStateManager.GoToState(this, "Fetching", true);
             await ViewModel.FetchSongsAsync();
-            SongsSource.Source = ViewModel.GroupedSongs;
             VisualStateManager.GoToState(this, ViewModel.GroupedSongs?.Count > 0 ? "Normal" : "NoContent", true);
             if (SongListView.Items != null)
             {

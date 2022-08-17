@@ -14,7 +14,10 @@
     mc:Ignorable="d">
     <local:ContentPage.Resources>
         <ResourceDictionary>
-            <CollectionViewSource x:Name="SongsSource" IsSourceGrouped="True" />
+            <CollectionViewSource
+                x:Name="SongsSource"
+                IsSourceGrouped="True"
+                Source="{x:Bind ViewModel.GroupedSongs, Mode=OneWay}" />
             <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
         </ResourceDictionary>
     </local:ContentPage.Resources>
@@ -114,7 +117,7 @@
             Grid.Row="1"
             Margin="0,24,0,0"
             Padding="0,0,36,0"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="36,0,0,128"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             ContainerContentChanging="SongListView_OnContainerContentChanging"
             ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
             SelectionMode="None">
@@ -311,7 +314,7 @@
             </ListView.ItemTemplate>
 
             <ListView.Footer>
-                <Border Height="148" />
+                <Border Height="{StaticResource ContentPageBottomMargin}" />
             </ListView.Footer>
         </ListView>
 

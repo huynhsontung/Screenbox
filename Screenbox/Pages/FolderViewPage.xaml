@@ -6,11 +6,14 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewmodels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
 
     <Grid>
         <GridView
+            Padding="0,0,20,0"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             IsItemClickEnabled="True"
             ItemClick="{x:Bind ViewModel.VideosItemClick}"
             ItemsSource="{x:Bind ViewModel.Items}"
@@ -64,6 +67,10 @@
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
+
+            <GridView.Footer>
+                <Border Height="{StaticResource ContentPageBottomMargin}" />
+            </GridView.Footer>
         </GridView>
         <TextBlock
             HorizontalAlignment="Center"
