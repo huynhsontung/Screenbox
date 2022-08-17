@@ -72,7 +72,7 @@ namespace Screenbox.ViewModels
                     }
                     else
                     {
-                        Play(items);
+                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
                     }
 
                     return;
@@ -84,8 +84,7 @@ namespace Screenbox.ViewModels
                 Uri? uri = await e.DataView.GetWebLinkAsync();
                 if (uri.IsFile)
                 {
-                    Play(uri);
-                    return;
+                    Messenger.Send(new PlayMediaMessage(uri));
                 }
             }
         }
@@ -202,12 +201,6 @@ namespace Screenbox.ViewModels
         {
             _viewSize = args.NewSize;
             SetCropGeometry(_viewSize);
-        }
-
-        private void Play(object? value)
-        {
-            if (value == null) return;
-            Messenger.Send(new PlayMediaMessage(value));
         }
 
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)

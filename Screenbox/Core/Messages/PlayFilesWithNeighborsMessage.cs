@@ -9,10 +9,10 @@ namespace Screenbox.Core.Messages
 {
     internal class PlayFilesWithNeighborsMessage : ValueChangedMessage<IReadOnlyList<IStorageItem>>
     {
-        public StorageFileQueryResult NeighboringFilesQuery { get; }
+        public StorageFileQueryResult? NeighboringFilesQuery { get; }
 
         public PlayFilesWithNeighborsMessage(IReadOnlyList<IStorageItem> files,
-            StorageFileQueryResult neighboringFilesQuery) : base(files)
+            StorageFileQueryResult? neighboringFilesQuery) : base(files)
         {
             NeighboringFilesQuery = neighboringFilesQuery;
         }
