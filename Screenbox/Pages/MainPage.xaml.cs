@@ -222,6 +222,7 @@ namespace Screenbox.Pages
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
         {
             UpdateTitleBarState();
+            ViewModel.NavigationViewDisplayMode = args.DisplayMode;
 
             if (ContentFrame.Content is Control frameContent)
             {

@@ -116,7 +116,7 @@
             x:Name="SongListView"
             Grid.Row="1"
             Margin="0,24,0,0"
-            Padding="0,0,36,0"
+            Padding="0,0,56,0"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             ContainerContentChanging="SongListView_OnContainerContentChanging"
             ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"

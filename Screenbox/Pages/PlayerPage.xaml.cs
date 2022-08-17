@@ -13,6 +13,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
 using Screenbox.Services;
 using Screenbox.ViewModels;
+using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -67,7 +68,7 @@ namespace Screenbox.Pages
             Loaded += (_, _) => FocusVideoView();
             LayoutGroup.CurrentStateChanged += (_, args) =>
             {
-                if (args.OldState?.Name == "Mini" && (args.NewState == null || args.NewState.Name == "Normal"))
+                if (args.OldState?.Name == "MiniPlayer" && (args.NewState == null || args.NewState.Name == "Normal"))
                     FocusVideoView();
             };
         }
@@ -107,7 +108,8 @@ namespace Screenbox.Pages
                         VisualStateManager.GoToState(this, "Normal", true);
                         break;
                     case WindowViewMode.Compact:
-                        VisualStateManager.GoToState(this, "Compact", true);
+                        ViewModel.PlayerVisible = true;
+                        VisualStateManager.GoToState(this, "CompactOverlay", true);
                         SetTitleBar();
                         break;
                     case WindowViewMode.FullScreen:
@@ -130,18 +132,49 @@ namespace Screenbox.Pages
             if (e.PropertyName == nameof(PlayerPageViewModel.PlayerVisible))
             {
                 UpdatePreviewVisualState();
+                UpdateMiniPlayerMargin();
+            }
+
+            if (e.PropertyName == nameof(PlayerPageViewModel.NavigationViewDisplayMode) && ViewModel.ViewMode == WindowViewMode.Default)
+            {
+                UpdateMiniPlayerMargin();
             }
         }
 
         private void UpdatePreviewVisualState()
         {
-            if (ViewModel.PlayerVisible)
+            if (ViewModel.PlayerVisible || ViewModel.IsCompact)
             {
                 VisualStateManager.GoToState(this, "NoPreview", true);
             }
             else
             {
                 VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
+            }
+        }
+
+        private void UpdateMiniPlayerMargin()
+        {
+            if (ViewModel.PlayerVisible || ViewModel.IsCompact)
+            {
+                VisualStateManager.GoToState(this, "NoMargin", false);
+            }
+            else
+            {
+                switch (ViewModel.NavigationViewDisplayMode)
+                {
+                    case NavigationViewDisplayMode.Minimal:
+                        VisualStateManager.GoToState(this, "MinimalMargin", false);
+                        break;
+                    case NavigationViewDisplayMode.Compact:
+                        VisualStateManager.GoToState(this, "CompactMargin", false);
+                        break;
+                    case NavigationViewDisplayMode.Expanded:
+                        VisualStateManager.GoToState(this, "ExpandedMargin", false);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }

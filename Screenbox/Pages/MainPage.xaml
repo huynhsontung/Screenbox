@@ -101,7 +101,7 @@
 
             <Frame
                 x:Name="ContentFrame"
-                Padding="56,12,0,0"
+                Padding="56,12,0,14"
                 Navigated="ContentFrame_Navigated"
                 NavigationFailed="ContentFrame_NavigationFailed" />
         </muxc:NavigationView>
@@ -118,7 +118,7 @@
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="98,0,0,0" />
-                        <Setter Target="ContentFrame.Padding" Value="12,12,0,0" />
+                        <Setter Target="ContentFrame.Padding" Value="12,12,0,12" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">

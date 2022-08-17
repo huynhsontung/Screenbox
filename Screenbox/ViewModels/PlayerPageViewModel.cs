@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
@@ -29,6 +30,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private WindowViewMode _viewMode;
+        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
 
         public bool SeekBarPointerPressed { get; set; }
@@ -69,10 +71,6 @@ namespace Screenbox.ViewModels
             {
                 ViewMode = e.NewValue;
                 IsCompact = ViewMode == WindowViewMode.Compact;
-                if (ViewMode == WindowViewMode.Default)
-                {
-                    PlayerVisible = true;
-                }
             });
         }
 

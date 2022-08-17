@@ -309,7 +309,7 @@
                 <core:GoToStateAction StateName="ControlsVisible" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Mini" />
+                <core:GoToStateAction StateName="MiniPlayer" />
             </core:DataTriggerBehavior>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="True">
                 <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind}" />
@@ -381,7 +381,7 @@
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Compact">
+                <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
@@ -401,7 +401,7 @@
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Mini">
+                <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
@@ -432,17 +432,33 @@
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.HorizontalAlignment" Value="Right" />
-                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,8" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
                         <Setter Target="LayoutRoot.Height" Value="128" />
-                        <Setter Target="LayoutRoot.Width" Value="484" />
                         <Setter Target="LayoutRoot.CornerRadius" Value="8" />
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="MiniPlayerMarginGroup">
+                <VisualState x:Name="NoMargin" />
+                <VisualState x:Name="ExpandedMargin">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,12" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="CompactMargin">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,12" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MinimalMargin">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
