@@ -168,6 +168,11 @@ namespace Screenbox.Pages
                     ? page.Header
                     : selectedItem.Content?.ToString();
             }
+
+            if (ContentFrame.Content is Control frameContent)
+            {
+                NotifyFrameContentOnDisplayModeChanged(frameContent, NavView.DisplayMode);
+            }
         }
 
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
@@ -188,18 +193,24 @@ namespace Screenbox.Pages
 
             if (ContentFrame.Content is Control frameContent)
             {
-                switch (args.DisplayMode)
-                {
-                    case muxc.NavigationViewDisplayMode.Minimal:
-                        VisualStateManager.GoToState(frameContent, "Minimal", true);
-                        break;
-                    case muxc.NavigationViewDisplayMode.Expanded:
-                        VisualStateManager.GoToState(frameContent, "Expanded", true);
-                        break;
-                    case muxc.NavigationViewDisplayMode.Compact:
-                        VisualStateManager.GoToState(frameContent, "Compact", true);
-                        break;
-                }
+                NotifyFrameContentOnDisplayModeChanged(frameContent, args.DisplayMode);
+            }
+        }
+
+        private static void NotifyFrameContentOnDisplayModeChanged(Control frameContent,
+            muxc.NavigationViewDisplayMode displayMode)
+        {
+            switch (displayMode)
+            {
+                case muxc.NavigationViewDisplayMode.Minimal:
+                    VisualStateManager.GoToState(frameContent, "Minimal", true);
+                    break;
+                case muxc.NavigationViewDisplayMode.Expanded:
+                    VisualStateManager.GoToState(frameContent, "Expanded", true);
+                    break;
+                case muxc.NavigationViewDisplayMode.Compact:
+                    VisualStateManager.GoToState(frameContent, "Compact", true);
+                    break;
             }
         }
 
