@@ -92,6 +92,8 @@ namespace Screenbox.Controls
             set { SetValue(ItemsSourceProperty, value); }
         }
 
+        public ItemCollection? Items => SongListView.Items;
+
         public IList<object> SelectedItems => SongListView.SelectedItems;
 
         public IReadOnlyList<ItemIndexRange> SelectedRanges => SongListView.SelectedRanges;

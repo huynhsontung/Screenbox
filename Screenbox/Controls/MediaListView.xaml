@@ -34,7 +34,6 @@
 
     <ListView
         x:Name="SongListView"
-        Margin="{x:Bind Margin, Mode=OneWay}"
         Padding="{x:Bind Padding, Mode=OneWay}"
         ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind ScrollBarMargin, Mode=OneWay}"
         AllowDrop="{x:Bind AllowDrop, Mode=OneWay}"
