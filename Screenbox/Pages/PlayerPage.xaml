@@ -144,7 +144,7 @@
                     x:Name="SubtitleText"
                     IsHitTestVisible="False"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+                    Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
                 </TextBlock>
             </StackPanel>
@@ -259,7 +259,7 @@
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             CornerRadius="6"
             IsHitTestVisible="False"
-            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}">
+            Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
             </animations:Implicit.ShowAnimations>
@@ -284,7 +284,7 @@
             VerticalAlignment="Center"
             IsActive="True"
             IsHitTestVisible="False"
-            Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
+            Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
         <controls:NotificationView
             Grid.Row="1"
@@ -299,7 +299,7 @@
             Grid.Column="0"
             Padding="6,20,6,12"
             Background="{StaticResource PlayerControlsBackground}"
-            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource InvertObjectToBooleanConverter}, Mode=OneWay}" />
+            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">

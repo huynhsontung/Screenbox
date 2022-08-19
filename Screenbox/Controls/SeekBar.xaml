@@ -35,7 +35,7 @@
             AutomationProperties.AccessibilityView="Raw"
             Foreground="Orange"
             IsIndeterminate="True"
-            Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource CommonVisibilityConverter}}" />
+            Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
         <Slider
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
@@ -49,7 +49,7 @@
             SmallChange="1000"
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
-            Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InvertCommonVisibilityConverter}}"
+            Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
             Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
     </Grid>
 </UserControl>

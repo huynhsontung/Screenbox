@@ -3,16 +3,20 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters">
     <Application.Resources>
         <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
-                    <converters:CommonVisibilityConverter x:Key="CommonVisibilityConverter" />
-                    <converters:CommonVisibilityConverter x:Key="InvertCommonVisibilityConverter" Invert="True" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-                    <converters:ObjectToBooleanConverter x:Key="ObjectToBooleanConverter" />
-                    <converters:ObjectToBooleanConverter x:Key="InvertObjectToBooleanConverter" Invert="True" />
+                    <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
+                    <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                    <toolkitConverters:BoolToObjectConverter
+                        x:Key="InverseBoolToVisibilityConverter"
+                        FalseValue="Visible"
+                        TrueValue="Collapsed" />
+                    <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
                     <x:Double x:Key="ContentPageBottomMargin">148</x:Double>
 
