@@ -15,7 +15,21 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08000000" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <ListView
@@ -27,8 +41,6 @@
         CanDragItems="{x:Bind CanDragItems, Mode=OneWay}"
         CanReorderItems="{x:Bind CanReorderItems, Mode=OneWay}"
         ContainerContentChanging="SongListView_OnContainerContentChanging"
-        DragOver="SongListView_OnDragOver"
-        Drop="SongListView_OnDrop"
         Footer="{x:Bind Footer, Mode=OneWay}"
         ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
         Loaded="SongListView_OnLoaded"
@@ -50,12 +62,9 @@
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="viewModels:MediaViewModel">
                 <UserControl>
-                    <Grid
-                        Height="46"
-                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                        CornerRadius="8">
+                    <Grid Height="46">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition x:Name="IndicatorColumn" Width="48" />
+                            <ColumnDefinition x:Name="IndicatorColumn" Width="28" />
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition Width="1.6*" />
                             <ColumnDefinition x:Name="ArtistColumn" Width="0" />
@@ -66,7 +75,7 @@
                         <FontIcon
                             x:Name="IsPlayingIcon"
                             Grid.Column="0"
-                            Margin="16,0,0,0"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontFamily="ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons"
                             FontSize="16"

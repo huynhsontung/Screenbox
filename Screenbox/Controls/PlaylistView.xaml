@@ -8,11 +8,8 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:viewModels="using:Screenbox.ViewModels"
-    x:Name="Control"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -134,7 +131,7 @@
             </CommandBar>
         </Border>
 
-        <ListView
+        <local:MediaListView
             x:Name="PlaylistListView"
             Grid.Row="2"
             Margin="0,8,0,0"
@@ -142,163 +139,13 @@
             AllowDrop="True"
             CanDragItems="True"
             CanReorderItems="True"
-            ContainerContentChanging="PlaylistListView_OnContainerContentChanging"
             DragOver="{x:Bind ViewModel.OnDragOver}"
             Drop="{x:Bind ViewModel.OnDrop}"
             ItemsSource="{x:Bind ViewModel.Playlist}"
+            PlayCommand="{x:Bind ViewModel.PlaySingleCommand}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
-            SelectionMode="Extended">
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <UserControl>
-                        <Grid Padding="0,6">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
-                                <ColumnDefinition Width="32" />
-                                <ColumnDefinition Width="2*" />
-                                <ColumnDefinition x:Name="ArtistColumn" Width="0" />
-                                <ColumnDefinition x:Name="AlbumColumn" Width="0" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <FontIcon
-                                x:Name="IsPlayingIcon"
-                                Grid.Column="0"
-                                FontFamily="ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons"
-                                FontSize="16"
-                                Glyph="A"
-                                ToolTipService.ToolTip="{x:Bind strings:Resources.IsPlaying}"
-                                Visibility="Collapsed" />
-
-                            <FontIcon
-                                x:Name="ItemIcon"
-                                Grid.Column="1"
-                                Margin="8"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                FontSize="16"
-                                Glyph="{x:Bind Glyph}" />
-
-                            <Button
-                                x:Name="PlayButton"
-                                Grid.Column="1"
-                                Padding="8"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Command="{Binding ElementName=Control, Path=DataContext.PlaySingleCommand}"
-                                CommandParameter="{x:Bind}"
-                                Visibility="Collapsed">
-                                <FontIcon
-                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                    FontSize="16"
-                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                    Glyph="&#xE768;" />
-                            </Button>
-
-                            <TextBlock
-                                x:Name="TitleText"
-                                Grid.Column="2"
-                                Margin="12,0,10,0"
-                                VerticalAlignment="Center"
-                                MaxLines="1"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind Name, Mode=OneWay}"
-                                TextTrimming="CharacterEllipsis" />
-
-                            <TextBlock
-                                x:Name="ArtistText"
-                                Grid.Column="3"
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                MaxLines="1"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
-                                TextTrimming="CharacterEllipsis"
-                                Visibility="Collapsed" />
-
-                            <TextBlock
-                                x:Name="AlbumText"
-                                Grid.Column="4"
-                                Margin="10,0"
-                                VerticalAlignment="Center"
-                                MaxLines="1"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind MusicProperties.Album, Mode=OneWay, FallbackValue={}}"
-                                TextTrimming="CharacterEllipsis"
-                                Visibility="Collapsed" />
-
-                            <TextBlock
-                                x:Name="DurationText"
-                                Grid.Column="5"
-                                Margin="10,0,8,0"
-                                VerticalAlignment="Center"
-                                MaxLines="1"
-                                Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{x:Bind Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
-
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup x:Name="PlayingState">
-                                    <VisualState x:Name="NotPlaying" />
-                                    <VisualState x:Name="IsPlaying">
-                                        <VisualState.StateTriggers>
-                                            <StateTrigger IsActive="{Binding IsPlaying}" />
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                            <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                            <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                            <Setter Target="ArtistText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                            <Setter Target="AlbumText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                            <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
-                                            <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-
-                                <VisualStateGroup x:Name="SelectionStates">
-                                    <VisualState x:Name="Multiple">
-                                        <VisualState.StateTriggers>
-                                            <StateTrigger IsActive="{Binding ElementName=MultiSelectToggle, Path=IsChecked}" />
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="IndicatorColumn.Width" Value="0" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-
-                                <VisualStateGroup x:Name="DetailsLevels">
-                                    <VisualState x:Name="Minimal" />
-                                    <VisualState x:Name="Compact">
-                                        <VisualState.Setters>
-                                            <Setter Target="ArtistColumn.Width" Value="*" />
-                                            <Setter Target="ArtistText.Visibility" Value="Visible" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState x:Name="Full">
-                                        <VisualState.Setters>
-                                            <Setter Target="ArtistColumn.Width" Value="*" />
-                                            <Setter Target="AlbumColumn.Width" Value="*" />
-                                            <Setter Target="ArtistText.Visibility" Value="Visible" />
-                                            <Setter Target="AlbumText.Visibility" Value="Visible" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-
-                                <VisualStateGroup x:Name="CommonStates">
-                                    <VisualState x:Name="Normal" />
-                                    <VisualState x:Name="PointerOver">
-                                        <VisualState.Setters>
-                                            <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
-                                            <Setter Target="PlayButton.Visibility" Value="Visible" />
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
-                        </Grid>
-                    </UserControl>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            SelectionMode="Extended"
+            ShowMediaIcon="True" />
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="True">
@@ -342,6 +189,9 @@
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind IsFlyout, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MoveUpButton.Width" Value="40" />
                         <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />

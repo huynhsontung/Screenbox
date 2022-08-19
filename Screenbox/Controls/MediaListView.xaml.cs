@@ -18,8 +18,6 @@ namespace Screenbox.Controls
 {
     public sealed partial class MediaListView : UserControl
     {
-        public event DragEventHandler? ListViewDragOver;
-        public event DragEventHandler? ListViewDrop;
         public event SelectionChangedEventHandler? SelectionChanged;
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
@@ -117,6 +115,8 @@ namespace Screenbox.Controls
             this.InitializeComponent();
         }
 
+        public void SelectAll() => SongListView.SelectAll();
+
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (SongListView.Items != null)
@@ -155,9 +155,6 @@ namespace Screenbox.Controls
 
             args.RegisterUpdateCallback(ContainerUpdateCallback);
             UpdateAlternateLayout(args.ItemContainer, args.ItemIndex);
-
-            // There is no lightweight styling for ListViewItem padding
-            args.ItemContainer.Padding = new Thickness(0);
         }
 
         private static async void ContainerUpdateCallback(ListViewBase sender, ContainerContentChangingEventArgs args)
@@ -228,18 +225,23 @@ namespace Screenbox.Controls
         private void UpdateAlternateLayout(SelectorItem itemContainer, int itemIndex)
         {
             if (itemIndex < 0) return;
-            if (itemContainer.ContentTemplateRoot is not UserControl templateRoot) return;
-            if (templateRoot.Content is not Grid control) return;
+            //if (itemContainer.ContentTemplateRoot is not UserControl templateRoot) return;
+            //if (templateRoot.Content is not Grid control) return;
+            if (itemContainer.FindDescendant<ListViewItemPresenter>() is not {} presenter) return;
+            if (itemContainer.FindDescendant<Border>() is not {} border) return;
+            presenter.CornerRadius = new CornerRadius(8);
             if (itemIndex % 2 == 0)
             {
-                control.Background = (Brush)Resources["SystemControlBackgroundListLowBrush"];
-                control.Background.Opacity = 0.4;
-                control.BorderThickness = new Thickness(1);
+                itemContainer.Background = (Brush)Resources["AccentListViewItemBackgroundBrush"];
+                border.Background = (Brush)Resources["AccentListViewItemBackgroundBrush"];
+                border.BorderBrush = (Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"];
+                border.BorderThickness = new Thickness(1);
             }
             else
             {
-                control.Background = null;
-                control.BorderThickness = new Thickness(0);
+                itemContainer.Background = (Brush)Resources["ListViewItemBackground"];
+                border.Background = (Brush)Resources["ListViewItemBackground"];
+                border.BorderThickness = new Thickness(0);
             }
         }
 
@@ -289,16 +291,6 @@ namespace Screenbox.Controls
             Control? control = (Control?)item.ContentTemplateRoot;
             if (control == null) return;
             VisualStateManager.GoToState(control, "PointerOver", false);
-        }
-
-        private void SongListView_OnDragOver(object sender, DragEventArgs e)
-        {
-            ListViewDragOver?.Invoke(sender, e);
-        }
-
-        private void SongListView_OnDrop(object sender, DragEventArgs e)
-        {
-            ListViewDrop?.Invoke(sender, e);
         }
 
         private void SongListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
