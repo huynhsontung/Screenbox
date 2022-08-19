@@ -54,14 +54,15 @@
             x:Name="SelectionCommandRow"
             Grid.Row="1"
             Margin="{x:Bind Padding, Mode=OneWay}"
-            Background="{StaticResource AcrylicInAppFillColorDefaultBrush}"
-            BorderBrush="{StaticResource CardStrokeColorDefaultSolidBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CommandBarBorderBrushOpen}"
             BorderThickness="1"
             CornerRadius="8"
             Shadow="{StaticResource SharedShadow}"
             Translation="0,0,32"
             Visibility="Collapsed">
             <CommandBar
+                x:Name="SelectionCommandBar"
                 VerticalContentAlignment="Center"
                 DefaultLabelPosition="Right"
                 IsDynamicOverflowEnabled="False"
@@ -143,9 +144,14 @@
             Drop="{x:Bind ViewModel.OnDrop}"
             ItemsSource="{x:Bind ViewModel.Playlist}"
             PlayCommand="{x:Bind ViewModel.PlaySingleCommand}"
+            ScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended"
-            ShowMediaIcon="True" />
+            ShowMediaIcon="True">
+            <local:MediaListView.Footer>
+                <Border x:Name="Footer" Height="{StaticResource ContentPageBottomMargin}" />
+            </local:MediaListView.Footer>
+        </local:MediaListView>
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="True">
@@ -154,6 +160,9 @@
             <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="False">
                 <core:GoToStateAction StateName="Extended" TargetObject="{x:Bind}" />
             </core:DataTriggerBehavior>
+            <core:EventTriggerBehavior EventName="Loaded">
+                <core:CallMethodAction MethodName="UpdateLayoutState" TargetObject="{x:Bind}" />
+            </core:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
@@ -193,6 +202,8 @@
                         <StateTrigger IsActive="{x:Bind IsFlyout, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="Footer.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaylistListView.ScrollBarMargin" Value="0" />
                         <Setter Target="MoveUpButton.Width" Value="40" />
                         <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />

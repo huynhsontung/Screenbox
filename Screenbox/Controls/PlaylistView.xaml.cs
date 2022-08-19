@@ -73,8 +73,18 @@ namespace Screenbox.Controls
 
         private void CommandBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (IsFlyout) return;
-            VisualStateManager.GoToState(this, e.NewSize.Width <= 620 ? "Compact" : "Normal", true);
+            UpdateLayoutState();
+        }
+
+        public void UpdateLayoutState()
+        {
+            if (IsFlyout)
+            {
+                VisualStateManager.GoToState(this, "Minimal", true);
+                return;
+            }
+
+            VisualStateManager.GoToState(this, SelectionCommandBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
         }
     }
 }
