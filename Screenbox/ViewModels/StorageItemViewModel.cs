@@ -16,8 +16,6 @@ namespace Screenbox.ViewModels
 
         public string Path { get; }
 
-        public string Glyph { get; protected set; }
-
         public DateTimeOffset DateCreated { get; }
 
         public IStorageItem StorageItem { get; }
@@ -36,7 +34,6 @@ namespace Screenbox.ViewModels
             Name = storageItem.Name;
             Path = storageItem.Path;
             DateCreated = storageItem.DateCreated;
-            Glyph = GetGlyph(storageItem);
 
             if (storageItem is StorageFile file)
             {
@@ -51,25 +48,6 @@ namespace Screenbox.ViewModels
             if (StorageItem is not StorageFolder folder || FolderItems != null) return;
             FolderItems = await folder.GetItemsAsync();
             CaptionText = Strings.Resources.ItemsCount(FolderItems.Count);
-        }
-
-        public static string GetGlyph(IStorageItem item)
-        {
-            string glyph = "\ue8b7";
-            if (item is IStorageFile file)
-            {
-                glyph = "\ue8a5";
-                if (file.ContentType.StartsWith("video"))
-                {
-                    glyph = "\ue8b2";
-                }
-                else if (file.ContentType.StartsWith("audio"))
-                {
-                    glyph = "\ue8d6";
-                }
-            }
-
-            return glyph;
         }
 
         private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)

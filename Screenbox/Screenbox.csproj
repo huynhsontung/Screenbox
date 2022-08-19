@@ -176,6 +176,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\RendererGlyphConverter.cs" />
+    <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />

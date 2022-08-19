@@ -9,6 +9,7 @@ using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Screenbox.Converters;
 using Screenbox.Core.Playback;
 using Screenbox.Services;
 
@@ -70,7 +71,7 @@ namespace Screenbox.ViewModels
             Source = file;
             _name = file.Name;
             Location = file.Path;
-            Glyph = StorageItemViewModel.GetGlyph(file);
+            Glyph = StorageItemGlyphConverter.Convert(file);
         }
 
         public async Task LoadDetailsAsync()
