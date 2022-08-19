@@ -21,75 +21,99 @@ namespace Screenbox.Controls
         public event SelectionChangedEventHandler? SelectionChanged;
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-            "ItemsSource", typeof(object), typeof(MediaListView), new PropertyMetadata(null));
+            "ItemsSource",
+            typeof(object),
+            typeof(MediaListView),
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty ScrollBarMarginProperty = DependencyProperty.Register(
-            "ScrollBarMargin", typeof(Thickness), typeof(MediaListView), new PropertyMetadata(default(Thickness)));
+            "ScrollBarMargin",
+            typeof(Thickness),
+            typeof(MediaListView),
+            new PropertyMetadata(default(Thickness)));
 
         public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(
-            "SelectionMode", typeof(ListViewSelectionMode), typeof(MediaListView), new PropertyMetadata(ListViewSelectionMode.None));
+            "SelectionMode",
+            typeof(ListViewSelectionMode),
+            typeof(MediaListView),
+            new PropertyMetadata(ListViewSelectionMode.None));
 
         public static readonly DependencyProperty FooterProperty = DependencyProperty.Register(
-            "Footer", typeof(object), typeof(MediaListView), new PropertyMetadata(null));
+            "Footer",
+            typeof(object),
+            typeof(MediaListView),
+            new PropertyMetadata(null));
 
         public static readonly DependencyProperty CanDragItemsProperty = DependencyProperty.Register(
-            "CanDragItems", typeof(bool), typeof(MediaListView), new PropertyMetadata(false));
+            "CanDragItems",
+            typeof(bool),
+            typeof(MediaListView),
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty CanReorderItemsProperty = DependencyProperty.Register(
-            "CanReorderItems", typeof(bool), typeof(MediaListView), new PropertyMetadata(false));
+            "CanReorderItems",
+            typeof(bool),
+            typeof(MediaListView),
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty ShowMediaIconProperty = DependencyProperty.Register(
-            "ShowMediaIcon", typeof(bool), typeof(MediaListView), new PropertyMetadata(false));
+            "ShowMediaIcon",
+            typeof(bool),
+            typeof(MediaListView),
+            new PropertyMetadata(false));
 
         public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
-            "PlayCommand", typeof(ICommand), typeof(MediaListView), new PropertyMetadata(null));
+            "PlayCommand",
+            typeof(ICommand),
+            typeof(MediaListView),
+            new PropertyMetadata(null));
 
         public ICommand? PlayCommand
         {
-            get { return (ICommand)GetValue(PlayCommandProperty); }
-            set { SetValue(PlayCommandProperty, value); }
+            get => (ICommand)GetValue(PlayCommandProperty);
+            set => SetValue(PlayCommandProperty, value);
         }
 
         public bool ShowMediaIcon
         {
-            get { return (bool)GetValue(ShowMediaIconProperty); }
-            set { SetValue(ShowMediaIconProperty, value); }
+            get => (bool)GetValue(ShowMediaIconProperty);
+            set => SetValue(ShowMediaIconProperty, value);
         }
 
         public bool CanReorderItems
         {
-            get { return (bool)GetValue(CanReorderItemsProperty); }
-            set { SetValue(CanReorderItemsProperty, value); }
+            get => (bool)GetValue(CanReorderItemsProperty);
+            set => SetValue(CanReorderItemsProperty, value);
         }
 
         public bool CanDragItems
         {
-            get { return (bool)GetValue(CanDragItemsProperty); }
-            set { SetValue(CanDragItemsProperty, value); }
+            get => (bool)GetValue(CanDragItemsProperty);
+            set => SetValue(CanDragItemsProperty, value);
         }
 
         public object Footer
         {
-            get { return (object)GetValue(FooterProperty); }
-            set { SetValue(FooterProperty, value); }
+            get => GetValue(FooterProperty);
+            set => SetValue(FooterProperty, value);
         }
 
         public ListViewSelectionMode SelectionMode
         {
-            get { return (ListViewSelectionMode)GetValue(SelectionModeProperty); }
-            set { SetValue(SelectionModeProperty, value); }
+            get => (ListViewSelectionMode)GetValue(SelectionModeProperty);
+            set => SetValue(SelectionModeProperty, value);
         }
 
         public Thickness ScrollBarMargin
         {
-            get { return (Thickness)GetValue(ScrollBarMarginProperty); }
-            set { SetValue(ScrollBarMarginProperty, value); }
+            get => (Thickness)GetValue(ScrollBarMarginProperty);
+            set => SetValue(ScrollBarMarginProperty, value);
         }
 
         public object ItemsSource
         {
-            get { return (object)GetValue(ItemsSourceProperty); }
-            set { SetValue(ItemsSourceProperty, value); }
+            get => GetValue(ItemsSourceProperty);
+            set => SetValue(ItemsSourceProperty, value);
         }
 
         public ItemCollection? Items => SongListView.Items;
@@ -127,7 +151,8 @@ namespace Screenbox.Controls
             }
         }
 
-        private void SongListView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private void SongListView_OnContainerContentChanging(ListViewBase sender,
+            ContainerContentChangingEventArgs args)
         {
             if (args.Phase > 0 || args.InRecycleQueue) return;
 
@@ -227,10 +252,8 @@ namespace Screenbox.Controls
         private void UpdateAlternateLayout(SelectorItem itemContainer, int itemIndex)
         {
             if (itemIndex < 0) return;
-            //if (itemContainer.ContentTemplateRoot is not UserControl templateRoot) return;
-            //if (templateRoot.Content is not Grid control) return;
-            if (itemContainer.FindDescendant<ListViewItemPresenter>() is not {} presenter) return;
-            if (itemContainer.FindDescendant<Border>() is not {} border) return;
+            if (itemContainer.FindDescendant<ListViewItemPresenter>() is not { } presenter) return;
+            if (itemContainer.FindDescendant<Border>() is not { } border) return;
             presenter.CornerRadius = new CornerRadius(8);
             if (itemIndex % 2 == 0)
             {
