@@ -12,7 +12,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.ViewModels
 {
@@ -37,15 +36,15 @@ namespace Screenbox.ViewModels
 
         public async Task OnNavigatedTo(object? parameter)
         {
-            Guard.IsNotNull(parameter, nameof(parameter));
-            Breadcrumbs = (IReadOnlyList<StorageFolder>)parameter;
-            if (Breadcrumbs.Count > 0)
+            switch (parameter)
             {
-                await FetchFolderContentAsync(Breadcrumbs.Last());
-            }
-            else
-            {
-                await LoadVideosFromLibraryAsync();
+                case IReadOnlyList<StorageFolder> { Count: > 0 } breadcrumbs:
+                    Breadcrumbs = breadcrumbs;
+                    await FetchFolderContentAsync(breadcrumbs.Last());
+                    break;
+                case StorageLibrary library:
+                    await FetchFolderContentAsync(library);
+                    break;
             }
         }
 
@@ -95,23 +94,33 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private async Task LoadVideosFromLibraryAsync()
+        private async Task FetchFolderContentAsync(StorageLibrary library)
         {
-            StorageLibrary? library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            if (library == null || library.Folders.Count <= 0) return;
+            if (library.Folders.Count <= 0)
+            {
+                IsEmpty = true;
+                return;
+            }
 
             if (library.Folders.Count == 1)
             {
+                // StorageLibrary is always the root
+                // Fetch content of the only folder if applicable
                 StorageFolder folder = library.Folders[0];
                 Breadcrumbs = new[] { folder };
                 await FetchFolderContentAsync(folder);
             }
             else
             {
+                Items.Clear();
                 foreach (StorageFolder folder in library.Folders)
                 {
-                    Items.Add(new StorageItemViewModel(folder));
+                    StorageItemViewModel item = new(folder);
+                    Items.Add(item);
+                    await item.LoadFolderContentAsync();
                 }
+
+                IsEmpty = Items.Count == 0;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +30,7 @@ namespace Screenbox.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            FolderViewFrame.Navigate(typeof(FolderViewPage), await ViewModel.GetInitialBreadcrumbsAsync(),
+            FolderViewFrame.Navigate(typeof(FolderViewPage), await ViewModel.GetVideosLibraryAsync(),
                 new SuppressNavigationTransitionInfo());
         }
 
