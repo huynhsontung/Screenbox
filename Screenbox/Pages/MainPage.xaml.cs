@@ -88,26 +88,28 @@ namespace Screenbox.Pages
         {
             if (e.PropertyName == nameof(ViewModel.PlayerVisible))
             {
-                Border? contentRootBorder = _contentRootBorder;
-                if (contentRootBorder == null) return;
+                if (_contentRootBorder != null)
+                {
+                    _contentRootBorder.Visibility = ViewModel.PlayerVisible ? Visibility.Collapsed : Visibility.Visible;
+                }
 
                 // Do not try to implement the following using XAML Behaviors APIs and VisualStates
                 // Will introduce visual artifacts with NavView
-                if (!ViewModel.PlayerVisible)
-                {
-                    SetTitleBar();
-                    NavView.IsPaneVisible = true;
-                    NavView.AlwaysShowHeader = true;
-                    contentRootBorder.Visibility = Visibility.Visible;
-                }
-                else
+                if (ViewModel.PlayerVisible)
                 {
                     NavView.IsPaneVisible = false;
                     NavView.IsPaneOpen = false;
                     NavView.AlwaysShowHeader = false;
-                    contentRootBorder.Visibility = Visibility.Collapsed;
+                    ContentFrame.Visibility = Visibility.Collapsed;
                 }
-                
+                else
+                {
+                    SetTitleBar();
+                    NavView.IsPaneVisible = true;
+                    NavView.AlwaysShowHeader = true;
+                    ContentFrame.Visibility = Visibility.Visible;
+                }
+
                 UpdateTitleBarState();
             }
         }
