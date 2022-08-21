@@ -23,6 +23,7 @@ namespace Screenbox.Pages
 
         private readonly Dictionary<string, Type> _pages;
         private readonly Frame _playerFrame;
+        private Border? _contentRootBorder;
 
         public MainPage()
         {
@@ -75,6 +76,7 @@ namespace Screenbox.Pages
             if (NavView.FindDescendant("ContentRoot") is Grid contentRoot)
             {
                 contentRoot.Children.Add(_playerFrame);
+                _contentRootBorder = contentRoot.FindChild<Border>();
             }
 
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
@@ -86,6 +88,9 @@ namespace Screenbox.Pages
         {
             if (e.PropertyName == nameof(ViewModel.PlayerVisible))
             {
+                Border? contentRootBorder = _contentRootBorder;
+                if (contentRootBorder == null) return;
+
                 // Do not try to implement the following using XAML Behaviors APIs and VisualStates
                 // Will introduce visual artifacts with NavView
                 if (!ViewModel.PlayerVisible)
@@ -93,14 +98,14 @@ namespace Screenbox.Pages
                     SetTitleBar();
                     NavView.IsPaneVisible = true;
                     NavView.AlwaysShowHeader = true;
-                    ContentFrame.Visibility = Visibility.Visible;
+                    contentRootBorder.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     NavView.IsPaneVisible = false;
                     NavView.IsPaneOpen = false;
                     NavView.AlwaysShowHeader = false;
-                    ContentFrame.Visibility = Visibility.Collapsed;
+                    contentRootBorder.Visibility = Visibility.Collapsed;
                 }
                 
                 UpdateTitleBarState();
