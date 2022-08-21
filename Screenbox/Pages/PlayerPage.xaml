@@ -15,7 +15,6 @@
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
