@@ -62,7 +62,7 @@ namespace Screenbox.Controls
                     PlaylistListView.SelectedItems.Count == 1 ? "MultipleSingleSelected" : "Multiple", true);
             }
 
-            ViewModel.OnSelectionChanged(sender, e);
+            ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
         }
 
         private void ClearSelection_OnClick(object sender, RoutedEventArgs e)

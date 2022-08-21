@@ -14,7 +14,10 @@ namespace Screenbox.ViewModels
     {
         public ObservableCollection<Renderer> Renderers { get; }
 
-        [ObservableProperty] private Renderer? _selectedRenderer;
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CastCommand))]
+        private Renderer? _selectedRenderer;
+
         [ObservableProperty] private Renderer? _castingDevice;
         [ObservableProperty] private bool _isCasting;
 
@@ -41,11 +44,6 @@ namespace Screenbox.ViewModels
             _castService.Stop();
             SelectedRenderer = null;
             Renderers.Clear();
-        }
-
-        partial void OnSelectedRendererChanged(Renderer? renderer)
-        {
-            CastCommand.NotifyCanExecuteChanged();
         }
 
         [RelayCommand(CanExecute = nameof(CanCast))]

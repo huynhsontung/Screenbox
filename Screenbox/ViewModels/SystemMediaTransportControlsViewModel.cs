@@ -74,8 +74,8 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(_playlistViewModel.PlayingItem) when _playlistViewModel.PlayingItem != null:
-                    await UpdateTransportControlsDisplay(_playlistViewModel.PlayingItem);
+                case nameof(_playlistViewModel.ActiveItem) when _playlistViewModel.ActiveItem != null:
+                    await UpdateTransportControlsDisplay(_playlistViewModel.ActiveItem);
                     break;
                 case nameof(_playlistViewModel.RepeatMode):
                     _transportControls.AutoRepeatMode = Convert(_playlistViewModel.RepeatMode);

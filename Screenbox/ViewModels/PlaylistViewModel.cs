@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -12,8 +11,6 @@ using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -32,22 +29,30 @@ namespace Screenbox.ViewModels
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
-        public MediaViewModel? PlayingItem
-        {
-            get => _playingItem;
-            private set => SetProperty(ref _playingItem, value);
-        }
-
         [ObservableProperty] private bool _canSkip;
         [ObservableProperty] private bool _hasItems;
-        [ObservableProperty] private RepeatMode _repeatMode;
         [ObservableProperty] private string _repeatModeGlyph;
-        [ObservableProperty] private int _selectionCount;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
+        private RepeatMode _repeatMode;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
+        private MediaViewModel? _activeItem;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
+        private int _selectionCount;
 
         private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private IMediaPlayer? _mediaPlayer;
-        private MediaViewModel? _playingItem;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
@@ -59,7 +64,6 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
-            PropertyChanged += OnPropertyChanged;
             Playlist.CollectionChanged += OnCollectionChanged;
 
             // Activate the view model's messenger
@@ -117,7 +121,7 @@ namespace Screenbox.ViewModels
 
         public void Receive(PlayingItemRequestMessage message)
         {
-            message.Reply(PlayingItem);
+            message.Reply(ActiveItem);
         }
 
         public void OnDragOver(object sender, DragEventArgs e)
@@ -142,45 +146,50 @@ namespace Screenbox.ViewModels
             }
         }
 
-        public void OnItemDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        partial void OnActiveItemChanging(MediaViewModel? value)
         {
-            ListViewItem item = (ListViewItem)sender;
-            if (item.Content is MediaViewModel selectedMedia && PlayingItem != selectedMedia)
+            if (_mediaPlayer != null)
             {
-                PlaySingle(selectedMedia);
+                _mediaPlayer.Source = value?.Item;
+                _mediaPlayer.Play();
+            }
+
+            if (ActiveItem != null)
+            {
+                ActiveItem.IsPlaying = false;
+            }
+
+            if (value != null)
+            {
+                value.IsPlaying = true;
+                // Setting current index here to handle updating playlist before calling PlaySingle
+                // If playlist is updated after, CollectionChanged handler will update the index
+                _currentIndex = Playlist.IndexOf(value);
+            }
+            else
+            {
+                _currentIndex = -1;
             }
         }
 
-        public void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        partial void OnActiveItemChanged(MediaViewModel? value)
         {
-            ListViewBase listView = (ListViewBase)sender;
-            SelectionCount = listView.SelectedItems.Count;
-            
-            PlayNextCommand.NotifyCanExecuteChanged();
-            RemoveSelectedCommand.NotifyCanExecuteChanged();
-            MoveSelectedItemUpCommand.NotifyCanExecuteChanged();
-            MoveSelectedItemDownCommand.NotifyCanExecuteChanged();
+            RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
+        }
+
+        partial void OnRepeatModeChanged(RepeatMode value)
+        {
+            RepeatModeGlyph = GetRepeatModeGlyph(value);
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(PlayingItem):
-                case nameof(RepeatMode):
-                    RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
-                    UpdateCanPreviousOrNext();
-                    break;
-            }
-        }
-
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _currentIndex = PlayingItem != null ? Playlist.IndexOf(PlayingItem) : -1;
+            _currentIndex = ActiveItem != null ? Playlist.IndexOf(ActiveItem) : -1;
 
-            UpdateCanPreviousOrNext();
+            NextCommand.NotifyCanExecuteChanged();
+            PreviousCommand.NotifyCanExecuteChanged();
             CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
             HasItems = Playlist.Count > 0;
         }
@@ -254,27 +263,15 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void PlaySingle(MediaViewModel vm)
         {
-            if (_mediaPlayer == null) return;
-            _mediaPlayer.Source = vm.Item;
-            _mediaPlayer.Play();
-
-            if (PlayingItem != null)
-            {
-                PlayingItem.IsPlaying = false;
-            }
-
-            vm.IsPlaying = true;
-            // Setting current index here to handle updating playlist before calling PlaySingle
-            // If playlist is updated after, CollectionChanged handler will update the index
-            _currentIndex = Playlist.IndexOf(vm);
-            PlayingItem = vm;
+            // OnActiveItemChanging handles the rest
+            ActiveItem = vm;
         }
 
         [RelayCommand]
         private void Clear()
         {
             if (_mediaPlayer != null) _mediaPlayer.Source = null;
-            PlayingItem = null;
+            ActiveItem = null;
             Playlist.Clear();
         }
 
@@ -285,10 +282,10 @@ namespace Screenbox.ViewModels
             List<object> copy = selectedItems.ToList();
             foreach (MediaViewModel item in copy)
             {
-                if (PlayingItem == item)
+                if (ActiveItem == item)
                 {
                     if (_mediaPlayer != null) _mediaPlayer.Source = null;
-                    PlayingItem = null;
+                    ActiveItem = null;
                 }
 
                 Playlist.Remove(item);
@@ -348,9 +345,9 @@ namespace Screenbox.ViewModels
         [RelayCommand(CanExecute = nameof(CanNext))]
         private async Task NextAsync()
         {
-            if (Playlist.Count == 0 || PlayingItem == null) return;
+            if (Playlist.Count == 0 || ActiveItem == null) return;
             int index = _currentIndex;
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && PlayingItem.Source is IStorageFile file)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && ActiveItem.Source is IStorageFile file)
             {
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
@@ -387,9 +384,9 @@ namespace Screenbox.ViewModels
         [RelayCommand(CanExecute = nameof(CanPrevious))]
         private async Task PreviousAsync()
         {
-            if (Playlist.Count == 0 || PlayingItem == null) return;
+            if (Playlist.Count == 0 || ActiveItem == null) return;
             int index = _currentIndex;
-            if (Playlist.Count == 1 && _neighboringFilesQuery != null && PlayingItem.Source is IStorageFile file)
+            if (Playlist.Count == 1 && _neighboringFilesQuery != null && ActiveItem.Source is IStorageFile file)
             {
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
@@ -425,12 +422,6 @@ namespace Screenbox.ViewModels
                         break;
                 }
             });
-        }
-
-        private void UpdateCanPreviousOrNext()
-        {
-            NextCommand.NotifyCanExecuteChanged();
-            PreviousCommand.NotifyCanExecuteChanged();
         }
 
         private static string GetRepeatModeGlyph(RepeatMode repeatMode)
