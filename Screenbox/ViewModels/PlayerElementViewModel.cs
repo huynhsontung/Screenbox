@@ -19,12 +19,13 @@ using Screenbox.Core.Playback;
 using CommunityToolkit.Diagnostics;
 using Windows.Media.Playback;
 using Windows.System.Display;
+using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.ViewModels
 {
     internal partial class PlayerElementViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
     {
-        internal VlcMediaPlayer? MediaPlayer => _libVlcService.MediaPlayer;
+        public MediaPlayer? VlcPlayer { get; private set; }
 
         //[ObservableProperty] private double _viewOpacity;
 
@@ -33,6 +34,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private Size _viewSize;
         private bool _zoomToFit;
+        private VlcMediaPlayer? _mediaPlayer;
         private DisplayRequest? _displayRequest;
 
         public PlayerElementViewModel(
@@ -68,7 +70,7 @@ namespace Screenbox.ViewModels
                 {
                     if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
                     {
-                        MediaPlayer?.AddSubtitle(file);
+                        _mediaPlayer?.AddSubtitle(file);
                     }
                     else
                     {
@@ -92,10 +94,12 @@ namespace Screenbox.ViewModels
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             _libVlcService.Initialize(e.SwapChainOptions);
-            Guard.IsNotNull(MediaPlayer, nameof(MediaPlayer));
-            MediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
-            MediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            Messenger.Send(new MediaPlayerChangedMessage(MediaPlayer));
+            _mediaPlayer = _libVlcService.MediaPlayer;
+            Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
+            VlcPlayer = _mediaPlayer.VlcPlayer;
+            _mediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
+            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+            Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -107,7 +111,7 @@ namespace Screenbox.ViewModels
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (MediaPlayer == null) return;
+            if (_mediaPlayer == null) return;
             args.Handled = true;
             long seekAmount = 0;
             int volumeChange = 0;
@@ -117,13 +121,13 @@ namespace Screenbox.ViewModels
             switch (key)
             {
                 case VirtualKey.Space:
-                    switch (MediaPlayer.PlaybackState)
+                    switch (_mediaPlayer.PlaybackState)
                     {
                         case MediaPlaybackState.Playing:
-                            MediaPlayer.Pause();
+                            _mediaPlayer.Pause();
                             break;
                         case MediaPlaybackState.Paused or MediaPlaybackState.None:
-                            MediaPlayer.Play();
+                            _mediaPlayer.Play();
                             break;
                     }
                     return;
@@ -151,7 +155,7 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    MediaPlayer.Position = (MediaPlayer?.NaturalDuration ?? default) * (0.1 * (key - VirtualKey.NumberPad0));
+                    _mediaPlayer.Position = (_mediaPlayer?.NaturalDuration ?? default) * (0.1 * (key - VirtualKey.NumberPad0));
                     break;
                 case VirtualKey.Number1:
                     ResizeWindow(0.5);
@@ -240,8 +244,8 @@ namespace Screenbox.ViewModels
 
         private bool ResizeWindow(double scalar = 0)
         {
-            if (MediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
-            Size videoDimension = new(MediaPlayer.NaturalVideoWidth, MediaPlayer.NaturalVideoHeight);
+            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)
             {
@@ -254,25 +258,25 @@ namespace Screenbox.ViewModels
 
         private void Seek(long amount)
         {
-            if (MediaPlayer?.CanSeek ?? false)
+            if (_mediaPlayer?.CanSeek ?? false)
             {
-                MediaPlayer.Position += TimeSpan.FromMilliseconds(amount);
+                _mediaPlayer.Position += TimeSpan.FromMilliseconds(amount);
                 Messenger.Send(new UpdateStatusMessage(
-                    $"{HumanizedDurationConverter.Convert(MediaPlayer.Position)} / {HumanizedDurationConverter.Convert(MediaPlayer.NaturalDuration)}"));
+                    $"{HumanizedDurationConverter.Convert(_mediaPlayer.Position)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)}"));
             }
         }
 
         private bool JumpFrame(bool previous = false)
         {
-            if ((MediaPlayer?.CanSeek ?? false) && MediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
+            if ((_mediaPlayer?.CanSeek ?? false) && _mediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
             {
                 if (previous)
                 {
-                    MediaPlayer.StepBackwardOneFrame();
+                    _mediaPlayer.StepBackwardOneFrame();
                 }
                 else
                 {
-                    MediaPlayer.StepForwardOneFrame();
+                    _mediaPlayer.StepForwardOneFrame();
                 }
 
                 return true;
@@ -283,25 +287,25 @@ namespace Screenbox.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (MediaPlayer == null) return;
+            if (_mediaPlayer == null) return;
             Rect defaultSize = new Rect(0, 0, 1, 1);
-            if (!_zoomToFit && MediaPlayer.NormalizedSourceRect == defaultSize) return;
+            if (!_zoomToFit && _mediaPlayer.NormalizedSourceRect == defaultSize) return;
             if (_zoomToFit)
             {
                 double leftOffset = 0.5, topOffset = 0.5;
-                double widthRatio = size.Width / MediaPlayer.NaturalVideoWidth;
-                double heightRatio = size.Height / MediaPlayer.NaturalVideoHeight;
+                double widthRatio = size.Width / _mediaPlayer.NaturalVideoWidth;
+                double heightRatio = size.Height / _mediaPlayer.NaturalVideoHeight;
                 double ratio = Math.Max(widthRatio, heightRatio);
-                double width = size.Width / ratio / MediaPlayer.NaturalVideoWidth;
-                double height = size.Height / ratio / MediaPlayer.NaturalVideoHeight;
+                double width = size.Width / ratio / _mediaPlayer.NaturalVideoWidth;
+                double height = size.Height / ratio / _mediaPlayer.NaturalVideoHeight;
                 leftOffset -= width / 2;
                 topOffset -= height / 2;
 
-                MediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
+                _mediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
             }
             else
             {
-                MediaPlayer.NormalizedSourceRect = defaultSize;
+                _mediaPlayer.NormalizedSourceRect = defaultSize;
             }
         }
     }
