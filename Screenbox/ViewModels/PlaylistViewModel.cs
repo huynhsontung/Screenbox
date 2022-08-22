@@ -24,7 +24,6 @@ namespace Screenbox.ViewModels
         IRecipient<PlayMediaMessage>,
         IRecipient<PlayFilesWithNeighborsMessage>,
         IRecipient<QueuePlaylistMessage>,
-        IRecipient<PlayingItemRequestMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
@@ -39,6 +38,7 @@ namespace Screenbox.ViewModels
         private RepeatMode _repeatMode;
 
         [ObservableProperty]
+        [NotifyPropertyChangedRecipients]
         [NotifyCanExecuteChangedFor(nameof(NextCommand))]
         [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
         private MediaViewModel? _activeItem;
@@ -117,11 +117,6 @@ namespace Screenbox.ViewModels
             }
 
             Play(message.Value);
-        }
-
-        public void Receive(PlayingItemRequestMessage message)
-        {
-            message.Reply(ActiveItem);
         }
 
         public void OnDragOver(object sender, DragEventArgs e)
@@ -270,7 +265,6 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void Clear()
         {
-            if (_mediaPlayer != null) _mediaPlayer.Source = null;
             ActiveItem = null;
             Playlist.Clear();
         }
@@ -284,7 +278,6 @@ namespace Screenbox.ViewModels
             {
                 if (ActiveItem == item)
                 {
-                    if (_mediaPlayer != null) _mediaPlayer.Source = null;
                     ActiveItem = null;
                 }
 

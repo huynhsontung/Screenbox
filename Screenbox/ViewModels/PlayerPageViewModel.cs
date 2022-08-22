@@ -6,6 +6,7 @@ using Windows.System;
 using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Converters;
@@ -17,13 +18,14 @@ using Screenbox.Core.Playback;
 namespace Screenbox.ViewModels
 {
     internal partial class PlayerPageViewModel : ObservableRecipient,
-        IRecipient<UpdateStatusMessage>, IRecipient<MediaPlayerChangedMessage>
+        IRecipient<UpdateStatusMessage>,
+        IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<PropertyChangedMessage<MediaViewModel?>>
     {
         [ObservableProperty] private string? _mediaTitle;
         [ObservableProperty] private bool _showSubtitle;
         [ObservableProperty] private bool _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
-        [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
         [ObservableProperty] private bool _playerVisible;
@@ -70,21 +72,29 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 ViewMode = e.NewValue;
-                IsCompact = ViewMode == WindowViewMode.Compact;
             });
         }
 
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
-            _mediaPlayer.MediaOpened += OnOpening;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
-            _mediaPlayer.SourceChanged += OnSourceChanged;
         }
 
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
+        }
+
+        public void Receive(PropertyChangedMessage<MediaViewModel?> message)
+        {
+            if (message.Sender is not PlaylistViewModel ||
+                message.PropertyName != nameof(PlaylistViewModel.ActiveItem))
+            {
+                return;
+            }
+
+            _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.NewValue));
         }
 
         public void OnBackRequested()
@@ -221,28 +231,29 @@ namespace Screenbox.ViewModels
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
         }
 
-        private void OnOpening(IMediaPlayer sender, object? args)
+        private async void ProcessOpeningMedia(MediaViewModel? current)
         {
-            _dispatcherQueue.TryEnqueue(ProcessOpeningMedia);
-        }
-
-        private async void ProcessOpeningMedia()
-        {
-            MediaViewModel? current = Media = Messenger.Send<PlayingItemRequestMessage>().Response;
-            if (current == null) return;
-
-            await current.LoadDetailsAsync();
-            await current.LoadThumbnailAsync();
-            AudioOnly = current.MusicProperties != null;
-            ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
-            if (!AudioOnly) PlayerVisible = true;
-            if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
+            Media = current;
+            if (current != null)
             {
-                MediaTitle = current.MusicProperties?.Title;
+                await current.LoadDetailsAsync();
+                await current.LoadThumbnailAsync();
+                AudioOnly = current.MusicProperties != null;
+                ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
+                if (!AudioOnly) PlayerVisible = true;
+                if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
+                {
+                    MediaTitle = current.MusicProperties?.Title;
+                }
+                else
+                {
+                    MediaTitle = current.Name;
+                }
             }
             else
             {
-                MediaTitle = current.Name;
+                MediaTitle = null;
+                ShowSubtitle = false;
             }
         }
 
@@ -264,16 +275,6 @@ namespace Screenbox.ViewModels
                     DelayHideControls();
                 }
             });
-        }
-
-        private void OnSourceChanged(IMediaPlayer sender, object? args)
-        {
-            if (sender.Source == null)
-            {
-                MediaTitle = null;
-                ShowSubtitle = false;
-                Media = null;
-            }
         }
     }
 }

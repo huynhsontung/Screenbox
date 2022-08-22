@@ -143,7 +143,7 @@ namespace Screenbox.Pages
 
         private void UpdatePreviewVisualState()
         {
-            if (ViewModel.PlayerVisible || ViewModel.IsCompact)
+            if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoPreview", true);
             }
@@ -155,7 +155,7 @@ namespace Screenbox.Pages
 
         private void UpdateMiniPlayerMargin()
         {
-            if (ViewModel.PlayerVisible || ViewModel.IsCompact)
+            if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoMargin", false);
             }
