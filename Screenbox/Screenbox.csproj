@@ -270,6 +270,7 @@
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
+    <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MusicPageViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />

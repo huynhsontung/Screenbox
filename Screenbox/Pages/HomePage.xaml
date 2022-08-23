@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
 
     <Grid>
@@ -59,5 +60,24 @@
                 </StackPanel>
             </controls:SplitButton>
         </Grid>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="NavigationViewStates">
+                <VisualState x:Name="Expanded" />
+                <VisualState x:Name="Compact" />
+                <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                            <triggers:IsEqualStateTrigger.To>
+                                <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
+                            </triggers:IsEqualStateTrigger.To>
+                        </triggers:IsEqualStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="WelcomePanel.Margin" Value="24,0,36,128" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
