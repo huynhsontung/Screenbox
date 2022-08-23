@@ -56,8 +56,9 @@ namespace Screenbox
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();
+            services.AddTransient<PlayerPageViewModel>();
+            services.AddTransient<MainPageViewModel>();
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
-            services.AddSingleton<PlayerPageViewModel>(); // Shared with MainPage
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
             services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 

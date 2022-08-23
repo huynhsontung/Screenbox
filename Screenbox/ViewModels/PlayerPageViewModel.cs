@@ -20,7 +20,8 @@ namespace Screenbox.ViewModels
     internal partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
-        IRecipient<PropertyChangedMessage<MediaViewModel?>>
+        IRecipient<PropertyChangedMessage<MediaViewModel?>>,
+        IRecipient<NavigationViewDisplayModeChangedMessage>
     {
         [ObservableProperty] private string? _mediaTitle;
         [ObservableProperty] private bool _showSubtitle;
@@ -95,6 +96,11 @@ namespace Screenbox.ViewModels
             }
 
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.NewValue));
+        }
+
+        public void Receive(NavigationViewDisplayModeChangedMessage message)
+        {
+            NavigationViewDisplayMode = message.Value;
         }
 
         public void OnBackRequested()
@@ -189,6 +195,11 @@ namespace Screenbox.ViewModels
             {
                 ShowControls();
             }
+        }
+
+        partial void OnPlayerVisibleChanged(bool value)
+        {
+            Messenger.Send(new PlayerVisibilityChangedMessage(value));
         }
 
         private void ShowStatusMessage(string? message)

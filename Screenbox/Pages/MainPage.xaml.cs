@@ -19,7 +19,7 @@ namespace Screenbox.Pages
 {
     public sealed partial class MainPage : Page
     {
-        private PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
+        private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
         private readonly Dictionary<string, Type> _pages;
         private readonly Frame _playerFrame;
@@ -43,7 +43,7 @@ namespace Screenbox.Pages
                 { "settings", typeof(SettingsPage) }
             };
 
-            DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            DataContext = App.Services.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
