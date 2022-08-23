@@ -185,8 +185,10 @@
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Messages\NavigationViewDisplayModeChangedMessage.cs" />
+    <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
+    <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
@@ -274,6 +276,7 @@
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\CastControlViewModel.cs" />
+    <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />

@@ -20,7 +20,7 @@ namespace Screenbox.ViewModels
     internal partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
-        IRecipient<PropertyChangedMessage<MediaViewModel?>>,
+        IRecipient<PlaylistActiveItemChangedMessage>,
         IRecipient<NavigationViewDisplayModeChangedMessage>
     {
         [ObservableProperty] private string? _mediaTitle;
@@ -62,6 +62,9 @@ namespace Screenbox.ViewModels
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
 
+            // MainPageViewModel has not initialized at this point
+            //_navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
             // Activate the view model's messenger
@@ -87,15 +90,9 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
         }
 
-        public void Receive(PropertyChangedMessage<MediaViewModel?> message)
+        public void Receive(PlaylistActiveItemChangedMessage message)
         {
-            if (message.Sender is not PlaylistViewModel ||
-                message.PropertyName != nameof(PlaylistViewModel.ActiveItem))
-            {
-                return;
-            }
-
-            _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.NewValue));
+            _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
         }
 
         public void Receive(NavigationViewDisplayModeChangedMessage message)

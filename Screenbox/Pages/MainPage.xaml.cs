@@ -82,6 +82,7 @@ namespace Screenbox.Pages
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             NavView.SelectedItem = NavView.MenuItems[0];
+            ViewModel.NavigationViewDisplayMode = NavView.DisplayMode;
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -219,22 +220,12 @@ namespace Screenbox.Pages
                     ? page.Header
                     : selectedItem.Content?.ToString();
             }
-
-            if (ContentFrame.Content is Control frameContent)
-            {
-                NotifyFrameContentOnDisplayModeChanged(frameContent, NavView.DisplayMode);
-            }
         }
 
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
         {
             UpdateTitleBarState();
             ViewModel.NavigationViewDisplayMode = args.DisplayMode;
-
-            if (ContentFrame.Content is Control frameContent)
-            {
-                NotifyFrameContentOnDisplayModeChanged(frameContent, args.DisplayMode);
-            }
         }
 
         private void UpdateTitleBarState()
@@ -260,23 +251,6 @@ namespace Screenbox.Pages
                 case muxc.NavigationViewDisplayMode.Expanded:
                 case muxc.NavigationViewDisplayMode.Compact:
                     VisualStateManager.GoToState(this, "Compact", true);
-                    break;
-            }
-        }
-
-        private static void NotifyFrameContentOnDisplayModeChanged(Control frameContent,
-            muxc.NavigationViewDisplayMode displayMode)
-        {
-            switch (displayMode)
-            {
-                case muxc.NavigationViewDisplayMode.Minimal:
-                    VisualStateManager.GoToState(frameContent, "Minimal", true);
-                    break;
-                case muxc.NavigationViewDisplayMode.Expanded:
-                    VisualStateManager.GoToState(frameContent, "Expanded", true);
-                    break;
-                case muxc.NavigationViewDisplayMode.Compact:
-                    VisualStateManager.GoToState(frameContent, "Compact", true);
                     break;
             }
         }

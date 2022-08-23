@@ -6,7 +6,8 @@ using Screenbox.Core.Messages;
 namespace Screenbox.ViewModels
 {
     internal partial class MainPageViewModel : ObservableRecipient,
-        IRecipient<PlayerVisibilityChangedMessage>
+        IRecipient<PlayerVisibilityChangedMessage>,
+        IRecipient<NavigationViewDisplayModeRequestMessage>
     {
         [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
@@ -19,6 +20,11 @@ namespace Screenbox.ViewModels
         public void Receive(PlayerVisibilityChangedMessage message)
         {
             PlayerVisible = message.Value;
+        }
+
+        public void Receive(NavigationViewDisplayModeRequestMessage message)
+        {
+            message.Reply(NavigationViewDisplayMode);
         }
 
         partial void OnNavigationViewDisplayModeChanged(NavigationViewDisplayMode value)

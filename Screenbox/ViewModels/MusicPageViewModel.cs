@@ -8,14 +8,17 @@ using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class MusicPageViewModel : ObservableRecipient
+    internal partial class MusicPageViewModel : ObservableRecipient,
+        IRecipient<NavigationViewDisplayModeChangedMessage>
     {
         [ObservableProperty] private List<IGrouping<string, MediaViewModel>>? _groupedSongs;
+        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
         private List<MediaViewModel>? _songs;
@@ -23,6 +26,15 @@ namespace Screenbox.ViewModels
         public MusicPageViewModel(IFilesService filesService)
         {
             _filesService = filesService;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+
+            // Activate the view model's messenger
+            IsActive = true;
+        }
+
+        public void Receive(NavigationViewDisplayModeChangedMessage message)
+        {
+            NavigationViewDisplayMode = message.Value;
         }
 
         [RelayCommand]

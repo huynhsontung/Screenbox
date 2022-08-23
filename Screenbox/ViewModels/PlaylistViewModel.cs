@@ -38,7 +38,6 @@ namespace Screenbox.ViewModels
         private RepeatMode _repeatMode;
 
         [ObservableProperty]
-        [NotifyPropertyChangedRecipients]
         [NotifyCanExecuteChangedFor(nameof(NextCommand))]
         [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
         private MediaViewModel? _activeItem;
@@ -169,6 +168,7 @@ namespace Screenbox.ViewModels
 
         partial void OnActiveItemChanged(MediaViewModel? value)
         {
+            Messenger.Send(new PlaylistActiveItemChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
         }
 
