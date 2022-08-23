@@ -636,6 +636,149 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region AddFolder
+        /// <summary>
+        ///   Looks up a localized string similar to: Add folder
+        /// </summary>
+        public static string AddFolder
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddFolder");
+            }
+        }
+        #endregion
+
+        #region Clear
+        /// <summary>
+        ///   Looks up a localized string similar to: Clear
+        /// </summary>
+        public static string Clear
+        {
+            get
+            {
+                return _resourceLoader.GetString("Clear");
+            }
+        }
+        #endregion
+
+        #region Home
+        /// <summary>
+        ///   Looks up a localized string similar to: Home
+        /// </summary>
+        public static string Home
+        {
+            get
+            {
+                return _resourceLoader.GetString("Home");
+            }
+        }
+        #endregion
+
+        #region Multiselect
+        /// <summary>
+        ///   Looks up a localized string similar to: Select multiple
+        /// </summary>
+        public static string Multiselect
+        {
+            get
+            {
+                return _resourceLoader.GetString("Multiselect");
+            }
+        }
+        #endregion
+
+        #region NoMusicPanelHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: We couldn't find any music
+        /// </summary>
+        public static string NoMusicPanelHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoMusicPanelHeader");
+            }
+        }
+        #endregion
+
+        #region NoMusicPanelSubtext
+        /// <summary>
+        ///   Looks up a localized string similar to: Your music library doesn't contain any music content.
+        /// </summary>
+        public static string NoMusicPanelSubtext
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoMusicPanelSubtext");
+            }
+        }
+        #endregion
+
+        #region OpenFiles
+        /// <summary>
+        ///   Looks up a localized string similar to: Open file(s)
+        /// </summary>
+        public static string OpenFiles
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFiles");
+            }
+        }
+        #endregion
+
+        #region SearchBoxPlaceholderText
+        /// <summary>
+        ///   Looks up a localized string similar to: Search
+        /// </summary>
+        public static string SearchBoxPlaceholderText
+        {
+            get
+            {
+                return _resourceLoader.GetString("SearchBoxPlaceholderText");
+            }
+        }
+        #endregion
+
+        #region Settings
+        /// <summary>
+        ///   Looks up a localized string similar to: Settings
+        /// </summary>
+        public static string Settings
+        {
+            get
+            {
+                return _resourceLoader.GetString("Settings");
+            }
+        }
+        #endregion
+
+        #region WelcomePanelHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Welcome to Screenbox
+        /// </summary>
+        public static string WelcomePanelHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("WelcomePanelHeader");
+            }
+        }
+        #endregion
+
+        #region WelcomePanelSubtext
+        /// <summary>
+        ///   Looks up a localized string similar to: Let's start playing some of your audio and video content to get things going.
+        /// </summary>
+        public static string WelcomePanelSubtext
+        {
+            get
+            {
+                return _resourceLoader.GetString("WelcomePanelSubtext");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -692,6 +835,17 @@ namespace Screenbox.Strings{
             UnknownArtist,
             UnknownAlbum,
             UnknownGenre,
+            AddFolder,
+            Clear,
+            Home,
+            Multiselect,
+            NoMusicPanelHeader,
+            NoMusicPanelSubtext,
+            OpenFiles,
+            SearchBoxPlaceholderText,
+            Settings,
+            WelcomePanelHeader,
+            WelcomePanelSubtext,
         }
 
         private static ResourceLoader _resourceLoader;

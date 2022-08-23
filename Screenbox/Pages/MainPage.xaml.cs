@@ -205,7 +205,7 @@ namespace Screenbox.Pages
             {
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
                 NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
-                NavView.Header = "Settings";
+                NavView.Header = Strings.Resources.Settings;
             }
             else if (ContentFrame.SourcePageType != null)
             {

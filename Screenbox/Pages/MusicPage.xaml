@@ -39,7 +39,7 @@
                 VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8f4;" />
-                    <TextBlock Text="Add folder" />
+                    <TextBlock Text="{x:Bind strings:Resources.AddFolder}" />
                 </StackPanel>
             </Button>
         </Grid>
@@ -100,14 +100,14 @@
                 Grid.Column="1"
                 VerticalAlignment="Bottom"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="We couldn't find any music" />
+                Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
 
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="1"
                 VerticalAlignment="Top"
                 Opacity="0.6"
-                Text="Your music library doesn't contain any music content." />
+                Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
         </Grid>
 
         <controls:MediaListView

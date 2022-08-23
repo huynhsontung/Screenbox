@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
 
@@ -38,14 +39,14 @@
                 Grid.Column="1"
                 VerticalAlignment="Bottom"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="Welcome to Screenbox" />
+                Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
 
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="1"
                 VerticalAlignment="Top"
                 Opacity="0.6"
-                Text="Let's start playing some of your audio and video content to get things going."
+                Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
                 TextWrapping="Wrap" />
 
             <controls:SplitButton
@@ -56,7 +57,7 @@
                 VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8da;" />
-                    <TextBlock Text="Open file(s)" />
+                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </controls:SplitButton>
         </Grid>

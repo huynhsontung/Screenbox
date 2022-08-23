@@ -283,4 +283,37 @@
   <data name="UnknownGenre" xml:space="preserve">
     <value>Unknown genre</value>
   </data>
+  <data name="AddFolder" xml:space="preserve">
+    <value>Add folder</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Multiselect" xml:space="preserve">
+    <value>Select multiple</value>
+  </data>
+  <data name="NoMusicPanelHeader" xml:space="preserve">
+    <value>We couldn't find any music</value>
+  </data>
+  <data name="NoMusicPanelSubtext" xml:space="preserve">
+    <value>Your music library doesn't contain any music content.</value>
+  </data>
+  <data name="OpenFiles" xml:space="preserve">
+    <value>Open file(s)</value>
+  </data>
+  <data name="SearchBoxPlaceholderText" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="WelcomePanelHeader" xml:space="preserve">
+    <value>Welcome to Screenbox</value>
+  </data>
+  <data name="WelcomePanelSubtext" xml:space="preserve">
+    <value>Let's start playing some of your audio and video content to get things going.</value>
+  </data>
 </root>

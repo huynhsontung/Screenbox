@@ -7,6 +7,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
     <local:ContentPage.Header>
@@ -18,7 +19,7 @@
             <muxc:SplitButton HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8da;" />
-                    <TextBlock Text="Open file(s)" />
+                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </muxc:SplitButton>
         </Grid>

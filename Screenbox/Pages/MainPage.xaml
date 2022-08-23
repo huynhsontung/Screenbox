@@ -9,6 +9,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
@@ -77,26 +78,26 @@
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    Content="Home"
+                    Content="{x:Bind strings:Resources.Home}"
                     Icon="Home"
                     Tag="home" />
-                <muxc:NavigationViewItem Content="Videos" Tag="videos">
+                <muxc:NavigationViewItem Content="{x:Bind strings:Resources.Videos}" Tag="videos">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xe8b2;" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    Content="Music"
+                    Content="{x:Bind strings:Resources.Music}"
                     Icon="Audio"
                     Tag="music" />
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
-                    Content="Play queue"
+                    Content="{x:Bind strings:Resources.PlayQueue}"
                     Icon="MusicInfo"
                     Tag="queue" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.AutoSuggestBox>
-                <AutoSuggestBox PlaceholderText="Search" QueryIcon="Find" />
+                <AutoSuggestBox PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}" QueryIcon="Find" />
             </muxc:NavigationView.AutoSuggestBox>
 
             <Frame
