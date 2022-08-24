@@ -1,13 +1,8 @@
 ﻿#nullable enable
 
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -27,7 +22,7 @@ namespace Screenbox.Pages
             DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
         }
 
-        private async void MusicPage_OnLoaded(object sender, RoutedEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             VisualStateManager.GoToState(this, "Fetching", true);
             await ViewModel.FetchSongsAsync();

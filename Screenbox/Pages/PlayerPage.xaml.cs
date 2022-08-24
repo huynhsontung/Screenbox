@@ -65,7 +65,6 @@ namespace Screenbox.Pages
 
         private void FocusVideoViewOnEvents()
         {
-            Loaded += (_, _) => FocusVideoView();
             LayoutGroup.CurrentStateChanged += (_, args) =>
             {
                 if (args.OldState?.Name == "MiniPlayer" && (args.NewState == null || args.NewState.Name == "Normal"))
