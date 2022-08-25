@@ -13,7 +13,10 @@ using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal class SystemMediaTransportControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
+    internal class SystemMediaTransportControlsViewModel : ObservableRecipient,
+        IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<RepeatModeChangedMessage>
     {
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly SystemMediaTransportControls _transportControls;
@@ -25,7 +28,6 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _playlistViewModel = playlistViewModel;
-            _playlistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
             _playlistViewModel.NextCommand.CanExecuteChanged += NextCommandOnCanExecuteChanged;
             _playlistViewModel.PreviousCommand.CanExecuteChanged += PreviousCommandOnCanExecuteChanged;
 
@@ -39,9 +41,7 @@ namespace Screenbox.ViewModels
             _transportControls.IsStopEnabled = true;
             _transportControls.AutoRepeatMode = MediaPlaybackAutoRepeatMode.None;
             _transportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
-            SystemMediaTransportControlsDisplayUpdater displayUpdater = _transportControls.DisplayUpdater;
-            displayUpdater.AppMediaId = "Screenbox";
-            displayUpdater.Update();
+            _transportControls.DisplayUpdater.ClearAll();
 
             _lastUpdated = DateTime.MinValue;
 
@@ -53,6 +53,16 @@ namespace Screenbox.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.PositionChanged += OnTimeChanged;
             RegisterPlaybackEvents(_mediaPlayer);
+        }
+
+        public async void Receive(PlaylistActiveItemChangedMessage message)
+        {
+            await UpdateTransportControlsDisplay(message.Value);
+        }
+
+        public void Receive(RepeatModeChangedMessage message)
+        {
+            _transportControls.AutoRepeatMode = Convert(_playlistViewModel.RepeatMode);
         }
 
         private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
@@ -68,19 +78,6 @@ namespace Screenbox.ViewModels
         private void NextCommandOnCanExecuteChanged(object sender, EventArgs e)
         {
             _transportControls.IsNextEnabled = _playlistViewModel.NextCommand.CanExecute(null);
-        }
-
-        private async void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(_playlistViewModel.ActiveItem) when _playlistViewModel.ActiveItem != null:
-                    await UpdateTransportControlsDisplay(_playlistViewModel.ActiveItem);
-                    break;
-                case nameof(_playlistViewModel.RepeatMode):
-                    _transportControls.AutoRepeatMode = Convert(_playlistViewModel.RepeatMode);
-                    break;
-            }
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
@@ -137,41 +134,55 @@ namespace Screenbox.ViewModels
 
         private void TransportControlsButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            if (_mediaPlayer == null) return;
-            switch (args.Button)
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                case SystemMediaTransportControlsButton.Pause:
-                    _mediaPlayer.Pause();
-                    break;
-                case SystemMediaTransportControlsButton.Play:
-                    _mediaPlayer.Play();
-                    break;
-                case SystemMediaTransportControlsButton.Stop:
-                    _mediaPlayer.Source = null;
-                    break;
-                case SystemMediaTransportControlsButton.Previous:
-                    _playlistViewModel.PreviousCommand.Execute(null);
-                    break;
-                case SystemMediaTransportControlsButton.Next:
-                    _playlistViewModel.NextCommand.Execute(null);
-                    break;
-                case SystemMediaTransportControlsButton.FastForward:
-                    _mediaPlayer.Position += TimeSpan.FromSeconds(10);
-                    break;
-                case SystemMediaTransportControlsButton.Rewind:
-                    _mediaPlayer.Position -= TimeSpan.FromSeconds(10);
-                    break;
-            }
+                if (_mediaPlayer == null) return;
+                switch (args.Button)
+                {
+                    case SystemMediaTransportControlsButton.Pause:
+                        _mediaPlayer.Pause();
+                        break;
+                    case SystemMediaTransportControlsButton.Play:
+                        _mediaPlayer.Play();
+                        break;
+                    case SystemMediaTransportControlsButton.Stop:
+                        _mediaPlayer.Source = null;
+                        break;
+                    case SystemMediaTransportControlsButton.Previous:
+                        _playlistViewModel.PreviousCommand.Execute(null);
+                        break;
+                    case SystemMediaTransportControlsButton.Next:
+                        _playlistViewModel.NextCommand.Execute(null);
+                        break;
+                    case SystemMediaTransportControlsButton.FastForward:
+                        _mediaPlayer.Position += TimeSpan.FromSeconds(10);
+                        break;
+                    case SystemMediaTransportControlsButton.Rewind:
+                        _mediaPlayer.Position -= TimeSpan.FromSeconds(10);
+                        break;
+                }
+            });
         }
 
-        private async Task UpdateTransportControlsDisplay(MediaViewModel item)
+        private async Task UpdateTransportControlsDisplay(MediaViewModel? item)
         {
             SystemMediaTransportControlsDisplayUpdater displayUpdater = _transportControls.DisplayUpdater;
+            displayUpdater.ClearAll();
+            displayUpdater.AppMediaId = "Screenbox";
+            if (item == null)
+            {
+                return;
+            }   
+
             if (item.Source is StorageFile file)
             {
                 if (file.ContentType.StartsWith("audio"))
                 {
                     await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
+                    if (string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
+                    {
+                        displayUpdater.MusicProperties.Title = item.Name;
+                    }
                 }
                 else if (file.ContentType.StartsWith("video"))
                 {

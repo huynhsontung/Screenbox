@@ -190,6 +190,7 @@
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
+    <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
     <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />

@@ -174,6 +174,7 @@ namespace Screenbox.ViewModels
 
         partial void OnRepeatModeChanged(RepeatMode value)
         {
+            Messenger.Send(new RepeatModeChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(value);
         }
 
