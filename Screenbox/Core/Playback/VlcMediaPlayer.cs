@@ -316,7 +316,7 @@ namespace Screenbox.Core.Playback
             if (BufferingProgress == 0)
             {
                 BufferingStarted?.Invoke(this, null);
-                PlaybackStateChanged?.Invoke(this, null);
+                //PlaybackStateChanged?.Invoke(this, null);
             }
 
             BufferingProgress = e.Cache / 100d;
@@ -324,7 +324,7 @@ namespace Screenbox.Core.Playback
             if (BufferingProgress == 1.0)
             {
                 BufferingEnded?.Invoke(this, null);
-                PlaybackStateChanged?.Invoke(this, null);
+                //PlaybackStateChanged?.Invoke(this, null);
                 BufferingProgress = 0;
             }
         }

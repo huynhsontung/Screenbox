@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -34,6 +35,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private bool _timeChangeOverride;
+        private bool _isPlaying;
 
         public SeekBarViewModel()
         {
@@ -47,12 +49,18 @@ namespace Screenbox.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
+            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.NaturalDurationChanged += OnLengthChanged;
             _mediaPlayer.PositionChanged += OnTimeChanged;
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
             _mediaPlayer.SourceChanged += OnSourceChanged;
+        }
+
+        private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
+        {
+            _isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
         }
 
         private void OnSourceChanged(IMediaPlayer sender, object? args)
@@ -114,8 +122,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && _mediaPlayer != null)
             {
                 double newTime = args.NewValue;
-                bool isPlaying = _mediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing;
-                if (args.OldValue == Time || !isPlaying || _timeChangeOverride)
+                if (args.OldValue == Time || !_isPlaying || _timeChangeOverride)
                 {
                     _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
                 }
