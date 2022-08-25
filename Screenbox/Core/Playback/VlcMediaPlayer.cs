@@ -185,6 +185,8 @@ namespace Screenbox.Core.Playback
         private ChapterCue? _chapter;
         private Rect _normalizedSourceRect;
         private bool _readyToPlay;
+        private bool _updateMediaProperties;
+        private long _naturalDuration;
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
@@ -198,8 +200,8 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Unmuted += (s, e) => IsMutedChanged?.Invoke(this, null);
             VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
             VlcPlayer.Paused += (s, e) => PlaybackStateChanged?.Invoke(this, null);
-            VlcPlayer.Playing += (s, e) => PlaybackStateChanged?.Invoke(this, null);
             VlcPlayer.Stopped += (s, e) => PlaybackStateChanged?.Invoke(this, null);
+            VlcPlayer.Playing += VlcPlayer_Playing;
             VlcPlayer.ChapterChanged += VlcPlayer_ChapterChanged;
             VlcPlayer.LengthChanged += VlcPlayer_LengthChanged;
             VlcPlayer.EndReached += VlcPlayer_EndReached;
@@ -252,42 +254,47 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_LengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
         {
-            try
-            {
-                // Update video dimension
-                uint px = 0, py = 0;
-                VlcPlayer.Size(0, ref px, ref py);
-                if (NaturalVideoWidth != px || NaturalVideoHeight != py)
-                {
-                    NaturalVideoWidth = px;
-                    NaturalVideoHeight = py;
-                    NaturalVideoSizeChanged?.Invoke(this, null);
-                }
+            // Length can fluctuate during playback. Check for tolerance here.
+            if (Math.Abs(_naturalDuration - e.Length) <= 10) return;
+            _naturalDuration = e.Length;
+            NaturalDurationChanged?.Invoke(this, null);
+        }
 
-                if (PlaybackItem == null) return;
+        private void VlcPlayer_Playing(object sender, EventArgs e)
+        {
+            PlaybackStateChanged?.Invoke(this, null);
+            if (!_updateMediaProperties) return;
+            _updateMediaProperties = false;
+
+            // Update video dimension
+            uint px = 0, py = 0;
+            VlcPlayer.Size(0, ref px, ref py);
+            if (NaturalVideoWidth != px || NaturalVideoHeight != py)
+            {
+                NaturalVideoWidth = px;
+                NaturalVideoHeight = py;
+                NaturalVideoSizeChanged?.Invoke(this, null);
+            }
+
+            if (PlaybackItem == null) return;
 
                 // Update chapter list
-                if (VlcPlayer.ChapterCount > 0)
-                {
-                    List<ChapterDescription> chapterDescriptions = new();
-                    for (int i = 0; i < VlcPlayer.TitleCount; i++)
-                    {
-                        chapterDescriptions.AddRange(VlcPlayer.FullChapterDescriptions(i));
-                    }
-
-                    PlaybackItem.Chapters.Load(chapterDescriptions);
-                }
-                else
-                {
-                    PlaybackItem.Chapters.Load(VlcPlayer.FullChapterDescriptions());
-                }
-
-                Chapter = PlaybackItem.Chapters.FirstOrDefault();
-            }
-            finally
+            if (VlcPlayer.ChapterCount > 0)
             {
-                NaturalDurationChanged?.Invoke(this, null);
+                List<ChapterDescription> chapterDescriptions = new();
+                for (int i = 0; i < VlcPlayer.TitleCount; i++)
+                {
+                    chapterDescriptions.AddRange(VlcPlayer.FullChapterDescriptions(i));
+                }
+
+                PlaybackItem.Chapters.Load(chapterDescriptions);
             }
+            else
+            {
+                PlaybackItem.Chapters.Load(VlcPlayer.FullChapterDescriptions());
+            }
+
+            Chapter = PlaybackItem.Chapters.FirstOrDefault();
         }
 
         private void VlcPlayer_EndReached(object sender, EventArgs e)
@@ -335,6 +342,7 @@ namespace Screenbox.Core.Playback
                 PlaybackItem = (PlaybackItem)source;
                 RegisterItemHandlers(PlaybackItem);
                 _readyToPlay = true;
+                _updateMediaProperties = true;
             }
         }
 

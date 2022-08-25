@@ -67,6 +67,13 @@ namespace Screenbox.ViewModels
                     Chapters = null;
                 });
             }
+            else
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    Time = 0;
+                });
+            }
         }
 
         private void OnBufferingEnded(IMediaPlayer sender, object? args)
@@ -127,7 +134,6 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                Time = 0;
                 Length = sender.NaturalDuration.TotalMilliseconds;
                 IsSeekable = sender.CanSeek;
                 Chapters = sender.PlaybackItem?.Chapters;
