@@ -30,6 +30,8 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private IReadOnlyCollection<ChapterCue>? _chapters;
 
+        [ObservableProperty] private double _previewTime;
+
         private IMediaPlayer? _mediaPlayer;
 
         private readonly DispatcherQueue _dispatcherQueue;
@@ -115,6 +117,12 @@ namespace Screenbox.ViewModels
         public void OnSeekBarPointerEvent(bool pressed)
         {
             _timeChangeOverride = pressed;
+        }
+
+        public void UpdatePreviewTime(double normalizedPosition)
+        {
+            normalizedPosition = Math.Clamp(normalizedPosition, 0, 1);
+            PreviewTime = (long)(normalizedPosition * Length);
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)

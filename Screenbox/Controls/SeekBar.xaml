@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -44,12 +45,21 @@
             Foreground="{x:Bind Foreground, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
             LargeChange="10000"
+            Loaded="SeekBarSlider_OnLoaded"
             Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
             Minimum="0"
+            PointerExited="SeekBarSlider_OnPointerExited"
+            SizeChanged="SeekBarSlider_OnSizeChanged"
             SmallChange="1000"
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
             Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-            Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
+            Value="{x:Bind ViewModel.Time, Mode=TwoWay}">
+            <ToolTipService.ToolTip>
+                <ToolTip x:Name="PreviewToolTip" Padding="8,3,8,5">
+                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewTime, Converter={StaticResource HumanizedDurationConverter}, Mode=OneWay}" />
+                </ToolTip>
+            </ToolTipService.ToolTip>
+        </Slider>
     </Grid>
 </UserControl>

@@ -153,8 +153,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             Background="Transparent"
-            Foreground="Transparent"
-            ToolTipService.ToolTip="{x:Bind strings:Resources.Seek}" />
+            Foreground="Transparent" />
 
         <StackPanel
             Grid.Row="1"
