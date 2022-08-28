@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -56,10 +57,23 @@ namespace Screenbox.Controls
             ViewModel.SetPlaybackSpeed(item.Text);
         }
 
-        private void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
         {
             _castFlyout ??= CastControl.GetFlyout();
             _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
+        }
+
+        private async void PropertiesMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            ContentDialog propertiesDialog = new()
+            {
+                Title = "Properties",
+                CloseButtonText = "Close",
+                DefaultButton = ContentDialogButton.Close,
+                Content = new PropertiesView { Media = ViewModel.PlaylistViewModel.ActiveItem, MinWidth = 400 }
+            };
+
+            await propertiesDialog.ShowAsync();
         }
     }
 }

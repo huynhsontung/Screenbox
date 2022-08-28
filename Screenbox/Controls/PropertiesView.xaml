@@ -1,0 +1,140 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.PropertiesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="PropertyItemTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    x:Name="TitleText"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,8,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{Binding Key}"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    x:Name="ValueText"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Text="{Binding Value}"
+                    TextWrapping="Wrap" />
+
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="LayoutGroup">
+                        <VisualState x:Name="Horizontal" />
+                        <VisualState x:Name="Vertical">
+                            <VisualState.StateTriggers>
+                                <triggers:ControlSizeTrigger MinWidth="400" TargetElement="{Binding ElementName=RootPanel}" />
+                            </VisualState.StateTriggers>
+                            <VisualState.Setters>
+                                <Setter Target="ValueText.(Grid.Row)" Value="1" />
+                                <Setter Target="TitleText.Margin" Value="0,0,0,8" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </Grid>
+        </DataTemplate>
+
+        <muxc:StackLayout
+            x:Key="PropertyStackLayout"
+            Orientation="Vertical"
+            Spacing="10" />
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollMode="Disabled" ZoomMode="Disabled">
+        <StackPanel x:Name="RootPanel" Orientation="Vertical">
+            <muxc:Expander
+                Margin="0,0,0,8"
+                HorizontalAlignment="Stretch"
+                Header="Media"
+                IsExpanded="True">
+                <muxc:ItemsRepeater
+                    ItemTemplate="{StaticResource PropertyItemTemplate}"
+                    ItemsSource="{x:Bind _mediaProperties}"
+                    Layout="{StaticResource PropertyStackLayout}" />
+            </muxc:Expander>
+
+            <muxc:Expander
+                Margin="0,8"
+                HorizontalAlignment="Stretch"
+                Header="Video"
+                IsExpanded="True"
+                Visibility="{x:Bind _videoProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                <muxc:ItemsRepeater
+                    ItemTemplate="{StaticResource PropertyItemTemplate}"
+                    ItemsSource="{x:Bind _videoProperties}"
+                    Layout="{StaticResource PropertyStackLayout}" />
+            </muxc:Expander>
+
+            <muxc:Expander
+                Margin="0,8"
+                HorizontalAlignment="Stretch"
+                Header="Music"
+                IsExpanded="True"
+                Visibility="{x:Bind _audioProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                <muxc:ItemsRepeater
+                    ItemTemplate="{StaticResource PropertyItemTemplate}"
+                    ItemsSource="{x:Bind _audioProperties}"
+                    Layout="{StaticResource PropertyStackLayout}" />
+            </muxc:Expander>
+
+            <muxc:Expander
+                Margin="0,8"
+                HorizontalAlignment="Stretch"
+                Header="File"
+                IsExpanded="True">
+                <StackPanel Orientation="Vertical">
+                    <muxc:ItemsRepeater
+                        ItemTemplate="{StaticResource PropertyItemTemplate}"
+                        ItemsSource="{x:Bind _fileProperties}"
+                        Layout="{StaticResource PropertyStackLayout}"
+                        Visibility="{x:Bind _fileProperties, Converter={StaticResource CollectionVisibilityConverter}}" />
+
+                    <TextBlock
+                        x:Name="LocationTitleText"
+                        Margin="0,10,0,8"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="File location"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <TextBlock
+                        x:Name="LocationText"
+                        HorizontalAlignment="Left"
+                        Text="{x:Bind Media.Location}"
+                        TextWrapping="Wrap" />
+
+                    <HyperlinkButton
+                        Margin="0,16,0,0"
+                        HorizontalAlignment="Left"
+                        Content="Open file location"
+                        IsEnabled="{x:Bind _canNavigateToFile}" />
+                </StackPanel>
+            </muxc:Expander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

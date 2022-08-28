@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
+using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -206,7 +207,7 @@ namespace Screenbox.Controls
 
         private static void UpdateDetailsLevel(Control templateRoot, MediaViewModel media)
         {
-            if (media.MusicProperties == null)
+            if (media.MusicProperties == null || media.MediaType != MediaPlaybackType.Music)
             {
                 VisualStateManager.GoToState(templateRoot, "Level0", true);
                 return;

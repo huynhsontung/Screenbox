@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
@@ -33,11 +34,13 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
+        [ObservableProperty] private BasicProperties? _basicProperties;
         [ObservableProperty] private VideoProperties? _videoProperties;
         [ObservableProperty] private MusicProperties? _musicProperties;
         [ObservableProperty] private string? _genre;
         [ObservableProperty] private ArtistViewModel[]? _artists;
         [ObservableProperty] private AlbumViewModel? _album;
+        [ObservableProperty] private MediaPlaybackType _mediaType;
 
         private readonly StorageItemViewModel? _linkedFile;
 
@@ -78,9 +81,12 @@ namespace Screenbox.ViewModels
         {
             if (Source is not StorageFile file) return;
             if (VideoProperties != null || MusicProperties != null) return;
+            BasicProperties ??= await file.GetBasicPropertiesAsync();
+            VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
+            MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
             if (file.ContentType.StartsWith("video"))
             {
-                VideoProperties = await file.Properties.GetVideoPropertiesAsync();
+                MediaType = MediaPlaybackType.Video;
                 if (VideoProperties != null)
                 {
                     if (VideoProperties.Duration != TimeSpan.Zero)
@@ -96,7 +102,7 @@ namespace Screenbox.ViewModels
             }
             else if (file.ContentType.StartsWith("audio"))
             {
-                MusicProperties = await file.Properties.GetMusicPropertiesAsync();
+                MediaType = MediaPlaybackType.Music;
                 if (MusicProperties != null)
                 {
                     if (MusicProperties.Duration != TimeSpan.Zero)
@@ -109,21 +115,24 @@ namespace Screenbox.ViewModels
                         Name = MusicProperties.Title;
                     }
 
-                    Genre = MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                    Album = AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+                    Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                    Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
 
-                    string[] contributingArtistsKey = { "System.Music.Artist" };
-                    IDictionary<string, object> contributingArtistsProperty =
-                        await MusicProperties.RetrievePropertiesAsync(contributingArtistsKey);
-                    if (contributingArtistsProperty["System.Music.Artist"] is not string[] contributingArtists ||
-                        contributingArtists.Length == 0)
+                    if (Artists == null)
                     {
-                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
-                    }
-                    else
-                    {
-                        Artists = contributingArtists.Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
-                            .ToArray();
+                        string[] contributingArtistsKey = { "System.Music.Artist" };
+                        IDictionary<string, object> contributingArtistsProperty =
+                            await MusicProperties.RetrievePropertiesAsync(contributingArtistsKey);
+                        if (contributingArtistsProperty["System.Music.Artist"] is not string[] contributingArtists ||
+                            contributingArtists.Length == 0)
+                        {
+                            Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
+                        }
+                        else
+                        {
+                            Artists = contributingArtists.Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                                .ToArray();
+                        }
                     }
                 }
             }
