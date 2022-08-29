@@ -15,12 +15,15 @@ namespace Screenbox.Controls
     public sealed partial class PropertiesView : UserControl
     {
         public static readonly DependencyProperty MediaProperty = DependencyProperty.Register(
-            "Media", typeof(MediaViewModel), typeof(PropertiesView), new PropertyMetadata(null, OnMediaChanged));
+            "Media",
+            typeof(MediaViewModel),
+            typeof(PropertiesView),
+            new PropertyMetadata(null, OnMediaChanged));
 
         internal MediaViewModel? Media
         {
-            get { return (MediaViewModel?)GetValue(MediaProperty); }
-            set { SetValue(MediaProperty, value); }
+            get => (MediaViewModel?)GetValue(MediaProperty);
+            set => SetValue(MediaProperty, value);
         }
 
         private readonly Dictionary<string, string> _mediaProperties;
@@ -53,9 +56,13 @@ namespace Screenbox.Controls
             switch (media.MediaType)
             {
                 case MediaPlaybackType.Video when media.VideoProperties != null:
-                    _mediaProperties["Title"] = media.VideoProperties.Title;
+                    _mediaProperties["Title"] = string.IsNullOrEmpty(media.VideoProperties.Title)
+                        ? media.Name
+                        : media.VideoProperties.Title;
                     _mediaProperties["Subtitle"] = media.VideoProperties.Subtitle;
-                    _mediaProperties["Year"] = media.VideoProperties.Year.ToString();
+                    _mediaProperties["Year"] = media.VideoProperties.Year > 0
+                        ? media.VideoProperties.Year.ToString()
+                        : string.Empty;
                     _mediaProperties["Producers"] = string.Join("; ", media.VideoProperties.Producers);
                     _mediaProperties["Writers"] = string.Join("; ", media.VideoProperties.Writers);
                     _mediaProperties["Length"] = HumanizedDurationConverter.Convert(media.VideoProperties.Duration);
@@ -76,7 +83,9 @@ namespace Screenbox.Controls
                     _mediaProperties["Album artists"] = media.MusicProperties.AlbumArtist;
                     _mediaProperties["Genre"] = string.Join("; ", media.MusicProperties.Genre);
                     _mediaProperties["Track"] = media.MusicProperties.TrackNumber.ToString();
-                    _mediaProperties["Year"] = media.MusicProperties.Year.ToString();
+                    _mediaProperties["Year"] = media.MusicProperties.Year > 0
+                        ? media.MusicProperties.Year.ToString()
+                        : string.Empty;
                     _mediaProperties["Length"] = HumanizedDurationConverter.Convert(media.MusicProperties.Duration);
 
                     _audioProperties["Bit rate"] = $"{media.MusicProperties.Bitrate / 1000} kbps";
@@ -90,11 +99,59 @@ namespace Screenbox.Controls
                 _fileProperties["Content type"] = file.ContentType;
                 if (media.BasicProperties != null)
                 {
-                    _fileProperties["Size"] = $"{media.BasicProperties.Size} bytes";
+                    _fileProperties["Size"] = BytesToHumanReadable((long)media.BasicProperties.Size);
                     _fileProperties["Last modified"] = media.BasicProperties.DateModified.ToString();
                     _fileProperties["Item date"] = media.BasicProperties.ItemDate.ToString();
                 }
             }
+        }
+
+        // https://stackoverflow.com/a/11124118
+        private static string BytesToHumanReadable(long byteCount)
+        {
+            // Get absolute value
+            long absCount = (byteCount < 0 ? -byteCount : byteCount);
+            // Determine the suffix and readable value
+            string suffix;
+            double readable;
+            if (absCount >= 0x1000000000000000) // Exabyte
+            {
+                suffix = "EB";
+                readable = (byteCount >> 50);
+            }
+            else if (absCount >= 0x4000000000000) // Petabyte
+            {
+                suffix = "PB";
+                readable = (byteCount >> 40);
+            }
+            else if (absCount >= 0x10000000000) // Terabyte
+            {
+                suffix = "TB";
+                readable = (byteCount >> 30);
+            }
+            else if (absCount >= 0x40000000) // Gigabyte
+            {
+                suffix = "GB";
+                readable = (byteCount >> 20);
+            }
+            else if (absCount >= 0x100000) // Megabyte
+            {
+                suffix = "MB";
+                readable = (byteCount >> 10);
+            }
+            else if (absCount >= 0x400) // Kilobyte
+            {
+                suffix = "KB";
+                readable = byteCount;
+            }
+            else
+            {
+                return byteCount.ToString("0 B"); // Byte
+            }
+            // Divide by 1024 to get fractional value
+            readable = (readable / 1024);
+            // Return formatted number with suffix
+            return readable.ToString("0.## ") + suffix;
         }
     }
 }
