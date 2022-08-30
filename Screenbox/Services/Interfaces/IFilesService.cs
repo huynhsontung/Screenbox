@@ -22,5 +22,6 @@ namespace Screenbox.Services
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer);
+        public Task OpenFileLocationAsync(StorageFile file);
     }
 }

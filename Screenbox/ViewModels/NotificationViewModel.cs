@@ -31,12 +31,14 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isOpen;
 
         private readonly INotificationService _notificationService;
+        private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
 
-        public NotificationViewModel(INotificationService notificationService)
+        public NotificationViewModel(INotificationService notificationService, IFilesService filesService)
         {
             _notificationService = notificationService;
+            _filesService = filesService;
             _notificationService.NotificationRaised += NotificationServiceOnNotificationRaised;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
@@ -73,7 +75,7 @@ namespace Screenbox.ViewModels
                     Content = message.Value.Name,
                 };
 
-                ActionButton.Click += (_, _) => OpenSaveFolder(message.Value);
+                ActionButton.Click += (_, _) => _filesService.OpenFileLocationAsync(message.Value);
 
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
@@ -135,14 +137,6 @@ namespace Screenbox.ViewModels
                 default:
                     return InfoBarSeverity.Informational;
             }
-        }
-
-        private async void OpenSaveFolder(StorageFile savedFrame)
-        {
-            StorageFolder? saveFolder = await savedFrame.GetParentAsync();
-            FolderLauncherOptions options = new();
-            options.ItemsToSelect.Add(savedFrame);
-            await Launcher.LaunchFolderAsync(saveFolder, options);
         }
     }
 }

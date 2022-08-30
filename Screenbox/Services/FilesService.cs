@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
+using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
 using Screenbox.Core.Playback;
 
@@ -142,6 +143,15 @@ namespace Screenbox.Services
             {
                 await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
+        }
+
+        public async Task OpenFileLocationAsync(StorageFile file)
+        {
+            StorageFolder? folder = await file.GetParentAsync();
+            if (folder == null) return;
+            FolderLauncherOptions options = new();
+            options.ItemsToSelect.Add(file);
+            await Launcher.LaunchFolderAsync(folder, options);
         }
     }
 }

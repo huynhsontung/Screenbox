@@ -6,55 +6,60 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
     <UserControl.Resources>
         <DataTemplate x:Key="PropertyItemTemplate">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.6*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    x:Name="TitleText"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Margin="0,0,8,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                    Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Key}"
-                    TextTrimming="CharacterEllipsis" />
-                <TextBlock
-                    x:Name="ValueText"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    Text="{Binding Value}"
-                    TextWrapping="Wrap" />
+            <UserControl>
+                <Grid x:Name="PropertyGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="FirstColumn" Width="0.6*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        x:Name="TitleText"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,8,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{Binding Key}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        x:Name="ValueText"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Text="{Binding Value}"
+                        TextWrapping="Wrap" />
 
-                <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="LayoutGroup">
-                        <VisualState x:Name="Horizontal" />
-                        <VisualState x:Name="Vertical">
-                            <VisualState.StateTriggers>
-                                <triggers:ControlSizeTrigger MinWidth="400" TargetElement="{Binding ElementName=RootPanel}" />
-                            </VisualState.StateTriggers>
-                            <VisualState.Setters>
-                                <Setter Target="ValueText.(Grid.Row)" Value="1" />
-                                <Setter Target="TitleText.Margin" Value="0,0,0,8" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateManager.VisualStateGroups>
-            </Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="LayoutGroup">
+                            <VisualState x:Name="Horizontal" />
+                            <VisualState x:Name="Vertical">
+                                <VisualState.StateTriggers>
+                                    <triggers:ControlSizeTrigger MaxWidth="400" TargetElement="{Binding ElementName=PropertyGrid}" />
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Target="ValueText.(Grid.Row)" Value="1" />
+                                    <Setter Target="ValueText.(Grid.Column)" Value="0" />
+                                    <Setter Target="TitleText.Margin" Value="0,0,0,0" />
+                                    <Setter Target="FirstColumn.Width" Value="*" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Grid>
+            </UserControl>
         </DataTemplate>
 
         <muxc:StackLayout
@@ -64,7 +69,7 @@
     </UserControl.Resources>
 
     <ScrollViewer HorizontalScrollMode="Disabled" ZoomMode="Disabled">
-        <StackPanel x:Name="RootPanel" Orientation="Vertical">
+        <StackPanel Orientation="Vertical">
             <muxc:Expander
                 Margin="0,0,0,8"
                 HorizontalAlignment="Stretch"
@@ -72,7 +77,7 @@
                 IsExpanded="True">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
-                    ItemsSource="{x:Bind _mediaProperties}"
+                    ItemsSource="{x:Bind ViewModel.MediaProperties}"
                     Layout="{StaticResource PropertyStackLayout}" />
             </muxc:Expander>
 
@@ -81,10 +86,10 @@
                 HorizontalAlignment="Stretch"
                 Header="Video"
                 IsExpanded="True"
-                Visibility="{x:Bind _videoProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.VideoProperties, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
-                    ItemsSource="{x:Bind _videoProperties}"
+                    ItemsSource="{x:Bind ViewModel.VideoProperties}"
                     Layout="{StaticResource PropertyStackLayout}" />
             </muxc:Expander>
 
@@ -93,10 +98,10 @@
                 HorizontalAlignment="Stretch"
                 Header="Music"
                 IsExpanded="True"
-                Visibility="{x:Bind _audioProperties, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{x:Bind ViewModel.AudioProperties, Converter={StaticResource CollectionVisibilityConverter}}">
                 <muxc:ItemsRepeater
                     ItemTemplate="{StaticResource PropertyItemTemplate}"
-                    ItemsSource="{x:Bind _audioProperties}"
+                    ItemsSource="{x:Bind ViewModel.AudioProperties}"
                     Layout="{StaticResource PropertyStackLayout}" />
             </muxc:Expander>
 
@@ -108,18 +113,18 @@
                 <StackPanel Orientation="Vertical">
                     <muxc:ItemsRepeater
                         ItemTemplate="{StaticResource PropertyItemTemplate}"
-                        ItemsSource="{x:Bind _fileProperties}"
+                        ItemsSource="{x:Bind ViewModel.FileProperties}"
                         Layout="{StaticResource PropertyStackLayout}"
-                        Visibility="{x:Bind _fileProperties, Converter={StaticResource CollectionVisibilityConverter}}" />
+                        Visibility="{x:Bind ViewModel.FileProperties, Converter={StaticResource CollectionVisibilityConverter}}" />
 
                     <TextBlock
                         x:Name="LocationTitleText"
-                        Margin="0,10,0,8"
+                        Margin="0,10,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="File location"
+                        Text="{x:Bind strings:Resources.PropertyFileLocation}"
                         TextTrimming="CharacterEllipsis" />
 
                     <TextBlock
@@ -131,8 +136,8 @@
                     <HyperlinkButton
                         Margin="0,16,0,0"
                         HorizontalAlignment="Left"
-                        Content="Open file location"
-                        IsEnabled="{x:Bind _canNavigateToFile}" />
+                        Command="{x:Bind ViewModel.OpenFileLocationCommand}"
+                        Content="{x:Bind strings:Resources.OpenFileLocation}" />
                 </StackPanel>
             </muxc:Expander>
         </StackPanel>

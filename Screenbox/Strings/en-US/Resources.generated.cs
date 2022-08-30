@@ -779,6 +779,279 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Properties
+        /// <summary>
+        ///   Looks up a localized string similar to: Properties
+        /// </summary>
+        public static string Properties
+        {
+            get
+            {
+                return _resourceLoader.GetString("Properties");
+            }
+        }
+        #endregion
+
+        #region Close
+        /// <summary>
+        ///   Looks up a localized string similar to: Close
+        /// </summary>
+        public static string Close
+        {
+            get
+            {
+                return _resourceLoader.GetString("Close");
+            }
+        }
+        #endregion
+
+        #region OpenFileLocation
+        /// <summary>
+        ///   Looks up a localized string similar to: Open file location
+        /// </summary>
+        public static string OpenFileLocation
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFileLocation");
+            }
+        }
+        #endregion
+
+        #region PropertyAlbum
+        /// <summary>
+        ///   Looks up a localized string similar to: Album
+        /// </summary>
+        public static string PropertyAlbum
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyAlbum");
+            }
+        }
+        #endregion
+
+        #region PropertyAlbumArtist
+        /// <summary>
+        ///   Looks up a localized string similar to: Album artist
+        /// </summary>
+        public static string PropertyAlbumArtist
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyAlbumArtist");
+            }
+        }
+        #endregion
+
+        #region PropertyBitRate
+        /// <summary>
+        ///   Looks up a localized string similar to: Bit rate
+        /// </summary>
+        public static string PropertyBitRate
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyBitRate");
+            }
+        }
+        #endregion
+
+        #region PropertyContentType
+        /// <summary>
+        ///   Looks up a localized string similar to: Content type
+        /// </summary>
+        public static string PropertyContentType
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyContentType");
+            }
+        }
+        #endregion
+
+        #region PropertyContributingArtists
+        /// <summary>
+        ///   Looks up a localized string similar to: Contributing artists
+        /// </summary>
+        public static string PropertyContributingArtists
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyContributingArtists");
+            }
+        }
+        #endregion
+
+        #region PropertyFileLocation
+        /// <summary>
+        ///   Looks up a localized string similar to: File location
+        /// </summary>
+        public static string PropertyFileLocation
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyFileLocation");
+            }
+        }
+        #endregion
+
+        #region PropertyFileType
+        /// <summary>
+        ///   Looks up a localized string similar to: File type
+        /// </summary>
+        public static string PropertyFileType
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyFileType");
+            }
+        }
+        #endregion
+
+        #region PropertyGenre
+        /// <summary>
+        ///   Looks up a localized string similar to: Genre
+        /// </summary>
+        public static string PropertyGenre
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyGenre");
+            }
+        }
+        #endregion
+
+        #region PropertyLastModified
+        /// <summary>
+        ///   Looks up a localized string similar to: Last modified
+        /// </summary>
+        public static string PropertyLastModified
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyLastModified");
+            }
+        }
+        #endregion
+
+        #region PropertyLength
+        /// <summary>
+        ///   Looks up a localized string similar to: Length
+        /// </summary>
+        public static string PropertyLength
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyLength");
+            }
+        }
+        #endregion
+
+        #region PropertyProducers
+        /// <summary>
+        ///   Looks up a localized string similar to: Producers
+        /// </summary>
+        public static string PropertyProducers
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyProducers");
+            }
+        }
+        #endregion
+
+        #region PropertyResolution
+        /// <summary>
+        ///   Looks up a localized string similar to: Resolution
+        /// </summary>
+        public static string PropertyResolution
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyResolution");
+            }
+        }
+        #endregion
+
+        #region PropertySize
+        /// <summary>
+        ///   Looks up a localized string similar to: Size
+        /// </summary>
+        public static string PropertySize
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertySize");
+            }
+        }
+        #endregion
+
+        #region PropertySubtitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitle
+        /// </summary>
+        public static string PropertySubtitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertySubtitle");
+            }
+        }
+        #endregion
+
+        #region PropertyTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Title
+        /// </summary>
+        public static string PropertyTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyTitle");
+            }
+        }
+        #endregion
+
+        #region PropertyTrack
+        /// <summary>
+        ///   Looks up a localized string similar to: Track
+        /// </summary>
+        public static string PropertyTrack
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyTrack");
+            }
+        }
+        #endregion
+
+        #region PropertyWriters
+        /// <summary>
+        ///   Looks up a localized string similar to: Writers
+        /// </summary>
+        public static string PropertyWriters
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyWriters");
+            }
+        }
+        #endregion
+
+        #region PropertyYear
+        /// <summary>
+        ///   Looks up a localized string similar to: Year
+        /// </summary>
+        public static string PropertyYear
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyYear");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -846,6 +1119,27 @@ namespace Screenbox.Strings{
             Settings,
             WelcomePanelHeader,
             WelcomePanelSubtext,
+            Properties,
+            Close,
+            OpenFileLocation,
+            PropertyAlbum,
+            PropertyAlbumArtist,
+            PropertyBitRate,
+            PropertyContentType,
+            PropertyContributingArtists,
+            PropertyFileLocation,
+            PropertyFileType,
+            PropertyGenre,
+            PropertyLastModified,
+            PropertyLength,
+            PropertyProducers,
+            PropertyResolution,
+            PropertySize,
+            PropertySubtitle,
+            PropertyTitle,
+            PropertyTrack,
+            PropertyWriters,
+            PropertyYear,
         }
 
         private static ResourceLoader _resourceLoader;

@@ -71,6 +71,11 @@
             </Flyout>
 
             <MenuFlyout x:Name="NormalVideoContextMenu">
+                <MenuFlyoutItem
+                    Click="PropertiesMenuFlyoutItem_OnClick"
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xE946;}"
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutSubItem Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
                         Click="{x:Bind PlaybackSpeedItem_Click}"
@@ -127,11 +132,6 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                        Glyph=&#xEC15;}"
                     Text="Cast" />
-                <MenuFlyoutItem
-                    Click="PropertiesMenuFlyoutItem_OnClick"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xE946;}"
-                    Text="Properties" />
             </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>

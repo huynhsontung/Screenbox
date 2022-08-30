@@ -67,8 +67,8 @@ namespace Screenbox.Controls
         {
             ContentDialog propertiesDialog = new()
             {
-                Title = "Properties",
-                CloseButtonText = "Close",
+                Title = Strings.Resources.Properties,
+                CloseButtonText = Strings.Resources.Close,
                 DefaultButton = ContentDialogButton.Close,
                 Content = new PropertiesView { Media = ViewModel.PlaylistViewModel.ActiveItem, MinWidth = 400 }
             };
