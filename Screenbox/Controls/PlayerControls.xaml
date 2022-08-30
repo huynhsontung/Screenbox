@@ -72,7 +72,7 @@
 
             <MenuFlyout x:Name="NormalVideoContextMenu">
                 <MenuFlyoutItem
-                    Click="PropertiesMenuFlyoutItem_OnClick"
+                    Command="{x:Bind ViewModel.ShowPropertiesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                        Glyph=&#xE946;}"
                     Text="{x:Bind strings:Resources.Properties}" />

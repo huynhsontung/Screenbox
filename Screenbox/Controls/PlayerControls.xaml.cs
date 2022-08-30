@@ -62,18 +62,5 @@ namespace Screenbox.Controls
             _castFlyout ??= CastControl.GetFlyout();
             _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
         }
-
-        private async void PropertiesMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            ContentDialog propertiesDialog = new()
-            {
-                Title = Strings.Resources.Properties,
-                CloseButtonText = Strings.Resources.Close,
-                DefaultButton = ContentDialogButton.Close,
-                Content = new PropertiesView { Media = ViewModel.PlaylistViewModel.ActiveItem, MinWidth = 400 }
-            };
-
-            await propertiesDialog.ShowAsync();
-        }
     }
 }
