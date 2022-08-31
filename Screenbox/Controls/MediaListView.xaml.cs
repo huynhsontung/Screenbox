@@ -183,6 +183,11 @@ namespace Screenbox.Controls
 
             args.RegisterUpdateCallback(ContainerUpdateCallback);
             UpdateAlternateLayout(args.ItemContainer, args.ItemIndex);
+            if (args.ItemContainer.FindDescendant<Border>() is Border border)
+            {
+                // Hard-coded Margin is 4,2,4,2
+                border.Margin = new Thickness(0,2,0,2);
+            }
         }
 
         private static async void ContainerUpdateCallback(ListViewBase sender, ContainerContentChangingEventArgs args)
