@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -51,16 +52,49 @@ namespace Screenbox.Controls
             VisualStateManager.GoToState(this, "Normal", false);
         }
 
-        private void PlaybackSpeedItem_Click(object sender, RoutedEventArgs e)
-        {
-            RadioMenuFlyoutItem item = (RadioMenuFlyoutItem)sender;
-            ViewModel.SetPlaybackSpeed(item.Text);
-        }
-
         private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
         {
             _castFlyout ??= CastControl.GetFlyout();
             _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
+        }
+
+        private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
+            customSpeedFlyout.ShowAt(MoreButton);
+            if (SpeedSlider.Value != ViewModel.PlaybackSpeed)
+            {
+                SpeedSlider.Value = ViewModel.PlaybackSpeed;
+            }
+            else
+            {
+                SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackSpeed);
+            }
+        }
+
+        private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            ViewModel.PlaybackSpeed = e.NewValue;
+            SelectAlternatePlaybackSpeedItem(e.NewValue);
+        }
+
+        private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
+        {
+            bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
+            if (isMenuValue && PlaybackSpeedSubMenu.Items?.FirstOrDefault(x => IsValueEqualTag(playbackSpeed, x.Tag)) is RadioMenuFlyoutItem matchItem)
+            {
+                matchItem.IsChecked = true;
+            }
+            else
+            {
+                CustomPlaybackSpeedMenuItem.IsChecked = true;
+            }
+        }
+
+        private static bool IsValueEqualTag(double value, object? tag)
+        {
+            if (!double.TryParse(tag as string, out double tagValue)) return false;
+            return Math.Abs(value - tagValue) < 0.0001;
         }
     }
 }

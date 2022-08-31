@@ -1052,6 +1052,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region CustomPlaybackSpeed
+        /// <summary>
+        ///   Looks up a localized string similar to: Custom
+        /// </summary>
+        public static string CustomPlaybackSpeed
+        {
+            get
+            {
+                return _resourceLoader.GetString("CustomPlaybackSpeed");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1140,6 +1153,7 @@ namespace Screenbox.Strings{
             PropertyTrack,
             PropertyWriters,
             PropertyYear,
+            CustomPlaybackSpeed,
         }
 
         private static ResourceLoader _resourceLoader;

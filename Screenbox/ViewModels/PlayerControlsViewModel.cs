@@ -32,6 +32,14 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
+        [ObservableProperty] private double _playbackSpeed;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ShowPropertiesCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToggleCompactLayoutCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToggleFullscreenCommand))]
+        private bool _hasActiveItem;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
@@ -48,6 +56,7 @@ namespace Screenbox.ViewModels
             _windowService = windowService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playPauseGlyph = GetPlayPauseGlyph(false);
+            _playbackSpeed = 1.0;
             PlaylistViewModel = playlistViewModel;
             PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
@@ -62,16 +71,15 @@ namespace Screenbox.ViewModels
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
         }
 
-        public void SetPlaybackSpeed(string speedText)
-        {
-            if (_mediaPlayer == null) return;
-            float.TryParse(speedText, out float speed);
-            _mediaPlayer.PlaybackRate = speed;
-        }
-
         partial void OnZoomToFitChanged(bool value)
         {
             Messenger.Send(new ChangeZoomToFitMessage(value));
+        }
+
+        partial void OnPlaybackSpeedChanged(double value)
+        {
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.PlaybackRate = value;
         }
 
         private void UpdateShowPreviousNext()
@@ -87,7 +95,7 @@ namespace Screenbox.ViewModels
                     UpdateShowPreviousNext();
                     break;
                 case nameof(PlaylistViewModel.ActiveItem):
-                    ShowPropertiesCommand.NotifyCanExecuteChanged();
+                    HasActiveItem = PlaylistViewModel.ActiveItem != null;
                     break;
             }
         }
@@ -138,6 +146,12 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
+        private void SetPlaybackSpeed(string speedText)
+        {
+            PlaybackSpeed = double.Parse(speedText);
+        }
+
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
@@ -155,7 +169,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private void ToggleFullscreen()
         {
             if (IsCompact) return;
@@ -169,7 +183,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private void PlayPause()
         {
             if (IsPlaying)
@@ -205,7 +219,7 @@ namespace Screenbox.ViewModels
             return _mediaPlayer?.NaturalVideoHeight > 0;
         }
 
-        [RelayCommand(CanExecute = nameof(CanShowProperties))]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private async Task ShowPropertiesAsync()
         {
             ContentDialog propertiesDialog = new()
@@ -218,8 +232,6 @@ namespace Screenbox.ViewModels
 
             await propertiesDialog.ShowAsync();
         }
-
-        private bool CanShowProperties() => PlaylistViewModel.ActiveItem != null;
 
         private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
     }

@@ -70,46 +70,101 @@
                 <local:VolumeControl x:Name="VolumeControl" />
             </Flyout>
 
+            <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
+                <Grid MinWidth="180">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
+                    <Slider
+                        x:Name="SpeedSlider"
+                        Grid.Row="1"
+                        Margin="0,8,0,0"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="2"
+                        Minimum="0.05"
+                        StepFrequency="0.05"
+                        ValueChanged="SpeedSlider_OnValueChanged"
+                        Value="1.0" />
+                </Grid>
+            </Flyout>
+
             <MenuFlyout x:Name="NormalVideoContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.ShowPropertiesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
                                        Glyph=&#xE946;}"
                     Text="{x:Bind strings:Resources.Properties}" />
-                <MenuFlyoutSubItem Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily}, Glyph=&#xEC57;}" Text="{x:Bind strings:Resources.PlaybackSpeed}">
+                <MenuFlyoutSubItem
+                    x:Name="PlaybackSpeedSubMenu"
+                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
+                                       Glyph=&#xEC57;}"
+                    Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed025MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="0.25" />
+                        Tag="0.25"
+                        Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed05MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed05MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="0.5" />
+                        Tag="0.5"
+                        Text="0.5 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed075MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed075MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="0.75" />
+                        Tag="0.75"
+                        Text="0.75 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed1MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed1MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
-                        Text="1" />
+                        Tag="1"
+                        Text="1 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed125MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed125MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="1.25" />
+                        Tag="1.25"
+                        Text="1.25 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed15MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed15MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="1.5" />
+                        Tag="1.5"
+                        Text="1.5 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed175MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed175MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="1.75" />
+                        Tag="1.75"
+                        Text="1.75 ×" />
                     <muxc:RadioMenuFlyoutItem
-                        Click="{x:Bind PlaybackSpeedItem_Click}"
+                        x:Name="PlaybackSpeed2MenuItem"
+                        Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
+                        CommandParameter="{x:Bind PlaybackSpeed2MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Text="2" />
+                        Tag="2"
+                        Text="2 ×" />
+                    <MenuFlyoutSeparator />
+                    <muxc:RadioMenuFlyoutItem
+                        x:Name="CustomPlaybackSpeedMenuItem"
+                        Click="CustomSpeedMenuItem_OnClick"
+                        GroupName="SpeedGroup"
+                        Text="{x:Bind strings:Resources.CustomPlaybackSpeed}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
