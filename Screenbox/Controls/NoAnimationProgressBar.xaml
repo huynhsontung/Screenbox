@@ -2,6 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+
+    <!--  Increase track height to avoid visual artifact on Surface  -->
+    <x:Double x:Key="ProgressBarTrackHeight">2</x:Double>
+
     <Style x:Key="NoAnimationProgressBar" TargetType="muxc:ProgressBar">
         <Setter Property="Foreground" Value="{ThemeResource ProgressBarForeground}" />
         <Setter Property="Background" Value="{ThemeResource ProgressBarBackground}" />
