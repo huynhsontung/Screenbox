@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -246,7 +247,7 @@ namespace Screenbox.ViewModels
             {
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
-                AudioOnly = current.MusicProperties != null;
+                AudioOnly = current.MediaType == MediaPlaybackType.Music;
                 ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
                 if (!AudioOnly) PlayerVisible = true;
                 if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))

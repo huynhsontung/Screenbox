@@ -17,6 +17,7 @@
                         FalseValue="Visible"
                         TrueValue="Collapsed" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+                    <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
                     <x:Double x:Key="ContentPageBottomMargin">148</x:Double>
 

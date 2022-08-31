@@ -162,6 +162,9 @@
     <Compile Include="Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PropertiesView.xaml.cs">
+      <DependentUpon>PropertiesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
     </Compile>
@@ -279,6 +282,7 @@
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
+    <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
@@ -386,6 +390,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PlaylistView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

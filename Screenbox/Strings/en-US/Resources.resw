@@ -316,4 +316,67 @@
   <data name="WelcomePanelSubtext" xml:space="preserve">
     <value>Let's start playing some of your audio and video content to get things going.</value>
   </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="OpenFileLocation" xml:space="preserve">
+    <value>Open file location</value>
+  </data>
+  <data name="PropertyAlbum" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="PropertyAlbumArtist" xml:space="preserve">
+    <value>Album artist</value>
+  </data>
+  <data name="PropertyBitRate" xml:space="preserve">
+    <value>Bit rate</value>
+  </data>
+  <data name="PropertyContentType" xml:space="preserve">
+    <value>Content type</value>
+  </data>
+  <data name="PropertyContributingArtists" xml:space="preserve">
+    <value>Contributing artists</value>
+  </data>
+  <data name="PropertyFileLocation" xml:space="preserve">
+    <value>File location</value>
+  </data>
+  <data name="PropertyFileType" xml:space="preserve">
+    <value>File type</value>
+  </data>
+  <data name="PropertyGenre" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="PropertyLastModified" xml:space="preserve">
+    <value>Last modified</value>
+  </data>
+  <data name="PropertyLength" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="PropertyProducers" xml:space="preserve">
+    <value>Producers</value>
+  </data>
+  <data name="PropertyResolution" xml:space="preserve">
+    <value>Resolution</value>
+  </data>
+  <data name="PropertySize" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="PropertySubtitle" xml:space="preserve">
+    <value>Subtitle</value>
+  </data>
+  <data name="PropertyTitle" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="PropertyTrack" xml:space="preserve">
+    <value>Track</value>
+  </data>
+  <data name="PropertyWriters" xml:space="preserve">
+    <value>Writers</value>
+  </data>
+  <data name="PropertyYear" xml:space="preserve">
+    <value>Year</value>
+  </data>
 </root>

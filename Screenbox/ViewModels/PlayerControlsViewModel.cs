@@ -7,9 +7,11 @@ using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -67,9 +69,9 @@ namespace Screenbox.ViewModels
             _mediaPlayer.PlaybackRate = speed;
         }
 
-        partial void OnZoomToFitChanged(bool zoomToFit)
+        partial void OnZoomToFitChanged(bool value)
         {
-            Messenger.Send(new ChangeZoomToFitMessage(ZoomToFit));
+            Messenger.Send(new ChangeZoomToFitMessage(value));
         }
 
         private void UpdateShowPreviousNext()
@@ -79,9 +81,14 @@ namespace Screenbox.ViewModels
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(PlaylistViewModel.CanSkip))
+            switch (e.PropertyName)
             {
-                UpdateShowPreviousNext();
+                case nameof(PlaylistViewModel.CanSkip):
+                    UpdateShowPreviousNext();
+                    break;
+                case nameof(PlaylistViewModel.ActiveItem):
+                    ShowPropertiesCommand.NotifyCanExecuteChanged();
+                    break;
             }
         }
 
@@ -197,6 +204,22 @@ namespace Screenbox.ViewModels
         {
             return _mediaPlayer?.NaturalVideoHeight > 0;
         }
+
+        [RelayCommand(CanExecute = nameof(CanShowProperties))]
+        private async Task ShowPropertiesAsync()
+        {
+            ContentDialog propertiesDialog = new()
+            {
+                Title = Resources.Properties,
+                CloseButtonText = Resources.Close,
+                DefaultButton = ContentDialogButton.Close,
+                Content = new PropertiesView { Media = PlaylistViewModel.ActiveItem, MinWidth = 400 }
+            };
+
+            await propertiesDialog.ShowAsync();
+        }
+
+        private bool CanShowProperties() => PlaylistViewModel.ActiveItem != null;
 
         private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
     }
