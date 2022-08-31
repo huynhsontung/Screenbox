@@ -3,13 +3,14 @@
 using System.Collections.Generic;
 using Windows.Media;
 using Windows.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Converters;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PropertyViewModel
+    internal partial class PropertyViewModel : ObservableObject
     {
         public Dictionary<string, string> MediaProperties { get; }
 
@@ -19,7 +20,9 @@ namespace Screenbox.ViewModels
 
         public Dictionary<string, string> FileProperties { get; }
 
-        public bool CanNavigateToFile { get; private set; }
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
+        private bool _canNavigateToFile;
 
         private readonly IFilesService _filesService;
         private StorageFile? _mediaFile; 
@@ -77,7 +80,6 @@ namespace Screenbox.ViewModels
             if (media.Source is StorageFile file)
             {
                 CanNavigateToFile = true;
-                OpenFileLocationCommand.NotifyCanExecuteChanged();
                 _mediaFile = file;
 
                 FileProperties[Strings.Resources.PropertyFileType] = file.FileType;
