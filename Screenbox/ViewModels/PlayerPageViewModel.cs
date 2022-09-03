@@ -246,7 +246,6 @@ namespace Screenbox.ViewModels
             if (current != null)
             {
                 await current.LoadDetailsAsync();
-                await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
                 ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
                 if (!AudioOnly) PlayerVisible = true;

@@ -89,7 +89,6 @@ namespace Screenbox.ViewModels
                 if (item.Media != null)
                 {
                     await item.Media.LoadDetailsAsync();
-                    await item.Media.LoadThumbnailAsync();
                 }
             }
         }

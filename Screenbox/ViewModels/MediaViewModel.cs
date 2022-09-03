@@ -80,7 +80,6 @@ namespace Screenbox.ViewModels
         public async Task LoadDetailsAsync()
         {
             if (Source is not StorageFile file) return;
-            if (VideoProperties != null || MusicProperties != null) return;
             BasicProperties ??= await file.GetBasicPropertiesAsync();
             VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
             MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
@@ -136,6 +135,8 @@ namespace Screenbox.ViewModels
                     }
                 }
             }
+
+            await LoadThumbnailAsync();
         }
 
         public async Task LoadThumbnailAsync()
