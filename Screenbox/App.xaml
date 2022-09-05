@@ -10,6 +10,7 @@
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
+                    <converters:StorageItemGlyphConverter x:Key="StorageItemGlyphConverter" />
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
                     <toolkitConverters:BoolToObjectConverter
