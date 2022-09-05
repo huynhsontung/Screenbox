@@ -24,9 +24,7 @@ namespace Screenbox.ViewModels
 
         public bool IsFile { get; }
 
-        [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private string? _captionText;
-        [ObservableProperty] private IReadOnlyList<IStorageItem>? _folderItems;
 
         public StorageItemViewModel(IStorageItem storageItem)
         {
@@ -38,27 +36,29 @@ namespace Screenbox.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = new MediaViewModel(this, file);
+                Media = new MediaViewModel(file);
                 Media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
 
         public async Task LoadFolderContentAsync()
         {
-            if (StorageItem is not StorageFolder folder || FolderItems != null) return;
-            FolderItems = await folder.GetItemsAsync();
-            CaptionText = Strings.Resources.ItemsCount(FolderItems.Count);
+            if (StorageItem is not StorageFolder folder) return;
+            IReadOnlyList<IStorageItem>? items = await folder.GetItemsAsync();
+            CaptionText = Strings.Resources.ItemsCount(items.Count);
         }
 
         private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Media.VideoProperties))
+            switch (e.PropertyName)
             {
-                CaptionText = Media?.VideoProperties == null || Media.VideoProperties.Duration == default
-                    ? null
-                    : HumanizedDurationConverter.Convert(Media.VideoProperties.Duration);
+                case nameof(Media.MusicProperties) when !string.IsNullOrEmpty(Media?.MusicProperties?.Artist):
+                    CaptionText = Media?.MusicProperties?.Artist;
+                    break;
+                case nameof(Media.VideoProperties) when Media?.VideoProperties != null:
+                    CaptionText ??= HumanizedDurationConverter.Convert(Media.VideoProperties.Duration);
+                    break;
             }
         }
-
     }
 }

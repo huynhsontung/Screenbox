@@ -42,11 +42,8 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
 
-        private readonly StorageItemViewModel? _linkedFile;
-
-        public MediaViewModel(MediaViewModel source)
+        private MediaViewModel(MediaViewModel source)
         {
-            _linkedFile = source._linkedFile;
             _item = source._item;
             _name = source._name;
             Thumbnail = source.Thumbnail;
@@ -54,11 +51,6 @@ namespace Screenbox.ViewModels
             Duration = source.Duration;
             Source = source.Source;
             Glyph = source.Glyph;
-        }
-
-        public MediaViewModel(StorageItemViewModel linkedVm, StorageFile file) : this(file)
-        {
-            _linkedFile = linkedVm;
         }
 
         public MediaViewModel(Uri uri)
@@ -75,6 +67,11 @@ namespace Screenbox.ViewModels
             _name = file.Name;
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
+        }
+
+        public MediaViewModel Clone()
+        {
+            return new MediaViewModel(this);
         }
 
         public async Task LoadDetailsAsync()
@@ -145,14 +142,6 @@ namespace Screenbox.ViewModels
             {
                 IFilesService filesService = App.Services.GetRequiredService<IFilesService>();
                 Thumbnail = await filesService.GetThumbnailAsync(file);
-            }
-        }
-
-        partial void OnIsPlayingChanged(bool value)
-        {
-            if (_linkedFile != null)
-            {
-                _linkedFile.IsPlaying = value;
             }
         }
     }

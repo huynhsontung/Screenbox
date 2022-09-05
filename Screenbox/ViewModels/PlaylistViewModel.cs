@@ -293,7 +293,7 @@ namespace Screenbox.ViewModels
             IEnumerable<object> reverse = selectedItems.Reverse();
             foreach (MediaViewModel item in reverse)
             {
-                Playlist.Insert(_currentIndex + 1, new MediaViewModel(item));
+                Playlist.Insert(_currentIndex + 1, item.Clone());
             }
         }
 
