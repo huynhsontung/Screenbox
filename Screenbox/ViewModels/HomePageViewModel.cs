@@ -96,7 +96,7 @@ namespace Screenbox.ViewModels
                 Recent.RemoveAt(Recent.Count - 1);
             }
 
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media!.LoadDetailsAsync());
+            IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media!.LoadDetailsAndThumbnailAsync());
             await Task.WhenAll(loadingTasks).ConfigureAwait(false);
         }
 

@@ -29,7 +29,8 @@ namespace Screenbox.ViewModels
             : PlaybackItem.GetFromUri((Uri)Source);
 
         private PlaybackItem? _item;
-        private Task _loadingTask;
+        private Task _loadTask;
+        private Task _loadThumbnailTask;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isPlaying;
@@ -47,7 +48,8 @@ namespace Screenbox.ViewModels
         {
             _item = source._item;
             _name = source._name;
-            _loadingTask = source._loadingTask;
+            _loadTask = source._loadTask;
+            _loadThumbnailTask = source._loadThumbnailTask;
             Thumbnail = source.Thumbnail;
             Location = source.Location;
             Duration = source.Duration;
@@ -59,7 +61,8 @@ namespace Screenbox.ViewModels
         {
             Source = uri;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
-            _loadingTask = Task.CompletedTask;
+            _loadTask = Task.CompletedTask;
+            _loadThumbnailTask = Task.CompletedTask;
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
         }
@@ -68,7 +71,8 @@ namespace Screenbox.ViewModels
         {
             Source = file;
             _name = file.Name;
-            _loadingTask = Task.CompletedTask;
+            _loadTask = Task.CompletedTask;
+            _loadThumbnailTask = Task.CompletedTask;
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
@@ -78,11 +82,22 @@ namespace Screenbox.ViewModels
             return new MediaViewModel(this);
         }
 
+        public void Clean()
+        {
+            Thumbnail = null;
+        }
+
+        public async Task LoadDetailsAndThumbnailAsync()
+        {
+            await LoadDetailsAsync();
+            await LoadThumbnailAsync();
+        }
+
         public Task LoadDetailsAsync()
         {
-            if (!_loadingTask.IsCompleted) return _loadingTask;
-            _loadingTask = LoadDetailsInternalAsync();
-            return _loadingTask;
+            if (!_loadTask.IsCompleted) return _loadTask;
+            _loadTask = LoadDetailsInternalAsync();
+            return _loadTask;
         }
 
         private async Task LoadDetailsInternalAsync()
@@ -143,11 +158,16 @@ namespace Screenbox.ViewModels
                     }
                 }
             }
-
-            await LoadThumbnailAsync();
         }
 
-        public async Task LoadThumbnailAsync()
+        public Task LoadThumbnailAsync()
+        {
+            if (!_loadThumbnailTask.IsCompleted) return _loadThumbnailTask;
+            _loadThumbnailTask = LoadThumbnailInternalAsync();
+            return _loadThumbnailTask;
+        }
+
+        public async Task LoadThumbnailInternalAsync()
         {
             if (Thumbnail == null && Source is StorageFile file)
             {
