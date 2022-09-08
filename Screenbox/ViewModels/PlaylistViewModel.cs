@@ -137,6 +137,7 @@ namespace Screenbox.ViewModels
             if (items?.Count > 0)
             {
                 Enqueue(items);
+                await LoadPlaylistMediaDetailsAsync();
             }
         }
 
@@ -190,7 +191,7 @@ namespace Screenbox.ViewModels
             HasItems = Playlist.Count > 0;
         }
 
-        private async void Enqueue(IReadOnlyList<IStorageItem> files)
+        private void Enqueue(IReadOnlyList<IStorageItem> files)
         {
             foreach (IStorageItem item in files)
             {
@@ -205,11 +206,14 @@ namespace Screenbox.ViewModels
                     Playlist.Add(new MediaViewModel(storageFile));
                 }
             }
-
-            await Task.WhenAll(Playlist.Select(media => media.LoadDetailsAsync()));
         }
 
-        private void Play(IReadOnlyList<IStorageItem> files)
+        private Task LoadPlaylistMediaDetailsAsync()
+        {
+            return Task.WhenAll(Playlist.Select(media => media.LoadDetailsAsync()));
+        }
+
+        private async void Play(IReadOnlyList<IStorageItem> files)
         {
             Playlist.Clear();
 
@@ -219,6 +223,7 @@ namespace Screenbox.ViewModels
             if (media != null)
             {
                 PlaySingle(media);
+                await LoadPlaylistMediaDetailsAsync();
             }
         }
 
@@ -235,7 +240,6 @@ namespace Screenbox.ViewModels
 
         private void Play(object value)
         {
-            Playlist.Clear();
             MediaViewModel vm;
             switch (value)
             {
@@ -248,10 +252,14 @@ namespace Screenbox.ViewModels
                 case Uri uri:
                     vm = new MediaViewModel(uri);
                     break;
+                case IReadOnlyList<IStorageItem> files:
+                    Play(files);
+                    return;
                 default:
                     throw new ArgumentException("Unsupported media type", nameof(value));
             }
 
+            Playlist.Clear();
             Playlist.Add(vm);
             PlaySingle(vm);
         }

@@ -29,6 +29,7 @@ namespace Screenbox.ViewModels
             : PlaybackItem.GetFromUri((Uri)Source);
 
         private PlaybackItem? _item;
+        private Task _loadingTask;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isPlaying;
@@ -46,6 +47,7 @@ namespace Screenbox.ViewModels
         {
             _item = source._item;
             _name = source._name;
+            _loadingTask = source._loadingTask;
             Thumbnail = source.Thumbnail;
             Location = source.Location;
             Duration = source.Duration;
@@ -57,6 +59,7 @@ namespace Screenbox.ViewModels
         {
             Source = uri;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            _loadingTask = Task.CompletedTask;
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
         }
@@ -65,6 +68,7 @@ namespace Screenbox.ViewModels
         {
             Source = file;
             _name = file.Name;
+            _loadingTask = Task.CompletedTask;
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
@@ -74,7 +78,14 @@ namespace Screenbox.ViewModels
             return new MediaViewModel(this);
         }
 
-        public async Task LoadDetailsAsync()
+        public Task LoadDetailsAsync()
+        {
+            if (!_loadingTask.IsCompleted) return _loadingTask;
+            _loadingTask = LoadDetailsInternalAsync();
+            return _loadingTask;
+        }
+
+        private async Task LoadDetailsInternalAsync()
         {
             if (Source is not StorageFile file) return;
             BasicProperties ??= await file.GetBasicPropertiesAsync();
