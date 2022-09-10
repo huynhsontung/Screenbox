@@ -22,18 +22,35 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
+        private readonly object _lockObject;
         private List<MediaViewModel>? _songs;
+        private Task _loadSongsTask;
 
         public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
             _filesService = filesService;
             _navigationService = navigationService;
             _navigationViewDisplayMode = navigationService.DisplayMode;
+            _loadSongsTask = Task.CompletedTask;
+            _lockObject = new object();
 
             navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public Task FetchSongsAsync()
+        {
+            lock (_lockObject)
+            {
+                if (!_loadSongsTask.IsCompleted)
+                {
+                    return _loadSongsTask;
+                }
+
+                return _loadSongsTask = FetchSongsInternalAsync();
+            }
         }
 
         private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
@@ -57,7 +74,7 @@ namespace Screenbox.ViewModels
             Messenger.Send(new QueuePlaylistMessage(shuffledList, shuffledList[0]));
         }
 
-        public async Task FetchSongsAsync()
+        private async Task FetchSongsInternalAsync()
         {
             if (GroupedSongs != null) return;
             IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync();
