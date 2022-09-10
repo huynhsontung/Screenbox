@@ -47,6 +47,14 @@ namespace Screenbox.Pages
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter != null)
+            {
+                ViewModel.PlayerVisible = true;
+            }
+        }
+
         private static Frame CreatePlayerFrame()
         {
             /*

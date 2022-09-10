@@ -94,7 +94,7 @@ namespace Screenbox
             var rootFrame = InitRootFrame();
             if (rootFrame.Content is not MainPage)
             {
-                rootFrame.Navigate(typeof(MainPage));
+                rootFrame.Navigate(typeof(MainPage), true);
             }
 
             Window.Current.Activate();
