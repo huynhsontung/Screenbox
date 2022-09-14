@@ -5,13 +5,14 @@ Screenbox is a modern video player with focus on ease of usability no matter the
 
 ℹ️ Screenbox is currently in Alpha with limited testing group.
 
-![form header](https://user-images.githubusercontent.com/31434093/157200760-b7b0c9c9-c40e-4e0a-8158-7912bc0eaf0b.png)
+![image](https://user-images.githubusercontent.com/31434093/190074638-9a5aca20-4826-49f1-a1bc-8282c402d58d.png)
+![image](https://user-images.githubusercontent.com/31434093/190075094-acb7443a-ce6b-4c16-a0e5-cf94d4b390ac.png)
 
 ## Notable Features
 
 - Fluent design user interface
 - Gesture support for seeking and changing volume
-- Window resize hotkeys (number row `1`-`0`)
+- Window resize hotkeys (number row `1`-`4`)
 - YouTube inspired hotkey layout
 - Picture in picture mode
 - Save video frame as image
