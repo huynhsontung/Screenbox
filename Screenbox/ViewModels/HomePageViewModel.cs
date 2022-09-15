@@ -9,12 +9,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
 using Screenbox.Core.Messages;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
     internal partial class HomePageViewModel : ObservableRecipient,
-        IRecipient<NavigationViewDisplayModeChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>
     {
         public ObservableCollection<StorageItemViewModel> Recent { get; }
@@ -23,18 +24,20 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public HomePageViewModel()
+        public HomePageViewModel(INavigationService navigationService)
         {
-            _navigationViewDisplayMode = Messenger.Send(new NavigationViewDisplayModeRequestMessage());
+            _navigationViewDisplayMode = navigationService.DisplayMode;
             Recent = new ObservableCollection<StorageItemViewModel>();
+
+            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        public void Receive(NavigationViewDisplayModeChangedMessage message)
+        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
         {
-            NavigationViewDisplayMode = message.Value;
+            NavigationViewDisplayMode = e.NewValue;
         }
 
         public async void Receive(PlaylistActiveItemChangedMessage message)

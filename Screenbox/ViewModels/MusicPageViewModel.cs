@@ -9,32 +9,36 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class MusicPageViewModel : ObservableRecipient,
-        IRecipient<NavigationViewDisplayModeChangedMessage>
+    internal partial class MusicPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private List<IGrouping<string, MediaViewModel>>? _groupedSongs;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
+        private readonly INavigationService _navigationService;
         private List<MediaViewModel>? _songs;
 
-        public MusicPageViewModel(IFilesService filesService)
+        public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
             _filesService = filesService;
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            _navigationService = navigationService;
+            _navigationViewDisplayMode = navigationService.DisplayMode;
+
+            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        public void Receive(NavigationViewDisplayModeChangedMessage message)
+        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
         {
-            NavigationViewDisplayMode = message.Value;
+            NavigationViewDisplayMode = e.NewValue;
         }
 
         [RelayCommand]

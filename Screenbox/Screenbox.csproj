@@ -186,13 +186,12 @@
     <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
-    <Compile Include="Core\Messages\NavigationViewDisplayModeChangedMessage.cs" />
-    <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
     <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
+    <Compile Include="Core\NavigationServiceDisplayModeChangedEventArgs.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
     <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />
@@ -239,10 +238,12 @@
     </Compile>
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\CastService.cs" />
+    <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

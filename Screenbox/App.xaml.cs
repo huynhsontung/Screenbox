@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
@@ -71,6 +72,12 @@ namespace Screenbox
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
+            services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
+                new KeyValuePair<Type, string>(typeof(HomePageViewModel), "home"),
+                new KeyValuePair<Type, string>(typeof(VideosPageViewModel), "videos"),
+                new KeyValuePair<Type, string>(typeof(MusicPageViewModel), "music"),
+                new KeyValuePair<Type, string>(typeof(PlayQueuePageViewModel), "queue")
+            ));
 
             return services.BuildServiceProvider();
         }

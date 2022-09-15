@@ -1,26 +1,30 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core.Messages;
+using Screenbox.Core;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayQueuePageViewModel : ObservableRecipient,
-        IRecipient<NavigationViewDisplayModeChangedMessage>
+    internal partial class PlayQueuePageViewModel : ObservableRecipient
     {
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public PlayQueuePageViewModel()
+        private readonly INavigationService _navigationService;
+
+        public PlayQueuePageViewModel(INavigationService navigationService)
         {
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            _navigationService = navigationService;
+            _navigationViewDisplayMode = navigationService.DisplayMode;
+
+            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        public void Receive(NavigationViewDisplayModeChangedMessage message)
+        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
         {
-            NavigationViewDisplayMode = message.Value;
+            NavigationViewDisplayMode = e.NewValue;
         }
     }
 }

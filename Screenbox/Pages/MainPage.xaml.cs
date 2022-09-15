@@ -55,6 +55,12 @@ namespace Screenbox.Pages
             }
         }
 
+        public void NavigateContentFrame(string navigationTag)
+        {
+            ViewModel.PlayerVisible = false;
+            NavView_Navigate(navigationTag, new CommonNavigationTransitionInfo());
+        }
+
         private static Frame CreatePlayerFrame()
         {
             /*

@@ -2,18 +2,22 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
     internal partial class MainPageViewModel : ObservableRecipient,
-        IRecipient<PlayerVisibilityChangedMessage>,
-        IRecipient<NavigationViewDisplayModeRequestMessage>
+        IRecipient<PlayerVisibilityChangedMessage>
     {
         [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public MainPageViewModel()
+        private readonly INavigationService _navigationService;
+
+        public MainPageViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             IsActive = true;
         }
 
@@ -22,14 +26,9 @@ namespace Screenbox.ViewModels
             PlayerVisible = message.Value;
         }
 
-        public void Receive(NavigationViewDisplayModeRequestMessage message)
-        {
-            message.Reply(NavigationViewDisplayMode);
-        }
-
         partial void OnNavigationViewDisplayModeChanged(NavigationViewDisplayMode value)
         {
-            Messenger.Send(new NavigationViewDisplayModeChangedMessage(value));
+            _navigationService.DisplayMode = value;
         }
     }
 }
