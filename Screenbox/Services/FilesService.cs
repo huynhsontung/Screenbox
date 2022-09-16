@@ -91,7 +91,17 @@ namespace Screenbox.Services
 
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync()
         {
+            string[] customPropertyKeys =
+            {
+                SystemProperties.Title,
+                SystemProperties.Music.Artist,
+                SystemProperties.Media.Duration
+            };
+
             QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats);
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
+                customPropertyKeys);
             StorageFileQueryResult result = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
             return result.GetFilesAsync();
         }

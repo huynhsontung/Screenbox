@@ -97,7 +97,7 @@ namespace Screenbox.ViewModels
 
         public async Task LoadTitleAsync()
         {
-            if (Source is not StorageFile { IsAvailable: true } file) return;
+            if (Source is not StorageFile file) return;
             string[] propertyKeys = { SystemProperties.Title };
             IDictionary<string, object> properties = await file.Properties.RetrievePropertiesAsync(propertyKeys);
             if (properties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
@@ -115,13 +115,14 @@ namespace Screenbox.ViewModels
 
         private async Task LoadDetailsInternalAsync()
         {
-            if (Source is not StorageFile { IsAvailable: true } file) return;
+            if (Source is not StorageFile file) return;
             string[] additionalPropertyKeys =
             {
                 SystemProperties.Title,
                 SystemProperties.Music.Artist,
                 SystemProperties.Media.Duration
             };
+
             IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
             if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
             {
@@ -133,29 +134,37 @@ namespace Screenbox.ViewModels
                 Duration = TimeSpan.FromTicks((long)ticks);
             }
 
-            VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
-            MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
             BasicProperties ??= await file.GetBasicPropertiesAsync();
 
-            if (MediaType == MediaPlaybackType.Music && MusicProperties != null)
+            switch (MediaType)
             {
-                Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+                case MediaPlaybackType.Video:
+                    VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
+                    break;
+                case MediaPlaybackType.Music:
+                    MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
+                    if (MusicProperties != null)
+                    {
+                        Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                        Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
 
-                if (Artists == null)
-                {
-                    if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
-                        contributingArtists.Length == 0)
-                    {
-                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
+                        if (Artists == null)
+                        {
+                            if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
+                                contributingArtists.Length == 0)
+                            {
+                                Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
+                            }
+                            else
+                            {
+                                Artists = contributingArtists
+                                    .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                                    .ToArray();
+                            }
+                        }
                     }
-                    else
-                    {
-                        Artists = contributingArtists
-                            .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
-                            .ToArray();
-                    }
-                }
+
+                    break;
             }
         }
 
