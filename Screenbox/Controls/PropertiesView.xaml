@@ -134,7 +134,7 @@
                         TextWrapping="Wrap" />
 
                     <HyperlinkButton
-                        Margin="0,16,0,0"
+                        Margin="-11,10,0,0"
                         HorizontalAlignment="Left"
                         Command="{x:Bind ViewModel.OpenFileLocationCommand}"
                         Content="{x:Bind strings:Resources.OpenFileLocation}" />
