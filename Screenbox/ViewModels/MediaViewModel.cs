@@ -61,6 +61,7 @@ namespace Screenbox.ViewModels
         {
             Source = uri;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            _mediaType = MediaPlaybackType.Unknown;
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
             Location = uri.ToString();
@@ -73,6 +74,7 @@ namespace Screenbox.ViewModels
             _name = file.Name;
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
+            _mediaType = GetMediaTypeForFile(file);
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
@@ -93,6 +95,17 @@ namespace Screenbox.ViewModels
             await LoadThumbnailAsync();
         }
 
+        public async Task LoadTitleAsync()
+        {
+            if (Source is not StorageFile { IsAvailable: true } file) return;
+            string[] propertyKeys = { SystemProperties.Title };
+            IDictionary<string, object> properties = await file.Properties.RetrievePropertiesAsync(propertyKeys);
+            if (properties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
+            {
+                Name = name;
+            }
+        }
+
         public Task LoadDetailsAsync()
         {
             if (!_loadTask.IsCompleted) return _loadTask;
@@ -102,59 +115,45 @@ namespace Screenbox.ViewModels
 
         private async Task LoadDetailsInternalAsync()
         {
-            if (Source is not StorageFile file) return;
-            BasicProperties ??= await file.GetBasicPropertiesAsync();
+            if (Source is not StorageFile { IsAvailable: true } file) return;
+            string[] additionalPropertyKeys =
+            {
+                SystemProperties.Title,
+                SystemProperties.Music.Artist,
+                SystemProperties.Media.Duration
+            };
+            IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+            if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
+            {
+                Name = name;
+            }
+
+            if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+            {
+                Duration = TimeSpan.FromTicks((long)ticks);
+            }
+
             VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
             MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
-            if (file.ContentType.StartsWith("video"))
+            BasicProperties ??= await file.GetBasicPropertiesAsync();
+
+            if (MediaType == MediaPlaybackType.Music && MusicProperties != null)
             {
-                MediaType = MediaPlaybackType.Video;
-                if (VideoProperties != null)
+                Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+
+                if (Artists == null)
                 {
-                    if (VideoProperties.Duration != TimeSpan.Zero)
+                    if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
+                        contributingArtists.Length == 0)
                     {
-                        Duration = VideoProperties.Duration;
+                        Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
                     }
-
-                    if (!string.IsNullOrEmpty(VideoProperties.Title))
+                    else
                     {
-                        Name = VideoProperties.Title;
-                    }
-                }
-            }
-            else if (file.ContentType.StartsWith("audio"))
-            {
-                MediaType = MediaPlaybackType.Music;
-                if (MusicProperties != null)
-                {
-                    if (MusicProperties.Duration != TimeSpan.Zero)
-                    {
-                        Duration = MusicProperties.Duration;
-                    }
-
-                    if (!string.IsNullOrEmpty(MusicProperties.Title))
-                    {
-                        Name = MusicProperties.Title;
-                    }
-
-                    Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                    Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
-
-                    if (Artists == null)
-                    {
-                        string[] contributingArtistsKey = { "System.Music.Artist" };
-                        IDictionary<string, object> contributingArtistsProperty =
-                            await MusicProperties.RetrievePropertiesAsync(contributingArtistsKey);
-                        if (contributingArtistsProperty["System.Music.Artist"] is not string[] contributingArtists ||
-                            contributingArtists.Length == 0)
-                        {
-                            Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
-                        }
-                        else
-                        {
-                            Artists = contributingArtists.Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
-                                .ToArray();
-                        }
+                        Artists = contributingArtists
+                            .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                            .ToArray();
                     }
                 }
             }
@@ -174,6 +173,14 @@ namespace Screenbox.ViewModels
                 IFilesService filesService = App.Services.GetRequiredService<IFilesService>();
                 Thumbnail = await filesService.GetThumbnailAsync(file);
             }
+        }
+
+        private static MediaPlaybackType GetMediaTypeForFile(IStorageFile file)
+        {
+            if (file.ContentType.StartsWith("video")) return MediaPlaybackType.Video;
+            if (file.ContentType.StartsWith("audio")) return MediaPlaybackType.Music;
+            if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
+            return MediaPlaybackType.Unknown;
         }
     }
 }

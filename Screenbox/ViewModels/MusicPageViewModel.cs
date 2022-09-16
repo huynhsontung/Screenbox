@@ -78,13 +78,9 @@ namespace Screenbox.ViewModels
         {
             if (GroupedSongs != null) return;
             IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync();
-            List<IGrouping<string, MediaViewModel>> groupedSongs =
-                files.Select(f => new MediaViewModel(f)).GroupBy(GroupByFirstLetter).ToList();
-            GroupedSongs = groupedSongs;
-            await Task.Run(() =>
-            {
-                _songs = groupedSongs.SelectMany(models => models.ToArray()).ToList();
-            }).ConfigureAwait(false);
+            List<MediaViewModel> vms = _songs = files.Select(f => new MediaViewModel(f)).ToList();
+            await Task.WhenAll(vms.Select(vm => vm.LoadTitleAsync()));
+            GroupedSongs = vms.GroupBy(GroupByFirstLetter).ToList();
         }
 
         private string GroupByFirstLetter(MediaViewModel media)

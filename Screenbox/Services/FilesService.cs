@@ -91,8 +91,7 @@ namespace Screenbox.Services
 
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync()
         {
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedAudioFormats)
-                { FolderDepth = FolderDepth.Deep };
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats);
             StorageFileQueryResult result = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
             return result.GetFilesAsync();
         }
