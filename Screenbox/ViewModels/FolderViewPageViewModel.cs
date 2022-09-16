@@ -117,7 +117,7 @@ namespace Screenbox.ViewModels
                 {
                     StorageItemViewModel item = new(folder);
                     Items.Add(item);
-                    await item.LoadFolderContentAsync();
+                    //await item.LoadFolderContentAsync();
                 }
 
                 IsEmpty = Items.Count == 0;
