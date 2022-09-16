@@ -56,7 +56,17 @@ namespace Screenbox.Core.Playback
             }
         }
 
-        public TimeSpan NaturalDuration => VlcPlayer.Length == -1 ? default : TimeSpan.FromMilliseconds(VlcPlayer.Length);
+        public TimeSpan NaturalDuration
+        {
+            get => _naturalDuration;
+            private set
+            {
+                // Length can fluctuate during playback. Check for tolerance here.
+                if (Math.Abs((_naturalDuration - value).TotalMilliseconds) <= 10) return;
+                _naturalDuration = value;
+                NaturalDurationChanged?.Invoke(this, null);
+            }
+        }
 
         public TimeSpan Position
         {
@@ -188,7 +198,7 @@ namespace Screenbox.Core.Playback
         private Rect _normalizedSourceRect;
         private bool _readyToPlay;
         private bool _updateMediaProperties;
-        private long _naturalDuration;
+        private TimeSpan _naturalDuration;
         private MediaPlaybackState _playbackState;
 
         public VlcMediaPlayer(LibVLC libVlc)
@@ -263,10 +273,7 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_LengthChanged(object sender, MediaPlayerLengthChangedEventArgs e)
         {
-            // Length can fluctuate during playback. Check for tolerance here.
-            if (Math.Abs(_naturalDuration - e.Length) <= 10) return;
-            _naturalDuration = e.Length;
-            NaturalDurationChanged?.Invoke(this, null);
+            NaturalDuration = TimeSpan.FromMilliseconds(e.Length);
         }
 
         private void VlcPlayer_Playing(object sender, EventArgs e)
