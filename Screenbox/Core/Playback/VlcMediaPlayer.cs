@@ -155,18 +155,20 @@ namespace Screenbox.Core.Playback
             }
         }
 
+        public MediaPlaybackState PlaybackState
+        {
+            get => _playbackState;
+            private set
+            {
+                if (value == _playbackState) return;
+                _playbackState = value;
+                PlaybackStateChanged?.Invoke(this, null);
+            }
+        }
+
         public bool IsLoopingEnabled { get; set; }
 
         public double BufferingProgress { get; private set; }
-
-        public MediaPlaybackState PlaybackState => VlcPlayer.State switch
-        {
-            VLCState.Playing => MediaPlaybackState.Playing,
-            VLCState.Paused => MediaPlaybackState.Paused,
-            VLCState.Buffering => MediaPlaybackState.Buffering,
-            VLCState.Opening => MediaPlaybackState.Opening,
-            _ => MediaPlaybackState.None
-        };
 
         public uint NaturalVideoHeight { get; private set; }
 
@@ -187,6 +189,7 @@ namespace Screenbox.Core.Playback
         private bool _readyToPlay;
         private bool _updateMediaProperties;
         private long _naturalDuration;
+        private MediaPlaybackState _playbackState;
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
@@ -195,12 +198,12 @@ namespace Screenbox.Core.Playback
             _normalizedSourceRect = _defaultSourceRect;
 
             VlcPlayer.TimeChanged += (s, e) => PositionChanged?.Invoke(this, null);
-            VlcPlayer.EncounteredError += (s, e) => MediaFailed?.Invoke(this, null);
             VlcPlayer.Muted += (s, e) => IsMutedChanged?.Invoke(this, null);
             VlcPlayer.Unmuted += (s, e) => IsMutedChanged?.Invoke(this, null);
             VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
-            VlcPlayer.Paused += (s, e) => PlaybackStateChanged?.Invoke(this, null);
-            VlcPlayer.Stopped += (s, e) => PlaybackStateChanged?.Invoke(this, null);
+            VlcPlayer.Paused += (s, e) => PlaybackState = MediaPlaybackState.Paused;
+            VlcPlayer.Stopped += (s, e) => PlaybackState = MediaPlaybackState.None;
+            VlcPlayer.EncounteredError += VlcPlayer_EncounteredError;
             VlcPlayer.Playing += VlcPlayer_Playing;
             VlcPlayer.ChapterChanged += VlcPlayer_ChapterChanged;
             VlcPlayer.LengthChanged += VlcPlayer_LengthChanged;
@@ -212,6 +215,12 @@ namespace Screenbox.Core.Playback
 
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+        }
+
+        private void VlcPlayer_EncounteredError(object sender, EventArgs e)
+        {
+            MediaFailed?.Invoke(this, null);
+            PlaybackState = MediaPlaybackState.None;
         }
 
         private void VlcPlayer_ESSelected(object sender, MediaPlayerESSelectedEventArgs e)
@@ -262,7 +271,7 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_Playing(object sender, EventArgs e)
         {
-            PlaybackStateChanged?.Invoke(this, null);
+            PlaybackState = MediaPlaybackState.Playing;
             if (!_updateMediaProperties) return;
             _updateMediaProperties = false;
 
@@ -300,7 +309,7 @@ namespace Screenbox.Core.Playback
         private void VlcPlayer_EndReached(object sender, EventArgs e)
         {
             MediaEnded?.Invoke(this, null);
-            PlaybackStateChanged?.Invoke(this, null);
+            PlaybackState = MediaPlaybackState.None;
             if (IsLoopingEnabled)
                 Replay();
         }
@@ -308,7 +317,7 @@ namespace Screenbox.Core.Playback
         private void VlcPlayer_Opening(object sender, EventArgs e)
         {
             MediaOpened?.Invoke(this, null);
-            PlaybackStateChanged?.Invoke(this, null);
+            PlaybackState = MediaPlaybackState.Opening;
         }
 
         private void VlcPlayer_Buffering(object sender, MediaPlayerBufferingEventArgs e)
