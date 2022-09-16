@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using System;
+using Windows.Media;
 using Windows.UI.Xaml.Data;
 using CommunityToolkit.Diagnostics;
-using Screenbox.ViewModels;
 
 namespace Screenbox.Converters
 {
@@ -11,15 +11,15 @@ namespace Screenbox.Converters
     {
         public object? Convert(object value, Type targetType, object parameter, string language)
         {
-            Guard.IsOfType<RepeatMode>(value, nameof(value));
-            RepeatMode repeatMode = (RepeatMode)value;
+            Guard.IsOfType<MediaPlaybackAutoRepeatMode>(value, nameof(value));
+            MediaPlaybackAutoRepeatMode repeatMode = (MediaPlaybackAutoRepeatMode)value;
             switch (repeatMode)
             {
-                case RepeatMode.Off:
+                case MediaPlaybackAutoRepeatMode.None:
                     return false;
-                case RepeatMode.All:
+                case MediaPlaybackAutoRepeatMode.List:
                     return true;
-                case RepeatMode.One:
+                case MediaPlaybackAutoRepeatMode.Track:
                     return null;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -28,9 +28,9 @@ namespace Screenbox.Converters
 
         public object ConvertBack(object? value, Type targetType, object parameter, string language)
         {
-            if (value == null) return RepeatMode.One;
+            if (value == null) return MediaPlaybackAutoRepeatMode.Track;
             bool check = (bool)value;
-            return check ? RepeatMode.All : RepeatMode.Off;
+            return check ? MediaPlaybackAutoRepeatMode.List : MediaPlaybackAutoRepeatMode.None;
         }
     }
 }

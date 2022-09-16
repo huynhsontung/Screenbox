@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
@@ -35,7 +36,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(NextCommand))]
         [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
-        private RepeatMode _repeatMode;
+        private MediaPlaybackAutoRepeatMode _repeatMode;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(NextCommand))]
@@ -50,20 +51,27 @@ namespace Screenbox.ViewModels
         private int _selectionCount;
 
         private readonly IFilesService _filesService;
+        private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly DispatcherQueue _dispatcherQueue;
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
 
-        public PlaylistViewModel(IFilesService filesService)
+        public PlaylistViewModel(IFilesService filesService,
+            ISystemMediaTransportControlsService transportControlsService)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
+            _transportControlsService = transportControlsService;
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
             Playlist.CollectionChanged += OnCollectionChanged;
+            transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
+            transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
+            NextCommand.CanExecuteChanged += (_, _) => transportControlsService.TransportControls.IsNextEnabled = CanNext();
+            PreviousCommand.CanExecuteChanged += (_, _) => transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -171,15 +179,40 @@ namespace Screenbox.ViewModels
         {
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
+            _transportControlsService.UpdateTransportControlsDisplay(value);
         }
 
-        partial void OnRepeatModeChanged(RepeatMode value)
+        partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
         {
             Messenger.Send(new RepeatModeChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(value);
+            _transportControlsService.TransportControls.AutoRepeatMode = value;
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
+
+        private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            async void AsyncCallback()
+            {
+                switch (args.Button)
+                {
+                    case SystemMediaTransportControlsButton.Next:
+                        await NextAsync();
+                        break;
+                    case SystemMediaTransportControlsButton.Previous:
+                        await PreviousAsync();
+                        break;
+                }
+            }
+
+            _dispatcherQueue.TryEnqueue(AsyncCallback);
+        }
+
+        private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+        {
+            _dispatcherQueue.TryEnqueue(() => RepeatMode = args.RequestedAutoRepeatMode);
+        }
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -336,7 +369,7 @@ namespace Screenbox.ViewModels
                 return _neighboringFilesQuery != null;
             }
 
-            if (RepeatMode == RepeatMode.All)
+            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
                 return true;
             }
@@ -357,7 +390,7 @@ namespace Screenbox.ViewModels
                     Play(nextFile);
                 }
             }
-            else if (index == Playlist.Count - 1 && RepeatMode == RepeatMode.All)
+            else if (index == Playlist.Count - 1 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
                 PlaySingle(Playlist[0]);
             }
@@ -375,7 +408,7 @@ namespace Screenbox.ViewModels
                 return _neighboringFilesQuery != null;
             }
 
-            if (RepeatMode == RepeatMode.All)
+            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
                 return true;
             }
@@ -396,7 +429,7 @@ namespace Screenbox.ViewModels
                     Play(previousFile);
                 }
             }
-            else if (index == 0 && RepeatMode == RepeatMode.All)
+            else if (index == 0 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
                 PlaySingle(Playlist.Last());
             }
@@ -413,10 +446,10 @@ namespace Screenbox.ViewModels
             {
                 switch (RepeatMode)
                 {
-                    case RepeatMode.All when _currentIndex == Playlist.Count - 1:
+                    case MediaPlaybackAutoRepeatMode.List when _currentIndex == Playlist.Count - 1:
                         PlaySingle(Playlist[0]);
                         break;
-                    case RepeatMode.One:
+                    case MediaPlaybackAutoRepeatMode.Track:
                         sender.Position = TimeSpan.Zero;
                         break;
                     default:
@@ -426,26 +459,19 @@ namespace Screenbox.ViewModels
             });
         }
 
-        private static string GetRepeatModeGlyph(RepeatMode repeatMode)
+        private static string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
         {
             switch (repeatMode)
             {
-                case RepeatMode.Off:
+                case MediaPlaybackAutoRepeatMode.None:
                     return "\uf5e7";
-                case RepeatMode.All:
+                case MediaPlaybackAutoRepeatMode.List:
                     return "\ue8ee";
-                case RepeatMode.One:
+                case MediaPlaybackAutoRepeatMode.Track:
                     return "\ue8ed";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
             }
         }
-    }
-
-    public enum RepeatMode
-    {
-        Off,
-        All,
-        One
     }
 }

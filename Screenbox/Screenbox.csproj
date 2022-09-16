@@ -238,12 +238,14 @@
     </Compile>
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\CastService.cs" />
-    <Compile Include="Services\INavigationService.cs" />
+    <Compile Include="Services\Interfaces\INavigationService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
+    <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

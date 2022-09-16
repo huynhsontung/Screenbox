@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Media;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Input;
@@ -31,6 +32,7 @@ namespace Screenbox.ViewModels
 
         private readonly LibVlcService _libVlcService;
         private readonly IWindowService _windowService;
+        private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly DispatcherQueue _dispatcherQueue;
         private Size _viewSize;
         private bool _zoomToFit;
@@ -39,11 +41,16 @@ namespace Screenbox.ViewModels
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
-            IWindowService windowService)
+            IWindowService windowService,
+            ISystemMediaTransportControlsService transportControlsService)
         {
             _libVlcService = libVlcService;
             _windowService = windowService;
+            _transportControlsService = transportControlsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+            transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
+            transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
             // View model does not receive any message
             IsActive = true;
@@ -99,7 +106,19 @@ namespace Screenbox.ViewModels
             VlcPlayer = _mediaPlayer.VlcPlayer;
             _mediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+            _mediaPlayer.PositionChanged += OnPositionChanged;
+            _mediaPlayer.MediaFailed += OnMediaFailed;
             Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+        }
+
+        private void OnMediaFailed(IMediaPlayer sender, object? args)
+        {
+            _transportControlsService.ClosePlayback();
+        }
+
+        private void OnPositionChanged(IMediaPlayer sender, object? args)
+        {
+            _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
@@ -207,6 +226,35 @@ namespace Screenbox.ViewModels
             SetCropGeometry(_viewSize);
         }
 
+        private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
+        {
+            if (_mediaPlayer == null) return;
+            _mediaPlayer.Position = args.RequestedPlaybackPosition;
+        }
+
+        private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+        {
+            if (_mediaPlayer == null) return;
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Pause:
+                    _mediaPlayer.Pause();
+                    break;
+                case SystemMediaTransportControlsButton.Play:
+                    _mediaPlayer.Play();
+                    break;
+                case SystemMediaTransportControlsButton.Stop:
+                    _mediaPlayer.Source = null;
+                    break;
+                case SystemMediaTransportControlsButton.FastForward:
+                    _mediaPlayer.Position += TimeSpan.FromSeconds(10);
+                    break;
+                case SystemMediaTransportControlsButton.Rewind:
+                    _mediaPlayer.Position -= TimeSpan.FromSeconds(10);
+                    break;
+            }
+        }
+
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
         {
             if (sender.NaturalVideoHeight > 0 &&
@@ -231,6 +279,8 @@ namespace Screenbox.ViewModels
                     _displayRequest = null;
                 });
             }
+
+            _transportControlsService.UpdatePlaybackStatus(sender.PlaybackState);
         }
 
         private void OnVideoSizeChanged(IMediaPlayer sender, object? args)

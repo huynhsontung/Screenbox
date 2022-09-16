@@ -62,12 +62,12 @@ namespace Screenbox.ViewModels
 
         public void Receive(RepeatModeChangedMessage message)
         {
-            _transportControls.AutoRepeatMode = Convert(_playlistViewModel.RepeatMode);
+            _transportControls.AutoRepeatMode = _playlistViewModel.RepeatMode;
         }
 
         private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
         {
-            _dispatcherQueue.TryEnqueue(() => _playlistViewModel.RepeatMode = Convert(args.RequestedAutoRepeatMode));
+            _dispatcherQueue.TryEnqueue(() => _playlistViewModel.RepeatMode = args.RequestedAutoRepeatMode);
         }
 
         private void PreviousCommandOnCanExecuteChanged(object sender, EventArgs e)
@@ -203,21 +203,5 @@ namespace Screenbox.ViewModels
 
             displayUpdater.Update();
         }
-
-        private static RepeatMode Convert(MediaPlaybackAutoRepeatMode systemRepeatMode) => systemRepeatMode switch
-        {
-            MediaPlaybackAutoRepeatMode.None => RepeatMode.Off,
-            MediaPlaybackAutoRepeatMode.Track => RepeatMode.One,
-            MediaPlaybackAutoRepeatMode.List => RepeatMode.All,
-            _ => RepeatMode.Off
-        };
-
-        private static MediaPlaybackAutoRepeatMode Convert(RepeatMode repeatMode) => repeatMode switch
-        {
-            RepeatMode.Off => MediaPlaybackAutoRepeatMode.None,
-            RepeatMode.All => MediaPlaybackAutoRepeatMode.List,
-            RepeatMode.One => MediaPlaybackAutoRepeatMode.Track,
-            _ => MediaPlaybackAutoRepeatMode.None
-        };
     }
 }

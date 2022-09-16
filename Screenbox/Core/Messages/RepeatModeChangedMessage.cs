@@ -1,11 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
-using Screenbox.ViewModels;
+﻿using Windows.Media;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.Core.Messages
 {
-    internal class RepeatModeChangedMessage : ValueChangedMessage<RepeatMode>
+    internal class RepeatModeChangedMessage : ValueChangedMessage<MediaPlaybackAutoRepeatMode>
     {
-        public RepeatModeChangedMessage(RepeatMode value) : base(value)
+        public RepeatModeChangedMessage(MediaPlaybackAutoRepeatMode value) : base(value)
         {
         }
     }

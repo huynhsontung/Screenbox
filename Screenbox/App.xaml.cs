@@ -64,7 +64,6 @@ namespace Screenbox
             services.AddTransient<HomePageViewModel>();
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
-            services.AddSingleton<SystemMediaTransportControlsViewModel>(); // Handle system controls
 
             services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
@@ -72,6 +71,7 @@ namespace Screenbox
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
+            services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
                 new KeyValuePair<Type, string>(typeof(HomePageViewModel), "home"),
                 new KeyValuePair<Type, string>(typeof(VideosPageViewModel), "videos"),

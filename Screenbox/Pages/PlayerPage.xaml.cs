@@ -26,12 +26,9 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
-        private readonly SystemMediaTransportControlsViewModel _systemMediaTransportControlsViewModel;  // unused. just for holding reference
-
         public PlayerPage()
         {
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
-            _systemMediaTransportControlsViewModel = App.Services.GetRequiredService<SystemMediaTransportControlsViewModel>();
             this.InitializeComponent();
             RegisterSeekBarPointerHandlers();
             FocusVideoViewOnEvents();
