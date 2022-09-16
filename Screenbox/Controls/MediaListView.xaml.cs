@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
@@ -168,6 +169,7 @@ namespace Screenbox.Controls
 
             args.ItemContainer.DoubleTapped -= ItemContainerOnDoubleTapped;
             args.ItemContainer.SizeChanged -= ItemContainerOnSizeChanged;
+            args.ItemContainer.EffectiveViewportChanged -= ItemContainerOnEffectiveViewportChanged;
 
             // Registering events
             args.ItemContainer.PointerEntered += ItemContainerOnPointerEntered;
@@ -180,8 +182,8 @@ namespace Screenbox.Controls
 
             args.ItemContainer.DoubleTapped += ItemContainerOnDoubleTapped;
             args.ItemContainer.SizeChanged += ItemContainerOnSizeChanged;
+            args.ItemContainer.EffectiveViewportChanged += ItemContainerOnEffectiveViewportChanged;
 
-            args.RegisterUpdateCallback(ContainerUpdateCallback);
             UpdateAlternateLayout(args.ItemContainer, args.ItemIndex);
             if (args.ItemContainer.FindDescendant<Border>() is Border border)
             {
@@ -190,12 +192,15 @@ namespace Screenbox.Controls
             }
         }
 
-        private static async void ContainerUpdateCallback(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private static async void ItemContainerOnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
         {
-            if (args.Item is MediaViewModel media)
+            double threshold = Math.Clamp(sender.ActualHeight, 200, 1000);
+            if (args.BringIntoViewDistanceY > threshold) return;
+            SelectorItem itemContainer = (SelectorItem)sender;
+            if (itemContainer.Content is MediaViewModel media)
             {
                 await media.LoadDetailsAsync();
-                if (args.ItemContainer.ContentTemplateRoot is Control control)
+                if (itemContainer.ContentTemplateRoot is Control control)
                 {
                     UpdateDetailsLevel(control, media);
                 }
