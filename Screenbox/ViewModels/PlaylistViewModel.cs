@@ -177,6 +177,7 @@ namespace Screenbox.ViewModels
 
         partial void OnActiveItemChanged(MediaViewModel? value)
         {
+            if (value != null) HomePageViewModel.AddToRecent(value);
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
             _transportControlsService.UpdateTransportControlsDisplay(value);

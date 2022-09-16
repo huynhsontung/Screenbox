@@ -42,10 +42,15 @@ namespace Screenbox.ViewModels
 
         public async void Receive(PlaylistActiveItemChangedMessage message)
         {
-            if (message.Value is not { Source: StorageFile file }) return;
+            if (message.Value is not { Source: StorageFile }) return;
+            await UpdateRecentMediaList().ConfigureAwait(false);
+        }
+
+        public static void AddToRecent(MediaViewModel media)
+        {
+            if (media.Source is not StorageFile file) return;
             string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
             StorageApplicationPermissions.MostRecentlyUsedList.Add(file, metadata);
-            await UpdateRecentMediaList().ConfigureAwait(false);
         }
 
         public async void OnLoaded()
