@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -17,14 +18,15 @@ namespace Screenbox.ViewModels
 {
     internal partial class MusicPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private List<IGrouping<string, MediaViewModel>>? _groupedSongs;
+        [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
         private readonly object _lockObject;
-        private List<MediaViewModel>? _songs;
+        private readonly List<MediaViewModel> _songs;
         private Task _loadSongsTask;
+        private uint _fetchIndex;
 
         public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
@@ -33,6 +35,8 @@ namespace Screenbox.ViewModels
             _navigationViewDisplayMode = navigationService.DisplayMode;
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
+            _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
+            _songs = new List<MediaViewModel>();
 
             navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
@@ -58,17 +62,22 @@ namespace Screenbox.ViewModels
             NavigationViewDisplayMode = e.NewValue;
         }
 
-        [RelayCommand]
+        private bool HasSongs()
+        {
+            return _songs.Count != 0;
+        }
+
+        [RelayCommand(CanExecute = nameof(HasSongs))]
         private void Play(MediaViewModel media)
         {
-            if (_songs == null) return;
+            if (_songs.Count == 0) return;
             Messenger.Send(new QueuePlaylistMessage(_songs, media));
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(HasSongs))]
         private void ShuffleAndPlay()
         {
-            if (_songs == null) return;
+            if (_songs.Count == 0) return;
             Random rnd = new();
             List<MediaViewModel> shuffledList = _songs.OrderBy(_ => rnd.Next()).ToList();
             Messenger.Send(new QueuePlaylistMessage(shuffledList, shuffledList[0]));
@@ -76,16 +85,35 @@ namespace Screenbox.ViewModels
 
         private async Task FetchSongsInternalAsync()
         {
-            if (GroupedSongs != null) return;
-            IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync();
-            List<MediaViewModel> vms = _songs = files.Select(f => new MediaViewModel(f)).ToList();
-            await Task.WhenAll(vms.Select(vm => vm.LoadTitleAsync()));
-            GroupedSongs = vms.GroupBy(GroupByFirstLetter).ToList();
+            const int maxCount = 5000;
+
+            if (_fetchIndex > 0) return; // WIP. Temp prevent double loading
+            uint fetchIndex = _fetchIndex;
+            while (fetchIndex < maxCount)
+            {
+                IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync(fetchIndex, maxCount);
+                if (files.Count == 0) break;
+                fetchIndex += (uint)files.Count;
+
+                List<MediaViewModel> songs = files.Select(f => new MediaViewModel(f)).ToList();
+                _songs.AddRange(songs);
+                await Task.WhenAll(songs.Select(vm => vm.LoadTitleAsync()));
+
+                foreach (MediaViewModel song in songs)
+                {
+                    GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
+                }
+            }
+
+            _fetchIndex = fetchIndex;
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
         }
 
-        private string GroupByFirstLetter(MediaViewModel media)
+        private string GetFirstLetterGroup(string name)
         {
-            return char.IsLetter(media.Name, 0) ? media.Name.Substring(0, 1).ToUpper() : "#";
+            if (char.IsLetter(name, 0)) return name.Substring(0, 1).ToUpper();
+            return char.IsNumber(name, 0) ? "#" : "&";
         }
     }
 }

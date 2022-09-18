@@ -89,7 +89,7 @@ namespace Screenbox.Services
             return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
         }
 
-        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync()
+        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSongsFromLibraryAsync(uint startIndex, uint maxNumberOfItems = 50)
         {
             string[] customPropertyKeys =
             {
@@ -103,7 +103,7 @@ namespace Screenbox.Services
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
                 customPropertyKeys);
             StorageFileQueryResult result = KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
-            return result.GetFilesAsync();
+            return result.GetFilesAsync(startIndex, maxNumberOfItems);
         }
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
