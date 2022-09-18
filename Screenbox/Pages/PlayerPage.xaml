@@ -129,14 +129,21 @@
                 Grid.Column="3"
                 Margin="36,0,0,0"
                 VerticalAlignment="Center"
+                IsHitTestVisible="False"
                 Orientation="Vertical">
                 <TextBlock
                     x:Name="TitleText"
                     FontSize="20"
                     FontWeight="SemiBold"
-                    IsHitTestVisible="False"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextTrimming="CharacterEllipsis" />
+
+                <TextBlock
+                    x:Name="TitleTextSeparator"
+                    Margin="0,0,3,0"
+                    FontSize="12"
+                    Text=" –"
+                    Visibility="Collapsed" />
 
                 <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}">
                     <TextBlock
@@ -393,7 +400,7 @@
                         <Setter Target="SubtitleText.FontSize" Value="12" />
                         <Setter Target="TitleTextPanel.Margin" Value="13,0,0,0" />
                         <Setter Target="TitleTextPanel.Orientation" Value="Horizontal" />
-                        <Setter Target="TitleTextPanel.Spacing" Value="14" />
+                        <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
