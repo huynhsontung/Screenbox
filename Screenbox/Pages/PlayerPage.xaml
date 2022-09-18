@@ -135,16 +135,18 @@
                     FontSize="20"
                     FontWeight="SemiBold"
                     IsHitTestVisible="False"
-                    Text="{x:Bind ViewModel.MediaTitle, Mode=OneWay}"
+                    Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextTrimming="CharacterEllipsis" />
 
-                <TextBlock
-                    x:Name="SubtitleText"
-                    IsHitTestVisible="False"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind ViewModel.ShowSubtitle, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Run Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}" /><Run Text=" • " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
-                </TextBlock>
+                <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}">
+                    <TextBlock
+                        x:Name="SubtitleText"
+                        Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock FontSize="{x:Bind SubtitleText.FontSize, Mode=OneWay}" Visibility="{x:Bind ViewModel.Media.MusicProperties.Album, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay, FallbackValue=Collapsed}">
+                        <Run Text=" – " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
+                    </TextBlock>
+                </StackPanel>
             </StackPanel>
         </Grid>
 
@@ -456,7 +458,7 @@
                 </VisualState>
                 <VisualState x:Name="MinimalMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
+                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,8" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

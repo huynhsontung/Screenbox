@@ -7,7 +7,6 @@ using Windows.System;
 using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Converters;
@@ -23,8 +22,6 @@ namespace Screenbox.ViewModels
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>
     {
-        [ObservableProperty] private string? _mediaTitle;
-        [ObservableProperty] private bool _showSubtitle;
         [ObservableProperty] private bool _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
@@ -248,21 +245,7 @@ namespace Screenbox.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
-                ShowSubtitle = !string.IsNullOrEmpty(current.MusicProperties?.Artist);
                 if (!AudioOnly) PlayerVisible = true;
-                if (AudioOnly && !string.IsNullOrEmpty(current.MusicProperties?.Title))
-                {
-                    MediaTitle = current.MusicProperties?.Title;
-                }
-                else
-                {
-                    MediaTitle = current.Name;
-                }
-            }
-            else
-            {
-                MediaTitle = null;
-                ShowSubtitle = false;
             }
         }
 
