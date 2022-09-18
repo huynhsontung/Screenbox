@@ -53,10 +53,13 @@ namespace Screenbox.ViewModels
         private readonly IFilesService _filesService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly Queue<MediaViewModel> _cleanUpQueue;
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
+
+        private const int LastPlayedQueueCapacity = 5;
 
         public PlaylistViewModel(IFilesService filesService,
             ISystemMediaTransportControlsService transportControlsService)
@@ -65,6 +68,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _transportControlsService = transportControlsService;
+            _cleanUpQueue = new Queue<MediaViewModel>(LastPlayedQueueCapacity);
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
             Playlist.CollectionChanged += OnCollectionChanged;
@@ -177,7 +181,12 @@ namespace Screenbox.ViewModels
 
         partial void OnActiveItemChanged(MediaViewModel? value)
         {
-            if (value != null) HomePageViewModel.AddToRecent(value);
+            if (value != null)
+            {
+                HomePageViewModel.AddToRecent(value);
+                EnqueueForCleanUp(value);
+            }
+
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
             _transportControlsService.UpdateTransportControlsDisplay(value);
@@ -191,6 +200,29 @@ namespace Screenbox.ViewModels
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
+
+        private void EnqueueForCleanUp(MediaViewModel value)
+        {
+            if (_cleanUpQueue.Contains(value))
+            {
+                MediaViewModel[] filtered = _cleanUpQueue.Where(x => x != value).ToArray();
+                _cleanUpQueue.Clear();
+                foreach (MediaViewModel vm in filtered)
+                {
+                    _cleanUpQueue.Enqueue(vm);
+                }
+
+                _cleanUpQueue.Enqueue(value);
+            }
+            else if (_cleanUpQueue.Count < LastPlayedQueueCapacity)
+            {
+                _cleanUpQueue.Enqueue(value);
+            }
+            else
+            {
+                _cleanUpQueue.Dequeue().Clean();
+            }
+        }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
