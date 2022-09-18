@@ -67,6 +67,7 @@
             x:Name="LoadingIndicator"
             Grid.Row="1"
             Margin="0,16,0,0"
+            Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             IsIndeterminate="True"
@@ -129,7 +130,6 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="Fetching">
                     <VisualState.Setters>
-                        <Setter Target="ShufflePlayButton.Visibility" Value="Collapsed" />
                         <Setter Target="LoadingIndicator.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
@@ -156,6 +156,7 @@
                     <VisualState.Setters>
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
