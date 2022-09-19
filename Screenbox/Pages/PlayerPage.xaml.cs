@@ -28,12 +28,11 @@ namespace Screenbox.Pages
 
         public PlayerPage()
         {
-            DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
             this.InitializeComponent();
+            DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
             RegisterSeekBarPointerHandlers();
-            FocusVideoViewOnEvents();
             SetTitleBar();
-            UpdatePreviewVisualState();
+            UpdatePreviewType();
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
@@ -41,6 +40,8 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+            LayoutGroup.CurrentStateChanged += OnLayoutVisualStateChanged;
+            Loading += OnLoading;
         }
 
         public void FocusVideoView()
@@ -53,20 +54,17 @@ namespace Screenbox.Pages
             Window.Current.SetTitleBar(TitleBarElement);
         }
 
+        private void OnLoading(FrameworkElement sender, object args)
+        {
+            if (!ViewModel.PlayerVisible)
+                VisualStateManager.GoToState(this, "MiniPlayer", false);
+        }
+
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             // Get the size of the caption controls and set padding.
             LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
-        }
-
-        private void FocusVideoViewOnEvents()
-        {
-            LayoutGroup.CurrentStateChanged += (_, args) =>
-            {
-                if (args.OldState?.Name == "MiniPlayer" && (args.NewState == null || args.NewState.Name == "Normal"))
-                    FocusVideoView();
-            };
         }
 
         private void RegisterSeekBarPointerHandlers()
@@ -94,50 +92,68 @@ namespace Screenbox.Pages
             PlayerControls.ViewModel.ToggleFullscreenCommand.Execute(null);
         }
 
+        private void OnLayoutVisualStateChanged(object _, VisualStateChangedEventArgs args)
+        {
+            if (args.OldState?.Name == "MiniPlayer" && (args.NewState == null || args.NewState.Name == "Normal"))
+                FocusVideoView();
+        }
+
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(PlayerPageViewModel.ViewMode))
+            switch (e.PropertyName)
             {
-                switch (ViewModel.ViewMode)
-                {
-                    case WindowViewMode.Default:
-                        VisualStateManager.GoToState(this, "Normal", true);
-                        break;
-                    case WindowViewMode.Compact:
-                        ViewModel.PlayerVisible = true;
-                        VisualStateManager.GoToState(this, "CompactOverlay", true);
+                case nameof(PlayerPageViewModel.ControlsHidden):
+                    VisualStateManager.GoToState(this, ViewModel.ControlsHidden ? "ControlsHidden" : "ControlsVisible", true);
+                    break;
+                case nameof(PlayerPageViewModel.ViewMode):
+                    switch (ViewModel.ViewMode)
+                    {
+                        case WindowViewMode.Default:
+                            VisualStateManager.GoToState(this, "Normal", true);
+                            break;
+                        case WindowViewMode.Compact:
+                            ViewModel.PlayerVisible = true;
+                            VisualStateManager.GoToState(this, "CompactOverlay", true);
+                            SetTitleBar();
+                            break;
+                        case WindowViewMode.FullScreen:
+                            VisualStateManager.GoToState(this, "Fullscreen", true);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    break;
+                case nameof(PlayerPageViewModel.AudioOnly):
+                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
+                    PlayerControls.Background = ViewModel.AudioOnly
+                        ? null
+                        : (Brush)Resources["PlayerControlsBackground"];
+
+                    UpdatePreviewType();
+                    break;
+                case nameof(PlayerPageViewModel.PlayerVisible):
+                    if (ViewModel.PlayerVisible)
+                    {
                         SetTitleBar();
-                        break;
-                    case WindowViewMode.FullScreen:
-                        VisualStateManager.GoToState(this, "Fullscreen", true);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+                        VisualStateManager.GoToState(this, "Normal", true);
+                        VisualStateManager.GoToState(this, "NoPreview", true);
+                    }
+                    else
+                    {
+                        VisualStateManager.GoToState(this, "MiniPlayer", true);
+                    }
 
-            if (e.PropertyName == nameof(PlayerPageViewModel.AudioOnly))
-            {
-                PlayerControls.Background = ViewModel.AudioOnly
-                    ? null
-                    : (Brush)Resources["PlayerControlsBackground"];
-
-                UpdatePreviewVisualState();
-            }
-
-            if (e.PropertyName == nameof(PlayerPageViewModel.PlayerVisible))
-            {
-                UpdatePreviewVisualState();
-                UpdateMiniPlayerMargin();
-            }
-
-            if (e.PropertyName == nameof(PlayerPageViewModel.NavigationViewDisplayMode) && ViewModel.ViewMode == WindowViewMode.Default)
-            {
-                UpdateMiniPlayerMargin();
+                    UpdatePreviewType();
+                    UpdateMiniPlayerMargin();
+                    break;
+                case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
+                    UpdateMiniPlayerMargin();
+                    break;
             }
         }
 
-        private void UpdatePreviewVisualState()
+        private void UpdatePreviewType()
         {
             if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
             {

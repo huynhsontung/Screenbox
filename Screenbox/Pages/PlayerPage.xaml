@@ -15,6 +15,7 @@
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
+    x:Name="Page"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
@@ -308,23 +309,6 @@
             Background="{StaticResource PlayerControlsBackground}"
             IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
 
-        <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="ControlsHidden" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.ControlsHidden, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="ControlsVisible" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="MiniPlayer" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind ViewModel.PlayerVisible, Mode=OneWay}" Value="True">
-                <core:CallMethodAction MethodName="SetTitleBar" TargetObject="{x:Bind}" />
-                <core:GoToStateAction StateName="Normal" />
-                <core:GoToStateAction StateName="NoPreview" />
-            </core:DataTriggerBehavior>
-        </interactivity:Interaction.Behaviors>
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
                 <VisualStateGroup.Transitions>
@@ -352,9 +336,6 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Video" />
                 <VisualState x:Name="AudioOnly">
-                    <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.AudioOnly, Mode=OneWay}" />
-                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
@@ -446,7 +427,7 @@
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind Page.ActualTheme, Mode=OneWay}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
