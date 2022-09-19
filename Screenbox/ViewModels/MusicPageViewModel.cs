@@ -89,7 +89,7 @@ namespace Screenbox.ViewModels
             const int maxCount = 5000;
 
             if (_queryResult != null) return;
-            StorageFileQueryResult queryResult = _queryResult = _filesService.GetSongsFromLibraryAsync();
+            StorageFileQueryResult queryResult = _queryResult = _filesService.GetSongsFromLibrary();
             uint fetchIndex = 0;
             while (fetchIndex < maxCount)
             {

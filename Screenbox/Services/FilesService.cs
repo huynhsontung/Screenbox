@@ -89,7 +89,7 @@ namespace Screenbox.Services
             return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
         }
 
-        public StorageFileQueryResult GetSongsFromLibraryAsync()
+        public StorageFileQueryResult GetSongsFromLibrary()
         {
             string[] customPropertyKeys =
             {

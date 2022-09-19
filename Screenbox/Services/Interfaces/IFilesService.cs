@@ -19,7 +19,7 @@ namespace Screenbox.Services
             StorageFileQueryResult neighboringFilesQuery);
         public Task<BitmapImage?> GetThumbnailAsync(StorageFile file);
         public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder);
-        public StorageFileQueryResult GetSongsFromLibraryAsync();
+        public StorageFileQueryResult GetSongsFromLibrary();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer);
         public Task OpenFileLocationAsync(StorageFile file);
