@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -26,7 +27,7 @@ namespace Screenbox.ViewModels
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
         private Task _loadSongsTask;
-        private uint _fetchIndex;
+        private StorageFileQueryResult? _queryResult;
 
         public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
@@ -87,11 +88,12 @@ namespace Screenbox.ViewModels
         {
             const int maxCount = 5000;
 
-            if (_fetchIndex > 0) return; // WIP. Temp prevent double loading
-            uint fetchIndex = _fetchIndex;
+            if (_queryResult != null) return;
+            StorageFileQueryResult queryResult = _queryResult = _filesService.GetSongsFromLibraryAsync();
+            uint fetchIndex = 0;
             while (fetchIndex < maxCount)
             {
-                IReadOnlyList<StorageFile> files = await _filesService.GetSongsFromLibraryAsync(fetchIndex, maxCount);
+                IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
                 if (files.Count == 0) break;
                 fetchIndex += (uint)files.Count;
 
@@ -105,7 +107,6 @@ namespace Screenbox.ViewModels
                 }
             }
 
-            _fetchIndex = fetchIndex;
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             PlayCommand.NotifyCanExecuteChanged();
         }
