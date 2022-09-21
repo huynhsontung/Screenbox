@@ -81,8 +81,9 @@
             </GridView.Footer>
         </GridView>
         <TextBlock
+            Margin="0,28"
             HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            VerticalAlignment="Top"
             Text="{x:Bind strings:Resources.EmptyFolder}"
             Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
     </Grid>

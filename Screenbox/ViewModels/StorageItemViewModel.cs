@@ -3,10 +3,11 @@
 using System;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Converters;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
@@ -26,8 +27,16 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private string? _captionText;
 
-        public StorageItemViewModel(IStorageItem storageItem)
+        private readonly IFilesService _filesService;
+
+        public StorageItemViewModel(IStorageItem storageItem) :
+            this(App.Services.GetRequiredService<IFilesService>(), storageItem)
         {
+        }
+
+        public StorageItemViewModel(IFilesService filesService, IStorageItem storageItem)
+        {
+            _filesService = filesService;
             StorageItem = storageItem;
             Name = storageItem.Name;
             Path = storageItem.Path;
@@ -44,8 +53,7 @@ namespace Screenbox.ViewModels
         public async Task LoadFolderContentAsync()
         {
             if (StorageItem is not StorageFolder folder) return;
-            IReadOnlyList<IStorageItem>? items = await folder.GetItemsAsync();
-            CaptionText = Strings.Resources.ItemsCount(items.Count);
+            CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
         }
 
         private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)

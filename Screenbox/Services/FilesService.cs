@@ -89,6 +89,12 @@ namespace Screenbox.Services
             return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
         }
 
+        public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder)
+        {
+            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
+            return folder.CreateItemQueryWithOptions(queryOptions).GetItemCountAsync();
+        }
+
         public StorageFileQueryResult GetSongsFromLibrary()
         {
             string[] customPropertyKeys =

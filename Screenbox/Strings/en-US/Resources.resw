@@ -205,11 +205,11 @@
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} item selected</value>
-    <comment>#Format[Plural Int]</comment>
+    <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
     <value>{0} items selected</value>
-    <comment>#Format[Plural Int]</comment>
+    <comment>#Format[Plural]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>Add to queue</value>
@@ -241,11 +241,11 @@
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} item</value>
-    <comment>#Format[Plural Int]</comment>
+    <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
     <value>{0} items</value>
-    <comment>#Format[Plural Int]</comment>
+    <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
     <value>Empty</value>

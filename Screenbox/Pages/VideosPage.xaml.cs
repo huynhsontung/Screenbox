@@ -27,10 +27,10 @@ namespace Screenbox.Pages
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            FolderViewFrame.Navigate(typeof(FolderViewPage), await ViewModel.GetVideosLibraryAsync(),
+            FolderViewFrame.Navigate(typeof(FolderViewPage), new[] { KnownFolders.VideosLibrary },
                 new SuppressNavigationTransitionInfo());
         }
 

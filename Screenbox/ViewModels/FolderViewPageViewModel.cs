@@ -85,11 +85,14 @@ namespace Screenbox.ViewModels
             IsEmpty = Items.Count == 0;
             foreach (StorageItemViewModel item in Items)
             {
-                await item.LoadFolderContentAsync();
                 if (item.Media != null)
                 {
                     await item.Media.LoadDetailsAsync();
                     await item.Media.LoadThumbnailAsync();
+                }
+                else
+                {
+                    await item.LoadFolderContentAsync();
                 }
             }
         }
@@ -117,7 +120,7 @@ namespace Screenbox.ViewModels
                 {
                     StorageItemViewModel item = new(folder);
                     Items.Add(item);
-                    //await item.LoadFolderContentAsync();
+                    await item.LoadFolderContentAsync();
                 }
 
                 IsEmpty = Items.Count == 0;

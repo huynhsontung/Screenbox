@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
@@ -51,12 +50,6 @@ namespace Screenbox.ViewModels
 
         public void OnFolderViewFrameNavigated(object sender, NavigationEventArgs e)
         {
-            if (e.Parameter is StorageLibrary library && library.Folders.Count == 1)
-            {
-                UpdateBreadcrumbs(new[] { library.Folders[0] });
-                return;
-            }
-
             IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
             UpdateBreadcrumbs(crumbs);
         }
@@ -70,11 +63,6 @@ namespace Screenbox.ViewModels
             {
                 Breadcrumbs.Add(storageFolder.DisplayName);
             }
-        }
-
-        public IAsyncOperation<StorageLibrary> GetVideosLibraryAsync()
-        {
-            return StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
         }
     }
 }
