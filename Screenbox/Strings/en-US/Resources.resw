@@ -205,11 +205,11 @@
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} item selected</value>
-    <comment>#Format[Plural]</comment>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
     <value>{0} items selected</value>
-    <comment>#Format[Plural]</comment>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>Add to queue</value>

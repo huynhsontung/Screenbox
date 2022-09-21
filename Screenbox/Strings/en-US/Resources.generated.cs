@@ -120,9 +120,9 @@ namespace Screenbox.Strings{
         /// <summary>
         ///   Get the pluralized version of the string similar to: {0} item selected
         /// </summary>
-        public static string ItemsSelected(double pluralCount)
+        public static string ItemsSelected(int pluralCount)
         {
-            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "ItemsSelected", pluralCount, false), pluralCount);
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "ItemsSelected", (double)pluralCount, false), pluralCount);
         }
         #endregion
 

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -85,6 +86,14 @@ namespace Screenbox.Controls
             }
 
             VisualStateManager.GoToState(this, SelectionCommandBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
+        }
+
+        public void GoToCurrentItem()
+        {
+            if (ViewModel.ActiveItem != null && PlaylistListView.FindChild<ListViewBase>() is {} listView)
+            {
+                listView.SmoothScrollIntoViewWithItemAsync(ViewModel.ActiveItem, ScrollItemPlacement.Center);
+            }
         }
     }
 }

@@ -166,7 +166,8 @@
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
                 IsItemClickEnabled="True"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
-                ItemsSource="{x:Bind ViewModel.Recent}">
+                ItemsSource="{x:Bind ViewModel.Recent}"
+                SelectionMode="None">
                 <GridView.Footer>
                     <Border Height="{StaticResource ContentPageBottomPadding}" />
                 </GridView.Footer>

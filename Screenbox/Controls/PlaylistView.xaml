@@ -162,6 +162,7 @@
             </core:DataTriggerBehavior>
             <core:EventTriggerBehavior EventName="Loaded">
                 <core:CallMethodAction MethodName="UpdateLayoutState" TargetObject="{x:Bind}" />
+                <core:CallMethodAction MethodName="GoToCurrentItem" TargetObject="{x:Bind}" />
             </core:EventTriggerBehavior>
         </interactivity:Interaction.Behaviors>
 
