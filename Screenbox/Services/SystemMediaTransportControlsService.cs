@@ -33,7 +33,7 @@ namespace Screenbox.Services
         {
             SystemMediaTransportControlsDisplayUpdater displayUpdater = TransportControls.DisplayUpdater;
             displayUpdater.ClearAll();
-            displayUpdater.AppMediaId = "Screenbox";
+            displayUpdater.AppMediaId = ReswPlusLib.Macros.ApplicationName;
             if (item == null)
             {
                 return;
