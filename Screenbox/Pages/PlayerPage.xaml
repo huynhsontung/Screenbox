@@ -188,14 +188,17 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
             IsHitTestVisible="False">
             <Grid x:Name="BackgroundArt">
+                <Image
+                    x:Name="BackgroundImageNext"
+                    Source="{x:Bind AlbumArtImage.Source, Mode=OneWay}"
+                    Stretch="UniformToFill" />
                 <Image x:Name="BackgroundImage" Stretch="UniformToFill">
                     <animations:Explicit.Animations>
                         <animations:AnimationSet x:Name="BackgroundSourceChangeAnimation" IsSequential="True">
                             <animations:OpacityAnimation
-                                EasingMode="EaseIn"
+                                EasingMode="EaseInOut"
                                 To="0"
                                 Duration="0:0:1" />
                             <animations:InvokeActionsActivity>
@@ -400,6 +403,7 @@
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
@@ -409,6 +413,7 @@
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
                         <Setter Target="PlayerControls.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -479,7 +484,6 @@
                         <Setter Target="AlbumArt.CornerRadius" Value="6" />
                         <Setter Target="AlbumArt.BorderThickness" Value="0" />
                         <Setter Target="BackgroundArt.Visibility" Value="Collapsed" />
-                        <Setter Target="BackgroundElement.Background" Value="Transparent" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
