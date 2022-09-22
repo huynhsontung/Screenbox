@@ -3,6 +3,8 @@
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -52,6 +54,7 @@ namespace Screenbox.Pages
         public void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
+            UpdateSystemCaptionButtonForeground();
         }
 
         private void OnLoading(FrameworkElement sender, object args)
@@ -130,14 +133,15 @@ namespace Screenbox.Pages
                         ? null
                         : (Brush)Resources["PlayerControlsBackground"];
 
+                    UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
                 case nameof(PlayerPageViewModel.PlayerVisible):
                     if (ViewModel.PlayerVisible)
                     {
-                        SetTitleBar();
-                        VisualStateManager.GoToState(this, "Normal", true);
                         VisualStateManager.GoToState(this, "NoPreview", true);
+                        VisualStateManager.GoToState(this, "Normal", true);
+                        SetTitleBar();
                     }
                     else
                     {
@@ -150,6 +154,17 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
+                case nameof(PlayerPageViewModel.Media):
+                    BackgroundSourceChangeAnimation.Start();
+                    break;
+            }
+        }
+
+        private void UpdateSystemCaptionButtonForeground()
+        {
+            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            {
+                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
             }
         }
 

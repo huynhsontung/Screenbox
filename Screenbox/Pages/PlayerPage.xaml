@@ -11,11 +11,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
-    x:Name="Page"
     toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
     toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
@@ -24,6 +24,32 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <media:AcrylicBrush
+                        x:Key="BackgroundArtAcrylicBrush"
+                        BackgroundSource="Backdrop"
+                        FallbackColor="#C92C2C2C"
+                        TintColor="#202020"
+                        TintLuminosityOpacity="0.96"
+                        TintOpacity="0.8" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Light">
+                    <media:AcrylicBrush
+                        x:Key="BackgroundArtAcrylicBrush"
+                        BackgroundSource="Backdrop"
+                        FallbackColor="#C9F9F9F9"
+                        TintColor="#FCFCFC"
+                        TintLuminosityOpacity="0.85"
+                        TintOpacity="0.4" />
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="BackgroundArtAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
                 <GradientStop Offset="1" Color="#99000000" />
@@ -47,7 +73,6 @@
     <Grid
         x:Name="LayoutRoot"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
-        RequestedTheme="Dark"
         Translation="0,0,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -158,6 +183,41 @@
             </StackPanel>
         </Grid>
 
+        <Border
+            x:Name="BackgroundElement"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            IsHitTestVisible="False">
+            <Grid x:Name="BackgroundArt">
+                <Image x:Name="BackgroundImage" Stretch="UniformToFill">
+                    <animations:Explicit.Animations>
+                        <animations:AnimationSet x:Name="BackgroundSourceChangeAnimation" IsSequential="True">
+                            <animations:OpacityAnimation
+                                EasingMode="EaseIn"
+                                To="0"
+                                Duration="0:0:1" />
+                            <animations:InvokeActionsActivity>
+                                <core:ChangePropertyAction
+                                    PropertyName="Source"
+                                    TargetObject="{x:Bind BackgroundImage}"
+                                    Value="{x:Bind AlbumArtImage.Source, Mode=OneWay}" />
+                            </animations:InvokeActionsActivity>
+                            <animations:OpacityAnimation
+                                EasingMode="EaseOut"
+                                To="1"
+                                Duration="0:0:1" />
+                        </animations:AnimationSet>
+                    </animations:Explicit.Animations>
+                </Image>
+                <Border
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Background="{ThemeResource BackgroundArtAcrylicBrush}" />
+            </Grid>
+        </Border>
+
         <controls:PlayerElement
             x:Name="VideoView"
             Grid.Row="0"
@@ -214,8 +274,11 @@
                     VerticalAlignment="Center"
                     FontSize="80"
                     Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
-                <Border CornerRadius="{x:Bind CornerRadius}">
-                    <Image Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
+                    <Image
+                        x:Name="AlbumArtImage"
+                        Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                        Stretch="UniformToFill" />
                 </Border>
             </Grid>
         </controls1:ConstrainedBox>
@@ -334,9 +397,14 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="ContentStates">
-                <VisualState x:Name="Video" />
+                <VisualState x:Name="Video">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ActualTheme, Mode=OneWay}" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
                         <Setter Target="PlayerControls.Background" Value="Transparent" />
@@ -410,6 +478,8 @@
                         <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
                         <Setter Target="AlbumArt.CornerRadius" Value="6" />
                         <Setter Target="AlbumArt.BorderThickness" Value="0" />
+                        <Setter Target="BackgroundArt.Visibility" Value="Collapsed" />
+                        <Setter Target="BackgroundElement.Background" Value="Transparent" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
@@ -427,7 +497,6 @@
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind Page.ActualTheme, Mode=OneWay}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

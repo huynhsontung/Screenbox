@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -82,6 +83,10 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
+            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            {
+                titleBar.ButtonForegroundColor = null;
+            }
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
