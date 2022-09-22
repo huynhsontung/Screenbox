@@ -321,19 +321,18 @@
                 </Button.Flyout>
             </Button>
 
-            <ToggleButton
+            <Button
                 x:Name="FullscreenButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                IsChecked="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}"
-                Style="{StaticResource PlayerToggleButtonStyle}">
-                <ToggleButton.KeyboardAccelerators>
+                Style="{StaticResource PlayerButtonStyle}">
+                <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
-                </ToggleButton.KeyboardAccelerators>
+                </Button.KeyboardAccelerators>
                 <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE1D9;" />
-            </ToggleButton>
+            </Button>
 
             <Button
                 x:Name="CompactVolumeButton"
