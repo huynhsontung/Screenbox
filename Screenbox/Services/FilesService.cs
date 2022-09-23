@@ -71,12 +71,20 @@ namespace Screenbox.Services
 
         public async Task<BitmapImage?> GetThumbnailAsync(StorageFile file)
         {
-            StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
-            if (source != null && source.Type == ThumbnailType.Image)
+            if (!file.IsAvailable) return null;
+            try
             {
-                BitmapImage thumbnail = new();
-                await thumbnail.SetSourceAsync(source);
-                return thumbnail;
+                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                if (source != null && source.Type == ThumbnailType.Image)
+                {
+                    BitmapImage thumbnail = new();
+                    await thumbnail.SetSourceAsync(source);
+                    return thumbnail;
+                }
+            }
+            catch (Exception)
+            {
+                // pass
             }
 
             return null;

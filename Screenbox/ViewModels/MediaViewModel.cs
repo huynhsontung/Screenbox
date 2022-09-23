@@ -28,6 +28,7 @@ namespace Screenbox.ViewModels
             ? PlaybackItem.GetFromStorageFile(file)
             : PlaybackItem.GetFromUri((Uri)Source);
 
+        private readonly IFilesService _filesService;
         private PlaybackItem? _item;
         private Task _loadTask;
         private Task _loadThumbnailTask;
@@ -46,6 +47,7 @@ namespace Screenbox.ViewModels
 
         private MediaViewModel(MediaViewModel source)
         {
+            _filesService = source._filesService;
             _item = source._item;
             _name = source._name;
             _loadTask = source._loadTask;
@@ -57,19 +59,17 @@ namespace Screenbox.ViewModels
             Glyph = source.Glyph;
         }
 
-        public MediaViewModel(Uri uri)
+        public MediaViewModel(Uri uri) : this(App.Services.GetRequiredService<IFilesService>(), uri)
         {
-            Source = uri;
-            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
-            _mediaType = MediaPlaybackType.Unknown;
-            _loadTask = Task.CompletedTask;
-            _loadThumbnailTask = Task.CompletedTask;
-            Location = uri.ToString();
-            Glyph = "\ue774"; // Globe icon
         }
 
-        public MediaViewModel(StorageFile file)
+        public MediaViewModel(StorageFile file) : this(App.Services.GetRequiredService<IFilesService>(), file)
         {
+        }
+
+        public MediaViewModel(IFilesService filesService, StorageFile file)
+        {
+            _filesService = filesService;
             Source = file;
             _name = file.Name;
             _loadTask = Task.CompletedTask;
@@ -77,6 +77,18 @@ namespace Screenbox.ViewModels
             _mediaType = GetMediaTypeForFile(file);
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
+        }
+
+        public MediaViewModel(IFilesService filesService, Uri uri)
+        {
+            _filesService = filesService;
+            Source = uri;
+            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            _mediaType = MediaPlaybackType.Unknown;
+            _loadTask = Task.CompletedTask;
+            _loadThumbnailTask = Task.CompletedTask;
+            Location = uri.ToString();
+            Glyph = "\ue774"; // Globe icon
         }
 
         public MediaViewModel Clone()
@@ -115,7 +127,7 @@ namespace Screenbox.ViewModels
 
         private async Task LoadDetailsInternalAsync()
         {
-            if (Source is not StorageFile file) return;
+            if (Source is not StorageFile { IsAvailable: true } file) return;
             string[] additionalPropertyKeys =
             {
                 SystemProperties.Title,
@@ -123,48 +135,55 @@ namespace Screenbox.ViewModels
                 SystemProperties.Media.Duration
             };
 
-            IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
-            if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
+            try
             {
-                Name = name;
-            }
+                IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+                if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
+                {
+                    Name = name;
+                }
 
-            if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
-            {
-                Duration = TimeSpan.FromTicks((long)ticks);
-            }
+                if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                {
+                    Duration = TimeSpan.FromTicks((long)ticks);
+                }
 
-            BasicProperties ??= await file.GetBasicPropertiesAsync();
+                BasicProperties ??= await file.GetBasicPropertiesAsync();
 
-            switch (MediaType)
-            {
-                case MediaPlaybackType.Video:
-                    VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
-                    break;
-                case MediaPlaybackType.Music:
-                    MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
-                    if (MusicProperties != null)
-                    {
-                        Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                        Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
-
-                        if (Artists == null)
+                switch (MediaType)
+                {
+                    case MediaPlaybackType.Video:
+                        VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
+                        break;
+                    case MediaPlaybackType.Music:
+                        MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
+                        if (MusicProperties != null)
                         {
-                            if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
-                                contributingArtists.Length == 0)
+                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                            Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+
+                            if (Artists == null)
                             {
-                                Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
-                            }
-                            else
-                            {
-                                Artists = contributingArtists
-                                    .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
-                                    .ToArray();
+                                if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
+                                    contributingArtists.Length == 0)
+                                {
+                                    Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
+                                }
+                                else
+                                {
+                                    Artists = contributingArtists
+                                        .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                                        .ToArray();
+                                }
                             }
                         }
-                    }
 
-                    break;
+                        break;
+                }
+            }
+            catch (Exception)
+            {
+                // pass
             }
         }
 
@@ -179,8 +198,7 @@ namespace Screenbox.ViewModels
         {
             if (Thumbnail == null && Source is StorageFile file)
             {
-                IFilesService filesService = App.Services.GetRequiredService<IFilesService>();
-                Thumbnail = await filesService.GetThumbnailAsync(file);
+                Thumbnail = await _filesService.GetThumbnailAsync(file);
             }
         }
 
