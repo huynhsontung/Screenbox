@@ -272,6 +272,9 @@
             AspectRatio="1:1"
             IsHitTestVisible="False"
             Visibility="Collapsed">
+            <controls1:ConstrainedBox.Transitions>
+                <RepositionThemeTransition />
+            </controls1:ConstrainedBox.Transitions>
             <Grid
                 x:Name="AlbumArt"
                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -376,13 +379,18 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom" />
 
+        <Border
+            x:Name="PlayerControlsBackground"
+            Grid.Row="2"
+            Grid.Column="0"
+            Background="{StaticResource PlayerControlsBackground}"
+            BackgroundTransition="{StaticResource DefaultBackgroundTransition}" />
+
         <controls:PlayerControls
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12"
-            Background="{StaticResource PlayerControlsBackground}"
-            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
             IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
             <controls:PlayerControls.Transitions>
                 <EdgeUIThemeTransition />
@@ -409,6 +417,7 @@
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="TitleBarArea.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -425,7 +434,7 @@
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ActualTheme, Mode=OneWay}" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
-                        <Setter Target="PlayerControls.Background" Value="Transparent" />
+                        <Setter Target="PlayerControlsBackground.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                     </VisualState.Setters>
@@ -500,12 +509,10 @@
                         <Setter Target="BackgroundArt.Visibility" Value="Collapsed" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
-                        <!--<Setter Target="PlayerControls.MinWidth" Value="302" />
-                        <Setter Target="PlayerControls.MaxWidth" Value="392" />-->
-                        <Setter Target="PlayerControls.Background" Value="Transparent" />
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
+                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
