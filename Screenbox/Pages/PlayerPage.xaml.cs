@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -28,6 +29,8 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
+        private CancellationTokenSource? _animationCancellationTokenSource;
+
         public PlayerPage()
         {
             this.InitializeComponent();
@@ -44,6 +47,7 @@ namespace Screenbox.Pages
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             LayoutGroup.CurrentStateChanged += OnLayoutVisualStateChanged;
             Loading += OnLoading;
+            AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
         }
 
         public void FocusVideoView()
@@ -55,6 +59,11 @@ namespace Screenbox.Pages
         {
             Window.Current.SetTitleBar(TitleBarElement);
             UpdateSystemCaptionButtonForeground();
+        }
+
+        private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            PlayBackgroundArtChangeCrossFadeAnimation();
         }
 
         private void OnLoading(FrameworkElement sender, object args)
@@ -154,10 +163,44 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
-                case nameof(PlayerPageViewModel.Media):
-                    BackgroundSourceChangeAnimation.Start();
-                    break;
             }
+        }
+
+        private async void PlayBackgroundArtChangeCrossFadeAnimation()
+        {
+            // AnimationSet does not throw exception on cancellation
+            _animationCancellationTokenSource?.Cancel();
+            if (BackgroundElement.Visibility == Visibility.Collapsed ||
+            BackgroundArt.Visibility == Visibility.Collapsed)
+            {
+                BackgroundImage.Source = AlbumArtImage.Source;
+                return;
+            }
+
+            using CancellationTokenSource cts = _animationCancellationTokenSource = new CancellationTokenSource();
+            if (ViewModel.Media == null)
+            {
+                await BackgroundArtFadeOutAnimation.StartAsync(cts.Token);
+                BackgroundImage.Source = null;
+            }
+            else if (BackgroundImage.Source == null)
+            {
+                BackgroundImageNext.Visibility = Visibility.Collapsed;
+                BackgroundImage.GetVisual().Opacity = 0;
+                BackgroundImage.Source = AlbumArtImage.Source;
+                await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
+            }
+            else
+            {
+                BackgroundImageNext.Visibility = Visibility.Visible;
+                await BackgroundArtFadeOutAnimation.StartAsync(cts.Token);
+                BackgroundImage.Source = AlbumArtImage.Source;
+                await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
+                BackgroundImageNext.Visibility = Visibility.Collapsed;
+            }
+
+            if (cts == _animationCancellationTokenSource)
+                _animationCancellationTokenSource = null;
         }
 
         private void UpdateSystemCaptionButtonForeground()

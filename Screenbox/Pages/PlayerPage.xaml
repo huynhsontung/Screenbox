@@ -196,17 +196,13 @@
                     Stretch="UniformToFill" />
                 <Image x:Name="BackgroundImage" Stretch="UniformToFill">
                     <animations:Explicit.Animations>
-                        <animations:AnimationSet x:Name="BackgroundSourceChangeAnimation" IsSequential="True">
+                        <animations:AnimationSet x:Name="BackgroundArtFadeOutAnimation">
                             <animations:OpacityAnimation
                                 EasingMode="EaseInOut"
                                 To="0"
                                 Duration="0:0:1" />
-                            <animations:InvokeActionsActivity>
-                                <core:ChangePropertyAction
-                                    PropertyName="Source"
-                                    TargetObject="{x:Bind BackgroundImage}"
-                                    Value="{x:Bind AlbumArtImage.Source, Mode=OneWay}" />
-                            </animations:InvokeActionsActivity>
+                        </animations:AnimationSet>
+                        <animations:AnimationSet x:Name="BackgroundArtFadeInAnimation">
                             <animations:OpacityAnimation
                                 EasingMode="EaseOut"
                                 To="1"
