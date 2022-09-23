@@ -194,6 +194,7 @@
     <Grid
         Padding="{x:Bind Padding, Mode=OneWay}"
         Background="{x:Bind Background, Mode=OneWay}"
+        BackgroundTransition="{x:Bind BackgroundTransition, Mode=OneWay}"
         XYFocusKeyboardNavigation="Enabled">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -45,8 +45,6 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-            LayoutGroup.CurrentStateChanged += OnLayoutVisualStateChanged;
-            Loading += OnLoading;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
         }
 
@@ -97,11 +95,6 @@ namespace Screenbox.Pages
         {
             ViewModel.SeekBarPointerPressed = false;
             FocusVideoView();
-        }
-
-        private void VideoView_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            PlayerControls.ViewModel.ToggleFullscreenCommand.Execute(null);
         }
 
         private void OnLayoutVisualStateChanged(object _, VisualStateChangedEventArgs args)

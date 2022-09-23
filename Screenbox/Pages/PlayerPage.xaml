@@ -21,6 +21,7 @@
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
+    Loading="OnLoading"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -67,13 +68,19 @@
                     MaxHeight="500"
                     IsFlyout="True" />
             </Flyout>
+
+            <BrushTransition x:Key="DefaultBackgroundTransition" />
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid
         x:Name="LayoutRoot"
+        BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         Translation="0,0,8">
+        <Grid.Transitions>
+            <PaneThemeTransition />
+        </Grid.Transitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -93,6 +100,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Background="{StaticResource TitleBarBackground}"
+            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
             Canvas.ZIndex="3" />
 
         <Grid
@@ -157,6 +165,9 @@
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Orientation="Vertical">
+                <StackPanel.Transitions>
+                    <RepositionThemeTransition />
+                </StackPanel.Transitions>
                 <TextBlock
                     x:Name="TitleText"
                     FontSize="20"
@@ -226,7 +237,6 @@
             VerticalAlignment="Stretch"
             Click="{x:Bind ViewModel.ToggleControlsVisibility}"
             ContextFlyout="{x:Bind PlayerControls.VideoContextMenu, Mode=OneWay}"
-            DoubleTapped="VideoView_OnDoubleTapped"
             ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"
@@ -243,6 +253,9 @@
                         PropertyName="VideoViewFocused"
                         TargetObject="{x:Bind ViewModel}"
                         Value="False" />
+                </core:EventTriggerBehavior>
+                <core:EventTriggerBehavior EventName="DoubleTapped">
+                    <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </controls:PlayerElement>
@@ -369,7 +382,12 @@
             Grid.Column="0"
             Padding="6,20,6,12"
             Background="{StaticResource PlayerControlsBackground}"
-            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
+            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
+            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
+            <controls:PlayerControls.Transitions>
+                <EdgeUIThemeTransition />
+            </controls:PlayerControls.Transitions>
+        </controls:PlayerControls>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
@@ -428,7 +446,7 @@
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="LayoutGroup">
+            <VisualStateGroup x:Name="LayoutGroup" CurrentStateChanged="OnLayoutVisualStateChanged">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>

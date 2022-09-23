@@ -27,6 +27,18 @@ namespace Screenbox.Controls
             typeof(PlayerControls),
             new PropertyMetadata(default(MenuFlyout)));
 
+        public static readonly DependencyProperty BackgroundTransitionProperty = DependencyProperty.Register(
+            "BackgroundTransition",
+            typeof(BrushTransition),
+            typeof(PlayerControls),
+            new PropertyMetadata(null));
+
+        public BrushTransition BackgroundTransition
+        {
+            get => (BrushTransition)GetValue(BackgroundTransitionProperty);
+            set => SetValue(BackgroundTransitionProperty, value);
+        }
+
         public MenuFlyout VideoContextMenu
         {
             get => (MenuFlyout)GetValue(VideoContextMenuProperty);
