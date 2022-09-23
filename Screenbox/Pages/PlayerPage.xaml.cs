@@ -131,10 +131,6 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
-                    PlayerControls.Background = ViewModel.AudioOnly
-                        ? null
-                        : (Brush)Resources["PlayerControlsBackground"];
-
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
