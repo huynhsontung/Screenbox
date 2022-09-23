@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -60,10 +62,10 @@ namespace Screenbox.ViewModels
 
         private async Task UpdateRecentMediaList()
         {
-            IEnumerable<Task<StorageFile>> tasks = StorageApplicationPermissions.MostRecentlyUsedList.Entries
+            IEnumerable<Task<StorageFile?>> tasks = StorageApplicationPermissions.MostRecentlyUsedList.Entries
                 .OrderByDescending(x => x.Metadata)
                 .Select(x => ConvertMruTokenToStorageFile(x.Token));
-            StorageFile[] files = await Task.WhenAll(tasks);
+            StorageFile[] files = (await Task.WhenAll(tasks)).OfType<StorageFile>().ToArray();
             for (int i = 0; i < files.Length; i++)
             {
                 StorageFile file = files[i];
@@ -117,9 +119,17 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private static Task<StorageFile> ConvertMruTokenToStorageFile(string token)
+        private static async Task<StorageFile?> ConvertMruTokenToStorageFile(string token)
         {
-            return StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token).AsTask();
+            try
+            {
+                return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
+                    AccessCacheOptions.UseReadOnlyCachedCopy | AccessCacheOptions.SuppressAccessTimeUpdate);
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                return null;
+            }
         }
     }
 }
