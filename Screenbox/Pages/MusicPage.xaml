@@ -36,7 +36,8 @@
                 x:Name="HeaderAddFolderButton"
                 Grid.Column="1"
                 Margin="{StaticResource ContentPageRightMargin}"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Command="{x:Bind ViewModel.AddFolderCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8f4;" />
                     <TextBlock Text="{x:Bind strings:Resources.AddFolder}" />

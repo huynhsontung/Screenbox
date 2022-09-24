@@ -27,7 +27,7 @@ namespace Screenbox.ViewModels
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
         private Task _loadSongsTask;
-        private StorageFileQueryResult? _queryResult;
+        private StorageLibrary? _library;
 
         public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
@@ -84,12 +84,25 @@ namespace Screenbox.ViewModels
             Messenger.Send(new QueuePlaylistMessage(shuffledList, shuffledList[0]));
         }
 
+        [RelayCommand]
+        private async Task AddFolder()
+        {
+            if (_library == null) return;
+            await _library.RequestAddFolderAsync();
+        }
+
         private async Task FetchSongsInternalAsync()
         {
             const int maxCount = 5000;
 
-            if (_queryResult != null) return;
-            StorageFileQueryResult queryResult = _queryResult = _filesService.GetSongsFromLibrary();
+            if (_songs.Count > 0) return;
+            if (_library == null)
+            {
+                _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+                _library.DefinitionChanged += LibraryOnDefinitionChanged;
+            }
+
+            StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
             uint fetchIndex = 0;
             while (fetchIndex < maxCount)
             {
@@ -109,6 +122,18 @@ namespace Screenbox.ViewModels
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             PlayCommand.NotifyCanExecuteChanged();
+        }
+
+        private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
+        {
+            if (!_loadSongsTask.IsCompleted)
+            {
+                await _loadSongsTask;
+            }
+
+            GroupedSongs.Clear();
+            _songs.Clear();
+            await FetchSongsAsync();
         }
 
         private string GetFirstLetterGroup(string name)
