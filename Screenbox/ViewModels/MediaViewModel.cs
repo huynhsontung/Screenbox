@@ -24,8 +24,8 @@ namespace Screenbox.ViewModels
         public string Glyph { get; }
 
         public PlaybackItem Item => _item ??= Source is StorageFile file
-            ? new PlaybackItem(_mediaService, file)
-            : new PlaybackItem(_mediaService, (Uri)Source);
+            ? new PlaybackItem(_mediaService.CreateMedia(file))
+            : new PlaybackItem(_mediaService.CreateMedia((Uri)Source));
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;

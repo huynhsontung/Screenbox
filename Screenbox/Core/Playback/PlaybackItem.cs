@@ -2,8 +2,6 @@
 
 using System;
 using LibVLCSharp.Shared;
-using Windows.Storage;
-using Screenbox.Services;
 
 namespace Screenbox.Core.Playback
 {
@@ -25,7 +23,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan? Duration => Source.Duration > 0 ? TimeSpan.FromMilliseconds(Source.Duration) : null;
 
-        private PlaybackItem(Media media)
+        public PlaybackItem(Media media)
         {
             Source = media;
             AudioTracks = new PlaybackAudioTrackList(media);
@@ -33,14 +31,6 @@ namespace Screenbox.Core.Playback
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
             Chapters = new PlaybackChapterList();
             StartTime = TimeSpan.Zero;
-        }
-
-        internal PlaybackItem(IMediaService mediaService, IStorageFile file) : this(mediaService.CreateMedia(file))
-        {
-        }
-
-        internal PlaybackItem(IMediaService mediaService, Uri uri) : this(mediaService.CreateMedia(uri))
-        {
         }
     }
 }
