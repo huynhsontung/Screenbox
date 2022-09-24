@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
+using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
 {
@@ -26,10 +27,12 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isEmpty;
 
         private readonly IFilesService _filesService;
+        private readonly StorageItemViewModelFactory _storageVmFactory;
 
-        public FolderViewPageViewModel(IFilesService filesService)
+        public FolderViewPageViewModel(IFilesService filesService, StorageItemViewModelFactory storageVmFactory)
         {
             _filesService = filesService;
+            _storageVmFactory = storageVmFactory;
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
         }
@@ -71,14 +74,14 @@ namespace Screenbox.ViewModels
             IReadOnlyCollection<StorageFolder> subfolders = await folder.GetFoldersAsync();
             foreach (StorageFolder subfolder in subfolders)
             {
-                StorageItemViewModel item = new(subfolder);
+                StorageItemViewModel item = _storageVmFactory.GetTransient(subfolder);
                 Items.Add(item);
             }
 
             IReadOnlyList<StorageFile> files = await _filesService.GetSupportedFilesAsync(folder);
             foreach (StorageFile file in files)
             {
-                StorageItemViewModel item = new(file);
+                StorageItemViewModel item = _storageVmFactory.GetTransient(file);
                 Items.Add(item);
             }
 
@@ -118,7 +121,7 @@ namespace Screenbox.ViewModels
                 Items.Clear();
                 foreach (StorageFolder folder in library.Folders)
                 {
-                    StorageItemViewModel item = new(folder);
+                    StorageItemViewModel item = _storageVmFactory.GetTransient(folder);
                     Items.Add(item);
                     await item.LoadFolderContentAsync();
                 }

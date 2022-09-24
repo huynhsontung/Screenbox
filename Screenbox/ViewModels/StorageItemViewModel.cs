@@ -5,8 +5,7 @@ using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Converters;
+using Screenbox.Factories;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -29,12 +28,9 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
 
-        public StorageItemViewModel(IStorageItem storageItem) :
-            this(App.Services.GetRequiredService<IFilesService>(), storageItem)
-        {
-        }
-
-        public StorageItemViewModel(IFilesService filesService, IStorageItem storageItem)
+        public StorageItemViewModel(IFilesService filesService,
+            MediaViewModelFactory mediaFactory,
+            IStorageItem storageItem)
         {
             _filesService = filesService;
             StorageItem = storageItem;
@@ -45,7 +41,7 @@ namespace Screenbox.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = new MediaViewModel(file);
+                Media = mediaFactory.GetSingleton(file);
                 Media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
@@ -58,14 +54,9 @@ namespace Screenbox.ViewModels
 
         private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
+            if (e.PropertyName == nameof(MediaViewModel.Caption) && !string.IsNullOrEmpty(Media?.Caption))
             {
-                case nameof(Media.MusicProperties) when !string.IsNullOrEmpty(Media?.MusicProperties?.Artist):
-                    CaptionText = Media?.MusicProperties?.Artist;
-                    break;
-                case nameof(Media.VideoProperties) when Media?.VideoProperties != null:
-                    CaptionText ??= HumanizedDurationConverter.Convert(Media.VideoProperties.Duration);
-                    break;
+                CaptionText = Media?.Caption;
             }
         }
     }

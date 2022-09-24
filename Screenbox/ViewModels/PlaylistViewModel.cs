@@ -18,6 +18,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
+using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
 {
@@ -52,6 +53,7 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
+        private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly Queue<MediaViewModel> _cleanUpQueue;
         private IMediaPlayer? _mediaPlayer;
@@ -62,12 +64,14 @@ namespace Screenbox.ViewModels
         private const int LastPlayedQueueCapacity = 5;
 
         public PlaylistViewModel(IFilesService filesService,
-            ISystemMediaTransportControlsService transportControlsService)
+            ISystemMediaTransportControlsService transportControlsService,
+            MediaViewModelFactory mediaFactory)
         {
             Playlist = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _transportControlsService = transportControlsService;
+            _mediaFactory = mediaFactory;
             _cleanUpQueue = new Queue<MediaViewModel>(LastPlayedQueueCapacity);
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
@@ -269,7 +273,7 @@ namespace Screenbox.ViewModels
 
                 if (item is StorageFile storageFile)
                 {
-                    Playlist.Add(MediaViewModel.GetSingleton(storageFile));
+                    Playlist.Add(_mediaFactory.GetSingleton(storageFile));
                 }
             }
         }
@@ -310,13 +314,13 @@ namespace Screenbox.ViewModels
             switch (value)
             {
                 case StorageFile file:
-                    vm = new MediaViewModel(file);
+                    vm = _mediaFactory.GetTransient(file);
                     break;
                 case MediaViewModel vmValue:
                     vm = vmValue;
                     break;
                 case Uri uri:
-                    vm = new MediaViewModel(uri);
+                    vm = _mediaFactory.GetTransient(uri);
                     break;
                 case IReadOnlyList<IStorageItem> files:
                     Play(files);

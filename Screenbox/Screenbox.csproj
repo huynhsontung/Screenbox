@@ -217,6 +217,8 @@
     <Compile Include="Core\RendererEventArgs.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
+    <Compile Include="Factories\MediaViewModelFactory.cs" />
+    <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Pages\FolderViewPage.xaml.cs">
       <DependentUpon>FolderViewPage.xaml</DependentUpon>
     </Compile>

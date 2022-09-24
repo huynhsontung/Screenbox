@@ -14,6 +14,7 @@ using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
+using Screenbox.Factories;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Screenbox.ViewModels;
@@ -47,6 +48,7 @@ namespace Screenbox
         {
             var services = new ServiceCollection();
 
+            // View models
             services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<PropertyViewModel>();
             services.AddTransient<ChapterViewModel>();
@@ -65,6 +67,11 @@ namespace Screenbox
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls
 
+            // Factories
+            services.AddSingleton<MediaViewModelFactory>();
+            services.AddSingleton<StorageItemViewModelFactory>();
+
+            // Services
             services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<INotificationService, NotificationService>();

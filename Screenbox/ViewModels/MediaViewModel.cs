@@ -8,7 +8,6 @@ using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
-using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Converters;
 using Screenbox.Core.Playback;
@@ -25,13 +24,11 @@ namespace Screenbox.ViewModels
         public string Glyph { get; }
 
         public PlaybackItem Item => _item ??= Source is StorageFile file
-            ? PlaybackItem.GetSingleton(file)
-            : PlaybackItem.GetSingleton((Uri)Source);
-
-        private static readonly Dictionary<string, WeakReference<MediaViewModel>> References = new();
-        private static int _referencesCleanUpThreshold = 500;
+            ? new PlaybackItem(_mediaService, file)
+            : new PlaybackItem(_mediaService, (Uri)Source);
 
         private readonly IFilesService _filesService;
+        private readonly IMediaService _mediaService;
         private PlaybackItem? _item;
         private Task _loadTask;
         private Task _loadThumbnailTask;
@@ -47,10 +44,12 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private ArtistViewModel[]? _artists;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
+        [ObservableProperty] private string? _caption;
 
         private MediaViewModel(MediaViewModel source)
         {
             _filesService = source._filesService;
+            _mediaService = source._mediaService;
             _item = source._item;
             _name = source._name;
             _loadTask = source._loadTask;
@@ -62,17 +61,10 @@ namespace Screenbox.ViewModels
             Glyph = source.Glyph;
         }
 
-        public MediaViewModel(Uri uri) : this(App.Services.GetRequiredService<IFilesService>(), uri)
-        {
-        }
-
-        public MediaViewModel(StorageFile file) : this(App.Services.GetRequiredService<IFilesService>(), file)
-        {
-        }
-
-        public MediaViewModel(IFilesService filesService, StorageFile file)
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService, StorageFile file)
         {
             _filesService = filesService;
+            _mediaService = mediaService;
             Source = file;
             _name = file.Name;
             _loadTask = Task.CompletedTask;
@@ -82,9 +74,10 @@ namespace Screenbox.ViewModels
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
 
-        public MediaViewModel(IFilesService filesService, Uri uri)
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService, Uri uri)
         {
             _filesService = filesService;
+            _mediaService = mediaService;
             Source = uri;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
@@ -92,37 +85,6 @@ namespace Screenbox.ViewModels
             _loadThumbnailTask = Task.CompletedTask;
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
-        }
-
-        public static MediaViewModel GetSingleton(StorageFile file)
-        {
-            string path = file.Path;
-            if (!References.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||
-                !reference.TryGetTarget(out MediaViewModel instance))
-            {
-                instance = new MediaViewModel(file);
-                if (!string.IsNullOrEmpty(path))
-                {
-                    References[path] = new WeakReference<MediaViewModel>(instance);
-                    CleanUpStaleReferences();
-                }
-            }
-
-            return instance;
-        }
-
-        private static void CleanUpStaleReferences()
-        {
-            if (References.Count < _referencesCleanUpThreshold) return;
-            IEnumerable<string> keysToRemove = References
-                .Where(pair => !pair.Value.TryGetTarget(out MediaViewModel _))
-                .Select(pair => pair.Key);
-            foreach (string key in keysToRemove)
-            {
-                References.Remove(key);
-            }
-
-            _referencesCleanUpThreshold = Math.Max(References.Count * 2, _referencesCleanUpThreshold);
         }
 
         public MediaViewModel Clone()
@@ -179,7 +141,9 @@ namespace Screenbox.ViewModels
 
                 if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
                 {
-                    Duration = TimeSpan.FromTicks((long)ticks);
+                    TimeSpan duration = TimeSpan.FromTicks((long)ticks);
+                    Duration = duration;
+                    Caption = HumanizedDurationConverter.Convert(duration);
                 }
 
                 BasicProperties ??= await file.GetBasicPropertiesAsync();
@@ -195,6 +159,11 @@ namespace Screenbox.ViewModels
                         {
                             Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
                             Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+
+                            if (!string.IsNullOrEmpty(MusicProperties.Artist))
+                            {
+                                Caption = MusicProperties.Artist;
+                            }
 
                             if (Artists == null)
                             {

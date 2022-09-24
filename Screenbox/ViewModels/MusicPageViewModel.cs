@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
+using Screenbox.Factories;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -24,15 +25,19 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
+        private readonly MediaViewModelFactory _mediaFactory;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
         private Task _loadSongsTask;
         private StorageLibrary? _library;
 
-        public MusicPageViewModel(IFilesService filesService, INavigationService navigationService)
+        public MusicPageViewModel(IFilesService filesService,
+            INavigationService navigationService,
+            MediaViewModelFactory mediaFactory)
         {
             _filesService = filesService;
             _navigationService = navigationService;
+            _mediaFactory = mediaFactory;
             _navigationViewDisplayMode = navigationService.DisplayMode;
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
@@ -110,7 +115,7 @@ namespace Screenbox.ViewModels
                 if (files.Count == 0) break;
                 fetchIndex += (uint)files.Count;
 
-                List<MediaViewModel> songs = files.Select(MediaViewModel.GetSingleton).ToList();
+                List<MediaViewModel> songs = files.Select(_mediaFactory.GetSingleton).ToList();
                 _songs.AddRange(songs);
                 await Task.WhenAll(songs.Select(vm => vm.LoadTitleAsync()));
 

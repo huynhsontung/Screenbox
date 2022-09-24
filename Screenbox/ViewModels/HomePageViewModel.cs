@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
+using Screenbox.Factories;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -20,16 +21,19 @@ namespace Screenbox.ViewModels
     internal partial class HomePageViewModel : ObservableRecipient,
         IRecipient<PlaylistActiveItemChangedMessage>
     {
-        public ObservableCollection<StorageItemViewModel> Recent { get; }
+        public ObservableCollection<MediaViewModel> Recent { get; }
 
         public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0;
 
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public HomePageViewModel(INavigationService navigationService)
+        private readonly MediaViewModelFactory _mediaFactory;
+
+        public HomePageViewModel(INavigationService navigationService, MediaViewModelFactory mediaFactory)
         {
+            _mediaFactory = mediaFactory;
             _navigationViewDisplayMode = navigationService.DisplayMode;
-            Recent = new ObservableCollection<StorageItemViewModel>();
+            Recent = new ObservableCollection<MediaViewModel>();
 
             navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
@@ -71,16 +75,16 @@ namespace Screenbox.ViewModels
                 StorageFile file = files[i];
                 if (i >= Recent.Count)
                 {
-                    Recent.Add(new StorageItemViewModel(file));
+                    Recent.Add(_mediaFactory.GetSingleton(file));
                 }
-                else if (!file.IsEqual(Recent[i].StorageItem))
+                else if (!file.IsEqual(Recent[i].Source as IStorageItem))
                 {
                     // Find index of the VM of the same file
                     // There is no FindIndex method for ObservableCollection :(
                     int existingIndex = -1;
                     for (int j = i + 1; j < Recent.Count; j++)
                     {
-                        if (file.IsEqual(Recent[j].StorageItem))
+                        if (file.IsEqual(Recent[j].Source as IStorageItem))
                         {
                             existingIndex = j;
                             break;
@@ -89,11 +93,11 @@ namespace Screenbox.ViewModels
 
                     if (existingIndex == -1)
                     {
-                        Recent.Insert(i, new StorageItemViewModel(file));
+                        Recent.Insert(i, _mediaFactory.GetSingleton(file));
                     }
                     else
                     {
-                        StorageItemViewModel toInsert = Recent[existingIndex];
+                        MediaViewModel toInsert = Recent[existingIndex];
                         Recent.RemoveAt(existingIndex);
                         Recent.Insert(i, toInsert);
                     }
@@ -106,7 +110,7 @@ namespace Screenbox.ViewModels
                 Recent.RemoveAt(Recent.Count - 1);
             }
 
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media!.LoadDetailsAndThumbnailAsync());
+            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAndThumbnailAsync());
             await Task.WhenAll(loadingTasks).ConfigureAwait(false);
         }
 
