@@ -110,7 +110,7 @@ namespace Screenbox.ViewModels
                 if (files.Count == 0) break;
                 fetchIndex += (uint)files.Count;
 
-                List<MediaViewModel> songs = files.Select(f => new MediaViewModel(f)).ToList();
+                List<MediaViewModel> songs = files.Select(MediaViewModel.GetSingleton).ToList();
                 _songs.AddRange(songs);
                 await Task.WhenAll(songs.Select(vm => vm.LoadTitleAsync()));
 

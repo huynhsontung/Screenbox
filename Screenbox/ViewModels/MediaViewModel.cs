@@ -28,6 +28,9 @@ namespace Screenbox.ViewModels
             ? PlaybackItem.GetFromStorageFile(file)
             : PlaybackItem.GetFromUri((Uri)Source);
 
+        private static readonly Dictionary<string, WeakReference<MediaViewModel>> References = new();
+        private static int _referencesCleanUpThreshold = 500;
+
         private readonly IFilesService _filesService;
         private PlaybackItem? _item;
         private Task _loadTask;
@@ -89,6 +92,37 @@ namespace Screenbox.ViewModels
             _loadThumbnailTask = Task.CompletedTask;
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
+        }
+
+        public static MediaViewModel GetSingleton(StorageFile file)
+        {
+            string path = file.Path;
+            if (!References.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||
+                !reference.TryGetTarget(out MediaViewModel instance))
+            {
+                instance = new MediaViewModel(file);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    References[path] = new WeakReference<MediaViewModel>(instance);
+                    CleanUpStaleReferences();
+                }
+            }
+
+            return instance;
+        }
+
+        private static void CleanUpStaleReferences()
+        {
+            if (References.Count < _referencesCleanUpThreshold) return;
+            IEnumerable<string> keysToRemove = References
+                .Where(pair => !pair.Value.TryGetTarget(out MediaViewModel _))
+                .Select(pair => pair.Key);
+            foreach (string key in keysToRemove)
+            {
+                References.Remove(key);
+            }
+
+            _referencesCleanUpThreshold = Math.Max(References.Count * 2, _referencesCleanUpThreshold);
         }
 
         public MediaViewModel Clone()

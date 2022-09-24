@@ -269,7 +269,7 @@ namespace Screenbox.ViewModels
 
                 if (item is StorageFile storageFile)
                 {
-                    Playlist.Add(new MediaViewModel(storageFile));
+                    Playlist.Add(MediaViewModel.GetSingleton(storageFile));
                 }
             }
         }
