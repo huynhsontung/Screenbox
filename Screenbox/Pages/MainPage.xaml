@@ -89,6 +89,10 @@
                     Content="{x:Bind strings:Resources.Music}"
                     Icon="Audio"
                     Tag="music" />
+                <muxc:NavigationViewItem
+                    Content="Network"
+                    Icon="MapDrive"
+                    Tag="network" />
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
                     Content="{x:Bind strings:Resources.PlayQueue}"

@@ -41,6 +41,7 @@ namespace Screenbox.Pages
                 { "videos", typeof(VideosPage) },
                 { "music", typeof(MusicPage) },
                 { "queue", typeof(PlayQueuePage) },
+                { "network", typeof(NetworkPage) },
                 { "settings", typeof(SettingsPage) }
             };
 
