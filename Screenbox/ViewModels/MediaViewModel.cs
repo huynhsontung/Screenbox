@@ -25,8 +25,8 @@ namespace Screenbox.ViewModels
         public string Glyph { get; }
 
         public PlaybackItem Item => _item ??= Source is StorageFile file
-            ? PlaybackItem.GetFromStorageFile(file)
-            : PlaybackItem.GetFromUri((Uri)Source);
+            ? PlaybackItem.GetSingleton(file)
+            : PlaybackItem.GetSingleton((Uri)Source);
 
         private static readonly Dictionary<string, WeakReference<MediaViewModel>> References = new();
         private static int _referencesCleanUpThreshold = 500;

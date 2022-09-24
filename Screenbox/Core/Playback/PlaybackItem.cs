@@ -39,7 +39,7 @@ namespace Screenbox.Core.Playback
             StartTime = TimeSpan.Zero;
         }
 
-        public static PlaybackItem GetFromStorageFile(StorageFile file)
+        public static PlaybackItem GetSingleton(StorageFile file)
         {
             string path = file.Path;
             if (!string.IsNullOrEmpty(path) && Items.TryGetValue(path, out PlaybackItem? item))
@@ -54,7 +54,7 @@ namespace Screenbox.Core.Playback
             return item;
         }
 
-        public static PlaybackItem GetFromUri(Uri uri)
+        public static PlaybackItem GetSingleton(Uri uri)
         {
             string uriString = uri.ToString();
             if (Items.TryGetValue(uriString, out PlaybackItem? item))
