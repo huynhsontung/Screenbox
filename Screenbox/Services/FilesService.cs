@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -171,10 +172,18 @@ namespace Screenbox.Services
         public async Task OpenFileLocationAsync(StorageFile file)
         {
             StorageFolder? folder = await file.GetParentAsync();
-            if (folder == null) return;
-            FolderLauncherOptions options = new();
-            options.ItemsToSelect.Add(file);
-            await Launcher.LaunchFolderAsync(folder, options);
+            if (folder == null)
+            {
+                string? folderPath = Path.GetDirectoryName(file.Path);
+                if (!string.IsNullOrEmpty(folderPath))
+                    await Launcher.LaunchFolderPathAsync(folderPath);
+            }
+            else
+            {
+                FolderLauncherOptions options = new();
+                options.ItemsToSelect.Add(file);
+                await Launcher.LaunchFolderAsync(folder, options);
+            }
         }
     }
 }
