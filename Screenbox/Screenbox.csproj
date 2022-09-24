@@ -183,7 +183,6 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
-    <Compile Include="Core\MediaPlayerInitializedEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
@@ -213,7 +212,6 @@
     <Compile Include="Core\Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
-    <Compile Include="Core\PlayerStateChangedEventArgs.cs" />
     <Compile Include="Core\RendererEventArgs.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
@@ -243,7 +241,7 @@
     <Compile Include="Services\Interfaces\INavigationService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
-    <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
+    <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />

@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Messages
 {
-    internal class TimeChangeOverrideMessage : ValueChangedMessage<bool>
+    internal sealed class TimeChangeOverrideMessage : ValueChangedMessage<bool>
     {
         public TimeChangeOverrideMessage(bool value) : base(value)
         {

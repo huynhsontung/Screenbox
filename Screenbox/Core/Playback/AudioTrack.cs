@@ -6,7 +6,7 @@ using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
-    public class AudioTrack : IMediaTrack
+    public sealed class AudioTrack : IMediaTrack
     {
         internal int VlcTrackId { get; }
 

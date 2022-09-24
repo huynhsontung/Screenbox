@@ -10,7 +10,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PropertyViewModel : ObservableObject
+    internal sealed partial class PropertyViewModel : ObservableObject
     {
         public Dictionary<string, string> MediaProperties { get; }
 

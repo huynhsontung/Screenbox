@@ -18,7 +18,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class MusicPageViewModel : ObservableRecipient
+    internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;

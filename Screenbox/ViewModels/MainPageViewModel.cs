@@ -6,7 +6,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class MainPageViewModel : ObservableRecipient,
+    internal sealed partial class MainPageViewModel : ObservableRecipient,
         IRecipient<PlayerVisibilityChangedMessage>
     {
         [ObservableProperty] private bool _playerVisible;

@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Playback
 {
-    public class PlaybackVideoTrackList : SingleSelectTrackList<VideoTrack>
+    public sealed class PlaybackVideoTrackList : SingleSelectTrackList<VideoTrack>
     {
         private readonly Media _media;
 

@@ -12,7 +12,7 @@ namespace Screenbox.Core
         Success
     }
 
-    internal class NotificationRaisedEventArgs : EventArgs
+    internal sealed class NotificationRaisedEventArgs : EventArgs
     {
         public string Title { get; set; }
 

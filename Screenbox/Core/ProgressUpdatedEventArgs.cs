@@ -4,7 +4,7 @@ using System;
 
 namespace Screenbox.Core
 {
-    internal class ProgressUpdatedEventArgs : EventArgs
+    internal sealed class ProgressUpdatedEventArgs : EventArgs
     {
         public ProgressUpdatedEventArgs(string? title, string? text, bool isIndeterminate, double value)
         {

@@ -16,7 +16,7 @@ using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class FolderViewPageViewModel : ObservableRecipient
+    internal sealed partial class FolderViewPageViewModel : ObservableRecipient
     {
         public event EventHandler<FolderViewNavigationEventArgs>? NavigationRequested;
 

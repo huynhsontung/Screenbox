@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Messages
 {
-    public class UpdateStatusMessage : ValueChangedMessage<string>
+    public sealed class UpdateStatusMessage : ValueChangedMessage<string>
     {
         public UpdateStatusMessage(string value) : base(value)
         {

@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class VideosPageViewModel : ObservableRecipient
+    internal sealed partial class VideosPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private string _urlText;
 

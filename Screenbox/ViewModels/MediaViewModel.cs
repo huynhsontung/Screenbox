@@ -15,7 +15,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class MediaViewModel : ObservableObject
+    internal sealed partial class MediaViewModel : ObservableObject
     {
         public string Location { get; }
 

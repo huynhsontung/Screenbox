@@ -4,7 +4,7 @@ using Windows.Storage;
 
 namespace Screenbox.Core
 {
-    internal class FolderViewNavigationEventArgs : EventArgs
+    internal sealed class FolderViewNavigationEventArgs : EventArgs
     {
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; }
 

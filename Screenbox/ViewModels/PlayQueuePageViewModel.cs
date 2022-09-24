@@ -5,7 +5,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayQueuePageViewModel : ObservableRecipient
+    internal sealed partial class PlayQueuePageViewModel : ObservableRecipient
     {
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 

@@ -17,7 +17,7 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerPageViewModel : ObservableRecipient,
+    internal sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>

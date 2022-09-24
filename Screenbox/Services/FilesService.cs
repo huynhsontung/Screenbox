@@ -17,7 +17,7 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.Services
 {
-    internal class FilesService : IFilesService
+    internal sealed class FilesService : IFilesService
     {
         private ImmutableArray<string> SupportedFormats { get; } = ImmutableArray.Create(
             // Video formats

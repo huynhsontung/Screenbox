@@ -6,7 +6,7 @@ using Screenbox.Core;
 
 namespace Screenbox.Converters
 {
-    internal class RendererGlyphConverter : IValueConverter
+    internal sealed class RendererGlyphConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object parameter, string language)
         {

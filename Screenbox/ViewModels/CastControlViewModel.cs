@@ -10,7 +10,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class CastControlViewModel : ObservableObject
+    internal sealed partial class CastControlViewModel : ObservableObject
     {
         public ObservableCollection<Renderer> Renderers { get; }
 

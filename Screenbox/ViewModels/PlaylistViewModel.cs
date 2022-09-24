@@ -22,7 +22,7 @@ using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlaylistViewModel : ObservableRecipient,
+    internal sealed partial class PlaylistViewModel : ObservableRecipient,
         IRecipient<PlayMediaMessage>,
         IRecipient<PlayFilesWithNeighborsMessage>,
         IRecipient<QueuePlaylistMessage>,

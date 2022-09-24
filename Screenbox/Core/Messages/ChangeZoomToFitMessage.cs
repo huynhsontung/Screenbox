@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Messages
 {
-    internal class ChangeZoomToFitMessage : ValueChangedMessage<bool>
+    internal sealed class ChangeZoomToFitMessage : ValueChangedMessage<bool>
     {
         public ChangeZoomToFitMessage(bool value) : base(value)
         {

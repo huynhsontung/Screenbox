@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Screenbox.ViewModels
 {
-    internal class ArtistViewModel
+    internal sealed class ArtistViewModel
     {
         private static readonly Dictionary<string, ArtistViewModel> AllArtists = new()
             { { Strings.Resources.UnknownArtist, new ArtistViewModel(Strings.Resources.UnknownArtist) } };

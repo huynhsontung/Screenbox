@@ -16,7 +16,7 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.Playback
 {
-    internal class VlcMediaPlayer : IMediaPlayer
+    internal sealed class VlcMediaPlayer : IMediaPlayer
     {
         public event TypedEventHandler<IMediaPlayer, object?>? MediaEnded;
         public event TypedEventHandler<IMediaPlayer, object?>? MediaFailed;

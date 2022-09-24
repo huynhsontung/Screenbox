@@ -16,7 +16,7 @@ using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
+    internal sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<string> SubtitleTracks { get; }
 

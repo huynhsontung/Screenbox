@@ -2,7 +2,7 @@
 
 namespace Screenbox.ViewModels
 {
-    internal partial class ChapterViewModel : ObservableObject
+    internal sealed partial class ChapterViewModel : ObservableObject
     {
         [ObservableProperty]
         private double _value;

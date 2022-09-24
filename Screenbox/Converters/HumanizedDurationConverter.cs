@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters
 {
-    internal class HumanizedDurationConverter : IValueConverter
+    internal sealed class HumanizedDurationConverter : IValueConverter
     {
         public static string Convert(double value)
         {

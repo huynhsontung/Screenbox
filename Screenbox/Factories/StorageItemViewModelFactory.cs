@@ -4,7 +4,7 @@ using Screenbox.ViewModels;
 
 namespace Screenbox.Factories
 {
-    internal class StorageItemViewModelFactory
+    internal sealed class StorageItemViewModelFactory
     {
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;

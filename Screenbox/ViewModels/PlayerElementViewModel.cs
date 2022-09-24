@@ -24,7 +24,7 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerElementViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
+    internal sealed partial class PlayerElementViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
     {
         public MediaPlayer? VlcPlayer { get; private set; }
 

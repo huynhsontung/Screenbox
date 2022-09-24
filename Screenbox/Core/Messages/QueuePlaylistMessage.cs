@@ -4,7 +4,7 @@ using Screenbox.ViewModels;
 
 namespace Screenbox.Core.Messages
 {
-    internal class QueuePlaylistMessage : ValueChangedMessage<IEnumerable<MediaViewModel>>
+    internal sealed class QueuePlaylistMessage : ValueChangedMessage<IEnumerable<MediaViewModel>>
     {
         public int StartIndex { get; }
 

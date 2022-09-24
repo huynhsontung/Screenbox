@@ -10,7 +10,7 @@ using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Services
 {
-    internal class NavigationService : INavigationService
+    internal sealed class NavigationService : INavigationService
     {
         public event EventHandler<NavigationServiceDisplayModeChangedEventArgs>? DisplayModeChanged;
 

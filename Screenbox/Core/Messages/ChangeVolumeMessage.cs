@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Messages
 {
-    internal class ChangeVolumeMessage : ValueChangedMessage<int>
+    internal sealed class ChangeVolumeMessage : ValueChangedMessage<int>
     {
         public bool IsOffset { get; }
 

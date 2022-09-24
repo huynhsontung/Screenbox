@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls
 {
-    public class AcceleratorService : DependencyObject
+    public sealed class AcceleratorService : DependencyObject
     {
         public static readonly DependencyProperty ToolTipProperty =
             DependencyProperty.RegisterAttached(

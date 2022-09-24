@@ -10,7 +10,7 @@ using Screenbox.Core;
 
 namespace Screenbox.Services
 {
-    internal class NotificationService : INotificationService
+    internal sealed class NotificationService : INotificationService
     {
         public event EventHandler<NotificationRaisedEventArgs>? NotificationRaised;
 

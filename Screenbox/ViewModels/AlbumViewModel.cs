@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Screenbox.ViewModels
 {
-    internal class AlbumViewModel
+    internal sealed class AlbumViewModel
     {
         private static readonly Dictionary<Tuple<string, string>, AlbumViewModel> AllAlbums = new()
         {

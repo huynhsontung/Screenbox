@@ -18,7 +18,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class HomePageViewModel : ObservableRecipient,
+    internal sealed partial class HomePageViewModel : ObservableRecipient,
         IRecipient<PlaylistActiveItemChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Recent { get; }

@@ -10,7 +10,7 @@ using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class StorageItemViewModel : ObservableObject
+    internal sealed partial class StorageItemViewModel : ObservableObject
     {
         public string Name { get; }
 

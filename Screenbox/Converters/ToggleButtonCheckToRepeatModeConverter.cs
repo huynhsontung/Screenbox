@@ -7,7 +7,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Converters
 {
-    internal class ToggleButtonCheckToRepeatModeConverter : IValueConverter
+    internal sealed class ToggleButtonCheckToRepeatModeConverter : IValueConverter
     {
         public object? Convert(object value, Type targetType, object parameter, string language)
         {

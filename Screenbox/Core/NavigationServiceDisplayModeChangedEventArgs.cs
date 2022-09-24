@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core
 {
-    internal class NavigationServiceDisplayModeChangedEventArgs : ValueChangedEventArgs<NavigationViewDisplayMode>
+    internal sealed class NavigationServiceDisplayModeChangedEventArgs : ValueChangedEventArgs<NavigationViewDisplayMode>
     {
         public NavigationServiceDisplayModeChangedEventArgs(NavigationViewDisplayMode newValue, NavigationViewDisplayMode oldValue) : base(newValue, oldValue)
         {

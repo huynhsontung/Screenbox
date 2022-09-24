@@ -6,7 +6,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Core.Playback
 {
-    public class SubtitleTrack : IMediaTrack
+    public sealed class SubtitleTrack : IMediaTrack
     {
         internal int VlcSpu { get; set; }
 

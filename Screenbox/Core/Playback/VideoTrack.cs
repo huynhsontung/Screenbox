@@ -6,7 +6,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Core.Playback
 {
-    public class VideoTrack : IMediaTrack
+    public sealed class VideoTrack : IMediaTrack
     {
         public string Id { get; }
 

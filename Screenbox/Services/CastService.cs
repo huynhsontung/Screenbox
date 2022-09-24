@@ -8,7 +8,7 @@ using Screenbox.Core;
 
 namespace Screenbox.Services
 {
-    internal class CastService : ICastService
+    internal sealed class CastService : ICastService
     {
         public event EventHandler<RendererFoundEventArgs>? RendererFound;
         public event EventHandler<RendererLostEventArgs>? RendererLost; 

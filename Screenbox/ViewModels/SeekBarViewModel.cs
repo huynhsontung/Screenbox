@@ -14,7 +14,7 @@ using Microsoft.Toolkit.Uwp.UI;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class SeekBarViewModel :
+    internal sealed partial class SeekBarViewModel :
         ObservableRecipient,
         IRecipient<TimeChangeOverrideMessage>,
         IRecipient<TimeRequestMessage>,

@@ -7,7 +7,7 @@ using LibVLCSharp.Shared.Structures;
 
 namespace Screenbox.Core.Playback
 {
-    public class PlaybackChapterList : IReadOnlyList<ChapterCue>
+    public sealed class PlaybackChapterList : IReadOnlyList<ChapterCue>
     {
         public int Count => _chapters.Count;
 

@@ -16,7 +16,7 @@ using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class NotificationViewModel : ObservableRecipient, IRecipient<RaiseFrameSavedNotificationMessage>, IRecipient<ErrorMessage>
+    internal sealed partial class NotificationViewModel : ObservableRecipient, IRecipient<RaiseFrameSavedNotificationMessage>, IRecipient<ErrorMessage>
     {
         [ObservableProperty] private InfoBarSeverity _severity;
 

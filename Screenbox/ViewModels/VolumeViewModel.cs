@@ -9,7 +9,7 @@ using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class VolumeViewModel : ObservableRecipient,
+    internal sealed partial class VolumeViewModel : ObservableRecipient,
         IRecipient<ChangeVolumeMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {

@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core.Messages
 {
-    internal class TimeRequestMessage : ChangeValueRequestMessage<TimeSpan>
+    internal sealed class TimeRequestMessage : ChangeValueRequestMessage<TimeSpan>
     {
         public TimeRequestMessage()
         {

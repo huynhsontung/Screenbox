@@ -9,7 +9,7 @@ using Screenbox.ViewModels;
 
 namespace Screenbox.Services
 {
-    internal class SystemMediaTransportControlsService : ISystemMediaTransportControlsService
+    internal sealed class SystemMediaTransportControlsService : ISystemMediaTransportControlsService
     {
         public SystemMediaTransportControls TransportControls { get; }
 

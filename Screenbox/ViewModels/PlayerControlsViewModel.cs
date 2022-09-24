@@ -20,7 +20,7 @@ using Screenbox.Core.Playback;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
+    internal sealed partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
         public PlaylistViewModel PlaylistViewModel { get; }
 

@@ -5,7 +5,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Converters
 {
-    internal class StorageItemGlyphConverter : IValueConverter
+    internal sealed class StorageItemGlyphConverter : IValueConverter
     {
         public static string Convert(IStorageItem item)
         {

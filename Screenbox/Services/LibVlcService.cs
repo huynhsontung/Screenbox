@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Screenbox.Services
 {
-    internal class LibVlcService : IDisposable
+    internal sealed class LibVlcService : IDisposable
     {
         public VlcMediaPlayer? MediaPlayer { get; private set; }
 

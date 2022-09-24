@@ -12,7 +12,7 @@ using Screenbox.Core;
 
 namespace Screenbox.Services
 {
-    internal class WindowService : IWindowService
+    internal sealed class WindowService : IWindowService
     {
         public event EventHandler<ViewModeChangedEventArgs>? ViewModeChanged;
 

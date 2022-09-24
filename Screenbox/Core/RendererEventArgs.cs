@@ -2,7 +2,7 @@
 
 namespace Screenbox.Core
 {
-    internal class RendererFoundEventArgs : EventArgs
+    internal sealed class RendererFoundEventArgs : EventArgs
     {
         public Renderer Renderer { get; }
 
@@ -12,7 +12,7 @@ namespace Screenbox.Core
         }
     }
 
-    internal class RendererLostEventArgs : EventArgs
+    internal sealed class RendererLostEventArgs : EventArgs
     {
         public Renderer Renderer { get; }
 

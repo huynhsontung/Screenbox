@@ -8,7 +8,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Services
 {
-    internal class MediaService : IMediaService
+    internal sealed class MediaService : IMediaService
     {
         private readonly LibVlcService _libVlcService;
 
