@@ -251,7 +251,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <SemanticZoom x:Name="SemanticZoomRoot" CanChangeViews="{x:Bind MainListView.IsGrouping, Mode=OneWay}">
+    <SemanticZoom x:Name="SemanticZoomRoot">
         <SemanticZoom.ZoomedInView>
             <ListView
                 x:Name="MainListView"
