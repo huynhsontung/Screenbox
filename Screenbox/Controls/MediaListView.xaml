@@ -39,39 +39,25 @@
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 </Style.Setters>
             </Style>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
-    <ListView
-        x:Name="SongListView"
-        Padding="{x:Bind Padding, Mode=OneWay}"
-        contract13NotPresent:ItemContainerStyle="{StaticResource StretchContentListViewItemStyle}"
-        ui:ListViewExtensions.AlternateColor="{ThemeResource AccentListViewItemBackgroundBrush}"
-        ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind ScrollBarMargin, Mode=OneWay}"
-        AllowDrop="{x:Bind AllowDrop, Mode=OneWay}"
-        CanDragItems="{x:Bind CanDragItems, Mode=OneWay}"
-        CanReorderItems="{x:Bind CanReorderItems, Mode=OneWay}"
-        ContainerContentChanging="SongListView_OnContainerContentChanging"
-        Footer="{x:Bind Footer, Mode=OneWay}"
-        ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-        Loaded="SongListView_OnLoaded"
-        SelectionChanged="SongListView_OnSelectionChanged"
-        SelectionMode="{x:Bind SelectionMode, Mode=OneWay}">
-        <ListView.GroupStyle>
-            <GroupStyle HidesIfEmpty="True">
-                <GroupStyle.HeaderTemplate>
-                    <DataTemplate>
-                        <TextBlock
-                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                            Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{Binding Key}" />
-                    </DataTemplate>
-                </GroupStyle.HeaderTemplate>
-            </GroupStyle>
-        </ListView.GroupStyle>
+            <DataTemplate x:Key="GroupHeaderTemplate">
+                <TextBlock
+                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="{Binding Key}" />
+            </DataTemplate>
 
-        <ListView.ItemTemplate>
-            <DataTemplate x:DataType="viewModels:MediaViewModel">
+            <DataTemplate x:Key="GroupOverviewTemplate" x:DataType="ICollectionViewGroup">
+                <Button
+                    HorizontalAlignment="Center"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ClickMode="Hover">
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
+                </Button>
+            </DataTemplate>
+
+            <DataTemplate x:Key="MediaItemTemplate" x:DataType="viewModels:MediaViewModel">
                 <UserControl>
                     <Grid Height="46">
                         <Grid.ColumnDefinitions>
@@ -209,7 +195,7 @@
                                 <VisualState x:Name="Single" />
                                 <VisualState x:Name="Multiple">
                                     <VisualState.StateTriggers>
-                                        <triggers:IsEqualStateTrigger Value="{Binding ElementName=SongListView, Path=SelectionMode}">
+                                        <triggers:IsEqualStateTrigger Value="{Binding ElementName=MainListView, Path=SelectionMode}">
                                             <triggers:IsEqualStateTrigger.To>
                                                 <controls:ListViewSelectionMode>Multiple</controls:ListViewSelectionMode>
                                             </triggers:IsEqualStateTrigger.To>
@@ -262,6 +248,42 @@
                     </Grid>
                 </UserControl>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <SemanticZoom x:Name="SemanticZoomRoot" CanChangeViews="{x:Bind MainListView.IsGrouping, Mode=OneWay}">
+        <SemanticZoom.ZoomedInView>
+            <ListView
+                x:Name="MainListView"
+                Padding="{x:Bind Padding, Mode=OneWay}"
+                contract13NotPresent:ItemContainerStyle="{StaticResource StretchContentListViewItemStyle}"
+                ui:ListViewExtensions.AlternateColor="{ThemeResource AccentListViewItemBackgroundBrush}"
+                ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind ScrollBarMargin, Mode=OneWay}"
+                AllowDrop="{x:Bind AllowDrop, Mode=OneWay}"
+                CanDragItems="{x:Bind CanDragItems, Mode=OneWay}"
+                CanReorderItems="{x:Bind CanReorderItems, Mode=OneWay}"
+                ContainerContentChanging="SongListView_OnContainerContentChanging"
+                Footer="{x:Bind Footer, Mode=OneWay}"
+                ItemTemplate="{StaticResource MediaItemTemplate}"
+                ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+                Loaded="SongListView_OnLoaded"
+                SelectionChanged="SongListView_OnSelectionChanged"
+                SelectionMode="{x:Bind SelectionMode, Mode=OneWay}">
+                <ListView.GroupStyle>
+                    <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                </ListView.GroupStyle>
+            </ListView>
+        </SemanticZoom.ZoomedInView>
+
+        <SemanticZoom.ZoomedOutView>
+            <GridView
+                x:Name="GroupOverview"
+                MaxWidth="400"
+                Margin="{StaticResource ContentPageBottomMargin}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                ItemTemplate="{StaticResource GroupOverviewTemplate}"
+                SelectionMode="None" />
+        </SemanticZoom.ZoomedOutView>
+    </SemanticZoom>
 </UserControl>

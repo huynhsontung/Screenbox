@@ -24,6 +24,7 @@
                     <Thickness x:Key="ContentPageRightMargin">0,0,56,0</Thickness>
                     <Thickness x:Key="ContentPageRightMarginMinimal">0,0,15,0</Thickness>
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
+                    <Thickness x:Key="ContentPageBottomMargin">0,0,0,148</Thickness>
                     <x:Double x:Key="ContentPageBottomPadding">148</x:Double>
 
                     <Style TargetType="FontIcon">

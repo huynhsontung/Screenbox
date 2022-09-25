@@ -26,7 +26,7 @@ namespace Screenbox.Controls
             "ItemsSource",
             typeof(object),
             typeof(MediaListView),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnItemsSourceChanged));
 
         public static readonly DependencyProperty ScrollBarMarginProperty = DependencyProperty.Register(
             "ScrollBarMargin",
@@ -118,22 +118,22 @@ namespace Screenbox.Controls
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        public ItemCollection? Items => SongListView.Items;
+        public ItemCollection? Items => MainListView.Items;
 
-        public IList<object> SelectedItems => SongListView.SelectedItems;
+        public IList<object> SelectedItems => MainListView.SelectedItems;
 
-        public IReadOnlyList<ItemIndexRange> SelectedRanges => SongListView.SelectedRanges;
+        public IReadOnlyList<ItemIndexRange> SelectedRanges => MainListView.SelectedRanges;
 
         public object? SelectedItem
         {
-            get => SongListView.SelectedItem;
-            set => SongListView.SelectedItem = value;
+            get => MainListView.SelectedItem;
+            set => MainListView.SelectedItem = value;
         }
 
         public int SelectedIndex
         {
-            get => SongListView.SelectedIndex;
-            set => SongListView.SelectedIndex = value;
+            get => MainListView.SelectedIndex;
+            set => MainListView.SelectedIndex = value;
         }
 
         private ListViewItem? _focusedItem;
@@ -143,13 +143,22 @@ namespace Screenbox.Controls
             this.InitializeComponent();
         }
 
-        public void SelectAll() => SongListView.SelectAll();
+        public void SelectAll() => MainListView.SelectAll();
+
+        private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MediaListView view = (MediaListView)d;
+            if (e.NewValue is ICollectionView collectionView)
+            {
+                view.GroupOverview.ItemsSource = collectionView.CollectionGroups;
+            }
+        }
 
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (SongListView.Items != null)
+            if (MainListView.Items != null)
             {
-                SongListView.Items.VectorChanged += SongListView_OnItemsVectorChanged;
+                MainListView.Items.VectorChanged += SongListView_OnItemsVectorChanged;
             }
         }
 
@@ -249,7 +258,7 @@ namespace Screenbox.Controls
             // SongListView_OnContainerContentChanging method
             if (args.CollectionChange is CollectionChange.ItemInserted or CollectionChange.ItemRemoved)
             {
-                ListViewBase listViewBase = SongListView;
+                ListViewBase listViewBase = MainListView;
                 for (int i = (int)args.Index; i < sender.Count; i++)
                 {
                     if (listViewBase.ContainerFromIndex(i) is SelectorItem itemContainer)
