@@ -97,11 +97,11 @@ namespace Screenbox.Services
             return null;
         }
 
-        public IAsyncOperation<IReadOnlyList<StorageFile>> GetSupportedFilesAsync(StorageFolder folder)
+        public StorageItemQueryResult GetSupportedItems(StorageFolder folder)
         {
             // Don't use indexer when querying. Potential incomplete result.
             QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
-            return folder.CreateFileQueryWithOptions(queryOptions).GetFilesAsync();
+            return folder.CreateItemQueryWithOptions(queryOptions);
         }
 
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder)

@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
 using Windows.UI.Xaml.Controls;
 using Screenbox.Factories;
 
@@ -28,6 +29,7 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly StorageItemViewModelFactory _storageVmFactory;
+        private bool _isActive;
 
         public FolderViewPageViewModel(IFilesService filesService, StorageItemViewModelFactory storageVmFactory)
         {
@@ -37,8 +39,9 @@ namespace Screenbox.ViewModels
             Items = new ObservableCollection<StorageItemViewModel>();
         }
 
-        public async Task OnNavigatedTo(object? parameter)
+        public async Task FetchContentAsync(object? parameter)
         {
+            _isActive = true;
             switch (parameter)
             {
                 case IReadOnlyList<StorageFolder> { Count: > 0 } breadcrumbs:
@@ -49,6 +52,12 @@ namespace Screenbox.ViewModels
                     await FetchFolderContentAsync(library);
                     break;
             }
+        }
+
+        public void Clean()
+        {
+            _isActive = false;
+            Items.Clear();
         }
 
         public void VideosItemClick(object sender, ItemClickEventArgs e)
@@ -69,25 +78,26 @@ namespace Screenbox.ViewModels
 
         private async Task FetchFolderContentAsync(StorageFolder folder)
         {
-            // TODO: Virtualize data fetching
             Items.Clear();
-            IReadOnlyCollection<StorageFolder> subfolders = await folder.GetFoldersAsync();
-            foreach (StorageFolder subfolder in subfolders)
-            {
-                StorageItemViewModel item = _storageVmFactory.GetTransient(subfolder);
-                Items.Add(item);
-            }
 
-            IReadOnlyList<StorageFile> files = await _filesService.GetSupportedFilesAsync(folder);
-            foreach (StorageFile file in files)
+            StorageItemQueryResult itemQuery = _filesService.GetSupportedItems(folder);
+            uint fetchIndex = 0;
+            while (_isActive)
             {
-                StorageItemViewModel item = _storageVmFactory.GetTransient(file);
-                Items.Add(item);
+                IReadOnlyList<IStorageItem> items = await itemQuery.GetItemsAsync(fetchIndex, 30);
+                if (items.Count == 0) break;
+                fetchIndex += (uint)items.Count;
+                foreach (IStorageItem storageItem in items)
+                {
+                    StorageItemViewModel item = _storageVmFactory.GetTransient(storageItem);
+                    Items.Add(item);
+                }
             }
 
             IsEmpty = Items.Count == 0;
             foreach (StorageItemViewModel item in Items)
             {
+                if (!_isActive) return;
                 if (item.Media != null)
                 {
                     await item.Media.LoadDetailsAsync();

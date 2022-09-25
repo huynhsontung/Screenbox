@@ -26,7 +26,13 @@ namespace Screenbox.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.OnNavigatedTo(e.Parameter);
+            await ViewModel.FetchContentAsync(e.Parameter);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ViewModel.Clean();
         }
 
         private void ViewModel_NavigationRequested(object sender, FolderViewNavigationEventArgs e)
