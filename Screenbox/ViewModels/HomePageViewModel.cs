@@ -115,12 +115,9 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
-        private void Play(StorageItemViewModel item)
+        private void Play(MediaViewModel media)
         {
-            if (item.Media != null)
-            {
-                Messenger.Send(new PlayMediaMessage(item.Media));
-            }
+            Messenger.Send(new PlayMediaMessage(media));
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFile(string token)
