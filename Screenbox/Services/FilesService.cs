@@ -19,14 +19,20 @@ namespace Screenbox.Services
 {
     internal sealed class FilesService : IFilesService
     {
-        private ImmutableArray<string> SupportedFormats { get; } = ImmutableArray.Create(
-            // Video formats
-            ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm",
-            // Audio formats
-            ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba");
+        private ImmutableArray<string> SupportedAudioFormats { get; }
 
-        private ImmutableArray<string> SupportedAudioFormats { get; } = ImmutableArray.Create(
-            ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba");
+        private ImmutableArray<string> SupportedVideoFormats { get; }
+
+        private ImmutableArray<string> SupportedFormats { get; }
+
+        public FilesService()
+        {
+            SupportedVideoFormats = ImmutableArray.Create(
+                ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
+            SupportedAudioFormats = ImmutableArray.Create(
+                ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba", ".flac");
+            SupportedFormats = SupportedVideoFormats.AddRange(SupportedAudioFormats);
+        }
 
         public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
         {
