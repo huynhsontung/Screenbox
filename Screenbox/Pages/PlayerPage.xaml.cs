@@ -77,6 +77,13 @@ namespace Screenbox.Pages
             RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
         }
 
+        private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double edgeLength = Math.Max(e.NewSize.Width, e.NewSize.Height);
+            BackgroundArt.Width = edgeLength;
+            BackgroundArt.Height = edgeLength;
+        }
+
         private void RegisterSeekBarPointerHandlers()
         {
             SeekBar? seekBar = PlayerControls.FindDescendant<SeekBar>();

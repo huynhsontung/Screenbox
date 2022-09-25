@@ -79,7 +79,7 @@
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         Translation="0,0,8">
         <Grid.Transitions>
-            <PaneThemeTransition />
+            <PaneThemeTransition Edge="Bottom" />
         </Grid.Transitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -199,8 +199,9 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            IsHitTestVisible="False">
-            <Grid x:Name="BackgroundArt">
+            IsHitTestVisible="False"
+            SizeChanged="BackgroundElementOnSizeChanged">
+            <Grid x:Name="BackgroundArt" VerticalAlignment="Center">
                 <Image
                     x:Name="BackgroundImageNext"
                     Source="{x:Bind AlbumArtImage.Source, Mode=OneWay}"
@@ -273,7 +274,7 @@
             IsHitTestVisible="False"
             Visibility="Collapsed">
             <controls1:ConstrainedBox.Transitions>
-                <EdgeUIThemeTransition />
+                <EdgeUIThemeTransition Edge="Bottom" />
             </controls1:ConstrainedBox.Transitions>
             <Grid
                 x:Name="AlbumArt"
@@ -393,7 +394,7 @@
             Padding="6,20,6,12"
             IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
             <controls:PlayerControls.Transitions>
-                <EdgeUIThemeTransition />
+                <EdgeUIThemeTransition Edge="Bottom" />
             </controls:PlayerControls.Transitions>
         </controls:PlayerControls>
 
