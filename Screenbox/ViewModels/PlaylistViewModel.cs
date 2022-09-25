@@ -55,13 +55,13 @@ namespace Screenbox.ViewModels
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
-        private readonly Queue<MediaViewModel> _cleanUpQueue;
+        private readonly List<MediaViewModel> _mediaBuffer;
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private int _currentIndex;
 
-        private const int LastPlayedQueueCapacity = 5;
+        private const int MediaBufferCapacity = 5;
 
         public PlaylistViewModel(IFilesService filesService,
             ISystemMediaTransportControlsService transportControlsService,
@@ -72,7 +72,7 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _transportControlsService = transportControlsService;
             _mediaFactory = mediaFactory;
-            _cleanUpQueue = new Queue<MediaViewModel>(LastPlayedQueueCapacity);
+            _mediaBuffer = new List<MediaViewModel>(MediaBufferCapacity);
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
 
             Playlist.CollectionChanged += OnCollectionChanged;
@@ -120,7 +120,13 @@ namespace Screenbox.ViewModels
 
         public void Receive(QueuePlaylistMessage message)
         {
-            Play(message.Value, message.Target);
+            Playlist.Clear();
+            foreach (MediaViewModel media in message.Value)
+            {
+                Playlist.Add(media);
+            }
+
+            PlaySingle(message.Target);
         }
 
         public void Receive(PlayMediaMessage message)
@@ -188,12 +194,12 @@ namespace Screenbox.ViewModels
             if (value != null)
             {
                 HomePageViewModel.AddToRecent(value);
-                EnqueueForCleanUp(value);
             }
 
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(RepeatMode);
             _transportControlsService.UpdateTransportControlsDisplay(value);
+            UpdateMediaBuffer();
         }
 
         partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
@@ -205,27 +211,37 @@ namespace Screenbox.ViewModels
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
-        private void EnqueueForCleanUp(MediaViewModel value)
+        private void UpdateMediaBuffer()
         {
-            if (_cleanUpQueue.Contains(value))
+            int playlistCount = Playlist.Count;
+            if (_currentIndex < 0 || playlistCount == 0) return;
+            int startIndex = Math.Max(_currentIndex - 2, 0);
+            int endIndex = Math.Min(_currentIndex + 2, playlistCount - 1);
+            int count = endIndex - startIndex + 1;
+            List<MediaViewModel> toLoad = Playlist.Skip(startIndex).Take(count).ToList();
+            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
-                MediaViewModel[] filtered = _cleanUpQueue.Where(x => x != value).ToArray();
-                _cleanUpQueue.Clear();
-                foreach (MediaViewModel vm in filtered)
+                if (count < MediaBufferCapacity && startIndex == 0 && endIndex < playlistCount - 1)
                 {
-                    _cleanUpQueue.Enqueue(vm);
+                    toLoad.Add(Playlist.Last());
                 }
 
-                _cleanUpQueue.Enqueue(value);
+                if (count < MediaBufferCapacity && startIndex > 0 && endIndex == playlistCount - 1)
+                {
+                    toLoad.Add(Playlist[0]);
+                }
             }
-            else if (_cleanUpQueue.Count < LastPlayedQueueCapacity)
+
+            IEnumerable<MediaViewModel> toClean = _mediaBuffer.Where(x => !toLoad.Contains(x));
+            foreach (MediaViewModel media in toClean)
             {
-                _cleanUpQueue.Enqueue(value);
+                if (!media.IsPlaying)
+                    media.Clean();
             }
-            else
-            {
-                _cleanUpQueue.Dequeue().Clean();
-            }
+
+            _mediaBuffer.Clear();
+            _mediaBuffer.AddRange(toLoad);
+            Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -295,17 +311,6 @@ namespace Screenbox.ViewModels
                 PlaySingle(media);
                 await LoadPlaylistMediaDetailsAsync();
             }
-        }
-
-        private void Play(IEnumerable<MediaViewModel> mediaList, MediaViewModel target)
-        {
-            Playlist.Clear();
-            foreach (MediaViewModel media in mediaList)
-            {
-                Playlist.Add(media);
-            }
-
-            PlaySingle(target);
         }
 
         private void Play(object value)
@@ -424,7 +429,7 @@ namespace Screenbox.ViewModels
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    Play(nextFile);
+                    PlaySingle(_mediaFactory.GetSingleton(nextFile));
                 }
             }
             else if (index == Playlist.Count - 1 && RepeatMode == MediaPlaybackAutoRepeatMode.List)

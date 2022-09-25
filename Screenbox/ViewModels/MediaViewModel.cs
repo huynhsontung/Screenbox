@@ -197,7 +197,7 @@ namespace Screenbox.ViewModels
             return _loadThumbnailTask;
         }
 
-        public async Task LoadThumbnailInternalAsync()
+        private async Task LoadThumbnailInternalAsync()
         {
             if (Thumbnail == null && Source is StorageFile file)
             {
