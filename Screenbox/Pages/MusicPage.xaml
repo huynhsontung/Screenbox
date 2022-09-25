@@ -122,7 +122,7 @@
             ScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             SelectionMode="None">
             <controls:MediaListView.Footer>
-                <Border Height="{StaticResource ContentPageBottomPadding}" />
+                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
             </controls:MediaListView.Footer>
         </controls:MediaListView>
 

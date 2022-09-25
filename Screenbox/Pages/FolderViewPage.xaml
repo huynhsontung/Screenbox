@@ -77,7 +77,7 @@
             SelectionMode="None">
 
             <GridView.Footer>
-                <Border Height="{StaticResource ContentPageBottomPadding}" />
+                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
             </GridView.Footer>
         </GridView>
         <TextBlock

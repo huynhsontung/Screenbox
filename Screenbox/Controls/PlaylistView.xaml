@@ -149,7 +149,7 @@
             SelectionMode="Extended"
             ShowMediaIcon="True">
             <local:MediaListView.Footer>
-                <Border x:Name="Footer" Height="{StaticResource ContentPageBottomPadding}" />
+                <Border x:Name="Footer" Height="{StaticResource ContentPageBottomPaddingHeight}" />
             </local:MediaListView.Footer>
         </local:MediaListView>
 

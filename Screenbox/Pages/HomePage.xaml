@@ -169,7 +169,7 @@
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None">
                 <GridView.Footer>
-                    <Border Height="{StaticResource ContentPageBottomPadding}" />
+                    <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
                 </GridView.Footer>
             </GridView>
         </Grid>
