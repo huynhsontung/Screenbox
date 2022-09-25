@@ -273,7 +273,7 @@
             IsHitTestVisible="False"
             Visibility="Collapsed">
             <controls1:ConstrainedBox.Transitions>
-                <RepositionThemeTransition />
+                <EdgeUIThemeTransition />
             </controls1:ConstrainedBox.Transitions>
             <Grid
                 x:Name="AlbumArt"
