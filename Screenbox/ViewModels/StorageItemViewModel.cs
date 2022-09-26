@@ -41,7 +41,7 @@ namespace Screenbox.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = mediaFactory.GetSingleton(file);
+                Media = mediaFactory.GetTransient(file);    // transient instance for easy GC
                 Media.PropertyChanged += MediaOnPropertyChanged;
             }
         }
