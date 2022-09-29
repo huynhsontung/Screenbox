@@ -98,15 +98,7 @@ namespace Screenbox.ViewModels
             foreach (StorageItemViewModel item in Items)
             {
                 if (!_isActive) return;
-                if (item.Media != null)
-                {
-                    await item.Media.LoadDetailsAsync();
-                    await item.Media.LoadThumbnailAsync();
-                }
-                else
-                {
-                    await item.LoadFolderContentAsync();
-                }
+                await item.UpdateCaptionAsync();
             }
         }
 
@@ -133,7 +125,7 @@ namespace Screenbox.ViewModels
                 {
                     StorageItemViewModel item = _storageVmFactory.GetTransient(folder);
                     Items.Add(item);
-                    await item.LoadFolderContentAsync();
+                    await item.UpdateCaptionAsync();
                 }
 
                 IsEmpty = Items.Count == 0;

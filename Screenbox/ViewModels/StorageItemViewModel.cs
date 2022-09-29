@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Screenbox.Converters;
 using Screenbox.Factories;
 using Screenbox.Services;
 
@@ -41,22 +43,44 @@ namespace Screenbox.ViewModels
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
-                Media = mediaFactory.GetTransient(file);    // transient instance for easy GC
-                Media.PropertyChanged += MediaOnPropertyChanged;
+                Media = mediaFactory.GetSingleton(file);
             }
         }
 
-        public async Task LoadFolderContentAsync()
+        public async Task UpdateCaptionAsync()
         {
-            if (StorageItem is not StorageFolder folder) return;
-            CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
-        }
-
-        private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MediaViewModel.Caption) && !string.IsNullOrEmpty(Media?.Caption))
+            switch (StorageItem)
             {
-                CaptionText = Media?.Caption;
+                case StorageFolder folder:
+                    CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
+                    break;
+                case StorageFile file:
+                    if (!string.IsNullOrEmpty(Media?.Caption))
+                    {
+                        CaptionText = Media?.Caption;
+                    }
+                    else
+                    {
+                        string[] additionalPropertyKeys =
+                        {
+                            SystemProperties.Music.Artist,
+                            SystemProperties.Media.Duration
+                        };
+
+                        IDictionary<string, object> additionalProperties =
+                            await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+
+                        if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
+                        {
+                            CaptionText = string.Join(", ", contributingArtists);
+                        }
+                        else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                        {
+                            TimeSpan duration = TimeSpan.FromTicks((long)ticks);
+                            CaptionText = HumanizedDurationConverter.Convert(duration);
+                        }
+                    }
+                    break;
             }
         }
     }
