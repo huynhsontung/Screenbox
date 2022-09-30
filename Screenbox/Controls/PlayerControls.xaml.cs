@@ -60,8 +60,6 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerControlsViewModel>();
             VideoContextMenu = NormalVideoContextMenu;
-
-            VisualStateManager.GoToState(this, "Normal", false);
         }
 
         private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)

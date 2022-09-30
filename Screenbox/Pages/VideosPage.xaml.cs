@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,8 +22,8 @@ namespace Screenbox.Pages
 
         public VideosPage()
         {
-            DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
             this.InitializeComponent();
+            DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
