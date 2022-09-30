@@ -70,6 +70,8 @@ namespace Screenbox
             // Factories
             services.AddSingleton<MediaViewModelFactory>();
             services.AddSingleton<StorageItemViewModelFactory>();
+            services.AddSingleton<ArtistViewModelFactory>();
+            services.AddSingleton<AlbumViewModelFactory>();
 
             // Services
             services.AddSingleton<LibVlcService>();

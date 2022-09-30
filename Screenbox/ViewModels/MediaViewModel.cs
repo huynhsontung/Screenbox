@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Converters;
 using Screenbox.Core.Playback;
+using Screenbox.Factories;
 using Screenbox.Services;
 
 namespace Screenbox.ViewModels
@@ -29,6 +30,8 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
+        private readonly AlbumViewModelFactory _albumFactory;
+        private readonly ArtistViewModelFactory _artistFactory;
         private PlaybackItem? _item;
         private Task _loadTask;
         private Task _loadThumbnailTask;
@@ -50,6 +53,8 @@ namespace Screenbox.ViewModels
         {
             _filesService = source._filesService;
             _mediaService = source._mediaService;
+            _albumFactory = source._albumFactory;
+            _artistFactory = source._artistFactory;
             _item = source._item;
             _name = source._name;
             _loadTask = source._loadTask;
@@ -61,11 +66,14 @@ namespace Screenbox.ViewModels
             Glyph = source.Glyph;
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService, StorageFile file)
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, StorageFile file)
         {
             _filesService = filesService;
             _mediaService = mediaService;
             Source = file;
+            _artistFactory = artistFactory;
+            _albumFactory = albumFactory;
             _name = file.Name;
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
@@ -74,11 +82,14 @@ namespace Screenbox.ViewModels
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService, Uri uri)
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri)
         {
             _filesService = filesService;
             _mediaService = mediaService;
             Source = uri;
+            _artistFactory = artistFactory;
+            _albumFactory = albumFactory;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
             _loadTask = Task.CompletedTask;
@@ -158,7 +169,7 @@ namespace Screenbox.ViewModels
                         if (MusicProperties != null)
                         {
                             Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                            Album ??= AlbumViewModel.GetAlbumForSong(this, MusicProperties.Album, MusicProperties.AlbumArtist);
+                            Album ??= _albumFactory.AddSongToAlbum(this);
 
                             if (!string.IsNullOrEmpty(MusicProperties.Artist))
                             {
@@ -170,12 +181,12 @@ namespace Screenbox.ViewModels
                                 if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
                                     contributingArtists.Length == 0)
                                 {
-                                    Artists = new[] { ArtistViewModel.GetArtistForSong(this, string.Empty) };
+                                    Artists = new[] { _artistFactory.AddSongToArtist(this, string.Empty) };
                                 }
                                 else
                                 {
                                     Artists = contributingArtists
-                                        .Select(artist => ArtistViewModel.GetArtistForSong(this, artist))
+                                        .Select(artist => _artistFactory.AddSongToArtist(this, artist))
                                         .ToArray();
                                 }
                             }

@@ -11,23 +11,28 @@ namespace Screenbox.Factories
     {
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
+        private readonly ArtistViewModelFactory _artistFactory;
+        private readonly AlbumViewModelFactory _albumFactory;
         private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
         private int _referencesCleanUpThreshold = 500;
 
-        public MediaViewModelFactory(IFilesService filesService, IMediaService mediaService)
+        public MediaViewModelFactory(IFilesService filesService, IMediaService mediaService,
+            ArtistViewModelFactory artistFactory, AlbumViewModelFactory albumFactory)
         {
             _filesService = filesService;
             _mediaService = mediaService;
+            _artistFactory = artistFactory;
+            _albumFactory = albumFactory;
         }
 
         public MediaViewModel GetTransient(StorageFile file)
         {
-            return new MediaViewModel(_filesService, _mediaService, file);
+            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
         }
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new MediaViewModel(_filesService, _mediaService, uri);
+            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
         }
 
         public MediaViewModel GetSingleton(StorageFile file)
@@ -36,7 +41,7 @@ namespace Screenbox.Factories
             if (!_references.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||
                 !reference.TryGetTarget(out MediaViewModel instance))
             {
-                instance = new MediaViewModel(_filesService, _mediaService, file);
+                instance = new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
                 if (!string.IsNullOrEmpty(path))
                 {
                     _references[path] = new WeakReference<MediaViewModel>(instance);
