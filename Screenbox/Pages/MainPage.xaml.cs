@@ -50,7 +50,8 @@ namespace Screenbox.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if (e.Parameter != null)
+            _playerFrame.Navigate(typeof(PlayerPage), e.Parameter);
+            if (e.Parameter is true)
             {
                 ViewModel.PlayerVisible = true;
             }
@@ -76,7 +77,6 @@ namespace Screenbox.Pages
             playerFrame.SetValue(Grid.RowSpanProperty, 3);
             playerFrame.SetValue(Grid.ColumnProperty, 0);
             playerFrame.SetValue(Grid.ColumnSpanProperty, 2);
-            playerFrame.Navigate(typeof(PlayerPage));
             return playerFrame;
         }
 
@@ -91,7 +91,7 @@ namespace Screenbox.Pages
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            SetTitleBar();
+            if (!ViewModel.PlayerVisible) SetTitleBar();
             if (NavView.FindDescendant("ContentRoot") is Grid contentRoot)
             {
                 contentRoot.Children.Add(_playerFrame);

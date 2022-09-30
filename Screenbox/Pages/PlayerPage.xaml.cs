@@ -9,7 +9,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI;
@@ -36,7 +36,6 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
             RegisterSeekBarPointerHandlers();
-            SetTitleBar();
             UpdatePreviewType();
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -46,6 +45,14 @@ namespace Screenbox.Pages
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (e.Parameter is true)
+            {
+                ViewModel.PlayerVisible = true;
+            }
         }
 
         public void FocusVideoView()
