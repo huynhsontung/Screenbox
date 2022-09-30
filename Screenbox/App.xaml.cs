@@ -57,6 +57,7 @@ namespace Screenbox
             services.AddTransient<SeekBarViewModel>();
             services.AddTransient<NotificationViewModel>();
             services.AddTransient<VideosPageViewModel>();
+            services.AddTransient<NetworkPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();

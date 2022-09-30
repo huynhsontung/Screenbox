@@ -1,17 +1,8 @@
-﻿using System;
+﻿#nullable enable
+
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +18,12 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class NetworkPage : ContentPage
     {
-        internal VideosPageViewModel ViewModel => (VideosPageViewModel)DataContext;
+        internal NetworkPageViewModel ViewModel => (NetworkPageViewModel)DataContext;
 
         public NetworkPage()
         {
-            DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
             this.InitializeComponent();
+            DataContext = App.Services.GetRequiredService<NetworkPageViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -52,6 +43,12 @@ namespace Screenbox.Pages
             if (FolderViewFrame.Content is not FolderViewPage view) return;
             IReadOnlyList<StorageFolder> crumbs = view.ViewModel.Breadcrumbs.Take(args.Index + 1).ToArray();
             FolderViewFrame.Navigate(typeof(FolderViewPage), crumbs, new SuppressNavigationTransitionInfo());
+        }
+
+        private void FolderViewFrame_OnNavigated(object sender, NavigationEventArgs e)
+        {
+            IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
+            ViewModel.UpdateBreadcrumbs(crumbs);
         }
     }
 }

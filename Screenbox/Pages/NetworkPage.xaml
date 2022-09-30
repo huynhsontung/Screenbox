@@ -38,6 +38,6 @@
         <Frame
             x:Name="FolderViewFrame"
             Grid.Row="1"
-            Navigated="{x:Bind ViewModel.OnFolderViewFrameNavigated}" />
+            Navigated="FolderViewFrame_OnNavigated" />
     </Grid>
 </local:ContentPage>

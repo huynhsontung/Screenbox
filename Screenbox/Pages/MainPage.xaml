@@ -90,7 +90,7 @@
                     Icon="Audio"
                     Tag="music" />
                 <muxc:NavigationViewItem
-                    Content="Network"
+                    Content="{x:Bind strings:Resources.Network}"
                     Icon="MapDrive"
                     Tag="network" />
                 <muxc:NavigationViewItemSeparator />

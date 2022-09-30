@@ -48,6 +48,7 @@ namespace Screenbox.ViewModels
 
         public async Task UpdateCaptionAsync()
         {
+            if (string.IsNullOrEmpty(StorageItem.Path)) return;
             try
             {
                 switch (StorageItem)

@@ -382,4 +382,7 @@
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
 </root>
