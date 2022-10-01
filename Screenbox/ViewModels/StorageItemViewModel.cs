@@ -48,12 +48,11 @@ namespace Screenbox.ViewModels
 
         public async Task UpdateCaptionAsync()
         {
-            if (string.IsNullOrEmpty(StorageItem.Path)) return;
             try
             {
                 switch (StorageItem)
                 {
-                    case StorageFolder folder:
+                    case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
                         CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
                         break;
                     case StorageFile file:
