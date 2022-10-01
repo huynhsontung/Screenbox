@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Screenbox.Converters;
 using Screenbox.Factories;
@@ -49,38 +48,45 @@ namespace Screenbox.ViewModels
 
         public async Task UpdateCaptionAsync()
         {
-            switch (StorageItem)
+            try
             {
-                case StorageFolder folder:
-                    CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
-                    break;
-                case StorageFile file:
-                    if (!string.IsNullOrEmpty(Media?.Caption))
-                    {
-                        CaptionText = Media?.Caption;
-                    }
-                    else
-                    {
-                        string[] additionalPropertyKeys =
+                switch (StorageItem)
+                {
+                    case StorageFolder folder:
+                        CaptionText = Strings.Resources.ItemsCount(await _filesService.GetSupportedItemCountAsync(folder));
+                        break;
+                    case StorageFile file:
+                        if (!string.IsNullOrEmpty(Media?.Caption))
                         {
-                            SystemProperties.Music.Artist,
-                            SystemProperties.Media.Duration
-                        };
-
-                        IDictionary<string, object> additionalProperties =
-                            await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
-
-                        if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
-                        {
-                            CaptionText = string.Join(", ", contributingArtists);
+                            CaptionText = Media?.Caption;
                         }
-                        else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                        else
                         {
-                            TimeSpan duration = TimeSpan.FromTicks((long)ticks);
-                            CaptionText = HumanizedDurationConverter.Convert(duration);
+                            string[] additionalPropertyKeys =
+                            {
+                                SystemProperties.Music.Artist,
+                                SystemProperties.Media.Duration
+                            };
+
+                            IDictionary<string, object> additionalProperties =
+                                await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+
+                            if (additionalProperties[SystemProperties.Music.Artist] is string[] { Length: > 0 } contributingArtists)
+                            {
+                                CaptionText = string.Join(", ", contributingArtists);
+                            }
+                            else if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
+                            {
+                                TimeSpan duration = TimeSpan.FromTicks((long)ticks);
+                                CaptionText = HumanizedDurationConverter.Convert(duration);
+                            }
                         }
-                    }
-                    break;
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
             }
         }
     }

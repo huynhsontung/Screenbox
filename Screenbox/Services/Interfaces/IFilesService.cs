@@ -17,7 +17,7 @@ namespace Screenbox.Services
             StorageFileQueryResult neighboringFilesQuery);
         public Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
-        public Task<BitmapImage?> GetThumbnailAsync(StorageFile file);
+        public Task<BitmapImage?> GetThumbnailAsync(StorageFile file, bool allowIcon = false);
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder);
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder);
         public StorageFileQueryResult GetSongsFromLibrary();

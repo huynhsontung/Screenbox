@@ -195,9 +195,9 @@ namespace Screenbox.ViewModels
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
         }
 

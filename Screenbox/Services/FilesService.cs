@@ -76,22 +76,22 @@ namespace Screenbox.Services
             return files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
         }
 
-        public async Task<BitmapImage?> GetThumbnailAsync(StorageFile file)
+        public async Task<BitmapImage?> GetThumbnailAsync(StorageFile file, bool allowIcon = false)
         {
             if (!file.IsAvailable) return null;
             try
             {
                 StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
-                if (source != null && source.Type == ThumbnailType.Image)
+                if (source != null && (source.Type == ThumbnailType.Image || allowIcon))
                 {
                     BitmapImage thumbnail = new();
                     await thumbnail.SetSourceAsync(source);
                     return thumbnail;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // pass
+                LogService.Log(e);
             }
 
             return null;
