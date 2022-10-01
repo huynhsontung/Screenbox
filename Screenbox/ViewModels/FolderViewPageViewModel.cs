@@ -95,11 +95,13 @@ namespace Screenbox.ViewModels
             }
 
             IsEmpty = Items.Count == 0;
-            foreach (StorageItemViewModel item in Items)
-            {
-                if (!_isActive) return;
-                await item.UpdateCaptionAsync();
-            }
+            if (!_isActive) return;
+            IEnumerable<Task> loadingTasks = Items.Select(item =>
+                item.Media != null
+                    ? Task.WhenAll(item.UpdateCaptionAsync(), item.Media.LoadThumbnailAsync())
+                    : item.UpdateCaptionAsync());
+
+            await Task.WhenAll(loadingTasks);
         }
 
         private async Task FetchFolderContentAsync(StorageLibrary library)
