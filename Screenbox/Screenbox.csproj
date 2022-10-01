@@ -156,6 +156,9 @@
     <Compile Include="Controls\MediaListView.xaml.cs">
       <DependentUpon>MediaListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MediaListViewItem.xaml.cs">
+      <DependentUpon>MediaListViewItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -381,6 +384,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MediaListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MediaListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
