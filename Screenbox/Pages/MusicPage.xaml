@@ -38,6 +38,12 @@
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
+
+            <XamlUICommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}">
+                <XamlUICommand.IconSource>
+                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                </XamlUICommand.IconSource>
+            </XamlUICommand>
         </ResourceDictionary>
     </local:ContentPage.Resources>
 
@@ -152,8 +158,8 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:MediaViewModel">
                             <controls:MediaListViewItem
-                                PlayCommand="{Binding ElementName=PageRoot, Path=DataContext.PlayCommand}"
-                                SelectionMode="{Binding ElementName=SongListView, Path=SelectionMode}"
+                                PlayCommand="{StaticResource PlayCommand}"
+                                SelectionMode="{x:Bind SongListView.SelectionMode, Mode=OneWay}"
                                 ShowMediaIcon="False" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
