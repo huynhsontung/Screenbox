@@ -27,8 +27,6 @@ namespace Screenbox.Controls
         {
             //this.DefaultStyleKey = typeof(ListView);
 
-            AlternateItemBackground = (Brush)Resources["ListViewItemBackground"];
-
             ContainerContentChanging += OnContainerContentChanging;
             if (Items != null)
             {
@@ -73,7 +71,7 @@ namespace Screenbox.Controls
 
         private void UpdateAlternateLayout(SelectorItem itemContainer, int itemIndex)
         {
-            if (itemIndex < 0) return;
+            if (itemIndex < 0 || AlternateItemBackground == null) return;
             Brush oddBackground = (Brush)Resources["ListViewItemBackground"];
             Brush evenBackground = AlternateItemBackground ?? oddBackground;
             itemContainer.Background = itemIndex % 2 == 0 ? evenBackground : oddBackground;
