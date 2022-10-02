@@ -10,17 +10,17 @@ namespace Screenbox.Services
 {
     internal static class LogService
     {
+        [Conditional("DEBUG")]
         public static void Log(object? message, [CallerMemberName] string? source = default)
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
         }
 
+        [Conditional("DEBUG")]
         public static void RegisterLibVlcLogging(LibVLC libVlc)
         {
-#if DEBUG
             libVlc.Log -= LibVLC_Log;
             libVlc.Log += LibVLC_Log;
-#endif
         }
 
         private static void LibVLC_Log(object sender, LogEventArgs e)

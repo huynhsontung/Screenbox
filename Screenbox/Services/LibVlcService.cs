@@ -42,7 +42,11 @@ namespace Screenbox.Services
                 "--no-osd"
             };
             options.AddRange(swapChainOptions);
+#if DEBUG
             LibVLC libVlc = new(true, options.ToArray());
+#else
+            LibVLC libVlc = new(false, options.ToArray());
+#endif
             LogService.RegisterLibVlcLogging(libVlc);
             _notificationService.SetVlcDialogHandlers(libVlc);
             return libVlc;
