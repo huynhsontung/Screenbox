@@ -43,7 +43,7 @@ namespace Screenbox.Controls
             }
 
             // Only need to handle Inserted and Removed because we'll handle everything else in the
-            // SongListView_OnContainerContentChanging method
+            // OnContainerContentChanging method
             if (args.CollectionChange is CollectionChange.ItemInserted or CollectionChange.ItemRemoved)
             {
                 for (int i = (int)args.Index; i < sender.Count; i++)
