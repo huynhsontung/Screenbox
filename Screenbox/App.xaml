@@ -9,6 +9,18 @@
         <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Dark">
+                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="HighContrast">
+                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Light">
+                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08000000" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:StorageItemGlyphConverter x:Key="StorageItemGlyphConverter" />
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
