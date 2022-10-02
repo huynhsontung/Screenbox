@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,6 +16,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
+            <converters1:BoolToObjectConverter
+                x:Key="BoolToPlayPauseTextConverter"
+                FalseValue="{strings:Resources Key=Play}"
+                TrueValue="{strings:Resources Key=Pause}" />
 
             <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
             <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
@@ -223,7 +228,7 @@
             <Button
                 x:Name="PlayPauseButton"
                 Margin="0,0,2,0"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.PlayPauseToggle(ViewModel.IsPlaying), Mode=OneWay}"
+                local:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
                 AccessKey="P"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">

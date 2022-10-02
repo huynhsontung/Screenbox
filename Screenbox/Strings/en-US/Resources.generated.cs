@@ -66,31 +66,6 @@ namespace Screenbox.Strings{
         }
         #endregion
 
-        #region PlayPauseToggle
-        /// <summary>
-        ///   Get the variant version of the string similar to: Play
-        /// </summary>
-        public static string PlayPauseToggle(object variantId)
-        {
-            try
-            {
-                return PlayPauseToggle(Convert.ToInt64(variantId));
-            }
-            catch
-            {
-                return "";
-            }
-        }
-
-        /// <summary>
-        ///   Get the variant version of the string similar to: Play
-        /// </summary>
-        public static string PlayPauseToggle(long variantId)
-        {
-            return _resourceLoader.GetString("PlayPauseToggle_Variant" + variantId);
-        }
-        #endregion
-
         #region RepeatMode
         /// <summary>
         ///   Get the variant version of the string similar to: Repeat: Off
@@ -347,6 +322,32 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("Previous");
+            }
+        }
+        #endregion
+
+        #region Play
+        /// <summary>
+        ///   Looks up a localized string similar to: Play
+        /// </summary>
+        public static string Play
+        {
+            get
+            {
+                return _resourceLoader.GetString("Play");
+            }
+        }
+        #endregion
+
+        #region Pause
+        /// <summary>
+        ///   Looks up a localized string similar to: Pause
+        /// </summary>
+        public static string Pause
+        {
+            get
+            {
+                return _resourceLoader.GetString("Pause");
             }
         }
         #endregion
@@ -1078,7 +1079,6 @@ namespace Screenbox.Strings{
             __Undefined = 0,
             MuteToggle,
             FullscreenToggle,
-            PlayPauseToggle,
             RepeatMode,
             ItemsSelected,
             ItemsCount,
@@ -1099,6 +1099,8 @@ namespace Screenbox.Strings{
             ExitCompactOverlay,
             Next,
             Previous,
+            Play,
+            Pause,
             More,
             PlayQueue,
             AddToQueue,

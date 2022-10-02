@@ -182,10 +182,10 @@
   <data name="Previous" xml:space="preserve">
     <value>Previous</value>
   </data>
-  <data name="PlayPauseToggle_Variant0" xml:space="preserve">
+  <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
-  <data name="PlayPauseToggle_Variant1" xml:space="preserve">
+  <data name="Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
   <data name="More" xml:space="preserve">
