@@ -8,6 +8,8 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:viewModels="using:Screenbox.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -15,6 +17,12 @@
     <Grid>
         <Grid.Resources>
             <ThemeShadow x:Name="SharedShadow" />
+
+            <XamlUICommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}">
+                <XamlUICommand.IconSource>
+                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                </XamlUICommand.IconSource>
+            </XamlUICommand>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -132,26 +140,33 @@
             </CommandBar>
         </Border>
 
-        <local:MediaListView
+        <local:AlternatingListView
             x:Name="PlaylistListView"
             Grid.Row="2"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             AllowDrop="True"
+            AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
             CanDragItems="True"
             CanReorderItems="True"
-            DragOver="{x:Bind ViewModel.OnDragOver}"
-            Drop="{x:Bind ViewModel.OnDrop}"
+            DragOver="PlaylistListView_OnDragOver"
+            Drop="PlaylistListView_OnDrop"
             ItemsSource="{x:Bind ViewModel.Playlist}"
-            PlayCommand="{x:Bind ViewModel.PlaySingleCommand}"
-            ScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
-            SelectionMode="Extended"
-            ShowMediaIcon="True">
-            <local:MediaListView.Footer>
+            SelectionMode="Extended">
+            <local:AlternatingListView.Footer>
                 <Border x:Name="Footer" Height="{StaticResource ContentPageBottomPaddingHeight}" />
-            </local:MediaListView.Footer>
-        </local:MediaListView>
+            </local:AlternatingListView.Footer>
+            <local:AlternatingListView.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:MediaViewModel">
+                    <local:MediaListViewItem
+                        PlayCommand="{StaticResource PlayCommand}"
+                        SelectionMode="{x:Bind PlaylistListView.SelectionMode, Mode=OneWay}"
+                        ShowMediaIcon="True" />
+                </DataTemplate>
+            </local:AlternatingListView.ItemTemplate>
+        </local:AlternatingListView>
 
         <interactivity:Interaction.Behaviors>
             <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="True">
@@ -204,7 +219,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="Footer.Visibility" Value="Collapsed" />
-                        <Setter Target="PlaylistListView.ScrollBarMargin" Value="0" />
+                        <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
                         <Setter Target="MoveUpButton.Width" Value="40" />
                         <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />

@@ -9,13 +9,41 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:viewModels="using:Screenbox.ViewModels"
+    x:Name="PageRoot"
     mc:Ignorable="d">
     <local:ContentPage.Resources>
         <ResourceDictionary>
             <CollectionViewSource
                 x:Name="SongsSource"
                 IsSourceGrouped="True"
-                Source="{x:Bind ViewModel.GroupedSongs, Mode=OneWay}" />
+                Source="{x:Bind ViewModel.GroupedSongs}" />
+
+            <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
+
+            <DataTemplate x:Key="GroupOverviewTemplate">
+                <Button
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ClickMode="Hover">
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
+                </Button>
+            </DataTemplate>
+
+            <DataTemplate x:Key="GroupHeaderTemplate">
+                <TextBlock
+                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="{Binding Key}" />
+            </DataTemplate>
+
+            <XamlUICommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlayCommand}">
+                <XamlUICommand.IconSource>
+                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                </XamlUICommand.IconSource>
+            </XamlUICommand>
         </ResourceDictionary>
     </local:ContentPage.Resources>
 
@@ -112,19 +140,45 @@
                 Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
         </Grid>
 
-        <controls:MediaListView
-            x:Name="SongListView"
-            Grid.Row="1"
-            Margin="0,24,0,0"
-            Padding="{StaticResource ContentPageRightMargin}"
-            ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
-            PlayCommand="{x:Bind ViewModel.PlayCommand}"
-            ScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
-            SelectionMode="None">
-            <controls:MediaListView.Footer>
-                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
-            </controls:MediaListView.Footer>
-        </controls:MediaListView>
+        <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
+            <SemanticZoom.ZoomedInView>
+                <controls:AlternatingListView
+                    x:Name="SongListView"
+                    Padding="{StaticResource ContentPageRightMargin}"
+                    ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+                    AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
+                    SelectionMode="None">
+                    <ListView.Footer>
+                        <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                    </ListView.Footer>
+                    <ListView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                    </ListView.GroupStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="viewModels:MediaViewModel">
+                            <controls:MediaListViewItem
+                                PlayCommand="{StaticResource PlayCommand}"
+                                SelectionMode="{x:Bind SongListView.SelectionMode, Mode=OneWay}"
+                                ShowMediaIcon="False" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </controls:AlternatingListView>
+            </SemanticZoom.ZoomedInView>
+
+            <SemanticZoom.ZoomedOutView>
+                <GridView
+                    x:Name="GroupOverview"
+                    MaxWidth="400"
+                    Margin="{StaticResource ContentPageBottomMargin}"
+                    Padding="{StaticResource ContentPageRightMargin}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    ItemTemplate="{StaticResource GroupOverviewTemplate}"
+                    ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
+                    SelectionMode="None" />
+            </SemanticZoom.ZoomedOutView>
+        </SemanticZoom>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ContentStates">
@@ -156,6 +210,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>

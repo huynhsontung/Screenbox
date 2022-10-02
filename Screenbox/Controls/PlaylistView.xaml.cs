@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -64,6 +65,22 @@ namespace Screenbox.Controls
             }
 
             ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
+        }
+
+        private async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            await ViewModel.EnqueueDataView(e.DataView);
+        }
+
+        private void PlaylistListView_OnDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null)
+            {
+                e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
+            }
         }
 
         private void ClearSelection_OnClick(object sender, RoutedEventArgs e)
