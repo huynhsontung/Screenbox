@@ -43,15 +43,6 @@
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
                         <Setter Property="FontSize" Value="16" />
                     </Style>
-
-                    <Style
-                        x:Key="StretchContentListViewItemStyle"
-                        BasedOn="{StaticResource DefaultListViewItemStyle}"
-                        TargetType="ListViewItem">
-                        <Style.Setters>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        </Style.Setters>
-                    </Style>
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>
