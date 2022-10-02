@@ -6,7 +6,6 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:viewModels="using:Screenbox.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
     d:DesignHeight="300"
@@ -51,22 +50,21 @@
             IsHitTestVisible="False"
             Visibility="{x:Bind ShowMediaIcon, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-        <Button
+        <AppBarButton
             x:Name="PlayButton"
             Grid.Column="1"
+            Width="32"
             Padding="6"
             VerticalAlignment="Center"
             Background="Transparent"
             BorderThickness="0"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
+            IsCompact="True"
+            LabelPosition="Collapsed"
             Visibility="Collapsed">
-            <FontIcon
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                FontSize="16"
-                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                Glyph="&#xE768;" />
-        </Button>
+            <SymbolIcon Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+        </AppBarButton>
 
         <TextBlock
             x:Name="TitleText"
