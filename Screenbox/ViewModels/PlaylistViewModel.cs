@@ -140,26 +140,13 @@ namespace Screenbox.ViewModels
             Play(message.Value);
         }
 
-        public void OnDragOver(object sender, DragEventArgs e)
+        public async Task EnqueueDataView(DataPackageView dataView)
         {
-            if (e.Handled) return;
-            e.Handled = true;
-            e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null)
-            {
-                e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
-            }
-        }
-
-        public async void OnDrop(object sender, DragEventArgs e)
-        {
-            if (e.Handled || !e.DataView.Contains(StandardDataFormats.StorageItems)) return;
-            e.Handled = true;
-            IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+            if (!dataView.Contains(StandardDataFormats.StorageItems)) return;
+            IReadOnlyList<IStorageItem>? items = await dataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
                 Enqueue(items);
-                await LoadPlaylistMediaDetailsAsync();
             }
         }
 
