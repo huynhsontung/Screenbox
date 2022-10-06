@@ -91,7 +91,6 @@ namespace Screenbox.Pages
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!ViewModel.PlayerVisible) SetTitleBar();
             if (NavView.FindDescendant("ContentRoot") is Grid contentRoot)
             {
                 contentRoot.Children.Add(_playerFrame);
@@ -100,8 +99,12 @@ namespace Screenbox.Pages
 
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            NavView.SelectedItem = NavView.MenuItems[0];
             ViewModel.NavigationViewDisplayMode = NavView.DisplayMode;
+            if (!ViewModel.PlayerVisible)
+            {
+                SetTitleBar();
+                NavView.SelectedItem = NavView.MenuItems[0];
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -125,6 +128,7 @@ namespace Screenbox.Pages
                 else
                 {
                     SetTitleBar();
+                    NavView.SelectedItem ??= NavView.MenuItems[0];
                     NavView.IsPaneVisible = true;
                     NavView.AlwaysShowHeader = true;
                     ContentFrame.Visibility = Visibility.Visible;
