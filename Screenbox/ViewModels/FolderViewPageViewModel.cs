@@ -45,6 +45,7 @@ namespace Screenbox.ViewModels
             _storageVmFactory = storageVmFactory;
             _navigationService = navigationService;
             _loadingTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+            _navigationViewDisplayMode = navigationService.DisplayMode;
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
 
