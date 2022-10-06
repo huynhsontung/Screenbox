@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media;
@@ -38,6 +39,7 @@ namespace Screenbox.ViewModels
         private bool _zoomToFit;
         private VlcMediaPlayer? _mediaPlayer;
         private DisplayRequest? _displayRequest;
+        private string[]? _swapChainOptions;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -100,15 +102,18 @@ namespace Screenbox.ViewModels
 
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
-            _libVlcService.Initialize(e.SwapChainOptions);
-            _mediaPlayer = _libVlcService.MediaPlayer;
-            Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
-            VlcPlayer = _mediaPlayer.VlcPlayer;
-            _mediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-            _mediaPlayer.PositionChanged += OnPositionChanged;
-            _mediaPlayer.MediaFailed += OnMediaFailed;
-            Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+            Task.Run(() =>
+            {
+                _libVlcService.Initialize(e.SwapChainOptions);
+                _mediaPlayer = _libVlcService.MediaPlayer;
+                Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
+                VlcPlayer = _mediaPlayer.VlcPlayer;
+                _mediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
+                _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                _mediaPlayer.PositionChanged += OnPositionChanged;
+                _mediaPlayer.MediaFailed += OnMediaFailed;
+                Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+            });
         }
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)

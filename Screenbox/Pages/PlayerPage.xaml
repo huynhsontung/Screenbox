@@ -61,13 +61,6 @@
             </LinearGradientBrush>
 
             <ThemeShadow x:Name="SharedShadow" />
-            <Flyout x:Key="PlayQueueFlyout" Placement="BottomEdgeAlignedLeft">
-                <controls:PlaylistView
-                    Width="420"
-                    MinHeight="200"
-                    MaxHeight="500"
-                    IsFlyout="True" />
-            </Flyout>
 
             <BrushTransition x:Key="DefaultBackgroundTransition" />
         </ResourceDictionary>
@@ -153,9 +146,21 @@
                 HorizontalAlignment="Right"
                 Background="Transparent"
                 BorderThickness="0"
-                Flyout="{StaticResource PlayQueueFlyout}"
+                Click="PlayQueueButton_OnClick"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                 <SymbolIcon Symbol="MusicInfo" />
+                <Button.Flyout>
+                    <Flyout
+                        x:Name="PlayQueueFlyout"
+                        x:Load="False"
+                        Placement="BottomEdgeAlignedLeft">
+                        <controls:PlaylistView
+                            Width="420"
+                            MinHeight="200"
+                            MaxHeight="500"
+                            IsFlyout="True" />
+                    </Flyout>
+                </Button.Flyout>
             </Button>
 
             <StackPanel

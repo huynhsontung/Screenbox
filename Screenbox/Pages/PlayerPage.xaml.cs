@@ -250,5 +250,13 @@ namespace Screenbox.Pages
                 }
             }
         }
+
+        private void PlayQueueButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (PlayQueueFlyout == null)
+            {
+                FindName(nameof(PlayQueueFlyout));
+            }
+        }
     }
 }
