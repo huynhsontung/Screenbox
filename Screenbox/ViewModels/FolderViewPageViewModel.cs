@@ -12,7 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
@@ -26,17 +29,31 @@ namespace Screenbox.ViewModels
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
         [ObservableProperty] private bool _isEmpty;
+        [ObservableProperty] private bool _isLoading;
+        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
+        private readonly INavigationService _navigationService;
         private readonly StorageItemViewModelFactory _storageVmFactory;
+        private readonly DispatcherQueueTimer _loadingTimer;
         private bool _isActive;
 
-        public FolderViewPageViewModel(IFilesService filesService, StorageItemViewModelFactory storageVmFactory)
+        public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
+            StorageItemViewModelFactory storageVmFactory)
         {
             _filesService = filesService;
             _storageVmFactory = storageVmFactory;
+            _navigationService = navigationService;
+            _loadingTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
+
+            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+        }
+
+        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        {
+            NavigationViewDisplayMode = e.NewValue;
         }
 
         public async Task FetchContentAsync(object? parameter)
@@ -82,6 +99,7 @@ namespace Screenbox.ViewModels
             uint fetchIndex = 0;
             while (_isActive)
             {
+                _loadingTimer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(800));
                 IReadOnlyList<IStorageItem> items = await itemQuery.GetItemsAsync(fetchIndex, 30);
                 if (items.Count == 0) break;
                 fetchIndex += (uint)items.Count;
@@ -92,6 +110,8 @@ namespace Screenbox.ViewModels
                 }
             }
 
+            _loadingTimer.Stop();
+            IsLoading = false;
             IsEmpty = Items.Count == 0;
             if (!_isActive) return;
             IEnumerable<Task> loadingTasks = Items.Select(item =>
