@@ -73,7 +73,7 @@
             VerticalAlignment="Center"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Name, Mode=OneWay, FallbackValue=Test}"
+            Text="{Binding Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis" />
 
         <HyperlinkButton
