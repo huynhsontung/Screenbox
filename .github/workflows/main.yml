@@ -1,0 +1,50 @@
+name:  Windows Release Builder
+
+# Trigger on every new tag creation
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      SigningCertificate: ... 
+      Solution_Path: ....sln
+      
+    steps:
+
+    - name: Get tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
+
+    - name: Use tag
+      run: echo ${{steps.tag.outputs.tag}}
+           
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Build the sideload solution
+      run: msbuild $env:Solution_Path /p:Platform=x64 /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir=C:\DeployOutput /p:PackageCertificateKeyFile=$env:SigningCertificate /restore
+      env:
+        AppxBundle: Always
+        BuildMode: StoreUpload
+        Configuration: Release  
+    
+    - name: Create archive
+      run: Compress-Archive -Path C:\DeployOutput\* -DestinationPath C:\DeployOutput\AppPackages.zip
+
+    - name: Create release
+      id: create_release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: 'C:\DeployOutput\AppPackages.zip'
+        artifactContentType: application/zip
+        tag: ${{ steps.tag.outputs.tag }}
+        token: ${{ secrets.GITHUB_TOKEN }}
