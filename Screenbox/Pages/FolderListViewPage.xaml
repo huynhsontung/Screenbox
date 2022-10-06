@@ -1,0 +1,56 @@
+﻿<Page
+    x:Class="Screenbox.Pages.FolderListViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:viewModels="using:Screenbox.ViewModels"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" MinWidth="54" />
+                </Grid.ColumnDefinitions>
+
+                <FontIcon
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="0,0,16,0"
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Name}" />
+                <TextBlock
+                    Grid.Column="2"
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind CaptionText, Mode=OneWay}" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <controls:AlternatingListView
+            x:Name="ListView"
+            Padding="{StaticResource ContentPageRightMargin}"
+            ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
+            AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+            IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
+            ItemsSource="{x:Bind ViewModel.Items}"
+            SelectionMode="None">
+            <ListView.Footer>
+                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+            </ListView.Footer>
+        </controls:AlternatingListView>
+    </Grid>
+</Page>

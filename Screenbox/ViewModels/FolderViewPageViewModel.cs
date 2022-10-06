@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
-using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
@@ -60,19 +60,17 @@ namespace Screenbox.ViewModels
             Items.Clear();
         }
 
-        public void VideosItemClick(object sender, ItemClickEventArgs e)
+        [RelayCommand]
+        private void Click(StorageItemViewModel item)
         {
-            if (e.ClickedItem is StorageItemViewModel item)
+            if (item.Media != null)
             {
-                if (item.Media != null)
-                {
-                    Messenger.Send(new PlayMediaMessage(item.Media));
-                }
-                else if (item.StorageItem is StorageFolder folder)
-                {
-                    StorageFolder[] crumbs = Breadcrumbs.Append(folder).ToArray();
-                    NavigationRequested?.Invoke(this, new FolderViewNavigationEventArgs(crumbs));
-                }
+                Messenger.Send(new PlayMediaMessage(item.Media));
+            }
+            else if (item.StorageItem is StorageFolder folder)
+            {
+                StorageFolder[] crumbs = Breadcrumbs.Append(folder).ToArray();
+                NavigationRequested?.Invoke(this, new FolderViewNavigationEventArgs(crumbs));
             }
         }
 
@@ -97,7 +95,7 @@ namespace Screenbox.ViewModels
             IsEmpty = Items.Count == 0;
             if (!_isActive) return;
             IEnumerable<Task> loadingTasks = Items.Select(item =>
-                item.Media != null
+                item.Media != null && !string.IsNullOrEmpty(item.Path)
                     ? Task.WhenAll(item.UpdateCaptionAsync(), item.Media.LoadThumbnailAsync())
                     : item.UpdateCaptionAsync());
 

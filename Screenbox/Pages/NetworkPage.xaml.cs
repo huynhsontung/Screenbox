@@ -29,7 +29,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            FolderViewFrame.Navigate(typeof(FolderViewPage), new[] { KnownFolders.MediaServerDevices },
+            FolderViewFrame.Navigate(typeof(FolderListViewPage), new[] { KnownFolders.MediaServerDevices },
                 new SuppressNavigationTransitionInfo());
         }
 
@@ -40,9 +40,9 @@ namespace Screenbox.Pages
 
         private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
         {
-            if (FolderViewFrame.Content is not FolderViewPage view) return;
+            if (FolderViewFrame.Content is not FolderListViewPage view) return;
             IReadOnlyList<StorageFolder> crumbs = view.ViewModel.Breadcrumbs.Take(args.Index + 1).ToArray();
-            FolderViewFrame.Navigate(typeof(FolderViewPage), crumbs, new SuppressNavigationTransitionInfo());
+            FolderViewFrame.Navigate(typeof(FolderListViewPage), crumbs, new SuppressNavigationTransitionInfo());
         }
 
         private void FolderViewFrame_OnNavigated(object sender, NavigationEventArgs e)

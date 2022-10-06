@@ -230,6 +230,9 @@
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ContentPage.cs" />
+    <Compile Include="Pages\FolderListViewPage.xaml.cs">
+      <DependentUpon>FolderListViewPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\NetworkPage.xaml.cs">
       <DependentUpon>NetworkPage.xaml</DependentUpon>
     </Compile>
@@ -442,6 +445,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\MusicPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FolderListViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
