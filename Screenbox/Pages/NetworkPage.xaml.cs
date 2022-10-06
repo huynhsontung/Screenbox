@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,23 @@ namespace Screenbox.Pages
         {
             IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
             ViewModel.UpdateBreadcrumbs(crumbs);
+            if (crumbs?.Count == 1)
+            {
+                FolderListViewPage page = (FolderListViewPage)e.Content;
+                page.ViewModel.PropertyChanged -= FolderViewModel_PropertyChanged;
+                page.ViewModel.PropertyChanged += FolderViewModel_PropertyChanged;
+            }
+        }
+
+        private void FolderViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            FolderViewPageViewModel vm = (FolderViewPageViewModel)sender;
+            switch (e.PropertyName)
+            {
+                case nameof(FolderViewPageViewModel.IsEmpty):
+                    VisualStateManager.GoToState(this, vm.IsEmpty ? "NoNetworkDrive" : "FolderView", true);
+                    break;
+            }
         }
     }
 }
