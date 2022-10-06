@@ -39,7 +39,6 @@ namespace Screenbox.ViewModels
         private bool _zoomToFit;
         private VlcMediaPlayer? _mediaPlayer;
         private DisplayRequest? _displayRequest;
-        private string[]? _swapChainOptions;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
