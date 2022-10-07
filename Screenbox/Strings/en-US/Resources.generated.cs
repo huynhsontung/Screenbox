@@ -1079,6 +1079,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region NoNetworkDrivePanelHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: No network device available
+        /// </summary>
+        public static string NoNetworkDrivePanelHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoNetworkDrivePanelHeader");
+            }
+        }
+        #endregion
+
+        #region NoNetworkDrivePanelSubtext
+        /// <summary>
+        ///   Looks up a localized string similar to: Can't find your media? Make sure your network device is paired in the Windows Settings.
+        /// </summary>
+        public static string NoNetworkDrivePanelSubtext
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoNetworkDrivePanelSubtext");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1170,6 +1196,8 @@ namespace Screenbox.Strings{
             PropertyYear,
             CustomPlaybackSpeed,
             Network,
+            NoNetworkDrivePanelHeader,
+            NoNetworkDrivePanelSubtext,
         }
 
         private static ResourceLoader _resourceLoader;

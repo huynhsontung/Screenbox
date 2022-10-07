@@ -6,6 +6,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:viewmodels="using:Screenbox.ViewModels"
     CanGoBack="{x:Bind FolderViewFrame.CanGoBack, Mode=OneWay}"
@@ -45,13 +46,14 @@
             x:Name="NoNetworkDrivePanel"
             Grid.Row="0"
             Grid.RowSpan="2"
+            MaxWidth="520"
             Margin="0,0,56,128"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="Collapsed">
             <FontIcon
                 x:Name="NoNetworkDriveIcon"
-                Margin="0,0,16,0"
+                Margin="0,0,32,0"
                 FontSize="86"
                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                 Glyph="&#xe8cd;" />
@@ -59,15 +61,17 @@
                 x:Name="NoNetworkDriveHeaderText"
                 RelativePanel.RightOf="NoNetworkDriveIcon"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="This is a header" />
+                Text="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}" />
             <TextBlock
                 x:Name="NoNetworkDriveDescriptionText"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 RelativePanel.AlignLeftWith="NoNetworkDriveHeaderText"
                 RelativePanel.Below="NoNetworkDriveHeaderText"
-                Text="This is a description" />
+                Text="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}"
+                TextWrapping="Wrap" />
             <HyperlinkButton
-                Margin="-11,0,0,0"
-                Content="Open Windows Settings"
+                Margin="-12,6,0,0"
+                Content="Open Connected Devices settings"
                 NavigateUri="ms-settings:connecteddevices"
                 RelativePanel.AlignLeftWith="NoNetworkDriveDescriptionText"
                 RelativePanel.Below="NoNetworkDriveDescriptionText" />
