@@ -31,10 +31,9 @@
                         TrueValue="Collapsed" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
                     <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-                    <Thickness x:Key="ContentPageLeftTopBottomMargin">56,12,0,14</Thickness>
-                    <Thickness x:Key="ContentPageLeftTopBottomMarginMinimal">15,12,0,12</Thickness>
+                    <Thickness x:Key="ContentPageHeaderMargin">0,44,0,12</Thickness>
                     <Thickness x:Key="ContentPageRightMargin">0,0,56,0</Thickness>
-                    <Thickness x:Key="ContentPageRightMarginMinimal">0,0,15,0</Thickness>
+                    <Thickness x:Key="ContentPageRightMarginMinimal">0,0,16,0</Thickness>
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,148</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">148</x:Double>
