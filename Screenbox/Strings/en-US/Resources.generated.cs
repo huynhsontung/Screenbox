@@ -770,7 +770,7 @@ namespace Screenbox.Strings{
 
         #region WelcomePanelSubtext
         /// <summary>
-        ///   Looks up a localized string similar to: Let's start playing some of your audio and video content to get things going.
+        ///   Looks up a localized string similar to: Let's start playing some of your media content to get things going.
         /// </summary>
         public static string WelcomePanelSubtext
         {
@@ -1105,6 +1105,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Recent
+        /// <summary>
+        ///   Looks up a localized string similar to: Recent
+        /// </summary>
+        public static string Recent
+        {
+            get
+            {
+                return _resourceLoader.GetString("Recent");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1198,6 +1211,7 @@ namespace Screenbox.Strings{
             Network,
             NoNetworkDrivePanelHeader,
             NoNetworkDrivePanelSubtext,
+            Recent,
         }
 
         private static ResourceLoader _resourceLoader;

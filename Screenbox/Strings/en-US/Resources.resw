@@ -314,7 +314,7 @@
     <value>Welcome to Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your audio and video content to get things going.</value>
+    <value>Let's start playing some of your media content to get things going.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Properties</value>
@@ -390,5 +390,8 @@
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+  </data>
+  <data name="Recent" xml:space="preserve">
+    <value>Recent</value>
   </data>
 </root>
