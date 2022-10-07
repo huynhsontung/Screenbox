@@ -1,9 +1,8 @@
 ﻿<Page
-    x:Class="Screenbox.Pages.FolderViewPage"
+    x:Class="Screenbox.Pages.FolderListViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -11,56 +10,32 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewmodels="using:Screenbox.ViewModels"
+    xmlns:viewModels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
-        <x:Double x:Key="StorageItemGridViewItemWidth">220</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemHeight">180</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">118</x:Double>
+        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" MinWidth="54" />
+                </Grid.ColumnDefinitions>
 
-        <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="viewmodels:StorageItemViewModel">
-            <Grid
-                Width="{StaticResource StorageItemGridViewItemWidth}"
-                Height="{StaticResource StorageItemGridViewItemHeight}"
-                Padding="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid
-                    Grid.Row="0"
-                    Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4">
-                    <FontIcon
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="32"
-                        Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
-                    <Border CornerRadius="4">
-                        <Image
-                            x:Phase="1"
-                            Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                            Stretch="UniformToFill" />
-                    </Border>
-                </Grid>
-
+                <FontIcon
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    FontSize="16"
+                    Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
                 <TextBlock
-                    Grid.Row="1"
-                    Margin="4,0"
-                    FontWeight="SemiBold"
-                    MaxLines="2"
-                    Text="{x:Bind Name}"
-                    TextWrapping="Wrap" />
-
+                    Grid.Column="1"
+                    Margin="0,0,16,0"
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind Name}" />
                 <TextBlock
-                    Grid.Row="2"
-                    Margin="4,0"
-                    x:Phase="2"
-                    Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind CaptionText, Mode=OneWay}" />
             </Grid>
@@ -74,22 +49,23 @@
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-        <GridView
-            x:Name="FolderView"
+        <controls:AlternatingListView
+            x:Name="ListView"
             Padding="{StaticResource ContentPageRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
+            ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
             SelectionMode="None">
-            <GridView.Footer>
+            <ListView.Footer>
                 <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
-            </GridView.Footer>
-        </GridView>
+            </ListView.Footer>
+        </controls:AlternatingListView>
+
         <TextBlock
             x:Name="NoContentText"
-            Margin="{StaticResource ContentPageRightMargin}"
+            Margin="0,28"
+            Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{x:Bind strings:Resources.EmptyFolder}"
@@ -109,7 +85,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="FolderView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="ListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="NoContentText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>

@@ -230,6 +230,12 @@
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ContentPage.cs" />
+    <Compile Include="Pages\FolderListViewPage.xaml.cs">
+      <DependentUpon>FolderListViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\NetworkPage.xaml.cs">
+      <DependentUpon>NetworkPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\PlayQueuePage.xaml.cs">
       <DependentUpon>PlayQueuePage.xaml</DependentUpon>
     </Compile>
@@ -282,6 +288,7 @@
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MusicPageViewModel.cs" />
+    <Compile Include="ViewModels\NetworkPageViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
@@ -438,6 +445,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\MusicPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FolderListViewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\NetworkPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

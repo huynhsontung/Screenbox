@@ -382,4 +382,13 @@
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Custom</value>
   </data>
+  <data name="Network" xml:space="preserve">
+    <value>Network</value>
+  </data>
+  <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
+    <value>No network device available</value>
+  </data>
+  <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
+    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+  </data>
 </root>
