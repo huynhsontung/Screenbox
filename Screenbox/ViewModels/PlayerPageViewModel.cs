@@ -22,7 +22,7 @@ namespace Screenbox.ViewModels
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>
     {
-        [ObservableProperty] private bool _audioOnly;
+        [ObservableProperty] private bool? _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
@@ -34,6 +34,8 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private MediaViewModel? _media;
 
         public bool SeekBarPointerPressed { get; set; }
+
+        private bool AudioOnlyInternal => _audioOnly ?? false;
 
         private enum ManipulationLock
         {
@@ -110,7 +112,7 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride && PlayerVisible && !AudioOnly)
+            else if (IsPlaying && !_visibilityOverride && PlayerVisible && !AudioOnlyInternal)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -218,10 +220,10 @@ namespace Screenbox.ViewModels
 
         private void DelayHideControls()
         {
-            if (!PlayerVisible || AudioOnly) return;
+            if (!PlayerVisible || AudioOnlyInternal) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (IsPlaying && VideoViewFocused && !AudioOnly)
+                if (IsPlaying && VideoViewFocused && !AudioOnlyInternal)
                 {
                     HideControls();
 
@@ -245,7 +247,7 @@ namespace Screenbox.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
-                if (!AudioOnly) PlayerVisible = true;
+                if (!AudioOnlyInternal) PlayerVisible = true;
             }
         }
 

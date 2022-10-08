@@ -144,7 +144,7 @@ namespace Screenbox.Pages
 
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
-                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
+                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ?? false ? "AudioOnly" : "Video", true);
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
@@ -210,7 +210,7 @@ namespace Screenbox.Pages
         {
             if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
             {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
+                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ?? false ? null : Colors.White;
             }
         }
 
@@ -222,7 +222,7 @@ namespace Screenbox.Pages
             }
             else
             {
-                VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
+                VisualStateManager.GoToState(this, ViewModel.AudioOnly ?? false ? "AudioPreview" : "VideoPreview", true);
             }
         }
 
