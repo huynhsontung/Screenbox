@@ -11,8 +11,17 @@
     xmlns:viewmodels="using:Screenbox.ViewModels"
     CanGoBack="{x:Bind FolderViewFrame.CanGoBack, Mode=OneWay}"
     mc:Ignorable="d">
-    <local:ContentPage.Header>
-        <Grid Margin="0,0,40,0">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="HeaderGrid"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -25,26 +34,20 @@
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
         </Grid>
-    </local:ContentPage.Header>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <muxc:BreadcrumbBar
-            Grid.Row="0"
+            Grid.Row="1"
             VerticalAlignment="Top"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
         <Frame
             x:Name="FolderViewFrame"
-            Grid.Row="1"
+            Grid.Row="2"
             Navigated="FolderViewFrame_OnNavigated" />
 
         <RelativePanel
             x:Name="NoNetworkDrivePanel"
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.RowSpan="2"
             MaxWidth="520"
             Margin="0,0,56,128"
@@ -90,6 +93,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="NoNetworkDrivePanel.Margin" Value="24,0,40,128" />
                     </VisualState.Setters>
                 </VisualState>

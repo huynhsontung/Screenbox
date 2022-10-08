@@ -6,11 +6,21 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:viewmodels="using:Screenbox.ViewModels"
     CanGoBack="{x:Bind FolderViewFrame.CanGoBack, Mode=OneWay}"
     mc:Ignorable="d">
-    <local:ContentPage.Header>
-        <Grid Margin="0,0,40,0">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="HeaderGrid"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -49,21 +59,35 @@
                 </Button.Flyout>
             </Button>
         </Grid>
-    </local:ContentPage.Header>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
         <muxc:BreadcrumbBar
-            Grid.Row="0"
+            x:Name="LoadingProgressBar"
+            Grid.Row="1"
             VerticalAlignment="Top"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
         <Frame
             x:Name="FolderViewFrame"
-            Grid.Row="1"
+            Grid.Row="2"
             Navigated="{x:Bind ViewModel.OnFolderViewFrameNavigated}" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="NavigationViewStates">
+                <VisualState x:Name="Expanded" />
+                <VisualState x:Name="Compact" />
+                <VisualState x:Name="Minimal">
+                    <VisualState.StateTriggers>
+                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                            <triggers:IsEqualStateTrigger.To>
+                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
+                            </triggers:IsEqualStateTrigger.To>
+                        </triggers:IsEqualStateTrigger>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </local:ContentPage>
