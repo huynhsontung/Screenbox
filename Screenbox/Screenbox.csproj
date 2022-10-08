@@ -226,10 +226,10 @@
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\IContentFrame.cs" />
     <Compile Include="Pages\MusicPage.xaml.cs">
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ContentPage.cs" />
     <Compile Include="Pages\FolderListViewPage.xaml.cs">
       <DependentUpon>FolderListViewPage.xaml</DependentUpon>
     </Compile>
@@ -284,6 +284,7 @@
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\WindowService.cs" />
+    <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />

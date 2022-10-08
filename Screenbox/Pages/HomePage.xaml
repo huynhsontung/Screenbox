@@ -1,4 +1,4 @@
-﻿<local:ContentPage
+﻿<Page
     x:Class="Screenbox.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -68,23 +68,24 @@
         </DataTemplate>
     </Page.Resources>
 
-    <local:ContentPage.Header>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="HeaderGrid"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}">
             <TextBlock
-                Grid.Column="0"
+                x:Name="HeaderText"
                 MaxLines="2"
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Home}" />
 
             <controls:SplitButton
                 x:Name="HeaderOpenButton"
-                Grid.Column="1"
-                Margin="{StaticResource ContentPageRightMargin}"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe8da;" />
@@ -92,11 +93,10 @@
                 </StackPanel>
             </controls:SplitButton>
         </Grid>
-    </local:ContentPage.Header>
 
-    <Grid>
         <Grid
             x:Name="WelcomePanel"
+            Grid.Row="1"
             Margin="0,0,56,128"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -130,7 +130,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 VerticalAlignment="Top"
-                Opacity="0.6"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
                 TextWrapping="Wrap" />
 
@@ -147,16 +147,23 @@
             </controls:SplitButton>
         </Grid>
 
-        <Grid x:Name="RecentFilesPanel" Visibility="Collapsed">
+        <Grid
+            x:Name="RecentFilesPanel"
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            RelativePanel.Below="HeaderText"
+            Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <TextBlock
+                x:Name="GridViewHeaderText"
                 Grid.Row="0"
+                Margin="{StaticResource ContentPageRightMargin}"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="Recent" />
+                Text="{x:Bind strings:Resources.Recent}" />
             <GridView
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
@@ -188,6 +195,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="WelcomePanel.Margin" Value="24,0,40,128" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="HeaderOpenButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
@@ -212,4 +221,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</local:ContentPage>
+</Page>

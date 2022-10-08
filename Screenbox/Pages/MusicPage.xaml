@@ -1,4 +1,4 @@
-﻿<local:ContentPage
+﻿<Page
     x:Class="Screenbox.Pages.MusicPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,9 +11,8 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Screenbox.ViewModels"
-    x:Name="PageRoot"
     mc:Ignorable="d">
-    <local:ContentPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <CollectionViewSource
                 x:Name="SongsSource"
@@ -45,10 +44,19 @@
                 </XamlUICommand.IconSource>
             </XamlUICommand>
         </ResourceDictionary>
-    </local:ContentPage.Resources>
+    </Page.Resources>
 
-    <local:ContentPage.Header>
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            x:Name="HeaderGrid"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -63,7 +71,6 @@
             <Button
                 x:Name="HeaderAddFolderButton"
                 Grid.Column="1"
-                Margin="{StaticResource ContentPageRightMargin}"
                 VerticalAlignment="Top"
                 Command="{x:Bind ViewModel.AddFolderCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -72,17 +79,10 @@
                 </StackPanel>
             </Button>
         </Grid>
-    </local:ContentPage.Header>
-
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
 
         <Button
             x:Name="ShufflePlayButton"
-            Grid.Row="0"
+            Grid.Row="1"
             Margin="0,16,0,0"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
@@ -94,7 +94,7 @@
 
         <muxc:ProgressBar
             x:Name="LoadingIndicator"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,16,0,0"
             Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Stretch"
@@ -104,7 +104,7 @@
 
         <Grid
             x:Name="NoMusicMessage"
-            Grid.Row="1"
+            Grid.Row="2"
             Margin="0,0,0,128"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
@@ -140,7 +140,7 @@
                 Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
         </Grid>
 
-        <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
+        <SemanticZoom Grid.Row="2" Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
                 <controls:AlternatingListView
                     x:Name="SongListView"
@@ -209,13 +209,13 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</local:ContentPage>
+</Page>

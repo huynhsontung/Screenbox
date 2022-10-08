@@ -59,6 +59,7 @@ namespace Screenbox
             services.AddTransient<VideosPageViewModel>();
             services.AddTransient<NetworkPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
+            services.AddTransient<FolderListViewPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();
             services.AddTransient<PlayerPageViewModel>();
@@ -83,10 +84,13 @@ namespace Screenbox
             services.AddSingleton<ICastService, CastService>();
             services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
-                new KeyValuePair<Type, string>(typeof(HomePageViewModel), "home"),
-                new KeyValuePair<Type, string>(typeof(VideosPageViewModel), "videos"),
-                new KeyValuePair<Type, string>(typeof(MusicPageViewModel), "music"),
-                new KeyValuePair<Type, string>(typeof(PlayQueuePageViewModel), "queue")
+                new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
+                new KeyValuePair<Type, Type>(typeof(VideosPageViewModel), typeof(VideosPage)),
+                new KeyValuePair<Type, Type>(typeof(MusicPageViewModel), typeof(MusicPage)),
+                new KeyValuePair<Type, Type>(typeof(NetworkPageViewModel), typeof(NetworkPage)),
+                new KeyValuePair<Type, Type>(typeof(PlayQueuePageViewModel), typeof(PlayQueuePage)),
+                new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
+                new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage))
             ));
 
             return services.BuildServiceProvider();

@@ -1,9 +1,11 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,8 +19,14 @@ namespace Screenbox.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NetworkPage : ContentPage
+    public sealed partial class NetworkPage : Page, IContentFrame
     {
+        public Type SourcePageType => FolderViewFrame.SourcePageType;
+
+        public object? FrameContent => FolderViewFrame.Content;
+
+        public bool CanGoBack => FolderViewFrame.CanGoBack;
+
         internal NetworkPageViewModel ViewModel => (NetworkPageViewModel)DataContext;
 
         public NetworkPage()
@@ -34,9 +42,14 @@ namespace Screenbox.Pages
                 new SuppressNavigationTransitionInfo());
         }
 
-        public override void GoBack()
+        public void GoBack()
         {
             FolderViewFrame.GoBack(new SuppressNavigationTransitionInfo());
+        }
+
+        public void Navigate(Type pageType, object? parameter)
+        {
+            FolderViewFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
         private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)

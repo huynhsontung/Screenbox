@@ -11,25 +11,37 @@ using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
 
 namespace Screenbox.ViewModels
 {
     internal sealed partial class VideosPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private string _urlText;
-
         [ObservableProperty] private string _titleText;
+        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         public ObservableCollection<string> Breadcrumbs { get; }
 
         private readonly IFilesService _filesService;
+        private readonly INavigationService _navigationService;
 
-        public VideosPageViewModel(IFilesService filesService)
+        public VideosPageViewModel(IFilesService filesService, INavigationService navigationService)
         {
             _filesService = filesService;
+            _navigationService = navigationService;
             _urlText = string.Empty;
             _titleText = Strings.Resources.Videos;
             Breadcrumbs = new ObservableCollection<string>();
+
+            _navigationViewDisplayMode = navigationService.DisplayMode;
+            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+        }
+
+        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        {
+            NavigationViewDisplayMode = e.NewValue;
         }
 
         public void OpenButtonClick(object sender, RoutedEventArgs e)

@@ -64,8 +64,7 @@
 
         <TextBlock
             x:Name="NoContentText"
-            Margin="0,28"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Margin="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{x:Bind strings:Resources.EmptyFolder}"

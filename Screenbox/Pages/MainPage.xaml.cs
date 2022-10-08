@@ -18,8 +18,14 @@ using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IContentFrame
     {
+        public Type SourcePageType => ContentFrame.SourcePageType;
+
+        public object? FrameContent => ContentFrame.Content;
+
+        public bool CanGoBack => ContentFrame.CanGoBack;
+
         private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
         private readonly Dictionary<string, Type> _pages;
@@ -58,10 +64,29 @@ namespace Screenbox.Pages
             }
         }
 
-        public void NavigateContentFrame(string navigationTag)
+        public void GoBack()
         {
+            TryGoBack();
+        }
+
+        public void Navigate(Type pageType, object? parameter)
+        {
+            string? navTag = _pages.FirstOrDefault(p => p.Value == pageType).Key;
+            if (string.IsNullOrEmpty(navTag)) return;
             ViewModel.PlayerVisible = false;
-            NavView_Navigate(navigationTag, new CommonNavigationTransitionInfo());
+            ContentFrame.Navigate(pageType, parameter);
+            
+            // Update NavView SelectedItem after navigation to avoid double navigation
+            if (pageType == typeof(SettingsPage))
+            {
+                NavView.SelectedItem = NavView.SettingsItem;
+            }
+            else
+            {
+                object menuItem = NavView.MenuItems.OfType<FrameworkElement>()
+                    .First(item => ((string)item.Tag) == navTag);
+                NavView.SelectedItem = menuItem;
+            }
         }
 
         private static Frame CreatePlayerFrame()
@@ -123,7 +148,6 @@ namespace Screenbox.Pages
                 {
                     NavView.IsPaneVisible = false;
                     NavView.IsPaneOpen = false;
-                    NavView.AlwaysShowHeader = false;
                     ContentFrame.Visibility = Visibility.Collapsed;
                 }
                 else
@@ -131,7 +155,6 @@ namespace Screenbox.Pages
                     SetTitleBar();
                     NavView.SelectedItem ??= NavView.MenuItems[0];
                     NavView.IsPaneVisible = true;
-                    NavView.AlwaysShowHeader = true;
                     ContentFrame.Visibility = Visibility.Visible;
                 }
 
@@ -155,16 +178,16 @@ namespace Screenbox.Pages
         {
             if (args.IsSettingsSelected)
             {
-                NavView_Navigate("settings", args.RecommendedNavigationTransitionInfo);
+                NavView_Navigate("settings");
             }
             else if (args.SelectedItemContainer != null)
             {
                 var navItemTag = args.SelectedItemContainer.Tag.ToString();
-                NavView_Navigate(navItemTag, args.RecommendedNavigationTransitionInfo);
+                NavView_Navigate(navItemTag);
             }
         }
 
-        private void NavView_Navigate(string navItemTag, NavigationTransitionInfo transitionInfo)
+        private void NavView_Navigate(string navItemTag)
         {
             Type pageType = navItemTag == "settings" ? typeof(SettingsPage) : _pages.GetValueOrDefault(navItemTag);
             // Get the page type before navigation so you can prevent duplicate
@@ -174,7 +197,7 @@ namespace Screenbox.Pages
             // Only navigate if the selected page isn't currently loaded.
             if (!(pageType is null) && !Type.Equals(preNavPageType, pageType))
             {
-                ContentFrame.Navigate(pageType, null, transitionInfo);
+                ContentFrame.Navigate(pageType, null, new SuppressNavigationTransitionInfo());
             }
         }
 
@@ -208,7 +231,7 @@ namespace Screenbox.Pages
                  NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
                 return false;
 
-            if (ContentFrame.Content is ContentPage page && page.CanGoBack)
+            if (ContentFrame.Content is IContentFrame { CanGoBack: true } page)
             {
                 page.GoBack();
                 return true;
@@ -229,7 +252,6 @@ namespace Screenbox.Pages
             {
                 // SettingsItem is not part of NavView.MenuItems, and doesn't have a Tag.
                 NavView.SelectedItem = (muxc.NavigationViewItem)NavView.SettingsItem;
-                NavView.Header = Strings.Resources.Settings;
             }
             else if (ContentFrame.SourcePageType != null)
             {
@@ -240,9 +262,6 @@ namespace Screenbox.Pages
                     .First(n => n.Tag.Equals(item.Key));
                 
                 NavView.SelectedItem = selectedItem;
-                NavView.Header = ContentFrame.Content is ContentPage page
-                    ? page.Header
-                    : selectedItem.Content?.ToString();
             }
         }
 
@@ -257,10 +276,6 @@ namespace Screenbox.Pages
             if (ViewModel.PlayerVisible)
             {
                 VisualStateManager.GoToState(this, "Hidden", true);
-                if (NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal)
-                {
-                    VisualStateManager.GoToState(NavView, "HeaderCollapsed", false);
-                }
                 return;
             }
 

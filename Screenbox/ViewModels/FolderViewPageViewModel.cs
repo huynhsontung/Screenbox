@@ -20,10 +20,8 @@ using Screenbox.Factories;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class FolderViewPageViewModel : ObservableRecipient
+    internal partial class FolderViewPageViewModel : ObservableRecipient
     {
-        public event EventHandler<FolderViewNavigationEventArgs>? NavigationRequested;
-
         public ObservableCollection<StorageItemViewModel> Items { get; }
 
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
@@ -78,6 +76,11 @@ namespace Screenbox.ViewModels
             Items.Clear();
         }
 
+        protected virtual void Navigate(object? parameter = null)
+        {
+            _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
+        }
+
         [RelayCommand]
         private void Click(StorageItemViewModel item)
         {
@@ -88,7 +91,7 @@ namespace Screenbox.ViewModels
             else if (item.StorageItem is StorageFolder folder)
             {
                 StorageFolder[] crumbs = Breadcrumbs.Append(folder).ToArray();
-                NavigationRequested?.Invoke(this, new FolderViewNavigationEventArgs(crumbs));
+                Navigate(crumbs);
             }
         }
 
