@@ -1,4 +1,4 @@
-﻿<local:ContentPage
+﻿<Page
     x:Class="Screenbox.Pages.MusicPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,9 +11,8 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Screenbox.ViewModels"
-    x:Name="PageRoot"
     mc:Ignorable="d">
-    <local:ContentPage.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <CollectionViewSource
                 x:Name="SongsSource"
@@ -45,7 +44,7 @@
                 </XamlUICommand.IconSource>
             </XamlUICommand>
         </ResourceDictionary>
-    </local:ContentPage.Resources>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -219,4 +218,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</local:ContentPage>
+</Page>

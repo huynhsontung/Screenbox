@@ -1,4 +1,4 @@
-﻿<local:ContentPage
+﻿<Page
     x:Class="Screenbox.Pages.VideosPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +8,6 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:viewmodels="using:Screenbox.ViewModels"
-    CanGoBack="{x:Bind FolderViewFrame.CanGoBack, Mode=OneWay}"
     mc:Ignorable="d">
 
     <Grid>
@@ -90,4 +89,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-</local:ContentPage>
+</Page>

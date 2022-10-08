@@ -206,7 +206,7 @@ namespace Screenbox.Pages
                  NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
                 return false;
 
-            if (ContentFrame.Content is ContentPage page && page.CanGoBack)
+            if (ContentFrame.Content is IContentFrame page && page.CanGoBack)
             {
                 page.GoBack();
                 return true;

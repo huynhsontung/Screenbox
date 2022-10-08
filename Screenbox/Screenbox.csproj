@@ -226,10 +226,10 @@
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\IContentFrame.cs" />
     <Compile Include="Pages\MusicPage.xaml.cs">
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ContentPage.cs" />
     <Compile Include="Pages\FolderListViewPage.xaml.cs">
       <DependentUpon>FolderListViewPage.xaml</DependentUpon>
     </Compile>
