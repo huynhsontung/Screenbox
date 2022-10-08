@@ -9,14 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-
-    env:
-      SigningCertificate: ... 
-      Solution_Path: ....sln
-      
+    runs-on: windows-latest  
     steps:
-
     - name: Get tag
       id: tag
       uses: dawidd6/action-get-tag@v1
@@ -31,11 +25,19 @@ jobs:
       uses: microsoft/setup-msbuild@v1
       
     - name: Build the sideload solution
-      run: msbuild $env:Solution_Path /p:Platform=x64 /p:AppxBundle=$env:AppxBundle /p:AppxBundlePlatforms="x86|x64|ARM" /p:AppxPackageDir=C:\DeployOutput /p:PackageCertificateKeyFile=$env:SigningCertificate /restore
+      run: |
+        msbuild $((Get-Item *.sln).Name) `
+        -v:diag `
+        -p:Configuration=Release `
+        -p:Platform=x64 `
+        -p:AppxBundle=Always `
+        -p:AppxBundlePlatforms="x86|x64|ARM" `
+        -p:UapAppxPackageBuildMode=$env:BuildMode `
+        -p:AppxPackageDir=C:\DeployOutput `
+        -p:AppxPackageSigningEnabled=false `
+        -restore
       env:
-        AppxBundle: Always
-        BuildMode: StoreUpload
-        Configuration: Release  
+        BuildMode: SideloadOnly
     
     - name: Create archive
       run: Compress-Archive -Path C:\DeployOutput\* -DestinationPath C:\DeployOutput\AppPackages.zip
