@@ -14,12 +14,12 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class FolderListViewPage : Page
     {
-        internal FolderViewPageViewModel ViewModel => (FolderViewPageViewModel)DataContext;
+        internal FolderListViewPageViewModel ViewModel => (FolderListViewPageViewModel)DataContext;
 
         public FolderListViewPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<FolderViewPageViewModel>();
+            DataContext = App.Services.GetRequiredService<FolderListViewPageViewModel>();
             ViewModel.NavigationRequested += ViewModel_NavigationRequested;
         }
 

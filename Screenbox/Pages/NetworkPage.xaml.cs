@@ -21,6 +21,8 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class NetworkPage : Page, IContentFrame
     {
+        public Type SourcePageType => FolderViewFrame.SourcePageType;
+
         public object? FrameContent => FolderViewFrame.Content;
 
         public bool CanGoBack => FolderViewFrame.CanGoBack;

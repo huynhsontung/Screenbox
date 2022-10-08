@@ -18,8 +18,14 @@ using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IContentFrame
     {
+        public Type SourcePageType => ContentFrame.SourcePageType;
+
+        public object? FrameContent => ContentFrame.Content;
+
+        public bool CanGoBack => ContentFrame.CanGoBack;
+
         private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
         private readonly Dictionary<string, Type> _pages;
@@ -58,10 +64,29 @@ namespace Screenbox.Pages
             }
         }
 
-        public void NavigateContentFrame(string navigationTag)
+        public void GoBack()
         {
+            TryGoBack();
+        }
+
+        public void Navigate(Type pageType, object? parameter)
+        {
+            string? navTag = _pages.FirstOrDefault(p => p.Value == pageType).Key;
+            if (string.IsNullOrEmpty(navTag)) return;
             ViewModel.PlayerVisible = false;
-            NavView_Navigate(navigationTag);
+            ContentFrame.Navigate(pageType, parameter);
+            
+            // Update NavView SelectedItem after navigation to avoid double navigation
+            if (pageType == typeof(SettingsPage))
+            {
+                NavView.SelectedItem = NavView.SettingsItem;
+            }
+            else
+            {
+                object menuItem = NavView.MenuItems.OfType<FrameworkElement>()
+                    .First(item => ((string)item.Tag) == navTag);
+                NavView.SelectedItem = menuItem;
+            }
         }
 
         private static Frame CreatePlayerFrame()
@@ -206,7 +231,7 @@ namespace Screenbox.Pages
                  NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
                 return false;
 
-            if (ContentFrame.Content is IContentFrame page && page.CanGoBack)
+            if (ContentFrame.Content is IContentFrame { CanGoBack: true } page)
             {
                 page.GoBack();
                 return true;
