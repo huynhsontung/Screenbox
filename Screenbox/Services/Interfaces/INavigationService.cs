@@ -12,5 +12,6 @@ namespace Screenbox.Services
         NavigationViewDisplayMode DisplayMode { get; set; }
         void Navigate(Type vmType, object? parameter = null);
         void NavigateParent(Type parentVmType, Type targetVmType, object? parameter = null);
+        void NavigateExisting(Type vmType, object? parameter = null);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Core;
 using Screenbox.ViewModels;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -20,7 +18,6 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<FolderListViewPageViewModel>();
-            ViewModel.NavigationRequested += ViewModel_NavigationRequested;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -33,11 +30,6 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.Clean();
-        }
-
-        private void ViewModel_NavigationRequested(object sender, FolderViewNavigationEventArgs e)
-        {
-            Frame.Navigate(typeof(FolderListViewPage), e.Breadcrumbs, new SuppressNavigationTransitionInfo());
         }
     }
 }

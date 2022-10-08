@@ -48,7 +48,7 @@ namespace Screenbox.Pages
 
         public void Navigate(Type pageType, object? parameter)
         {
-            FolderViewFrame.Navigate(pageType, parameter);
+            FolderViewFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
         private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
