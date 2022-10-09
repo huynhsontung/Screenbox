@@ -206,7 +206,10 @@
             Grid.Column="0"
             IsHitTestVisible="False"
             SizeChanged="BackgroundElementOnSizeChanged">
-            <Grid x:Name="BackgroundArt" VerticalAlignment="Center">
+            <Grid
+                x:Name="BackgroundArt"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
                 <Image
                     x:Name="BackgroundImageNext"
                     Source="{x:Bind AlbumArtImage.Source, Mode=OneWay}"
