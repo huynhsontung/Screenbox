@@ -37,13 +37,17 @@ jobs:
         BuildMode: SideloadOnly
     
     - name: Create archive
-      run: Compress-Archive -Path C:\DeployOutput\* -DestinationPath C:\DeployOutput\AppPackages.zip
+      id: archive
+      run: |
+        $build = Get-ChildItem C:\DeployOutput\
+        $archive = $build | Compress-Archive -DestinationPath "$build.zip" -PassThru
+        Write-Output "::set-output name=path::$archive"
 
     - name: Create release
       id: create_release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: 'C:\DeployOutput\AppPackages.zip'
+        artifacts: ${{ steps.archive.outputs.path }}
         artifactContentType: application/zip
         tag: ${{ steps.tag.outputs.tag }}
         token: ${{ secrets.GITHUB_TOKEN }}
