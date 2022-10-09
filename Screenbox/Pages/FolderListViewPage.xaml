@@ -53,6 +53,7 @@
             x:Name="ListView"
             Padding="{StaticResource ContentPageRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
