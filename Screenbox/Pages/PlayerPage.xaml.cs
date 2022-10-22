@@ -8,7 +8,9 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
@@ -51,16 +53,17 @@ namespace Screenbox.Pages
         {
             if (e.Parameter is true)
             {
+                LayoutRoot.Transitions.Clear();
                 ViewModel.PlayerVisible = true;
             }
         }
 
-        public void FocusVideoView()
+        private void FocusVideoView()
         {
             VideoView.Focus(FocusState.Programmatic);
         }
 
-        public void SetTitleBar()
+        private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
             UpdateSystemCaptionButtonForeground();
@@ -75,6 +78,17 @@ namespace Screenbox.Pages
         {
             if (!ViewModel.PlayerVisible)
                 VisualStateManager.GoToState(this, "MiniPlayer", false);
+        }
+        
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (LayoutRoot.Transitions.Count != 0) return;
+            PaneThemeTransition transition = new()
+            {
+                Edge = EdgeTransitionLocation.Bottom
+            };
+                
+            LayoutRoot.Transitions.Add(transition);
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)

@@ -21,6 +21,7 @@
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
+    Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">
     <Page.Resources>
