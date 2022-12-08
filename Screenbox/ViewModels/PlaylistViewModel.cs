@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Media;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
@@ -432,23 +433,21 @@ namespace Screenbox.ViewModels
 
         private bool CanPrevious()
         {
-            if (Playlist.Count == 1)
-            {
-                return _neighboringFilesQuery != null;
-            }
-
-            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
-            {
-                return true;
-            }
-
-            return _currentIndex >= 1 && _currentIndex < Playlist.Count;
+            return Playlist.Count != 0 && ActiveItem != null;
         }
 
         [RelayCommand(CanExecute = nameof(CanPrevious))]
         private async Task PreviousAsync()
         {
-            if (Playlist.Count == 0 || ActiveItem == null) return;
+            if (_mediaPlayer == null || Playlist.Count == 0 || ActiveItem == null) return;
+            if ((_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
+                 _mediaPlayer.Position > TimeSpan.FromSeconds(5)) ||
+                Playlist.Count == 1)
+            {
+                _mediaPlayer.Position = TimeSpan.Zero;
+                return;
+            }
+
             int index = _currentIndex;
             if (Playlist.Count == 1 && _neighboringFilesQuery != null && ActiveItem.Source is IStorageFile file)
             {
@@ -456,6 +455,10 @@ namespace Screenbox.ViewModels
                 if (previousFile != null)
                 {
                     Play(previousFile);
+                }
+                else
+                {
+                    _mediaPlayer.Position = TimeSpan.Zero;
                 }
             }
             else if (index == 0 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
@@ -466,6 +469,10 @@ namespace Screenbox.ViewModels
             {
                 MediaViewModel previous = Playlist[index - 1];
                 PlaySingle(previous);
+            }
+            else
+            {
+                _mediaPlayer.Position = TimeSpan.Zero;
             }
         }
 

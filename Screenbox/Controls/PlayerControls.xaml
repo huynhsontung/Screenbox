@@ -245,8 +245,7 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                 Command="{x:Bind ViewModel.PlaylistViewModel.PreviousCommand}"
                 CornerRadius="4,0,0,4"
-                Style="{StaticResource PlayerButtonStyle}"
-                Visibility="Collapsed">
+                Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE100;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="PageUp" />
@@ -258,8 +257,7 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                 Command="{x:Bind ViewModel.PlaylistViewModel.NextCommand}"
                 CornerRadius="0,4,4,0"
-                Style="{StaticResource PlayerButtonStyle}"
-                Visibility="Collapsed">
+                Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE101;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="PageDown" />
@@ -375,7 +373,7 @@
         </StackPanel>
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="PreviousNextVisibility">
+            <!--<VisualStateGroup x:Name="PreviousNextVisibility">
                 <VisualState x:Name="PreviousNextHidden" />
                 <VisualState x:Name="PreviousNextVisible">
                     <VisualState.StateTriggers>
@@ -386,7 +384,7 @@
                         <Setter Target="NextButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
-            </VisualStateGroup>
+            </VisualStateGroup>-->
 
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
