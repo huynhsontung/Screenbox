@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -72,7 +73,7 @@
             </Style>
 
             <Flyout x:Key="VolumeControlFlyout">
-                <local:VolumeControl x:Name="VolumeControl" />
+                <local:VolumeControl Width="200" />
             </Flyout>
 
             <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
@@ -264,28 +265,13 @@
                 </Button.KeyboardAccelerators>
             </Button>
 
-            <muxc:ToggleSplitButton
-                x:Name="MuteButton"
-                Height="40"
-                Margin="2,0"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(VolumeControl.ViewModel.IsMute), Mode=OneWay}"
-                AccessKey="M"
-                Background="Transparent"
-                BorderThickness="0"
-                Flyout="{StaticResource VolumeControlFlyout}"
-                IsChecked="{x:Bind VolumeControl.ViewModel.IsMute, Mode=TwoWay}">
-                <muxc:SplitButton.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="M" />
-                </muxc:SplitButton.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind VolumeControl.GetMuteToggleGlyph(VolumeControl.ViewModel.IsMute), Mode=OneWay}" />
-            </muxc:ToggleSplitButton>
-
             <local:TimeDisplay
                 x:Name="TimeDisplay"
                 MinWidth="0"
                 Margin="6,0,0,0"
                 VerticalAlignment="Center"
                 ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
+                FontSize="14"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
                 TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
@@ -296,6 +282,24 @@
             Grid.Column="1"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
+            <Button
+                x:Name="VolumeButton"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
+                Flyout="{StaticResource VolumeControlFlyout}"
+                Style="{StaticResource PlayerButtonStyle}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="M" />
+                </Button.KeyboardAccelerators>
+                <FontIcon Glyph="{x:Bind VolumeControl.GetMuteToggleGlyph(VolumeControl.ViewModel.IsMute), Mode=OneWay}" />
+            </Button>
+
+            <local:VolumeControl
+                x:Name="VolumeControl"
+                Width="140"
+                Margin="2,0,8,0"
+                ShowValueText="False"
+                Visibility="Collapsed" />
+
             <ToggleButton
                 x:Name="RepeatButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.PlaylistViewModel.RepeatMode), Mode=OneWay}"
@@ -339,18 +343,6 @@
             </Button>
 
             <Button
-                x:Name="CompactVolumeButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
-                Flyout="{StaticResource VolumeControlFlyout}"
-                Style="{StaticResource SmallPlayerButtonStyle}"
-                Visibility="Collapsed">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="M" />
-                </Button.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind VolumeControl.GetMuteToggleGlyph(VolumeControl.ViewModel.IsMute), Mode=OneWay}" />
-            </Button>
-
-            <Button
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
                 Flyout="{x:Bind VideoContextMenu, Mode=OneWay}"
@@ -373,18 +365,26 @@
         </StackPanel>
 
         <VisualStateManager.VisualStateGroups>
-            <!--<VisualStateGroup x:Name="PreviousNextVisibility">
-                <VisualState x:Name="PreviousNextHidden" />
-                <VisualState x:Name="PreviousNextVisible">
+            <VisualStateGroup x:Name="VolumeControlStates">
+                <VisualState x:Name="Flyout" />
+                <VisualState x:Name="Inline">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.ShowPreviousNext, Mode=OneWay}" />
+                        <triggers:ControlSizeTrigger MinWidth="500" TargetElement="{x:Bind}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="PreviousButton.Visibility" Value="Visible" />
-                        <Setter Target="NextButton.Visibility" Value="Visible" />
+                        <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
+                        <Setter Target="VolumeControl.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
-            </VisualStateGroup>-->
+                <VisualState x:Name="Hidden">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
 
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
@@ -401,7 +401,6 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MuteButton.Visibility" Value="Collapsed" />
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
@@ -411,20 +410,24 @@
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.ProgressOnly" Value="True" />
                         <Setter Target="SeekBar.Margin" Value="0" />
+                        <Setter Target="TimeDisplay.FontSize" Value="13" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Mini">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsMinimal, Mode=OneWay}" />
+                        <triggers:ControlSizeTrigger
+                            MaxWidth="600"
+                            CanTrigger="{x:Bind ViewModel.IsCompact, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                            TargetElement="{x:Bind}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MuteButton.Visibility" Value="Collapsed" />
-                        <Setter Target="CompactVolumeButton.Visibility" Value="Visible" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                     </VisualState.Setters>

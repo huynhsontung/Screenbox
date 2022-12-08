@@ -52,7 +52,6 @@ namespace Screenbox
             services.AddTransient<PlayerElementViewModel>();
             services.AddTransient<PropertyViewModel>();
             services.AddTransient<ChapterViewModel>();
-            services.AddTransient<VolumeViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();
             services.AddTransient<SeekBarViewModel>();
             services.AddTransient<NotificationViewModel>();
@@ -65,6 +64,7 @@ namespace Screenbox
             services.AddTransient<PlayerPageViewModel>();
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<PlayQueuePageViewModel>();
+            services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
             services.AddSingleton<PlaylistViewModel>(); // Shared with PlayerPage, SystemMediaTransportControls

@@ -11,9 +11,15 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
         <ToggleButton
-            Margin="0,0,8,0"
+            Grid.Column="0"
+            Margin="0,0,4,0"
             VerticalAlignment="Stretch"
             Background="Transparent"
             BorderThickness="0"
@@ -27,13 +33,16 @@
         <Slider
             x:Name="VolumeSlider"
             x:Uid="VolumeSlider"
-            Width="150"
-            IsThumbToolTipEnabled="False"
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
         <TextBlock
+            Grid.Column="2"
             Width="28"
-            Margin="16,0,0,0"
+            Margin="12,0,0,0"
             VerticalAlignment="Center"
-            Text="{x:Bind VolumeSlider.Value, Mode=OneWay}" />
-    </StackPanel>
+            Text="{x:Bind VolumeSlider.Value, Mode=OneWay}"
+            Visibility="{x:Bind ShowValueText, Mode=OneWay}" />
+    </Grid>
 </UserControl>

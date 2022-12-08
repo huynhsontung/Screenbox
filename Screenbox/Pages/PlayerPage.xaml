@@ -505,7 +505,7 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="14" />
                         <Setter Target="TitleText.FontWeight" Value="SemiBold" />
-                        <Setter Target="TitleTextPanel.Margin" Value="16,4,10,0" />
+                        <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
                         <Setter Target="TitleTextPanel.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
