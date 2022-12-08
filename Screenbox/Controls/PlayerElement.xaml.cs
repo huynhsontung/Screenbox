@@ -18,6 +18,10 @@ namespace Screenbox.Controls
 
         private const VirtualKey PeriodKey = (VirtualKey)190;
         private const VirtualKey CommaKey = (VirtualKey)188;
+        private const VirtualKey PlusKey = (VirtualKey)0xBB;
+        private const VirtualKey MinusKey = (VirtualKey)0xBD;
+        private const VirtualKey AddKey = (VirtualKey)0x6B;
+        private const VirtualKey SubtractKey = (VirtualKey)0x6D;
 
         public PlayerElement()
         {
