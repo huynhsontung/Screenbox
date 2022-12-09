@@ -27,6 +27,7 @@
             <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
             <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
+            <SolidColorBrush x:Key="ToggleButtonBackgroundIndeterminate" Color="Transparent" />
             <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
             <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
             <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
@@ -97,16 +98,18 @@
                 </Grid>
             </Flyout>
 
-            <MenuFlyout x:Name="NormalVideoContextMenu">
+            <MenuFlyout x:Name="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.ShowPropertiesCommand}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xE946;}"
-                    Text="{x:Bind strings:Resources.Properties}" />
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{x:Bind strings:Resources.Properties}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="I" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xEC57;}"
+                    Icon="{ui:FontIcon Glyph=&#xEC57;}"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
@@ -174,25 +177,44 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xEE71;}"
+                    Icon="{ui:FontIcon Glyph=&#xEE71;}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}" />
-                <ToggleMenuFlyoutItem
-                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xEE49;}"
-                    IsChecked="{x:Bind ViewModel.IsCompact, Mode=OneWay}"
-                    Text="{x:Bind strings:Resources.PictureInPicture}" />
-                <ToggleMenuFlyoutItem
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xE9A6;}"
-                    IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
-                    Text="{x:Bind strings:Resources.ZoomToFit}" />
                 <MenuFlyoutItem
                     Click="CastMenuFlyoutItem_OnClick"
-                    Icon="{ui:FontIcon FontFamily={StaticResource SymbolThemeFontFamily},
-                                       Glyph=&#xEC15;}"
-                    Text="Cast" />
+                    Icon="{ui:FontIcon Glyph=&#xEC15;}"
+                    Text="{x:Bind strings:Resources.Cast}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="K" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutSubItem Icon="{ui:FontIcon Glyph=&#xe714;}" Text="{x:Bind strings:Resources.VideoSettings}">
+                    <ToggleMenuFlyoutItem
+                        Icon="{ui:FontIcon Glyph=&#xE9A6;}"
+                        IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
+                        Text="{x:Bind strings:Resources.ZoomToFit}">
+                        <MenuFlyoutItem.KeyboardAccelerators>
+                            <KeyboardAccelerator Key="Z" />
+                        </MenuFlyoutItem.KeyboardAccelerators>
+                    </ToggleMenuFlyoutItem>
+                </MenuFlyoutSubItem>
+
+                <MenuFlyoutSeparator x:Name="ExtraOptionsSeparator" Visibility="Collapsed" />
+                <MenuFlyoutItem
+                    x:Name="CompactOverlayMenuItem"
+                    Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xEE49;}"
+                    Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
+                    Visibility="Collapsed" />
+                <MenuFlyoutItem
+                    x:Name="FullscreenMenuItem"
+                    Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xE1D9;}"
+                    Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
+                    Visibility="Collapsed">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="F" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
             </MenuFlyout>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -330,6 +352,17 @@
             </Button>
 
             <Button
+                x:Name="CompactOverlayButton"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
+                Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
+                Style="{StaticResource PlayerButtonStyle}">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
+                </Button.KeyboardAccelerators>
+                <FontIcon x:Name="CompactOverlayButtonIcon" Glyph="&#xEE49;" />
+            </Button>
+
+            <Button
                 x:Name="FullscreenButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="F"
@@ -345,22 +378,10 @@
             <Button
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
-                Flyout="{x:Bind VideoContextMenu, Mode=OneWay}"
+                Flyout="{x:Bind PlayerContextMenu, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                 <FontIcon Glyph="&#xE10C;" />
-            </Button>
-
-            <Button
-                x:Name="ExitCompactOverlayButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ExitCompactOverlay}"
-                Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                Style="{StaticResource PlayerButtonStyle}"
-                Visibility="Collapsed">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="Escape" />
-                </Button.KeyboardAccelerators>
-                <FontIcon Glyph="&#xEE47;" />
             </Button>
         </StackPanel>
 
@@ -369,7 +390,10 @@
                 <VisualState x:Name="Flyout" />
                 <VisualState x:Name="Inline">
                     <VisualState.StateTriggers>
-                        <triggers:ControlSizeTrigger MinWidth="500" TargetElement="{x:Bind}" />
+                        <triggers:ControlSizeTrigger
+                            x:Name="InlineVolumeControlTrigger"
+                            MinWidth="640"
+                            TargetElement="{x:Bind}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
@@ -405,7 +429,7 @@
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
-                        <Setter Target="ExitCompactOverlayButton.Visibility" Value="Visible" />
+                        <Setter Target="CompactOverlayButtonIcon.Glyph" Value="&#xEE47;" />
                         <Setter Target="PlayPauseButton.Margin" Value="2,0,2,0" />
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.ProgressOnly" Value="True" />
@@ -416,20 +440,25 @@
                 <VisualState x:Name="Mini">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsMinimal, Mode=OneWay}" />
-                        <triggers:ControlSizeTrigger
-                            MaxWidth="600"
+                        <!--<triggers:ControlSizeTrigger
+                            MaxWidth="500"
                             CanTrigger="{x:Bind ViewModel.IsCompact, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            TargetElement="{x:Bind}" />
+                            TargetElement="{x:Bind}" />-->
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
+                        <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
+                        <Setter Target="InlineVolumeControlTrigger.MinWidth" Value="500" />
+                        <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
+                        <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

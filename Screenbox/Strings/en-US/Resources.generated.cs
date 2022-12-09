@@ -16,6 +16,31 @@ namespace Screenbox.Strings{
             _resourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
         }
 
+        #region CompactOverlayToggle
+        /// <summary>
+        ///   Get the variant version of the string similar to: Picture in picture
+        /// </summary>
+        public static string CompactOverlayToggle(object variantId)
+        {
+            try
+            {
+                return CompactOverlayToggle(Convert.ToInt64(variantId));
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        ///   Get the variant version of the string similar to: Picture in picture
+        /// </summary>
+        public static string CompactOverlayToggle(long variantId)
+        {
+            return _resourceLoader.GetString("CompactOverlayToggle_Variant" + variantId);
+        }
+        #endregion
+
         #region MuteToggle
         /// <summary>
         ///   Get the variant version of the string similar to: Mute
@@ -133,19 +158,6 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("FrameSavedNotificationTitle");
-            }
-        }
-        #endregion
-
-        #region PictureInPicture
-        /// <summary>
-        ///   Looks up a localized string similar to: Picture in picture
-        /// </summary>
-        public static string PictureInPicture
-        {
-            get
-            {
-                return _resourceLoader.GetString("PictureInPicture");
             }
         }
         #endregion
@@ -283,19 +295,6 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("Seek");
-            }
-        }
-        #endregion
-
-        #region ExitCompactOverlay
-        /// <summary>
-        ///   Looks up a localized string similar to: Exit picture in picture
-        /// </summary>
-        public static string ExitCompactOverlay
-        {
-            get
-            {
-                return _resourceLoader.GetString("ExitCompactOverlay");
             }
         }
         #endregion
@@ -1118,6 +1117,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region VideoSettings
+        /// <summary>
+        ///   Looks up a localized string similar to: Video settings
+        /// </summary>
+        public static string VideoSettings
+        {
+            get
+            {
+                return _resourceLoader.GetString("VideoSettings");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1129,6 +1141,7 @@ namespace Screenbox.Strings{
         public enum KeyEnum
         {
             __Undefined = 0,
+            CompactOverlayToggle,
             MuteToggle,
             FullscreenToggle,
             RepeatMode,
@@ -1136,7 +1149,6 @@ namespace Screenbox.Strings{
             ItemsCount,
             ZoomToFit,
             FrameSavedNotificationTitle,
-            PictureInPicture,
             SaveCurrentFrame,
             Loop,
             PlaybackSpeed,
@@ -1148,7 +1160,6 @@ namespace Screenbox.Strings{
             AudioAndCaption,
             Volume,
             Seek,
-            ExitCompactOverlay,
             Next,
             Previous,
             Play,
@@ -1212,6 +1223,7 @@ namespace Screenbox.Strings{
             NoNetworkDrivePanelHeader,
             NoNetworkDrivePanelSubtext,
             Recent,
+            VideoSettings,
         }
 
         private static ResourceLoader _resourceLoader;

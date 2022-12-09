@@ -10,6 +10,7 @@
     mc:Ignorable="d">
     <StackPanel Orientation="Horizontal">
         <StackPanel
+            VerticalAlignment="Center"
             Background="Transparent"
             Orientation="Horizontal"
             Tapped="TimeDisplay_OnTapped">

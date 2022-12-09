@@ -246,7 +246,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Click="{x:Bind ViewModel.ToggleControlsVisibility}"
-            ContextFlyout="{x:Bind PlayerControls.VideoContextMenu, Mode=OneWay}"
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
             ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"

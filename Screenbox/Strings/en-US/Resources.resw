@@ -123,7 +123,7 @@
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
     <value>Frame saved</value>
   </data>
-  <data name="PictureInPicture" xml:space="preserve">
+  <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Picture in picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
@@ -173,7 +173,7 @@
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
   </data>
-  <data name="ExitCompactOverlay" xml:space="preserve">
+  <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
@@ -393,5 +393,8 @@
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recent</value>
+  </data>
+  <data name="VideoSettings" xml:space="preserve">
+    <value>Video settings</value>
   </data>
 </root>

@@ -21,8 +21,8 @@ namespace Screenbox.Controls
             typeof(PlayerControls),
             new PropertyMetadata(false));
 
-        public static readonly DependencyProperty VideoContextMenuProperty = DependencyProperty.Register(
-            nameof(VideoContextMenu),
+        public static readonly DependencyProperty PlayerContextMenuProperty = DependencyProperty.Register(
+            nameof(PlayerContextMenu),
             typeof(MenuFlyout),
             typeof(PlayerControls),
             new PropertyMetadata(default(MenuFlyout)));
@@ -39,10 +39,10 @@ namespace Screenbox.Controls
             set => SetValue(BackgroundTransitionProperty, value);
         }
 
-        public MenuFlyout VideoContextMenu
+        public MenuFlyout PlayerContextMenu
         {
-            get => (MenuFlyout)GetValue(VideoContextMenuProperty);
-            private set => SetValue(VideoContextMenuProperty, value);
+            get => (MenuFlyout)GetValue(PlayerContextMenuProperty);
+            private set => SetValue(PlayerContextMenuProperty, value);
         }
 
         public bool IsMinimal
@@ -59,7 +59,7 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerControlsViewModel>();
-            VideoContextMenu = NormalVideoContextMenu;
+            PlayerContextMenu = NormalPlayerContextMenu;
         }
 
         private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
