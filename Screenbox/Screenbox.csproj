@@ -299,6 +299,7 @@
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />

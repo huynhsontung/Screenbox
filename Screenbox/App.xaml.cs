@@ -64,6 +64,7 @@ namespace Screenbox
             services.AddTransient<PlayerPageViewModel>();
             services.AddTransient<MainPageViewModel>();
             services.AddTransient<PlayQueuePageViewModel>();
+            services.AddTransient<SettingsPageViewModel>();
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
             services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
