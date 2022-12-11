@@ -222,14 +222,8 @@ namespace Screenbox.ViewModels
         [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private async Task ShowPropertiesAsync()
         {
-            ContentDialog propertiesDialog = new()
-            {
-                Title = Resources.Properties,
-                CloseButtonText = Resources.Close,
-                DefaultButton = ContentDialogButton.Close,
-                Content = new PropertiesView { Media = PlaylistViewModel.ActiveItem, MinWidth = 400 }
-            };
-
+            if (PlaylistViewModel.ActiveItem == null) return;
+            ContentDialog propertiesDialog = PropertiesView.GetDialog(PlaylistViewModel.ActiveItem);
             await propertiesDialog.ShowAsync();
         }
 

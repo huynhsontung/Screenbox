@@ -31,6 +31,19 @@ namespace Screenbox.Controls
             DataContext = App.Services.GetRequiredService<PropertyViewModel>();
         }
 
+        internal static ContentDialog GetDialog(MediaViewModel media)
+        {
+            ContentDialog propertiesDialog = new()
+            {
+                Title = Strings.Resources.Properties,
+                CloseButtonText = Strings.Resources.Close,
+                DefaultButton = ContentDialogButton.Close,
+                Content = new PropertiesView { Media = media, MinWidth = 400 }
+            };
+
+            return propertiesDialog;
+        }
+
         private static void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PropertiesView view = (PropertiesView)d;
