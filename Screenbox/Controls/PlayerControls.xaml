@@ -16,21 +16,42 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                    <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
+                    <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                    <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast" />
+            </ResourceDictionary.ThemeDictionaries>
+
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
             <converters1:BoolToObjectConverter
                 x:Key="BoolToPlayPauseTextConverter"
                 FalseValue="{strings:Resources Key=Play}"
                 TrueValue="{strings:Resources Key=Pause}" />
 
-            <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
             <SolidColorBrush x:Key="ToggleButtonBackgroundIndeterminate" Color="Transparent" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-            <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
             <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
 
             <Style
