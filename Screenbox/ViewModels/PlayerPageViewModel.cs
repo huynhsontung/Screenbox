@@ -14,13 +14,15 @@ using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
     internal sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
-        IRecipient<PlaylistActiveItemChangedMessage>
+        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool? _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
@@ -48,32 +50,29 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly IWindowService _windowService;
-        private readonly INavigationService _navigationService;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private ManipulationLock _lockDirection;
         private TimeSpan _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
 
-        public PlayerPageViewModel(IWindowService windowService, INavigationService navigationService)
+        public PlayerPageViewModel(IWindowService windowService)
         {
             _windowService = windowService;
-            _navigationService = navigationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
-            _navigationViewDisplayMode = navigationService.DisplayMode;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            _navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, EventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = _navigationService.DisplayMode;
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)

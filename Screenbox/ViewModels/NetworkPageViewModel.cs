@@ -6,31 +6,30 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.Storage;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core;
-using Screenbox.Services;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class NetworkPageViewModel : ObservableRecipient
+    internal sealed partial class NetworkPageViewModel : ObservableRecipient,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private string _titleText;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        private readonly INavigationService _navigationService;
-
-        public NetworkPageViewModel(INavigationService navigationService)
+        public NetworkPageViewModel()
         {
-            _navigationService = navigationService;
-            _navigationViewDisplayMode = navigationService.DisplayMode;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _titleText = Strings.Resources.Network;
             Breadcrumbs = new ObservableCollection<string>();
 
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+            IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = e.NewValue;
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         public ObservableCollection<string> Breadcrumbs { get; }

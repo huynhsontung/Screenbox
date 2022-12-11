@@ -187,12 +187,12 @@
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
+    <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
     <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
-    <Compile Include="Core\NavigationServiceDisplayModeChangedEventArgs.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
     <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />

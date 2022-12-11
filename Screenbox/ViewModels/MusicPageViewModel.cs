@@ -11,20 +11,20 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using Screenbox.Services;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class MusicPageViewModel : ObservableRecipient
+    internal sealed partial class MusicPageViewModel : ObservableRecipient,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
-        private readonly INavigationService _navigationService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
@@ -32,22 +32,23 @@ namespace Screenbox.ViewModels
         private StorageLibrary? _library;
 
         public MusicPageViewModel(IFilesService filesService,
-            INavigationService navigationService,
             MediaViewModelFactory mediaFactory)
         {
             _filesService = filesService;
-            _navigationService = navigationService;
             _mediaFactory = mediaFactory;
-            _navigationViewDisplayMode = navigationService.DisplayMode;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _songs = new List<MediaViewModel>();
 
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
-
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
+        {
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         public Task FetchSongsAsync()
@@ -61,11 +62,6 @@ namespace Screenbox.ViewModels
 
                 return _loadSongsTask = FetchSongsInternalAsync();
             }
-        }
-
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
-        {
-            NavigationViewDisplayMode = e.NewValue;
         }
 
         private bool HasSongs()

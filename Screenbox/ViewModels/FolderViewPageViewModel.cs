@@ -2,7 +2,6 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using System;
@@ -17,10 +16,12 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Factories;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal partial class FolderViewPageViewModel : ObservableRecipient
+    internal partial class FolderViewPageViewModel : ObservableRecipient,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         public ObservableCollection<StorageItemViewModel> Items { get; }
 
@@ -43,16 +44,16 @@ namespace Screenbox.ViewModels
             _storageVmFactory = storageVmFactory;
             _navigationService = navigationService;
             _loadingTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
-            _navigationViewDisplayMode = navigationService.DisplayMode;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
 
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+            IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = e.NewValue;
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         public async Task FetchContentAsync(object? parameter)

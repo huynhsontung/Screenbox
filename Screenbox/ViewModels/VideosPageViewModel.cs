@@ -12,11 +12,12 @@ using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class VideosPageViewModel : ObservableRecipient
+    internal sealed partial class VideosPageViewModel : ObservableRecipient,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private string _urlText;
         [ObservableProperty] private string _titleText;
@@ -25,23 +26,22 @@ namespace Screenbox.ViewModels
         public ObservableCollection<string> Breadcrumbs { get; }
 
         private readonly IFilesService _filesService;
-        private readonly INavigationService _navigationService;
 
-        public VideosPageViewModel(IFilesService filesService, INavigationService navigationService)
+        public VideosPageViewModel(IFilesService filesService)
         {
             _filesService = filesService;
-            _navigationService = navigationService;
             _urlText = string.Empty;
             _titleText = Strings.Resources.Videos;
             Breadcrumbs = new ObservableCollection<string>();
 
-            _navigationViewDisplayMode = navigationService.DisplayMode;
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+
+            IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = e.NewValue;
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         public void OpenButtonClick(object sender, RoutedEventArgs e)

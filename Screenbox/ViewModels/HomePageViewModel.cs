@@ -15,13 +15,14 @@ using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
-using Screenbox.Services;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
     internal sealed partial class HomePageViewModel : ObservableRecipient,
-        IRecipient<PlaylistActiveItemChangedMessage>
+        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
 
@@ -31,21 +32,19 @@ namespace Screenbox.ViewModels
 
         private readonly MediaViewModelFactory _mediaFactory;
 
-        public HomePageViewModel(INavigationService navigationService, MediaViewModelFactory mediaFactory)
+        public HomePageViewModel(MediaViewModelFactory mediaFactory)
         {
             _mediaFactory = mediaFactory;
-            _navigationViewDisplayMode = navigationService.DisplayMode;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
-
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = e.NewValue;
+            NavigationViewDisplayMode = message.NewValue;
         }
 
         public async void Receive(PlaylistActiveItemChangedMessage message)

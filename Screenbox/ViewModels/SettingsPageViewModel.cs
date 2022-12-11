@@ -1,28 +1,26 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Services;
-using Screenbox.Core;
+using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class SettingsPageViewModel : ObservableRecipient
+    internal sealed partial class SettingsPageViewModel : ObservableRecipient,
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public SettingsPageViewModel(INavigationService navigationService)
+        public SettingsPageViewModel()
         {
-            _navigationViewDisplayMode = navigationService.DisplayMode;
-            navigationService.DisplayModeChanged += NavigationServiceOnDisplayModeChanged;
+            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+
+            IsActive = true;
         }
 
-        private void NavigationServiceOnDisplayModeChanged(object sender, NavigationServiceDisplayModeChangedEventArgs e)
+        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
-            NavigationViewDisplayMode = e.NewValue;
+            NavigationViewDisplayMode = message.NewValue;
         }
     }
 }
