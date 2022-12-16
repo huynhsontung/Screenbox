@@ -21,11 +21,13 @@ using Screenbox.Core.Playback;
 using CommunityToolkit.Diagnostics;
 using Windows.Media.Playback;
 using Windows.System.Display;
+using Screenbox.Core;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class PlayerElementViewModel : ObservableRecipient, IRecipient<ChangeZoomToFitMessage>
+    internal sealed partial class PlayerElementViewModel : ObservableRecipient,
+        IRecipient<ChangeZoomToFitMessage>
     {
         public MediaPlayer? VlcPlayer { get; private set; }
 
@@ -34,19 +36,23 @@ namespace Screenbox.ViewModels
         private readonly LibVlcService _libVlcService;
         private readonly IWindowService _windowService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
+        private readonly ISettingsService _settingsService;
         private readonly DispatcherQueue _dispatcherQueue;
         private Size _viewSize;
         private bool _zoomToFit;
+        private bool _forceResize;
         private VlcMediaPlayer? _mediaPlayer;
         private DisplayRequest? _displayRequest;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
             IWindowService windowService,
+            ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService)
         {
             _libVlcService = libVlcService;
             _windowService = windowService;
+            _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
@@ -112,6 +118,8 @@ namespace Screenbox.ViewModels
                 _mediaPlayer.PositionChanged += OnPositionChanged;
                 _mediaPlayer.MediaFailed += OnMediaFailed;
                 Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+                if (_settingsService.PlayerAutoResize == PlayerAutoResizeOptions.OnLaunch)
+                    _forceResize = true;
             });
         }
 
@@ -293,6 +301,9 @@ namespace Screenbox.ViewModels
 
         private void OnVideoSizeChanged(IMediaPlayer sender, object? args)
         {
+            if (!_forceResize && _settingsService.PlayerAutoResize != PlayerAutoResizeOptions.Always) return;
+            _forceResize = false;
+
             _dispatcherQueue.TryEnqueue(() =>
             {
                 if (ResizeWindow(1)) return;

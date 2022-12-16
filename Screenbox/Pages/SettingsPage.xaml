@@ -4,10 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rpl="using:ReswPlusLib"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
 
     <Grid>
@@ -26,6 +29,66 @@
                 Text="{x:Bind strings:Resources.Settings}" />
         </Grid>
 
+        <StackPanel
+            x:Name="ContentRoot"
+            Grid.Row="1"
+            Padding="{StaticResource ContentPageRightMargin}"
+            Spacing="4">
+            <TextBlock
+                Margin="0,0,0,4"
+                FontWeight="SemiBold"
+                Text="Player" />
+            <labs:SettingsCard
+                Description="Resize the app window to best match a video's native resolution when the video plays"
+                Header="Auto resize"
+                HeaderIcon="{ui:FontIcon Glyph=&#xe799;}">
+                <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
+                    <x:String>Always</x:String>
+                    <x:String>Only on launch</x:String>
+                    <x:String>Never</x:String>
+                </ComboBox>
+            </labs:SettingsCard>
+            <labs:SettingsExpander
+                Header="Gestures"
+                HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
+                IsExpanded="True">
+                <labs:SettingsExpander.Items>
+                    <labs:SettingsCard ContentAlignment="Left">
+                        <CheckBox Content="Drag horizontally to seek" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                    </labs:SettingsCard>
+                    <labs:SettingsCard ContentAlignment="Left">
+                        <CheckBox Content="Drag vertically to adjust volume" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                    </labs:SettingsCard>
+                </labs:SettingsExpander.Items>
+            </labs:SettingsExpander>
+
+            <TextBlock
+                Margin="0,12,0,4"
+                FontWeight="SemiBold"
+                Text="About" />
+            <labs:SettingsCard
+                HorizontalContentAlignment="Left"
+                ContentAlignment="Vertical"
+                Header="Screenbox Media Player"
+                HeaderIcon="{ui:FontIcon Glyph=&#xe946;}">
+                <labs:SettingsCard.Description>
+                    <TextBlock><Run Text="Version" /> <Run Text="{x:Bind rpl:Macros.AppVersionFull}" />
+                        <LineBreak />
+                        Made with ❤️ by Tung Huynh</TextBlock>
+                </labs:SettingsCard.Description>
+                <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+                    <HyperlinkButton
+                        Margin="-11,0,0,0"
+                        Content="Source code"
+                        NavigateUri="https://github.com/huynhsontung/Screenbox" />
+                    <HyperlinkButton
+                        Margin="-11,0,0,0"
+                        Content="Discord"
+                        NavigateUri="https://discord.gg/HZPZXjANxz" />
+                </StackPanel>
+            </labs:SettingsCard>
+        </StackPanel>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
@@ -40,6 +103,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

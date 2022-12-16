@@ -50,15 +50,17 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly IWindowService _windowService;
+        private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private ManipulationLock _lockDirection;
         private TimeSpan _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
 
-        public PlayerPageViewModel(IWindowService windowService)
+        public PlayerPageViewModel(IWindowService windowService, ISettingsService settingsService)
         {
             _windowService = windowService;
+            _settingsService = settingsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
@@ -148,8 +150,9 @@ namespace Screenbox.ViewModels
             double horizontalCumulative = e.Cumulative.Translation.X;
             double verticalCumulative = e.Cumulative.Translation.Y;
 
-            if (_lockDirection == ManipulationLock.Vertical ||
-                _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50)
+            if ((_lockDirection == ManipulationLock.Vertical ||
+                _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50) &&
+                _settingsService.PlayerVolumeGesture)
             {
                 _lockDirection = ManipulationLock.Vertical;
                 Messenger.Send(new ChangeVolumeMessage((int)-verticalChange, true));
@@ -158,7 +161,8 @@ namespace Screenbox.ViewModels
 
             if ((_lockDirection == ManipulationLock.Horizontal ||
                  _lockDirection == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
-                (_mediaPlayer?.CanSeek ?? false))
+                (_mediaPlayer?.CanSeek ?? false) &&
+                _settingsService.PlayerSeekGesture)
             {
                 _lockDirection = ManipulationLock.Horizontal;
                 Messenger.Send(new TimeChangeOverrideMessage(true));

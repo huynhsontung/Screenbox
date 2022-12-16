@@ -83,6 +83,7 @@ namespace Screenbox
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
+            services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
                 new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
