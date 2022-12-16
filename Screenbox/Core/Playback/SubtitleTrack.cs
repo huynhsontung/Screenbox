@@ -24,7 +24,9 @@ namespace Screenbox.Core.Playback
             VlcSpu = textTrack.Id;
             Id = textTrack.Id.ToString();
             Language = textTrack.Language;
-            Label = textTrack.Description ?? textTrack.Language;
+            Label = string.IsNullOrEmpty(textTrack.Description)
+                ? textTrack.Language
+                : $"{textTrack.Description} ({textTrack.Language})";
         }
     }
 }

@@ -20,8 +20,6 @@ namespace Screenbox.Core.Playback
 
         public MediaTrackKind TrackKind => MediaTrackKind.Audio;
 
-        //public Windows.Media.Core.AudioTrack? Source { get; }
-
         public AudioTrack(MediaTrack audioTrack)
         {
             Guard.IsTrue(audioTrack.TrackType == TrackType.Audio, nameof(audioTrack.TrackType));
@@ -29,16 +27,9 @@ namespace Screenbox.Core.Playback
             Id = audioTrack.Id.ToString();
             Language = audioTrack.Language;
             Name = audioTrack.Description ?? audioTrack.Language ?? audioTrack.Id.ToString();
-            Label = audioTrack.Description ?? audioTrack.Language;
+            Label = string.IsNullOrEmpty(audioTrack.Description)
+                ? audioTrack.Language
+                : $"{audioTrack.Description} ({audioTrack.Language})";
         }
-
-        //public AudioTrack(Windows.Media.Core.AudioTrack audioTrack)
-        //{
-        //    //Source = audioTrack;
-        //    Id = audioTrack.Id;
-        //    Label = audioTrack.Label;
-        //    Language = audioTrack.Language;
-        //    Name = audioTrack.Name;
-        //}
     }
 }

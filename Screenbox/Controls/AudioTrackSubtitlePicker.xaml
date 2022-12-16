@@ -20,7 +20,7 @@
                 <TextBlock FontWeight="SemiBold" Text="Audio" />
             </ListView.Header>
         </ListView>
-        <MenuFlyoutSeparator Margin="0,4,0,10" IsTabStop="False" />
+        <MenuFlyoutSeparator Margin="-11,4,-11,8" IsTabStop="False" />
         <ListView
             Width="220"
             ItemContainerTransitions="{x:Null}"
