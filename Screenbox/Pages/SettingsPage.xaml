@@ -7,6 +7,7 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:rpl="using:ReswPlusLib"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -57,6 +58,35 @@
                     </labs:SettingsCard>
                     <labs:SettingsCard ContentAlignment="Left">
                         <CheckBox Content="Drag vertically to adjust volume" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                    </labs:SettingsCard>
+                </labs:SettingsExpander.Items>
+            </labs:SettingsExpander>
+
+            <TextBlock
+                Margin="0,12,0,4"
+                FontWeight="SemiBold"
+                Text="About" />
+            <labs:SettingsExpander
+                Header="Screenbox Media Player"
+                HeaderIcon="{ui:FontIcon Glyph=&#xe946;}"
+                IsExpanded="True">
+                <labs:SettingsExpander.Description>
+                    <TextBlock><Run Text="Version" /> <Run Text="{x:Bind rpl:Macros.AppVersionFull}" />
+                        <LineBreak />
+                        Made with ❤️ by Tung Huynh</TextBlock>
+                </labs:SettingsExpander.Description>
+                <labs:SettingsExpander.Items>
+                    <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                        <StackPanel Orientation="Vertical">
+                            <HyperlinkButton
+                                Margin="-11,0,0,0"
+                                Content="Source code"
+                                NavigateUri="https://github.com/huynhsontung/Screenbox" />
+                            <HyperlinkButton
+                                Margin="-11,0,0,0"
+                                Content="Discord"
+                                NavigateUri="https://discord.gg/HZPZXjANxz" />
+                        </StackPanel>
                     </labs:SettingsCard>
                 </labs:SettingsExpander.Items>
             </labs:SettingsExpander>
