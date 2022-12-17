@@ -39,13 +39,19 @@
             </DataTemplate>
 
             <XamlUICommand
-                x:Key="PlayCommand"
+                x:Key="AccentPlayCommand"
                 Command="{x:Bind ViewModel.PlayCommand}"
                 Label="{strings:Resources Key=Play}">
                 <XamlUICommand.IconSource>
                     <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
                 </XamlUICommand.IconSource>
             </XamlUICommand>
+
+            <XamlUICommand
+                x:Key="PlayCommand"
+                Command="{x:Bind ViewModel.PlayCommand}"
+                IconSource="{ui:SymbolIconSource Symbol=Play}"
+                Label="{strings:Resources Key=Play}" />
 
             <XamlUICommand
                 x:Key="PlayNextCommand"
@@ -183,7 +189,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="viewModels:MediaViewModel">
                             <controls:MediaListViewItem
-                                PlayCommand="{StaticResource PlayCommand}"
+                                PlayCommand="{StaticResource AccentPlayCommand}"
                                 SelectionMode="{x:Bind SongListView.SelectionMode, Mode=OneWay}"
                                 ShowMediaIcon="False" />
                         </DataTemplate>

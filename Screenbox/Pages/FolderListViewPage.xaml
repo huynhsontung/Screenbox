@@ -13,6 +13,26 @@
     xmlns:viewModels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
+        <MenuFlyout x:Name="ItemFlyout">
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.PlayCommand}"
+                CommandParameter="{Binding}"
+                Icon="{ui:SymbolIcon Symbol=Play}"
+                Text="{strings:Resources Key=Play}" />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.PlayNextCommand}"
+                CommandParameter="{Binding}"
+                Icon="{ui:FontIcon FontFamily='ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons',
+                                   Glyph=B}"
+                Text="{strings:Resources Key=PlayNext}" />
+            <MenuFlyoutSeparator />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.ShowPropertiesCommand}"
+                CommandParameter="{Binding}"
+                Icon="{ui:FontIcon Glyph=&#xe946;}"
+                Text="{strings:Resources Key=Properties}" />
+        </MenuFlyout>
+
         <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -54,9 +74,11 @@
             Padding="{StaticResource ContentPageRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+            ContextRequested="ListView_OnContextRequested"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
+            RightTapped="ListView_OnRightTapped"
             SelectionMode="None">
             <ListView.Footer>
                 <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />

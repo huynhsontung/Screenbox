@@ -131,14 +131,7 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void PlayNext(MediaViewModelWithMruToken media)
         {
-            // Clone to prevent queuing duplications
-            MediaViewModel clone = media.Media.Clone();
-            Messenger.Send(new QueuePlaylistMessage(clone, true));
-            PlaylistInfo info = Messenger.Send(new PlaylistRequestMessage());
-            if (info.ActiveIndex == -1)
-            {
-                Messenger.Send(new PlayMediaMessage(clone));
-            }
+            Messenger.SendPlayNext(media.Media);
         }
 
         [RelayCommand]

@@ -89,14 +89,7 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void PlayNext(MediaViewModel media)
         {
-            // Clone to prevent queuing duplications
-            MediaViewModel clone = media.Clone();
-            Messenger.Send(new QueuePlaylistMessage(clone, true));
-            PlaylistInfo info = Messenger.Send(new PlaylistRequestMessage());
-            if (info.ActiveIndex == -1)
-            {
-                Messenger.Send(new PlayMediaMessage(clone));
-            }
+            Messenger.SendPlayNext(media);
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]

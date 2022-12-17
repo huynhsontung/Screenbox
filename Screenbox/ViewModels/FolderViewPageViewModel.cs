@@ -12,11 +12,14 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.UI.Xaml.Controls;
 using Screenbox.Factories;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Controls;
+using Screenbox.Core;
+using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
@@ -27,9 +30,14 @@ namespace Screenbox.ViewModels
 
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
+        private bool IsMediaContextRequested => _contextRequested?.Media != null;
+
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(PlayCommand), nameof(PlayNextCommand), nameof(ShowPropertiesCommand))]
+        private StorageItemViewModel? _contextRequested;
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
@@ -80,6 +88,29 @@ namespace Screenbox.ViewModels
         protected virtual void Navigate(object? parameter = null)
         {
             _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
+        }
+
+        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        private void Play(StorageItemViewModel item)
+        {
+            if (item.Media == null) return;
+            Messenger.Send(new PlayMediaMessage(item.Media));
+        }
+
+        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        private void PlayNext(StorageItemViewModel item)
+        {
+            if (item.Media == null) return;
+            Messenger.SendPlayNext(item.Media);
+        }
+
+        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        private async Task ShowPropertiesAsync(StorageItemViewModel item)
+        {
+            if (item.Media == null) return;
+            await item.Media.LoadDetailsAsync();
+            ContentDialog propertiesDialog = PropertiesView.GetDialog(item.Media);
+            await propertiesDialog.ShowAsync();
         }
 
         [RelayCommand]
