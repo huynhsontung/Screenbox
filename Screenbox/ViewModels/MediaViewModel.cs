@@ -59,9 +59,17 @@ namespace Screenbox.ViewModels
             _name = source._name;
             _loadTask = source._loadTask;
             _loadThumbnailTask = source._loadThumbnailTask;
-            Thumbnail = source.Thumbnail;
+            _duration = source._duration;
+            _thumbnail = source.Thumbnail;
+            _mediaType = source._mediaType;
+            _basicProperties = source._basicProperties;
+            _videoProperties = source._videoProperties;
+            _musicProperties = source._musicProperties;
+            _genre = source._genre;
+            _artists = source._artists;
+            _album = source._album;
+            _caption = source._caption;
             Location = source.Location;
-            Duration = source.Duration;
             Source = source.Source;
             Glyph = source.Glyph;
         }
