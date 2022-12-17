@@ -22,22 +22,30 @@
             x:Key="PlayCommand"
             Command="{x:Bind ViewModel.PlayCommand}"
             IconSource="{ui:SymbolIconSource Symbol=Play}"
-            Label="{x:Bind strings:Resources.Play}" />
+            Label="{strings:Resources Key=Play}" />
+
+        <XamlUICommand
+            x:Key="PlayNextCommand"
+            Command="{x:Bind ViewModel.PlayNextCommand}"
+            IconSource="{ui:FontIconSource FontFamily='ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons',
+                                           Glyph=B}"
+            Label="{strings:Resources Key=PlayNext}" />
 
         <XamlUICommand
             x:Key="RemoveCommand"
             Command="{x:Bind ViewModel.RemoveCommand}"
             IconSource="{ui:SymbolIconSource Symbol=Clear}"
-            Label="{x:Bind strings:Resources.Remove}" />
+            Label="{strings:Resources Key=Remove}" />
 
         <XamlUICommand
             x:Key="PropertiesCommand"
             Command="{x:Bind ViewModel.ShowPropertiesCommand}"
             IconSource="{ui:FontIconSource Glyph=&#xe946;}"
-            Label="{x:Bind strings:Resources.Properties}" />
+            Label="{strings:Resources Key=Properties}" />
 
         <MenuFlyout x:Name="ItemFlyout">
             <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
+            <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
             <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />

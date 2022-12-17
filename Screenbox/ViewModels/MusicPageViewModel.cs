@@ -6,15 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using Screenbox.Services;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Controls;
+using Screenbox.Core;
+using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
@@ -73,7 +76,27 @@ namespace Screenbox.ViewModels
         private void Play(MediaViewModel media)
         {
             if (_songs.Count == 0) return;
-            Messenger.Send(new QueuePlaylistMessage(_songs, media));
+            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+            if (playlist.Playlist.Count != _songs.Count || playlist.LastUpdate != _songs)
+            {
+                Messenger.Send(new ClearPlaylistMessage());
+                Messenger.Send(new QueuePlaylistMessage(_songs, false));
+            }
+
+            Messenger.Send(new PlayMediaMessage(media, true));
+        }
+
+        [RelayCommand]
+        private void PlayNext(MediaViewModel media)
+        {
+            // Clone to prevent queuing duplications
+            MediaViewModel clone = media.Clone();
+            Messenger.Send(new QueuePlaylistMessage(clone, true));
+            PlaylistInfo info = Messenger.Send(new PlaylistRequestMessage());
+            if (info.ActiveIndex == -1)
+            {
+                Messenger.Send(new PlayMediaMessage(clone));
+            }
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -82,7 +105,9 @@ namespace Screenbox.ViewModels
             if (_songs.Count == 0) return;
             Random rnd = new();
             List<MediaViewModel> shuffledList = _songs.OrderBy(_ => rnd.Next()).ToList();
-            Messenger.Send(new QueuePlaylistMessage(shuffledList, shuffledList[0]));
+            Messenger.Send(new ClearPlaylistMessage());
+            Messenger.Send(new QueuePlaylistMessage(shuffledList));
+            Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
         }
 
         [RelayCommand]
@@ -90,6 +115,13 @@ namespace Screenbox.ViewModels
         {
             if (_library == null) return;
             await _library.RequestAddFolderAsync();
+        }
+
+        [RelayCommand]
+        private async Task ShowPropertiesAsync(MediaViewModel media)
+        {
+            ContentDialog propertiesDialog = PropertiesView.GetDialog(media);
+            await propertiesDialog.ShowAsync();
         }
 
         private async Task FetchSongsInternalAsync()

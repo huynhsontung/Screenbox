@@ -6,20 +6,16 @@ namespace Screenbox.Core.Messages
 {
     internal sealed class QueuePlaylistMessage : ValueChangedMessage<IEnumerable<MediaViewModel>>
     {
-        public int StartIndex { get; }
+        public bool AddNext { get; }
 
-        public MediaViewModel Target { get; }
-
-        public QueuePlaylistMessage(IList<MediaViewModel> playlist, MediaViewModel target) : base(playlist)
+        public QueuePlaylistMessage(MediaViewModel target, bool addNext = false) : base(new[] { target })
         {
-            Target = target;
-            StartIndex = playlist.IndexOf(Target);
+            AddNext = addNext;
         }
 
-        public QueuePlaylistMessage(IList<MediaViewModel> playlist, int startIndex) : base(playlist)
+        public QueuePlaylistMessage(IList<MediaViewModel> playlist, bool addNext = false) : base(playlist)
         {
-            Target = playlist[startIndex];
-            StartIndex = startIndex;
+            AddNext = addNext;
         }
     }
 }

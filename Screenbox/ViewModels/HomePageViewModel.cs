@@ -11,12 +11,12 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Screenbox.ViewModels
 {
@@ -126,6 +126,19 @@ namespace Screenbox.ViewModels
         private void Play(MediaViewModelWithMruToken media)
         {
             Messenger.Send(new PlayMediaMessage(media.Media));
+        }
+
+        [RelayCommand]
+        private void PlayNext(MediaViewModelWithMruToken media)
+        {
+            // Clone to prevent queuing duplications
+            MediaViewModel clone = media.Media.Clone();
+            Messenger.Send(new QueuePlaylistMessage(clone, true));
+            PlaylistInfo info = Messenger.Send(new PlaylistRequestMessage());
+            if (info.ActiveIndex == -1)
+            {
+                Messenger.Send(new PlayMediaMessage(clone));
+            }
         }
 
         [RelayCommand]

@@ -12,10 +12,10 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
-using Windows.UI.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
@@ -27,6 +27,8 @@ namespace Screenbox.ViewModels
         IRecipient<PlayMediaMessage>,
         IRecipient<PlayFilesWithNeighborsMessage>,
         IRecipient<QueuePlaylistMessage>,
+        IRecipient<ClearPlaylistMessage>,
+        IRecipient<PlaylistRequestMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
@@ -60,6 +62,7 @@ namespace Screenbox.ViewModels
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
+        private object? _lastUpdated;
         private int _currentIndex;
 
         private const int MediaBufferCapacity = 5;
@@ -75,6 +78,7 @@ namespace Screenbox.ViewModels
             _mediaFactory = mediaFactory;
             _mediaBuffer = new List<MediaViewModel>(MediaBufferCapacity);
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
+            _currentIndex = -1;
 
             Playlist.CollectionChanged += OnCollectionChanged;
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
@@ -119,15 +123,33 @@ namespace Screenbox.ViewModels
             }
         }
 
-        public void Receive(QueuePlaylistMessage message)
+        public void Receive(ClearPlaylistMessage message)
         {
             Playlist.Clear();
+        }
+
+        public void Receive(QueuePlaylistMessage message)
+        {
+            _lastUpdated = message.Value;
+            bool canInsert = _currentIndex + 1 < Playlist.Count;
+            int counter = 0;
             foreach (MediaViewModel media in message.Value)
             {
-                Playlist.Add(media);
+                if (message.AddNext && canInsert)
+                {
+                    Playlist.Insert(_currentIndex + 1 + counter, media);
+                    counter++;
+                }
+                else
+                {
+                    Playlist.Add(media);
+                }
             }
+        }
 
-            PlaySingle(message.Target);
+        public void Receive(PlaylistRequestMessage message)
+        {
+            message.Reply(new PlaylistInfo(Playlist, ActiveItem, _currentIndex, _lastUpdated));
         }
 
         public void Receive(PlayMediaMessage message)
@@ -136,6 +158,12 @@ namespace Screenbox.ViewModels
             {
                 _delayPlay = message.Value;
                 return;
+            }
+
+            if (!message.Existing)
+            {
+                _lastUpdated = message.Value;
+                Playlist.Clear();
             }
 
             Play(message.Value);
@@ -322,8 +350,11 @@ namespace Screenbox.ViewModels
                     throw new ArgumentException("Unsupported media type", nameof(value));
             }
 
-            Playlist.Clear();
-            Playlist.Add(vm);
+            if (Playlist.Count == 0)
+            {
+                Playlist.Add(vm);
+            }
+
             PlaySingle(vm);
         }
 
@@ -417,7 +448,8 @@ namespace Screenbox.ViewModels
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    PlaySingle(_mediaFactory.GetSingleton(nextFile));
+                    Playlist.Clear();
+                    Play(_mediaFactory.GetSingleton(nextFile));
                 }
             }
             else if (index == Playlist.Count - 1 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
@@ -440,9 +472,8 @@ namespace Screenbox.ViewModels
         private async Task PreviousAsync()
         {
             if (_mediaPlayer == null || Playlist.Count == 0 || ActiveItem == null) return;
-            if ((_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
-                 _mediaPlayer.Position > TimeSpan.FromSeconds(5)) ||
-                Playlist.Count == 1)
+            if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
+                _mediaPlayer.Position > TimeSpan.FromSeconds(5))
             {
                 _mediaPlayer.Position = TimeSpan.Zero;
                 return;
@@ -454,12 +485,17 @@ namespace Screenbox.ViewModels
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
                 {
+                    Playlist.Clear();
                     Play(previousFile);
                 }
                 else
                 {
                     _mediaPlayer.Position = TimeSpan.Zero;
                 }
+            }
+            else if (Playlist.Count == 1 && RepeatMode != MediaPlaybackAutoRepeatMode.List)
+            {
+                _mediaPlayer.Position = TimeSpan.Zero;
             }
             else if (index == 0 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {

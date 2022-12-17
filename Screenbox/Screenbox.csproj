@@ -186,11 +186,13 @@
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
     <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
+    <Compile Include="Core\Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
+    <Compile Include="Core\Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
     <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Core\Messages\SettingsChangedMessage.cs" />
@@ -205,6 +207,7 @@
     <Compile Include="Core\Playback\SubtitleTrack.cs" />
     <Compile Include="Core\Playback\VideoTrack.cs" />
     <Compile Include="Core\Playback\VlcMediaPlayer.cs" />
+    <Compile Include="Core\PlaylistInfo.cs" />
     <Compile Include="Core\Renderer.cs" />
     <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
     <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
