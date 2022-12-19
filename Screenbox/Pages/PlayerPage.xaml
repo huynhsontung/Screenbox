@@ -6,7 +6,7 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:converters="using:Screenbox.Converters"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -51,6 +51,11 @@
                     <SolidColorBrush x:Key="BackgroundArtAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+            <converters:BoolToObjectConverter
+                x:Key="FilledPlayPauseGlyphConverter"
+                FalseValue="D"
+                TrueValue="C" />
 
             <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0" Color="#00000000" />
@@ -370,6 +375,36 @@
                 Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
         </Border>
 
+        <Border
+            x:Name="PlayerStateBadge"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Width="70"
+            Height="70"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            toolkit:VisualExtensions.NormalizedCenterPoint="0.5"
+            Background="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}"
+            CornerRadius="16"
+            Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation To="0.8" Duration="0:0:0.03" />
+                <animations:ScaleAnimation To="1" Duration="0:0:0.03" />
+            </animations:Implicit.ShowAnimations>
+            <animations:Implicit.HideAnimations>
+                <animations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
+                <animations:ScaleAnimation To="1.2" Duration="0:0:0.6" />
+            </animations:Implicit.HideAnimations>
+            <FontIcon
+                x:Name="PlayerStateBadgeIcon"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
+                FontSize="26"
+                Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
+        </Border>
+
         <muxc:ProgressRing
             Grid.Row="0"
             Grid.RowSpan="3"
@@ -493,6 +528,9 @@
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
+                        <Setter Target="PlayerStateBadge.Width" Value="50" />
+                        <Setter Target="PlayerStateBadge.Height" Value="50" />
+                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MiniPlayer">

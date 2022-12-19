@@ -32,6 +32,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
+        [ObservableProperty] private bool _showPlayPauseBadge;
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
@@ -50,6 +51,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
+        private readonly DispatcherQueueTimer _playPauseBadgeTimer;
         private readonly IWindowService _windowService;
         private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
@@ -68,6 +70,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
+            _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
             UpdateSettings();
@@ -129,6 +132,9 @@ namespace Screenbox.ViewModels
                 {
                     _mediaPlayer?.Play();
                 }
+
+                ShowPlayPauseBadge = true;
+                _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
             }
 
             if (ControlsHidden)

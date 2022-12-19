@@ -38,6 +38,7 @@
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,148</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">148</x:Double>
+                    <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
 
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
