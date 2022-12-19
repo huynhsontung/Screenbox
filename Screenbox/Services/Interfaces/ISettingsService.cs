@@ -7,5 +7,6 @@ namespace Screenbox.Services
         PlayerAutoResizeOptions PlayerAutoResize { get; set; }
         bool PlayerVolumeGesture { get; set; }
         bool PlayerSeekGesture { get; set; }
+        bool PlayerTapGesture { get; set; }
     }
 }

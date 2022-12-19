@@ -63,6 +63,9 @@
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="Drag vertically to adjust volume" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
+                        <labs:SettingsCard ContentAlignment="Left">
+                            <CheckBox Content="Tap anywhere to play or pause" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 

@@ -22,6 +22,7 @@ namespace Screenbox.ViewModels
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool? _audioOnly;
@@ -56,6 +57,9 @@ namespace Screenbox.ViewModels
         private ManipulationLock _lockDirection;
         private TimeSpan _timeBeforeManipulation;
         private bool _overrideStatusTimeout;
+        private bool _playerSeekGesture;
+        private bool _playerVolumeGesture;
+        private bool _playerTapGesture;
 
         public PlayerPageViewModel(IWindowService windowService, ISettingsService settingsService)
         {
@@ -65,6 +69,8 @@ namespace Screenbox.ViewModels
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+
+            UpdateSettings();
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
@@ -83,6 +89,11 @@ namespace Screenbox.ViewModels
             {
                 ViewMode = e.NewValue;
             });
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            UpdateSettings();
         }
 
         public void Receive(MediaPlayerChangedMessage message)
@@ -106,8 +117,20 @@ namespace Screenbox.ViewModels
             PlayerVisible = false;
         }
 
-        public void ToggleControlsVisibility()
+        public void OnPlayerClick()
         {
+            if (_playerTapGesture)
+            {
+                if (IsPlaying)
+                {
+                    _mediaPlayer?.Pause();
+                }
+                else
+                {
+                    _mediaPlayer?.Play();
+                }
+            }
+
             if (ControlsHidden)
             {
                 ShowControls();
@@ -152,7 +175,7 @@ namespace Screenbox.ViewModels
 
             if ((_lockDirection == ManipulationLock.Vertical ||
                 _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50) &&
-                _settingsService.PlayerVolumeGesture)
+                _playerVolumeGesture)
             {
                 _lockDirection = ManipulationLock.Vertical;
                 Messenger.Send(new ChangeVolumeMessage((int)-verticalChange, true));
@@ -162,7 +185,7 @@ namespace Screenbox.ViewModels
             if ((_lockDirection == ManipulationLock.Horizontal ||
                  _lockDirection == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
                 (_mediaPlayer?.CanSeek ?? false) &&
-                _settingsService.PlayerSeekGesture)
+                _playerSeekGesture)
             {
                 _lockDirection = ManipulationLock.Horizontal;
                 Messenger.Send(new TimeChangeOverrideMessage(true));
@@ -195,6 +218,13 @@ namespace Screenbox.ViewModels
             {
                 ShowControls();
             }
+        }
+
+        private void UpdateSettings()
+        {
+            _playerSeekGesture = _settingsService.PlayerSeekGesture;
+            _playerTapGesture = _settingsService.PlayerTapGesture;
+            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
         }
 
         partial void OnPlayerVisibleChanged(bool value)

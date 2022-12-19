@@ -16,6 +16,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private int _playerAutoResize;
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
+        [ObservableProperty] private bool _playerTapGesture;
 
         private readonly ISettingsService _settingsService;
 
@@ -52,6 +53,12 @@ namespace Screenbox.ViewModels
         {
             _settingsService.PlayerSeekGesture = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture)));
+        }
+
+        partial void OnPlayerTapGestureChanged(bool value)
+        {
+            _settingsService.PlayerTapGesture = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
         }
     }
 }

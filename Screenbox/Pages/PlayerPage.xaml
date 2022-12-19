@@ -245,7 +245,7 @@
             Grid.Column="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Click="{x:Bind ViewModel.ToggleControlsVisibility}"
+            Click="{x:Bind ViewModel.OnPlayerClick}"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
             ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
