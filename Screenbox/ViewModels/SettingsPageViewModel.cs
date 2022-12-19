@@ -25,9 +25,7 @@ namespace Screenbox.ViewModels
             _settingsService = settingsService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
-            _playerAutoResize = (int)settingsService.PlayerAutoResize;
-            _playerVolumeGesture = settingsService.PlayerVolumeGesture;
-            _playerSeekGesture = settingsService.PlayerSeekGesture;
+            LoadValues();
 
             IsActive = true;
         }
@@ -59,6 +57,14 @@ namespace Screenbox.ViewModels
         {
             _settingsService.PlayerTapGesture = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
+        }
+
+        private void LoadValues()
+        {
+            _playerAutoResize = (int)_settingsService.PlayerAutoResize;
+            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            _playerSeekGesture = _settingsService.PlayerSeekGesture;
+            _playerTapGesture = _settingsService.PlayerTapGesture;
         }
     }
 }
