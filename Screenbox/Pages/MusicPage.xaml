@@ -56,7 +56,7 @@
             <XamlUICommand
                 x:Key="PlayNextCommand"
                 Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily='ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons',
+                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
                                                Glyph=B}"
                 Label="{strings:Resources Key=PlayNext}" />
 

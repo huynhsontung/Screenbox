@@ -27,7 +27,7 @@
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.PlayNextCommand}"
                 CommandParameter="{Binding}"
-                Icon="{ui:FontIcon FontFamily='ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons',
+                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
                                    Glyph=B}"
                 Text="{strings:Resources Key=PlayNext}" />
             <MenuFlyoutSeparator />

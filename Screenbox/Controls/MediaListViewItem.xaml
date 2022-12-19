@@ -31,7 +31,7 @@
             Grid.Column="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            FontFamily="ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons"
+            FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
             FontSize="16"
             Glyph="A"
             IsHitTestVisible="False"
