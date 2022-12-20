@@ -184,7 +184,6 @@ namespace Screenbox.ViewModels
             if (_mediaPlayer != null)
             {
                 _mediaPlayer.Source = value?.Item;
-                _mediaPlayer.Play();
             }
 
             if (ActiveItem != null)
@@ -361,8 +360,15 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void PlaySingle(MediaViewModel vm)
         {
+            // Force reload item
+            if (ActiveItem == vm)
+            {
+                _activeItem = null;
+            }
+
             // OnActiveItemChanging handles the rest
             ActiveItem = vm;
+            _mediaPlayer?.Play();
         }
 
         [RelayCommand]
