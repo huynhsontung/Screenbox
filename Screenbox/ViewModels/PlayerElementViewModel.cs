@@ -31,8 +31,6 @@ namespace Screenbox.ViewModels
     {
         public MediaPlayer? VlcPlayer { get; private set; }
 
-        //[ObservableProperty] private double _viewOpacity;
-
         private readonly LibVlcService _libVlcService;
         private readonly IWindowService _windowService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -161,6 +159,8 @@ namespace Screenbox.ViewModels
                             _mediaPlayer.Play();
                             break;
                     }
+
+                    Messenger.Send(new ShowPlayPauseBadgeMessage());
                     return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
@@ -209,6 +209,9 @@ namespace Screenbox.ViewModels
                     return;
                 case (VirtualKey)188:   // Comma (",")
                     JumpFrame(true);
+                    return;
+                default:
+                    args.Handled = false;
                     return;
             }
 

@@ -23,6 +23,7 @@ namespace Screenbox.ViewModels
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
         IRecipient<SettingsChangedMessage>,
+        IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool? _audioOnly;
@@ -115,6 +116,11 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
         }
 
+        public void Receive(ShowPlayPauseBadgeMessage message)
+        {
+            BlinkPlayPauseBadge();
+        }
+
         public void OnBackRequested()
         {
             PlayerVisible = false;
@@ -133,8 +139,7 @@ namespace Screenbox.ViewModels
                     _mediaPlayer?.Play();
                 }
 
-                ShowPlayPauseBadge = true;
-                _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
+                BlinkPlayPauseBadge();
             }
 
             if (ControlsHidden)
@@ -236,6 +241,12 @@ namespace Screenbox.ViewModels
         partial void OnPlayerVisibleChanged(bool value)
         {
             Messenger.Send(new PlayerVisibilityChangedMessage(value));
+        }
+
+        private void BlinkPlayPauseBadge()
+        {
+            ShowPlayPauseBadge = true;
+            _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
         }
 
         private void ShowStatusMessage(string? message)
