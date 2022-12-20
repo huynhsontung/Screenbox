@@ -38,7 +38,6 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _seekTimer;
         private bool _timeChangeOverride;
-        private bool _isPlaying;
 
         public SeekBarViewModel()
         {
@@ -53,18 +52,12 @@ namespace Screenbox.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.NaturalDurationChanged += OnLengthChanged;
             _mediaPlayer.PositionChanged += OnTimeChanged;
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
             _mediaPlayer.SourceChanged += OnSourceChanged;
-        }
-
-        private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
-        {
-            _isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
         }
 
         private void OnSourceChanged(IMediaPlayer sender, object? args)
@@ -136,7 +129,8 @@ namespace Screenbox.ViewModels
             if (IsSeekable && _mediaPlayer != null)
             {
                 double newTime = args.NewValue;
-                if (args.OldValue == Time || !_isPlaying || _timeChangeOverride)
+                bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
+                if (args.OldValue == Time || paused || _timeChangeOverride)
                 {
                     _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime),
                         TimeSpan.FromMilliseconds(50));
