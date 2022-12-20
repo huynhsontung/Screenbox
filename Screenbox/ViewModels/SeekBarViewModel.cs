@@ -36,6 +36,7 @@ namespace Screenbox.ViewModels
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
+        private readonly DispatcherQueueTimer _seekTimer;
         private bool _timeChangeOverride;
         private bool _isPlaying;
 
@@ -43,6 +44,7 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
+            _seekTimer = _dispatcherQueue.CreateTimer();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -136,7 +138,8 @@ namespace Screenbox.ViewModels
                 double newTime = args.NewValue;
                 if (args.OldValue == Time || !_isPlaying || _timeChangeOverride)
                 {
-                    _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
+                    _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime),
+                        TimeSpan.FromMilliseconds(50));
                 }
             }
         }
