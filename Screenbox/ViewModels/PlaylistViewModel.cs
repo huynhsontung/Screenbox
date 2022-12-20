@@ -360,12 +360,6 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private void PlaySingle(MediaViewModel vm)
         {
-            // Force reload item
-            if (ActiveItem == vm)
-            {
-                _activeItem = null;
-            }
-
             // OnActiveItemChanging handles the rest
             ActiveItem = vm;
             _mediaPlayer?.Play();
