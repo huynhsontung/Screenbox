@@ -1,20 +1,15 @@
 ﻿#nullable enable
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media;
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using LibVLCSharp.Platforms.UWP;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Converters;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
@@ -67,42 +62,6 @@ namespace Screenbox.ViewModels
             SetCropGeometry(_viewSize);
         }
 
-        public void OnDragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = "Open";
-        }
-
-        public async void OnDrop(object sender, DragEventArgs e)
-        {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems))
-            {
-                IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
-                if (items.Count > 0)
-                {
-                    if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
-                    {
-                        _mediaPlayer?.AddSubtitle(file);
-                    }
-                    else
-                    {
-                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
-                    }
-
-                    return;
-                }
-            }
-
-            if (e.DataView.Contains(StandardDataFormats.WebLink))
-            {
-                Uri? uri = await e.DataView.GetWebLinkAsync();
-                if (uri.IsFile)
-                {
-                    Messenger.Send(new PlayMediaMessage(uri));
-                }
-            }
-        }
-
         public void OnInitialized(object sender, InitializedEventArgs e)
         {
             Task.Run(() =>
@@ -121,79 +80,12 @@ namespace Screenbox.ViewModels
             });
         }
 
-        private void OnMediaFailed(IMediaPlayer sender, object? args)
+        public void OnResizeAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            _transportControlsService.ClosePlayback();
-        }
-
-        private void OnPositionChanged(IMediaPlayer sender, object? args)
-        {
-            _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
-        }
-
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            Messenger.Send(new ChangeVolumeMessage(mouseWheelDelta / 25, true));
-        }
-
-        public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            if (_mediaPlayer == null) return;
+            if (sender.Modifiers != VirtualKeyModifiers.None) return;
             args.Handled = true;
-            long seekAmount = 0;
-            int volumeChange = 0;
-            int direction = 0;
-            VirtualKey key = sender.Key;
-
-            switch (key)
+            switch (sender.Key)
             {
-                case VirtualKey.K when sender.Modifiers == VirtualKeyModifiers.None:
-                case VirtualKey.P when sender.Modifiers == VirtualKeyModifiers.None:
-                case VirtualKey.Space:
-                    switch (_mediaPlayer.PlaybackState)
-                    {
-                        case MediaPlaybackState.Playing:
-                            _mediaPlayer.Pause();
-                            break;
-                        case MediaPlaybackState.Paused or MediaPlaybackState.None:
-                            _mediaPlayer.Play();
-                            break;
-                    }
-
-                    Messenger.Send(new ShowPlayPauseBadgeMessage());
-                    return;
-                case VirtualKey.Left:
-                case VirtualKey.J:
-                    direction = -1;
-                    break;
-                case VirtualKey.Right:
-                case VirtualKey.L:
-                    direction = 1;
-                    break;
-                case VirtualKey.Up:
-                case (VirtualKey)0xBB:  // Plus ("+")
-                case (VirtualKey)0x6B:  // Add ("+")(Numpad plus)
-                    volumeChange = 5;
-                    break;
-                case VirtualKey.Down:
-                case (VirtualKey)0xBD:  // Minus ("-")
-                case (VirtualKey)0x6D:  // Subtract ("-")(Numpad minus)
-                    volumeChange = -5;
-                    break;
-                case VirtualKey.NumberPad0:
-                case VirtualKey.NumberPad1:
-                case VirtualKey.NumberPad2:
-                case VirtualKey.NumberPad3:
-                case VirtualKey.NumberPad4:
-                case VirtualKey.NumberPad5:
-                case VirtualKey.NumberPad6:
-                case VirtualKey.NumberPad7:
-                case VirtualKey.NumberPad8:
-                case VirtualKey.NumberPad9:
-                    _mediaPlayer.Position = (_mediaPlayer?.NaturalDuration ?? default) * (0.1 * (key - VirtualKey.NumberPad0));
-                    break;
                 case VirtualKey.Number1:
                     ResizeWindow(0.5);
                     break;
@@ -206,39 +98,17 @@ namespace Screenbox.ViewModels
                 case VirtualKey.Number4:
                     ResizeWindow(0);
                     break;
-                case (VirtualKey)190:   // Period (".")
-                    JumpFrame(false);
-                    return;
-                case (VirtualKey)188:   // Comma (",")
-                    JumpFrame(true);
-                    return;
-                default:
-                    args.Handled = false;
-                    return;
             }
+        }
 
-            switch (sender.Modifiers)
-            {
-                case VirtualKeyModifiers.Control:
-                    seekAmount = 10000;
-                    break;
-                case VirtualKeyModifiers.Shift:
-                    seekAmount = 1000;
-                    break;
-                case VirtualKeyModifiers.None:
-                    seekAmount = 5000;
-                    break;
-            }
+        private void OnMediaFailed(IMediaPlayer sender, object? args)
+        {
+            _transportControlsService.ClosePlayback();
+        }
 
-            if (seekAmount * direction != 0)
-            {
-                Seek(seekAmount * direction);
-            }
-
-            if (volumeChange != 0)
-            {
-                Messenger.Send(new ChangeVolumeMessage(volumeChange, true));
-            }
+        private void OnPositionChanged(IMediaPlayer sender, object? args)
+        {
+            _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
         }
 
         public void OnSizeChanged(object sender, SizeChangedEventArgs args)
@@ -324,35 +194,6 @@ namespace Screenbox.ViewModels
             if (actualScalar > 0)
             {
                 Messenger.Send(new UpdateStatusMessage($"Scale {actualScalar * 100:0.##}%"));
-                return true;
-            }
-
-            return false;
-        }
-
-        private void Seek(long amount)
-        {
-            if (_mediaPlayer?.CanSeek ?? false)
-            {
-                _mediaPlayer.Position += TimeSpan.FromMilliseconds(amount);
-                Messenger.Send(new UpdateStatusMessage(
-                    $"{HumanizedDurationConverter.Convert(_mediaPlayer.Position)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)}"));
-            }
-        }
-
-        private bool JumpFrame(bool previous = false)
-        {
-            if ((_mediaPlayer?.CanSeek ?? false) && _mediaPlayer.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
-            {
-                if (previous)
-                {
-                    _mediaPlayer.StepBackwardOneFrame();
-                }
-                else
-                {
-                    _mediaPlayer.StepForwardOneFrame();
-                }
-
                 return true;
             }
 

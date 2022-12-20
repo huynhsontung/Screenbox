@@ -17,7 +17,7 @@ namespace Screenbox.ViewModels
     internal sealed partial class SeekBarViewModel :
         ObservableRecipient,
         IRecipient<TimeChangeOverrideMessage>,
-        IRecipient<TimeRequestMessage>,
+        IRecipient<ChangeTimeRequestMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private double _length;
@@ -103,11 +103,15 @@ namespace Screenbox.ViewModels
             _timeChangeOverride = message.Value;
         }
 
-        public void Receive(TimeRequestMessage message)
+        public void Receive(ChangeTimeRequestMessage message)
         {
-            if (message.IsChangeRequest)
+            // Assume UI thread
+            if (message.IsOffset)
             {
-                // Assume UI thread
+                Time += message.Value.TotalMilliseconds;
+            }
+            else
+            {
                 Time = message.Value.TotalMilliseconds;
             }
 

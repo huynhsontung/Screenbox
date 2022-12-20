@@ -154,6 +154,7 @@
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\AlternatingListView.cs" />
+    <Compile Include="Controls\ManipulationLock.cs" />
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
@@ -186,10 +187,11 @@
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
     <Compile Include="Core\MessageHelpers.cs" />
-    <Compile Include="Core\Messages\ChangeVolumeMessage.cs" />
+    <Compile Include="Core\Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Core\Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
+    <Compile Include="Core\Messages\OverrideControlsHideMessage.cs" />
     <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
@@ -216,7 +218,7 @@
     <Compile Include="Core\Messages\ErrorMessage.cs" />
     <Compile Include="Core\Messages\ChangeZoomToFitMessage.cs" />
     <Compile Include="Core\Messages\PlayMediaMessage.cs" />
-    <Compile Include="Core\Messages\TimeRequestMessage.cs" />
+    <Compile Include="Core\Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Core\Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
@@ -301,6 +303,7 @@
     <Compile Include="ViewModels\MusicPageViewModel.cs" />
     <Compile Include="ViewModels\NetworkPageViewModel.cs" />
     <Compile Include="ViewModels\NotificationViewModel.cs" />
+    <Compile Include="ViewModels\PlayerInteractionViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\CastControlViewModel.cs" />

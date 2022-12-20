@@ -2,10 +2,13 @@
 
 namespace Screenbox.Core.Messages
 {
-    public sealed class UpdateStatusMessage : ValueChangedMessage<string>
+    public sealed class UpdateStatusMessage : ValueChangedMessage<string?>
     {
-        public UpdateStatusMessage(string value) : base(value)
+        public bool Persistent { get; }
+
+        public UpdateStatusMessage(string? value, bool persistent = false) : base(value)
         {
+            Persistent = persistent;
         }
     }
 }

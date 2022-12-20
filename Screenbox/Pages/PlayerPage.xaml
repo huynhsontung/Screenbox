@@ -251,11 +251,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Click="{x:Bind ViewModel.OnPlayerClick}"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
-            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
-            ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}">
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="GotFocus">
                     <core:ChangePropertyAction

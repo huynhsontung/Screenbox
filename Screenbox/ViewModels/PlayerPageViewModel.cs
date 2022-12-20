@@ -4,12 +4,10 @@ using System;
 using System.Threading.Tasks;
 using Windows.Media;
 using Windows.System;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -22,8 +20,8 @@ namespace Screenbox.ViewModels
         IRecipient<UpdateStatusMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
-        IRecipient<SettingsChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
+        IRecipient<OverrideControlsHideMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool? _audioOnly;
@@ -42,13 +40,6 @@ namespace Screenbox.ViewModels
 
         private bool AudioOnlyInternal => _audioOnly ?? false;
 
-        private enum ManipulationLock
-        {
-            None,
-            Horizontal,
-            Vertical
-        }
-
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
@@ -57,12 +48,6 @@ namespace Screenbox.ViewModels
         private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
-        private ManipulationLock _lockDirection;
-        private TimeSpan _timeBeforeManipulation;
-        private bool _overrideStatusTimeout;
-        private bool _playerSeekGesture;
-        private bool _playerVolumeGesture;
-        private bool _playerTapGesture;
 
         public PlayerPageViewModel(IWindowService windowService, ISettingsService settingsService)
         {
@@ -73,8 +58,6 @@ namespace Screenbox.ViewModels
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
-
-            UpdateSettings();
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
@@ -95,11 +78,6 @@ namespace Screenbox.ViewModels
             });
         }
 
-        public void Receive(SettingsChangedMessage message)
-        {
-            UpdateSettings();
-        }
-
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
@@ -108,7 +86,12 @@ namespace Screenbox.ViewModels
 
         public void Receive(UpdateStatusMessage message)
         {
-            _dispatcherQueue.TryEnqueue(() => ShowStatusMessage(message.Value));
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                StatusMessage = message.Value;
+                if (message.Persistent || message.Value == null) return;
+                _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
+            });
         }
 
         public void Receive(PlaylistActiveItemChangedMessage message)
@@ -121,6 +104,11 @@ namespace Screenbox.ViewModels
             BlinkPlayPauseBadge();
         }
 
+        public void Receive(OverrideControlsHideMessage message)
+        {
+            OverrideControlsDelayHide(message.Delay);
+        }
+
         public void OnBackRequested()
         {
             PlayerVisible = false;
@@ -128,20 +116,6 @@ namespace Screenbox.ViewModels
 
         public void OnPlayerClick()
         {
-            if (_playerTapGesture)
-            {
-                if (IsPlaying)
-                {
-                    _mediaPlayer?.Pause();
-                }
-                else
-                {
-                    _mediaPlayer?.Play();
-                }
-
-                BlinkPlayPauseBadge();
-            }
-
             if (ControlsHidden)
             {
                 ShowControls();
@@ -151,7 +125,7 @@ namespace Screenbox.ViewModels
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
-                OverrideVisibilityChange();
+                OverrideControlsDelayHide();
             }
         }
 
@@ -167,58 +141,6 @@ namespace Screenbox.ViewModels
             DelayHideControls();
         }
 
-        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            _overrideStatusTimeout = false;
-            if (_lockDirection == ManipulationLock.None) return;
-            OverrideVisibilityChange(100);
-            ShowStatusMessage(null);
-            Messenger.Send(new TimeChangeOverrideMessage(false));
-        }
-
-        public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            const double horizontalChangePerPixel = 200;
-            double horizontalChange = e.Delta.Translation.X;
-            double verticalChange = e.Delta.Translation.Y;
-            double horizontalCumulative = e.Cumulative.Translation.X;
-            double verticalCumulative = e.Cumulative.Translation.Y;
-
-            if ((_lockDirection == ManipulationLock.Vertical ||
-                _lockDirection == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50) &&
-                _playerVolumeGesture)
-            {
-                _lockDirection = ManipulationLock.Vertical;
-                Messenger.Send(new ChangeVolumeMessage((int)-verticalChange, true));
-                return;
-            }
-
-            if ((_lockDirection == ManipulationLock.Horizontal ||
-                 _lockDirection == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
-                (_mediaPlayer?.CanSeek ?? false) &&
-                _playerSeekGesture)
-            {
-                _lockDirection = ManipulationLock.Horizontal;
-                Messenger.Send(new TimeChangeOverrideMessage(true));
-                double timeChange = horizontalChange * horizontalChangePerPixel;
-                TimeSpan currentTime = Messenger.Send(new TimeRequestMessage());
-                TimeSpan newTime = currentTime + TimeSpan.FromMilliseconds(timeChange);
-                Messenger.Send(new TimeRequestMessage(newTime));
-
-                string changeText = HumanizedDurationConverter.Convert(newTime - _timeBeforeManipulation);
-                if (changeText[0] != '-') changeText = '+' + changeText;
-                ShowStatusMessage($"{HumanizedDurationConverter.Convert(newTime)} ({changeText})");
-            }
-        }
-
-        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        {
-            _overrideStatusTimeout = true;
-            _lockDirection = ManipulationLock.None;
-            if (_mediaPlayer != null)
-                _timeBeforeManipulation = _mediaPlayer.Position;
-        }
-
         partial void OnVideoViewFocusedChanged(bool value)
         {
             if (value)
@@ -231,13 +153,6 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void UpdateSettings()
-        {
-            _playerSeekGesture = _settingsService.PlayerSeekGesture;
-            _playerTapGesture = _settingsService.PlayerTapGesture;
-            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
-        }
-
         partial void OnPlayerVisibleChanged(bool value)
         {
             Messenger.Send(new PlayerVisibilityChangedMessage(value));
@@ -247,13 +162,6 @@ namespace Screenbox.ViewModels
         {
             ShowPlayPauseBadge = true;
             _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
-        }
-
-        private void ShowStatusMessage(string? message)
-        {
-            StatusMessage = message;
-            if (_overrideStatusTimeout || message == null) return;
-            _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
         }
 
         private void ShowControls()
@@ -278,12 +186,12 @@ namespace Screenbox.ViewModels
                     HideControls();
 
                     // Workaround for PointerMoved is raised when show/hide cursor
-                    OverrideVisibilityChange();
+                    OverrideControlsDelayHide();
                 }
             }, TimeSpan.FromSeconds(3));
         }
 
-        private void OverrideVisibilityChange(int delay = 400)
+        private void OverrideControlsDelayHide(int delay = 400)
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);

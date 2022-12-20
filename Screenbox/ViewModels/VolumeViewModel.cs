@@ -5,12 +5,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
-using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
     internal sealed partial class VolumeViewModel : ObservableRecipient,
-        IRecipient<ChangeVolumeMessage>,
+        IRecipient<ChangeVolumeRequestMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private int _volume;
@@ -32,13 +31,12 @@ namespace Screenbox.ViewModels
             _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
-        public void Receive(ChangeVolumeMessage message)
+        public void Receive(ChangeVolumeRequestMessage message)
         {
             Volume = message.IsOffset ?
                 Math.Clamp(Volume + message.Value, 0, 100) :
                 Math.Clamp(message.Value, 0, 100);
-
-            Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(Volume)));
+            message.Reply(Volume);
         }
 
         partial void OnVolumeChanged(int value)
