@@ -125,7 +125,7 @@
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
                     Text="{x:Bind strings:Resources.Properties}">
                     <MenuFlyoutItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="I" />
+                        <KeyboardAccelerator Key="I" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
@@ -205,7 +205,7 @@
                     Icon="{ui:FontIcon Glyph=&#xEC15;}"
                     Text="{x:Bind strings:Resources.Cast}">
                     <MenuFlyoutItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="K" />
+                        <KeyboardAccelerator Key="K" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem Icon="{ui:FontIcon Glyph=&#xe714;}" Text="{x:Bind strings:Resources.VideoSettings}">
@@ -214,7 +214,7 @@
                         IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
                         Text="{x:Bind strings:Resources.ZoomToFit}">
                         <MenuFlyoutItem.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Z" />
+                            <KeyboardAccelerator Key="Z" Modifiers="Control,Shift" />
                         </MenuFlyoutItem.KeyboardAccelerators>
                     </ToggleMenuFlyoutItem>
                 </MenuFlyoutSubItem>

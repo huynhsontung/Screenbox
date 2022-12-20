@@ -149,6 +149,8 @@ namespace Screenbox.ViewModels
 
             switch (key)
             {
+                case VirtualKey.K when sender.Modifiers == VirtualKeyModifiers.None:
+                case VirtualKey.P when sender.Modifiers == VirtualKeyModifiers.None:
                 case VirtualKey.Space:
                     switch (_mediaPlayer.PlaybackState)
                     {

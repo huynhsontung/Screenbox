@@ -79,6 +79,8 @@
                     Key="Space"
                     Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}"
                     ScopeOwner="{x:Bind VideoViewButton}" />
+                <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.ProcessKeyboardAccelerators}" />
