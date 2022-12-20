@@ -42,7 +42,7 @@ namespace Screenbox.Services
             SetDefault(PlayerAutoResizeKey, 0);
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
-            SetDefault(PlayerTapGestureKey, false);
+            SetDefault(PlayerTapGestureKey, true);
         }
 
         private T? GetValue<T>(string key)
