@@ -33,6 +33,18 @@ namespace Screenbox.Services
         private CoreCursor? _cursor;
         private WindowViewMode _viewMode;
 
+        public WindowService()
+        {
+            Window.Current.SizeChanged += OnWindowSizeChanged;
+        }
+
+        private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (ViewMode == WindowViewMode.FullScreen && !view.IsFullScreenMode)
+                ViewMode = WindowViewMode.Default;
+        }
+
         public bool TryEnterFullScreen()
         {
             ApplicationView? view = ApplicationView.GetForCurrentView();

@@ -150,6 +150,7 @@ namespace Screenbox.Pages
                             SetTitleBar();
                             break;
                         case WindowViewMode.FullScreen:
+                            ViewModel.PlayerVisible = true;
                             VisualStateManager.GoToState(this, "Fullscreen", true);
                             break;
                         default:
