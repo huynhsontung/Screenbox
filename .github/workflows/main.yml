@@ -34,6 +34,7 @@ jobs:
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=C:\DeployOutput `
         -p:AppxPackageSigningEnabled=false `
+        -p:RestoreConfigFile=nuget.config `
         -restore
       env:
         BuildMode: SideloadOnly
