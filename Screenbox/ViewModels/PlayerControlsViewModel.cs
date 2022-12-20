@@ -29,6 +29,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private bool _showPreviousNext;
         [ObservableProperty] private bool _zoomToFit;
+        [ObservableProperty] private bool _hasVideo;
         [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
@@ -102,6 +103,7 @@ namespace Screenbox.ViewModels
 
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
+            HasVideo = _mediaPlayer?.NaturalVideoHeight > 0;
             SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
@@ -196,7 +198,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanSaveSnapshot))]
+        [RelayCommand(CanExecute = nameof(HasVideo))]
         private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)
@@ -212,11 +214,6 @@ namespace Screenbox.ViewModels
                     // TODO: track error
                 }
             }
-        }
-
-        private bool CanSaveSnapshot()
-        {
-            return _mediaPlayer?.NaturalVideoHeight > 0;
         }
 
         [RelayCommand(CanExecute = nameof(HasActiveItem))]

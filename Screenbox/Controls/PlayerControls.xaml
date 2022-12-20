@@ -208,7 +208,10 @@
                         <KeyboardAccelerator Key="K" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
-                <MenuFlyoutSubItem Icon="{ui:FontIcon Glyph=&#xe714;}" Text="{x:Bind strings:Resources.VideoSettings}">
+                <MenuFlyoutSubItem
+                    Icon="{ui:FontIcon Glyph=&#xe714;}"
+                    IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
+                    Text="{x:Bind strings:Resources.VideoSettings}">
                     <ToggleMenuFlyoutItem
                         Icon="{ui:FontIcon Glyph=&#xE9A6;}"
                         IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
