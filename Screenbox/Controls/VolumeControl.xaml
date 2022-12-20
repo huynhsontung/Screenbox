@@ -21,10 +21,10 @@
             Grid.Column="0"
             Margin="0,0,4,0"
             VerticalAlignment="Stretch"
+            local:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             Background="Transparent"
             BorderThickness="0"
-            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
-            ToolTipService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}">
+            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
             <FontIcon Glyph="{x:Bind GetMuteToggleGlyph(ViewModel.IsMute), Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
