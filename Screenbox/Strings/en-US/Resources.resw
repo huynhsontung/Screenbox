@@ -197,10 +197,10 @@
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Repeat: Off</value>
   </data>
-  <data name="RepeatMode_Variant1" xml:space="preserve">
+  <data name="RepeatMode_Variant2" xml:space="preserve">
     <value>Repeat: All</value>
   </data>
-  <data name="RepeatMode_Variant2" xml:space="preserve">
+  <data name="RepeatMode_Variant1" xml:space="preserve">
     <value>Repeat: One</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
