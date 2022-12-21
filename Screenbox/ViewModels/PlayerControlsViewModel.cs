@@ -103,7 +103,7 @@ namespace Screenbox.ViewModels
 
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, object? args)
         {
-            HasVideo = _mediaPlayer?.NaturalVideoHeight > 0;
+            _dispatcherQueue.TryEnqueue(() => HasVideo = _mediaPlayer?.NaturalVideoHeight > 0);
             SaveSnapshotCommand.NotifyCanExecuteChanged();
         }
 
