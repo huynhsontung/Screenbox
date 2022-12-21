@@ -110,7 +110,7 @@ namespace Screenbox.Core.Playback
             set
             {
                 int iVal = (int)(value * 100);
-                if (VlcPlayer.Volume != iVal)
+                if (VlcPlayer.Volume != iVal && VlcPlayer.Volume >= 0)
                 {
                     VlcPlayer.Volume = iVal;
                 }
