@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
@@ -15,10 +16,12 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
         private IMediaPlayer? _mediaPlayer;
+        private readonly DispatcherQueue _dispatcherQueue;
 
         public VolumeViewModel()
         {
             _volume = 100;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model doesn't receive any messages
             IsActive = true;
@@ -57,7 +60,7 @@ namespace Screenbox.ViewModels
             double normalizedVolume = Volume / 100d;
             if (sender.Volume != normalizedVolume)
             {
-                sender.Volume = normalizedVolume;
+                _dispatcherQueue.TryEnqueue(() => sender.Volume = normalizedVolume);
             }
         }
 
@@ -65,7 +68,7 @@ namespace Screenbox.ViewModels
         {
             if (sender.IsMuted != IsMute)
             {
-                sender.IsMuted = IsMute;
+                _dispatcherQueue.TryEnqueue(() => sender.IsMuted = IsMute);
             }
         }
     }
