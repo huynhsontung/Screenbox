@@ -142,6 +142,7 @@ namespace Screenbox.ViewModels
         {
             if (!_timeChangeOverride)
             {
+                if (_seekTimer.IsRunning) return;
                 _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
             }
         }
