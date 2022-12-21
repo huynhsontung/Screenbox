@@ -8,5 +8,6 @@ namespace Screenbox.Services
         bool PlayerVolumeGesture { get; set; }
         bool PlayerSeekGesture { get; set; }
         bool PlayerTapGesture { get; set; }
+        int PersistentVolume { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
@@ -17,10 +18,13 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isMute;
         private IMediaPlayer? _mediaPlayer;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly ISettingsService _settingsService;
 
-        public VolumeViewModel()
+        public VolumeViewModel(ISettingsService settingsService)
         {
-            _volume = 100;
+            _settingsService = settingsService;
+            _volume = settingsService.PersistentVolume;
+            _isMute = _volume == 0;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model doesn't receive any messages
@@ -45,8 +49,11 @@ namespace Screenbox.ViewModels
         partial void OnVolumeChanged(int value)
         {
             if (_mediaPlayer == null) return;
-            _mediaPlayer.Volume = value / 100d;
+            double newValue = value / 100d;
+            // bool stayMute = IsMute && newValue - _mediaPlayer.Volume < 0.005;
+            _mediaPlayer.Volume = newValue;
             IsMute = value == 0;
+            _settingsService.PersistentVolume = value;
         }
 
         partial void OnIsMuteChanged(bool value)

@@ -12,6 +12,7 @@ namespace Screenbox.Services
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
+        private const string PersistentVolumeKey = "Values/Volume";
 
         public PlayerAutoResizeOptions PlayerAutoResize
         {
@@ -37,12 +38,19 @@ namespace Screenbox.Services
             set => SetValue(PlayerTapGestureKey, value);
         }
 
+        public int PersistentVolume
+        {
+            get => GetValue<int>(PersistentVolumeKey);
+            set => SetValue(PersistentVolumeKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, 0);
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
+            SetDefault(PersistentVolumeKey, 100);
         }
 
         private T? GetValue<T>(string key)
