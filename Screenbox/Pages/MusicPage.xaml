@@ -177,6 +177,7 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
                     AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     ContextRequested="SongListView_OnContextRequested"
+                    IsItemClickEnabled="True"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     RightTapped="SongListView_OnRightTapped"
                     SelectionMode="None">
