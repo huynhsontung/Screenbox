@@ -13,6 +13,8 @@ using Screenbox.Core.Messages;
 using Screenbox.Services;
 using Screenbox.Core.Playback;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Windows.UI.Xaml.Input;
+using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
@@ -139,6 +141,32 @@ namespace Screenbox.ViewModels
 
             if (SeekBarPointerPressed) return;
             DelayHideControls();
+        }
+
+        public void OnVolumeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (_mediaPlayer == null || sender.Modifiers != VirtualKeyModifiers.None) return;
+            args.Handled = true;
+            int volumeChange;
+            VirtualKey key = sender.Key;
+
+            switch (key)
+            {
+                case (VirtualKey)0xBB:  // Plus ("+")
+                case (VirtualKey)0x6B:  // Add ("+")(Numpad plus)
+                    volumeChange = 5;
+                    break;
+                case (VirtualKey)0xBD:  // Minus ("-")
+                case (VirtualKey)0x6D:  // Subtract ("-")(Numpad minus)
+                    volumeChange = -5;
+                    break;
+                default:
+                    args.Handled = false;
+                    return;
+            }
+
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
+            Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(volume)));
         }
 
         partial void OnVideoViewFocusedChanged(bool value)

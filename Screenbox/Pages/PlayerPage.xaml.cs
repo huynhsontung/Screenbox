@@ -19,6 +19,7 @@ using Screenbox.Controls;
 using Screenbox.Services;
 using Screenbox.ViewModels;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+using Windows.System;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -30,6 +31,11 @@ namespace Screenbox.Pages
     public sealed partial class PlayerPage : Page
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
+
+        private const VirtualKey PlusKey = (VirtualKey)0xBB;
+        private const VirtualKey MinusKey = (VirtualKey)0xBD;
+        private const VirtualKey AddKey = (VirtualKey)0x6B;
+        private const VirtualKey SubtractKey = (VirtualKey)0x6D;
 
         private CancellationTokenSource? _animationCancellationTokenSource;
 

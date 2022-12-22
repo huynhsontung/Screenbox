@@ -102,10 +102,6 @@
                 <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PeriodKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="{x:Bind local:PlayerElement.CommaKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PlusKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.AddKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.MinusKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.SubtractKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
             </lvs:VideoView.KeyboardAccelerators>
         </lvs:VideoView>
     </Grid>

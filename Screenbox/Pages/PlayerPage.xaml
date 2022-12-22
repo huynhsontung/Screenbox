@@ -75,6 +75,7 @@
     <Grid
         x:Name="LayoutRoot"
         BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
+        KeyboardAcceleratorPlacementMode="Hidden"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         Translation="0,0,8">
         <Grid.Transitions>
@@ -89,6 +90,13 @@
             <ColumnDefinition x:Name="FirstColumn" Width="*" />
             <ColumnDefinition x:Name="SecondColumn" Width="0" />
         </Grid.ColumnDefinitions>
+
+        <Grid.KeyboardAccelerators>
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PlusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+        </Grid.KeyboardAccelerators>
 
         <Border
             x:Name="HeaderBackground"
