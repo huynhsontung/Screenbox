@@ -16,6 +16,7 @@ using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
+using Screenbox.Services;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
@@ -31,10 +32,12 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly MediaViewModelFactory _mediaFactory;
+        private readonly IFilesService _filesService;
 
-        public HomePageViewModel(MediaViewModelFactory mediaFactory)
+        public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService)
         {
             _mediaFactory = mediaFactory;
+            _filesService = filesService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
 
@@ -146,6 +149,25 @@ namespace Screenbox.ViewModels
         {
             ContentDialog propertiesDialog = PropertiesView.GetDialog(media.Media);
             await propertiesDialog.ShowAsync();
+        }
+
+        [RelayCommand]
+        private async Task OpenFiles()
+        {
+            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+            if (files == null || files.Count == 0) return;
+            Messenger.Send(new PlayMediaMessage(files));
+        }
+
+        [RelayCommand]
+        private async Task OpenFolder()
+        {
+            StorageFolder? folder = await _filesService.PickFolderAsync();
+            if (folder == null) return;
+            IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
+            IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
+            if (files.Length == 0) return;
+            Messenger.Send(new PlayMediaMessage(files));
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFile(string token)

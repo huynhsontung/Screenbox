@@ -51,6 +51,18 @@
             <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
         </MenuFlyout>
 
+        <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.OpenFilesCommand}"
+                Icon="{ui:FontIcon Glyph=&#xe838;}"
+                Text="{strings:Resources Key=OpenFiles}" />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.OpenFolderCommand}"
+                Icon="{ui:FontIcon Glyph=&#xe8da;}"
+                Text="Open folder" />
+            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="Open URL" />
+        </MenuFlyout>
+
         <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
             <Grid
                 Width="{StaticResource StorageItemGridViewItemWidth}"
@@ -119,9 +131,11 @@
             <controls:SplitButton
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Command="{x:Bind ViewModel.OpenFilesCommand}"
+                Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xe8da;" />
+                    <FontIcon Glyph="&#xe838;" />
                     <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </controls:SplitButton>
@@ -172,9 +186,10 @@
                 Grid.Column="1"
                 Margin="0,8,0,0"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Command="{x:Bind ViewModel.OpenFilesCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xe8da;" />
+                    <FontIcon Glyph="&#xe838;" />
                     <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </controls:SplitButton>

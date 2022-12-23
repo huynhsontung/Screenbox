@@ -128,19 +128,29 @@ namespace Screenbox.Services
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
         {
-            FileOpenPicker picker = new()
+            FileOpenPicker picker = GetFilePickerForFormats(formats);
+            return picker.PickSingleFileAsync();
+        }
+
+        public IAsyncOperation<IReadOnlyList<StorageFile>> PickMultipleFilesAsync(params string[] formats)
+        {
+            FileOpenPicker picker = GetFilePickerForFormats(formats);
+            return picker.PickMultipleFilesAsync();
+        }
+
+        public IAsyncOperation<StorageFolder> PickFolderAsync()
+        {
+            FolderPicker picker = new()
             {
-                ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.VideosLibrary
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
 
-            IEnumerable<string> fileTypes = formats.Length == 0 ? SupportedFormats : formats;
-            foreach (string? fileType in fileTypes)
+            foreach (string supportedFormat in SupportedFormats)
             {
-                picker.FileTypeFilter.Add(fileType);
+                picker.FileTypeFilter.Add(supportedFormat);
             }
 
-            return picker.PickSingleFileAsync();
+            return picker.PickSingleFolderAsync();
         }
 
         public async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer)
@@ -190,6 +200,23 @@ namespace Screenbox.Services
                 options.ItemsToSelect.Add(file);
                 await Launcher.LaunchFolderAsync(folder, options);
             }
+        }
+
+        private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)
+        {
+            FileOpenPicker picker = new()
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.VideosLibrary
+            };
+
+            IEnumerable<string> fileTypes = formats.Count == 0 ? SupportedFormats : formats;
+            foreach (string? fileType in fileTypes)
+            {
+                picker.FileTypeFilter.Add(fileType);
+            }
+
+            return picker;
         }
     }
 }
