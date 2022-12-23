@@ -37,7 +37,7 @@ namespace Screenbox.Services
 #else
                 "--verbose=0",
 #endif
-                "--aout=winstore",
+                // "--aout=winstore",
                 //"--sout-chromecast-conversion-quality=0",
                 "--no-osd"
             };

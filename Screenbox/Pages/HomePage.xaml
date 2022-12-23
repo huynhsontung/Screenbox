@@ -60,7 +60,10 @@
                 Command="{x:Bind ViewModel.OpenFolderCommand}"
                 Icon="{ui:FontIcon Glyph=&#xe8da;}"
                 Text="Open folder" />
-            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="Open URL" />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.OpenUrlCommand}"
+                Icon="{ui:SymbolIcon Symbol=Globe}"
+                Text="Open URL" />
         </MenuFlyout>
 
         <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">

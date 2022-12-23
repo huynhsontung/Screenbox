@@ -1,0 +1,20 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Controls.OpenUrlDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="Open a URL"
+    CloseButtonText="Close"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind CanOpen(UrlBox.Text), Mode=OneWay}"
+    PrimaryButtonText="{strings:Resources Key=Open}"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <TextBox x:Name="UrlBox" PlaceholderText="Enter the URL for a file or stream" />
+    </Grid>
+</ContentDialog>

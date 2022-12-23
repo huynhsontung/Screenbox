@@ -152,7 +152,7 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
-        private async Task OpenFiles()
+        private async Task OpenFilesAsync()
         {
             IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
             if (files == null || files.Count == 0) return;
@@ -160,7 +160,7 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
-        private async Task OpenFolder()
+        private async Task OpenFolderAsync()
         {
             StorageFolder? folder = await _filesService.PickFolderAsync();
             if (folder == null) return;
@@ -168,6 +168,14 @@ namespace Screenbox.ViewModels
             IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
             if (files.Length == 0) return;
             Messenger.Send(new PlayMediaMessage(files));
+        }
+
+        [RelayCommand]
+        private async Task OpenUrlAsync()
+        {
+            Uri? url = await OpenUrlDialog.GetUrlAsync();
+            if (url == null) return;
+            Messenger.Send(new PlayMediaMessage(url));
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFile(string token)
