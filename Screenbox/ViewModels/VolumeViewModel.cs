@@ -7,6 +7,10 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Services;
+using Windows.UI.Xaml.Input;
+using Screenbox.Strings;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
 
 namespace Screenbox.ViewModels
 {
@@ -46,6 +50,14 @@ namespace Screenbox.ViewModels
             message.Reply(Volume);
         }
 
+        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
+            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
+            int volumeChange = mouseWheelDelta / 25;
+            Volume = Math.Clamp(Volume + volumeChange, 0, 100);
+        }
+
         partial void OnVolumeChanged(int value)
         {
             if (_mediaPlayer == null) return;
@@ -65,7 +77,7 @@ namespace Screenbox.ViewModels
         private void OnVolumeChanged(IMediaPlayer sender, object? args)
         {
             double normalizedVolume = Volume / 100d;
-            if (sender.Volume != normalizedVolume)
+            if (Math.Abs(sender.Volume - normalizedVolume) > 0.001)
             {
                 _dispatcherQueue.TryEnqueue(() => sender.Volume = normalizedVolume);
             }

@@ -36,6 +36,7 @@
             Grid.Column="1"
             VerticalAlignment="Center"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
         <TextBlock
             Grid.Column="2"
