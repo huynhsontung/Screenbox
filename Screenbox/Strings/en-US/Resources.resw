@@ -397,4 +397,7 @@
   <data name="VideoSettings" xml:space="preserve">
     <value>Video settings</value>
   </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
 </root>

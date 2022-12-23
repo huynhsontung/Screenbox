@@ -216,7 +216,7 @@
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
                 Margin="0,16,0,0"
-                Padding="{StaticResource ContentPageRightMargin}"
+                Padding="{StaticResource ContentPageThumbnailRightMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
                 ContextRequested="RecentFilesGridView_OnContextRequested"

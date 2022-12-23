@@ -14,9 +14,9 @@
     xmlns:viewmodels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
-        <x:Double x:Key="StorageItemGridViewItemWidth">220</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemHeight">180</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">118</x:Double>
+        <x:Double x:Key="StorageItemGridViewItemWidth">230</x:Double>
+        <x:Double x:Key="StorageItemGridViewItemHeight">188</x:Double>
+        <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">126</x:Double>
 
         <MenuFlyout x:Name="ItemFlyout">
             <MenuFlyoutItem
@@ -96,7 +96,7 @@
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="FolderView"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
             ContextRequested="FolderView_OnContextRequested"

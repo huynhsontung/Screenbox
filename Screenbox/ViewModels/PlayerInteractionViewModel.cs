@@ -67,7 +67,7 @@ namespace Screenbox.ViewModels
         public void OnDragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = "Open";
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Resources.Open;
         }
 
         public async void OnDrop(object sender, DragEventArgs e)
