@@ -236,7 +236,7 @@
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F" />
+                        <KeyboardAccelerator Key="F" IsEnabled="{x:Bind IsMinimal, Mode=OneWay}" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
             </MenuFlyout>
