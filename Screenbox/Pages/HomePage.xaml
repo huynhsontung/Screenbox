@@ -133,13 +133,14 @@
 
             <controls:SplitButton
                 x:Name="HeaderOpenButton"
+                Height="32"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Command="{x:Bind ViewModel.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
-                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </controls:SplitButton>
         </Grid>
@@ -251,7 +252,6 @@
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="HeaderOpenButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
