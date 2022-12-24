@@ -3,14 +3,14 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using Screenbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 
@@ -19,18 +19,13 @@ namespace Screenbox.ViewModels
     internal sealed partial class VideosPageViewModel : ObservableRecipient,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
-        [ObservableProperty] private string _urlText;
         [ObservableProperty] private string _titleText;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         public ObservableCollection<string> Breadcrumbs { get; }
 
-        private readonly IFilesService _filesService;
-
-        public VideosPageViewModel(IFilesService filesService)
+        public VideosPageViewModel()
         {
-            _filesService = filesService;
-            _urlText = string.Empty;
             _titleText = Strings.Resources.Videos;
             Breadcrumbs = new ObservableCollection<string>();
 
@@ -42,22 +37,6 @@ namespace Screenbox.ViewModels
         public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
             NavigationViewDisplayMode = message.NewValue;
-        }
-
-        public void OpenButtonClick(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(UrlText) && Uri.TryCreate(UrlText, UriKind.Absolute, out Uri uri))
-            {
-                Messenger.Send(new PlayMediaMessage(uri));
-            }
-        }
-
-        public async void PickFileButtonClick(object sender, RoutedEventArgs e)
-        {
-            StorageFile? pickedFile = await _filesService.PickFileAsync();
-
-            if (pickedFile != null)
-                Messenger.Send(new PlayMediaMessage(pickedFile));
         }
 
         public void OnFolderViewFrameNavigated(object sender, NavigationEventArgs e)
@@ -75,6 +54,23 @@ namespace Screenbox.ViewModels
             {
                 Breadcrumbs.Add(storageFolder.DisplayName);
             }
+        }
+
+        [RelayCommand]
+        private async Task AddFolderAsync()
+        {
+            StorageLibrary videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            StorageFolder? addedFolder = await videosLibrary.RequestAddFolderAsync();
+            if (addedFolder != null)
+            {
+                videosLibrary.DefinitionChanged += VideosLibraryOnDefinitionChanged;
+            }
+        }
+
+        private void VideosLibraryOnDefinitionChanged(StorageLibrary sender, object args)
+        {
+            sender.DefinitionChanged -= VideosLibraryOnDefinitionChanged;
+            Messenger.Send(new RefreshFolderMessage());
         }
     }
 }

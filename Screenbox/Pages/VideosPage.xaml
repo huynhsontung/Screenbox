@@ -6,6 +6,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:viewmodels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
@@ -34,28 +35,13 @@
 
             <Button
                 Grid.Column="1"
-                Margin="6,0"
                 HorizontalAlignment="Right"
-                Click="{x:Bind ViewModel.PickFileButtonClick}"
-                Content="Pick file" />
-
-            <Button
-                Grid.Column="2"
-                HorizontalAlignment="Right"
-                Content="Open from URL">
-                <Button.Flyout>
-                    <Flyout>
-                        <StackPanel Width="300" Spacing="5">
-                            <TextBox
-                                x:Name="UrlBox"
-                                Margin="0,5,0,0"
-                                Header="URL to open"
-                                Text="{x:Bind ViewModel.UrlText, Mode=TwoWay}" />
-
-                            <Button Click="{x:Bind ViewModel.OpenButtonClick}" Content="Open" />
-                        </StackPanel>
-                    </Flyout>
-                </Button.Flyout>
+                VerticalAlignment="Top"
+                Command="{x:Bind ViewModel.AddFolderCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xe8f4;" />
+                    <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
+                </StackPanel>
             </Button>
         </Grid>
 

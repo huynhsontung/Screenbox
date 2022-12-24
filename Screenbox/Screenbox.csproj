@@ -200,6 +200,7 @@
     <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
     <Compile Include="Core\Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
+    <Compile Include="Core\Messages\RefreshFolderMessage.cs" />
     <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Core\Messages\SettingsChangedMessage.cs" />
     <Compile Include="Core\Messages\ShowPlayPauseBadgeMessage.cs" />

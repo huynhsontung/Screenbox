@@ -24,7 +24,8 @@ using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDispl
 namespace Screenbox.ViewModels
 {
     internal partial class FolderViewPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
+        IRecipient<RefreshFolderMessage>
     {
         public ObservableCollection<StorageItemViewModel> Items { get; }
 
@@ -42,6 +43,7 @@ namespace Screenbox.ViewModels
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
         private readonly StorageItemViewModelFactory _storageVmFactory;
+        private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _loadingTimer;
         private bool _isActive;
 
@@ -51,7 +53,8 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _storageVmFactory = storageVmFactory;
             _navigationService = navigationService;
-            _loadingTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _loadingTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
@@ -62,6 +65,12 @@ namespace Screenbox.ViewModels
         public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
         {
             NavigationViewDisplayMode = message.NewValue;
+        }
+
+        public void Receive(RefreshFolderMessage message)
+        {
+            if (!_isActive) return;
+            _dispatcherQueue.TryEnqueue(RefreshFolderContent);
         }
 
         public async Task FetchContentAsync(object? parameter)
@@ -186,6 +195,11 @@ namespace Screenbox.ViewModels
 
                 IsEmpty = Items.Count == 0;
             }
+        }
+
+        private async void RefreshFolderContent()
+        {
+            await FetchFolderContentAsync(Breadcrumbs.Last());
         }
     }
 }
