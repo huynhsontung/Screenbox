@@ -2,6 +2,7 @@
     x:Class="Screenbox.Pages.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:appModel="using:Windows.ApplicationModel"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -61,7 +62,7 @@
                     Margin="12,0,0,0"
                     VerticalAlignment="Center"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="Screenbox" />
+                    Text="{x:Bind appModel:AppInfo.Current.DisplayInfo.DisplayName}" />
             </StackPanel>
         </Grid>
 
