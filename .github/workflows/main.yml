@@ -53,7 +53,7 @@ jobs:
         BuildPlatforms: x86|x64|ARM
     
     - uses: actions/upload-artifact@v3
-      if: ${{ github.ref == "refs/heads/main" || github.ref_type == "tag" }}
+      if: github.ref == 'refs/heads/main' || github.ref_type == 'tag'
       with:
         name: store-upload
         path: |
