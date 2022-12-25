@@ -55,9 +55,13 @@ jobs:
     - name: Create archive
       id: archive
       run: |
-        $build = Get-ChildItem C:\DeployOutput\
-        $archive = $build | Compress-Archive -DestinationPath "$build.zip" -PassThru
+        $archive = Compress-Archive -Path C:\DeployOutput\* -DestinationPath ScreenboxStoreUpload.zip -PassThru
         Write-Output "::set-output name=path::$archive"
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: store-upload
+        path: ${{ steps.archive.outputs.path }}
 
     # - name: Create release
     #   id: create_release
