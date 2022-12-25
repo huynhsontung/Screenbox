@@ -17,15 +17,18 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
 
-    - name: setup-gomplate
-      uses: jason-dour/action-setup-gomplate@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Fetch Gomplate
+      uses: dsaltares/fetch-gh-release-asset@1.1.0
+      with:
+        repo: hairyhenderson/gomplate
+        version: tags/v3.11.3
+        file: gomplate_windows-amd64-slim.exe
+        target: gomplate.exe
 
     - name: Render secrets
       env:
         APPCENTER_API_KEY: ${{ secrets.APPCENTER_API_KEY }}
-      run: Get-Content Screenbox/Secrets.cs.template | gomplate | Set-Content Screenbox/Secrets.cs
+      run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
 
     - name: Restore solution
       run: |
