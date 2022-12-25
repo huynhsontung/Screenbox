@@ -22,22 +22,37 @@ jobs:
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
-      
-    - name: Build the sideload solution
+
+    - name: setup-gomplate
+      uses: jason-dour/action-setup-gomplate@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Render secrets
+      env:
+        APPCENTER_API_KEY: ${{ secrets.APPCENTER_API_KEY }}
+      run: Get-Content Screenbox/Secrets.cs.template | gomplate | Set-Content Screenbox/Secrets.cs
+
+    - name: Restore solution
       run: |
         msbuild $((Get-Item *.sln).Name) `
-        -v:diag `
+        -p:RestoreConfigFile=nuget.config `
+        -restore
+      
+    - name: Build solution
+      run: |
+        msbuild $((Get-Item *.sln).Name) `
+        -v:d `
         -p:Configuration=Release `
         -p:Platform=x64 `
         -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="x86|x64|ARM" `
+        -p:AppxBundlePlatforms="$env:BuildPlatforms" `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=C:\DeployOutput `
         -p:AppxPackageSigningEnabled=false `
-        -p:RestoreConfigFile=nuget.config `
-        -restore
       env:
-        BuildMode: SideloadOnly
+        BuildMode: StoreUpload
+        BuildPlatforms: x86|x64|ARM
     
     - name: Create archive
       id: archive
