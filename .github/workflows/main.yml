@@ -24,6 +24,7 @@ jobs:
         version: tags/v3.11.3
         file: gomplate_windows-amd64-slim.exe
         target: gomplate.exe
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Render secrets
       env:
