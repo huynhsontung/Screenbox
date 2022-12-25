@@ -1,21 +1,15 @@
 name:  Windows Release Builder
 
-# Trigger on every new tag creation
 on:
-  push:
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+-**
-      - v[0-9]+.[0-9]+.[0-9]+
-      - '[0-9]+.[0-9]+.[0-9]+-**'
-      - '[0-9]+.[0-9]+.[0-9]+'
+  push
 
 jobs:
   build:
     runs-on: windows-latest  
     steps:
-    - name: Get tag
-      id: tag
-      uses: dawidd6/action-get-tag@v1
+    # - name: Get tag
+    #   id: tag
+    #   uses: dawidd6/action-get-tag@v1
            
     - name: Checkout
       uses: actions/checkout@v3
@@ -61,11 +55,11 @@ jobs:
         $archive = $build | Compress-Archive -DestinationPath "$build.zip" -PassThru
         Write-Output "::set-output name=path::$archive"
 
-    - name: Create release
-      id: create_release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: ${{ steps.archive.outputs.path }}
-        artifactContentType: application/zip
-        tag: ${{ steps.tag.outputs.tag }}
-        token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Create release
+    #   id: create_release
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     artifacts: ${{ steps.archive.outputs.path }}
+    #     artifactContentType: application/zip
+    #     tag: ${{ steps.tag.outputs.tag }}
+    #     token: ${{ secrets.GITHUB_TOKEN }}
