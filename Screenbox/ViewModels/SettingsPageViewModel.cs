@@ -1,10 +1,15 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System;
+using Windows.Foundation.Collections;
+using Windows.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
 using Screenbox.Core;
 using Screenbox.Services;
+using CommunityToolkit.Mvvm.Input;
+using System.Threading.Tasks;
 
 namespace Screenbox.ViewModels
 {
@@ -17,8 +22,12 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
+        [ObservableProperty] private IObservableVector<StorageFolder>? _musicLocations;
+        [ObservableProperty] private IObservableVector<StorageFolder>? _videoLocations;
 
         private readonly ISettingsService _settingsService;
+        private StorageLibrary? _videosLibrary;
+        private StorageLibrary? _musicLibrary;
 
         public SettingsPageViewModel(ISettingsService settingsService)
         {
@@ -26,6 +35,7 @@ namespace Screenbox.ViewModels
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
             LoadValues();
+            LoadLibraryLocations();
 
             IsActive = true;
         }
@@ -59,12 +69,48 @@ namespace Screenbox.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
         }
 
+        [RelayCommand]
+        private async Task AddVideosFolderAsync()
+        {
+            if (_videosLibrary == null) return;
+            await _videosLibrary.RequestAddFolderAsync();
+        }
+
+        [RelayCommand]
+        private async Task RemoveVideosFolderAsync(StorageFolder folder)
+        {
+            if (_videosLibrary == null) return;
+            await _videosLibrary.RequestRemoveFolderAsync(folder);
+        }
+
+        [RelayCommand]
+        private async Task AddMusicFolderAsync()
+        {
+            if (_musicLibrary == null) return;
+            await _musicLibrary.RequestAddFolderAsync();
+        }
+
+        [RelayCommand]
+        private async Task RemoveMusicFolderAsync(StorageFolder folder)
+        {
+            if (_musicLibrary == null) return;
+            await _musicLibrary.RequestRemoveFolderAsync(folder);
+        }
+
         private void LoadValues()
         {
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
             _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
+        }
+
+        private async void LoadLibraryLocations()
+        {
+            _videosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            _musicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            VideoLocations = _videosLibrary.Folders;
+            MusicLocations = _musicLibrary.Folders;
         }
     }
 }

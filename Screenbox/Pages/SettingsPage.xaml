@@ -8,10 +8,52 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:rpl="using:ReswPlusLib"
+    xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+    <Page.Resources>
+        <XamlUICommand
+            x:Key="RemoveMusicFolderCommand"
+            Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
+            Description="Remove folder"
+            IconSource="{ui:FontIconSource FontSize=16,
+                                           Glyph=&#xe894;}"
+            Label="{strings:Resources Key=Remove}" />
+
+        <XamlUICommand
+            x:Key="RemoveVideosFolderCommand"
+            Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
+            Description="Remove folder"
+            IconSource="{ui:FontIconSource FontSize=16,
+                                           Glyph=&#xe894;}"
+            Label="{strings:Resources Key=Remove}" />
+
+        <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
+            <labs:SettingsCard Header="{x:Bind Path}">
+                <Button
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{StaticResource RemoveVideosFolderCommand}"
+                    CommandParameter="{x:Bind}">
+                    <FontIcon FontSize="16" Glyph="&#xe894;" />
+                </Button>
+            </labs:SettingsCard>
+        </DataTemplate>
+
+        <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
+            <labs:SettingsCard Header="{x:Bind Path}">
+                <Button
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Command="{StaticResource RemoveMusicFolderCommand}"
+                    CommandParameter="{x:Bind}">
+                    <FontIcon FontSize="16" Glyph="&#xe894;" />
+                </Button>
+            </labs:SettingsCard>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -38,8 +80,40 @@
                 Margin="{StaticResource ContentPageBottomMargin}"
                 Padding="{StaticResource ContentPageRightMargin}"
                 Spacing="4">
+                <StackPanel.ChildrenTransitions>
+                    <RepositionThemeTransition IsStaggeringEnabled="False" />
+                </StackPanel.ChildrenTransitions>
                 <TextBlock
                     Margin="0,0,0,4"
+                    FontWeight="SemiBold"
+                    Text="Libraries" />
+                <labs:SettingsExpander
+                    Header="Music library locations"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
+                    ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
+                    ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}">
+                    <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xe8f4;" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
+                        </StackPanel>
+                    </Button>
+                </labs:SettingsExpander>
+                <labs:SettingsExpander
+                    Header="Video library locations"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
+                    ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
+                    ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}">
+                    <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xe8f4;" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
+                        </StackPanel>
+                    </Button>
+                </labs:SettingsExpander>
+
+                <TextBlock
+                    Margin="0,12,0,4"
                     FontWeight="SemiBold"
                     Text="Player" />
                 <labs:SettingsCard
