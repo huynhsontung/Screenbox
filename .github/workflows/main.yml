@@ -3,14 +3,14 @@ name:  Windows Release Builder
 on:
   push
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: windows-latest  
     steps:
-    # - name: Get tag
-    #   id: tag
-    #   uses: dawidd6/action-get-tag@v1
-           
     - name: Checkout
       uses: actions/checkout@v3
 
@@ -52,22 +52,10 @@ jobs:
         BuildMode: StoreUpload
         BuildPlatforms: x86|x64|ARM
     
-    - name: Create archive
-      id: archive
-      run: |
-        $archive = Compress-Archive -Path C:\DeployOutput\* -DestinationPath ScreenboxStoreUpload.zip -PassThru
-        Write-Output "::set-output name=path::$archive"
-
     - uses: actions/upload-artifact@v3
+      if: ${{ github.ref == "refs/heads/main" || github.ref_type == "tag" }}
       with:
         name: store-upload
-        path: ${{ steps.archive.outputs.path }}
-
-    # - name: Create release
-    #   id: create_release
-    #   uses: ncipollo/release-action@v1
-    #   with:
-    #     artifacts: ${{ steps.archive.outputs.path }}
-    #     artifactContentType: application/zip
-    #     tag: ${{ steps.tag.outputs.tag }}
-    #     token: ${{ secrets.GITHUB_TOKEN }}
+        path: |
+          C:\DeployOutput\*.msixupload
+          C:\DeployOutput\*.appxupload
