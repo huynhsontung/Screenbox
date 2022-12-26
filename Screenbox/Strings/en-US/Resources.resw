@@ -400,4 +400,12 @@
   <data name="Open" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="LocationSpecified_One" xml:space="preserve">
+    <value>{0} location specified</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="LocationSpecified_Other" xml:space="preserve">
+    <value>{0} locations specified</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
 </root>

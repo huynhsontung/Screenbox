@@ -136,6 +136,16 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region LocationSpecified
+        /// <summary>
+        ///   Get the pluralized version of the string similar to: {0} location specified
+        /// </summary>
+        public static string LocationSpecified(int pluralCount)
+        {
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "LocationSpecified", (double)pluralCount, false), pluralCount);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -1160,6 +1170,7 @@ namespace Screenbox.Strings{
             RepeatMode,
             ItemsSelected,
             ItemsCount,
+            LocationSpecified,
             ZoomToFit,
             FrameSavedNotificationTitle,
             SaveCurrentFrame,
