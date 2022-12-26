@@ -16,7 +16,7 @@
             <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
             <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" />
+            <!-- <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" /> -->
         </ResourceDictionary>
     </UserControl.Resources>
 
