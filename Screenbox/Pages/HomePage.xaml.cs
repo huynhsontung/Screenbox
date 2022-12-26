@@ -6,6 +6,8 @@ using Windows.UI.Xaml.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.ViewModels;
+using Microsoft.Toolkit.Uwp.UI;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
