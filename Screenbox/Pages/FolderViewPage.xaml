@@ -103,6 +103,7 @@
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
+            ContainerContentChanging="FolderView_OnContainerContentChanging"
             RightTapped="FolderView_OnRightTapped"
             SelectionMode="None">
             <GridView.Footer>

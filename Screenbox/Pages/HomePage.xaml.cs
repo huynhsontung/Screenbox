@@ -54,5 +54,12 @@ namespace Screenbox.Pages
                 e.Handled = true;
             }
         }
+
+        private void RecentFilesGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.InRecycleQueue || args.Phase != 0) return;
+            if (args.ItemContainer.FindDescendant<ListViewItemPresenter>() is not { } presenter) return;
+            presenter.CornerRadius = new CornerRadius(8);
+        }
     }
 }

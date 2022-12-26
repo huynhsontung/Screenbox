@@ -223,6 +223,7 @@
                 Padding="{StaticResource ContentPageThumbnailRightMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+                ContainerContentChanging="RecentFilesGridView_OnContainerContentChanging"
                 ContextRequested="RecentFilesGridView_OnContextRequested"
                 IsItemClickEnabled="True"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
