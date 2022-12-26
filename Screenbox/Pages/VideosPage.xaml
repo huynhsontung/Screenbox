@@ -21,28 +21,10 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
             <TextBlock
-                Grid.Column="0"
                 MaxLines="2"
                 Style="{StaticResource TitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
-
-            <Button
-                Grid.Column="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Command="{x:Bind ViewModel.AddFolderCommand}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe8f4;" />
-                    <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
-                </StackPanel>
-            </Button>
         </Grid>
 
         <muxc:BreadcrumbBar

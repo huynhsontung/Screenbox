@@ -3,14 +3,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 
@@ -54,23 +51,6 @@ namespace Screenbox.ViewModels
             {
                 Breadcrumbs.Add(storageFolder.DisplayName);
             }
-        }
-
-        [RelayCommand]
-        private async Task AddFolderAsync()
-        {
-            StorageLibrary videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            StorageFolder? addedFolder = await videosLibrary.RequestAddFolderAsync();
-            if (addedFolder != null)
-            {
-                videosLibrary.DefinitionChanged += VideosLibraryOnDefinitionChanged;
-            }
-        }
-
-        private void VideosLibraryOnDefinitionChanged(StorageLibrary sender, object args)
-        {
-            sender.DefinitionChanged -= VideosLibraryOnDefinitionChanged;
-            Messenger.Send(new RefreshFolderMessage());
         }
     }
 }
