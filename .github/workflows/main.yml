@@ -52,10 +52,41 @@ jobs:
         BuildMode: StoreUpload
         BuildPlatforms: x86|x64|ARM
     
-    - uses: actions/upload-artifact@v3
-      if: github.ref == 'refs/heads/main' || github.ref_type == 'tag'
+    - name: Create store-upload artifact
+      uses: actions/upload-artifact@v3
+      if: github.ref_type == 'tag'
       with:
         name: store-upload
         path: |
           C:\DeployOutput\*.msixupload
           C:\DeployOutput\*.appxupload
+
+    - name: Create sideload artifact
+      uses: actions/upload-artifact@v3
+      if: github.ref_type == 'tag'
+      with:
+        name: Screenbox-sideload
+        path: |
+          C:\DeployOutput\*_Test
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: Screenbox-sideload
+        path: download/
+
+    - name: Generate GitHub Release
+      uses: "marvinpinto/action-automatic-releases@v1"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: true
+        files: |
+          download/*
