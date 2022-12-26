@@ -89,7 +89,7 @@
                     FontWeight="SemiBold"
                     Text="Libraries" />
                 <labs:SettingsExpander
-                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
+                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocationCount), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Music library locations"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
@@ -102,7 +102,7 @@
                     </Button>
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
-                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
+                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocationCount), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Video library locations"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"

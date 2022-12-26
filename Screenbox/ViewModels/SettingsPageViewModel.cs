@@ -24,6 +24,8 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private IObservableVector<StorageFolder>? _musicLocations;
         [ObservableProperty] private IObservableVector<StorageFolder>? _videoLocations;
+        [ObservableProperty] private int _musicLocationCount;   // Required for description due to weird binding behavior
+        [ObservableProperty] private int _videoLocationCount;   // Required for description due to weird binding behavior
 
         private readonly ISettingsService _settingsService;
         private StorageLibrary? _videosLibrary;
@@ -109,8 +111,29 @@ namespace Screenbox.ViewModels
         {
             _videosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
             _musicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+
+            if (VideoLocations != null)
+            {
+                VideoLocations.VectorChanged -= LibraryLocationsOnVectorChanged;
+            }
+
+            if (MusicLocations != null)
+            {
+                MusicLocations.VectorChanged -= LibraryLocationsOnVectorChanged;
+            }
+
             VideoLocations = _videosLibrary.Folders;
             MusicLocations = _musicLibrary.Folders;
+            VideoLocations.VectorChanged += LibraryLocationsOnVectorChanged;
+            MusicLocations.VectorChanged += LibraryLocationsOnVectorChanged;
+            VideoLocationCount = VideoLocations.Count;
+            MusicLocationCount = MusicLocations.Count;
+        }
+
+        private void LibraryLocationsOnVectorChanged(IObservableVector<StorageFolder> sender, IVectorChangedEventArgs _)
+        {
+            VideoLocationCount = VideoLocations?.Count ?? 0;
+            MusicLocationCount = MusicLocations?.Count ?? 0;
         }
     }
 }
