@@ -45,6 +45,7 @@ jobs:
       run: |
         msbuild $((Get-Item *.sln).Name) `
         -p:RestoreConfigFile=nuget.config `
+        -p:RestoreLockedMode=true `
         -restore
       
     - name: Build solution
