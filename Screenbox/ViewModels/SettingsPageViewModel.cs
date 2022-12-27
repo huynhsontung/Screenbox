@@ -1,5 +1,5 @@
 ﻿using System;
-using Windows.Foundation.Collections;
+using System.Collections.ObjectModel;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,6 +10,7 @@ using Screenbox.Core;
 using Screenbox.Services;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
+using Windows.System;
 
 namespace Screenbox.ViewModels
 {
@@ -22,18 +23,22 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
-        [ObservableProperty] private IObservableVector<StorageFolder>? _musicLocations;
-        [ObservableProperty] private IObservableVector<StorageFolder>? _videoLocations;
-        [ObservableProperty] private int _musicLocationCount;   // Required for description due to weird binding behavior
-        [ObservableProperty] private int _videoLocationCount;   // Required for description due to weird binding behavior
+
+        public ObservableCollection<StorageFolder> MusicLocations { get; }
+
+        public ObservableCollection<StorageFolder> VideoLocations { get; }
 
         private readonly ISettingsService _settingsService;
+        private readonly DispatcherQueue _dispatcherQueue;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
         public SettingsPageViewModel(ISettingsService settingsService)
         {
             _settingsService = settingsService;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            MusicLocations = new ObservableCollection<StorageFolder>();
+            VideoLocations = new ObservableCollection<StorageFolder>();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
             LoadValues();
@@ -109,31 +114,34 @@ namespace Screenbox.ViewModels
 
         private async void LoadLibraryLocations()
         {
-            _videosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            _musicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-
-            if (VideoLocations != null)
-            {
-                VideoLocations.VectorChanged -= LibraryLocationsOnVectorChanged;
-            }
-
-            if (MusicLocations != null)
-            {
-                MusicLocations.VectorChanged -= LibraryLocationsOnVectorChanged;
-            }
-
-            VideoLocations = _videosLibrary.Folders;
-            MusicLocations = _musicLibrary.Folders;
-            VideoLocations.VectorChanged += LibraryLocationsOnVectorChanged;
-            MusicLocations.VectorChanged += LibraryLocationsOnVectorChanged;
-            VideoLocationCount = VideoLocations.Count;
-            MusicLocationCount = MusicLocations.Count;
+            if (_videosLibrary != null || _musicLibrary != null) return;
+            _videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            _musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            UpdateLibraryLocations();
+            _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
+            _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
         }
 
-        private void LibraryLocationsOnVectorChanged(IObservableVector<StorageFolder> sender, IVectorChangedEventArgs _)
+        private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
         {
-            VideoLocationCount = VideoLocations?.Count ?? 0;
-            MusicLocationCount = MusicLocations?.Count ?? 0;
+            _dispatcherQueue.TryEnqueue(UpdateLibraryLocations);
+        }
+
+        private void UpdateLibraryLocations()
+        {
+            if (_videosLibrary == null || _musicLibrary == null) return;
+            VideoLocations.Clear();
+            MusicLocations.Clear();
+
+            foreach (StorageFolder folder in _musicLibrary.Folders)
+            {
+                MusicLocations.Add(folder);
+            }
+
+            foreach (StorageFolder folder in _videosLibrary.Folders)
+            {
+                VideoLocations.Add(folder);
+            }
         }
     }
 }

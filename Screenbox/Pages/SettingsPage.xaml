@@ -14,6 +14,11 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
     <Page.Resources>
+        <controls:StackLayout
+            x:Name="VerticalStackLayout"
+            Orientation="Vertical"
+            Spacing="12" />
+
         <XamlUICommand
             x:Key="RemoveMusicFolderCommand"
             Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
@@ -31,27 +36,49 @@
             Label="{strings:Resources Key=Remove}" />
 
         <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <labs:SettingsCard Header="{x:Bind Path}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Path}" />
                 <Button
+                    Grid.Column="1"
+                    Height="32"
+                    VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
                     Command="{StaticResource RemoveVideosFolderCommand}"
                     CommandParameter="{x:Bind}">
                     <FontIcon FontSize="16" Glyph="&#xe894;" />
                 </Button>
-            </labs:SettingsCard>
+            </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <labs:SettingsCard Header="{x:Bind Path}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Path}" />
                 <Button
+                    Grid.Column="1"
+                    Height="32"
+                    VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
                     Command="{StaticResource RemoveMusicFolderCommand}"
                     CommandParameter="{x:Bind}">
                     <FontIcon FontSize="16" Glyph="&#xe894;" />
                 </Button>
-            </labs:SettingsCard>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
 
@@ -89,30 +116,44 @@
                     FontWeight="SemiBold"
                     Text="Libraries" />
                 <labs:SettingsExpander
-                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocationCount), Mode=OneWay, FallbackValue={x:Null}}"
+                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Music library locations"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
-                    ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
-                    ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}">
                     <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard HorizontalAlignment="Stretch" ContentAlignment="Vertical">
+                            <controls:ItemsRepeater
+                                HorizontalAlignment="Stretch"
+                                ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
+                                ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
+                                Layout="{StaticResource VerticalStackLayout}" />
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
-                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocationCount), Mode=OneWay, FallbackValue={x:Null}}"
+                    Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Video library locations"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
-                    ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
-                    ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}">
                     <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard HorizontalAlignment="Stretch" ContentAlignment="Vertical">
+                            <controls:ItemsRepeater
+                                HorizontalAlignment="Stretch"
+                                ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
+                                ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
+                                Layout="{StaticResource VerticalStackLayout}" />
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 
                 <TextBlock
