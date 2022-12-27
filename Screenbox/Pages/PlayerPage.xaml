@@ -618,17 +618,17 @@
                 <VisualState x:Name="NoMargin" />
                 <VisualState x:Name="ExpandedMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,12" />
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="CompactMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,12" />
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MinimalMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,8" />
+                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,4" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="HiddenMargin">
