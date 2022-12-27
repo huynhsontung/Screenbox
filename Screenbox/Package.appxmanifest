@@ -9,7 +9,7 @@
   IgnorableNamespaces="uap mp uap3">
 
   <Identity
-    Name="18496Starpine.Screenbox"
+    Name="Screenbox"
     Publisher="CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C"
     Version="0.7.2.0" />
 
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="Screenbox.App">
       <uap:VisualElements
-        DisplayName="Screenbox"
+        DisplayName="[Debug] Screenbox"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="Modern video player"
