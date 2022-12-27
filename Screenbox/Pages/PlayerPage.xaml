@@ -576,6 +576,42 @@
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
+                <VisualState x:Name="Hidden">
+                    <VisualState.Setters>
+                        <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="HeaderBackground.Height" Value="NaN" />
+                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleText.FontSize" Value="14" />
+                        <Setter Target="TitleText.FontWeight" Value="SemiBold" />
+                        <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
+                        <Setter Target="TitleTextPanel.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
+                        <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="VideoView.IsEnabled" Value="False" />
+                        <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
+                        <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
+                        <Setter Target="AlbumArtPanel.Margin" Value="0" />
+                        <Setter Target="AlbumArtPanel.Opacity" Value="0" />
+                        <Setter Target="BackgroundArt.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
+                        <Setter Target="PlayerControls.Padding" Value="0" />
+                        <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
+                        <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
+                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
+                        <Setter Target="SecondColumn.Width" Value="*" />
+                        <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
+                        <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
+                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
+                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
+                        <Setter Target="LayoutRoot.BorderThickness" Value="1" />
+                        <Setter Target="LayoutRoot.Height" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="MiniPlayerMarginGroup">
@@ -593,6 +629,11 @@
                 <VisualState x:Name="MinimalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="8,0,8,8" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HiddenMargin">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,-1" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

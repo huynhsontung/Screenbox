@@ -31,6 +31,7 @@ namespace Screenbox.Pages
     public sealed partial class PlayerPage : Page
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
+        internal PlaylistViewModel PlaylistViewModel { get; }
 
         private const VirtualKey PlusKey = (VirtualKey)0xBB;
         private const VirtualKey MinusKey = (VirtualKey)0xBD;
@@ -43,6 +44,7 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            PlaylistViewModel = App.Services.GetRequiredService<PlaylistViewModel>();
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
 
@@ -52,6 +54,7 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+            PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
         }
 
@@ -83,7 +86,7 @@ namespace Screenbox.Pages
         private void OnLoading(FrameworkElement sender, object args)
         {
             if (!ViewModel.PlayerVisible)
-                VisualStateManager.GoToState(this, "MiniPlayer", false);
+                VisualStateManager.GoToState(this, "Hidden", false);
         }
         
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -176,9 +179,13 @@ namespace Screenbox.Pages
                         VisualStateManager.GoToState(this, "Normal", true);
                         SetTitleBar();
                     }
-                    else
+                    else if (PlaylistViewModel.HasItems)
                     {
                         VisualStateManager.GoToState(this, "MiniPlayer", true);
+                    }
+                    else
+                    {
+                        VisualStateManager.GoToState(this, "Hidden", true);
                     }
 
                     UpdatePreviewType();
@@ -187,6 +194,15 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
+            }
+        }
+
+        private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PlaylistViewModel.HasItems) && !ViewModel.PlayerVisible)
+            {
+                VisualStateManager.GoToState(this, PlaylistViewModel.HasItems ? "MiniPlayer" : "Hidden", true);
+                UpdateMiniPlayerMargin();
             }
         }
 
@@ -252,6 +268,10 @@ namespace Screenbox.Pages
             if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoMargin", false);
+            }
+            else if (!PlaylistViewModel.HasItems)
+            {
+                VisualStateManager.GoToState(this, "HiddenMargin", false);
             }
             else
             {
