@@ -17,6 +17,13 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
 
+    - uses: actions/cache@v3
+      with:
+        path: ~\.nuget\packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Fetch Gomplate
       uses: dsaltares/fetch-gh-release-asset@1.1.0
       with:
