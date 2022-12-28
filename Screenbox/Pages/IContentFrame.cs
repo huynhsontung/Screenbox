@@ -7,9 +7,9 @@ namespace Screenbox.Pages
     internal interface IContentFrame
     {
         object? FrameContent { get; }
-        Type SourcePageType { get; }
+        Type ContentSourcePageType { get; }
         bool CanGoBack { get; }
         void GoBack();
-        void Navigate(Type pageType, object? parameter);
+        void NavigateContent(Type pageType, object? parameter);
     }
 }

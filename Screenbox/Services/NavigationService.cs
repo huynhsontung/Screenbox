@@ -24,11 +24,11 @@ namespace Screenbox.Services
             Frame rootFrame = (Frame)Window.Current.Content;
             if (rootFrame.Content is IContentFrame page)
             {
-                page.Navigate(pageType, parameter);
+                page.NavigateContent(pageType, parameter);
             }
         }
 
-        public void NavigateParent(Type parentVmType, Type targetVmType, object? parameter = null)
+        public void NavigateChild(Type parentVmType, Type targetVmType, object? parameter = null)
         {
             if (!_vmPageMapping.TryGetValue(parentVmType, out Type parentPageType)) return;
             if (!_vmPageMapping.TryGetValue(targetVmType, out Type targetPageType)) return;
@@ -37,9 +37,9 @@ namespace Screenbox.Services
             IContentFrame? page = rootFrame.Content as IContentFrame;
             while (page != null)
             {
-                if (page.SourcePageType == parentPageType && page.FrameContent is IContentFrame childPage)
+                if (page.ContentSourcePageType == parentPageType && page.FrameContent is IContentFrame childPage)
                 {
-                    childPage.Navigate(targetPageType, parameter);
+                    childPage.NavigateContent(targetPageType, parameter);
                     break;
                 }
 
@@ -55,9 +55,9 @@ namespace Screenbox.Services
             IContentFrame? page = rootFrame.Content as IContentFrame;
             while (page != null)
             {
-                if (page.SourcePageType == pageType)
+                if (page.ContentSourcePageType == pageType)
                 {
-                    page.Navigate(pageType, parameter);
+                    page.NavigateContent(pageType, parameter);
                     break;
                 }
 

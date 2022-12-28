@@ -20,7 +20,7 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class VideosPage : Page, IContentFrame
     {
-        public Type SourcePageType => FolderViewFrame.SourcePageType;
+        public Type ContentSourcePageType => FolderViewFrame.SourcePageType;
 
         public object? FrameContent => FolderViewFrame.Content;
 
@@ -46,7 +46,7 @@ namespace Screenbox.Pages
             FolderViewFrame.GoBack(new SuppressNavigationTransitionInfo());
         }
 
-        public void Navigate(Type pageType, object? parameter)
+        public void NavigateContent(Type pageType, object? parameter)
         {
             FolderViewFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }

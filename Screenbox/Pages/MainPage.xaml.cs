@@ -20,7 +20,7 @@ namespace Screenbox.Pages
 {
     public sealed partial class MainPage : Page, IContentFrame
     {
-        public Type SourcePageType => ContentFrame.SourcePageType;
+        public Type ContentSourcePageType => ContentFrame.SourcePageType;
 
         public object? FrameContent => ContentFrame.Content;
 
@@ -69,7 +69,7 @@ namespace Screenbox.Pages
             TryGoBack();
         }
 
-        public void Navigate(Type pageType, object? parameter)
+        public void NavigateContent(Type pageType, object? parameter)
         {
             string? navTag = _pages.FirstOrDefault(p => p.Value == pageType).Key;
             if (string.IsNullOrEmpty(navTag)) return;
