@@ -50,12 +50,5 @@ namespace Screenbox.Pages
         {
             FolderViewFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
-
-        private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
-        {
-            if (FolderViewFrame.Content is not FolderViewPage view) return;
-            IReadOnlyList<StorageFolder> crumbs = view.ViewModel.Breadcrumbs.Take(args.Index + 1).ToArray();
-            FolderViewFrame.Navigate(typeof(FolderViewPage), crumbs, new SuppressNavigationTransitionInfo());
-        }
     }
 }

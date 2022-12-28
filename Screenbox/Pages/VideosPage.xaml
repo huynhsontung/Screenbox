@@ -6,10 +6,15 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:viewmodels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
+            <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +36,8 @@
             x:Name="LoadingProgressBar"
             Grid.Row="1"
             VerticalAlignment="Top"
-            ItemClicked="BreadcrumbBar_OnItemClicked"
+            ItemClicked="{x:Bind ViewModel.OnBreadcrumbBarItemClicked}"
+            ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
         <Frame
             x:Name="FolderViewFrame"

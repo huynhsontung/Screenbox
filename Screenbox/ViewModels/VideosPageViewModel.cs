@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Services;
 
 namespace Screenbox.ViewModels
 {
@@ -19,12 +20,15 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private string _titleText;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
-        public ObservableCollection<string> Breadcrumbs { get; }
+        public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
-        public VideosPageViewModel()
+        private readonly INavigationService _navigationService;
+
+        public VideosPageViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
             _titleText = Strings.Resources.Videos;
-            Breadcrumbs = new ObservableCollection<string>();
+            Breadcrumbs = new ObservableCollection<StorageFolder>();
 
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
@@ -42,14 +46,20 @@ namespace Screenbox.ViewModels
             UpdateBreadcrumbs(crumbs);
         }
 
-        public void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
+        public void OnBreadcrumbBarItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            IReadOnlyList<StorageFolder> crumbs = Breadcrumbs.Take(args.Index + 1).ToArray();
+            _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(FolderViewPageViewModel), crumbs);
+        }
+
+        private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
         {
             Breadcrumbs.Clear();
             if (crumbs == null) return;
             TitleText = crumbs.LastOrDefault()?.DisplayName ?? Strings.Resources.Videos;
             foreach (StorageFolder storageFolder in crumbs)
             {
-                Breadcrumbs.Add(storageFolder.DisplayName);
+                Breadcrumbs.Add(storageFolder);
             }
         }
     }
