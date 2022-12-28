@@ -93,6 +93,15 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public async Task LoadItemDetailsAsync(StorageItemViewModel item)
+        {
+            await item.UpdateCaptionAsync();
+            if (item.Media != null)
+            {
+                await item.Media.LoadThumbnailAsync();
+            }
+        }
+
         public void Clean()
         {
             _isActive = false;
@@ -162,8 +171,6 @@ namespace Screenbox.ViewModels
             _loadingTimer.Stop();
             IsLoading = false;
             IsEmpty = Items.Count == 0;
-            if (!_isActive) return;
-            await LoadItemsDetailsAsync();
         }
 
         private async Task FetchFolderContentAsync(StorageFolder folder)
@@ -188,8 +195,6 @@ namespace Screenbox.ViewModels
             _loadingTimer.Stop();
             IsLoading = false;
             IsEmpty = Items.Count == 0;
-            if (!_isActive) return;
-            await LoadItemsDetailsAsync();
         }
 
         private async Task FetchFolderContentAsync(StorageLibrary library)
@@ -220,16 +225,6 @@ namespace Screenbox.ViewModels
 
                 IsEmpty = Items.Count == 0;
             }
-        }
-
-        private Task LoadItemsDetailsAsync()
-        {
-            IEnumerable<Task> loadingTasks = Items.Select(item =>
-                item.Media != null && !string.IsNullOrEmpty(item.Path)
-                    ? Task.WhenAll(item.UpdateCaptionAsync(), item.Media.LoadThumbnailAsync())
-                    : item.UpdateCaptionAsync());
-
-            return Task.WhenAll(loadingTasks);
         }
 
         private async void RefreshFolderContent()

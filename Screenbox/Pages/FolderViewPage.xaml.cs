@@ -68,11 +68,15 @@ namespace Screenbox.Pages
             }
         }
 
-        private void FolderView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private async void FolderView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
-            if (args.InRecycleQueue || args.Phase != 0) return;
-            if (args.ItemContainer.FindDescendant<ListViewItemPresenter>() is not { } presenter) return;
-            presenter.CornerRadius = new CornerRadius(8);
+            if (args.Phase != 0) return;
+            if (!args.InRecycleQueue && args.ItemContainer.FindDescendant<ListViewItemPresenter>() is { } presenter)
+            {
+                presenter.CornerRadius = new CornerRadius(8);
+            }
+
+            if (args.Item != null) await ViewModel.LoadItemDetailsAsync((StorageItemViewModel)args.Item);
         }
     }
 }
