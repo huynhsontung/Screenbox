@@ -40,18 +40,13 @@ jobs:
 
     - name: Update package manifest
       run: .\scripts\update-manifest.ps1
-
-    - name: Restore solution
-      run: |
-        msbuild $((Get-Item *.sln).Name) `
-        -p:RestoreConfigFile=nuget.config `
-        -p:RestoreLockedMode=true `
-        -restore
       
     - name: Build solution
       run: |
         msbuild $((Get-Item *.sln).Name) `
         -v:d `
+        -p:RestoreConfigFile=nuget.config `
+        -p:RestoreLockedMode=true `
         -p:Configuration=Release `
         -p:Platform=x64 `
         -p:AppxBundle=Always `
@@ -59,6 +54,7 @@ jobs:
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=C:\DeployOutput `
         -p:AppxPackageSigningEnabled=false `
+        -restore
       env:
         BuildMode: StoreUpload
         BuildPlatforms: x86|x64|ARM
