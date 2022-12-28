@@ -1,15 +1,11 @@
 ﻿#nullable enable
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,8 +33,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            FolderViewFrame.Navigate(typeof(FolderViewPage), new[] { KnownFolders.VideosLibrary },
-                new SuppressNavigationTransitionInfo());
+            ViewModel.OnNavigatedTo();
         }
 
         public void GoBack()

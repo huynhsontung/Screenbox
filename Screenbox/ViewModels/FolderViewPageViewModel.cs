@@ -45,6 +45,7 @@ namespace Screenbox.ViewModels
         private readonly StorageItemViewModelFactory _storageVmFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _loadingTimer;
+        private object? _source;
         private bool _isActive;
 
         public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
@@ -76,6 +77,7 @@ namespace Screenbox.ViewModels
         public async Task FetchContentAsync(object? parameter)
         {
             _isActive = true;
+            _source = parameter;
             switch (parameter)
             {
                 case IReadOnlyList<StorageFolder> { Count: > 0 } breadcrumbs:
@@ -84,6 +86,9 @@ namespace Screenbox.ViewModels
                     break;
                 case StorageLibrary library:
                     await FetchFolderContentAsync(library);
+                    break;
+                case StorageFileQueryResult queryResult:
+                    await FetchQueryItemAsync(queryResult);
                     break;
             }
         }
@@ -136,6 +141,31 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private async Task FetchQueryItemAsync(StorageFileQueryResult query)
+        {
+            Items.Clear();
+
+            uint fetchIndex = 0;
+            while (_isActive)
+            {
+                _loadingTimer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(800));
+                IReadOnlyList<StorageFile> items = await query.GetFilesAsync(fetchIndex, 30);
+                if (items.Count == 0) break;
+                fetchIndex += (uint)items.Count;
+                foreach (StorageFile storageFile in items)
+                {
+                    StorageItemViewModel item = _storageVmFactory.GetInstance(storageFile);
+                    Items.Add(item);
+                }
+            }
+
+            _loadingTimer.Stop();
+            IsLoading = false;
+            IsEmpty = Items.Count == 0;
+            if (!_isActive) return;
+            await LoadItemsDetailsAsync();
+        }
+
         private async Task FetchFolderContentAsync(StorageFolder folder)
         {
             Items.Clear();
@@ -150,7 +180,7 @@ namespace Screenbox.ViewModels
                 fetchIndex += (uint)items.Count;
                 foreach (IStorageItem storageItem in items)
                 {
-                    StorageItemViewModel item = _storageVmFactory.GetTransient(storageItem);
+                    StorageItemViewModel item = _storageVmFactory.GetInstance(storageItem);
                     Items.Add(item);
                 }
             }
@@ -159,12 +189,7 @@ namespace Screenbox.ViewModels
             IsLoading = false;
             IsEmpty = Items.Count == 0;
             if (!_isActive) return;
-            IEnumerable<Task> loadingTasks = Items.Select(item =>
-                item.Media != null && !string.IsNullOrEmpty(item.Path)
-                    ? Task.WhenAll(item.UpdateCaptionAsync(), item.Media.LoadThumbnailAsync())
-                    : item.UpdateCaptionAsync());
-
-            await Task.WhenAll(loadingTasks);
+            await LoadItemsDetailsAsync();
         }
 
         private async Task FetchFolderContentAsync(StorageLibrary library)
@@ -188,7 +213,7 @@ namespace Screenbox.ViewModels
                 Items.Clear();
                 foreach (StorageFolder folder in library.Folders)
                 {
-                    StorageItemViewModel item = _storageVmFactory.GetTransient(folder);
+                    StorageItemViewModel item = _storageVmFactory.GetInstance(folder);
                     Items.Add(item);
                     await item.UpdateCaptionAsync();
                 }
@@ -197,9 +222,19 @@ namespace Screenbox.ViewModels
             }
         }
 
+        private Task LoadItemsDetailsAsync()
+        {
+            IEnumerable<Task> loadingTasks = Items.Select(item =>
+                item.Media != null && !string.IsNullOrEmpty(item.Path)
+                    ? Task.WhenAll(item.UpdateCaptionAsync(), item.Media.LoadThumbnailAsync())
+                    : item.UpdateCaptionAsync());
+
+            return Task.WhenAll(loadingTasks);
+        }
+
         private async void RefreshFolderContent()
         {
-            await FetchFolderContentAsync(Breadcrumbs.Last());
+            await FetchContentAsync(_source);
         }
     }
 }

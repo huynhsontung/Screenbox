@@ -15,7 +15,7 @@ namespace Screenbox.Factories
             _mediaFactory = mediaFactory;
         }
 
-        public StorageItemViewModel GetTransient(IStorageItem storageItem)
+        public StorageItemViewModel GetInstance(IStorageItem storageItem)
         {
             return new StorageItemViewModel(_filesService, _mediaFactory, storageItem);
         }

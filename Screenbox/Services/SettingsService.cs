@@ -8,6 +8,7 @@ namespace Screenbox.Services
     {
         private readonly IPropertySet _settingsStorage = ApplicationData.Current.LocalSettings.Values;
 
+        private const string LibraryShowVideoFoldersKey = "Libraries/ShowVideoFolders";
         private const string PlayerAutoResizeKey = "Player/AutoResize";
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
@@ -44,6 +45,12 @@ namespace Screenbox.Services
             set => SetValue(PersistentVolumeKey, value);
         }
 
+        public bool ShowVideoFolders
+        {
+            get => GetValue<bool>(LibraryShowVideoFoldersKey);
+            set => SetValue(LibraryShowVideoFoldersKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, 0);
@@ -51,6 +58,7 @@ namespace Screenbox.Services
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
             SetDefault(PersistentVolumeKey, 100);
+            SetDefault(LibraryShowVideoFoldersKey, true);
         }
 
         private T? GetValue<T>(string key)
