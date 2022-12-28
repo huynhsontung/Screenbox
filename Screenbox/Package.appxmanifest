@@ -16,7 +16,7 @@
   <mp:PhoneIdentity PhoneProductId="13f69037-4fca-4b86-a6f5-a77c0969d41a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Screenbox</DisplayName>
+    <DisplayName>[Debug] Screenbox</DisplayName>
     <PublisherDisplayName>Tung H.</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

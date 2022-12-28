@@ -62,7 +62,7 @@
                     Margin="12,0,0,0"
                     VerticalAlignment="Center"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind appModel:AppInfo.Current.DisplayInfo.DisplayName}" />
+                    Text="{x:Bind appModel:Package.Current.DisplayName}" />
             </StackPanel>
         </Grid>
 
