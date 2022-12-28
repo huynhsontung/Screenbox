@@ -36,9 +36,9 @@
                     <Thickness x:Key="ContentPageRightMargin">0,0,56,0</Thickness>
                     <Thickness x:Key="ContentPageThumbnailRightMargin">0,0,24,0</Thickness>
                     <Thickness x:Key="ContentPageRightMarginMinimal">0,0,16,0</Thickness>
-                    <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,142</Thickness>
-                    <Thickness x:Key="ContentPageBottomMargin">0,0,0,148</Thickness>
-                    <x:Double x:Key="ContentPageBottomPaddingHeight">148</x:Double>
+                    <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
+                    <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
+                    <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
                     <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
 
                     <Style TargetType="FontIcon">

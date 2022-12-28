@@ -11,6 +11,7 @@ namespace Screenbox.ViewModels
         IRecipient<NavigationViewDisplayModeRequestMessage>
     {
         [ObservableProperty] private bool _playerVisible;
+        [ObservableProperty] private bool _shouldUseMargin;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -24,6 +25,7 @@ namespace Screenbox.ViewModels
         public void Receive(PlayerVisibilityChangedMessage message)
         {
             PlayerVisible = message.Value == PlayerVisibilityStates.Visible;
+            ShouldUseMargin = message.Value != PlayerVisibilityStates.Hidden;
         }
 
         public void Receive(NavigationViewDisplayModeRequestMessage message)
