@@ -21,6 +21,7 @@ namespace Screenbox.Services
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder);
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder);
         public StorageFileQueryResult GetSongsFromLibrary();
+        public StorageFileQueryResult GetVideosFromLibrary();
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public IAsyncOperation<IReadOnlyList<StorageFile>> PickMultipleFilesAsync(params string[] formats);
         public IAsyncOperation<StorageFolder> PickFolderAsync();

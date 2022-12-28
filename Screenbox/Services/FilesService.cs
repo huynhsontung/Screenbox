@@ -126,6 +126,23 @@ namespace Screenbox.Services
             return KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
         }
 
+        public StorageFileQueryResult GetVideosFromLibrary()
+        {
+            string[] customPropertyKeys =
+            {
+                SystemProperties.Title,
+                "System.Thumbnail",
+                "System.ThumbnailStream",
+                "System.ThumbnailCacheId"
+            };
+
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats);
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
+                customPropertyKeys);
+            return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
+        }
+
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
         {
             FileOpenPicker picker = GetFilePickerForFormats(formats);
