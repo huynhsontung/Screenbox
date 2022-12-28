@@ -327,6 +327,7 @@
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
             Background="Transparent"
+            Command="{x:Bind ViewModel.RestorePlayerCommand}"
             Visibility="Collapsed">
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="I" />
@@ -342,15 +343,6 @@
             <ToolTipService.ToolTip>
                 <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
-
-            <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="Click">
-                    <core:ChangePropertyAction
-                        PropertyName="PlayerVisible"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="True" />
-                </core:EventTriggerBehavior>
-            </interactivity:Interaction.Behaviors>
         </Button>
 
         <Border
@@ -440,7 +432,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12"
-            IsMinimal="{x:Bind ViewModel.PlayerVisible, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
+            IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}">
             <controls:PlayerControls.Transitions>
                 <EdgeUIThemeTransition Edge="Bottom" />
             </controls:PlayerControls.Transitions>
@@ -616,12 +608,7 @@
 
             <VisualStateGroup x:Name="MiniPlayerMarginGroup">
                 <VisualState x:Name="NoMargin" />
-                <VisualState x:Name="ExpandedMargin">
-                    <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="CompactMargin">
+                <VisualState x:Name="NormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
                     </VisualState.Setters>
@@ -631,9 +618,14 @@
                         <Setter Target="LayoutRoot.Margin" Value="8,0,8,4" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="HiddenMargin">
+                <VisualState x:Name="HiddenMinimalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="8,0,8,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HiddenNormalMargin">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

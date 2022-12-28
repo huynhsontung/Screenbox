@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Controls;
 
 namespace Screenbox.Core.Messages
 {
-    internal sealed class PlayerVisibilityChangedMessage : ValueChangedMessage<bool>
+    internal sealed class PlayerVisibilityChangedMessage : ValueChangedMessage<PlayerVisibilityStates>
     {
-        public PlayerVisibilityChangedMessage(bool value) : base(value)
+        public PlayerVisibilityChangedMessage(PlayerVisibilityStates value) : base(value)
         {
         }
     }

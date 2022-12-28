@@ -14,6 +14,8 @@ using Screenbox.Services;
 using Screenbox.Core.Playback;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Windows.UI.Xaml.Input;
+using CommunityToolkit.Mvvm.Input;
+using Screenbox.Controls;
 using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
@@ -30,7 +32,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
-        [ObservableProperty] private bool _playerVisible;
+        [ObservableProperty] private PlayerVisibilityStates _playerVisibility;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private bool _showPlayPauseBadge;
@@ -60,6 +62,7 @@ namespace Screenbox.ViewModels
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            _playerVisibility = PlayerVisibilityStates.Hidden;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
@@ -113,7 +116,9 @@ namespace Screenbox.ViewModels
 
         public void OnBackRequested()
         {
-            PlayerVisible = false;
+            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+            bool hasItemsInQueue = playlist.Playlist.Count > 0;
+            PlayerVisibility = hasItemsInQueue ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Hidden;
         }
 
         public void OnPlayerClick()
@@ -123,7 +128,9 @@ namespace Screenbox.ViewModels
                 ShowControls();
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride && PlayerVisible && !AudioOnlyInternal)
+            else if (IsPlaying && !_visibilityOverride &&
+                     PlayerVisibility == PlayerVisibilityStates.Visible &&
+                     !AudioOnlyInternal)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -181,9 +188,15 @@ namespace Screenbox.ViewModels
             }
         }
 
-        partial void OnPlayerVisibleChanged(bool value)
+        partial void OnPlayerVisibilityChanged(PlayerVisibilityStates value)
         {
             Messenger.Send(new PlayerVisibilityChangedMessage(value));
+        }
+
+        [RelayCommand]
+        private void RestorePlayer()
+        {
+            PlayerVisibility = PlayerVisibilityStates.Visible;
         }
 
         private void BlinkPlayPauseBadge()
@@ -206,7 +219,7 @@ namespace Screenbox.ViewModels
 
         private void DelayHideControls()
         {
-            if (!PlayerVisible || AudioOnlyInternal) return;
+            if (PlayerVisibility != PlayerVisibilityStates.Visible || AudioOnlyInternal) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
                 if (IsPlaying && VideoViewFocused && !AudioOnlyInternal)
@@ -233,7 +246,11 @@ namespace Screenbox.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
-                if (!AudioOnlyInternal) PlayerVisible = true;
+                PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Visible;
+            }
+            else if (PlayerVisibility == PlayerVisibilityStates.Minimal)
+            {
+                PlayerVisibility = PlayerVisibilityStates.Hidden;
             }
         }
 

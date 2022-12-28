@@ -31,7 +31,6 @@ namespace Screenbox.Pages
     public sealed partial class PlayerPage : Page
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
-        internal PlaylistViewModel PlaylistViewModel { get; }
 
         private const VirtualKey PlusKey = (VirtualKey)0xBB;
         private const VirtualKey MinusKey = (VirtualKey)0xBD;
@@ -44,7 +43,6 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
-            PlaylistViewModel = App.Services.GetRequiredService<PlaylistViewModel>();
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
 
@@ -54,7 +52,6 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-            PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
         }
 
@@ -63,9 +60,12 @@ namespace Screenbox.Pages
             if (e.Parameter is true)
             {
                 LayoutRoot.Transitions.Clear();
-                ViewModel.PlayerVisible = true;
+                ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
             }
         }
+
+        private bool GetControlsIsMinimal(PlayerVisibilityStates visibility) =>
+            visibility != PlayerVisibilityStates.Visible;
 
         private void FocusVideoView()
         {
@@ -85,7 +85,7 @@ namespace Screenbox.Pages
 
         private void OnLoading(FrameworkElement sender, object args)
         {
-            if (!ViewModel.PlayerVisible)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden)
                 VisualStateManager.GoToState(this, "Hidden", false);
         }
         
@@ -154,12 +154,12 @@ namespace Screenbox.Pages
                             VisualStateManager.GoToState(this, "Normal", true);
                             break;
                         case WindowViewMode.Compact:
-                            ViewModel.PlayerVisible = true;
+                            ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
                             VisualStateManager.GoToState(this, "CompactOverlay", true);
                             SetTitleBar();
                             break;
                         case WindowViewMode.FullScreen:
-                            ViewModel.PlayerVisible = true;
+                            ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
                             VisualStateManager.GoToState(this, "Fullscreen", true);
                             break;
                         default:
@@ -172,20 +172,22 @@ namespace Screenbox.Pages
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
-                case nameof(PlayerPageViewModel.PlayerVisible):
-                    if (ViewModel.PlayerVisible)
+                case nameof(PlayerPageViewModel.PlayerVisibility):
+                    switch (ViewModel.PlayerVisibility)
                     {
-                        VisualStateManager.GoToState(this, "NoPreview", true);
-                        VisualStateManager.GoToState(this, "Normal", true);
-                        SetTitleBar();
-                    }
-                    else if (PlaylistViewModel.HasItems)
-                    {
-                        VisualStateManager.GoToState(this, "MiniPlayer", true);
-                    }
-                    else
-                    {
-                        VisualStateManager.GoToState(this, "Hidden", true);
+                        case PlayerVisibilityStates.Visible:
+                            VisualStateManager.GoToState(this, "NoPreview", true);
+                            VisualStateManager.GoToState(this, "Normal", true);
+                            SetTitleBar();
+                            break;
+                        case PlayerVisibilityStates.Minimal:
+                            VisualStateManager.GoToState(this, "MiniPlayer", true);
+                            break;
+                        case PlayerVisibilityStates.Hidden:
+                            VisualStateManager.GoToState(this, "Hidden", true);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
 
                     UpdatePreviewType();
@@ -194,15 +196,6 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
-            }
-        }
-
-        private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(PlaylistViewModel.HasItems) && !ViewModel.PlayerVisible)
-            {
-                VisualStateManager.GoToState(this, PlaylistViewModel.HasItems ? "MiniPlayer" : "Hidden", true);
-                UpdateMiniPlayerMargin();
             }
         }
 
@@ -253,7 +246,7 @@ namespace Screenbox.Pages
 
         private void UpdatePreviewType()
         {
-            if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoPreview", true);
             }
@@ -265,26 +258,27 @@ namespace Screenbox.Pages
 
         private void UpdateMiniPlayerMargin()
         {
-            if (ViewModel.PlayerVisible || ViewModel.ViewMode == WindowViewMode.Compact)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoMargin", false);
-            }
-            else if (!PlaylistViewModel.HasItems)
-            {
-                VisualStateManager.GoToState(this, "HiddenMargin", false);
             }
             else
             {
                 switch (ViewModel.NavigationViewDisplayMode)
                 {
+                    case NavigationViewDisplayMode.Minimal when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
+                        VisualStateManager.GoToState(this, "HiddenMinimalMargin", false);
+                        break;
                     case NavigationViewDisplayMode.Minimal:
                         VisualStateManager.GoToState(this, "MinimalMargin", false);
                         break;
-                    case NavigationViewDisplayMode.Compact:
-                        VisualStateManager.GoToState(this, "CompactMargin", false);
+                    case NavigationViewDisplayMode.Compact when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
+                    case NavigationViewDisplayMode.Expanded when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
+                        VisualStateManager.GoToState(this, "HiddenNormalMargin", false);
                         break;
+                    case NavigationViewDisplayMode.Compact:
                     case NavigationViewDisplayMode.Expanded:
-                        VisualStateManager.GoToState(this, "ExpandedMargin", false);
+                        VisualStateManager.GoToState(this, "NormalMargin", false);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

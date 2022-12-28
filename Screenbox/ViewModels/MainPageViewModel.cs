@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Controls;
 using Screenbox.Core.Messages;
 
 namespace Screenbox.ViewModels
@@ -22,7 +23,7 @@ namespace Screenbox.ViewModels
 
         public void Receive(PlayerVisibilityChangedMessage message)
         {
-            PlayerVisible = message.Value;
+            PlayerVisible = message.Value == PlayerVisibilityStates.Visible;
         }
 
         public void Receive(NavigationViewDisplayModeRequestMessage message)

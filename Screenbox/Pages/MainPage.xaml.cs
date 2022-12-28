@@ -296,14 +296,14 @@ namespace Screenbox.Pages
 
         private void NavView_OnPaneOpening(muxc.NavigationView sender, object args)
         {
-            if (TitleBarGroup.CurrentState?.Name == "Hidden") return;
+            if (NavigationViewStates.CurrentState?.Name == "Hidden") return;
             if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
                 VisualStateManager.GoToState(this, "Expanded", true);
         }
 
         private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
         {
-            if (TitleBarGroup.CurrentState?.Name == "Hidden") return;
+            if (NavigationViewStates.CurrentState?.Name == "Hidden") return;
             if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
                 VisualStateManager.GoToState(this, "Compact", true);
         }

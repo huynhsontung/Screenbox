@@ -111,7 +111,7 @@
         </muxc:NavigationView>
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="TitleBarGroup">
+            <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact">
                     <VisualState.Setters>
