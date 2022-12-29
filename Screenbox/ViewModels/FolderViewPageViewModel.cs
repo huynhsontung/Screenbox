@@ -45,6 +45,7 @@ namespace Screenbox.ViewModels
         private readonly StorageItemViewModelFactory _storageVmFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _loadingTimer;
+        private readonly List<MediaViewModel> _playableItems;
         private object? _source;
         private bool _isActive;
 
@@ -57,6 +58,7 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _loadingTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            _playableItems = new List<MediaViewModel>();
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
 
@@ -117,7 +119,14 @@ namespace Screenbox.ViewModels
         private void Play(StorageItemViewModel item)
         {
             if (item.Media == null) return;
-            Messenger.Send(new PlayMediaMessage(item.Media));
+            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+            if (playlist.Playlist.Count != _playableItems.Count || playlist.LastUpdate != _playableItems)
+            {
+                Messenger.Send(new ClearPlaylistMessage());
+                Messenger.Send(new QueuePlaylistMessage(_playableItems, false));
+            }
+
+            Messenger.Send(new PlayMediaMessage(item.Media, true));
         }
 
         [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
@@ -141,7 +150,7 @@ namespace Screenbox.ViewModels
         {
             if (item.Media != null)
             {
-                Messenger.Send(new PlayMediaMessage(item.Media));
+                Play(item);
             }
             else if (item.StorageItem is StorageFolder folder)
             {
@@ -153,6 +162,7 @@ namespace Screenbox.ViewModels
         private async Task FetchQueryItemAsync(StorageFileQueryResult query)
         {
             Items.Clear();
+            _playableItems.Clear();
 
             uint fetchIndex = 0;
             while (_isActive)
@@ -165,6 +175,7 @@ namespace Screenbox.ViewModels
                 {
                     StorageItemViewModel item = _storageVmFactory.GetInstance(storageFile);
                     Items.Add(item);
+                    if (item.Media != null) _playableItems.Add(item.Media);
                 }
             }
 
@@ -176,6 +187,7 @@ namespace Screenbox.ViewModels
         private async Task FetchFolderContentAsync(StorageFolder folder)
         {
             Items.Clear();
+            _playableItems.Clear();
 
             StorageItemQueryResult itemQuery = _filesService.GetSupportedItems(folder);
             uint fetchIndex = 0;
@@ -189,6 +201,7 @@ namespace Screenbox.ViewModels
                 {
                     StorageItemViewModel item = _storageVmFactory.GetInstance(storageItem);
                     Items.Add(item);
+                    if (item.Media != null) _playableItems.Add(item.Media);
                 }
             }
 
