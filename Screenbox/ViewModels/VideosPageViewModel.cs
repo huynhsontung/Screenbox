@@ -29,6 +29,7 @@ namespace Screenbox.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly ISettingsService _settingsService;
+        private StorageLibrary? _library;
 
         public VideosPageViewModel(INavigationService navigationService,
             IFilesService filesService,
@@ -83,9 +84,18 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private async Task AddFolder()
         {
-            StorageLibrary? library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            if (library == null) return;
-            await library.RequestAddFolderAsync();
+            if (_library == null)
+            {
+                _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+                _library.DefinitionChanged += LibraryOnDefinitionChanged;
+            }
+
+            await _library.RequestAddFolderAsync();
+        }
+
+        private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
+        {
+            Messenger.Send(new RefreshFolderMessage());
         }
     }
 }
