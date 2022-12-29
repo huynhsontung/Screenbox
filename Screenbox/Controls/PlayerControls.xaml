@@ -366,7 +366,7 @@
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xED1F;" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="C" />
+                    <KeyboardAccelerator Key="C" Invoked="{x:Bind ViewModel.ToggleSubtitle}" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
                     <Flyout Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}" ShouldConstrainToRootBounds="False">

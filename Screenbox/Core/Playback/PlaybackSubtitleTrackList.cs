@@ -40,6 +40,7 @@ namespace Screenbox.Core.Playback
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
+            _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
         }
 
