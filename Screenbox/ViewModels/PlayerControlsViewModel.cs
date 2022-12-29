@@ -47,7 +47,6 @@ namespace Screenbox.ViewModels
         private readonly IWindowService _windowService;
         private readonly IFilesService _filesService;
         private IMediaPlayer? _mediaPlayer;
-        private int _lastSubtitle = -1;
 
         public PlayerControlsViewModel(
             PlaylistViewModel playlistViewModel,
@@ -76,26 +75,54 @@ namespace Screenbox.ViewModels
 
         public void ToggleSubtitle(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            args.Handled = true;
             if (_mediaPlayer?.PlaybackItem == null) return;
-            var subtitleTracks = _mediaPlayer.PlaybackItem.SubtitleTracks;
+            PlaybackSubtitleTrackList subtitleTracks = _mediaPlayer.PlaybackItem.SubtitleTracks;
             if (subtitleTracks.Count == 0) return;
-            if (subtitleTracks.SelectedIndex >= 0)
+            args.Handled = true;
+            switch (args.KeyboardAccelerator.Modifiers)
             {
-                _lastSubtitle = subtitleTracks.SelectedIndex;
-                subtitleTracks.SelectedIndex = -1; Messenger.Send(
-                    new UpdateStatusMessage("Subtitle: None"));
+                case VirtualKeyModifiers.None when subtitleTracks.Count == 1:
+                    if (subtitleTracks.SelectedIndex >= 0)
+                    {
+                        subtitleTracks.SelectedIndex = -1;
+                    }
+                    else
+                    {
+                        subtitleTracks.SelectedIndex = 0;
+                        
+                    }
+                    break;
+
+                case VirtualKeyModifiers.Control:
+                    if (subtitleTracks.SelectedIndex == subtitleTracks.Count - 1)
+                    {
+                        subtitleTracks.SelectedIndex = -1;
+                    }
+                    else
+                    {
+                        subtitleTracks.SelectedIndex++;
+                    }
+                    break;
+
+                case VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift:
+                    if (subtitleTracks.SelectedIndex == -1)
+                    {
+                        subtitleTracks.SelectedIndex = subtitleTracks.Count - 1;
+                    }
+                    else
+                    {
+                        subtitleTracks.SelectedIndex--;
+                    }
+                    break;
+
+                default:
+                    args.Handled = false;
+                    return;
             }
-            else if (_lastSubtitle >= 0)
-            {
-                subtitleTracks.SelectedIndex = _lastSubtitle;
-                Messenger.Send(
-                    new UpdateStatusMessage($"Subtitle: {subtitleTracks[subtitleTracks.SelectedIndex].Label}"));
-            }
-            else
-            {
-                args.Handled = false;
-            }
+
+            Messenger.Send(subtitleTracks.SelectedIndex == -1
+                ? new UpdateStatusMessage("Subtitle: None")
+                : new UpdateStatusMessage($"Subtitle: {subtitleTracks[subtitleTracks.SelectedIndex].Label}"));
         }
 
         partial void OnZoomToFitChanged(bool value)
@@ -131,7 +158,6 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() => HasVideo = _mediaPlayer?.NaturalVideoHeight > 0);
             SaveSnapshotCommand.NotifyCanExecuteChanged();
-            _lastSubtitle = -1;
         }
 
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)

@@ -367,6 +367,14 @@
                 <FontIcon Glyph="&#xED1F;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="C" Invoked="{x:Bind ViewModel.ToggleSubtitle}" />
+                    <KeyboardAccelerator
+                        Key="C"
+                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Modifiers="Control" />
+                    <KeyboardAccelerator
+                        Key="C"
+                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Modifiers="Control,Shift" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
                     <Flyout Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}" ShouldConstrainToRootBounds="False">
