@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
 
@@ -17,6 +18,11 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayQueuePageViewModel>();
+        }
+
+        private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
         }
     }
 }

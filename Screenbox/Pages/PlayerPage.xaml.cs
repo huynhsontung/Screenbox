@@ -293,5 +293,11 @@ namespace Screenbox.Pages
                 FindName(nameof(PlayQueueFlyout));
             }
         }
+
+        private async void PlayQueueFlyout_OnOpened(object sender, object e)
+        {
+            if (PlaylistView == null) return;
+            await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
+        }
     }
 }

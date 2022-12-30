@@ -167,8 +167,10 @@
                     <Flyout
                         x:Name="PlayQueueFlyout"
                         x:Load="False"
+                        Opened="PlayQueueFlyout_OnOpened"
                         Placement="BottomEdgeAlignedLeft">
                         <controls:PlaylistView
+                            x:Name="PlaylistView"
                             Width="420"
                             MinHeight="200"
                             MaxHeight="500"

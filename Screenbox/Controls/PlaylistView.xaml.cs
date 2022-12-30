@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +34,12 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlaylistViewModel>();
             ViewModel.Playlist.CollectionChanged += PlaylistOnCollectionChanged;
+        }
+
+        public async Task SmoothScrollActiveItemIntoViewAsync()
+        {
+            if (ViewModel.ActiveItem == null || !ViewModel.HasItems) return;
+            await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.ActiveItem, ScrollItemPlacement.Center);
         }
 
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
