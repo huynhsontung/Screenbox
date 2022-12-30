@@ -89,6 +89,10 @@ namespace Screenbox.ViewModels
 
         private void OnBufferingStarted(IMediaPlayer sender, object? args)
         {
+            // When the player is paused, the following still triggers a buffering
+            if (sender.Position == sender.NaturalDuration)
+                return;
+
             // Only show buffering if it takes more than 0.5s
             _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
         }
