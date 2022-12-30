@@ -400,6 +400,7 @@
                 VerticalAlignment="Center"
                 FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
                 FontSize="26"
+                Foreground="White"
                 Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
 
