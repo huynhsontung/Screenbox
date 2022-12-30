@@ -191,7 +191,8 @@
                 Margin="0,8,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Command="{x:Bind ViewModel.OpenFilesCommand}">
+                Command="{x:Bind ViewModel.OpenFilesCommand}"
+                Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe838;" />
                     <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
