@@ -88,6 +88,12 @@ namespace Screenbox.Core.Playback
                 if (VlcPlayer.Time != ms)
                 {
                     VlcPlayer.Time = ms;
+                    // Position changed will not fire if the player is paused
+                    // TODO: Check for more problematic states
+                    if (PlaybackState is MediaPlaybackState.Paused)
+                    {
+                        PositionChanged?.Invoke(this, null);
+                    }
                 }
             }
         }
