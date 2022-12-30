@@ -14,7 +14,7 @@ namespace Screenbox.Factories
         private readonly ArtistViewModelFactory _artistFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
-        private int _referencesCleanUpThreshold = 500;
+        private int _referencesCleanUpThreshold = 1000;
 
         public MediaViewModelFactory(IFilesService filesService, IMediaService mediaService,
             ArtistViewModelFactory artistFactory, AlbumViewModelFactory albumFactory)

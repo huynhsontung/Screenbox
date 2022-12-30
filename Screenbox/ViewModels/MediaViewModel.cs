@@ -111,11 +111,6 @@ namespace Screenbox.ViewModels
             return new MediaViewModel(this);
         }
 
-        public void Clean()
-        {
-            Thumbnail = null;
-        }
-
         public async Task LoadDetailsAndThumbnailAsync()
         {
             await LoadDetailsAsync();

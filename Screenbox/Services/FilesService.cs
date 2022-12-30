@@ -81,7 +81,7 @@ namespace Screenbox.Services
             if (!file.IsAvailable) return null;
             try
             {
-                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 300);
                 if (source != null && (source.Type == ThumbnailType.Image || allowIcon))
                 {
                     BitmapImage thumbnail = new();
@@ -119,7 +119,10 @@ namespace Screenbox.Services
                 SystemProperties.Media.Duration
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats);
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats)
+            {
+                IndexerOption = IndexerOption.UseIndexerWhenAvailable
+            };
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
                 customPropertyKeys);
@@ -136,7 +139,10 @@ namespace Screenbox.Services
                 "System.ThumbnailCacheId"
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats);
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats)
+            {
+                IndexerOption = IndexerOption.UseIndexerWhenAvailable
+            };
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
                 customPropertyKeys);

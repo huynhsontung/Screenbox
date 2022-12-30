@@ -247,13 +247,6 @@ namespace Screenbox.ViewModels
                 }
             }
 
-            IEnumerable<MediaViewModel> toClean = _mediaBuffer.Where(x => !toLoad.Contains(x));
-            foreach (MediaViewModel media in toClean)
-            {
-                if (!media.IsPlaying)
-                    media.Clean();
-            }
-
             _mediaBuffer.Clear();
             _mediaBuffer.AddRange(toLoad);
             Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
