@@ -246,7 +246,10 @@ namespace Screenbox.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
-                PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Visible;
+                if (PlayerVisibility != PlayerVisibilityStates.Visible)
+                {
+                    PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Visible;
+                }
             }
             else if (PlayerVisibility == PlayerVisibilityStates.Minimal)
             {
