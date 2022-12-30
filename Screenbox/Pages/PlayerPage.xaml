@@ -425,7 +425,8 @@
             Grid.Row="2"
             Grid.Column="0"
             Background="{StaticResource PlayerControlsBackground}"
-            BackgroundTransition="{StaticResource DefaultBackgroundTransition}" />
+            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
+            Tapped="{x:Bind FocusVideoView}" />
 
         <controls:PlayerControls
             x:Name="PlayerControls"
