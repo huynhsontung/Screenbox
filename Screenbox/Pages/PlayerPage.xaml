@@ -608,6 +608,14 @@
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
                         <Setter Target="LayoutRoot.Height" Value="0" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="LayoutRoot"
+                            Storyboard.TargetProperty="Opacity"
+                            From="1.0"
+                            To="0.0"
+                            Duration="0:0:0.5" />
+                    </Storyboard>
                 </VisualState>
             </VisualStateGroup>
 
@@ -615,12 +623,12 @@
                 <VisualState x:Name="NoMargin" />
                 <VisualState x:Name="NormalMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,8" />
+                        <Setter Target="LayoutRoot.Margin" Value="12,0,12,10" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MinimalMargin">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,4" />
+                        <Setter Target="LayoutRoot.Margin" Value="8,0,8,6" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="HiddenMinimalMargin">
