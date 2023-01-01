@@ -293,9 +293,6 @@
             AspectRatio="1:1"
             IsHitTestVisible="False"
             Visibility="Collapsed">
-            <controls1:ConstrainedBox.Transitions>
-                <EdgeUIThemeTransition Edge="Bottom" />
-            </controls1:ConstrainedBox.Transitions>
             <Grid
                 x:Name="AlbumArt"
                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -437,11 +434,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12"
-            IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}">
-            <controls:PlayerControls.Transitions>
-                <EdgeUIThemeTransition Edge="Bottom" />
-            </controls:PlayerControls.Transitions>
-        </controls:PlayerControls>
+            IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates">
@@ -510,6 +503,10 @@
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
+                        <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="PlayerControls" />
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
@@ -533,6 +530,10 @@
                         <Setter Target="PlayerStateBadge.Height" Value="50" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
+                        <RepositionThemeAnimation FromVerticalOffset="30" TargetName="AlbumArtPanel" />
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
@@ -609,12 +610,7 @@
                         <Setter Target="LayoutRoot.Height" Value="0" />
                     </VisualState.Setters>
                     <Storyboard>
-                        <DoubleAnimation
-                            Storyboard.TargetName="LayoutRoot"
-                            Storyboard.TargetProperty="Opacity"
-                            From="1.0"
-                            To="0.0"
-                            Duration="0:0:0.5" />
+                        <FadeOutThemeAnimation TargetName="LayoutRoot" />
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
