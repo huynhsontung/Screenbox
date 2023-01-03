@@ -435,7 +435,6 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="AdaptiveControlStates">
-                <VisualState x:Name="AdaptiveExpanded" />
                 <VisualState x:Name="AdaptiveHidden">
                     <VisualState.StateTriggers>
                         <triggers:ControlSizeTrigger
@@ -454,6 +453,11 @@
                         <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
                         <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="ShuffleButton" />
+                        <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="RepeatButton" />
+                        <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="VolumeButton" />
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="CompactOverride">
                     <VisualState.StateTriggers>
