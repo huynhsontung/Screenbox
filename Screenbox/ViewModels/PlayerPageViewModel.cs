@@ -3,6 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Media;
+using Windows.Media.Playback;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -45,6 +46,7 @@ namespace Screenbox.ViewModels
         private bool AudioOnlyInternal => _audioOnly ?? false;
 
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _openingTimer;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _playPauseBadgeTimer;
@@ -58,6 +60,7 @@ namespace Screenbox.ViewModels
             _windowService = windowService;
             _settingsService = settingsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _openingTimer = _dispatcherQueue.CreateTimer();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
             _statusMessageTimer = _dispatcherQueue.CreateTimer();
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
@@ -259,11 +262,17 @@ namespace Screenbox.ViewModels
 
         private void OnStateChanged(IMediaPlayer sender, object? args)
         {
+            _openingTimer.Stop();
+            MediaPlaybackState state = sender.PlaybackState;
+            if (state == MediaPlaybackState.Opening)
+            {
+                _openingTimer.Debounce(() => IsOpening = state == MediaPlaybackState.Opening, TimeSpan.FromSeconds(0.5));
+            }
+
             _dispatcherQueue.TryEnqueue(() =>
             {
-                var state = sender.PlaybackState;
-                IsOpening = state == Windows.Media.Playback.MediaPlaybackState.Opening;
-                IsPlaying = state == Windows.Media.Playback.MediaPlaybackState.Playing;
+                IsPlaying = state == MediaPlaybackState.Playing;
+                IsOpening = false;
 
                 if (ControlsHidden && !IsPlaying)
                 {
