@@ -111,6 +111,14 @@ namespace Screenbox.ViewModels
             return new MediaViewModel(this);
         }
 
+        public void Clean()
+        {
+            PlaybackItem? item = _item;
+            _item = null;
+            if (item == null) return;
+            _mediaService.DisposeMedia(item.Source);
+        }
+
         public async Task LoadDetailsAndThumbnailAsync()
         {
             await LoadDetailsAsync();

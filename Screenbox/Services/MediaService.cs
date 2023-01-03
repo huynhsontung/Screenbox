@@ -52,5 +52,16 @@ namespace Screenbox.Services
             LibVLC libVlc = _libVlcService.LibVlc;
             return new Media(libVlc, uri);
         }
+
+        public void DisposeMedia(Media media)
+        {
+            string mrl = media.Mrl;
+            if (mrl.StartsWith("winrt://"))
+            {
+                StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+            }
+
+            media.Dispose();
+        }
     }
 }

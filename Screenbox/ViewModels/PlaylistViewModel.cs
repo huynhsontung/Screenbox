@@ -59,7 +59,7 @@ namespace Screenbox.ViewModels
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
-        private readonly List<MediaViewModel> _mediaBuffer;
+        private List<MediaViewModel> _mediaBuffer;
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
@@ -77,7 +77,7 @@ namespace Screenbox.ViewModels
             _filesService = filesService;
             _transportControlsService = transportControlsService;
             _mediaFactory = mediaFactory;
-            _mediaBuffer = new List<MediaViewModel>(MediaBufferCapacity);
+            _mediaBuffer = new List<MediaViewModel>(0);
             _repeatModeGlyph = GetRepeatModeGlyph(_repeatMode);
             _currentIndex = -1;
 
@@ -234,23 +234,30 @@ namespace Screenbox.ViewModels
             int startIndex = Math.Max(_currentIndex - 2, 0);
             int endIndex = Math.Min(_currentIndex + 2, playlistCount - 1);
             int count = endIndex - startIndex + 1;
-            List<MediaViewModel> toLoad = Playlist.Skip(startIndex).Take(count).ToList();
+            List<MediaViewModel> newBuffer = Playlist.Skip(startIndex).Take(count).ToList();
             if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
                 if (count < MediaBufferCapacity && startIndex == 0 && endIndex < playlistCount - 1)
                 {
-                    toLoad.Add(Playlist.Last());
+                    newBuffer.Add(Playlist.Last());
                 }
 
                 if (count < MediaBufferCapacity && startIndex > 0 && endIndex == playlistCount - 1)
                 {
-                    toLoad.Add(Playlist[0]);
+                    newBuffer.Add(Playlist[0]);
                 }
             }
 
-            _mediaBuffer.Clear();
-            _mediaBuffer.AddRange(toLoad);
-            Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
+            IEnumerable<MediaViewModel> toLoad = newBuffer.Except(_mediaBuffer);
+            IEnumerable<MediaViewModel> toClean = _mediaBuffer.Except(newBuffer);
+
+            foreach (MediaViewModel media in toClean)
+            {
+                media.Clean();
+            }
+
+            _mediaBuffer = newBuffer;
+            Task.WhenAll(toLoad.Select(x => Task.WhenAll(x.Item.Source.Parse(), x.LoadThumbnailAsync())));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)

@@ -12,4 +12,5 @@ internal interface IMediaService
     Media? CreateMedia(string source);
     Media CreateMedia(IStorageFile source);
     Media CreateMedia(Uri source);
+    void DisposeMedia(Media media);
 }
