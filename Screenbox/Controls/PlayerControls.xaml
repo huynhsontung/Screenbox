@@ -50,6 +50,11 @@
                 FalseValue="{strings:Resources Key=Play}"
                 TrueValue="{strings:Resources Key=Pause}" />
 
+            <converters1:BoolToObjectConverter
+                x:Key="ShuffleModeGlyphConverter"
+                FalseValue="E"
+                TrueValue="F" />
+
             <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
             <SolidColorBrush x:Key="ToggleButtonBackgroundIndeterminate" Color="Transparent" />
             <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
@@ -332,7 +337,8 @@
                 x:Name="VolumeButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 Flyout="{StaticResource VolumeControlFlyout}"
-                Style="{StaticResource PlayerButtonStyle}">
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="Collapsed">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
@@ -343,8 +349,18 @@
                 x:Name="VolumeControl"
                 Width="140"
                 Margin="2,0,8,0"
-                ShowValueText="False"
-                Visibility="Collapsed" />
+                ShowValueText="False" />
+
+            <ToggleButton
+                x:Name="ShuffleButton"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.PlaylistViewModel.ShuffleMode), Mode=OneWay}"
+                IsChecked="{x:Bind ViewModel.PlaylistViewModel.ShuffleMode, Mode=TwoWay}"
+                Style="{StaticResource PlayerToggleButtonStyle}">
+                <FontIcon FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}" Glyph="{x:Bind ViewModel.PlaylistViewModel.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
+                <ToggleButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="S" Modifiers="Control" />
+                </ToggleButton.KeyboardAccelerators>
+            </ToggleButton>
 
             <ToggleButton
                 x:Name="RepeatButton"
@@ -418,26 +434,36 @@
         </StackPanel>
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="VolumeControlStates">
-                <VisualState x:Name="Flyout" />
-                <VisualState x:Name="Inline">
+            <VisualStateGroup x:Name="AdaptiveControlStates">
+                <VisualState x:Name="AdaptiveExpanded" />
+                <VisualState x:Name="AdaptiveHidden">
                     <VisualState.StateTriggers>
                         <triggers:ControlSizeTrigger
-                            x:Name="InlineVolumeControlTrigger"
-                            MinWidth="640"
+                            x:Name="AdaptiveHiddenControlSizeTrigger"
+                            MaxWidth="720"
+                            CanTrigger="{x:Bind ViewModel.IsCompact, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                             TargetElement="{x:Bind}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
-                        <Setter Target="VolumeControl.Visibility" Value="Visible" />
+                        <Setter Target="VolumeButton.Visibility" Value="Visible" />
+                        <Setter Target="VolumeControl.Visibility" Value="Collapsed" />
+                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
+                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
+                        <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
+                        <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
-                <VisualState x:Name="Hidden">
+                <VisualState x:Name="CompactOverride">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VolumeButton.Visibility" Value="Collapsed" />
+                        <Setter Target="VolumeControl.Visibility" Value="Collapsed" />
+                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
+                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -459,9 +485,12 @@
                     <VisualState.Setters>
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
-                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
-                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButtonIcon.Glyph" Value="&#xEE47;" />
+                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PlayPauseButton.Margin" Value="2,0,2,0" />
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.ProgressOnly" Value="True" />
@@ -472,25 +501,19 @@
                 <VisualState x:Name="Mini">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsMinimal, Mode=OneWay}" />
-                        <!--<triggers:ControlSizeTrigger
-                            MaxWidth="500"
-                            CanTrigger="{x:Bind ViewModel.IsCompact, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            TargetElement="{x:Bind}" />-->
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
-                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
-                        <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
+                        <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="FullscreenButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
-                        <Setter Target="InlineVolumeControlTrigger.MinWidth" Value="500" />
-                        <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
-                        <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
-                        <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
+                        <Setter Target="AdaptiveHiddenControlSizeTrigger.MaxWidth" Value="640" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

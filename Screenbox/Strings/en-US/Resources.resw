@@ -408,4 +408,10 @@
     <value>{0} locations specified</value>
     <comment>#Format[Plural Int]</comment>
   </data>
+  <data name="ShuffleMode_Variant0" xml:space="preserve">
+    <value>Shuffle: Off</value>
+  </data>
+  <data name="ShuffleMode_Variant1" xml:space="preserve">
+    <value>Shuffle: On</value>
+  </data>
 </root>

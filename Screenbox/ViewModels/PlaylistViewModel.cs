@@ -36,6 +36,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _canSkip;
         [ObservableProperty] private bool _hasItems;
         [ObservableProperty] private string _repeatModeGlyph;
+        [ObservableProperty] private bool _shuffleMode;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(NextCommand))]

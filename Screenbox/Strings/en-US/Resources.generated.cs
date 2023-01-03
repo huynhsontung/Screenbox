@@ -146,6 +146,31 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region ShuffleMode
+        /// <summary>
+        ///   Get the variant version of the string similar to: Shuffle: Off
+        /// </summary>
+        public static string ShuffleMode(object variantId)
+        {
+            try
+            {
+                return ShuffleMode(Convert.ToInt64(variantId));
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        ///   Get the variant version of the string similar to: Shuffle: Off
+        /// </summary>
+        public static string ShuffleMode(long variantId)
+        {
+            return _resourceLoader.GetString("ShuffleMode_Variant" + variantId);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -1171,6 +1196,7 @@ namespace Screenbox.Strings{
             ItemsSelected,
             ItemsCount,
             LocationSpecified,
+            ShuffleMode,
             ZoomToFit,
             FrameSavedNotificationTitle,
             SaveCurrentFrame,
