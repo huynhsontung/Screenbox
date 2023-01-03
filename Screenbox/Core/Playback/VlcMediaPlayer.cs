@@ -70,7 +70,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan Position
         {
-            get => TimeSpan.FromMilliseconds(VlcPlayer.Time);
+            get => _position;
             set
             {
                 if (VlcPlayer.Length < 0) return;
@@ -84,16 +84,14 @@ namespace Screenbox.Core.Playback
                     Replay();
                 }
 
+                _position = value;
                 long ms = (long)value.TotalMilliseconds;
-                if (VlcPlayer.Time != ms)
+                VlcPlayer.Time = ms;
+                // Position changed will not fire if the player is paused
+                // TODO: Check for more problematic states
+                if (PlaybackState is MediaPlaybackState.Paused)
                 {
-                    VlcPlayer.Time = ms;
-                    // Position changed will not fire if the player is paused
-                    // TODO: Check for more problematic states
-                    if (PlaybackState is MediaPlaybackState.Paused)
-                    {
-                        PositionChanged?.Invoke(this, null);
-                    }
+                    PositionChanged?.Invoke(this, null);
                 }
             }
         }
@@ -205,6 +203,7 @@ namespace Screenbox.Core.Playback
         private bool _readyToPlay;
         private bool _updateMediaProperties;
         private TimeSpan _naturalDuration;
+        private TimeSpan _position;
         private MediaPlaybackState _playbackState;
 
         public VlcMediaPlayer(LibVLC libVlc)
@@ -213,7 +212,7 @@ namespace Screenbox.Core.Playback
             _defaultSourceRect = new Rect(0, 0, 1, 1);
             _normalizedSourceRect = _defaultSourceRect;
 
-            VlcPlayer.TimeChanged += (s, e) => PositionChanged?.Invoke(this, null);
+            VlcPlayer.TimeChanged += VlcPlayer_TimeChanged;
             VlcPlayer.Muted += (s, e) => IsMutedChanged?.Invoke(this, null);
             VlcPlayer.Unmuted += (s, e) => IsMutedChanged?.Invoke(this, null);
             VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
@@ -231,6 +230,16 @@ namespace Screenbox.Core.Playback
 
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+        }
+
+        private void VlcPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
+        {
+            TimeSpan newValue = TimeSpan.FromMilliseconds(e.Time);
+            if (newValue != _position)
+            {
+                _position = newValue;
+                PositionChanged?.Invoke(this, null);
+            }
         }
 
         private void VlcPlayer_EncounteredError(object sender, EventArgs e)
