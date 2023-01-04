@@ -13,9 +13,9 @@
       },
       "CommunityToolkit.Labs.Uwp.SettingsControls": {
         "type": "Direct",
-        "requested": "[0.0.10, )",
-        "resolved": "0.0.10",
-        "contentHash": "Az5Z/01Ey6FG9lZbUjDPEI3P1CVd85W37hN6abxuiEt2tFy4m5+ArKF2sjmY1rwUI0B/cK/1/qbT5uGADm3MCg==",
+        "requested": "[0.0.11, )",
+        "resolved": "0.0.11",
+        "contentHash": "JDPuB30MDafPRjywt6f2cmbJUfKivukTctL85bXBynDH3M+f3VHS4tALx7CjaY1K+y2qN5yz4fgm97itH61Wjw==",
         "dependencies": {
           "Microsoft.Toolkit.Uwp.UI": "7.1.2",
           "Microsoft.UI.Xaml": "2.7.0"
@@ -128,9 +128,9 @@
       },
       "Microsoft.UI.Xaml": {
         "type": "Direct",
-        "requested": "[2.8.1, )",
-        "resolved": "2.8.1",
-        "contentHash": "cTeWVcmA6zyMsEfSYBZFemngm8qvfF/0FF3ii/P/ti1mDwuiYGmnN/O8wwnHzarZSzC3h+QYzvOAfCvc7RzQOQ==",
+        "requested": "[2.8.2, )",
+        "resolved": "2.8.2",
+        "contentHash": "JcEwDcBcpylvO79/B3wnIpwtXDUvtk/IE1r7P3RMt5YSfBsAAoZzZJtmSCERRonhR+NEQXkgRDn9jXVfqsyftg==",
         "dependencies": {
           "Microsoft.Web.WebView2": "1.0.1264.42"
         }
