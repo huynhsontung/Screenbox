@@ -53,38 +53,89 @@
                         PointerOverBackground="{ThemeResource GridViewItemBackgroundPointerOver}"
                         PointerOverForeground="{ThemeResource GridViewItemForegroundPointerOver}"
                         PressedBackground="{ThemeResource GridViewItemBackgroundPressed}"
+                        RenderTransformOrigin="0.5,0.5"
                         ReorderHintOffset="{ThemeResource GridViewItemReorderHintThemeOffset}"
                         SelectedBackground="{ThemeResource GridViewItemBackgroundSelected}"
                         SelectedForeground="{ThemeResource GridViewItemForegroundSelected}"
                         SelectedPointerOverBackground="{ThemeResource GridViewItemBackgroundSelectedPointerOver}"
                         SelectedPressedBackground="{ThemeResource GridViewItemBackgroundSelectedPressed}"
                         SelectionCheckMarkVisualEnabled="{ThemeResource GridViewItemSelectionCheckMarkVisualEnabled}">
-                        <!--<VisualStateManager.VisualStateGroups>
+                        <ListViewItemPresenter.RenderTransform>
+                            <ScaleTransform x:Name="ScaleTransform" />
+                        </ListViewItemPresenter.RenderTransform>
+                        <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="Selected" />
 
-                                <VisualState x:Name="PointerOver">
-                                    <VisualState.Setters>
-                                        <Setter Target="Root.BorderThickness" Value="1" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="PointerOverSelected">
-                                    <VisualState.Setters>
-                                        <Setter Target="RootBorder.BorderThickness" Value="1" />
-                                    </VisualState.Setters>
-                                </VisualState>
+                                <VisualState x:Name="PointerOver" />
+                                <VisualState x:Name="PointerOverSelected" />
                                 <VisualState x:Name="PointerOverPressed">
                                     <VisualState.Setters>
-                                        <Setter Target="RootBorder.BorderThickness" Value="1" />
+                                        <Setter Target="ScaleTransform.ScaleX" Value="0.95" />
+                                        <Setter Target="ScaleTransform.ScaleY" Value="0.95" />
                                     </VisualState.Setters>
                                 </VisualState>
 
-                                <VisualState x:Name="Pressed" />
-                                <VisualState x:Name="PressedSelected" />
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ScaleTransform.ScaleX" Value="0.95" />
+                                        <Setter Target="ScaleTransform.ScaleY" Value="0.95" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PressedSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ScaleTransform.ScaleX" Value="0.95" />
+                                        <Setter Target="ScaleTransform.ScaleY" Value="0.95" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition To="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition To="PointerOverPressed">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition To="PressedSelected">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleX"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                            <DoubleAnimation
+                                                Storyboard.TargetName="ScaleTransform"
+                                                Storyboard.TargetProperty="ScaleY"
+                                                To="0.95"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
                             </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>-->
+                        </VisualStateManager.VisualStateGroups>
                     </ListViewItemPresenter>
                 </ControlTemplate>
             </Setter.Value>
