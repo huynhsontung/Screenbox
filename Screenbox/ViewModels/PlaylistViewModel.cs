@@ -60,6 +60,8 @@ namespace Screenbox.ViewModels
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private List<MediaViewModel> _mediaBuffer;
+        private ShuffleBackup? _shuffleBackup;
+        private Random? _random;
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
@@ -67,6 +69,14 @@ namespace Screenbox.ViewModels
         private int _currentIndex;
 
         private const int MediaBufferCapacity = 5;
+
+        private sealed record ShuffleBackup(List<MediaViewModel> OriginalPlaylist, List<MediaViewModel>? Removals = null)
+        {
+            public List<MediaViewModel> OriginalPlaylist { get; } = OriginalPlaylist;
+
+            // Needed due to how UI invokes CollectionChanged when moving items
+            public List<MediaViewModel> Removals { get; } = Removals ?? new List<MediaViewModel>();
+        }
 
         public PlaylistViewModel(IFilesService filesService,
             ISystemMediaTransportControlsService transportControlsService,
@@ -126,7 +136,7 @@ namespace Screenbox.ViewModels
 
         public void Receive(ClearPlaylistMessage message)
         {
-            Playlist.Clear();
+            Clear();
         }
 
         public void Receive(QueuePlaylistMessage message)
@@ -164,7 +174,7 @@ namespace Screenbox.ViewModels
             if (!message.Existing)
             {
                 _lastUpdated = message.Value;
-                Playlist.Clear();
+                Clear();
             }
 
             Play(message.Value);
@@ -223,6 +233,55 @@ namespace Screenbox.ViewModels
             Messenger.Send(new RepeatModeChangedMessage(value));
             RepeatModeGlyph = GetRepeatModeGlyph(value);
             _transportControlsService.TransportControls.AutoRepeatMode = value;
+        }
+
+        partial void OnShuffleModeChanged(bool value)
+        {
+            if (value)
+            {
+                List<MediaViewModel> backup = new(Playlist);
+                ShufflePlaylist();
+                _shuffleBackup = new ShuffleBackup(backup);
+            }
+            else
+            {
+                if (_shuffleBackup != null)
+                {
+                    ShuffleBackup shuffleBackup = _shuffleBackup;
+                    _shuffleBackup = null;
+                    List<MediaViewModel> backup = shuffleBackup.OriginalPlaylist;
+                    foreach (MediaViewModel removal in shuffleBackup.Removals)
+                    {
+                        backup.Remove(removal);
+                    }
+
+                    Playlist.Clear();
+                    foreach (MediaViewModel media in backup)
+                    {
+                        Playlist.Add(media);
+                    }
+                }
+                else
+                {
+                    ShufflePlaylist();
+                }
+            }
+        }
+
+        private void ShufflePlaylist()
+        {
+            _random ??= new Random();
+            if (_currentIndex >= 0 && ActiveItem != null)
+            {
+                MediaViewModel activeItem = ActiveItem;
+                Playlist.RemoveAt(_currentIndex);
+                Shuffle(Playlist, _random);
+                Playlist.Insert(0, activeItem);
+            }
+            else
+            {
+                Shuffle(Playlist, _random);
+            }
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
@@ -291,6 +350,53 @@ namespace Screenbox.ViewModels
             PreviousCommand.NotifyCanExecuteChanged();
             CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
             HasItems = Playlist.Count > 0;
+
+            if (Playlist.Count <= 1)
+            {
+                _shuffleBackup = null;
+                return;
+            }
+
+            // Update shuffle backup if shuffling is enabled
+            ShuffleBackup? backup = _shuffleBackup;
+            if (ShuffleMode && backup != null)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Remove when e.OldItems.Count > 0:
+                        foreach (object item in e.OldItems)
+                        {
+                            backup.Removals.Add((MediaViewModel)item);
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Replace when e.OldItems.Count > 0 && e.OldItems.Count == e.NewItems.Count:
+                        for (int i = 0; i < e.OldItems.Count; i++)
+                        {
+                            int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
+                            if (backupIndex >= 0)
+                            {
+                                backup.OriginalPlaylist[backupIndex] = (MediaViewModel)e.NewItems[i];
+                            }
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Add:
+                        foreach (object item in e.NewItems)
+                        {
+                            if (!backup.Removals.Remove((MediaViewModel)item))
+                            {
+                                _shuffleBackup = null;
+                                break;
+                            }
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Reset:
+                        _shuffleBackup = null;
+                        break;
+                }
+            }
         }
 
         private void Enqueue(IReadOnlyList<IStorageItem> files)
@@ -317,7 +423,7 @@ namespace Screenbox.ViewModels
 
         private async void Play(IReadOnlyList<IStorageItem> files)
         {
-            Playlist.Clear();
+            Clear();
 
             Enqueue(files);
 
@@ -370,7 +476,9 @@ namespace Screenbox.ViewModels
         private void Clear()
         {
             ActiveItem = null;
+            _shuffleBackup = null;
             Playlist.Clear();
+            ShuffleMode = false;
         }
 
         [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -449,7 +557,7 @@ namespace Screenbox.ViewModels
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    Playlist.Clear();
+                    Clear();
                     Play(_mediaFactory.GetSingleton(nextFile));
                 }
             }
@@ -486,7 +594,7 @@ namespace Screenbox.ViewModels
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
                 {
-                    Playlist.Clear();
+                    Clear();
                     Play(previousFile);
                 }
                 else
@@ -530,6 +638,17 @@ namespace Screenbox.ViewModels
                         break;
                 }
             });
+        }
+
+        private static void Shuffle<T>(IList<T> list, Random rng)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                (list[k], list[n]) = (list[n], list[k]);
+            }
         }
 
         private static string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
