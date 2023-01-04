@@ -17,7 +17,7 @@
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08000000" />
+                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="White" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 
