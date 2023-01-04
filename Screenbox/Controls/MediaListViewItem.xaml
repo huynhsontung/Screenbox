@@ -35,7 +35,7 @@
             FontSize="16"
             Glyph="A"
             IsHitTestVisible="False"
-            ToolTipService.ToolTip="{x:Bind strings:Resources.IsPlaying}"
+            ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
             Visibility="Collapsed" />
 
         <FontIcon
@@ -46,7 +46,6 @@
             VerticalAlignment="Center"
             FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="16"
-            Glyph="{Binding Glyph}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ShowMediaIcon, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
@@ -59,7 +58,6 @@
             Background="Transparent"
             BorderThickness="0"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
-            CommandParameter="{Binding}"
             IsCompact="True"
             LabelPosition="Collapsed"
             Visibility="Collapsed">
@@ -73,34 +71,33 @@
             VerticalAlignment="Center"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Name, Mode=OneWay}"
             TextTrimming="CharacterEllipsis" />
 
         <HyperlinkButton
-            x:Name="ArtistText"
+            x:Name="ArtistButton"
             Grid.Column="3"
             Margin="4,0"
             VerticalAlignment="Center"
             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
             Visibility="Collapsed">
             <TextBlock
+                x:Name="ArtistText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Artists[0].Name, Mode=OneWay, FallbackValue=''}"
                 TextTrimming="CharacterEllipsis" />
         </HyperlinkButton>
 
         <HyperlinkButton
-            x:Name="AlbumText"
+            x:Name="AlbumButton"
             Grid.Column="4"
             Margin="4,0"
             VerticalAlignment="Center"
             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
             Visibility="Collapsed">
             <TextBlock
+                x:Name="AlbumText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, Mode=OneWay, FallbackValue=''}"
                 TextTrimming="CharacterEllipsis" />
         </HyperlinkButton>
 
@@ -111,7 +108,6 @@
             VerticalAlignment="Center"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Genre, Mode=OneWay}"
             Visibility="Collapsed" />
 
         <TextBlock
@@ -121,22 +117,21 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             MaxLines="1"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Duration, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+            Style="{StaticResource CaptionTextBlockStyle}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="PlayingState">
                 <VisualState x:Name="NotPlaying" />
                 <VisualState x:Name="IsPlaying">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay}" />
+                        <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay, FallbackValue=False}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="ArtistText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="AlbumText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                         <Setter Target="IsPlayingIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
@@ -178,15 +173,15 @@
                 <VisualState x:Name="Level1">
                     <VisualState.Setters>
                         <Setter Target="ArtistColumn.Width" Value="*" />
-                        <Setter Target="ArtistText.Visibility" Value="Visible" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Level2">
                     <VisualState.Setters>
                         <Setter Target="ArtistColumn.Width" Value="*" />
                         <Setter Target="AlbumColumn.Width" Value="*" />
-                        <Setter Target="ArtistText.Visibility" Value="Visible" />
-                        <Setter Target="AlbumText.Visibility" Value="Visible" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
+                        <Setter Target="AlbumButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Level3">
@@ -194,8 +189,8 @@
                         <Setter Target="ArtistColumn.Width" Value="*" />
                         <Setter Target="AlbumColumn.Width" Value="*" />
                         <Setter Target="GenreColumn.Width" Value="*" />
-                        <Setter Target="ArtistText.Visibility" Value="Visible" />
-                        <Setter Target="AlbumText.Visibility" Value="Visible" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
+                        <Setter Target="AlbumButton.Visibility" Value="Visible" />
                         <Setter Target="GenreText.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>

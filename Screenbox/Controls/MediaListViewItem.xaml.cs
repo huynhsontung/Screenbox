@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Screenbox.ViewModels;
 using System.Windows.Input;
@@ -9,6 +11,7 @@ using Windows.UI.Xaml.Input;
 using FocusState = Windows.UI.Xaml.FocusState;
 using Windows.UI.Xaml.Controls.Primitives;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Converters;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -17,19 +20,19 @@ namespace Screenbox.Controls
     public sealed partial class MediaListViewItem : UserControl
     {
         public static readonly DependencyProperty ShowMediaIconProperty = DependencyProperty.Register(
-            "ShowMediaIcon",
+            nameof(ShowMediaIcon),
             typeof(bool),
             typeof(MediaListViewItem),
             new PropertyMetadata(false));
 
         public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
-            "PlayCommand",
+            nameof(PlayCommand),
             typeof(ICommand),
             typeof(MediaListViewItem),
             new PropertyMetadata(null));
 
         public static readonly DependencyProperty SelectionModeProperty = DependencyProperty.Register(
-            "SelectionMode",
+            nameof(SelectionMode),
             typeof(ListViewSelectionMode),
             typeof(MediaListViewItem),
             new PropertyMetadata(default(ListViewSelectionMode), OnSelectionModeChanged));
@@ -52,7 +55,7 @@ namespace Screenbox.Controls
             set => SetValue(ShowMediaIconProperty, value);
         }
 
-        internal MediaViewModel ViewModel => (MediaViewModel)DataContext;
+        internal MediaViewModel? ViewModel { get; private set; }
 
         private SelectorItem? _selector;
 
@@ -60,9 +63,42 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
 
-            EffectiveViewportChanged += OnEffectiveViewportChanged;
+            DataContextChanged += OnDataContextChanged;
             SizeChanged += OnSizeChanged;
             Loaded += OnLoaded;
+        }
+
+        private async void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            if (args.NewValue == null) return;
+            ViewModel = (MediaViewModel)args.NewValue;
+            await UpdateContent();
+            UpdateDetailsLevel();
+        }
+
+        private async Task UpdateContent()
+        {
+            if (ViewModel == null) return;
+            if (ViewModel.BasicProperties == null)
+            {
+                await ViewModel.LoadDetailsAsync();
+            }
+
+            ItemIcon.Glyph = ViewModel.Glyph;
+            PlayButton.CommandParameter = ViewModel;
+            TitleText.Text = ViewModel.Name;
+            AlbumText.Text = ViewModel.Album?.Name ?? string.Empty;
+            GenreText.Text = ViewModel.Genre ?? string.Empty;
+
+            if (ViewModel.Duration != null)
+            {
+                DurationText.Text = HumanizedDurationConverter.Convert((TimeSpan)ViewModel.Duration);
+            }
+
+            if (ViewModel.Artists?.Length > 0)
+            {
+                ArtistText.Text = ViewModel.Artists[0].Name;
+            }
         }
 
         private static void OnSelectionModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -128,42 +164,32 @@ namespace Screenbox.Controls
             PlayButton.Focus(FocusState.Programmatic);
         }
 
-        private static async void OnEffectiveViewportChanged(FrameworkElement sender, EffectiveViewportChangedEventArgs args)
-        {
-            const double threshold = 400;
-            if (args.BringIntoViewDistanceY > threshold) return;
-            MediaListViewItem item = (MediaListViewItem)sender;
-            if (item.DataContext == null) return;
-            await item.ViewModel.LoadDetailsAsync();
-            UpdateDetailsLevel(item, item.ViewModel);
-        }
-
         private static void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             MediaListViewItem item = (MediaListViewItem)sender;
             if (item.DataContext == null) return;
-            UpdateDetailsLevel(item, item.ViewModel);
+            item.UpdateDetailsLevel();
         }
 
-        private static void UpdateDetailsLevel(Control templateRoot, MediaViewModel media)
+        public void UpdateDetailsLevel()
         {
-            if (media.MusicProperties == null || media.MediaType != MediaPlaybackType.Music)
+            if (ViewModel?.MusicProperties == null || ViewModel.MediaType != MediaPlaybackType.Music)
             {
-                VisualStateManager.GoToState(templateRoot, "Level0", true);
+                VisualStateManager.GoToState(this, "Level0", true);
                 return;
             }
 
-            if (templateRoot.ActualWidth > 800)
+            if (ActualWidth > 800)
             {
-                VisualStateManager.GoToState(templateRoot, "Level3", true);
+                VisualStateManager.GoToState(this, "Level3", true);
             }
-            else if (templateRoot.ActualWidth > 620)
+            else if (ActualWidth > 620)
             {
-                VisualStateManager.GoToState(templateRoot, "Level2", true);
+                VisualStateManager.GoToState(this, "Level2", true);
             }
             else
             {
-                VisualStateManager.GoToState(templateRoot, "Level1", true);
+                VisualStateManager.GoToState(this, "Level1", true);
             }
         }
     }
