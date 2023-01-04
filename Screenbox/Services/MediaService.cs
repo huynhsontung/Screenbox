@@ -40,8 +40,6 @@ namespace Screenbox.Services
         {
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
-            if (StorageApplicationPermissions.FutureAccessList.Entries.Count > 995) // Limit 1000
-                StorageApplicationPermissions.FutureAccessList.Clear();
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
             return new Media(libVlc, mrl, FromType.FromLocation);
         }

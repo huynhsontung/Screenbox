@@ -35,14 +35,19 @@ namespace Screenbox.ViewModels
         {
             _filesService = filesService;
             StorageItem = storageItem;
-            Name = storageItem.Name;
-            Path = storageItem.Path;
             DateCreated = storageItem.DateCreated;
 
             if (storageItem is StorageFile file)
             {
                 IsFile = true;
                 Media = mediaFactory.GetSingleton(file);
+                Name = Media.Name;
+                Path = Media.Location;
+            }
+            else
+            {
+                Name = storageItem.Name;
+                Path = storageItem.Path;
             }
         }
 
