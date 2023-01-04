@@ -554,7 +554,7 @@
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
-                        <Setter Target="AlbumArt.CornerRadius" Value="6" />
+                        <Setter Target="AlbumArt.CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         <Setter Target="AlbumArt.BorderThickness" Value="0" />
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
