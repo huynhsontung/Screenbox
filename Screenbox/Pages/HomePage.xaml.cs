@@ -6,8 +6,6 @@ using Windows.UI.Xaml.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.ViewModels;
-using Microsoft.Toolkit.Uwp.UI;
-using Windows.UI.Xaml.Controls.Primitives;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -55,13 +53,6 @@ namespace Screenbox.Pages
                 ItemFlyout.ShowAt(element, e.GetPosition(element));
                 e.Handled = true;
             }
-        }
-
-        private void RecentFilesGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.InRecycleQueue || args.Phase != 0) return;
-            if (args.ItemContainer.FindDescendant<ListViewItemPresenter>() is not { } presenter) return;
-            presenter.CornerRadius = new CornerRadius(8);
         }
     }
 }

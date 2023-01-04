@@ -14,107 +14,113 @@
     Loaded="{x:Bind ViewModel.OnLoaded}"
     mc:Ignorable="d">
     <Page.Resources>
-        <x:Double x:Key="StorageItemGridViewItemWidth">168</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemHeight">220</x:Double>
-        <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">160</x:Double>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <XamlUICommand
-            x:Key="PlayCommand"
-            Command="{x:Bind ViewModel.PlayCommand}"
-            IconSource="{ui:SymbolIconSource Symbol=Play}"
-            Label="{strings:Resources Key=Play}" />
+            <x:Double x:Key="StorageItemGridViewItemWidth">168</x:Double>
+            <x:Double x:Key="StorageItemGridViewItemHeight">220</x:Double>
+            <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">160</x:Double>
 
-        <XamlUICommand
-            x:Key="PlayNextCommand"
-            Command="{x:Bind ViewModel.PlayNextCommand}"
-            IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
-                                           Glyph=B}"
-            Label="{strings:Resources Key=PlayNext}" />
+            <XamlUICommand
+                x:Key="PlayCommand"
+                Command="{x:Bind ViewModel.PlayCommand}"
+                IconSource="{ui:SymbolIconSource Symbol=Play}"
+                Label="{strings:Resources Key=Play}" />
 
-        <XamlUICommand
-            x:Key="RemoveCommand"
-            Command="{x:Bind ViewModel.RemoveCommand}"
-            IconSource="{ui:SymbolIconSource Symbol=Clear}"
-            Label="{strings:Resources Key=Remove}" />
+            <XamlUICommand
+                x:Key="PlayNextCommand"
+                Command="{x:Bind ViewModel.PlayNextCommand}"
+                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
+                                               Glyph=B}"
+                Label="{strings:Resources Key=PlayNext}" />
 
-        <XamlUICommand
-            x:Key="PropertiesCommand"
-            Command="{x:Bind ViewModel.ShowPropertiesCommand}"
-            IconSource="{ui:FontIconSource Glyph=&#xe946;}"
-            Label="{strings:Resources Key=Properties}" />
+            <XamlUICommand
+                x:Key="RemoveCommand"
+                Command="{x:Bind ViewModel.RemoveCommand}"
+                IconSource="{ui:SymbolIconSource Symbol=Clear}"
+                Label="{strings:Resources Key=Remove}" />
 
-        <MenuFlyout x:Name="ItemFlyout">
-            <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
-            <MenuFlyoutSeparator />
-            <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
-            <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
-        </MenuFlyout>
+            <XamlUICommand
+                x:Key="PropertiesCommand"
+                Command="{x:Bind ViewModel.ShowPropertiesCommand}"
+                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                Label="{strings:Resources Key=Properties}" />
 
-        <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
-            <MenuFlyoutItem
-                Command="{x:Bind ViewModel.OpenFilesCommand}"
-                Icon="{ui:FontIcon Glyph=&#xe838;}"
-                Text="{strings:Resources Key=OpenFiles}" />
-            <MenuFlyoutItem
-                Command="{x:Bind ViewModel.OpenFolderCommand}"
-                Icon="{ui:FontIcon Glyph=&#xe8da;}"
-                Text="Open folder" />
-            <MenuFlyoutItem
-                Command="{x:Bind ViewModel.OpenUrlCommand}"
-                Icon="{ui:SymbolIcon Symbol=Globe}"
-                Text="Open URL" />
-        </MenuFlyout>
+            <MenuFlyout x:Name="ItemFlyout">
+                <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
+            </MenuFlyout>
 
-        <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
-            <Grid
-                Width="{StaticResource StorageItemGridViewItemWidth}"
-                Height="{StaticResource StorageItemGridViewItemHeight}"
-                Padding="4">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.OpenFilesCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xe838;}"
+                    Text="{strings:Resources Key=OpenFiles}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.OpenFolderCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xe8da;}"
+                    Text="Open folder" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.OpenUrlCommand}"
+                    Icon="{ui:SymbolIcon Symbol=Globe}"
+                    Text="Open URL" />
+            </MenuFlyout>
+
+            <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
                 <Grid
-                    Grid.Row="0"
-                    Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="4">
-                    <FontIcon
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="52"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
-                        Glyph="{x:Bind Media.Source, Converter={StaticResource StorageItemGlyphConverter}}" />
-                    <Border CornerRadius="4">
-                        <Image
+                    Width="{StaticResource StorageItemGridViewItemWidth}"
+                    Height="{StaticResource StorageItemGridViewItemHeight}"
+                    Padding="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid
+                        Grid.Row="0"
+                        Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <FontIcon
                             HorizontalAlignment="Center"
-                            x:Phase="1"
-                            Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                            Stretch="UniformToFill" />
-                    </Border>
+                            VerticalAlignment="Center"
+                            FontSize="52"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                            Glyph="{x:Bind Media.Source, Converter={StaticResource StorageItemGlyphConverter}}" />
+                        <Border CornerRadius="4">
+                            <Image
+                                HorizontalAlignment="Center"
+                                x:Phase="1"
+                                Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                                Stretch="UniformToFill" />
+                        </Border>
+                    </Grid>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Margin="4,0"
+                        FontWeight="SemiBold"
+                        MaxLines="2"
+                        Text="{x:Bind Media.Name, Mode=OneWay}"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Margin="4,0"
+                        x:Phase="2"
+                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{x:Bind Media.Caption, Mode=OneWay}" />
                 </Grid>
-
-                <TextBlock
-                    Grid.Row="1"
-                    Margin="4,0"
-                    FontWeight="SemiBold"
-                    MaxLines="2"
-                    Text="{x:Bind Media.Name, Mode=OneWay}"
-                    TextWrapping="Wrap" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Margin="4,0"
-                    x:Phase="2"
-                    Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                    Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind Media.Caption, Mode=OneWay}" />
-            </Grid>
-        </DataTemplate>
+            </DataTemplate>
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
@@ -225,7 +231,6 @@
                 Padding="{StaticResource ContentPageThumbnailRightMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
-                ContainerContentChanging="RecentFilesGridView_OnContainerContentChanging"
                 ContextRequested="RecentFilesGridView_OnContextRequested"
                 IsItemClickEnabled="True"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"

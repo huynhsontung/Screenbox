@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="NoAnimationProgressBar.xaml" />
+                <ResourceDictionary Source="Styles/NoAnimationProgressBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
