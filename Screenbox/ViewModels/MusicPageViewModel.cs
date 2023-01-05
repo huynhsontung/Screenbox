@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -44,6 +45,8 @@ namespace Screenbox.ViewModels
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _songs = new List<MediaViewModel>();
+
+            PopulateGroups();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -164,8 +167,22 @@ namespace Screenbox.ViewModels
 
         private string GetFirstLetterGroup(string name)
         {
-            if (char.IsLetter(name, 0)) return name.Substring(0, 1).ToUpper();
-            return char.IsNumber(name, 0) ? "#" : "&";
+            char letter = char.ToUpper(name[0], CultureInfo.CurrentCulture);
+            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(letter))
+                return letter.ToString();
+            if (char.IsNumber(letter)) return "#";
+            if (char.IsSymbol(letter) || char.IsPunctuation(letter) || char.IsSeparator(letter)) return "&";
+            return "\u2026";
+        }
+
+        private void PopulateGroups()
+        {
+            // TODO: Support other languages beside English
+            string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
+            foreach (char letter in letters)
+            {
+                GroupedSongs.AddGroup(letter.ToString());
+            }
         }
     }
 }
