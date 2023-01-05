@@ -21,12 +21,15 @@
 
             <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
 
-            <DataTemplate x:Key="GroupOverviewTemplate">
+            <DataTemplate x:Key="GroupOverviewTemplate" x:DataType="ICollectionViewGroup">
                 <Button
+                    Width="46"
+                    Height="46"
                     HorizontalAlignment="Stretch"
                     Background="Transparent"
-                    BorderThickness="0"
-                    ClickMode="Hover">
+                    BorderBrush="Transparent"
+                    ClickMode="Hover"
+                    IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
                     <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
                 </Button>
             </DataTemplate>
@@ -208,7 +211,12 @@
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewTemplate}"
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
-                    SelectionMode="None" />
+                    SelectionMode="None">
+                    <GridView.Resources>
+                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
+                        <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+                    </GridView.Resources>
+                </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
 

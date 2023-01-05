@@ -31,6 +31,12 @@
                         TrueValue="Collapsed" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
                     <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+                    <toolkitConverters:DoubleToObjectConverter
+                        x:Key="DoubleToBoolConverter"
+                        FalseValue="False"
+                        GreaterThan="0"
+                        NullValue="False"
+                        TrueValue="True" />
                     <Thickness x:Key="ContentPageHeaderMargin">0,44,56,12</Thickness>
                     <Thickness x:Key="ContentPageHeaderMarginMinimal">0,44,16,12</Thickness>
                     <Thickness x:Key="ContentPageRightMargin">0,0,56,0</Thickness>
