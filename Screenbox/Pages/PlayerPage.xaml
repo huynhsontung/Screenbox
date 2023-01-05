@@ -306,7 +306,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="80"
-                    Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                    Foreground="{ThemeResource ThumbnailMediaIconForeground}"
                     Glyph="{x:Bind ViewModel.Media.Glyph, Mode=OneWay, FallbackValue={x:Null}}" />
                 <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
                     <Image

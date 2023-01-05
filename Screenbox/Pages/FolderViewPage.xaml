@@ -64,7 +64,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="32"
-                            Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                            Foreground="{ThemeResource ThumbnailMediaIconForeground}"
                             Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
                         <Border CornerRadius="4">
                             <Image
