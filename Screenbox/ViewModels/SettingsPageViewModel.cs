@@ -24,6 +24,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _showVideoFolders;
+        [ObservableProperty] private int _volumeBoost;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -83,6 +84,17 @@ namespace Screenbox.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(ShowVideoFolders)));
         }
 
+        partial void OnVolumeBoostChanged(int value)
+        {
+            _settingsService.MaxVolume = value switch
+            {
+                2 => 200,
+                1 => 150,
+                _ => 100
+            };
+            Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost)));
+        }
+
         [RelayCommand]
         private async Task AddVideosFolderAsync()
         {
@@ -118,6 +130,13 @@ namespace Screenbox.ViewModels
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _showVideoFolders = _settingsService.ShowVideoFolders;
+            int maxVolume = _settingsService.MaxVolume;
+            _volumeBoost = maxVolume switch
+            {
+                >= 200 => 2,
+                >= 150 => 1,
+                _ => 0
+            };
         }
 
         private async void LoadLibraryLocations()

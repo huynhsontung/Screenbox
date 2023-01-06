@@ -10,5 +10,6 @@ namespace Screenbox.Services
         bool PlayerTapGesture { get; set; }
         int PersistentVolume { get; set; }
         bool ShowVideoFolders { get; set; }
+        int MaxVolume { get; set; }
     }
 }
