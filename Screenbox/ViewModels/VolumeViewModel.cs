@@ -64,7 +64,7 @@ namespace Screenbox.ViewModels
         {
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volumeChange = mouseWheelDelta / 25;
+            int volumeChange = mouseWheelDelta > 0 ? 5 : -5;
             Volume = Math.Clamp(Volume + volumeChange, 0, MaxVolume);
         }
 

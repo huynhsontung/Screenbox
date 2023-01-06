@@ -104,7 +104,7 @@ namespace Screenbox.ViewModels
         {
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta / 25, true));
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
             Messenger.Send(new UpdateStatusMessage(Resources.VolumeChangeStatusMessage(volume)));
         }
 
