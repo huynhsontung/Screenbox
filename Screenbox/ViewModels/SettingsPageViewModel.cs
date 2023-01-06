@@ -88,8 +88,9 @@ namespace Screenbox.ViewModels
         {
             _settingsService.MaxVolume = value switch
             {
-                2 => 200,
-                1 => 150,
+                3 => 200,
+                2 => 150,
+                1 => 125,
                 _ => 100
             };
             Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost)));
@@ -133,8 +134,9 @@ namespace Screenbox.ViewModels
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
-                >= 200 => 2,
-                >= 150 => 1,
+                >= 200 => 3,
+                >= 150 => 2,
+                >= 125 => 1,
                 _ => 0
             };
         }

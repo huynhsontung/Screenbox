@@ -185,6 +185,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <x:String>None</x:String>
+                        <x:String>125%</x:String>
                         <x:String>150%</x:String>
                         <x:String>200%</x:String>
                     </ComboBox>
