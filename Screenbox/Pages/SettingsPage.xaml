@@ -179,6 +179,17 @@
                         <x:String>Never</x:String>
                     </ComboBox>
                 </labs:SettingsCard>
+                <labs:SettingsCard
+                    Description="Allow the maximum volume to go above 100%"
+                    Header="Volume boost"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
+                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
+                        <x:String>None</x:String>
+                        <x:String>125%</x:String>
+                        <x:String>150%</x:String>
+                        <x:String>200%</x:String>
+                    </ComboBox>
+                </labs:SettingsCard>
                 <labs:SettingsExpander
                     Header="Gestures"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"

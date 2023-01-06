@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.ComponentModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
@@ -24,6 +25,32 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<VolumeViewModel>();
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(VolumeViewModel.MaxVolume))
+            {
+                UpdateIndicatorBoostWidth();
+            }
+        }
+
+        private void VolumeControl_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateIndicatorBoostWidth();
+        }
+
+        private void UpdateIndicatorBoostWidth()
+        {
+            int maxVolume = ViewModel.MaxVolume;
+            if (maxVolume < 100)
+            {
+                BoostIndicator.Width = 0;
+                return;
+            }
+
+            BoostIndicator.Width = VolumeSlider.ActualWidth * (maxVolume - 100) / maxVolume;
         }
     }
 }
