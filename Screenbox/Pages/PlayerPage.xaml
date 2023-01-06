@@ -57,24 +57,12 @@
                 FalseValue="D"
                 TrueValue="C" />
 
-            <LinearGradientBrush x:Key="PlayerControlsBackground" StartPoint="0.5,0" EndPoint="0.5,1">
-                <GradientStop Offset="0" Color="#00000000" />
-                <GradientStop Offset="1" Color="#99000000" />
-            </LinearGradientBrush>
-            <LinearGradientBrush x:Key="TitleBarBackground" StartPoint="0.5,0" EndPoint="0.5,1">
-                <GradientStop Offset="1" Color="#00000000" />
-                <GradientStop Offset="0" Color="#99000000" />
-            </LinearGradientBrush>
-
             <ThemeShadow x:Name="SharedShadow" />
-
-            <BrushTransition x:Key="DefaultBackgroundTransition" />
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid
         x:Name="LayoutRoot"
-        BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
         KeyboardAcceleratorPlacementMode="Hidden"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         Translation="0,0,8">
@@ -106,9 +94,14 @@
             MinHeight="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="{StaticResource TitleBarBackground}"
-            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
-            Canvas.ZIndex="3" />
+            Canvas.ZIndex="3">
+            <Border.Background>
+                <LinearGradientBrush x:Name="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="1" Color="#00000000" />
+                    <GradientStop Offset="0" Color="#99000000" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
 
         <Grid
             x:Name="TitleBarArea"
@@ -425,9 +418,14 @@
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
             Grid.Column="0"
-            Background="{StaticResource PlayerControlsBackground}"
-            BackgroundTransition="{StaticResource DefaultBackgroundTransition}"
-            Tapped="{x:Bind FocusVideoView}" />
+            Tapped="{x:Bind FocusVideoView}">
+            <Border.Background>
+                <LinearGradientBrush x:Name="ControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0" Color="#00000000" />
+                    <GradientStop Offset="1" Color="#99000000" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
 
         <controls:PlayerControls
             x:Name="PlayerControls"
@@ -467,16 +465,30 @@
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetName="VideoView"
+                            Storyboard.TargetProperty="Opacity"
+                            To="1"
+                            Duration="0:0:0.16" />
+                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ActualTheme, Mode=OneWay}" />
-                        <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="HeaderBackground.Background" Value="Transparent" />
                         <Setter Target="PlayerControlsBackground.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                     </VisualState.Setters>
+                    <Storyboard>
+                        <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
+                        <DoubleAnimation
+                            Storyboard.TargetName="VideoView"
+                            Storyboard.TargetProperty="Opacity"
+                            To="0"
+                            Duration="0:0:0.24" />
+                    </Storyboard>
                 </VisualState>
             </VisualStateGroup>
 
