@@ -15,8 +15,10 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class VolumeViewModel : ObservableRecipient,
         IRecipient<ChangeVolumeRequestMessage>,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
+        [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
         [ObservableProperty] private string _volumeGlyph;
@@ -28,6 +30,7 @@ namespace Screenbox.ViewModels
         {
             _settingsService = settingsService;
             _volume = settingsService.PersistentVolume;
+            _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
             _volumeGlyph = GetVolumeGlyph();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -43,11 +46,17 @@ namespace Screenbox.ViewModels
             _mediaPlayer.IsMutedChanged += OnIsMutedChanged;
         }
 
+        public void Receive(SettingsChangedMessage message)
+        {
+            if (message.SettingsName != nameof(SettingsPageViewModel.VolumeBoost)) return;
+            MaxVolume = _settingsService.MaxVolume;
+        }
+
         public void Receive(ChangeVolumeRequestMessage message)
         {
             Volume = message.IsOffset ?
-                Math.Clamp(Volume + message.Value, 0, 100) :
-                Math.Clamp(message.Value, 0, 100);
+                Math.Clamp(Volume + message.Value, 0, MaxVolume) :
+                Math.Clamp(message.Value, 0, MaxVolume);
             message.Reply(Volume);
         }
 
@@ -56,7 +65,7 @@ namespace Screenbox.ViewModels
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
             int volumeChange = mouseWheelDelta / 25;
-            Volume = Math.Clamp(Volume + volumeChange, 0, 100);
+            Volume = Math.Clamp(Volume + volumeChange, 0, MaxVolume);
         }
 
         partial void OnVolumeChanged(int value)

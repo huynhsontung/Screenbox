@@ -9,6 +9,7 @@
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    SizeChanged="VolumeControl_OnSizeChanged"
     mc:Ignorable="d">
 
     <Grid>
@@ -30,12 +31,21 @@
                 <KeyboardAccelerator Key="M" />
             </ToggleButton.KeyboardAccelerators>
         </ToggleButton>
+        <Border
+            x:Name="BoostIndicator"
+            Grid.Column="1"
+            Height="4"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Background="Maroon"
+            CornerRadius="2" />
         <Slider
             x:Name="VolumeSlider"
             x:Uid="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+            Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
         <TextBlock
