@@ -25,7 +25,7 @@
             Background="Transparent"
             BorderThickness="0"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
-            <FontIcon Glyph="{x:Bind GetMuteToggleGlyph(ViewModel.IsMute), Mode=OneWay}" />
+            <FontIcon Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
             </ToggleButton.KeyboardAccelerators>

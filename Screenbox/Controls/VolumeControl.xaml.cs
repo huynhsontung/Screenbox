@@ -10,7 +10,7 @@ namespace Screenbox.Controls
     public sealed partial class VolumeControl : UserControl
     {
         public static readonly DependencyProperty ShowValueTextProperty = DependencyProperty.Register(
-            "ShowValueText", typeof(bool), typeof(VolumeControl), new PropertyMetadata(true));
+            nameof(ShowValueText), typeof(bool), typeof(VolumeControl), new PropertyMetadata(true));
 
         public bool ShowValueText
         {
@@ -25,7 +25,5 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<VolumeViewModel>();
         }
-
-        internal string GetMuteToggleGlyph(bool isMute) => isMute ? "\uE198" : "\uE15D";
     }
 }

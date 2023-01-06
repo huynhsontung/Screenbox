@@ -342,7 +342,7 @@
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind VolumeControl.GetMuteToggleGlyph(VolumeControl.ViewModel.IsMute), Mode=OneWay}" />
+                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" />
             </Button>
 
             <local:VolumeControl
