@@ -148,7 +148,12 @@ namespace Screenbox.ViewModels
                 case VirtualKey.NumberPad7:
                 case VirtualKey.NumberPad8:
                 case VirtualKey.NumberPad9:
-                    _mediaPlayer.Position = (_mediaPlayer?.NaturalDuration ?? default) * (0.1 * (key - VirtualKey.NumberPad0));
+                    int percent = (key - VirtualKey.NumberPad0) * 10;
+                    TimeSpan newPosition = _mediaPlayer.NaturalDuration * (0.01 * percent);
+                    newPosition = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
+                    string updateText =
+                        $"{HumanizedDurationConverter.Convert(newPosition)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)} ({percent}%)";
+                    Messenger.Send(new UpdateStatusMessage(updateText));
                     break;
                 case (VirtualKey)190:   // Period (".")
                     JumpFrame(false);
@@ -242,9 +247,9 @@ namespace Screenbox.ViewModels
         {
             if (_mediaPlayer?.CanSeek ?? false)
             {
-                _mediaPlayer.Position += TimeSpan.FromMilliseconds(amount);
+                TimeSpan newPosition = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromMilliseconds(amount), true));
                 Messenger.Send(new UpdateStatusMessage(
-                    $"{HumanizedDurationConverter.Convert(_mediaPlayer.Position)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)}"));
+                    $"{HumanizedDurationConverter.Convert(newPosition)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)} ({(amount > 0 ? '+' : string.Empty)}{HumanizedDurationConverter.Convert(amount)})"));
             }
         }
 

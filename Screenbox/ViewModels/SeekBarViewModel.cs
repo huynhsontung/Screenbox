@@ -105,6 +105,7 @@ namespace Screenbox.ViewModels
         public void Receive(ChangeTimeRequestMessage message)
         {
             // Assume UI thread
+            _timeChangeOverride = true;
             if (message.IsOffset)
             {
                 Time += message.Value.TotalMilliseconds;
@@ -114,6 +115,7 @@ namespace Screenbox.ViewModels
                 Time = message.Value.TotalMilliseconds;
             }
 
+            _timeChangeOverride = false;
             message.Reply(TimeSpan.FromMilliseconds(Time));
         }
 
