@@ -342,8 +342,8 @@
             x:Name="StatusMessage"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="24,4"
-            Padding="10"
+            Margin="22,4"
+            Padding="{StaticResource ButtonPadding}"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
@@ -538,6 +538,7 @@
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
+                        <Setter Target="StatusMessage.Margin" Value="8,4" />
                         <Setter Target="PlayerStateBadge.Width" Value="50" />
                         <Setter Target="PlayerStateBadge.Height" Value="50" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
