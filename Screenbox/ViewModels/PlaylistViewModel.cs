@@ -136,7 +136,7 @@ namespace Screenbox.ViewModels
 
         public void Receive(ClearPlaylistMessage message)
         {
-            Clear();
+            ClearPlaylist();
         }
 
         public void Receive(QueuePlaylistMessage message)
@@ -174,7 +174,7 @@ namespace Screenbox.ViewModels
             if (!message.Existing)
             {
                 _lastUpdated = message.Value;
-                Clear();
+                ClearPlaylist();
             }
 
             Play(message.Value);
@@ -423,7 +423,7 @@ namespace Screenbox.ViewModels
 
         private async void Play(IReadOnlyList<IStorageItem> files)
         {
-            Clear();
+            ClearPlaylist();
 
             Enqueue(files);
 
@@ -476,6 +476,11 @@ namespace Screenbox.ViewModels
         private void Clear()
         {
             ActiveItem = null;
+            ClearPlaylist();
+        }
+
+        private void ClearPlaylist()
+        {
             _shuffleBackup = null;
             Playlist.Clear();
             ShuffleMode = false;
@@ -557,7 +562,7 @@ namespace Screenbox.ViewModels
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    Clear();
+                    ClearPlaylist();
                     Play(_mediaFactory.GetSingleton(nextFile));
                 }
             }
@@ -594,7 +599,7 @@ namespace Screenbox.ViewModels
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
                 {
-                    Clear();
+                    ClearPlaylist();
                     Play(previousFile);
                 }
                 else
