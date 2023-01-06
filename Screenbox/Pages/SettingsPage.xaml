@@ -180,7 +180,7 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <labs:SettingsCard
-                    Description="Allow the volume to go above 100%"
+                    Description="Allow the maximum volume to go above 100%"
                     Header="Volume boost"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
