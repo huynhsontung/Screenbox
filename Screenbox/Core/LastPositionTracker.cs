@@ -11,7 +11,7 @@ namespace Screenbox.Core
 {
     internal class LastPositionTracker
     {
-        private const int Capacity = 100;
+        private const int Capacity = 64;
 
         private readonly IFilesService _filesService;
         private List<MediaLastPosition> _lastPositions;
