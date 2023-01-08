@@ -23,6 +23,7 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
+        IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
@@ -51,15 +52,15 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _playPauseBadgeTimer;
         private readonly IWindowService _windowService;
-        private readonly ISettingsService _settingsService;
+        private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private bool _processingNewMedia;
+        private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService, ISettingsService settingsService)
+        public PlayerPageViewModel(IWindowService windowService, IFilesService filesService)
         {
             _windowService = windowService;
-            _settingsService = settingsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _openingTimer = _dispatcherQueue.CreateTimer();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -67,6 +68,8 @@ namespace Screenbox.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityStates.Hidden;
+            _lastPositionTracker = new LastPositionTracker(filesService);
+            _lastUpdated = DateTimeOffset.MinValue;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
@@ -87,10 +90,18 @@ namespace Screenbox.ViewModels
             });
         }
 
-        public void Receive(MediaPlayerChangedMessage message)
+        public void Receive(SuspendingMessage message)
+        {
+            message.Reply(_lastPositionTracker.SaveToDiskAsync());
+        } 
+
+        public async void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
+            _mediaPlayer.PositionChanged += OnPositionChanged;
+
+            await _lastPositionTracker.LoadFromDiskAsync();
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -106,6 +117,10 @@ namespace Screenbox.ViewModels
         public void Receive(PlaylistActiveItemChangedMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
+            if (message.Value != null)
+            {
+                _lastPositionTracker.GetPosition(message.Value.Location);
+            }
         }
 
         public void Receive(ShowPlayPauseBadgeMessage message)
@@ -291,6 +306,15 @@ namespace Screenbox.ViewModels
                     DelayHideControls();
                 }
             });
+        }
+
+        private void OnPositionChanged(IMediaPlayer sender, object? args)
+        {
+            if (Media != null && DateTimeOffset.Now - _lastUpdated > TimeSpan.FromSeconds(1))
+            {
+                _lastUpdated = DateTimeOffset.Now;
+                _lastPositionTracker.UpdateLastPosition(Media.Location, sender.Position);
+            }
         }
     }
 }

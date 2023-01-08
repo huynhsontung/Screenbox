@@ -189,10 +189,13 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\LastPositionTracker.cs" />
+    <Compile Include="Core\MediaLastPosition.cs" />
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
     <Compile Include="Core\MessageHelpers.cs" />
     <Compile Include="Core\Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Core\Messages\ClearPlaylistMessage.cs" />
+    <Compile Include="Core\Messages\SuspendingMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Core\Messages\OverrideControlsHideMessage.cs" />
@@ -545,6 +548,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="protobuf-net">
+      <Version>3.1.26</Version>
     </PackageReference>
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>
