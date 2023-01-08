@@ -15,7 +15,8 @@ namespace Screenbox.Core
 
         private readonly IFilesService _filesService;
         private List<MediaLastPosition> _lastPositions;
-        private MediaLastPosition? _cache;
+        private MediaLastPosition? _updateCache;
+        private string? _removeCache;
 
         public LastPositionTracker(IFilesService filesService)
         {
@@ -25,7 +26,8 @@ namespace Screenbox.Core
 
         public void UpdateLastPosition(string location, TimeSpan position)
         {
-            MediaLastPosition? item = _cache;
+            _removeCache = null;
+            MediaLastPosition? item = _updateCache;
             if (item?.Location == location)
             {
                 item.Position = position;
@@ -41,7 +43,7 @@ namespace Screenbox.Core
                 item = _lastPositions.Find(x => x.Location == location);
                 if (item == null)
                 {
-                    _cache = item = new MediaLastPosition(location, position);
+                    _updateCache = item = new MediaLastPosition(location, position);
                     _lastPositions.Insert(0, item);
                     if (_lastPositions.Count > Capacity)
                     {
@@ -57,9 +59,14 @@ namespace Screenbox.Core
 
         public TimeSpan GetPosition(string location)
         {
-            return _cache?.Location == location
-                ? _cache.Position
-                : _lastPositions.Find(x => x.Location == location)?.Position ?? TimeSpan.Zero;
+            return _lastPositions.Find(x => x.Location == location)?.Position ?? TimeSpan.Zero;
+        }
+
+        public void RemovePosition(string location)
+        {
+            if (_removeCache == location) return;
+            _lastPositions.RemoveAll(x => x.Location == location);
+            _removeCache = location;
         }
 
         public async Task SaveToDiskAsync()

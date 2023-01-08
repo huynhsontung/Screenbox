@@ -310,10 +310,22 @@ namespace Screenbox.ViewModels
 
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
-            if (Media != null && DateTimeOffset.Now - _lastUpdated > TimeSpan.FromSeconds(1))
+            // Only record position for media over 1 minute
+            // Update every 3 seconds
+            TimeSpan position = sender.Position;
+            if (Media == null || sender.NaturalDuration <= TimeSpan.FromMinutes(1) ||
+                DateTimeOffset.Now - _lastUpdated <= TimeSpan.FromSeconds(3))
+                return;
+
+            if (position > TimeSpan.FromSeconds(30) && position + TimeSpan.FromSeconds(10) < sender.NaturalDuration)
             {
                 _lastUpdated = DateTimeOffset.Now;
-                _lastPositionTracker.UpdateLastPosition(Media.Location, sender.Position);
+                _lastPositionTracker.UpdateLastPosition(Media.Location, position);
+            }
+            else if (position > TimeSpan.FromSeconds(5))
+            {
+                _lastUpdated = DateTimeOffset.Now;
+                _lastPositionTracker.RemovePosition(Media.Location);
             }
         }
     }
