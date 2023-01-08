@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.ObjectModel;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using Windows.Media.Playback;
 using Windows.System;
