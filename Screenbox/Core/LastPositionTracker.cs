@@ -5,6 +5,7 @@ using Windows.Storage.Streams;
 using Windows.Storage;
 using Screenbox.Services;
 using System.IO;
+using System.Linq;
 using ProtoBuf;
 
 namespace Screenbox.Core
@@ -31,9 +32,9 @@ namespace Screenbox.Core
             if (item?.Location == location)
             {
                 item.Position = position;
-                int index = _lastPositions.IndexOf(item);
-                if (index > 0)
+                if (_lastPositions.FirstOrDefault() != item)
                 {
+                    int index = _lastPositions.IndexOf(item);
                     _lastPositions.RemoveAt(index);
                     _lastPositions.Insert(0, item);
                 }
@@ -43,7 +44,7 @@ namespace Screenbox.Core
                 item = _lastPositions.Find(x => x.Location == location);
                 if (item == null)
                 {
-                    _updateCache = item = new MediaLastPosition(location, position);
+                    item = new MediaLastPosition(location, position);
                     _lastPositions.Insert(0, item);
                     if (_lastPositions.Count > Capacity)
                     {
@@ -55,6 +56,8 @@ namespace Screenbox.Core
                     item.Position = position;
                 }
             }
+
+            _updateCache = item;
         }
 
         public TimeSpan GetPosition(string location)
