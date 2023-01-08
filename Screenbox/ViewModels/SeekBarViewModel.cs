@@ -105,6 +105,7 @@ namespace Screenbox.ViewModels
         public void Receive(ChangeTimeRequestMessage message)
         {
             // Assume UI thread
+            bool overrideValue = _timeChangeOverride;
             _timeChangeOverride = true;
             if (message.IsOffset)
             {
@@ -115,7 +116,7 @@ namespace Screenbox.ViewModels
                 Time = message.Value.TotalMilliseconds;
             }
 
-            _timeChangeOverride = false;
+            _timeChangeOverride = overrideValue;
             message.Reply(TimeSpan.FromMilliseconds(Time));
         }
 
@@ -146,11 +147,8 @@ namespace Screenbox.ViewModels
 
         private void OnTimeChanged(IMediaPlayer sender, object? args)
         {
-            if (!_timeChangeOverride)
-            {
-                if (_seekTimer.IsRunning) return;
-                _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
-            }
+            if (_seekTimer.IsRunning || _timeChangeOverride) return;
+            _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
         }
 
         private void OnLengthChanged(IMediaPlayer sender, object? args)
