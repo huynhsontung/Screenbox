@@ -58,7 +58,7 @@ namespace Screenbox.ViewModels
         private bool _processingNewMedia;
         private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService, IFilesService filesService)
+        public PlayerPageViewModel(IWindowService windowService)
         {
             _windowService = windowService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -68,7 +68,7 @@ namespace Screenbox.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityStates.Hidden;
-            _lastPositionTracker = new LastPositionTracker(filesService);
+            _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
 
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;

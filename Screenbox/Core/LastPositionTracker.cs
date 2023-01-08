@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using Windows.Storage;
-using Screenbox.Services;
 using System.IO;
 using System.Linq;
 using ProtoBuf;
@@ -13,15 +12,14 @@ namespace Screenbox.Core
     internal class LastPositionTracker
     {
         private const int Capacity = 64;
+        private const string SaveFileName = "last_positions.bin";
 
-        private readonly IFilesService _filesService;
         private List<MediaLastPosition> _lastPositions;
         private MediaLastPosition? _updateCache;
         private string? _removeCache;
 
-        public LastPositionTracker(IFilesService filesService)
+        public LastPositionTracker()
         {
-            _filesService = filesService;
             _lastPositions = new List<MediaLastPosition>(Capacity + 1);
         }
 
@@ -75,7 +73,8 @@ namespace Screenbox.Core
         public async Task SaveToDiskAsync()
         {
             StorageFile file =
-                await _filesService.GetFileAsync(ApplicationData.Current.TemporaryFolder, "last_positions.bin");
+                await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SaveFileName,
+                    CreationCollisionOption.OpenIfExists);
             using IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite);
             using Stream writeStream = stream.AsStreamForWrite();
             Serializer.Serialize(writeStream, _lastPositions);
@@ -84,7 +83,7 @@ namespace Screenbox.Core
         public async Task LoadFromDiskAsync()
         {
             StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
-            IStorageItem? item = await tempFolder.TryGetItemAsync("last_positions.bin");
+            IStorageItem? item = await tempFolder.TryGetItemAsync(SaveFileName);
             if (item is StorageFile file)
             {
                 try
