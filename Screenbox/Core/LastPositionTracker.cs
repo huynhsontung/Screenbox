@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
@@ -33,8 +35,11 @@ namespace Screenbox.Core
                 if (_lastPositions.FirstOrDefault() != item)
                 {
                     int index = _lastPositions.IndexOf(item);
-                    _lastPositions.RemoveAt(index);
-                    _lastPositions.Insert(0, item);
+                    if (index >= 0)
+                    {
+                        _lastPositions.RemoveAt(index);
+                        _lastPositions.Insert(0, item);
+                    }
                 }
             }
             else
