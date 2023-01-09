@@ -119,7 +119,8 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
             if (message.Value != null)
             {
-                _lastPositionTracker.GetPosition(message.Value.Location);
+                TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
+                Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
             }
         }
 

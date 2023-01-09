@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
+using Screenbox.Converters;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -16,7 +17,10 @@ using Screenbox.Strings;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class NotificationViewModel : ObservableRecipient, IRecipient<RaiseFrameSavedNotificationMessage>, IRecipient<ErrorMessage>
+    internal sealed partial class NotificationViewModel : ObservableRecipient,
+        IRecipient<RaiseFrameSavedNotificationMessage>,
+        IRecipient<RaiseResumePositionNotificationMessage>,
+        IRecipient<ErrorMessage>
     {
         [ObservableProperty] private InfoBarSeverity _severity;
 
@@ -82,6 +86,31 @@ namespace Screenbox.ViewModels
             }
 
             _dispatcherQueue.TryEnqueue(SetNotification);
+        }
+
+        public void Receive(RaiseResumePositionNotificationMessage message)
+        {
+            if (Severity == InfoBarSeverity.Error && IsOpen) return;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Reset();
+                if (message.Value <= TimeSpan.Zero) return;
+                Title = Resources.ResumePositionNotificationTitle;
+                Severity = InfoBarSeverity.Informational;
+                ActionButton = new Button
+                {
+                    Content = Resources.GoToPosition(HumanizedDurationConverter.Convert(message.Value))
+                };
+
+                ActionButton.Click += (_, _) =>
+                {
+                    IsOpen = false;
+                    Messenger.Send(new ChangeTimeRequestMessage(message.Value));
+                };
+
+                IsOpen = true;
+                _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            });
         }
 
         private void Reset()

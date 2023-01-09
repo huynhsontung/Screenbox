@@ -414,4 +414,11 @@
   <data name="ShuffleMode_Variant1" xml:space="preserve">
     <value>Shuffle: On</value>
   </data>
+  <data name="ResumePositionNotificationTitle" xml:space="preserve">
+    <value>Resume where you left off</value>
+  </data>
+  <data name="GoToPosition" xml:space="preserve">
+    <value>Go to {0}</value>
+    <comment>#Format[String position]</comment>
+  </data>
 </root>
