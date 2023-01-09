@@ -4,17 +4,13 @@ using ProtoBuf;
 namespace Screenbox.Core
 {
     [ProtoContract]
-    internal class MediaLastPosition
+    internal record MediaLastPosition(string Location, TimeSpan Position)
     {
-        [ProtoMember(1)]
-        public string Location { get; set; }
-        [ProtoMember(2)]
-        public TimeSpan Position { get; set; }
+        [ProtoMember(1)] public string Location { get; set; } = Location;
+        [ProtoMember(2)] public TimeSpan Position { get; set; } = Position;
 
-        public MediaLastPosition(string location, TimeSpan position)
+        public MediaLastPosition() : this(string.Empty, TimeSpan.Zero)
         {
-            Location = location;
-            Position = position;
         }
     }
 }
