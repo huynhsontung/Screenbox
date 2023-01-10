@@ -62,6 +62,7 @@ namespace Screenbox.ViewModels
 
         private void OnSourceChanged(IMediaPlayer sender, object? args)
         {
+            _seekTimer.Stop();
             if (sender.Source == null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
@@ -155,6 +156,7 @@ namespace Screenbox.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
+                Time = 0;
                 Length = sender.NaturalDuration.TotalMilliseconds;
                 IsSeekable = sender.CanSeek;
                 Chapters = sender.PlaybackItem?.Chapters;
