@@ -28,27 +28,24 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
-                    <media:AcrylicBrush
-                        x:Key="BackgroundArtAcrylicBrush"
-                        BackgroundSource="Backdrop"
-                        FallbackColor="#C92C2C2C"
-                        TintColor="#202020"
-                        TintLuminosityOpacity="0.96"
-                        TintOpacity="0.5" />
+                    <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
+                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">0.96</x:Double>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Light">
-                    <media:AcrylicBrush
-                        x:Key="BackgroundArtAcrylicBrush"
-                        BackgroundSource="Backdrop"
-                        FallbackColor="#C9F9F9F9"
-                        TintColor="#FCFCFC"
-                        TintLuminosityOpacity="0.85"
-                        TintOpacity="0.1" />
+                    <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
+                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">0.85</x:Double>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.1</x:Double>
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="BackgroundArtAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                    <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
+                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">1</x:Double>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
@@ -240,10 +237,17 @@
                     </animations:Explicit.Animations>
                 </Image>
             </Grid>
-            <Border
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="{ThemeResource BackgroundArtAcrylicBrush}" />
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Border.Background>
+                    <media:AcrylicBrush
+                        x:Name="BackgroundAcrylicBrush"
+                        BackgroundSource="Backdrop"
+                        FallbackColor="{ThemeResource BackgroundAcrylicTintFallbackColor}"
+                        TintColor="{ThemeResource BackgroundAcrylicTintColor}"
+                        TintLuminosityOpacity="{ThemeResource BackgroundAcrylicTintLuminosityOpacity}"
+                        TintOpacity="{ThemeResource BackgroundAcrylicTintOpacity}" />
+                </Border.Background>
+            </Border>
         </Grid>
 
         <controls:PlayerElement
@@ -467,32 +471,65 @@
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="HeaderBackground.Opacity" Value="1" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
+                        <Setter Target="VideoView.Opacity" Value="1" />
                     </VisualState.Setters>
-                    <Storyboard>
-                        <DoubleAnimation
-                            Storyboard.TargetName="VideoView"
-                            Storyboard.TargetProperty="Opacity"
-                            To="1"
-                            Duration="0:0:0.16" />
-                    </Storyboard>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ActualTheme, Mode=OneWay}" />
-                        <Setter Target="HeaderBackground.Background" Value="Transparent" />
-                        <Setter Target="PlayerControlsBackground.Background" Value="Transparent" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
+                        <Setter Target="HeaderBackground.Opacity" Value="0" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
+                        <Setter Target="VideoView.Opacity" Value="0" />
                     </VisualState.Setters>
-                    <Storyboard>
-                        <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
-                        <DoubleAnimation
-                            Storyboard.TargetName="VideoView"
-                            Storyboard.TargetProperty="Opacity"
-                            To="0"
-                            Duration="0:0:0.24" />
-                    </Storyboard>
                 </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.5"
+                        From="AudioOnly"
+                        To="Video">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Dark" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="VideoView" Storyboard.TargetProperty="Opacity">
+                                <DiscreteDoubleKeyFrame KeyTime="0:0:0.2" Value="0" />
+                                <LinearDoubleKeyFrame KeyTime="0:0:0.5" Value="1" />
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimation
+                                Storyboard.TargetName="BackgroundAcrylicBrush"
+                                Storyboard.TargetProperty="TintOpacity"
+                                To="1"
+                                Duration="0:0:0.2" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.24"
+                        From="Video"
+                        To="AudioOnly">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ActualTheme, Mode=OneWay}" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="PreviewWindowGroup">
