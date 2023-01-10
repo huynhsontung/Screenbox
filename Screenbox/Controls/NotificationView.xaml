@@ -13,10 +13,24 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                    <!--  Reference from AcrylicInAppFillColorDefaultBrush  -->
+                    <AcrylicBrush
+                        x:Key="InfoBarInformationalSeverityBackgroundBrush"
+                        BackgroundSource="Backdrop"
+                        FallbackColor="#F9F9F9"
+                        TintColor="#FCFCFC"
+                        TintLuminosityOpacity="0.85"
+                        TintOpacity="0.0" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                    <!--  Reference from AcrylicInAppFillColorDefaultBrush  -->
+                    <AcrylicBrush
+                        x:Key="InfoBarInformationalSeverityBackgroundBrush"
+                        BackgroundSource="Backdrop"
+                        FallbackColor="#2C2C2C"
+                        TintColor="#2C2C2C"
+                        TintLuminosityOpacity="0.96"
+                        TintOpacity="0.15" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
