@@ -408,9 +408,10 @@
             Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
         <controls:NotificationView
+            x:Name="NotificationView"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="12,0,12,4"
+            Margin="12,0,12,-8"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom" />
 
@@ -542,6 +543,7 @@
                         <Setter Target="PlayerStateBadge.Width" Value="50" />
                         <Setter Target="PlayerStateBadge.Height" Value="50" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
+                        <Setter Target="NotificationView.Margin" Value="4" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
@@ -576,6 +578,7 @@
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
+                        <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
@@ -613,6 +616,7 @@
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="SecondColumn.Width" Value="*" />
+                        <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
                         <Setter Target="LayoutRoot.CornerRadius" Value="8" />

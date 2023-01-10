@@ -9,8 +9,24 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <StaticResource x:Key="InfoBarInformationalSeverityBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <controls:InfoBar
+        x:Name="InfoBar"
         Title="{x:Bind ViewModel.Title, Mode=OneWay}"
         HorizontalAlignment="Center"
         VerticalAlignment="Bottom"
@@ -18,5 +34,9 @@
         Content="{x:Bind ViewModel.Content, Mode=OneWay}"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
         Message="{x:Bind ViewModel.Message, Mode=OneWay}"
-        Severity="{x:Bind ViewModel.Severity, Mode=OneWay}" />
+        Severity="{x:Bind ViewModel.Severity, Mode=OneWay}">
+        <controls:InfoBar.Shadow>
+            <ThemeShadow />
+        </controls:InfoBar.Shadow>
+    </controls:InfoBar>
 </UserControl>
