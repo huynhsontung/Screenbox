@@ -55,7 +55,6 @@ namespace Screenbox.ViewModels
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
-        private bool _processingNewMedia;
         private DateTimeOffset _lastUpdated;
 
         public PlayerPageViewModel(IWindowService windowService)
@@ -263,9 +262,13 @@ namespace Screenbox.ViewModels
             Media = current;
             if (current != null)
             {
-                _processingNewMedia = true;
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
+                AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                if (PlayerVisibility != PlayerVisibilityStates.Visible)
+                {
+                    PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Visible;
+                }
             }
             else if (PlayerVisibility == PlayerVisibilityStates.Minimal)
             {
@@ -286,16 +289,6 @@ namespace Screenbox.ViewModels
             {
                 IsPlaying = state == MediaPlaybackState.Playing;
                 IsOpening = false;
-
-                if (_processingNewMedia && IsPlaying && Media != null)
-                {
-                    _processingNewMedia = false;
-                    AudioOnly = Media.MediaType == MediaPlaybackType.Music;
-                    if (PlayerVisibility != PlayerVisibilityStates.Visible)
-                    {
-                        PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Visible;
-                    }
-                }
 
                 if (ControlsHidden && !IsPlaying)
                 {
