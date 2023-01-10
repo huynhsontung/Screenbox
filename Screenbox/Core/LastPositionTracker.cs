@@ -80,9 +80,9 @@ namespace Screenbox.Core
             StorageFile file =
                 await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SaveFileName,
                     CreationCollisionOption.OpenIfExists);
-            using IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite);
-            using Stream writeStream = stream.AsStreamForWrite();
-            Serializer.Serialize(writeStream, _lastPositions);
+            using Stream stream = await file.OpenStreamForWriteAsync();
+            Serializer.Serialize(stream, _lastPositions);
+            stream.SetLength(stream.Position);
         }
 
         public async Task LoadFromDiskAsync()
@@ -93,8 +93,7 @@ namespace Screenbox.Core
             {
                 try
                 {
-                    using IRandomAccessStreamWithContentType stream = await file.OpenReadAsync();
-                    using Stream readStream = stream.AsStreamForRead();
+                    using Stream readStream = await file.OpenStreamForReadAsync();
 
                     List<MediaLastPosition>? lastPositions = Serializer.Deserialize<List<MediaLastPosition>>(readStream);
                     if (lastPositions != null)
