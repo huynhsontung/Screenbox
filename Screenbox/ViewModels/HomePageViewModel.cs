@@ -185,6 +185,10 @@ namespace Screenbox.ViewModels
                 return await StorageApplicationPermissions.MostRecentlyUsedList.GetFileAsync(token,
                     AccessCacheOptions.UseReadOnlyCachedCopy | AccessCacheOptions.SuppressAccessTimeUpdate);
             }
+            catch (UnauthorizedAccessException)
+            {
+                return null;
+            }
             catch (System.IO.FileNotFoundException)
             {
                 return null;
