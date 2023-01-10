@@ -1178,6 +1178,29 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region ResumePositionNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Resume where you left off
+        /// </summary>
+        public static string ResumePositionNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("ResumePositionNotificationTitle");
+            }
+        }
+        #endregion
+
+        #region GoToPosition
+        /// <summary>
+        ///   Looks up a localized string similar to: Go to {0}
+        /// </summary>
+        public static string GoToPosition(string position)
+        {
+            return string.Format(_resourceLoader.GetString("GoToPosition"), position);
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1275,6 +1298,8 @@ namespace Screenbox.Strings{
             Recent,
             VideoSettings,
             Open,
+            ResumePositionNotificationTitle,
+            GoToPosition,
         }
 
         private static ResourceLoader _resourceLoader;
