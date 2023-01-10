@@ -32,11 +32,8 @@
         VerticalAlignment="Bottom"
         ActionButton="{x:Bind ViewModel.ActionButton, Mode=OneWay}"
         Content="{x:Bind ViewModel.Content, Mode=OneWay}"
+        CornerRadius="8"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
         Message="{x:Bind ViewModel.Message, Mode=OneWay}"
-        Severity="{x:Bind ViewModel.Severity, Mode=OneWay}">
-        <controls:InfoBar.Shadow>
-            <ThemeShadow />
-        </controls:InfoBar.Shadow>
-    </controls:InfoBar>
+        Severity="{x:Bind ViewModel.Severity, Mode=OneWay}" />
 </UserControl>

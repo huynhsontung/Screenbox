@@ -34,7 +34,7 @@
                         FallbackColor="#C92C2C2C"
                         TintColor="#202020"
                         TintLuminosityOpacity="0.96"
-                        TintOpacity="0.8" />
+                        TintOpacity="0.5" />
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Light">
@@ -44,7 +44,7 @@
                         FallbackColor="#C9F9F9F9"
                         TintColor="#FCFCFC"
                         TintLuminosityOpacity="0.85"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.1" />
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="HighContrast">
@@ -343,10 +343,12 @@
             Grid.Row="1"
             Grid.Column="0"
             Margin="22,4"
-            Padding="{StaticResource ButtonPadding}"
+            Padding="11,8,11,9"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
             CornerRadius="6"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
@@ -411,7 +413,7 @@
             x:Name="NotificationView"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="12,0,12,-8"
+            Margin="12,0,12,-12"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom" />
 
