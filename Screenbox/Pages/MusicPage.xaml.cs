@@ -31,6 +31,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ContentFrame.Navigate(typeof(SongsPage), null, new SuppressNavigationTransitionInfo());
+            LibraryNavigationView.SelectedItem = LibraryNavigationView.MenuItems[0];
         }
 
         public void GoBack()
