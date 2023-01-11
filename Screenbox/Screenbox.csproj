@@ -239,6 +239,12 @@
     <Compile Include="Factories\ArtistViewModelFactory.cs" />
     <Compile Include="Factories\MediaViewModelFactory.cs" />
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
+    <Compile Include="Pages\AlbumsPage.xaml.cs">
+      <DependentUpon>AlbumsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ArtistsPage.xaml.cs">
+      <DependentUpon>ArtistsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\FolderViewPage.xaml.cs">
       <DependentUpon>FolderViewPage.xaml</DependentUpon>
     </Compile>
@@ -468,6 +474,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VolumeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AlbumsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ArtistsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

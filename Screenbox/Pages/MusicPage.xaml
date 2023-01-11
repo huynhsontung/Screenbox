@@ -15,12 +15,13 @@
 
     <Grid>
         <muxc:NavigationView
-            x:Name="LibraryNavigationView"
+            x:Name="LibraryNavView"
             Margin="0,44,0,0"
             Background="Transparent"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
-            PaneDisplayMode="Top">
+            PaneDisplayMode="Top"
+            SelectionChanged="LibraryNavView_OnSelectionChanged">
             <muxc:NavigationView.Resources>
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
@@ -33,9 +34,18 @@
                     Text="{x:Bind strings:Resources.Music}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Content="Songs" FontSize="16" />
-                <muxc:NavigationViewItem Content="Albums" FontSize="16" />
-                <muxc:NavigationViewItem Content="Artists" FontSize="16" />
+                <muxc:NavigationViewItem
+                    Content="Songs"
+                    FontSize="16"
+                    Tag="songs" />
+                <muxc:NavigationViewItem
+                    Content="Albums"
+                    FontSize="16"
+                    Tag="albums" />
+                <muxc:NavigationViewItem
+                    Content="Artists"
+                    FontSize="16"
+                    Tag="artists" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.PaneFooter>
                 <Button
