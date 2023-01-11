@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Messages;
 using Screenbox.Core;
 using Screenbox.Services;
@@ -16,11 +14,8 @@ using Windows.System;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class SettingsPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+    internal sealed partial class SettingsPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
-
         [ObservableProperty] private int _playerAutoResize;
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
@@ -43,17 +38,11 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
 
             LoadValues();
             LoadLibraryLocations();
 
             IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         partial void OnPlayerAutoResizeChanged(int value)

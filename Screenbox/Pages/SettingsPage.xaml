@@ -103,11 +103,11 @@
 
         <ScrollViewer
             Grid.Row="1"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             HorizontalScrollMode="Disabled">
             <StackPanel
                 x:Name="ContentRoot"
-                Margin="{StaticResource ContentPageBottomMargin}"
+                Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
                 Padding="{StaticResource ContentPageRightMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
                 Spacing="4">
@@ -212,6 +212,7 @@
                     FontWeight="SemiBold"
                     Text="About" />
                 <labs:SettingsCard
+                    Margin="0,0,0,24"
                     HorizontalContentAlignment="Left"
                     ContentAlignment="Vertical"
                     Header="Screenbox Media Player"
@@ -241,7 +242,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>

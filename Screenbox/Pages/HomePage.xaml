@@ -230,7 +230,7 @@
                 Margin="0,16,0,0"
                 Padding="{StaticResource ContentPageThumbnailRightMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
-                ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+                ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 ContextRequested="RecentFilesGridView_OnContextRequested"
                 IsItemClickEnabled="True"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
@@ -238,7 +238,7 @@
                 RightTapped="RecentFilesGridView_OnRightTapped"
                 SelectionMode="None">
                 <GridView.Footer>
-                    <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </GridView.Footer>
             </GridView>
         </Grid>
@@ -249,7 +249,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>

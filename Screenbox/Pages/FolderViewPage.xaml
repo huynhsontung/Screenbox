@@ -105,7 +105,7 @@
             x:Name="FolderView"
             Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ContainerContentChanging="FolderView_OnContainerContentChanging"
             ContextRequested="FolderView_OnContextRequested"
             IsItemClickEnabled="True"
@@ -114,7 +114,7 @@
             RightTapped="FolderView_OnRightTapped"
             SelectionMode="None">
             <GridView.Footer>
-                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
         </GridView>
         <TextBlock
@@ -131,7 +131,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>

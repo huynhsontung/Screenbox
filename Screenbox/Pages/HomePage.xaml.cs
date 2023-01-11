@@ -18,10 +18,13 @@ namespace Screenbox.Pages
     {
         internal HomePageViewModel ViewModel => (HomePageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public HomePage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<HomePageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
             VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
         }
 

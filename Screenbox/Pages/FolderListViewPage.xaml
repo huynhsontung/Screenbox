@@ -73,7 +73,7 @@
             x:Name="ListView"
             Padding="{StaticResource ContentPageRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ContextRequested="ListView_OnContextRequested"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
@@ -81,7 +81,7 @@
             RightTapped="ListView_OnRightTapped"
             SelectionMode="None">
             <ListView.Footer>
-                <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
         </controls:AlternatingListView>
 
@@ -99,7 +99,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>

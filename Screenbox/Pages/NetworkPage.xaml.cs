@@ -29,10 +29,13 @@ namespace Screenbox.Pages
 
         internal NetworkPageViewModel ViewModel => (NetworkPageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public NetworkPage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<NetworkPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

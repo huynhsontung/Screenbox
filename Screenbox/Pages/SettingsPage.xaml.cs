@@ -17,10 +17,12 @@ namespace Screenbox.Pages
     {
         internal SettingsPageViewModel ViewModel => (SettingsPageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
         public SettingsPage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<SettingsPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         private void ContentRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)

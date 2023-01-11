@@ -34,13 +34,16 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
-        [ObservableProperty] private PlayerVisibilityStates _playerVisibility;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private bool _showPlayPauseBadge;
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedRecipients]
+        private PlayerVisibilityStates _playerVisibility;
 
         public bool SeekBarPointerPressed { get; set; }
 

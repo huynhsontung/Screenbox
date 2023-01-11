@@ -14,10 +14,13 @@ namespace Screenbox.Pages
     {
         internal PlayQueuePageViewModel ViewModel => (PlayQueuePageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public PlayQueuePage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayQueuePageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)

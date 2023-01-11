@@ -145,7 +145,7 @@
             Grid.Row="2"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             AllowDrop="True"
             AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
             CanDragItems="True"
@@ -156,7 +156,7 @@
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <local:AlternatingListView.Footer>
-                <Border x:Name="Footer" Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </local:AlternatingListView.Footer>
             <local:AlternatingListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">

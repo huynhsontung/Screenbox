@@ -17,10 +17,13 @@ namespace Screenbox.Pages
     {
         internal FolderListViewPageViewModel ViewModel => (FolderListViewPageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public FolderListViewPage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<FolderListViewPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

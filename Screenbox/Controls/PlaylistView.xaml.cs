@@ -29,10 +29,13 @@ namespace Screenbox.Controls
 
         internal PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public PlaylistView()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlaylistViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
             ViewModel.Playlist.CollectionChanged += PlaylistOnCollectionChanged;
         }
 

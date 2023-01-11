@@ -11,25 +11,20 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using Screenbox.Services;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
     internal sealed partial class HomePageViewModel : ObservableRecipient,
-        IRecipient<PlaylistActiveItemChangedMessage>,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+        IRecipient<PlaylistActiveItemChangedMessage>
     {
         public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
 
         public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0;
-
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly IFilesService _filesService;
@@ -38,16 +33,10 @@ namespace Screenbox.ViewModels
         {
             _mediaFactory = mediaFactory;
             _filesService = filesService;
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
 
             // Activate the view model's messenger
             IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         public async void Receive(PlaylistActiveItemChangedMessage message)

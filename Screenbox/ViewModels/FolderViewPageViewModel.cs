@@ -16,15 +16,12 @@ using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Factories;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Controls;
 using Screenbox.Core;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
     internal partial class FolderViewPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
         IRecipient<RefreshFolderMessage>
     {
         public ObservableCollection<StorageItemViewModel> Items { get; }
@@ -35,7 +32,7 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlayCommand), nameof(PlayNextCommand), nameof(ShowPropertiesCommand))]
         private StorageItemViewModel? _contextRequested;
@@ -57,17 +54,11 @@ namespace Screenbox.ViewModels
             _navigationService = navigationService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _loadingTimer = _dispatcherQueue.CreateTimer();
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playableItems = new List<MediaViewModel>();
             Breadcrumbs = Array.Empty<StorageFolder>();
             Items = new ObservableCollection<StorageItemViewModel>();
 
             IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         public void Receive(RefreshFolderMessage message)
