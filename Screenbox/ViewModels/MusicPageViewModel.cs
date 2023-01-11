@@ -27,6 +27,7 @@ namespace Screenbox.ViewModels
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
+        [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
@@ -34,6 +35,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
+        private readonly HashSet<string> _albumNames;
         private Task _loadSongsTask;
         private StorageLibrary? _library;
 
@@ -46,7 +48,9 @@ namespace Screenbox.ViewModels
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
+            _groupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
             _songs = new List<MediaViewModel>();
+            _albumNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             PopulateGroups();
@@ -144,11 +148,21 @@ namespace Screenbox.ViewModels
 
                 List<MediaViewModel> songs = files.Select(_mediaFactory.GetSingleton).ToList();
                 _songs.AddRange(songs);
-                await Task.WhenAll(songs.Select(vm => vm.LoadTitleAsync()));
+                await Task.WhenAll(songs.Select(vm => vm.LoadDetailsAsync()));
 
                 foreach (MediaViewModel song in songs)
                 {
                     GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
+
+                    if (song.Album != null && !_albumNames.Contains(song.Album.ToString()))
+                    {
+                        string albumName = song.Album.Name;
+                        string key = albumName != Strings.Resources.UnknownAlbum
+                            ? GetFirstLetterGroup(albumName)
+                            : "\u2026";
+                        GroupedAlbums.AddItem(key, song.Album);
+                        _albumNames.Add(song.Album.ToString());
+                    }
                 }
             }
 
@@ -188,6 +202,7 @@ namespace Screenbox.ViewModels
             foreach (char letter in letters)
             {
                 GroupedSongs.AddGroup(letter.ToString());
+                GroupedAlbums.AddGroup(letter.ToString());
             }
         }
     }
