@@ -97,7 +97,7 @@
             <TextBlock
                 x:Name="HeaderText"
                 MaxLines="2"
-                Style="{StaticResource TitleTextBlockStyle}"
+                Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Settings}" />
         </Grid>
 

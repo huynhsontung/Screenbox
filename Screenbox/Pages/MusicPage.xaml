@@ -97,7 +97,7 @@
             <TextBlock
                 Grid.Column="0"
                 MaxLines="2"
-                Style="{StaticResource TitleTextBlockStyle}"
+                Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Music}" />
 
             <Button
