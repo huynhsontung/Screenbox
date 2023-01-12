@@ -28,7 +28,6 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private bool _isFullscreen;
-        [ObservableProperty] private bool _showPreviousNext;
         [ObservableProperty] private bool _zoomToFit;
         [ObservableProperty] private bool _hasVideo;
         [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
@@ -136,18 +135,10 @@ namespace Screenbox.ViewModels
             _mediaPlayer.PlaybackRate = value;
         }
 
-        private void UpdateShowPreviousNext()
-        {
-            ShowPreviousNext = PlaylistViewModel.CanSkip && !IsCompact;
-        }
-
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case nameof(PlaylistViewModel.CanSkip):
-                    UpdateShowPreviousNext();
-                    break;
                 case nameof(PlaylistViewModel.ActiveItem):
                     HasActiveItem = PlaylistViewModel.ActiveItem != null;
                     break;
@@ -196,8 +187,6 @@ namespace Screenbox.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            UpdateShowPreviousNext();
         }
 
         [RelayCommand]

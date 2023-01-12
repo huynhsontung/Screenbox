@@ -35,7 +35,6 @@ namespace Screenbox.ViewModels
     {
         public ObservableCollection<MediaViewModel> Playlist { get; }
 
-        [ObservableProperty] private bool _canSkip;
         [ObservableProperty] private bool _hasItems;
         [ObservableProperty] private string _repeatModeGlyph;
         [ObservableProperty] private bool _shuffleMode;
@@ -354,7 +353,6 @@ namespace Screenbox.ViewModels
 
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
-            CanSkip = _neighboringFilesQuery != null || Playlist.Count > 1;
             HasItems = Playlist.Count > 0;
 
             if (Playlist.Count <= 1)
