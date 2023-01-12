@@ -288,6 +288,10 @@ namespace Screenbox.ViewModels
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
+        private bool IsItemNotFirst(MediaViewModel item) => Playlist.Count > 0 && Playlist[0] != item;
+
+        private bool IsItemNotLast(MediaViewModel item) => Playlist.Count > 0 && Playlist[Playlist.Count - 1] != item;
+
         private void UpdateMediaBuffer()
         {
             int playlistCount = Playlist.Count;
@@ -532,11 +536,17 @@ namespace Screenbox.ViewModels
         {
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
+            MoveItemUp(item);
+            selectedItems.Add(item);
+        }
+
+        [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
+        private void MoveItemUp(MediaViewModel item)
+        {
             int index = Playlist.IndexOf(item);
             if (index <= 0) return;
             Playlist.RemoveAt(index);
             Playlist.Insert(index - 1, item);
-            selectedItems.Add(item);
         }
 
         [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -544,11 +554,17 @@ namespace Screenbox.ViewModels
         {
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
+            MoveItemDown(item);
+            selectedItems.Add(item);
+        }
+
+        [RelayCommand(CanExecute = nameof(IsItemNotLast))]
+        private void MoveItemDown(MediaViewModel item)
+        {
             int index = Playlist.IndexOf(item);
             if (index == -1 || index >= Playlist.Count - 1) return;
             Playlist.RemoveAt(index);
             Playlist.Insert(index + 1, item);
-            selectedItems.Add(item);
         }
 
         private bool CanNext()
