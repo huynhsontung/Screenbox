@@ -127,7 +127,7 @@ namespace Screenbox.Controls
         private void PlaylistListView_OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
         {
             if (ItemFlyout.Items == null) return;
-            if (args.OriginalSource is GridViewItem item)
+            if (args.OriginalSource is ListViewItem item)
             {
                 foreach (MenuFlyoutItemBase itemBase in ItemFlyout.Items)
                 {
