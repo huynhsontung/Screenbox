@@ -56,7 +56,14 @@ namespace Screenbox.Services
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
             {
-                StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+                try
+                {
+                    StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+                }
+                catch (Exception)
+                {
+                    LogService.Log($"Failed to remove FAL: {mrl.Substring(8)}");
+                }
             }
 
             media.Dispose();
