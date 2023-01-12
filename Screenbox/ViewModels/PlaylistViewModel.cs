@@ -12,9 +12,11 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
@@ -493,24 +495,36 @@ namespace Screenbox.ViewModels
             List<object> copy = selectedItems.ToList();
             foreach (MediaViewModel item in copy)
             {
-                if (ActiveItem == item)
-                {
-                    ActiveItem = null;
-                }
-
-                Playlist.Remove(item);
+                Remove(item);
             }
         }
 
+        [RelayCommand]
+        private void Remove(MediaViewModel item)
+        {
+            if (ActiveItem == item)
+            {
+                ActiveItem = null;
+            }
+
+            Playlist.Remove(item);
+        }
+
         [RelayCommand(CanExecute = nameof(HasSelection))]
-        private void PlayNext(IList<object>? selectedItems)
+        private void PlaySelectedNext(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
             IEnumerable<object> reverse = selectedItems.Reverse();
             foreach (MediaViewModel item in reverse)
             {
-                Playlist.Insert(_currentIndex + 1, item.Clone());
+                PlayNext(item);
             }
+        }
+
+        [RelayCommand]
+        private void PlayNext(MediaViewModel item)
+        {
+            Playlist.Insert(_currentIndex + 1, item.Clone());
         }
 
         [RelayCommand(CanExecute = nameof(HasSelection))]
@@ -624,6 +638,13 @@ namespace Screenbox.ViewModels
             {
                 _mediaPlayer.Position = TimeSpan.Zero;
             }
+        }
+
+        [RelayCommand]
+        private async Task ShowPropertiesAsync(MediaViewModel media)
+        {
+            ContentDialog propertiesDialog = PropertiesView.GetDialog(media);
+            await propertiesDialog.ShowAsync();
         }
 
         private void OnEndReached(IMediaPlayer sender, object? args)

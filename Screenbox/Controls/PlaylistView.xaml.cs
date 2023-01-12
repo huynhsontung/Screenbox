@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -120,6 +121,36 @@ namespace Screenbox.Controls
             if (ViewModel.ActiveItem != null && PlaylistListView.FindChild<ListViewBase>() is {} listView)
             {
                 listView.SmoothScrollIntoViewWithItemAsync(ViewModel.ActiveItem, ScrollItemPlacement.Center);
+            }
+        }
+
+        private void PlaylistListView_OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
+        {
+            if (ItemFlyout.Items == null) return;
+            if (args.OriginalSource is GridViewItem item)
+            {
+                foreach (MenuFlyoutItemBase itemBase in ItemFlyout.Items)
+                {
+                    itemBase.DataContext = item.Content;
+                }
+
+                ItemFlyout.ShowAt(item);
+                args.Handled = true;
+            }
+        }
+
+        private void PlaylistListView_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (ItemFlyout.Items == null) return;
+            if (e.OriginalSource is FrameworkElement { DataContext: MediaViewModel media } element)
+            {
+                foreach (MenuFlyoutItemBase itemBase in ItemFlyout.Items)
+                {
+                    itemBase.DataContext = media;
+                }
+
+                ItemFlyout.ShowAt(element, e.GetPosition(element));
+                e.Handled = true;
             }
         }
     }

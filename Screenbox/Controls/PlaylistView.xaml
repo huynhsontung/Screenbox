@@ -18,11 +18,47 @@
         <Grid.Resources>
             <ThemeShadow x:Name="SharedShadow" />
 
-            <XamlUICommand x:Key="PlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}">
+            <XamlUICommand
+                x:Key="PlayAccentCommand"
+                Command="{x:Bind ViewModel.PlaySingleCommand}"
+                Label="{strings:Resources Key=Play}">
                 <XamlUICommand.IconSource>
                     <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
                 </XamlUICommand.IconSource>
             </XamlUICommand>
+
+            <XamlUICommand
+                x:Key="PlayCommand"
+                Command="{x:Bind ViewModel.PlaySingleCommand}"
+                IconSource="{ui:SymbolIconSource Symbol=Play}"
+                Label="{strings:Resources Key=Play}" />
+
+            <XamlUICommand
+                x:Key="PlayNextCommand"
+                Command="{x:Bind ViewModel.PlayNextCommand}"
+                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
+                                               Glyph=B}"
+                Label="{strings:Resources Key=PlayNext}" />
+
+            <XamlUICommand
+                x:Key="RemoveCommand"
+                Command="{x:Bind ViewModel.RemoveCommand}"
+                IconSource="{ui:SymbolIconSource Symbol=Delete}"
+                Label="{strings:Resources Key=Remove}" />
+
+            <XamlUICommand
+                x:Key="PropertiesCommand"
+                Command="{x:Bind ViewModel.ShowPropertiesCommand}"
+                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                Label="{strings:Resources Key=Properties}" />
+
+            <MenuFlyout x:Name="ItemFlyout">
+                <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
+            </MenuFlyout>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -77,7 +113,7 @@
                 SizeChanged="CommandBar_OnSizeChanged">
                 <AppBarButton
                     x:Name="PlayNextButton"
-                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Label="{x:Bind strings:Resources.PlayNext}">
                     <AppBarButton.Icon>
@@ -150,9 +186,11 @@
             AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
             CanDragItems="True"
             CanReorderItems="True"
+            ContextRequested="PlaylistListView_OnContextRequested"
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             ItemsSource="{x:Bind ViewModel.Playlist}"
+            RightTapped="PlaylistListView_OnRightTapped"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <local:AlternatingListView.Footer>
@@ -161,7 +199,7 @@
             <local:AlternatingListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <local:MediaListViewItem
-                        PlayCommand="{StaticResource PlayCommand}"
+                        PlayCommand="{StaticResource PlayAccentCommand}"
                         SelectionMode="{x:Bind PlaylistListView.SelectionMode, Mode=OneWay}"
                         ShowMediaIcon="True" />
                 </DataTemplate>
