@@ -12,6 +12,7 @@
     xmlns:viewModels="using:Screenbox.ViewModels"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -100,6 +101,7 @@
             <ToggleButton
                 x:Name="MultiSelectToggle"
                 VerticalAlignment="Center"
+                IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe762;" />
@@ -173,7 +175,7 @@
                 </AppBarButton>
                 <AppBarButton
                     Width="40"
-                    Click="ClearSelection_OnClick"
+                    Command="{x:Bind ViewModel.ClearSelectionCommand}"
                     Icon="Clear"
                     Label="{x:Bind strings:Resources.ClearSelection}"
                     LabelPosition="Collapsed" />
@@ -219,23 +221,12 @@
             </local:AlternatingListView.ItemTemplate>
         </local:AlternatingListView>
 
-        <interactivity:Interaction.Behaviors>
-            <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="True">
-                <core:GoToStateAction StateName="Multiple" TargetObject="{x:Bind}" />
-            </core:DataTriggerBehavior>
-            <core:DataTriggerBehavior Binding="{x:Bind MultiSelectToggle.IsChecked, Mode=OneWay}" Value="False">
-                <core:GoToStateAction StateName="Extended" TargetObject="{x:Bind}" />
-            </core:DataTriggerBehavior>
-            <core:EventTriggerBehavior EventName="Loaded">
-                <core:CallMethodAction MethodName="UpdateLayoutState" TargetObject="{x:Bind}" />
-                <core:CallMethodAction MethodName="GoToCurrentItem" TargetObject="{x:Bind}" />
-            </core:EventTriggerBehavior>
-        </interactivity:Interaction.Behaviors>
-
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SelectionModes">
-                <VisualState x:Name="Extended" />
                 <VisualState x:Name="Multiple">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.EnableMultiSelect, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
                         <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />

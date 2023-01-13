@@ -37,21 +37,12 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlaylistViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
-            ViewModel.Playlist.Items.CollectionChanged += PlaylistOnCollectionChanged;
         }
 
         public async Task SmoothScrollActiveItemIntoViewAsync()
         {
             if (ViewModel.Playlist.CurrentItem == null || !ViewModel.HasItems) return;
             await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
-        }
-
-        private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (ViewModel.Playlist.Items.Count == 0)
-            {
-                MultiSelectToggle.IsChecked = false;
-            }
         }
 
         private void SelectionCheckBox_OnClick(object sender, RoutedEventArgs e)
@@ -69,7 +60,7 @@ namespace Screenbox.Controls
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
-            if (MultiSelectToggle.IsChecked ?? false)
+            if (ViewModel.EnableMultiSelect)
             {
                 VisualStateManager.GoToState(this,
                     PlaylistListView.SelectedItems.Count == 1 ? "MultipleSingleSelected" : "Multiple", true);
@@ -94,18 +85,12 @@ namespace Screenbox.Controls
             }
         }
 
-        private void ClearSelection_OnClick(object sender, RoutedEventArgs e)
-        {
-            MultiSelectToggle.IsChecked = false;
-            PlaylistListView.SelectedItem = null;
-        }
-
         private void CommandBar_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateLayoutState();
         }
 
-        public void UpdateLayoutState()
+        private void UpdateLayoutState()
         {
             if (IsFlyout)
             {
@@ -116,7 +101,7 @@ namespace Screenbox.Controls
             VisualStateManager.GoToState(this, SelectionCommandBar.ActualWidth <= 620 ? "Compact" : "Normal", true);
         }
 
-        public void GoToCurrentItem()
+        private void GoToCurrentItem()
         {
             if (ViewModel.Playlist.CurrentItem != null && PlaylistListView.FindChild<ListViewBase>() is { } listView)
             {
@@ -152,6 +137,12 @@ namespace Screenbox.Controls
                 ItemFlyout.ShowAt(element, e.GetPosition(element));
                 e.Handled = true;
             }
+        }
+
+        private void PlaylistView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            UpdateLayoutState();
+            GoToCurrentItem();
         }
     }
 }

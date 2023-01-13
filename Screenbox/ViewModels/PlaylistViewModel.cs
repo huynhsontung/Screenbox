@@ -19,6 +19,8 @@ namespace Screenbox.ViewModels
         public MediaListViewModel Playlist { get; }
 
         [ObservableProperty] private bool _hasItems;
+        [ObservableProperty] private bool _enableMultiSelect;
+        [ObservableProperty] private object? _selectedItem;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
@@ -37,6 +39,16 @@ namespace Screenbox.ViewModels
         private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasItems = Playlist.Items.Count > 0;
+            if (!HasItems)
+            {
+                EnableMultiSelect = false;
+            }
+        }
+
+        partial void OnEnableMultiSelectChanged(bool value)
+        {
+            if (!value)
+                SelectedItem = null;
         }
 
         public async Task EnqueueDataView(DataPackageView dataView)
@@ -128,6 +140,13 @@ namespace Screenbox.ViewModels
             if (index == -1 || index >= Playlist.Items.Count - 1) return;
             Playlist.Items.RemoveAt(index);
             Playlist.Items.Insert(index + 1, item);
+        }
+
+        [RelayCommand]
+        private void ClearSelection()
+        {
+            EnableMultiSelect = false;
+            SelectedItem = null;
         }
 
         [RelayCommand]
