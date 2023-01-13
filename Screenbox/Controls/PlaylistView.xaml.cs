@@ -37,18 +37,18 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlaylistViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
-            ViewModel.Playlist.CollectionChanged += PlaylistOnCollectionChanged;
+            ViewModel.Playlist.Items.CollectionChanged += PlaylistOnCollectionChanged;
         }
 
         public async Task SmoothScrollActiveItemIntoViewAsync()
         {
-            if (ViewModel.ActiveItem == null || !ViewModel.HasItems) return;
-            await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.ActiveItem, ScrollItemPlacement.Center);
+            if (ViewModel.Playlist.CurrentItem == null || !ViewModel.HasItems) return;
+            await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
         }
 
         private void PlaylistOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (ViewModel.Playlist.Count == 0)
+            if (ViewModel.Playlist.Items.Count == 0)
             {
                 MultiSelectToggle.IsChecked = false;
             }
@@ -68,7 +68,7 @@ namespace Screenbox.Controls
 
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Count;
+            SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
             if (MultiSelectToggle.IsChecked ?? false)
             {
                 VisualStateManager.GoToState(this,
@@ -118,9 +118,9 @@ namespace Screenbox.Controls
 
         public void GoToCurrentItem()
         {
-            if (ViewModel.ActiveItem != null && PlaylistListView.FindChild<ListViewBase>() is {} listView)
+            if (ViewModel.Playlist.CurrentItem != null && PlaylistListView.FindChild<ListViewBase>() is { } listView)
             {
-                listView.SmoothScrollIntoViewWithItemAsync(ViewModel.ActiveItem, ScrollItemPlacement.Center);
+                listView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
             }
         }
 

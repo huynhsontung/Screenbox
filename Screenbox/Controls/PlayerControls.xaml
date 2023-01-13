@@ -295,7 +295,7 @@
                 x:Name="PreviousButton"
                 Margin="2,0,0,0"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
-                Command="{x:Bind ViewModel.PlaylistViewModel.PreviousCommand}"
+                Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                 CornerRadius="4,0,0,4"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE100;" />
@@ -307,7 +307,7 @@
                 x:Name="NextButton"
                 Margin="0,0,2,0"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
-                Command="{x:Bind ViewModel.PlaylistViewModel.NextCommand}"
+                Command="{x:Bind ViewModel.Playlist.NextCommand}"
                 CornerRadius="0,4,4,0"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE101;" />
@@ -353,10 +353,10 @@
 
             <ToggleButton
                 x:Name="ShuffleButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.PlaylistViewModel.ShuffleMode), Mode=OneWay}"
-                IsChecked="{x:Bind ViewModel.PlaylistViewModel.ShuffleMode, Mode=TwoWay}"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
+                IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}" Glyph="{x:Bind ViewModel.PlaylistViewModel.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}" Glyph="{x:Bind ViewModel.Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -364,11 +364,11 @@
 
             <ToggleButton
                 x:Name="RepeatButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.PlaylistViewModel.RepeatMode), Mode=OneWay}"
-                IsChecked="{x:Bind ViewModel.PlaylistViewModel.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
+                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
+                IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon Glyph="{x:Bind ViewModel.PlaylistViewModel.RepeatModeGlyph, Mode=OneWay}" />
+                <FontIcon Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>

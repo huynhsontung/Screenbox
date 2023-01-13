@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -86,6 +87,21 @@ namespace Screenbox.Controls
         {
             ViewModel.PlaybackSpeed = e.NewValue;
             SelectAlternatePlaybackSpeedItem(e.NewValue);
+        }
+
+        private string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
+        {
+            switch (repeatMode)
+            {
+                case MediaPlaybackAutoRepeatMode.None:
+                    return "\uf5e7";
+                case MediaPlaybackAutoRepeatMode.List:
+                    return "\ue8ee";
+                case MediaPlaybackAutoRepeatMode.Track:
+                    return "\ue8ed";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
+            }
         }
 
         private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)

@@ -23,7 +23,7 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
-        public PlaylistViewModel PlaylistViewModel { get; }
+        public MediaListViewModel Playlist { get; }
 
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isCompact;
@@ -48,7 +48,7 @@ namespace Screenbox.ViewModels
         private IMediaPlayer? _mediaPlayer;
 
         public PlayerControlsViewModel(
-            PlaylistViewModel playlistViewModel,
+            MediaListViewModel playlist,
             IFilesService filesService,
             IWindowService windowService)
         {
@@ -58,8 +58,8 @@ namespace Screenbox.ViewModels
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playPauseGlyph = GetPlayPauseGlyph(false);
             _playbackSpeed = 1.0;
-            PlaylistViewModel = playlistViewModel;
-            PlaylistViewModel.PropertyChanged += PlaylistViewModelOnPropertyChanged;
+            Playlist = playlist;
+            Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
             IsActive = true;
         }
@@ -139,8 +139,8 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(PlaylistViewModel.ActiveItem):
-                    HasActiveItem = PlaylistViewModel.ActiveItem != null;
+                case nameof(Playlist.CurrentItem):
+                    HasActiveItem = Playlist.CurrentItem != null;
                     break;
             }
         }
@@ -261,8 +261,8 @@ namespace Screenbox.ViewModels
         [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private async Task ShowPropertiesAsync()
         {
-            if (PlaylistViewModel.ActiveItem == null) return;
-            ContentDialog propertiesDialog = PropertiesView.GetDialog(PlaylistViewModel.ActiveItem);
+            if (Playlist.CurrentItem == null) return;
+            ContentDialog propertiesDialog = PropertiesView.GetDialog(Playlist.CurrentItem);
             await propertiesDialog.ShowAsync();
         }
 
