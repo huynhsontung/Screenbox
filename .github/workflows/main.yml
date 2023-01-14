@@ -90,10 +90,13 @@ jobs:
         name: Screenbox-sideload
         path: download/
 
+    - name: Zip artifact
+      run: zip -r sideload.zip download/
+
     - name: Generate GitHub Release
       uses: marvinpinto/action-automatic-releases@v1.2.1
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: true
         files: |
-          download/*
+          sideload.zip
