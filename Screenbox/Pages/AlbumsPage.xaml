@@ -105,6 +105,7 @@
                     x:Name="AlbumGridView"
                     Padding="{StaticResource ContentPageThumbnailRightMargin}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
+                    ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
                     ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View}"

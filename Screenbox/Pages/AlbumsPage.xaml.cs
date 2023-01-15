@@ -34,5 +34,14 @@ namespace Screenbox.Pages
             DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
         }
+
+        private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.Phase != 0) return;
+            if (args.Item is AlbumViewModel album)
+            {
+                album.RelatedSongs[0].LoadThumbnailAsync();
+            }
+        }
     }
 }
