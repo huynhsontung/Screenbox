@@ -28,6 +28,7 @@ namespace Screenbox.ViewModels
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
+        [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
@@ -36,6 +37,7 @@ namespace Screenbox.ViewModels
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
         private readonly HashSet<string> _albumNames;
+        private readonly HashSet<string> _artistNames;
         private Task _loadSongsTask;
         private StorageLibrary? _library;
 
@@ -49,8 +51,10 @@ namespace Screenbox.ViewModels
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _groupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
+            _groupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
             _songs = new List<MediaViewModel>();
             _albumNames = new HashSet<string>();
+            _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             PopulateGroups();
@@ -163,6 +167,21 @@ namespace Screenbox.ViewModels
                         GroupedAlbums.AddItem(key, song.Album);
                         _albumNames.Add(song.Album.ToString());
                     }
+
+                    if (song.Artists?.Length > 0)
+                    {
+                        foreach (ArtistViewModel artist in song.Artists)
+                        {
+                            if (_artistNames.Contains(artist.Name))
+                                continue;
+
+                            string key = artist.Name != Strings.Resources.UnknownArtist
+                                ? GetFirstLetterGroup(artist.Name)
+                                : "\u2026";
+                            GroupedArtists.AddItem(key, artist);
+                            _artistNames.Add(artist.Name);
+                        }
+                    }
                 }
             }
 
@@ -198,11 +217,12 @@ namespace Screenbox.ViewModels
         private void PopulateGroups()
         {
             // TODO: Support other languages beside English
-            string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
-            foreach (char letter in letters)
+            const string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
+            foreach (string key in letters.Select(letter => letter.ToString()))
             {
-                GroupedSongs.AddGroup(letter.ToString());
-                GroupedAlbums.AddGroup(letter.ToString());
+                GroupedSongs.AddGroup(key);
+                GroupedAlbums.AddGroup(key);
+                GroupedArtists.AddGroup(key);
             }
         }
     }
