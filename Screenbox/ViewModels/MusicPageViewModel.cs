@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -30,6 +31,7 @@ namespace Screenbox.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
+        private readonly DispatcherQueue _dispatcherQueue;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
         private Task _loadSongsTask;
@@ -45,6 +47,7 @@ namespace Screenbox.ViewModels
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _songs = new List<MediaViewModel>();
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             PopulateGroups();
 
@@ -160,9 +163,12 @@ namespace Screenbox.ViewModels
                 await _loadSongsTask;
             }
 
-            GroupedSongs.Clear();
-            _songs.Clear();
-            await FetchSongsAsync();
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                GroupedSongs.Clear();
+                _songs.Clear();
+                FetchSongsAsync();
+            });
         }
 
         private string GetFirstLetterGroup(string name)
