@@ -421,4 +421,13 @@
     <value>Go to {0}</value>
     <comment>#Format[String position]</comment>
   </data>
+  <data name="Albums" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="Artists" xml:space="preserve">
+    <value>Artists</value>
+  </data>
+  <data name="Songs" xml:space="preserve">
+    <value>Songs</value>
+  </data>
 </root>

@@ -2,15 +2,12 @@
     x:Class="Screenbox.Pages.MusicPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewModels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
 
     <Grid>
@@ -35,16 +32,16 @@
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    Content="Songs"
-                    FontSize="16"
+                    Content="{strings:Resources Key=Songs}"
+                    FontSize="18"
                     Tag="songs" />
                 <muxc:NavigationViewItem
-                    Content="Albums"
-                    FontSize="16"
+                    Content="{strings:Resources Key=Albums}"
+                    FontSize="18"
                     Tag="albums" />
                 <muxc:NavigationViewItem
-                    Content="Artists"
-                    FontSize="16"
+                    Content="{strings:Resources Key=Artists}"
+                    FontSize="18"
                     Tag="artists" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.PaneFooter>

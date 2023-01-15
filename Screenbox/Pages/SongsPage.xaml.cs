@@ -27,7 +27,7 @@ namespace Screenbox.Pages
         {
             VisualStateManager.GoToState(this, "Fetching", true);
             await ViewModel.FetchSongsAsync();
-            VisualStateManager.GoToState(this, ViewModel.GroupedSongs?.Count > 0 ? "Normal" : "NoContent", true);
+            VisualStateManager.GoToState(this, ViewModel.GroupedSongs.Count > 0 ? "Normal" : "NoContent", true);
         }
 
         private void SongListView_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
