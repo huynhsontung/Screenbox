@@ -92,6 +92,16 @@
             </StackPanel>
         </Button>
 
+        <controls:ProgressBar
+            x:Name="LoadingIndicator"
+            Grid.Row="1"
+            Margin="0,16,0,0"
+            Padding="{StaticResource ContentPageRightMargin}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
         <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
                 <GridView
@@ -151,6 +161,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

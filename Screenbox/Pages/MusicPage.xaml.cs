@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -41,12 +43,26 @@ namespace Screenbox.Pages
                 { "artists", typeof(ArtistsPage) },
                 { "albums", typeof(AlbumsPage) }
             };
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
+            if (!ViewModel.IsLoaded)
+            {
+                await ViewModel.FetchSongsAsync();
+            }
+
+            VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
 
         public void GoBack()
@@ -57,6 +73,14 @@ namespace Screenbox.Pages
         public void NavigateContent(Type pageType, object? parameter)
         {
             ContentFrame.Navigate(pageType, parameter);
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.IsLoading) && !ViewModel.IsLoading)
+            {
+                VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
+            }
         }
 
         private void LibraryNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

@@ -11,8 +11,81 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            x:Name="HeaderGrid"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}"
+            Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                MaxLines="2"
+                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Text="{strings:Resources Key=Music}" />
+        </Grid>
+
+        <Grid
+            x:Name="NoMusicMessage"
+            Grid.Row="1"
+            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <FontIcon
+                Grid.Row="0"
+                Grid.RowSpan="2"
+                Grid.Column="0"
+                Margin="0,0,16,0"
+                FontSize="72"
+                Glyph="&#xe8d6;" />
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                VerticalAlignment="Bottom"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                VerticalAlignment="Top"
+                Opacity="0.6"
+                Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
+
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                Command="{x:Bind ViewModel.AddFolderCommand}"
+                Style="{StaticResource AccentButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xe8f4;" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
         <muxc:NavigationView
             x:Name="LibraryNavView"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             Margin="0,44,0,0"
             Background="Transparent"
             IsBackButtonVisible="Collapsed"
@@ -65,6 +138,17 @@
         </muxc:NavigationView>
 
         <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ContentStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="NoMusic">
+                    <VisualState.Setters>
+                        <Setter Target="HeaderGrid.Visibility" Value="Visible" />
+                        <Setter Target="NoMusicMessage.Visibility" Value="Visible" />
+                        <Setter Target="LibraryNavView.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact" />

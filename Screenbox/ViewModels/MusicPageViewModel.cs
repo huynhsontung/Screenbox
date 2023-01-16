@@ -26,6 +26,11 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
         [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
+        [ObservableProperty] private bool _isLoading;
+
+        public int Count => _songs.Count;
+
+        public bool IsLoaded => _library != null;
 
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
@@ -131,6 +136,7 @@ namespace Screenbox.ViewModels
 
             StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
             uint fetchIndex = 0;
+            IsLoading = true;
             while (fetchIndex < maxCount)
             {
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
@@ -174,6 +180,7 @@ namespace Screenbox.ViewModels
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             PlayCommand.NotifyCanExecuteChanged();
+            IsLoading = false;
         }
 
         private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)

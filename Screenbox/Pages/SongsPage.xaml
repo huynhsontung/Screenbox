@@ -91,45 +91,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             IsIndeterminate="True"
-            Visibility="Collapsed" />
-
-        <Grid
-            x:Name="NoMusicMessage"
-            Grid.Row="1"
-            Margin="0,0,0,128"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <FontIcon
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="0"
-                Margin="0,0,16,0"
-                FontSize="72"
-                Glyph="&#xe8d6;" />
-
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="1"
-                VerticalAlignment="Bottom"
-                Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
-
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                VerticalAlignment="Top"
-                Opacity="0.6"
-                Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
-        </Grid>
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
         <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
@@ -180,22 +142,6 @@
         </SemanticZoom>
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="ContentStates">
-                <VisualState x:Name="Normal" />
-                <VisualState x:Name="Fetching">
-                    <VisualState.Setters>
-                        <Setter Target="LoadingIndicator.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="NoContent">
-                    <VisualState.Setters>
-                        <Setter Target="SongListView.Visibility" Value="Collapsed" />
-                        <Setter Target="ShufflePlayButton.Visibility" Value="Collapsed" />
-                        <Setter Target="NoMusicMessage.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact" />

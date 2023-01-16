@@ -2,7 +2,6 @@
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
 
@@ -24,13 +23,6 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
-        }
-
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            VisualStateManager.GoToState(this, "Fetching", true);
-            await ViewModel.FetchSongsAsync();
-            VisualStateManager.GoToState(this, ViewModel.GroupedSongs.Count > 0 ? "Normal" : "NoContent", true);
         }
 
         private void SongListView_OnRightTapped(object sender, RightTappedRoutedEventArgs e)
