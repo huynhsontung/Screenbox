@@ -22,7 +22,10 @@ namespace Screenbox.Pages
         public object? FrameContent => ContentFrame;
         public Type ContentSourcePageType => ContentFrame.SourcePageType;
         public bool CanGoBack => ContentFrame.CanGoBack;
+
         internal MusicPageViewModel ViewModel => (MusicPageViewModel)DataContext;
+
+        internal CommonViewModel Common { get; }
 
         private readonly Dictionary<string, Type> _pages;
 
@@ -30,6 +33,7 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
 
             _pages = new Dictionary<string, Type>
             {

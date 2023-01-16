@@ -16,20 +16,16 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using Screenbox.Services;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Controls;
 using Screenbox.Core;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class MusicPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+    internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
         [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
         [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
@@ -46,7 +42,6 @@ namespace Screenbox.ViewModels
         {
             _filesService = filesService;
             _mediaFactory = mediaFactory;
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
@@ -58,14 +53,6 @@ namespace Screenbox.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             PopulateGroups();
-
-            // Activate the view model's messenger
-            IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         public Task FetchSongsAsync()

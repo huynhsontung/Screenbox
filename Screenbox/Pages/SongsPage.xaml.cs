@@ -17,10 +17,13 @@ namespace Screenbox.Pages
     {
         internal MusicPageViewModel ViewModel => (MusicPageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public SongsPage()
         {
-            DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
             this.InitializeComponent();
+            DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

@@ -136,7 +136,7 @@
                 <controls1:AlternatingListView
                     x:Name="SongListView"
                     Padding="{StaticResource ContentPageRightMargin}"
-                    ui:ScrollViewerExtensions.VerticalScrollBarMargin="{StaticResource ContentPageScrollBarMargin}"
+                    ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     ContextRequested="SongListView_OnContextRequested"
                     IsItemClickEnabled="True"
@@ -164,7 +164,7 @@
                 <GridView
                     x:Name="GroupOverview"
                     MaxWidth="400"
-                    Margin="{StaticResource ContentPageBottomMargin}"
+                    Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
                     Padding="{StaticResource ContentPageRightMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -201,7 +201,7 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>
