@@ -128,16 +128,28 @@ namespace Screenbox.ViewModels
             const int maxCount = 5000;
 
             if (_songs.Count > 0) return;
+            IsLoading = true;
+            await InitializeLibraryAsync();
+            await FetchAndProcessSongsAsync(maxCount);
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
+            IsLoading = false;
+        }
+
+        private async Task InitializeLibraryAsync()
+        {
             if (_library == null)
             {
                 _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
                 _library.DefinitionChanged += LibraryOnDefinitionChanged;
             }
+        }
 
+        private async Task FetchAndProcessSongsAsync(int maxCount)
+        {
             StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
             uint fetchIndex = 0;
-            IsLoading = true;
-            while (fetchIndex < maxCount)
+            while (_songs.Count < maxCount)
             {
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
                 if (files.Count == 0) break;
@@ -149,38 +161,47 @@ namespace Screenbox.ViewModels
 
                 foreach (MediaViewModel song in songs)
                 {
-                    GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
-
-                    if (song.Album != null && !_albumNames.Contains(song.Album.ToString()))
-                    {
-                        string albumName = song.Album.Name;
-                        string key = albumName != Strings.Resources.UnknownAlbum
-                            ? GetFirstLetterGroup(albumName)
-                            : "\u2026";
-                        GroupedAlbums.AddItem(key, song.Album);
-                        _albumNames.Add(song.Album.ToString());
-                    }
-
-                    if (song.Artists?.Length > 0)
-                    {
-                        foreach (ArtistViewModel artist in song.Artists)
-                        {
-                            if (_artistNames.Contains(artist.Name))
-                                continue;
-
-                            string key = artist.Name != Strings.Resources.UnknownArtist
-                                ? GetFirstLetterGroup(artist.Name)
-                                : "\u2026";
-                            GroupedArtists.AddItem(key, artist);
-                            _artistNames.Add(artist.Name);
-                        }
-                    }
+                    GroupSongsByName(song);
+                    GroupAlbumsByName(song);
+                    GroupArtistsByName(song);
                 }
             }
+        }
 
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
-            IsLoading = false;
+        private void GroupSongsByName(MediaViewModel song)
+        {
+            GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
+        }
+
+        private void GroupAlbumsByName(MediaViewModel song)
+        {
+            if (song.Album == null || _albumNames.Contains(song.Album.ToString()))
+                return;
+
+            string albumName = song.Album.Name;
+            string key = albumName != Strings.Resources.UnknownAlbum
+                ? GetFirstLetterGroup(albumName)
+                : "\u2026";
+            GroupedAlbums.AddItem(key, song.Album);
+            _albumNames.Add(song.Album.ToString());
+        }
+
+        private void GroupArtistsByName(MediaViewModel song)
+        {
+            if (song.Artists == null || song.Artists.Length == 0)
+                return;
+
+            foreach (ArtistViewModel artist in song.Artists)
+            {
+                if (_artistNames.Contains(artist.Name))
+                    continue;
+
+                string key = artist.Name != Strings.Resources.UnknownArtist
+                    ? GetFirstLetterGroup(artist.Name)
+                    : "\u2026";
+                GroupedArtists.AddItem(key, artist);
+                _artistNames.Add(artist.Name);
+            }
         }
 
         private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
