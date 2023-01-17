@@ -466,8 +466,8 @@
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
-                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="1" />
@@ -504,6 +504,11 @@
                                 Storyboard.TargetName="BackgroundAcrylicBrush"
                                 Storyboard.TargetProperty="TintOpacity"
                                 To="1"
+                                Duration="0:0:0.2" />
+                            <ColorAnimation
+                                Storyboard.TargetName="BackgroundAcrylicBrush"
+                                Storyboard.TargetProperty="TintColor"
+                                To="#202020"
                                 Duration="0:0:0.2" />
                         </Storyboard>
                     </VisualTransition>
