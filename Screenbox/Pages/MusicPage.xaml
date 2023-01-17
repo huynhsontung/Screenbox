@@ -136,7 +136,7 @@
                 </Button>
             </muxc:NavigationView.PaneFooter>
 
-            <Frame x:Name="ContentFrame" />
+            <Frame x:Name="ContentFrame" Navigated="ContentFrame_OnNavigated" />
         </muxc:NavigationView>
 
         <VisualStateManager.VisualStateGroups>

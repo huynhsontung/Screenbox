@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -87,7 +88,7 @@ namespace Screenbox.Pages
         {
             if (args.SelectedItemContainer != null)
             {
-                var navItemTag = args.SelectedItemContainer.Tag.ToString();
+                string navItemTag = args.SelectedItemContainer.Tag.ToString();
                 NavView_Navigate(navItemTag);
             }
         }
@@ -103,6 +104,20 @@ namespace Screenbox.Pages
             if (!(pageType is null) && !Type.Equals(preNavPageType, pageType))
             {
                 ContentFrame.Navigate(pageType, null, new SuppressNavigationTransitionInfo());
+            }
+        }
+
+        private void ContentFrame_OnNavigated(object sender, NavigationEventArgs e)
+        {
+            if (e.SourcePageType != null)
+            {
+                KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
+
+                Microsoft.UI.Xaml.Controls.NavigationViewItem? selectedItem = LibraryNavView.MenuItems
+                    .OfType<Microsoft.UI.Xaml.Controls.NavigationViewItem>()
+                    .FirstOrDefault(n => n.Tag.Equals(item.Key));
+
+                LibraryNavView.SelectedItem = selectedItem;
             }
         }
     }
