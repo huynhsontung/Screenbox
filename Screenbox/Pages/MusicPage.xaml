@@ -36,6 +36,7 @@
             x:Name="NoMusicMessage"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="Collapsed">
@@ -50,10 +51,10 @@
             </Grid.ColumnDefinitions>
             <FontIcon
                 Grid.Row="0"
-                Grid.RowSpan="2"
+                Grid.RowSpan="3"
                 Grid.Column="0"
                 Margin="0,0,16,0"
-                FontSize="72"
+                FontSize="86"
                 Glyph="&#xe8d6;" />
 
             <TextBlock
@@ -73,6 +74,7 @@
             <Button
                 Grid.Row="2"
                 Grid.Column="1"
+                Margin="0,8,0,0"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Style="{StaticResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
@@ -162,6 +164,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderAddFolderButton.Margin" Value="0,0,16,0" />
+                        <Setter Target="NoMusicMessage.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="AddFolderButtonText.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
