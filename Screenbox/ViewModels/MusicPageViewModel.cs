@@ -16,24 +16,29 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Factories;
 using Screenbox.Services;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Controls;
 using Screenbox.Core;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class MusicPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+    internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
+        [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
+        [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
+        [ObservableProperty] private bool _isLoading;
+
+        public int Count => _songs.Count;
+
+        public bool IsLoaded => _library != null;
 
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
+        private readonly HashSet<string> _albumNames;
+        private readonly HashSet<string> _artistNames;
         private Task _loadSongsTask;
         private StorageLibrary? _library;
 
@@ -42,22 +47,17 @@ namespace Screenbox.ViewModels
         {
             _filesService = filesService;
             _mediaFactory = mediaFactory;
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
+            _groupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
+            _groupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
             _songs = new List<MediaViewModel>();
+            _albumNames = new HashSet<string>();
+            _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             PopulateGroups();
-
-            // Activate the view model's messenger
-            IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         public Task FetchSongsAsync()
@@ -128,15 +128,28 @@ namespace Screenbox.ViewModels
             const int maxCount = 5000;
 
             if (_songs.Count > 0) return;
+            IsLoading = true;
+            await InitializeLibraryAsync();
+            await FetchAndProcessSongsAsync(maxCount);
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
+            IsLoading = false;
+        }
+
+        private async Task InitializeLibraryAsync()
+        {
             if (_library == null)
             {
                 _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
                 _library.DefinitionChanged += LibraryOnDefinitionChanged;
             }
+        }
 
+        private async Task FetchAndProcessSongsAsync(int maxCount)
+        {
             StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
             uint fetchIndex = 0;
-            while (fetchIndex < maxCount)
+            while (_songs.Count < maxCount)
             {
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
                 if (files.Count == 0) break;
@@ -144,16 +157,51 @@ namespace Screenbox.ViewModels
 
                 List<MediaViewModel> songs = files.Select(_mediaFactory.GetSingleton).ToList();
                 _songs.AddRange(songs);
-                await Task.WhenAll(songs.Select(vm => vm.LoadTitleAsync()));
+                await Task.WhenAll(songs.Select(vm => vm.LoadDetailsAsync()));
 
                 foreach (MediaViewModel song in songs)
                 {
-                    GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
+                    GroupSongsByName(song);
+                    GroupAlbumsByName(song);
+                    GroupArtistsByName(song);
                 }
             }
+        }
 
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
+        private void GroupSongsByName(MediaViewModel song)
+        {
+            GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
+        }
+
+        private void GroupAlbumsByName(MediaViewModel song)
+        {
+            if (song.Album == null || _albumNames.Contains(song.Album.ToString()))
+                return;
+
+            string albumName = song.Album.Name;
+            string key = albumName != Strings.Resources.UnknownAlbum
+                ? GetFirstLetterGroup(albumName)
+                : "\u2026";
+            GroupedAlbums.AddItem(key, song.Album);
+            _albumNames.Add(song.Album.ToString());
+        }
+
+        private void GroupArtistsByName(MediaViewModel song)
+        {
+            if (song.Artists == null || song.Artists.Length == 0)
+                return;
+
+            foreach (ArtistViewModel artist in song.Artists)
+            {
+                if (_artistNames.Contains(artist.Name))
+                    continue;
+
+                string key = artist.Name != Strings.Resources.UnknownArtist
+                    ? GetFirstLetterGroup(artist.Name)
+                    : "\u2026";
+                GroupedArtists.AddItem(key, artist);
+                _artistNames.Add(artist.Name);
+            }
         }
 
         private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
@@ -184,10 +232,12 @@ namespace Screenbox.ViewModels
         private void PopulateGroups()
         {
             // TODO: Support other languages beside English
-            string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
-            foreach (char letter in letters)
+            const string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
+            foreach (string key in letters.Select(letter => letter.ToString()))
             {
-                GroupedSongs.AddGroup(letter.ToString());
+                GroupedSongs.AddGroup(key);
+                GroupedAlbums.AddGroup(key);
+                GroupedArtists.AddGroup(key);
             }
         }
     }

@@ -1201,6 +1201,45 @@ namespace Screenbox.Strings{
             return string.Format(_resourceLoader.GetString("GoToPosition"), position);
         }
         #endregion
+
+        #region Albums
+        /// <summary>
+        ///   Looks up a localized string similar to: Albums
+        /// </summary>
+        public static string Albums
+        {
+            get
+            {
+                return _resourceLoader.GetString("Albums");
+            }
+        }
+        #endregion
+
+        #region Artists
+        /// <summary>
+        ///   Looks up a localized string similar to: Artists
+        /// </summary>
+        public static string Artists
+        {
+            get
+            {
+                return _resourceLoader.GetString("Artists");
+            }
+        }
+        #endregion
+
+        #region Songs
+        /// <summary>
+        ///   Looks up a localized string similar to: Songs
+        /// </summary>
+        public static string Songs
+        {
+            get
+            {
+                return _resourceLoader.GetString("Songs");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1300,6 +1339,9 @@ namespace Screenbox.Strings{
             Open,
             ResumePositionNotificationTitle,
             GoToPosition,
+            Albums,
+            Artists,
+            Songs,
         }
 
         private static ResourceLoader _resourceLoader;

@@ -31,7 +31,7 @@ namespace Screenbox.Factories
         {
             albumName ??= song.MusicProperties?.Album ?? string.Empty;
             artistName ??= song.MusicProperties?.AlbumArtist ?? string.Empty;
-            if (albumName == string.Empty && artistName == string.Empty)
+            if (string.IsNullOrEmpty(albumName))
             {
                 _unknownAlbum.RelatedSongs.Add(song);
                 return _unknownAlbum;

@@ -62,6 +62,19 @@
                         <Setter Property="FontSize" Value="34" />
                         <Setter Property="FontWeight" Value="SemiBold" />
                     </Style>
+
+                    <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
+                        <Button
+                            Width="46"
+                            Height="46"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            ClickMode="Hover"
+                            IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
+                        </Button>
+                    </DataTemplate>
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>
