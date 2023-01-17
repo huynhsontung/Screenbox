@@ -30,21 +30,18 @@
                 <ResourceDictionary x:Key="Default">
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
-                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">0.96</x:Double>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
-                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">0.85</x:Double>
-                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.1</x:Double>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
                     <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
-                    <x:Double x:Key="BackgroundAcrylicTintLuminosityOpacity">1</x:Double>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
@@ -244,7 +241,6 @@
                         BackgroundSource="Backdrop"
                         FallbackColor="{ThemeResource BackgroundAcrylicTintFallbackColor}"
                         TintColor="{ThemeResource BackgroundAcrylicTintColor}"
-                        TintLuminosityOpacity="{ThemeResource BackgroundAcrylicTintLuminosityOpacity}"
                         TintOpacity="{ThemeResource BackgroundAcrylicTintOpacity}" />
                 </Border.Background>
             </Border>

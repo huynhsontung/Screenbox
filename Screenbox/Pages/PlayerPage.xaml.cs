@@ -20,6 +20,7 @@ using Screenbox.Services;
 using Screenbox.ViewModels;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 using Windows.System;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -43,8 +44,10 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
+            UpdateBackgroundAcrylicOpacity(LayoutRoot.ActualTheme);
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
@@ -53,6 +56,7 @@ namespace Screenbox.Pages
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
+            LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -298,6 +302,17 @@ namespace Screenbox.Pages
         {
             if (PlaylistView == null) return;
             await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            UpdateBackgroundAcrylicOpacity(ActualTheme);
+        }
+
+        private void UpdateBackgroundAcrylicOpacity(ElementTheme theme)
+        {
+            // Set in code due to XAML compiler not setting it in Release
+            BackgroundAcrylicBrush.TintLuminosityOpacity = theme == ElementTheme.Light ? 0.5 : 0.4;
         }
     }
 }
