@@ -12,7 +12,7 @@ namespace Screenbox.Controls
     public sealed class AlternatingListView : ListView
     {
         public static readonly DependencyProperty AlternateItemBackgroundProperty = DependencyProperty.Register(
-            "AlternateItemBackground",
+            nameof(AlternateItemBackground),
             typeof(Brush),
             typeof(AlternatingListView),
             new PropertyMetadata(null));
@@ -27,10 +27,23 @@ namespace Screenbox.Controls
         {
             //this.DefaultStyleKey = typeof(ListView);
 
+            ActualThemeChanged += OnActualThemeChanged;
             ContainerContentChanging += OnContainerContentChanging;
             if (Items != null)
             {
                 Items.VectorChanged += ItemsOnVectorChanged;
+            }
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            if (Items == null) return;
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (ContainerFromIndex(i) is SelectorItem itemContainer)
+                {
+                    UpdateAlternateLayout(itemContainer, i);
+                }
             }
         }
 
