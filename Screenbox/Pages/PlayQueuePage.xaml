@@ -9,8 +9,17 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     Loaded="PlayQueuePage_OnLoaded"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
+            <MenuFlyoutItem Icon="{ui:FontIcon Glyph=&#xe838;}" Text="{strings:Resources Key=AddFiles}" />
+            <MenuFlyoutItem Icon="{ui:FontIcon Glyph=&#xe8da;}" Text="{strings:Resources Key=AddFolder}" />
+            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}" />
+        </MenuFlyout>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,11 +34,19 @@
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="Play queue" />
-            <muxc:SplitButton HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                Text="{strings:Resources Key=PlayQueue}" />
+            <muxc:SplitButton
+                Height="32"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Flyout="{StaticResource AddToPlayQueueFlyout}"
+                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe8da;" />
-                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
+                    <TextBlock
+                        x:Name="HeaderAddFileButtonText"
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.AddFiles}" />
                 </StackPanel>
             </muxc:SplitButton>
         </Grid>
@@ -52,6 +69,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="HeaderAddFileButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>

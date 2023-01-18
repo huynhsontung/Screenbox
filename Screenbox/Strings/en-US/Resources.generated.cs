@@ -1253,6 +1253,97 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region AddFiles
+        /// <summary>
+        ///   Looks up a localized string similar to: Add file(s)
+        /// </summary>
+        public static string AddFiles
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddFiles");
+            }
+        }
+        #endregion
+
+        #region AddFilesToPlayQueueToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Browse for file(s) to add to the play queue
+        /// </summary>
+        public static string AddFilesToPlayQueueToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddFilesToPlayQueueToolTip");
+            }
+        }
+        #endregion
+
+        #region AddMusicFolderToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Add a folder to your music library
+        /// </summary>
+        public static string AddMusicFolderToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddMusicFolderToolTip");
+            }
+        }
+        #endregion
+
+        #region AddUrl
+        /// <summary>
+        ///   Looks up a localized string similar to: Add media from URL
+        /// </summary>
+        public static string AddUrl
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddUrl");
+            }
+        }
+        #endregion
+
+        #region AddVideoFolderToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Add a folder to your video library
+        /// </summary>
+        public static string AddVideoFolderToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddVideoFolderToolTip");
+            }
+        }
+        #endregion
+
+        #region OpenFolder
+        /// <summary>
+        ///   Looks up a localized string similar to: Open folder
+        /// </summary>
+        public static string OpenFolder
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFolder");
+            }
+        }
+        #endregion
+
+        #region OpenUrl
+        /// <summary>
+        ///   Looks up a localized string similar to: Open URL
+        /// </summary>
+        public static string OpenUrl
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenUrl");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1356,6 +1447,13 @@ namespace Screenbox.Strings{
             Artists,
             Songs,
             OpenFilesToolTip,
+            AddFiles,
+            AddFilesToPlayQueueToolTip,
+            AddMusicFolderToolTip,
+            AddUrl,
+            AddVideoFolderToolTip,
+            OpenFolder,
+            OpenUrl,
         }
 
         private static ResourceLoader _resourceLoader;

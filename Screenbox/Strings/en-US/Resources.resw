@@ -433,4 +433,25 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Browse for files to play</value>
   </data>
+  <data name="AddFiles" xml:space="preserve">
+    <value>Add file(s)</value>
+  </data>
+  <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
+    <value>Browse for file(s) to add to the play queue</value>
+  </data>
+  <data name="AddMusicFolderToolTip" xml:space="preserve">
+    <value>Add a folder to your music library</value>
+  </data>
+  <data name="AddUrl" xml:space="preserve">
+    <value>Add media from URL</value>
+  </data>
+  <data name="AddVideoFolderToolTip" xml:space="preserve">
+    <value>Add a folder to your video library</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
+  <data name="OpenUrl" xml:space="preserve">
+    <value>Open URL</value>
+  </data>
 </root>

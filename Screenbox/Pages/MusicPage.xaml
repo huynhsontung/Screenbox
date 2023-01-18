@@ -76,7 +76,8 @@
                 Grid.Column="1"
                 Margin="0,8,0,0"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
-                Style="{StaticResource AccentButtonStyle}">
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe8f4;" />
                     <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
@@ -125,7 +126,8 @@
                     Grid.Column="1"
                     Margin="0,0,56,0"
                     VerticalAlignment="Top"
-                    Command="{x:Bind ViewModel.AddFolderCommand}">
+                    Command="{x:Bind ViewModel.AddFolderCommand}"
+                    ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
                         <TextBlock

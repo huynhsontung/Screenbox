@@ -122,7 +122,7 @@
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Music library locations"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}">
-                    <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}">
+                    <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
@@ -142,7 +142,7 @@
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="Video library locations"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}">
-                    <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}">
+                    <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
