@@ -71,22 +71,8 @@ namespace Screenbox.Pages
 
         public void NavigateContent(Type pageType, object? parameter)
         {
-            string? navTag = _pages.FirstOrDefault(p => p.Value == pageType).Key;
-            if (string.IsNullOrEmpty(navTag)) return;
             ViewModel.PlayerVisible = false;
-            ContentFrame.Navigate(pageType, parameter);
-            
-            // Update NavView SelectedItem after navigation to avoid double navigation
-            if (pageType == typeof(SettingsPage))
-            {
-                NavView.SelectedItem = NavView.SettingsItem;
-            }
-            else
-            {
-                object menuItem = NavView.MenuItems.OfType<FrameworkElement>()
-                    .First(item => ((string)item.Tag) == navTag);
-                NavView.SelectedItem = menuItem;
-            }
+            ContentFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
         private static Frame CreatePlayerFrame()
@@ -257,9 +243,9 @@ namespace Screenbox.Pages
             {
                 KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
 
-                muxc.NavigationViewItem selectedItem = NavView.MenuItems
+                muxc.NavigationViewItem? selectedItem = NavView.MenuItems
                     .OfType<muxc.NavigationViewItem>()
-                    .First(n => n.Tag.Equals(item.Key));
+                    .FirstOrDefault(n => n.Tag.Equals(item.Key));
                 
                 NavView.SelectedItem = selectedItem;
             }
