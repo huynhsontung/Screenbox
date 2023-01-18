@@ -68,6 +68,7 @@ namespace Screenbox
             services.AddTransient<PlayQueuePageViewModel>();
             services.AddTransient<SettingsPageViewModel>();
             services.AddTransient<PlaylistViewModel>();
+            services.AddTransient<AlbumDetailsPageViewModel>();
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
@@ -99,6 +100,7 @@ namespace Screenbox
                 new KeyValuePair<Type, Type>(typeof(NetworkPageViewModel), typeof(NetworkPage)),
                 new KeyValuePair<Type, Type>(typeof(PlayQueuePageViewModel), typeof(PlayQueuePage)),
                 new KeyValuePair<Type, Type>(typeof(SettingsPageViewModel), typeof(SettingsPage)),
+                new KeyValuePair<Type, Type>(typeof(AlbumDetailsPageViewModel), typeof(AlbumDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage))
             ));

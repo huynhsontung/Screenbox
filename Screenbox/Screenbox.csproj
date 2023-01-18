@@ -239,6 +239,9 @@
     <Compile Include="Factories\ArtistViewModelFactory.cs" />
     <Compile Include="Factories\MediaViewModelFactory.cs" />
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
+    <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
+      <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AlbumsPage.xaml.cs">
       <DependentUpon>AlbumsPage.xaml</DependentUpon>
     </Compile>
@@ -290,6 +293,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resw</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AlbumDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumsPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
@@ -477,6 +481,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\VolumeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AlbumDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -35,6 +35,7 @@ namespace Screenbox.ViewModels
         public bool IsLoaded => _library != null;
 
         private readonly IFilesService _filesService;
+        private readonly INavigationService _navigationService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly object _lockObject;
@@ -45,10 +46,12 @@ namespace Screenbox.ViewModels
         private StorageLibrary? _library;
 
         public MusicPageViewModel(IFilesService filesService,
+            INavigationService navigationService,
             MediaViewModelFactory mediaFactory)
         {
             _filesService = filesService;
             _mediaFactory = mediaFactory;
+            _navigationService = navigationService;
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
@@ -124,6 +127,12 @@ namespace Screenbox.ViewModels
         {
             ContentDialog propertiesDialog = PropertiesView.GetDialog(media);
             await propertiesDialog.ShowAsync();
+        }
+
+        [RelayCommand]
+        private void OpenAlbum(AlbumViewModel album)
+        {
+            _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
         }
 
         private async Task FetchSongsInternalAsync()
