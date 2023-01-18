@@ -1240,6 +1240,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region OpenFilesToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Browse for files to play
+        /// </summary>
+        public static string OpenFilesToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFilesToolTip");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1342,6 +1355,7 @@ namespace Screenbox.Strings{
             Albums,
             Artists,
             Songs,
+            OpenFilesToolTip,
         }
 
         private static ResourceLoader _resourceLoader;

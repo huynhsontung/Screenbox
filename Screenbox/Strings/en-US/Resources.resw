@@ -430,4 +430,7 @@
   <data name="Songs" xml:space="preserve">
     <value>Songs</value>
   </data>
+  <data name="OpenFilesToolTip" xml:space="preserve">
+    <value>Browse for files to play</value>
+  </data>
 </root>
