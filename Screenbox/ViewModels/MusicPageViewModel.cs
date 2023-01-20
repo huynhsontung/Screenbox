@@ -28,6 +28,8 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
         [ObservableProperty] private bool _isLoading;
 
+        public string NavigationState { get; set; }
+
         public int Count => _songs.Count;
 
         public bool IsLoaded => _library != null;
@@ -56,6 +58,7 @@ namespace Screenbox.ViewModels
             _albumNames = new HashSet<string>();
             _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            NavigationState = string.Empty;
 
             PopulateGroups();
         }

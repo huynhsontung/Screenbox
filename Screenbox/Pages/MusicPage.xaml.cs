@@ -51,7 +51,16 @@ namespace Screenbox.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
+            if (string.IsNullOrEmpty(ViewModel.NavigationState))
+            {
+                LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
+            }
+            else
+            {
+                ContentFrame.SetNavigationState(ViewModel.NavigationState);
+                UpdateSelectedNavItem(ContentSourcePageType);
+            }
+
             if (!ViewModel.IsLoaded)
             {
                 await ViewModel.FetchSongsAsync();
@@ -64,6 +73,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+            ViewModel.NavigationState = ContentFrame.GetNavigationState();
         }
 
         public void GoBack()
@@ -111,14 +121,19 @@ namespace Screenbox.Pages
         {
             if (e.SourcePageType != null)
             {
-                KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
-
-                Microsoft.UI.Xaml.Controls.NavigationViewItem? selectedItem = LibraryNavView.MenuItems
-                    .OfType<Microsoft.UI.Xaml.Controls.NavigationViewItem>()
-                    .FirstOrDefault(n => n.Tag.Equals(item.Key));
-
-                LibraryNavView.SelectedItem = selectedItem;
+                UpdateSelectedNavItem(e.SourcePageType);
             }
+        }
+
+        private void UpdateSelectedNavItem(Type sourcePageType)
+        {
+            KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == sourcePageType);
+
+            Microsoft.UI.Xaml.Controls.NavigationViewItem? selectedItem = LibraryNavView.MenuItems
+                .OfType<Microsoft.UI.Xaml.Controls.NavigationViewItem>()
+                .FirstOrDefault(n => n.Tag.Equals(item.Key));
+
+            LibraryNavView.SelectedItem = selectedItem;
         }
     }
 }
