@@ -13,6 +13,7 @@ using Screenbox.Converters;
 using Screenbox.Core.Playback;
 using Screenbox.Factories;
 using Screenbox.Services;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.ViewModels
 {

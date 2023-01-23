@@ -27,5 +27,6 @@ namespace Screenbox.Services
         public IAsyncOperation<StorageFolder> PickFolderAsync();
         public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer);
         public Task OpenFileLocationAsync(StorageFile file);
+        public void AddToRecent(IStorageItem item);
     }
 }

@@ -24,15 +24,19 @@ namespace Screenbox.ViewModels
     {
         public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
 
-        public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0;
+        public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0 && _settingsService.ShowRecent;
 
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly IFilesService _filesService;
+        private readonly ISettingsService _settingsService;
 
-        public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService)
+        public HomePageViewModel(MediaViewModelFactory mediaFactory,
+            IFilesService filesService,
+            ISettingsService settingsService)
         {
             _mediaFactory = mediaFactory;
             _filesService = filesService;
+            _settingsService = settingsService;
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
 
             // Activate the view model's messenger
@@ -41,20 +45,22 @@ namespace Screenbox.ViewModels
 
         public async void Receive(PlaylistActiveItemChangedMessage message)
         {
-            if (message.Value is not { Source: StorageFile }) return;
-            await UpdateRecentMediaList().ConfigureAwait(false);
-        }
-
-        public static void AddToRecent(MediaViewModel media)
-        {
-            if (media.Source is not StorageFile file) return;
-            string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-            StorageApplicationPermissions.MostRecentlyUsedList.Add(file, metadata);
+            if (message.Value is { Source: IStorageItem } && _settingsService.ShowRecent)
+            {
+                await UpdateRecentMediaList().ConfigureAwait(false);
+            }
         }
 
         public async void OnLoaded()
         {
-            await UpdateRecentMediaList().ConfigureAwait(false);
+            if (_settingsService.ShowRecent)
+            {
+                await UpdateRecentMediaList().ConfigureAwait(false);
+            }
+            else
+            {
+                Recent.Clear();
+            }
         }
 
         private async Task UpdateRecentMediaList()
@@ -63,6 +69,13 @@ namespace Screenbox.ViewModels
                 .OrderByDescending(x => x.Metadata)
                 .Select(x => new Tuple<string, Task<StorageFile?>>(x.Token, ConvertMruTokenToStorageFile(x.Token)))
                 .ToArray();
+
+            if (tuples.Length == 0)
+            {
+                Recent.Clear();
+                return;
+            }
+
             for (int i = 0; i < tuples.Length; i++)
             {
                 StorageFile? file = await tuples[i].Item2;

@@ -3,6 +3,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.ViewModels;
@@ -25,6 +26,11 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<HomePageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
             VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
         }
 
