@@ -14,6 +14,7 @@ using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.Xaml.Media.Imaging;
 using Screenbox.Core.Playback;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.Services
 {
@@ -223,6 +224,12 @@ namespace Screenbox.Services
                 options.ItemsToSelect.Add(file);
                 await Launcher.LaunchFolderAsync(folder, options);
             }
+        }
+
+        public void AddToRecent(IStorageItem item)
+        {
+            string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+            StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
         }
 
         private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)

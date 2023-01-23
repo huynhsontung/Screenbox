@@ -6,7 +6,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -198,9 +197,9 @@ namespace Screenbox.ViewModels
 
         partial void OnCurrentItemChanged(MediaViewModel? value)
         {
-            if (value != null)
+            if (value is { Source: IStorageItem item })
             {
-                HomePageViewModel.AddToRecent(value);
+                _filesService.AddToRecent(item);
             }
 
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));

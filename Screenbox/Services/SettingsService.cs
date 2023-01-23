@@ -1,4 +1,6 @@
-﻿using Windows.Foundation.Collections;
+﻿#nullable enable
+
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Screenbox.Core;
 
@@ -13,6 +15,7 @@ namespace Screenbox.Services
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
+        private const string GeneralShowRecent = "General/ShowRecent";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
 
@@ -58,6 +61,12 @@ namespace Screenbox.Services
             set => SetValue(LibraryShowVideoFoldersKey, value);
         }
 
+        public bool ShowRecent
+        {
+            get => GetValue<bool>(GeneralShowRecent);
+            set => SetValue(GeneralShowRecent, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, 0);
@@ -67,6 +76,7 @@ namespace Screenbox.Services
             SetDefault(PersistentVolumeKey, 100);
             SetDefault(MaxVolumeKey, 100);
             SetDefault(LibraryShowVideoFoldersKey, true);
+            SetDefault(GeneralShowRecent, true);
         }
 
         private T? GetValue<T>(string key)

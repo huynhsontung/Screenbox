@@ -168,6 +168,22 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
+                    Text="General" />
+                <labs:SettingsExpander
+                    Description="Display recently played media on the home page"
+                    Header="Show recent"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard Header="Clear recent media history">
+                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
+                </labs:SettingsExpander>
+
+                <TextBlock
+                    Margin="0,24,0,4"
+                    FontWeight="SemiBold"
                     Text="Player" />
                 <labs:SettingsCard
                     Description="Resize the app window to best match a video's native resolution when the video plays"

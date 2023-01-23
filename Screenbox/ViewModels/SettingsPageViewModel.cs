@@ -11,6 +11,7 @@ using Screenbox.Services;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 using Windows.System;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.ViewModels
 {
@@ -22,6 +23,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _showVideoFolders;
         [ObservableProperty] private int _volumeBoost;
+        [ObservableProperty] private bool _showRecent;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -75,6 +77,12 @@ namespace Screenbox.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(ShowVideoFolders)));
         }
 
+        partial void OnShowRecentChanged(bool value)
+        {
+            _settingsService.ShowRecent = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
+        }
+
         partial void OnVolumeBoostChanged(int value)
         {
             _settingsService.MaxVolume = value switch
@@ -115,6 +123,12 @@ namespace Screenbox.ViewModels
             await _musicLibrary.RequestRemoveFolderAsync(folder);
         }
 
+        [RelayCommand]
+        private void ClearRecentHistory()
+        {
+            StorageApplicationPermissions.MostRecentlyUsedList.Clear();
+        }
+
         private void LoadValues()
         {
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
@@ -122,6 +136,7 @@ namespace Screenbox.ViewModels
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _showVideoFolders = _settingsService.ShowVideoFolders;
+            _showRecent = _settingsService.ShowRecent;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
