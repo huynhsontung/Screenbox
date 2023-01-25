@@ -155,6 +155,7 @@
                         <Setter Target="ListHeaderPadding.Height" Value="100" />
                         <Setter Target="Header.Margin" Value="0,44,0,-60" />
                         <Setter Target="Header.Height" Value="160" />
+                        <Setter Target="BackgroundHost.Margin" Value="-16,-1,0,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
