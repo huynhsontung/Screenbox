@@ -15,6 +15,15 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ThemeShadow x:Key="SharedShadow" />
+
+        <XamlUICommand
+            x:Key="AccentPlayCommand"
+            Command="{x:Bind ViewModel.PlayCommand}"
+            Label="{strings:Resources Key=Play}">
+            <XamlUICommand.IconSource>
+                <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+            </XamlUICommand.IconSource>
+        </XamlUICommand>
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
@@ -111,7 +120,10 @@
                     Margin="0,0,0,32"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">
-                    <Button Style="{StaticResource AccentButtonStyle}">
+                    <Button
+                        Command="{x:Bind ViewModel.PlayCommand}"
+                        CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
+                        Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
@@ -126,13 +138,16 @@
             Grid.Row="1"
             Padding="{StaticResource ContentPageRightMargin}"
             AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
-            ItemsSource="{x:Bind ViewModel.Source.RelatedSongs}">
+            ItemsSource="{x:Bind ViewModel.SortedItems}">
             <controls:AlternatingListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </controls:AlternatingListView.Header>
             <controls:AlternatingListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <controls:MediaListViewItem ShowMediaIcon="False" ShowTrackNumber="True" />
+                    <controls:MediaListViewItem
+                        PlayCommand="{StaticResource AccentPlayCommand}"
+                        ShowMediaIcon="False"
+                        ShowTrackNumber="True" />
                 </DataTemplate>
             </controls:AlternatingListView.ItemTemplate>
         </controls:AlternatingListView>
