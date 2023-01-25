@@ -66,6 +66,7 @@ namespace Screenbox.Pages
             _props = _compositor.CreatePropertySet();
             _props.InsertScalar("progress", 0);
             _props.InsertScalar("clampSize", ClampSize);
+            _props.InsertScalar("bottomMargin", (float)ButtonPanel.Margin.Bottom);
 
             // Get references to our property sets for use with ExpressionNodes
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
@@ -79,6 +80,7 @@ namespace Screenbox.Pages
             PropertySetReferenceNode props = _props.GetReference();
             ScalarNode progressNode = props.GetScalarProperty("progress");
             ScalarNode clampSizeNode = props.GetScalarProperty("clampSize");
+            ScalarNode bottomMarginNode = props.GetScalarProperty("bottomMargin");
 
             // Create and start an ExpressionAnimation to track scroll progress over the desired distance
             ExpressionNode progressAnimation = EF.Clamp(-scrollVerticalOffset / clampSizeNode, 0, 1);
@@ -108,7 +110,7 @@ namespace Screenbox.Pages
             ElementCompositionPreview.SetIsTranslationEnabled(TitlePanel, true);
 
             // Create and start and ExpressionAnimation to translate title text
-            ExpressionNode titleTranslationXAnimation = progressNode * -94;
+            ExpressionNode titleTranslationXAnimation = progressNode * (-clampSizeNode + 5);
             titleVisual.StartAnimation("Translation.X", titleTranslationXAnimation);
 
             Visual artistNameVisual = ElementCompositionPreview.GetElementVisual(ArtistNameText);
@@ -119,7 +121,7 @@ namespace Screenbox.Pages
             Visual buttonVisual = ElementCompositionPreview.GetElementVisual(ButtonPanel);
             ElementCompositionPreview.SetIsTranslationEnabled(ButtonPanel, true);
 
-            ExpressionNode buttonTranslationYAnimation = progressNode * -58;
+            ExpressionNode buttonTranslationYAnimation = progressNode * (-clampSizeNode + bottomMarginNode);
             buttonVisual.StartAnimation("Translation.X", titleTranslationXAnimation);
             buttonVisual.StartAnimation("Translation.Y", buttonTranslationYAnimation);
         }
@@ -164,6 +166,7 @@ namespace Screenbox.Pages
         private void AlbumArt_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             _props?.InsertScalar("clampSize", ClampSize);
+            _props?.InsertScalar("bottomMargin", (float)ButtonPanel.Margin.Bottom);
             UpdateBackgroundAcrylicSize(_scrollViewer?.VerticalOffset ?? 0);
         }
 
