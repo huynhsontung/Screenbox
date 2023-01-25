@@ -17,11 +17,19 @@
         <ThemeShadow x:Key="SharedShadow" />
     </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <Grid
+            x:Name="BackgroundHost"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Margin="-56,-1,0,0"
+            SizeChanged="BackgroundHost_OnSizeChanged" />
+
         <Grid
             x:Name="Header"
             Grid.Row="0"

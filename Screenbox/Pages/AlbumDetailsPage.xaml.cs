@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Numerics;
+using Windows.Storage.FileProperties;
+using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
@@ -28,6 +32,7 @@ namespace Screenbox.Pages
         private CompositionPropertySet? _props;
         private CompositionPropertySet? _scrollerPropertySet;
         private Compositor? _compositor;
+        private SpriteVisual? _backgroundVisual;
         private ScrollViewer? _scrollViewer;
 
         public AlbumDetailsPage()
@@ -64,12 +69,19 @@ namespace Screenbox.Pages
 
             // Get references to our property sets for use with ExpressionNodes
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
+            
+            CreateHeaderAnimation(scrollingProperties.Translation.Y);
+            CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y);
+        }
+
+        private void CreateHeaderAnimation(ScalarNode scrollVerticalOffset)
+        {
             PropertySetReferenceNode props = _props.GetReference();
             ScalarNode progressNode = props.GetScalarProperty("progress");
             ScalarNode clampSizeNode = props.GetScalarProperty("clampSize");
 
             // Create and start an ExpressionAnimation to track scroll progress over the desired distance
-            ExpressionNode progressAnimation = EF.Clamp(-scrollingProperties.Translation.Y / clampSizeNode, 0, 1);
+            ExpressionNode progressAnimation = EF.Clamp(-scrollVerticalOffset / clampSizeNode, 0, 1);
             _props.StartAnimation("progress", progressAnimation);
 
             // Get the backing visual for the photo in the header so that its properties can be animated
@@ -107,14 +119,41 @@ namespace Screenbox.Pages
             Visual buttonVisual = ElementCompositionPreview.GetElementVisual(ButtonPanel);
             ElementCompositionPreview.SetIsTranslationEnabled(ButtonPanel, true);
 
-            // // When the header stops scrolling it is 150 pixels offscreen.  We want the text header to end up with 50 pixels of its content
-            // // offscreen which means it needs to go from offset 0 to 100 as we traverse through the scrollable region
-            // ExpressionNode contentOffsetAnimation = progressNode * 100;
-            // textVisual.StartAnimation("Offset.Y", contentOffsetAnimation);
-            
             ExpressionNode buttonTranslationYAnimation = progressNode * -58;
             buttonVisual.StartAnimation("Translation.X", titleTranslationXAnimation);
             buttonVisual.StartAnimation("Translation.Y", buttonTranslationYAnimation);
+        }
+
+        private void CreateImageBackgroundGradientVisual(ScalarNode scrollVerticalOffset)
+        {
+            StorageItemThumbnail? image = ViewModel.Source.RelatedSongs[0].ThumbnailSource;
+            if (image == null || _compositor == null) return;
+            image.Seek(0);  // Manually seek the stream to start or image won't load
+            LoadedImageSurface imageSurface = LoadedImageSurface.StartLoadFromStream(image);
+            CompositionSurfaceBrush imageBrush = _compositor.CreateSurfaceBrush(imageSurface);
+            imageBrush.HorizontalAlignmentRatio = 0.5f;
+            imageBrush.VerticalAlignmentRatio = 0.5f;
+            imageBrush.Stretch = CompositionStretch.UniformToFill;
+
+            CompositionLinearGradientBrush gradientBrush = _compositor.CreateLinearGradientBrush();
+            gradientBrush.EndPoint = new Vector2(0, 1);
+            gradientBrush.MappingMode = CompositionMappingMode.Relative;
+            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0.6f, Colors.White));
+            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(1, Colors.Transparent));
+
+            CompositionMaskBrush maskBrush = _compositor.CreateMaskBrush();
+            maskBrush.Source = imageBrush;
+            maskBrush.Mask = gradientBrush;
+
+            SpriteVisual? visual = _backgroundVisual = _compositor.CreateSpriteVisual();
+            visual.Size = new Vector2((float)BackgroundHost.ActualWidth, (float)(Header.Height + 80));
+            visual.Opacity = 0.15f;
+            visual.Brush = maskBrush;
+
+            visual.StartAnimation("Offset.Y", scrollVerticalOffset);
+            imageBrush.StartAnimation("Offset.Y", -scrollVerticalOffset * 0.8f);
+
+            ElementCompositionPreview.SetElementChildVisual(BackgroundHost, visual);
         }
 
         private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
@@ -135,6 +174,12 @@ namespace Screenbox.Pages
             double maxHeight = Header.Height;
             double minHeight = 102;
             BackgroundAcrylic.Height = maxHeight + (minHeight - maxHeight) * progress;
+        }
+
+        private void BackgroundHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (_backgroundVisual == null) return;
+            _backgroundVisual.Size = new Vector2((float)e.NewSize.Width, (float)(Header.Height + 80));
         }
     }
 }
