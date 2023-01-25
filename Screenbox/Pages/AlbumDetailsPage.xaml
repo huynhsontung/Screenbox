@@ -132,7 +132,7 @@
             </controls:AlternatingListView.Header>
             <controls:AlternatingListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <controls:MediaListViewItem ShowMediaIcon="False" />
+                    <controls:MediaListViewItem ShowMediaIcon="False" ShowTrackNumber="True" />
                 </DataTemplate>
             </controls:AlternatingListView.ItemTemplate>
         </controls:AlternatingListView>
