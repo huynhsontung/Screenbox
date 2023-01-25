@@ -25,6 +25,8 @@ namespace Screenbox.ViewModels
 
         public string Glyph { get; }
 
+        public StorageItemThumbnail? ThumbnailSource { get; set; }
+
         public PlaybackItem Item => _item ??= Source is StorageFile file
             ? new PlaybackItem(_mediaService.CreateMedia(file))
             : new PlaybackItem(_mediaService.CreateMedia((Uri)Source));
@@ -224,7 +226,11 @@ namespace Screenbox.ViewModels
         {
             if (Thumbnail == null && Source is StorageFile file)
             {
-                Thumbnail = await _filesService.GetThumbnailAsync(file);
+                StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
+                if (source == null) return;
+                BitmapImage image = new();
+                await image.SetSourceAsync(ThumbnailSource);
+                Thumbnail = image;
             }
         }
 

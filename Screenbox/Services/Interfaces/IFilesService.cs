@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
-using Windows.UI.Xaml.Media.Imaging;
 using Screenbox.Core.Playback;
+using Windows.Storage.FileProperties;
 
 namespace Screenbox.Services
 {
@@ -17,7 +17,7 @@ namespace Screenbox.Services
             StorageFileQueryResult neighboringFilesQuery);
         public Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
-        public Task<BitmapImage?> GetThumbnailAsync(StorageFile file, bool allowIcon = false);
+        public Task<StorageItemThumbnail?> GetThumbnailAsync(StorageFile file, bool allowIcon = false);
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder);
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder);
         public StorageFileQueryResult GetSongsFromLibrary();

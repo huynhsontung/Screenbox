@@ -12,7 +12,6 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.System;
-using Windows.UI.Xaml.Media.Imaging;
 using Screenbox.Core.Playback;
 using Windows.Storage.AccessCache;
 
@@ -77,17 +76,15 @@ namespace Screenbox.Services
             return files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
         }
 
-        public async Task<BitmapImage?> GetThumbnailAsync(StorageFile file, bool allowIcon = false)
+        public async Task<StorageItemThumbnail?> GetThumbnailAsync(StorageFile file, bool allowIcon = false)
         {
             if (!file.IsAvailable) return null;
             try
             {
-                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem, 300);
+                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
                 if (source != null && (source.Type == ThumbnailType.Image || allowIcon))
                 {
-                    BitmapImage thumbnail = new();
-                    await thumbnail.SetSourceAsync(source);
-                    return thumbnail;
+                    return source;
                 }
             }
             catch (Exception e)
