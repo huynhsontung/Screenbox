@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Screenbox.ViewModels
 {
@@ -6,14 +7,18 @@ namespace Screenbox.ViewModels
     {
         public string Name { get; }
 
-        public string Artist { get; }
+        public string Artist => string.IsNullOrEmpty(_albumArtist) && RelatedSongs.Count > 0
+            ? RelatedSongs[0].Artists?.FirstOrDefault()?.Name ?? string.Empty
+            : _albumArtist;
 
         public List<MediaViewModel> RelatedSongs { get; }
+
+        private readonly string _albumArtist;
 
         public AlbumViewModel(string album, string albumArtist)
         {
             Name = album;
-            Artist = albumArtist;
+            _albumArtist = albumArtist;
             RelatedSongs = new List<MediaViewModel>();
         }
 

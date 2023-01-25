@@ -9,6 +9,6 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private AlbumViewModel _source;
+        [ObservableProperty] private AlbumViewModel _source = null!;
     }
 }
