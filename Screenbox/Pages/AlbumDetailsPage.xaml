@@ -108,6 +108,8 @@
                     x:Name="ButtonPanel"
                     Grid.Row="1"
                     Grid.Column="1"
+                    Margin="0,0,0,32"
+                    VerticalAlignment="Bottom"
                     Orientation="Horizontal">
                     <Button Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
@@ -156,6 +158,7 @@
                         <Setter Target="Header.Margin" Value="0,44,0,-60" />
                         <Setter Target="Header.Height" Value="160" />
                         <Setter Target="BackgroundHost.Margin" Value="-16,-1,0,0" />
+                        <Setter Target="ButtonPanel.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
