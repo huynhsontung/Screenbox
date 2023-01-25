@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage.FileProperties;
@@ -27,8 +28,7 @@ namespace Screenbox.ViewModels
                 MusicProperties? m2 = y as MusicProperties;
                 uint t1 = m1?.TrackNumber ?? uint.MaxValue;
                 uint t2 = m2?.TrackNumber ?? uint.MaxValue;
-                if (t1 == t2) return 0;
-                return t1 > t2 ? 1 : -1;
+                return StringComparer.OrdinalIgnoreCase.Compare(t1, t2);
             }
         }
 
