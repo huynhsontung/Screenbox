@@ -171,6 +171,16 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SongsCount
+        /// <summary>
+        ///   Get the pluralized version of the string similar to: Empty
+        /// </summary>
+        public static string SongsCount(int pluralCount)
+        {
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "SongsCount", (double)pluralCount, true), pluralCount);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -1363,6 +1373,7 @@ namespace Screenbox.Strings{
             ItemsCount,
             LocationSpecified,
             ShuffleMode,
+            SongsCount,
             ZoomToFit,
             FrameSavedNotificationTitle,
             SaveCurrentFrame,

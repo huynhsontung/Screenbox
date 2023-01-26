@@ -454,4 +454,15 @@
   <data name="OpenUrl" xml:space="preserve">
     <value>Open URL</value>
   </data>
+  <data name="SongsCount_None" xml:space="preserve">
+    <value>Empty</value>
+  </data>
+  <data name="SongsCount_One" xml:space="preserve">
+    <value>{0} song</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SongsCount_Other" xml:space="preserve">
+    <value>{0} songs</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
 </root>

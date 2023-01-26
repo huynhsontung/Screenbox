@@ -111,6 +111,12 @@
                         MaxLines="1"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Artist}" />
+                    <TextBlock
+                        x:Name="Subtext"
+                        Margin="0,8,0,0"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        MaxLines="1"
+                        Text="{x:Bind ViewModel.Subtext, Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel
@@ -119,7 +125,8 @@
                     Grid.Column="1"
                     Margin="0,0,0,32"
                     VerticalAlignment="Bottom"
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Spacing="16">
                     <Button
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
@@ -127,6 +134,13 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xe8b1;" />
+                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
