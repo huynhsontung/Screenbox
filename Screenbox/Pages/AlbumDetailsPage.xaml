@@ -137,11 +137,15 @@
             x:Name="ItemList"
             Grid.Row="1"
             Padding="{StaticResource ContentPageRightMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
             ItemsSource="{x:Bind ViewModel.SortedItems}">
             <controls:AlternatingListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </controls:AlternatingListView.Header>
+            <controls:AlternatingListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </controls:AlternatingListView.Footer>
             <controls:AlternatingListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <controls:MediaListViewItem
