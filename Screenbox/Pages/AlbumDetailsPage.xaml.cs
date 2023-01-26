@@ -140,7 +140,7 @@ namespace Screenbox.Pages
             CompositionLinearGradientBrush gradientBrush = _compositor.CreateLinearGradientBrush();
             gradientBrush.EndPoint = new Vector2(0, 1);
             gradientBrush.MappingMode = CompositionMappingMode.Relative;
-            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0.6f, Colors.White));
+            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0.4f, Colors.White));
             gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(1, Colors.Transparent));
 
             CompositionMaskBrush maskBrush = _compositor.CreateMaskBrush();
