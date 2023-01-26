@@ -16,6 +16,8 @@ namespace Screenbox.ViewModels
     {
         [ObservableProperty] private AlbumViewModel _source = null!;
 
+        [ObservableProperty] private string _subtext;
+
         public AdvancedCollectionView SortedItems { get; }
 
         private List<MediaViewModel>? _itemList;
@@ -34,6 +36,7 @@ namespace Screenbox.ViewModels
 
         public AlbumDetailsPageViewModel()
         {
+            _subtext = string.Empty;
             SortedItems = new AdvancedCollectionView();
             SortedItems.SortDescriptions.Add(new SortDescription(nameof(MediaViewModel.MusicProperties),
                 SortDirection.Ascending, new TrackNumberComparer()));
@@ -42,6 +45,7 @@ namespace Screenbox.ViewModels
         partial void OnSourceChanged(AlbumViewModel value)
         {
             SortedItems.Source = value.RelatedSongs;
+            Subtext = Strings.Resources.SongsCount(value.RelatedSongs.Count);
         }
 
         [RelayCommand]
@@ -56,6 +60,17 @@ namespace Screenbox.ViewModels
             }
 
             Messenger.Send(new PlayMediaMessage(item, true));
+        }
+
+        [RelayCommand]
+        private void ShuffleAndPlay()
+        {
+            if (Source.RelatedSongs.Count == 0) return;
+            Random rnd = new();
+            List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
+            Messenger.Send(new ClearPlaylistMessage());
+            Messenger.Send(new QueuePlaylistMessage(shuffledList));
+            Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
         }
     }
 }

@@ -113,9 +113,17 @@ namespace Screenbox.Pages
             ExpressionNode titleTranslationXAnimation = progressNode * (-clampSizeNode + 5);
             titleVisual.StartAnimation("Translation.X", titleTranslationXAnimation);
 
+            // Get the backing visual for artist name and subtext
             Visual artistNameVisual = ElementCompositionPreview.GetElementVisual(ArtistNameText);
-            ExpressionNode artistNameOpacityAnimation = 1 - EF.Conditional(progressNode < 0.6f, progressNode / 0.6f, 1);
-            artistNameVisual.StartAnimation("Opacity", artistNameOpacityAnimation);
+            Visual subtextVisual = ElementCompositionPreview.GetElementVisual(Subtext);
+
+            // Create and start fade animation with threshold for subtexts
+            ScalarNode fadeThreshold = ExpressionValues.Constant.CreateConstantScalar("fadeThreshold", 0.6f);
+            ExpressionNode textFadeAnimation = 1 - EF.Conditional(progressNode < fadeThreshold, progressNode / fadeThreshold, 1);
+            artistNameVisual.StartAnimation("Opacity", textFadeAnimation);
+            textFadeAnimation.SetScalarParameter("fadeThreshold", 0.2f);
+            subtextVisual.StartAnimation("Opacity", textFadeAnimation);
+            
 
             // Get the backing visuals for the button containers so that their properties can be animated
             Visual buttonVisual = ElementCompositionPreview.GetElementVisual(ButtonPanel);
