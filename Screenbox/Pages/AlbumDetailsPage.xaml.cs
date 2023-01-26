@@ -184,5 +184,11 @@ namespace Screenbox.Pages
             if (_backgroundVisual == null) return;
             _backgroundVisual.Size = new Vector2((float)e.NewSize.Width, (float)(Header.Height + 80));
         }
+
+        private Thickness GetScrollbarVerticalMargin(Thickness value)
+        {
+            double headerHeight = Header.Height + Header.Margin.Bottom;
+            return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
+        }
     }
 }
