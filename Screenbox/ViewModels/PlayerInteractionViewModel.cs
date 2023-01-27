@@ -249,7 +249,7 @@ namespace Screenbox.ViewModels
         {
             if (_mediaPlayer?.CanSeek ?? false)
             {
-                TimeSpan newPosition = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromMilliseconds(amount), true));
+                TimeSpan newPosition = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromMilliseconds(amount), true, false));
                 Messenger.Send(new UpdateStatusMessage(
                     $"{HumanizedDurationConverter.Convert(newPosition)} / {HumanizedDurationConverter.Convert(_mediaPlayer.NaturalDuration)} ({(amount > 0 ? '+' : string.Empty)}{HumanizedDurationConverter.Convert(amount)})"));
             }

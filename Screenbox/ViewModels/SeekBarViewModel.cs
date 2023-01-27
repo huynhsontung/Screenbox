@@ -38,6 +38,7 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _seekTimer;
         private bool _timeChangeOverride;
+        private bool _debounceOverride;
 
         public SeekBarViewModel()
         {
@@ -52,8 +53,8 @@ namespace Screenbox.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
-            _mediaPlayer.NaturalDurationChanged += OnLengthChanged;
-            _mediaPlayer.PositionChanged += OnTimeChanged;
+            _mediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
+            _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
@@ -105,8 +106,10 @@ namespace Screenbox.ViewModels
 
         public void Receive(ChangeTimeRequestMessage message)
         {
+            if (!message.Debounce)
+                _debounceOverride = true;
+
             // Assume UI thread
-            _timeChangeOverride = true;
             if (message.IsOffset)
             {
                 Time += message.Value.TotalMilliseconds;
@@ -116,7 +119,6 @@ namespace Screenbox.ViewModels
                 Time = message.Value.TotalMilliseconds;
             }
 
-            _timeChangeOverride = false;
             message.Reply(TimeSpan.FromMilliseconds(Time));
         }
 
@@ -137,7 +139,13 @@ namespace Screenbox.ViewModels
             {
                 double newTime = args.NewValue;
                 bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
-                if (args.OldValue == Time || paused || _timeChangeOverride)
+                if (_debounceOverride)
+                {
+                    _debounceOverride = false;
+                    _seekTimer.Stop();
+                    _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
+                }
+                else if (args.OldValue == Time || paused || _timeChangeOverride)
                 {
                     _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime),
                         TimeSpan.FromMilliseconds(50));
@@ -145,13 +153,13 @@ namespace Screenbox.ViewModels
             }
         }
 
-        private void OnTimeChanged(IMediaPlayer sender, object? args)
+        private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
             if (_seekTimer.IsRunning || _timeChangeOverride) return;
             _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
         }
 
-        private void OnLengthChanged(IMediaPlayer sender, object? args)
+        private void OnNaturalDurationChanged(IMediaPlayer sender, object? args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
