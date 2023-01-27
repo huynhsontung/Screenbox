@@ -48,8 +48,9 @@
             x:Name="NoNetworkDrivePanel"
             Grid.Row="1"
             Grid.RowSpan="2"
-            MaxWidth="520"
-            Margin="0,0,56,128"
+            MaxWidth="540"
+            Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
+            Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Visibility="Collapsed">
@@ -93,7 +94,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="NoNetworkDrivePanel.Margin" Value="24,0,40,128" />
+                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="NoNetworkDrivePanel.MaxWidth" Value="440" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
