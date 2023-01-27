@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -191,14 +193,16 @@
             </CommandBar>
         </Border>
 
-        <local:AlternatingListView
+        <ListView
             x:Name="PlaylistListView"
             Grid.Row="2"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
+            extensions:ListViewExtensions.ItemCornerRadius="8"
+            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             AllowDrop="True"
-            AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
             CanDragItems="True"
             CanReorderItems="True"
             ContextRequested="PlaylistListView_OnContextRequested"
@@ -208,18 +212,24 @@
             RightTapped="PlaylistListView_OnRightTapped"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
-            <local:AlternatingListView.Footer>
+            <interactivity:Interaction.Behaviors>
+                <interactions:AlternatingListViewBehavior
+                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    AlternateBorderThickness="1" />
+            </interactivity:Interaction.Behaviors>
+            <ListView.Footer>
                 <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </local:AlternatingListView.Footer>
-            <local:AlternatingListView.ItemTemplate>
+            </ListView.Footer>
+            <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <local:MediaListViewItem
                         PlayCommand="{StaticResource PlayAccentCommand}"
                         SelectionMode="{x:Bind PlaylistListView.SelectionMode, Mode=OneWay}"
                         ShowMediaIcon="True" />
                 </DataTemplate>
-            </local:AlternatingListView.ItemTemplate>
-        </local:AlternatingListView>
+            </ListView.ItemTemplate>
+        </ListView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="SelectionModes">

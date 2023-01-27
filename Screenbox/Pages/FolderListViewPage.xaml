@@ -4,6 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -69,10 +72,13 @@
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
-        <controls:AlternatingListView
+        <ListView
             x:Name="ListView"
             Padding="{StaticResource ContentPageRightMargin}"
+            extensions:ListViewExtensions.ItemCornerRadius="8"
+            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ContextRequested="ListView_OnContextRequested"
             IsItemClickEnabled="True"
@@ -80,10 +86,16 @@
             ItemsSource="{x:Bind ViewModel.Items}"
             RightTapped="ListView_OnRightTapped"
             SelectionMode="None">
+            <interactivity:Interaction.Behaviors>
+                <interactions:AlternatingListViewBehavior
+                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    AlternateBorderThickness="1" />
+            </interactivity:Interaction.Behaviors>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
-        </controls:AlternatingListView>
+        </ListView>
 
         <TextBlock
             x:Name="NoContentText"

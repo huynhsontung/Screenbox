@@ -5,6 +5,9 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:controls1="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
@@ -95,16 +98,24 @@
 
         <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
-                <controls1:AlternatingListView
+                <ListView
                     x:Name="SongListView"
                     Padding="{StaticResource ContentPageRightMargin}"
+                    extensions:ListViewExtensions.ItemCornerRadius="8"
+                    extensions:ListViewExtensions.ItemMargin="0,2,0,2"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-                    AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     ContextRequested="SongListView_OnContextRequested"
                     IsItemClickEnabled="True"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     RightTapped="SongListView_OnRightTapped"
                     SelectionMode="None">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:AlternatingListViewBehavior
+                            AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                            AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            AlternateBorderThickness="1" />
+                    </interactivity:Interaction.Behaviors>
                     <ListView.Footer>
                         <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
                     </ListView.Footer>
@@ -119,7 +130,7 @@
                                 ShowMediaIcon="False" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                </controls1:AlternatingListView>
+                </ListView>
             </SemanticZoom.ZoomedInView>
 
             <SemanticZoom.ZoomedOutView>
