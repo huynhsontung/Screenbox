@@ -190,6 +190,10 @@ namespace Screenbox.Pages
             double maxHeight = Header.Height;
             double minHeight = 102;
             BackgroundAcrylic.Height = maxHeight + (minHeight - maxHeight) * progress;
+
+            // There is no way to detect over panning (i.e. scrollviewer translate but no view change)
+            // Hide the background acrylic when the vertical srollbar is not visible where over panning is an issue
+            BackgroundAcrylic.Visibility = _scrollViewer?.ComputedVerticalScrollBarVisibility ?? Visibility.Collapsed;
         }
 
         private void BackgroundHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
