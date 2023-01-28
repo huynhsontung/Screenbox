@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Numerics;
 using Windows.Storage.FileProperties;
 using Windows.UI;
@@ -29,6 +31,9 @@ namespace Screenbox.Pages
         internal CommonViewModel Common { get; }
 
         private int ClampSize => Common.NavigationViewDisplayMode == NavigationViewDisplayMode.Minimal ? 58 : 98;
+
+        private float BackgroundVisualHeight => (float)(Header.Height + 200);
+
         private CompositionPropertySet? _props;
         private CompositionPropertySet? _scrollerPropertySet;
         private Compositor? _compositor;
@@ -148,15 +153,15 @@ namespace Screenbox.Pages
             CompositionLinearGradientBrush gradientBrush = _compositor.CreateLinearGradientBrush();
             gradientBrush.EndPoint = new Vector2(0, 1);
             gradientBrush.MappingMode = CompositionMappingMode.Relative;
-            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0.4f, Colors.White));
+            gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0.6f, Colors.White));
             gradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(1, Colors.Transparent));
 
             CompositionMaskBrush maskBrush = _compositor.CreateMaskBrush();
             maskBrush.Source = imageBrush;
             maskBrush.Mask = gradientBrush;
 
-            SpriteVisual? visual = _backgroundVisual = _compositor.CreateSpriteVisual();
-            visual.Size = new Vector2((float)BackgroundHost.ActualWidth, (float)(Header.Height + 80));
+            SpriteVisual visual = _backgroundVisual = _compositor.CreateSpriteVisual();
+            visual.Size = new Vector2((float)BackgroundHost.ActualWidth, BackgroundVisualHeight);
             visual.Opacity = 0.15f;
             visual.Brush = maskBrush;
 
@@ -190,7 +195,7 @@ namespace Screenbox.Pages
         private void BackgroundHost_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_backgroundVisual == null) return;
-            _backgroundVisual.Size = new Vector2((float)e.NewSize.Width, (float)(Header.Height + 80));
+            _backgroundVisual.Size = new Vector2((float)e.NewSize.Width, BackgroundVisualHeight);
         }
 
         private Thickness GetScrollbarVerticalMargin(Thickness value)
