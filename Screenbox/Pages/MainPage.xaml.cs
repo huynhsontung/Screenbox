@@ -139,7 +139,6 @@ namespace Screenbox.Pages
                 else
                 {
                     SetTitleBar();
-                    NavView.SelectedItem ??= NavView.MenuItems[0];
                     NavView.IsPaneVisible = true;
                     ContentFrame.Visibility = Visibility.Visible;
                 }
