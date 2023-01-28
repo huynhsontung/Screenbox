@@ -36,14 +36,14 @@
             x:Name="BackgroundHost"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="-56,-1,0,0"
+            Margin="-56,-100,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />
 
         <Grid
             x:Name="Header"
             Grid.Row="0"
             Height="200"
-            Margin="0,44,0,-100"
+            Margin="0,44,0,-108"
             Padding="{StaticResource ContentPageRightMargin}"
             Canvas.ZIndex="1">
 
@@ -51,6 +51,8 @@
                 x:Name="BackgroundAcrylic"
                 VerticalAlignment="Top"
                 Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                BorderThickness="1"
                 CornerRadius="8"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,8" />
@@ -188,9 +190,9 @@
                         <Setter Target="AlbumArt.Width" Value="140" />
                         <Setter Target="AlbumArt.Height" Value="140" />
                         <Setter Target="ListHeaderPadding.Height" Value="100" />
-                        <Setter Target="Header.Margin" Value="0,44,0,-60" />
+                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
                         <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="BackgroundHost.Margin" Value="-16,-1,0,0" />
+                        <Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />
                         <Setter Target="ButtonPanel.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
