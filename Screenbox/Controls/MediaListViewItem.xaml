@@ -143,31 +143,39 @@
 
             <VisualStateGroup x:Name="MultiSelectStates">
                 <VisualState x:Name="MultiSelectDisabled">
-                    <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RootGridTranslateTransform" Storyboard.TargetProperty="X">
-                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="-32" />
-                            <SplineDoubleKeyFrame
-                                KeySpline="0.1,0.9,0.2,1"
-                                KeyTime="0:0:0.333"
-                                Value="0" />
-                        </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
+                    <VisualState.Setters>
+                        <Setter Target="IsPlayingIcon.Opacity" Value="1" />
+                        <Setter Target="ItemIcon.Opacity" Value="1" />
+                        <Setter Target="RootGridTranslateTransform.X" Value="0" />
+                    </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MultiSelectEnabled">
                     <VisualState.Setters>
                         <Setter Target="IsPlayingIcon.Opacity" Value="0" />
                         <Setter Target="ItemIcon.Opacity" Value="0" />
+                        <Setter Target="RootGridTranslateTransform.X" Value="-32" />
                     </VisualState.Setters>
-                    <Storyboard>
-                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="RootGridTranslateTransform" Storyboard.TargetProperty="X">
-                            <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0" />
-                            <SplineDoubleKeyFrame
-                                KeySpline="0.1,0.9,0.2,1"
-                                KeyTime="0:0:0.333"
-                                Value="-32" />
-                        </DoubleAnimationUsingKeyFrames>
-                    </Storyboard>
                 </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.333"
+                        From="MultiSelectDisabled"
+                        To="MultiSelectEnabled">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.333"
+                        From="MultiSelectedEnabled"
+                        To="MultiSelectDisabled">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseIn" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="DetailsLevels">
