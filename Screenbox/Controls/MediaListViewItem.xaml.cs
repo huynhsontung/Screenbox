@@ -64,7 +64,6 @@ namespace Screenbox.Controls
             this.InitializeComponent();
 
             DataContextChanged += OnDataContextChanged;
-            SizeChanged += OnSizeChanged;
             Loaded += OnLoaded;
         }
 
@@ -73,7 +72,10 @@ namespace Screenbox.Controls
             if (args.NewValue == null) return;
             ViewModel = (MediaViewModel)args.NewValue;
             await UpdateContent();
-            UpdateDetailsLevel();
+            if (ViewModel?.MusicProperties == null || ViewModel.MediaType != MediaPlaybackType.Music)
+            {
+                AdaptiveLayoutBehavior.Override = 0;
+            }
         }
 
         private async Task UpdateContent()
@@ -162,35 +164,6 @@ namespace Screenbox.Controls
         private void SelectorFocusEngaged(Control sender, FocusEngagedEventArgs args)
         {
             PlayButton.Focus(FocusState.Programmatic);
-        }
-
-        private static void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            MediaListViewItem item = (MediaListViewItem)sender;
-            if (item.DataContext == null) return;
-            item.UpdateDetailsLevel();
-        }
-
-        public void UpdateDetailsLevel()
-        {
-            if (ViewModel?.MusicProperties == null || ViewModel.MediaType != MediaPlaybackType.Music)
-            {
-                VisualStateManager.GoToState(this, "Level0", true);
-                return;
-            }
-
-            if (ActualWidth > 800)
-            {
-                VisualStateManager.GoToState(this, "Level3", true);
-            }
-            else if (ActualWidth > 620)
-            {
-                VisualStateManager.GoToState(this, "Level2", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "Level1", true);
-            }
         }
     }
 }

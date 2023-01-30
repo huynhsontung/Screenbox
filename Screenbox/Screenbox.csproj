@@ -154,6 +154,7 @@
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
+    <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\ManipulationLock.cs" />
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
