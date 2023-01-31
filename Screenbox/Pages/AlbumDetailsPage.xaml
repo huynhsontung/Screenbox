@@ -5,6 +5,9 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
@@ -14,16 +17,13 @@
     Loaded="AlbumDetailsPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
-        <ThemeShadow x:Key="SharedShadow" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/MediaListViewItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <XamlUICommand
-            x:Key="AccentPlayCommand"
-            Command="{x:Bind ViewModel.PlayCommand}"
-            Label="{strings:Resources Key=Play}">
-            <XamlUICommand.IconSource>
-                <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-            </XamlUICommand.IconSource>
-        </XamlUICommand>
+            <ThemeShadow x:Key="SharedShadow" />
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
@@ -149,28 +149,38 @@
             </Grid>
         </Grid>
 
-        <controls:AlternatingListView
+        <ListView
             x:Name="ItemList"
             Grid.Row="1"
             Padding="{StaticResource ContentPageRightMargin}"
+            extensions:ListViewExtensions.ItemCornerRadius="8"
+            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
-            AlternateItemBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+            ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SortedItems}">
-            <controls:AlternatingListView.Header>
+            <ListView.Resources>
+                <XamlUICommand
+                    x:Key="MediaListViewItemPlayCommand"
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    Label="{strings:Resources Key=Play}">
+                    <XamlUICommand.IconSource>
+                        <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                    </XamlUICommand.IconSource>
+                </XamlUICommand>
+            </ListView.Resources>
+            <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
-            </controls:AlternatingListView.Header>
-            <controls:AlternatingListView.Footer>
+            </ListView.Header>
+            <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </controls:AlternatingListView.Footer>
-            <controls:AlternatingListView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <controls:MediaListViewItem
-                        PlayCommand="{StaticResource AccentPlayCommand}"
-                        ShowMediaIcon="False"
-                        ShowTrackNumber="True" />
-                </DataTemplate>
-            </controls:AlternatingListView.ItemTemplate>
-        </controls:AlternatingListView>
+            </ListView.Footer>
+            <interactivity:Interaction.Behaviors>
+                <interactions:AlternatingListViewBehavior
+                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    AlternateBorderThickness="1" />
+            </interactivity:Interaction.Behaviors>
+        </ListView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
