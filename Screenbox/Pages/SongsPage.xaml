@@ -17,6 +17,10 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/MediaListViewItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <CollectionViewSource
                 x:Name="SongsSource"
                 IsSourceGrouped="True"
@@ -30,15 +34,6 @@
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
-
-            <XamlUICommand
-                x:Key="AccentPlayCommand"
-                Command="{x:Bind ViewModel.PlayCommand}"
-                Label="{strings:Resources Key=Play}">
-                <XamlUICommand.IconSource>
-                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                </XamlUICommand.IconSource>
-            </XamlUICommand>
 
             <XamlUICommand
                 x:Key="PlayCommand"
@@ -107,9 +102,20 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContextRequested="SongListView_OnContextRequested"
                     IsItemClickEnabled="True"
+                    ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     RightTapped="SongListView_OnRightTapped"
                     SelectionMode="None">
+                    <ListView.Resources>
+                        <XamlUICommand
+                            x:Key="MediaListViewItemPlayCommand"
+                            Command="{x:Bind ViewModel.PlayCommand}"
+                            Label="{strings:Resources Key=Play}">
+                            <XamlUICommand.IconSource>
+                                <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                            </XamlUICommand.IconSource>
+                        </XamlUICommand>
+                    </ListView.Resources>
                     <interactivity:Interaction.Behaviors>
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
@@ -122,14 +128,6 @@
                     <ListView.GroupStyle>
                         <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
                     </ListView.GroupStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:MediaViewModel">
-                            <controls1:MediaListViewItem
-                                PlayCommand="{StaticResource AccentPlayCommand}"
-                                SelectionMode="{x:Bind SongListView.SelectionMode, Mode=OneWay}"
-                                ShowMediaIcon="False" />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
                 </ListView>
             </SemanticZoom.ZoomedInView>
 

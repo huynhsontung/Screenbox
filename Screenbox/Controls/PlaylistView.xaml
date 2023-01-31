@@ -16,19 +16,17 @@
     d:DesignWidth="400"
     Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/MediaListViewItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.Resources>
             <ThemeShadow x:Name="SharedShadow" />
-
-            <XamlUICommand
-                x:Key="PlayAccentCommand"
-                Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
-                Label="{strings:Resources Key=Play}">
-                <XamlUICommand.IconSource>
-                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                </XamlUICommand.IconSource>
-            </XamlUICommand>
 
             <XamlUICommand
                 x:Key="PlayCommand"
@@ -208,10 +206,21 @@
             ContextRequested="PlaylistListView_OnContextRequested"
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
+            ItemTemplate="{StaticResource MediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             RightTapped="PlaylistListView_OnRightTapped"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
+            <ListView.Resources>
+                <XamlUICommand
+                    x:Key="MediaListViewItemPlayCommand"
+                    Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
+                    Label="{strings:Resources Key=Play}">
+                    <XamlUICommand.IconSource>
+                        <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
+                    </XamlUICommand.IconSource>
+                </XamlUICommand>
+            </ListView.Resources>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
@@ -221,14 +230,6 @@
             <ListView.Footer>
                 <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <local:MediaListViewItem
-                        PlayCommand="{StaticResource PlayAccentCommand}"
-                        SelectionMode="{x:Bind PlaylistListView.SelectionMode, Mode=OneWay}"
-                        ShowMediaIcon="True" />
-                </DataTemplate>
-            </ListView.ItemTemplate>
         </ListView>
 
         <VisualStateManager.VisualStateGroups>
