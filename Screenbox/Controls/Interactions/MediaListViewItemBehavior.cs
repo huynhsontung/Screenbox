@@ -22,7 +22,7 @@ namespace Screenbox.Controls.Interactions
             base.OnAttached();
             if (AssociatedObject.FindAscendant<SelectorItem>() is { } selector)
             {
-                InitializeSelectorItem(selector);
+                Initialize(selector);
             }
             else
             {
@@ -53,10 +53,10 @@ namespace Screenbox.Controls.Interactions
         {
             AssociatedObject.Loaded -= AssociatedObjectOnLoaded;
             if (AssociatedObject.FindAscendant<SelectorItem>() is not { } selector) return;
-            InitializeSelectorItem(selector);
+            Initialize(selector);
         }
 
-        private void InitializeSelectorItem(SelectorItem selector)
+        private void Initialize(SelectorItem selector)
         {
             // Listen to selector interaction events
             _selector = selector;
