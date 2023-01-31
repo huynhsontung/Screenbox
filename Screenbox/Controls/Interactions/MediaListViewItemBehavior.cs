@@ -20,7 +20,14 @@ namespace Screenbox.Controls.Interactions
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.Loaded += AssociatedObjectOnLoaded;
+            if (AssociatedObject.FindAscendant<SelectorItem>() is { } selector)
+            {
+                InitializeSelectorItem(selector);
+            }
+            else
+            {
+                AssociatedObject.Loaded += AssociatedObjectOnLoaded;
+            }
         }
 
         protected override void OnDetaching()
@@ -44,8 +51,14 @@ namespace Screenbox.Controls.Interactions
 
         private void AssociatedObjectOnLoaded(object sender, RoutedEventArgs e)
         {
-            // Listen to selector interaction events
+            AssociatedObject.Loaded -= AssociatedObjectOnLoaded;
             if (AssociatedObject.FindAscendant<SelectorItem>() is not { } selector) return;
+            InitializeSelectorItem(selector);
+        }
+
+        private void InitializeSelectorItem(SelectorItem selector)
+        {
+            // Listen to selector interaction events
             _selector = selector;
 
             selector.FocusEngaged += SelectorFocusEngaged;
@@ -61,6 +74,7 @@ namespace Screenbox.Controls.Interactions
             _listView = listView;
             _selectionModePropertyToken =
                 listView.RegisterPropertyChangedCallback(ListViewBase.SelectionModeProperty, OnSelectionModeChanged);
+            UpdateSelectionModeVisualState((ListViewSelectionMode)listView.GetValue(ListViewBase.SelectionModeProperty));
 
             // Bind play button command
             if (AssociatedObject.FindDescendant("PlayButton") is not ButtonBase button) return;
@@ -107,6 +121,11 @@ namespace Screenbox.Controls.Interactions
         private void OnSelectionModeChanged(DependencyObject sender, DependencyProperty dp)
         {
             ListViewSelectionMode selectionMode = (ListViewSelectionMode)sender.GetValue(dp);
+            UpdateSelectionModeVisualState(selectionMode);
+        }
+
+        private void UpdateSelectionModeVisualState(ListViewSelectionMode selectionMode)
+        {
             VisualStateManager.GoToState(AssociatedObject,
                 selectionMode == ListViewSelectionMode.Multiple ? "MultiSelectEnabled" : "MultiSelectDisabled",
                 true);
