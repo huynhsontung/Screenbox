@@ -104,6 +104,7 @@
                     Grid.Column="5"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{Binding Genre}"
@@ -115,6 +116,7 @@
                     Margin="8,0,16,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
@@ -311,6 +313,7 @@
                     Grid.Column="5"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{Binding Genre}"
@@ -322,6 +325,7 @@
                     Margin="8,0,16,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
