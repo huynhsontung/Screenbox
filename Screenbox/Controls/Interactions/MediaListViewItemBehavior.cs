@@ -80,7 +80,7 @@ namespace Screenbox.Controls.Interactions
         private void SelectorOnLostFocus(object sender, RoutedEventArgs e)
         {
             Control? control = FocusManager.GetFocusedElement() as Control;
-            if (control?.FindParentOrSelf<SelectorItem>() == _selector) return;
+            if (control?.FindAscendantOrSelf<SelectorItem>() == _selector) return;
             VisualStateManager.GoToState(AssociatedObject, "Normal", false);
         }
 
