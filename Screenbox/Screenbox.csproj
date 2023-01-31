@@ -154,11 +154,10 @@
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
+    <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
+    <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
     <Compile Include="Controls\ManipulationLock.cs" />
-    <Compile Include="Controls\MediaListViewItem.xaml.cs">
-      <DependentUpon>MediaListViewItem.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -429,11 +428,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\MediaListViewItem.xaml">
+    <Page Include="Controls\Styles\CustomGridViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Styles\CustomGridViewItem.xaml">
+    <Page Include="Controls\Styles\MediaListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
