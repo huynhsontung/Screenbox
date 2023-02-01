@@ -1,8 +1,9 @@
 ﻿#nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Numerics;
-using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -77,7 +78,26 @@ namespace Screenbox.Pages
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
             
             CreateHeaderAnimation(scrollingProperties.Translation.Y);
-            CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y);
+            MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
+            if (firstSong.ThumbnailSource != null)
+            {
+                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, firstSong.ThumbnailSource);
+            }
+            else
+            {
+                firstSong.PropertyChanged += OnPropertyChanged;
+            }
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            MediaViewModel media = (MediaViewModel)sender;
+            if (e.PropertyName == nameof(MediaViewModel.Thumbnail) && media.ThumbnailSource != null)
+            {
+                media.PropertyChanged -= OnPropertyChanged;
+                ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
+                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, media.ThumbnailSource);
+            }
         }
 
         private void CreateHeaderAnimation(ScalarNode scrollVerticalOffset)
@@ -139,10 +159,9 @@ namespace Screenbox.Pages
             buttonVisual.StartAnimation("Translation.Y", buttonTranslationYAnimation);
         }
 
-        private void CreateImageBackgroundGradientVisual(ScalarNode scrollVerticalOffset)
+        private void CreateImageBackgroundGradientVisual(ScalarNode scrollVerticalOffset, IRandomAccessStream image)
         {
-            StorageItemThumbnail? image = ViewModel.Source.RelatedSongs[0].ThumbnailSource;
-            if (image == null || _compositor == null) return;
+            if (_compositor == null) return;
             image.Seek(0);  // Manually seek the stream to start or image won't load
             LoadedImageSurface imageSurface = LoadedImageSurface.StartLoadFromStream(image);
             CompositionSurfaceBrush imageBrush = _compositor.CreateSurfaceBrush(imageSurface);
