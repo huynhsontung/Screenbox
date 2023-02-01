@@ -89,6 +89,7 @@
                     Grid.Column="4"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    CommandParameter="{Binding Album}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
@@ -298,6 +299,7 @@
                     Grid.Column="4"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    CommandParameter="{Binding Album}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
