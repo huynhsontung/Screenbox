@@ -48,6 +48,10 @@ namespace Screenbox.ViewModels
         {
             SortedItems.Source = value.RelatedSongs;
             Subtext = Strings.Resources.SongsCount(value.RelatedSongs.Count);
+            if (value.RelatedSongs.Count > 0 && value.RelatedSongs[0].Thumbnail == null)
+            {
+                value.RelatedSongs[0].LoadThumbnailAsync();
+            }
         }
 
         [RelayCommand]

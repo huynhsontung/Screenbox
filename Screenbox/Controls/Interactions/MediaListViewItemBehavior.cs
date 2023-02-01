@@ -6,16 +6,24 @@ using Windows.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.ViewModels;
 
 namespace Screenbox.Controls.Interactions
 {
     internal class MediaListViewItemBehavior : Behavior<Control>
     {
+        private readonly CommonViewModel _common;
         private SelectorItem? _selector;
         private ListViewBase? _listView;
         private ButtonBase? _playButton;
         private long _selectionModePropertyToken;
+
+        public MediaListViewItemBehavior()
+        {
+            _common = App.Services.GetRequiredService<CommonViewModel>();
+        }
 
         protected override void OnAttached()
         {
@@ -76,13 +84,25 @@ namespace Screenbox.Controls.Interactions
                 listView.RegisterPropertyChangedCallback(ListViewBase.SelectionModeProperty, OnSelectionModeChanged);
             UpdateSelectionModeVisualState((ListViewSelectionMode)listView.GetValue(ListViewBase.SelectionModeProperty));
 
-            // Bind play button command
-            if (AssociatedObject.FindDescendant("PlayButton") is not ButtonBase button) return;
-            _playButton = button;
-            if (listView.Resources.TryGetValue("MediaListViewItemPlayCommand", out object value) &&
-                value is ICommand command)
+            // Bind buttons command
+            BindButtonsCommand(listView);
+        }
+
+        private void BindButtonsCommand(ListViewBase listView)
+        {
+            if (AssociatedObject.FindDescendant("PlayButton") is ButtonBase button)
             {
-                button.Command = command;
+                _playButton = button;
+                if (listView.Resources.TryGetValue("MediaListViewItemPlayCommand", out object value) &&
+                    value is ICommand command)
+                {
+                    button.Command = command;
+                }
+            }
+
+            if (AssociatedObject.FindDescendant("AlbumButton") is ButtonBase albumButton)
+            {
+                albumButton.Command = _common.OpenAlbumCommand;
             }
         }
 
