@@ -74,6 +74,7 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
@@ -284,6 +285,7 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
@@ -501,6 +503,7 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
+                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock

@@ -104,6 +104,11 @@ namespace Screenbox.Controls.Interactions
             {
                 albumButton.Command = _common.OpenAlbumCommand;
             }
+
+            if (AssociatedObject.FindDescendant("ArtistButton") is ButtonBase artistButton)
+            {
+                artistButton.Command = _common.OpenArtistCommand;
+            }
         }
 
         private void SelectorOnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
