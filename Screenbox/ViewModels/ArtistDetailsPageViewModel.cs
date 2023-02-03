@@ -4,6 +4,7 @@ using Screenbox.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Converters;
@@ -25,7 +26,7 @@ namespace Screenbox.ViewModels
             _subtext = string.Empty;
         }
 
-        partial void OnSourceChanged(ArtistViewModel value)
+        async partial void OnSourceChanged(ArtistViewModel value)
         {
             Albums = value.RelatedSongs
                 .OrderBy(m => m.MusicProperties?.TrackNumber ?? 0)
@@ -34,6 +35,11 @@ namespace Screenbox.ViewModels
             string totalDuration = HumanizedDurationConverter.Convert(GetTotalDuration(value.RelatedSongs));
             Subtext =
                 $"{Strings.Resources.AlbumsCount(Albums.Count)} • {Strings.Resources.SongsCount(value.RelatedSongs.Count)} • {Strings.Resources.RunTime(totalDuration)}";
+
+            IEnumerable<Task> loadingTasks = Albums.Where(g => g.Key is { AlbumArt: null })
+                .Select(g => g.Key?.LoadAlbumArtAsync())
+                .OfType<Task>();
+            await Task.WhenAll(loadingTasks);
         }
 
         [RelayCommand]

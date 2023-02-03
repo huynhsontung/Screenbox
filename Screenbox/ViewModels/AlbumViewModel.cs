@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.ViewModels
@@ -25,6 +26,14 @@ namespace Screenbox.ViewModels
             Name = album;
             _albumArtist = albumArtist;
             RelatedSongs = new ObservableCollection<MediaViewModel>();
+        }
+
+        public async Task LoadAlbumArtAsync()
+        {
+            if (RelatedSongs.Count > 0)
+            {
+                await RelatedSongs[0].LoadThumbnailAsync();
+            }
         }
 
         public override string ToString()
