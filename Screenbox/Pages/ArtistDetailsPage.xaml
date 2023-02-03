@@ -21,6 +21,8 @@
                 <ResourceDictionary Source="/Controls/Styles/MediaListViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
+
             <ThemeShadow x:Key="SharedShadow" />
 
             <CollectionViewSource
@@ -28,11 +30,69 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.Albums}" />
 
-            <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{Binding Key.Name}" />
+            <DataTemplate x:Key="AlbumGroupHeaderTemplate">
+                <UserControl>
+                    <StackPanel
+                        x:Name="HeaderRootPanel"
+                        Margin="0,-6,0,0"
+                        Orientation="Vertical">
+                        <Grid
+                            x:Name="AlbumArtGrid"
+                            Width="140"
+                            Height="140"
+                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                            <FontIcon
+                                x:Name="AlbumArtIcon"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="42"
+                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Glyph="&#xe93c;" />
+                            <Image Source="{Binding Key.AlbumArt}" />
+                        </Grid>
+
+                        <StackPanel
+                            x:Name="TextPanel"
+                            Margin="8,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Orientation="Vertical">
+                            <TextBlock
+                                FontWeight="SemiBold"
+                                MaxLines="2"
+                                Style="{StaticResource BodyTextBlockStyle}"
+                                Text="{Binding Key.Name}" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{Binding Key.Year}" />
+                        </StackPanel>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Top">
+                                    <VisualState.StateTriggers>
+                                        <triggers:IsEqualStateTrigger Value="{Binding GroupHeaderPlacement, ElementName=ItemsStackPanel}">
+                                            <triggers:IsEqualStateTrigger.To>
+                                                <GroupHeaderPlacement>Top</GroupHeaderPlacement>
+                                            </triggers:IsEqualStateTrigger.To>
+                                        </triggers:IsEqualStateTrigger>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="AlbumArtGrid.Width" Value="80" />
+                                        <Setter Target="AlbumArtGrid.Height" Value="80" />
+                                        <Setter Target="HeaderRootPanel.Margin" Value="-12,0,0,0" />
+                                        <Setter Target="HeaderRootPanel.Orientation" Value="Horizontal" />
+                                        <Setter Target="AlbumArtIcon.FontSize" Value="32" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </StackPanel>
+                </UserControl>
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
@@ -168,6 +228,14 @@
                     </XamlUICommand.IconSource>
                 </XamlUICommand>
             </ListView.Resources>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel
+                        x:Name="ItemsStackPanel"
+                        AreStickyGroupHeadersEnabled="False"
+                        GroupHeaderPlacement="Left" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </ListView.Header>
@@ -175,7 +243,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
             <ListView.GroupStyle>
-                <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                <GroupStyle HeaderTemplate="{StaticResource AlbumGroupHeaderTemplate}" HidesIfEmpty="True" />
             </ListView.GroupStyle>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
@@ -208,6 +276,7 @@
                         <!--<Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />-->
                         <Setter Target="ButtonPanel.Margin" Value="0" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
+                        <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
