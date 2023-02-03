@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.ViewModels
 {
@@ -12,6 +13,8 @@ namespace Screenbox.ViewModels
             : _albumArtist;
 
         public uint? Year { get; set; }
+
+        public BitmapImage? AlbumArt => RelatedSongs.Count > 0 ? RelatedSongs[0].Thumbnail : null;
 
         public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
