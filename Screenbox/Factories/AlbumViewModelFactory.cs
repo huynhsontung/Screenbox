@@ -40,12 +40,17 @@ namespace Screenbox.Factories
             AlbumViewModel album = GetAlbumFromName(albumName, artistName);
             if (album != _unknownAlbum)
             {
+                album.Year ??= song.MusicProperties?.Year;
                 album.RelatedSongs.Add(song);
                 return album;
             }
 
             string albumKey = GetAlbumKey(albumName, artistName);
-            album = new AlbumViewModel(albumName, artistName);
+            album = new AlbumViewModel(albumName, artistName)
+            {
+                Year = song.MusicProperties?.Year
+            };
+
             album.RelatedSongs.Add(song);
             return _allAlbums[albumKey] = album;
         }
