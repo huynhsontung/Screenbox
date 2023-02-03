@@ -181,6 +181,16 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region AlbumsCount
+        /// <summary>
+        ///   Get the pluralized version of the string similar to: {0} album
+        /// </summary>
+        public static string AlbumsCount(int pluralCount)
+        {
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "AlbumsCount", (double)pluralCount, false), pluralCount);
+        }
+        #endregion
+
         #region ZoomToFit
         /// <summary>
         ///   Looks up a localized string similar to: Zoom to fit
@@ -1354,6 +1364,16 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region RunTime
+        /// <summary>
+        ///   Looks up a localized string similar to: {0} run time
+        /// </summary>
+        public static string RunTime(string runtime)
+        {
+            return string.Format(_resourceLoader.GetString("RunTime"), runtime);
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1374,6 +1394,7 @@ namespace Screenbox.Strings{
             LocationSpecified,
             ShuffleMode,
             SongsCount,
+            AlbumsCount,
             ZoomToFit,
             FrameSavedNotificationTitle,
             SaveCurrentFrame,
@@ -1465,6 +1486,7 @@ namespace Screenbox.Strings{
             AddVideoFolderToolTip,
             OpenFolder,
             OpenUrl,
+            RunTime,
         }
 
         private static ResourceLoader _resourceLoader;

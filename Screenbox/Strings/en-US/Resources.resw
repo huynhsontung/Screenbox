@@ -465,4 +465,16 @@
     <value>{0} songs</value>
     <comment>#Format[Plural Int]</comment>
   </data>
+  <data name="AlbumsCount_One" xml:space="preserve">
+    <value>{0} album</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AlbumsCount_Other" xml:space="preserve">
+    <value>{0} albums</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>{0} run time</value>
+    <comment>#Format[String runtime]</comment>
+  </data>
 </root>
