@@ -46,7 +46,7 @@ namespace Screenbox.ViewModels
                 SortDirection.Ascending, new TrackNumberComparer()));
         }
 
-        partial void OnSourceChanged(AlbumViewModel value)
+        async partial void OnSourceChanged(AlbumViewModel value)
         {
             SortedItems.Source = value.RelatedSongs;
             TimeSpan totalDuration = GetTotalDuration(value.RelatedSongs);
@@ -61,9 +61,9 @@ namespace Screenbox.ViewModels
 
             builder.AppendJoin(" • ", songsCount, runTime);
             Subtext = builder.ToString();
-            if (value.RelatedSongs.Count > 0 && value.RelatedSongs[0].Thumbnail == null)
+            if (value.AlbumArt == null)
             {
-                value.RelatedSongs[0].LoadThumbnailAsync();
+                await value.LoadAlbumArtAsync();
             }
         }
 
