@@ -157,8 +157,10 @@
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
+            IsItemClickEnabled="True"
             ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
-            ItemsSource="{x:Bind ViewModel.SortedItems}">
+            ItemsSource="{x:Bind ViewModel.SortedItems}"
+            SelectionMode="None">
             <ListView.Resources>
                 <XamlUICommand
                     x:Key="MediaListViewItemPlayCommand"
