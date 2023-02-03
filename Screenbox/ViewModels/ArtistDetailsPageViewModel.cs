@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Converters;
 
 namespace Screenbox.ViewModels
 {
@@ -30,8 +31,9 @@ namespace Screenbox.ViewModels
                 .OrderBy(m => m.MusicProperties?.TrackNumber ?? 0)
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
+            string totalDuration = HumanizedDurationConverter.Convert(GetTotalDuration(value.RelatedSongs));
             Subtext =
-                $"{Albums.Count} {Strings.Resources.Albums} • {value.RelatedSongs.Count} {Strings.Resources.Songs}";
+                $"{Strings.Resources.AlbumsCount(Albums.Count)} • {Strings.Resources.SongsCount(value.RelatedSongs.Count)} • {Strings.Resources.RunTime(totalDuration)}";
         }
 
         [RelayCommand]
@@ -58,6 +60,17 @@ namespace Screenbox.ViewModels
             Messenger.Send(new ClearPlaylistMessage());
             Messenger.Send(new QueuePlaylistMessage(shuffledList));
             Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
+        }
+
+        private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)
+        {
+            TimeSpan duration = TimeSpan.Zero;
+            foreach (MediaViewModel item in items)
+            {
+                duration += item.Duration ?? TimeSpan.Zero;
+            }
+
+            return duration;
         }
     }
 }
