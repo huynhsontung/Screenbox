@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System.Collections.Generic;
+using System.Globalization;
 using Screenbox.ViewModels;
 
 namespace Screenbox.Factories
@@ -21,7 +22,8 @@ namespace Screenbox.Factories
             if (string.IsNullOrEmpty(artistName))
                 return _unknownArtist;
 
-            return _allArtists.TryGetValue(artistName, out ArtistViewModel artist) ? artist : _unknownArtist;
+            string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : _unknownArtist;
         }
 
         public ArtistViewModel AddSongToArtist(MediaViewModel song, string? artistName = null)
@@ -40,9 +42,10 @@ namespace Screenbox.Factories
                 return artist;
             }
 
+            string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             artist = new ArtistViewModel(artistName);
             artist.RelatedSongs.Add(song);
-            return _allArtists[artistName] = artist;
+            return _allArtists[key] = artist;
         }
     }
 }
