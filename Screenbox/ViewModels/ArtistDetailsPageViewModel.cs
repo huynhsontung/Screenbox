@@ -15,14 +15,35 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private string _subtext;
 
+        public List<IGrouping<AlbumViewModel?, MediaViewModel>>? Albums { get; private set; }
+
+        private List<MediaViewModel>? _itemList;
+
+        public ArtistDetailsPageViewModel()
+        {
+            _subtext = string.Empty;
+        }
+
+        partial void OnSourceChanged(ArtistViewModel value)
+        {
+            Albums = value.RelatedSongs
+                .OrderBy(m => m.MusicProperties?.TrackNumber ?? 0)
+                .GroupBy(m => m.Album)
+                .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
+            Subtext =
+                $"{Albums.Count} {Strings.Resources.Albums} • {value.RelatedSongs.Count} {Strings.Resources.Songs}";
+        }
+
         [RelayCommand]
         private void Play(MediaViewModel media)
         {
+            if (Albums == null) return;
+            _itemList ??= Albums.SelectMany(g => g).ToList();
             PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != Source.RelatedSongs.Count || playlist.LastUpdate != Source.RelatedSongs)
+            if (playlist.Playlist.Count != _itemList.Count || playlist.LastUpdate != _itemList)
             {
                 Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(Source.RelatedSongs, false));
+                Messenger.Send(new QueuePlaylistMessage(_itemList, false));
             }
 
             Messenger.Send(new PlayMediaMessage(media, true));

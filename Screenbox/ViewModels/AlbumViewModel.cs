@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Screenbox.ViewModels
@@ -11,7 +11,9 @@ namespace Screenbox.ViewModels
             ? RelatedSongs[0].Artists?.FirstOrDefault()?.Name ?? string.Empty
             : _albumArtist;
 
-        public List<MediaViewModel> RelatedSongs { get; }
+        public uint? Year { get; set; }
+
+        public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
         private readonly string _albumArtist;
 
@@ -19,7 +21,7 @@ namespace Screenbox.ViewModels
         {
             Name = album;
             _albumArtist = albumArtist;
-            RelatedSongs = new List<MediaViewModel>();
+            RelatedSongs = new ObservableCollection<MediaViewModel>();
         }
 
         public override string ToString()
