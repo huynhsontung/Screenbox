@@ -2,6 +2,7 @@
 
 using Screenbox.ViewModels;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Screenbox.Factories
 {
@@ -23,8 +24,10 @@ namespace Screenbox.Factories
                 return _unknownAlbum;
             }
 
-            string albumKey = GetAlbumKey(albumName, artistName);
-            return _allAlbums.TryGetValue(albumKey, out AlbumViewModel album) ? album : _unknownAlbum;
+            string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string artistKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string key = GetAlbumKey(albumKey, artistKey);
+            return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : _unknownAlbum;
         }
 
         public AlbumViewModel AddSongToAlbum(MediaViewModel song, string? albumName = null, string? artistName = null)
@@ -45,14 +48,16 @@ namespace Screenbox.Factories
                 return album;
             }
 
-            string albumKey = GetAlbumKey(albumName, artistName);
+            string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string artistKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string key = GetAlbumKey(albumKey, artistKey);
             album = new AlbumViewModel(albumName, artistName)
             {
                 Year = song.MusicProperties?.Year
             };
 
             album.RelatedSongs.Add(song);
-            return _allAlbums[albumKey] = album;
+            return _allAlbums[key] = album;
         }
 
         private static string GetAlbumKey(string albumName, string artistName)
