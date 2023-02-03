@@ -84,9 +84,10 @@
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,8">
                     <FontIcon
+                        x:Name="AlbumArtIcon"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontSize="52"
+                        FontSize="64"
                         Foreground="{ThemeResource ThumbnailMediaIconForeground}"
                         Glyph="&#xe93c;" />
                     <Border CornerRadius="8">
@@ -204,6 +205,7 @@
                         <Setter Target="Header.Height" Value="160" />
                         <Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />
                         <Setter Target="ButtonPanel.Margin" Value="0" />
+                        <Setter Target="AlbumArtIcon.FontSize" Value="52" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
