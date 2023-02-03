@@ -278,6 +278,7 @@
                         <!--<Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />-->
                         <Setter Target="ButtonPanel.Margin" Value="0" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
+                        <Setter Target="Subtext.Style" Value="{StaticResource BodyTextBlockStyle}" />
                         <!-- <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" /> -->
                     </VisualState.Setters>
                 </VisualState>
