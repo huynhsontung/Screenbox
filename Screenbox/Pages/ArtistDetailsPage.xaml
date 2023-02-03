@@ -215,7 +215,7 @@
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
+            ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
             ItemsSource="{x:Bind AlbumSource.View}"
             SelectionMode="None">
             <ListView.Resources>

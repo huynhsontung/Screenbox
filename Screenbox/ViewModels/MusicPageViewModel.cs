@@ -129,18 +129,6 @@ namespace Screenbox.ViewModels
             await propertiesDialog.ShowAsync();
         }
 
-        [RelayCommand]
-        private void OpenAlbum(AlbumViewModel album)
-        {
-            _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
-        }
-
-        [RelayCommand]
-        private void OpenArtist(ArtistViewModel album)
-        {
-            _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), album);
-        }
-
         private async Task FetchSongsInternalAsync()
         {
             const int maxCount = 5000;

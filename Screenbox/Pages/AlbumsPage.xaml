@@ -114,7 +114,7 @@
                 <GridView
                     x:Name="AlbumGridView"
                     Padding="{StaticResource ContentPageThumbnailRightMargin}"
-                    ui:ListViewExtensions.Command="{x:Bind ViewModel.OpenAlbumCommand}"
+                    ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"

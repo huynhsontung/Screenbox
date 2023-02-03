@@ -56,5 +56,12 @@ namespace Screenbox.ViewModels
             if (album == null) return;
             _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
         }
+
+        [RelayCommand]
+        private void OpenArtist(ArtistViewModel? artist)
+        {
+            if (artist == null) return;
+            _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+        }
     }
 }
