@@ -135,6 +135,12 @@ namespace Screenbox.ViewModels
             _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
         }
 
+        [RelayCommand]
+        private void OpenArtist(ArtistViewModel album)
+        {
+            _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), album);
+        }
+
         private async Task FetchSongsInternalAsync()
         {
             const int maxCount = 5000;
