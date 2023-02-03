@@ -81,6 +81,8 @@
               <uap:FileType ContentType="audio/ogg">.ogg</uap:FileType>
               <uap:FileType ContentType="audio/ogg">.oga</uap:FileType>
               <uap:FileType ContentType="audio/webm">.weba</uap:FileType>
+              <uap:FileType ContentType="audio/mp4">.m4a</uap:FileType>
+              <uap:FileType ContentType="audio/flac">.flac</uap:FileType>
             </uap:SupportedFileTypes>
             <uap:DisplayName>Audios</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
