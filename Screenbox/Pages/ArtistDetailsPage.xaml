@@ -230,10 +230,12 @@
             </ListView.Resources>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
+                    <!--  Due to layout issue, GroupHeaderPlacement=Left does not work well with MediaListViewItem  -->
+                    <!--  Potential layout cycle trigger  -->
                     <ItemsStackPanel
                         x:Name="ItemsStackPanel"
                         AreStickyGroupHeadersEnabled="False"
-                        GroupHeaderPlacement="Left" />
+                        GroupHeaderPlacement="Top" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.Header>
@@ -276,7 +278,7 @@
                         <!--<Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />-->
                         <Setter Target="ButtonPanel.Margin" Value="0" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
-                        <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
+                        <!-- <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" /> -->
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
