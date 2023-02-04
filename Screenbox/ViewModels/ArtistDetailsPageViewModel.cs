@@ -45,7 +45,7 @@ namespace Screenbox.ViewModels
         }
 
         [RelayCommand]
-        private void Play(MediaViewModel media)
+        private void Play(MediaViewModel? media)
         {
             if (Albums == null) return;
             _itemList ??= Albums.SelectMany(g => g).ToList();
@@ -56,7 +56,7 @@ namespace Screenbox.ViewModels
                 Messenger.Send(new QueuePlaylistMessage(_itemList, false));
             }
 
-            Messenger.Send(new PlayMediaMessage(media, true));
+            Messenger.Send(new PlayMediaMessage(media ?? _itemList[0], true));
         }
 
         [RelayCommand]

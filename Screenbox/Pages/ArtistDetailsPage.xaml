@@ -188,10 +188,7 @@
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal"
                     Spacing="16">
-                    <Button
-                        Command="{x:Bind ViewModel.PlayCommand}"
-                        CommandParameter="{x:Bind ViewModel.Source.RelatedSongs[0], Mode=OneWay}"
-                        Style="{StaticResource AccentButtonStyle}">
+                    <Button Command="{x:Bind ViewModel.PlayCommand}" Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
