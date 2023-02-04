@@ -240,13 +240,17 @@
                     </labs:SettingsCard.Description>
                     <StackPanel Margin="0,8,0,0" Orientation="Vertical">
                         <HyperlinkButton
-                            Margin="-11,0,0,0"
+                            Margin="-12,0,0,0"
                             Content="Source code"
                             NavigateUri="https://github.com/huynhsontung/Screenbox" />
                         <HyperlinkButton
-                            Margin="-11,0,0,0"
+                            Margin="-12,0,0,0"
                             Content="Discord"
                             NavigateUri="https://discord.gg/HZPZXjANxz" />
+                        <HyperlinkButton
+                            Margin="-12,0,0,0"
+                            Content="Support the development ☕"
+                            NavigateUri="https://github.com/sponsors/huynhsontung" />
                     </StackPanel>
                 </labs:SettingsCard>
             </StackPanel>
