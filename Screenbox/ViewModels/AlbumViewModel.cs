@@ -13,13 +13,24 @@ namespace Screenbox.ViewModels
             ? RelatedSongs[0].Artists?.FirstOrDefault()?.Name ?? string.Empty
             : _albumArtist;
 
-        public uint? Year { get; set; }
+        public uint? Year
+        {
+            get => _year;
+            set
+            {
+                if (value > 0)
+                {
+                    _year = value;
+                }
+            }
+        }
 
         public BitmapImage? AlbumArt => RelatedSongs.Count > 0 ? RelatedSongs[0].Thumbnail : null;
 
         public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
         private readonly string _albumArtist;
+        private uint? _year;
 
         public AlbumViewModel(string album, string albumArtist)
         {

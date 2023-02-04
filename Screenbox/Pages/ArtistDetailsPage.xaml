@@ -68,7 +68,8 @@
                             <TextBlock
                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                 Style="{StaticResource CaptionTextBlockStyle}"
-                                Text="{Binding Key.Year}" />
+                                Text="{Binding Key.Year}"
+                                Visibility="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource StringVisibilityConverter}}" />
                         </StackPanel>
 
                         <VisualStateManager.VisualStateGroups>
