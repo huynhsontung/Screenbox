@@ -138,6 +138,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && _mediaPlayer != null)
             {
                 double newTime = args.NewValue;
+                double diffMs = Math.Abs(newTime - _mediaPlayer.Position.TotalMilliseconds);
                 bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
                 if (_debounceOverride)
                 {
@@ -145,7 +146,7 @@ namespace Screenbox.ViewModels
                     _seekTimer.Stop();
                     _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
                 }
-                else if (args.OldValue == Time || paused || _timeChangeOverride)
+                else if (diffMs > 100 || paused || _timeChangeOverride)
                 {
                     _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime),
                         TimeSpan.FromMilliseconds(50));
