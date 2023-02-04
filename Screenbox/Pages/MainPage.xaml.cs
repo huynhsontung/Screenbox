@@ -143,6 +143,10 @@ namespace Screenbox.Pages
                     SetTitleBar();
                     NavView.IsPaneVisible = true;
                     ContentGrid.Visibility = Visibility.Visible;
+                    if (ContentFrame.Content == null)
+                    {
+                        NavView.SelectedItem = NavView.MenuItems[0];
+                    }
                 }
 
                 UpdateTitleBarState();
