@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Numerics;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -39,6 +40,7 @@ namespace Screenbox.Pages
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+            NotificationView.Translation = new Vector3(0, 0, 8);
 
             _playerFrame = CreatePlayerFrame();
             _pages = new Dictionary<string, Type>
@@ -134,13 +136,13 @@ namespace Screenbox.Pages
                 {
                     NavView.IsPaneVisible = false;
                     NavView.IsPaneOpen = false;
-                    ContentFrame.Visibility = Visibility.Collapsed;
+                    ContentGrid.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     SetTitleBar();
                     NavView.IsPaneVisible = true;
-                    ContentFrame.Visibility = Visibility.Visible;
+                    ContentGrid.Visibility = Visibility.Visible;
                 }
 
                 UpdateTitleBarState();

@@ -1,11 +1,9 @@
 ﻿#nullable enable
 
 using System;
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.UI.Xaml.Controls;
@@ -30,7 +28,9 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private object? _content;
 
-        [ObservableProperty] private ButtonBase? _actionButton;
+        [ObservableProperty] private string? _buttonContent;
+
+        [ObservableProperty] private RelayCommand? _actionCommand;
 
         [ObservableProperty] private bool _isOpen;
 
@@ -74,13 +74,9 @@ namespace Screenbox.ViewModels
                 Reset();
                 Title = Resources.FrameSavedNotificationTitle;
                 Severity = InfoBarSeverity.Success;
-                ActionButton = new HyperlinkButton
-                {
-                    Content = message.Value.Name,
-                };
-
-                ActionButton.Click += (_, _) => _filesService.OpenFileLocationAsync(message.Value);
-
+                ButtonContent = message.Value.Name;
+                ActionCommand = new RelayCommand(() => _filesService.OpenFileLocationAsync(message.Value));
+                
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
             }
@@ -97,16 +93,12 @@ namespace Screenbox.ViewModels
                 if (message.Value <= TimeSpan.Zero) return;
                 Title = Resources.ResumePositionNotificationTitle;
                 Severity = InfoBarSeverity.Informational;
-                ActionButton = new Button
-                {
-                    Content = Resources.GoToPosition(HumanizedDurationConverter.Convert(message.Value))
-                };
-
-                ActionButton.Click += (_, _) =>
+                ButtonContent = Resources.GoToPosition(HumanizedDurationConverter.Convert(message.Value));
+                ActionCommand = new RelayCommand(() =>
                 {
                     IsOpen = false;
-                    Messenger.Send(new ChangeTimeRequestMessage(message.Value));
-                };
+                    Messenger.Send(new ChangeTimeRequestMessage(message.Value, debounce: false));
+                });
 
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
@@ -118,7 +110,8 @@ namespace Screenbox.ViewModels
             Title = default;
             Message = default;
             Severity = default;
-            ActionButton = default;
+            ButtonContent = default;
+            ActionCommand = default;
             Content = default;
             IsOpen = false;
         }

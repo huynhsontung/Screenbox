@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:appModel="using:Windows.ApplicationModel"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -18,6 +19,8 @@
             <!--<Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>-->
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
+
+            <ThemeShadow x:Key="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -105,11 +108,21 @@
                 <AutoSuggestBox PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}" QueryIcon="Find" />
             </muxc:NavigationView.AutoSuggestBox>
 
-            <Frame
-                x:Name="ContentFrame"
-                Padding="56,0,0,0"
-                Navigated="ContentFrame_Navigated"
-                NavigationFailed="ContentFrame_NavigationFailed" />
+            <Grid x:Name="ContentGrid">
+                <Frame
+                    x:Name="ContentFrame"
+                    Padding="56,0,0,0"
+                    Navigated="ContentFrame_Navigated"
+                    NavigationFailed="ContentFrame_NavigationFailed" />
+
+                <controls:NotificationView
+                    x:Name="NotificationView"
+                    MaxWidth="400"
+                    Margin="10,10,10,148"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Shadow="{StaticResource SharedShadow}" />
+            </Grid>
         </muxc:NavigationView>
 
         <VisualStateManager.VisualStateGroups>
@@ -125,6 +138,7 @@
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="98,0,0,0" />
                         <Setter Target="ContentFrame.Padding" Value="16,0,0,0" />
+                        <Setter Target="NotificationView.Margin" Value="8,8,8,146" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">

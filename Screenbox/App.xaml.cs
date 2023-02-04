@@ -56,7 +56,6 @@ namespace Screenbox
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();
             services.AddTransient<SeekBarViewModel>();
-            services.AddTransient<NotificationViewModel>();
             services.AddTransient<VideosPageViewModel>();
             services.AddTransient<NetworkPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
@@ -70,6 +69,7 @@ namespace Screenbox
             services.AddTransient<PlaylistViewModel>();
             services.AddTransient<AlbumDetailsPageViewModel>();
             services.AddTransient<ArtistDetailsPageViewModel>();
+            services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
