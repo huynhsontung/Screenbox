@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿#nullable enable
+
+using Windows.UI.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging.Messages;

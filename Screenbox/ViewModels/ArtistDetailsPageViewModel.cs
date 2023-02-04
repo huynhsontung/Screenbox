@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Messages;
 using Screenbox.Core;
 using System;
