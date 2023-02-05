@@ -62,7 +62,7 @@ namespace Screenbox.Core.Playback
             private set
             {
                 // Length can fluctuate during playback. Check for tolerance here.
-                if (Math.Abs((_naturalDuration - value).TotalMilliseconds) <= 10) return;
+                if (Math.Abs((_naturalDuration - value).TotalMilliseconds) <= 50) return;
                 _naturalDuration = value;
                 NaturalDurationChanged?.Invoke(this, null);
             }

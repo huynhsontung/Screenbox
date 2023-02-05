@@ -70,8 +70,7 @@ namespace Screenbox.ViewModels
                 {
                     IsSeekable = false;
                     Time = 0;
-                    Length = 0;
-                    Chapters = null;
+                    Chapters = sender.PlaybackItem?.Chapters;
                 });
             }
             else
@@ -138,7 +137,7 @@ namespace Screenbox.ViewModels
             if (IsSeekable && _mediaPlayer != null)
             {
                 double newTime = args.NewValue;
-                double diffMs = Math.Abs(newTime - _mediaPlayer.Position.TotalMilliseconds);
+                double oldDiffMs = Math.Abs(args.OldValue - _mediaPlayer.Position.TotalMilliseconds);
                 bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
                 if (_debounceOverride)
                 {
@@ -146,7 +145,7 @@ namespace Screenbox.ViewModels
                     _seekTimer.Stop();
                     _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime);
                 }
-                else if (diffMs > 100 || paused || _timeChangeOverride)
+                else if (oldDiffMs < 50 || paused || _timeChangeOverride)
                 {
                     _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(newTime),
                         TimeSpan.FromMilliseconds(50));
@@ -157,14 +156,22 @@ namespace Screenbox.ViewModels
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
             if (_seekTimer.IsRunning || _timeChangeOverride) return;
-            _dispatcherQueue.TryEnqueue(() => Time = sender.Position.TotalMilliseconds);
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Time = sender.Position.TotalMilliseconds;
+                if (!IsSeekable)
+                {
+                    IsSeekable = sender.CanSeek;
+                }
+            });
         }
 
         private void OnNaturalDurationChanged(IMediaPlayer sender, object? args)
         {
+            // Natural duration can fluctuate during playback
+            // Do not rely on this event to detect media changes
             _dispatcherQueue.TryEnqueue(() =>
             {
-                Time = 0;
                 Length = sender.NaturalDuration.TotalMilliseconds;
                 IsSeekable = sender.CanSeek;
                 Chapters = sender.PlaybackItem?.Chapters;
