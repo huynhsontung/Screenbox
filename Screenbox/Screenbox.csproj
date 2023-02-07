@@ -156,6 +156,8 @@
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
+    <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
+    <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
     <Compile Include="Controls\ManipulationLock.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
