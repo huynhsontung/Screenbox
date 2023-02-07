@@ -73,37 +73,43 @@ namespace Screenbox.Controls.Interactions
 
         private static void OnOverrideChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is not int target || target < 0) return;
             AdaptiveLayoutBreakpointsBehavior instance = (AdaptiveLayoutBreakpointsBehavior)d;
             if (instance.AssociatedObject == null) return;
-            if (VisualStateManager.GoToState(instance.AssociatedObject, $"Level{target}", true))
-            {
-                instance.Current = target;
-            }
+            instance.UpdateLayout();
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Override >= 0) return;
-            Control control = (Control)sender;
-            double width = e.NewSize.Width;
-            int target = 0;
-            for (int i = 0; i < _breakpoints.Length; i++)
-            {
-                double currentBreak = _breakpoints[i];
-                if (width < currentBreak)
-                {
-                    target = i;
-                    break;
-                }
+            UpdateLayout();
+        }
 
-                if (i == _breakpoints.Length - 1)
+        private void UpdateLayout()
+        {
+            int target = 0;
+            if (Override >= 0)
+            {
+                target = Override;
+            }
+            else
+            {
+                double width = AssociatedObject.ActualWidth;
+                for (int i = 0; i < _breakpoints.Length; i++)
                 {
-                    target = _breakpoints.Length;
+                    double currentBreak = _breakpoints[i];
+                    if (width < currentBreak)
+                    {
+                        target = i;
+                        break;
+                    }
+
+                    if (i == _breakpoints.Length - 1)
+                    {
+                        target = _breakpoints.Length;
+                    }
                 }
             }
 
-            if (VisualStateManager.GoToState(control, $"Level{target}", true))
+            if (VisualStateManager.GoToState(AssociatedObject, $"Level{target}", true))
             {
                 Current = target;
             }

@@ -1,9 +1,12 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:strings="using:Screenbox.Strings">
+
+    <converters:MediaTypeAdaptiveLayoutOverrideConverter x:Key="AdaptiveLayoutOverrideConverter" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
         <UserControl>
@@ -221,7 +224,10 @@
             </Grid>
 
             <interactivity:Interaction.Behaviors>
-                <interactions:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="400,620,800" />
+                <interactions:AdaptiveLayoutBreakpointsBehavior
+                    x:Name="AdaptiveLayoutBehavior"
+                    Breakpoints="400,620,800"
+                    Override="{Binding MediaType, Converter={StaticResource AdaptiveLayoutOverrideConverter}}" />
                 <interactions:MediaListViewItemBehavior />
             </interactivity:Interaction.Behaviors>
         </UserControl>
