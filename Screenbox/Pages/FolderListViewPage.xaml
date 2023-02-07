@@ -80,17 +80,16 @@
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-            ContextRequested="ListView_OnContextRequested"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
-            RightTapped="ListView_OnRightTapped"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
+                <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
             </interactivity:Interaction.Behaviors>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

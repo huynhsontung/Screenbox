@@ -28,14 +28,8 @@ namespace Screenbox.ViewModels
 
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
-        private bool IsMediaContextRequested => _contextRequested?.Media != null;
-
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayCommand), nameof(PlayNextCommand), nameof(ShowPropertiesCommand))]
-        private StorageItemViewModel? _contextRequested;
 
         private readonly IFilesService _filesService;
         private readonly INavigationService _navigationService;
@@ -106,7 +100,7 @@ namespace Screenbox.ViewModels
             _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
         }
 
-        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        [RelayCommand]
         private void Play(StorageItemViewModel item)
         {
             if (item.Media == null) return;
@@ -120,14 +114,14 @@ namespace Screenbox.ViewModels
             Messenger.Send(new PlayMediaMessage(item.Media, true));
         }
 
-        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        [RelayCommand]
         private void PlayNext(StorageItemViewModel item)
         {
             if (item.Media == null) return;
             Messenger.SendPlayNext(item.Media);
         }
 
-        [RelayCommand(CanExecute = nameof(IsMediaContextRequested))]
+        [RelayCommand]
         private async Task ShowPropertiesAsync(StorageItemViewModel item)
         {
             if (item.Media == null) return;

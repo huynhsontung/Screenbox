@@ -4,7 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -107,15 +110,16 @@
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ContainerContentChanging="FolderView_OnContainerContentChanging"
-            ContextRequested="FolderView_OnContextRequested"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
-            RightTapped="FolderView_OnRightTapped"
             SelectionMode="None">
             <GridView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
+            <interactivity:Interaction.Behaviors>
+                <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
+            </interactivity:Interaction.Behaviors>
         </GridView>
         <TextBlock
             x:Name="NoContentText"
