@@ -477,7 +477,8 @@
                     IsHitTestVisible="False"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding MusicProperties.TrackNumber, FallbackValue=''}" />
+                    Text="{Binding TrackNumber, FallbackValue=''}"
+                    Visibility="{Binding ShouldDisplayTrackNumber}" />
 
                 <AppBarButton
                     x:Name="PlayButton"

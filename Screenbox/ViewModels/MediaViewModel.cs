@@ -13,7 +13,6 @@ using Screenbox.Converters;
 using Screenbox.Core.Playback;
 using Screenbox.Factories;
 using Screenbox.Services;
-using Windows.Storage.AccessCache;
 
 namespace Screenbox.ViewModels
 {
@@ -30,6 +29,8 @@ namespace Screenbox.ViewModels
         public PlaybackItem Item => _item ??= Source is StorageFile file
             ? new PlaybackItem(_mediaService.CreateMedia(file))
             : new PlaybackItem(_mediaService.CreateMedia((Uri)Source));
+
+        public bool ShouldDisplayTrackNumber => TrackNumber > 0;    // Helper for binding
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
@@ -51,6 +52,10 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
+        private uint _trackNumber;
 
         private MediaViewModel(MediaViewModel source)
         {
@@ -184,6 +189,7 @@ namespace Screenbox.ViewModels
                         {
                             Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
                             Album ??= _albumFactory.AddSongToAlbum(this);
+                            TrackNumber = MusicProperties.TrackNumber;
 
                             if (!string.IsNullOrEmpty(MusicProperties.Artist))
                             {
