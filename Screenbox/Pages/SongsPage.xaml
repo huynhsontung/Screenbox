@@ -100,11 +100,9 @@
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-                    ContextRequested="SongListView_OnContextRequested"
                     IsItemClickEnabled="True"
                     ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
-                    RightTapped="SongListView_OnRightTapped"
                     SelectionMode="None">
                     <ListView.Resources>
                         <XamlUICommand
@@ -121,6 +119,7 @@
                             AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             AlternateBorderThickness="1" />
+                        <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     </interactivity:Interaction.Behaviors>
                     <ListView.Footer>
                         <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
