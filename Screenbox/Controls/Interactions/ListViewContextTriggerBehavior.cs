@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System.Collections.Generic;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -12,6 +13,8 @@ namespace Screenbox.Controls.Interactions
 {
     internal class ListViewContextTriggerBehavior : Trigger<ListViewBase>
     {
+        public event TypedEventHandler<ListViewContextTriggerBehavior, ListViewContextRequestedEventArgs>? ContextRequested;
+
         public static readonly DependencyProperty FlyoutProperty = DependencyProperty.Register(
             nameof(Flyout),
             typeof(FlyoutBase),
@@ -43,6 +46,10 @@ namespace Screenbox.Controls.Interactions
         private void OnContextRequested(UIElement sender, ContextRequestedEventArgs args)
         {
             if (args.OriginalSource is not SelectorItem element) return;
+            ListViewContextRequestedEventArgs eventArgs = new(element);
+            ContextRequested?.Invoke(this, eventArgs);
+            if (eventArgs.Handled) return;
+
             Interaction.ExecuteActions(AssociatedObject, Actions, element.Content);
             if (Flyout == null) return;
             if (Flyout is MenuFlyout { Items: { } } menuFlyout)
@@ -57,7 +64,11 @@ namespace Screenbox.Controls.Interactions
         private void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             if (e.OriginalSource is not FrameworkElement element ||
-                element.FindAscendantOrSelf<SelectorItem>() == null) return;
+                element.FindAscendantOrSelf<SelectorItem>() is not { } item) return;
+            ListViewContextRequestedEventArgs eventArgs = new(item);
+            ContextRequested?.Invoke(this, eventArgs);
+            if (eventArgs.Handled) return;
+
             Interaction.ExecuteActions(AssociatedObject, Actions, element.DataContext);
             if (Flyout == null) return;
             if (Flyout is MenuFlyout { Items: { } } menuFlyout)
