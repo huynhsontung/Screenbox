@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -49,13 +48,13 @@ namespace Screenbox.ViewModels
         [RelayCommand(CanExecute = nameof(CanCast))]
         private void Cast()
         {
-            if (_selectedRenderer == null) return;
-            _castService.SetActiveRenderer(_selectedRenderer);
-            CastingDevice = _selectedRenderer;
+            if (SelectedRenderer == null) return;
+            _castService.SetActiveRenderer(SelectedRenderer);
+            CastingDevice = SelectedRenderer;
             IsCasting = true;
         }
 
-        private bool CanCast() => _selectedRenderer is { IsAvailable: true };
+        private bool CanCast() => SelectedRenderer is { IsAvailable: true };
 
         [RelayCommand]
         private void StopCasting()

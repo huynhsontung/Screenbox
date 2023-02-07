@@ -131,14 +131,14 @@ namespace Screenbox.ViewModels
 
         private void LoadValues()
         {
-            _playerAutoResize = (int)_settingsService.PlayerAutoResize;
-            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
-            _playerSeekGesture = _settingsService.PlayerSeekGesture;
-            _playerTapGesture = _settingsService.PlayerTapGesture;
-            _showVideoFolders = _settingsService.ShowVideoFolders;
-            _showRecent = _settingsService.ShowRecent;
+            PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
+            PlayerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            PlayerSeekGesture = _settingsService.PlayerSeekGesture;
+            PlayerTapGesture = _settingsService.PlayerTapGesture;
+            ShowVideoFolders = _settingsService.ShowVideoFolders;
+            ShowRecent = _settingsService.ShowRecent;
             int maxVolume = _settingsService.MaxVolume;
-            _volumeBoost = maxVolume switch
+            VolumeBoost = maxVolume switch
             {
                 >= 200 => 3,
                 >= 150 => 2,

@@ -47,7 +47,7 @@ namespace Screenbox.ViewModels
 
         public bool SeekBarPointerPressed { get; set; }
 
-        private bool AudioOnlyInternal => _audioOnly ?? false;
+        private bool AudioOnlyInternal => AudioOnly ?? false;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _openingTimer;
