@@ -85,6 +85,7 @@ namespace Screenbox
             // Services
             services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<ILibraryService, LibraryService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();

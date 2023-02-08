@@ -192,6 +192,7 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Core\Database\MediaFileRecord.cs" />
     <Compile Include="Core\LastPositionTracker.cs" />
     <Compile Include="Core\Database\MediaLastPosition.cs" />
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
@@ -284,11 +285,13 @@
     </Compile>
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\CastService.cs" />
+    <Compile Include="Services\Interfaces\ILibraryService.cs" />
     <Compile Include="Services\Interfaces\INavigationService.cs" />
     <Compile Include="Services\Interfaces\ICastService.cs" />
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />
