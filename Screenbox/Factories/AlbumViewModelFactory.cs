@@ -8,12 +8,13 @@ namespace Screenbox.Factories
 {
     internal sealed class AlbumViewModelFactory
     {
+        public AlbumViewModel UnknownAlbum { get; }
+
         private readonly Dictionary<string, AlbumViewModel> _allAlbums;
-        private readonly AlbumViewModel _unknownAlbum;
 
         public AlbumViewModelFactory()
         {
-            _unknownAlbum = new AlbumViewModel(Strings.Resources.UnknownAlbum, Strings.Resources.UnknownArtist);
+            UnknownAlbum = new AlbumViewModel(Strings.Resources.UnknownAlbum, Strings.Resources.UnknownArtist);
             _allAlbums = new Dictionary<string, AlbumViewModel>();
         }
 
@@ -21,39 +22,44 @@ namespace Screenbox.Factories
         {
             if (string.IsNullOrEmpty(albumName) || albumName == Strings.Resources.UnknownAlbum)
             {
-                return _unknownAlbum;
+                return UnknownAlbum;
             }
 
             string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string artistKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string key = GetAlbumKey(albumKey, artistKey);
-            return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : _unknownAlbum;
+            return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : UnknownAlbum;
         }
 
-        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string? albumName = null, string? artistName = null)
+        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string? albumName = null, string? artistName = null, uint year = 0)
         {
             albumName ??= song.MusicProperties?.Album ?? string.Empty;
             artistName ??= song.MusicProperties?.AlbumArtist ?? string.Empty;
+            if (year == 0 && song.MusicProperties != null)
+            {
+                year = song.MusicProperties.Year;
+            }
+
             if (string.IsNullOrEmpty(albumName))
             {
-                _unknownAlbum.RelatedSongs.Add(song);
-                return _unknownAlbum;
+                UnknownAlbum.RelatedSongs.Add(song);
+                return UnknownAlbum;
             }
 
             AlbumViewModel album = GetAlbumFromName(albumName, artistName);
-            if (album != _unknownAlbum)
+            if (album != UnknownAlbum)
             {
-                album.Year ??= song.MusicProperties?.Year;
+                album.Year ??= year;
                 album.RelatedSongs.Add(song);
                 return album;
             }
 
             string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            string artistKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
+            string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string key = GetAlbumKey(albumKey, artistKey);
             album = new AlbumViewModel(albumName, artistName)
             {
-                Year = song.MusicProperties?.Year
+                Year = year
             };
 
             album.RelatedSongs.Add(song);

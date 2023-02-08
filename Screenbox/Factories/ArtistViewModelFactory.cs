@@ -1,29 +1,55 @@
 ﻿#nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Screenbox.ViewModels;
 
 namespace Screenbox.Factories
 {
     internal sealed class ArtistViewModelFactory
     {
+        public ArtistViewModel UnknownArtist { get; }
+
         private readonly Dictionary<string, ArtistViewModel> _allArtists;
-        private readonly ArtistViewModel _unknownArtist;
+
+        private static readonly string[] ArtistNameSeparators = { " & ", ", " };
 
         public ArtistViewModelFactory()
         {
             _allArtists = new Dictionary<string, ArtistViewModel>();
-            _unknownArtist = new ArtistViewModel(Strings.Resources.UnknownArtist);
+            UnknownArtist = new ArtistViewModel(Strings.Resources.UnknownArtist);
+        }
+
+        public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
+        {
+            if (artists.Length == 0)
+                return new[] { UnknownArtist };
+
+            IEnumerable<string> artistNames = artists;
+            if (artists.Length == 1)
+            {
+                string artistName = artists[0];
+                string[] splits = artistName.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries);
+                if (splits.Length > 1)
+                {
+                    artistNames = splits.Prepend(artistName);
+                }
+            }
+
+            return artistNames
+                .Select(artist => AddSongToArtist(song, artist))
+                .ToArray();
         }
 
         public ArtistViewModel GetArtistFromName(string artistName)
         {
             if (string.IsNullOrEmpty(artistName))
-                return _unknownArtist;
+                return UnknownArtist;
 
             string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : _unknownArtist;
+            return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : UnknownArtist;
         }
 
         public ArtistViewModel AddSongToArtist(MediaViewModel song, string? artistName = null)
@@ -31,12 +57,12 @@ namespace Screenbox.Factories
             artistName ??= song.MusicProperties?.Artist ?? string.Empty;
             if (string.IsNullOrEmpty(artistName))
             {
-                _unknownArtist.RelatedSongs.Add(song);
-                return _unknownArtist;
+                UnknownArtist.RelatedSongs.Add(song);
+                return UnknownArtist;
             }
 
             ArtistViewModel artist = GetArtistFromName(artistName);
-            if (artist != _unknownArtist)
+            if (artist != UnknownArtist)
             {
                 artist.RelatedSongs.Add(song);
                 return artist;

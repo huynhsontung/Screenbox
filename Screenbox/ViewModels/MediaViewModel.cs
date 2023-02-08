@@ -52,6 +52,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;
+        [ObservableProperty] private uint _year;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
@@ -189,28 +190,22 @@ namespace Screenbox.ViewModels
                         MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
                         if (MusicProperties != null)
                         {
-                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
-                            Album ??= _albumFactory.AddSongToAlbum(this);
                             TrackNumber = MusicProperties.TrackNumber;
+                            Year = MusicProperties.Year;
+                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : Strings.Resources.UnknownGenre;
+                            Album ??= _albumFactory.AddSongToAlbum(this, MusicProperties.Album, MusicProperties.AlbumArtist, Year);
+
+                            if (Artists.Length == 0)
+                            {
+                                string[] contributingArtists =
+                                    additionalProperties[SystemProperties.Music.Artist] as string[] ??
+                                    Array.Empty<string>();
+                                Artists = _artistFactory.ParseArtists(contributingArtists, this);
+                            }
 
                             if (!string.IsNullOrEmpty(MusicProperties.Artist))
                             {
                                 Caption = MusicProperties.Artist;
-                            }
-
-                            if (Artists.Length == 0)
-                            {
-                                if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
-                                    contributingArtists.Length == 0)
-                                {
-                                    Artists = new[] { _artistFactory.AddSongToArtist(this, string.Empty) };
-                                }
-                                else
-                                {
-                                    Artists = contributingArtists
-                                        .Select(artist => _artistFactory.AddSongToArtist(this, artist))
-                                        .ToArray();
-                                }
                             }
                         }
 
