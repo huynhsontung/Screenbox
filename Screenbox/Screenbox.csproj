@@ -193,7 +193,7 @@
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Core\LastPositionTracker.cs" />
-    <Compile Include="Core\MediaLastPosition.cs" />
+    <Compile Include="Core\Database\MediaLastPosition.cs" />
     <Compile Include="Core\MediaViewModelWithMruToken.cs" />
     <Compile Include="Core\MessageHelpers.cs" />
     <Compile Include="Core\Messages\ChangeVolumeRequestMessage.cs" />

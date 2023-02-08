@@ -1,7 +1,7 @@
 ﻿using System;
 using ProtoBuf;
 
-namespace Screenbox.Core
+namespace Screenbox.Core.Database
 {
     [ProtoContract]
     internal record MediaLastPosition(string Location, TimeSpan Position)

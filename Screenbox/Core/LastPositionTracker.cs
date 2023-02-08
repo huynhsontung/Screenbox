@@ -3,11 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
 using Windows.Storage;
 using System.IO;
 using System.Linq;
 using ProtoBuf;
+using Screenbox.Core.Database;
 
 namespace Screenbox.Core
 {
