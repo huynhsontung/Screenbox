@@ -48,7 +48,7 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private VideoProperties? _videoProperties;
         [ObservableProperty] private MusicProperties? _musicProperties;
         [ObservableProperty] private string? _genre;
-        [ObservableProperty] private ArtistViewModel[]? _artists;
+        [ObservableProperty] private ArtistViewModel[] _artists;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;
@@ -94,6 +94,7 @@ namespace Screenbox.ViewModels
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
             _mediaType = GetMediaTypeForFile(file);
+            _artists = Array.Empty<ArtistViewModel>();
             Location = file.Path;
             Glyph = StorageItemGlyphConverter.Convert(file);
         }
@@ -110,6 +111,7 @@ namespace Screenbox.ViewModels
             _mediaType = MediaPlaybackType.Unknown;
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
+            _artists = Array.Empty<ArtistViewModel>();
             Location = uri.ToString();
             Glyph = "\ue774"; // Globe icon
         }
@@ -196,7 +198,7 @@ namespace Screenbox.ViewModels
                                 Caption = MusicProperties.Artist;
                             }
 
-                            if (Artists == null)
+                            if (Artists.Length == 0)
                             {
                                 if (additionalProperties[SystemProperties.Music.Artist] is not string[] contributingArtists ||
                                     contributingArtists.Length == 0)
