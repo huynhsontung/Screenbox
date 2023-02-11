@@ -10,7 +10,7 @@ namespace Screenbox.Services
         IReadOnlyList<AlbumViewModel> Albums { get; }
         IReadOnlyList<ArtistViewModel> Artists { get; }
         IReadOnlyList<MediaViewModel> Videos { get; }
-        Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool ignoreCache = false);
-        Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool ignoreCache = false);
+        Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool useCache = true);
+        Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true);
     }
 }
