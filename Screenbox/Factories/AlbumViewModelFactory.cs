@@ -18,6 +18,8 @@ namespace Screenbox.Factories
             _allAlbums = new Dictionary<string, AlbumViewModel>();
         }
 
+        public List<AlbumViewModel> GetAllAlbums() => new(_allAlbums.Values);
+
         public AlbumViewModel GetAlbumFromName(string albumName, string artistName)
         {
             if (string.IsNullOrEmpty(albumName) || albumName == Strings.Resources.UnknownAlbum)
