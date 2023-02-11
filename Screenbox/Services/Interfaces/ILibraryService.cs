@@ -6,6 +6,11 @@ namespace Screenbox.Services
 {
     internal interface ILibraryService
     {
-        Task<IList<MediaViewModel>> FetchSongsAsync(bool ignoreCache = false);
+        IReadOnlyList<MediaViewModel> Songs { get; }
+        IReadOnlyList<AlbumViewModel> Albums { get; }
+        IReadOnlyList<ArtistViewModel> Artists { get; }
+        IReadOnlyList<MediaViewModel> Videos { get; }
+        Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool ignoreCache = false);
+        Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool ignoreCache = false);
     }
 }

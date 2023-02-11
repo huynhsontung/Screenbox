@@ -17,6 +17,11 @@ namespace Screenbox.Services
 {
     internal sealed class LibraryService : ILibraryService
     {
+        public IReadOnlyList<MediaViewModel> Songs => _songs.AsReadOnly();
+        public IReadOnlyList<AlbumViewModel> Albums => _albums.AsReadOnly();
+        public IReadOnlyList<ArtistViewModel> Artists => _artists.AsReadOnly();
+        public IReadOnlyList<MediaViewModel> Videos => _videos.AsReadOnly();
+
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
@@ -26,8 +31,12 @@ namespace Screenbox.Services
         private const int MaxLoadCount = 5000;
         private const string SaveFileName = "library.bin";
 
-        private IList<MediaViewModel>? _songs;
-        private Task<IList<MediaViewModel>>? _loadSongsTask;
+        private Task<IReadOnlyList<MediaViewModel>>? _loadSongsTask;
+        private Task<IReadOnlyList<MediaViewModel>>? _loadVideosTask;
+        private List<MediaViewModel> _songs;
+        private List<AlbumViewModel> _albums;
+        private List<ArtistViewModel> _artists;
+        private List<MediaViewModel> _videos;
 
         public LibraryService(IFilesService filesService, MediaViewModelFactory mediaFactory,
             AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
@@ -37,9 +46,13 @@ namespace Screenbox.Services
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
             _lockObject = new object();
+            _songs = new List<MediaViewModel>();
+            _albums = new List<AlbumViewModel>();
+            _artists = new List<ArtistViewModel>();
+            _videos = new List<MediaViewModel>();
         }
 
-        public Task<IList<MediaViewModel>> FetchSongsAsync(bool ignoreCache = false)
+        public Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool useCache = true)
         {
             lock (_lockObject)
             {
@@ -48,33 +61,67 @@ namespace Screenbox.Services
                     return _loadSongsTask;
                 }
 
-                return _loadSongsTask = FetchSongsInternalAsync(ignoreCache);
+                return _loadSongsTask = FetchSongsInternalAsync(useCache);
             }
         }
 
-        private async Task<IList<MediaViewModel>> FetchSongsInternalAsync(bool ignoreCache)
+        public Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true)
         {
-            IList<MediaViewModel> songs;
-            if (ignoreCache)
+            lock (_lockObject)
             {
+                if (_loadVideosTask is { IsCompleted: false })
+                {
+                    return _loadVideosTask;
+                }
+
+                return _loadVideosTask = FetchVideosInternalAsync(useCache);
+            }
+        }
+
+        private async Task<IReadOnlyList<MediaViewModel>> FetchSongsInternalAsync(bool useCache)
+        {
+            List<MediaViewModel> songs;
+            if (useCache)
+            {
+                if (Songs.Count > 0) return Songs;
                 songs = await FetchSongsFromStorage();
-                await CacheAsync(songs);
+                // songs = await FetchSongsFromCache();
+                // if (songs.Count == 0)
+                // {
+                //     songs = await FetchSongsFromStorage();
+                //     await CacheAsync(songs);
+                // }
             }
             else
             {
-                if (_songs != null) return _songs;
-                songs = await FetchSongsFromCache();
-                if (songs.Count == 0)
-                {
-                    songs = await FetchSongsFromStorage();
-                    await CacheAsync(songs);
-                }
+                songs = await FetchSongsFromStorage();
+                // await CacheAsync(songs);
             }
 
-            return _songs = songs;
+            _songs = songs;
+            _artists = _artistFactory.GetAllArtists();
+            _albums = _albumFactory.GetAllAlbums();
+            return songs.AsReadOnly();
         }
 
-        private async Task CacheAsync(IList<MediaViewModel> media)
+        private async Task<IReadOnlyList<MediaViewModel>> FetchVideosInternalAsync(bool useCache)
+        {
+            List<MediaViewModel> videos;
+            if (useCache)
+            {
+                if (Videos.Count > 0) return Videos;
+                videos = await FetchVideosFromStorage();
+            }
+            else
+            {
+                videos = await FetchVideosFromStorage();
+            }
+
+            _videos = videos;
+            return videos.AsReadOnly();
+        }
+
+        private async Task CacheAsync(IEnumerable<MediaViewModel> media)
         {
             List<MediaFileRecord> records = media.Select(ToRecord).ToList();
             StorageFolder folder = ApplicationData.Current.LocalFolder;
@@ -84,28 +131,39 @@ namespace Screenbox.Services
             stream.SetLength(stream.Position);
         }
 
-        private async Task<IList<MediaViewModel>> FetchSongsFromStorage()
+        private async Task<List<MediaViewModel>> FetchSongsFromStorage()
         {
             StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
-            List<MediaViewModel> songs = new();
+            return await FetchMediaFromStorage(queryResult);
+        }
+
+        private async Task<List<MediaViewModel>> FetchVideosFromStorage()
+        {
+            StorageFileQueryResult queryResult = _filesService.GetVideosFromLibrary();
+            return await FetchMediaFromStorage(queryResult);
+        }
+
+        private async Task<List<MediaViewModel>> FetchMediaFromStorage(StorageFileQueryResult queryResult)
+        {
+            List<MediaViewModel> media = new();
             uint fetchIndex = 0;
             while (fetchIndex < MaxLoadCount)
             {
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
                 if (files.Count == 0) break;
                 fetchIndex += (uint)files.Count;
-                songs.AddRange(files.Select(_mediaFactory.GetSingleton));
+                media.AddRange(files.Select(_mediaFactory.GetSingleton));
             }
 
-            foreach (MediaViewModel song in songs)
+            foreach (MediaViewModel song in media)
             {
                 await song.LoadDetailsAsync();
             }
 
-            return songs;
+            return media;
         }
 
-        private async Task<IList<MediaViewModel>> FetchSongsFromCache()
+        private async Task<List<MediaViewModel>> FetchSongsFromCache()
         {
             StorageFolder folder = ApplicationData.Current.LocalFolder;
             IStorageItem? item = await folder.TryGetItemAsync(SaveFileName);
