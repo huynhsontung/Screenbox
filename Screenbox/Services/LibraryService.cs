@@ -109,7 +109,7 @@ namespace Screenbox.Services
 
         private async Task<MusicLibraryFetchResult> FetchMusicInternalAsync(bool useCache)
         {
-            if (useCache && !_invalidateMusicCache)
+            if (useCache && !_invalidateMusicCache && _musicLibraryQueryResult != null)
             {
                 return GetMusicCache();
             }
@@ -126,7 +126,7 @@ namespace Screenbox.Services
 
         private async Task<IReadOnlyList<MediaViewModel>> FetchVideosInternalAsync(bool useCache)
         {
-            if (useCache && !_invalidateVideosCache)
+            if (useCache && !_invalidateVideosCache && _videosLibraryQueryResult != null)
             {
                 return GetVideosCache();
             }
