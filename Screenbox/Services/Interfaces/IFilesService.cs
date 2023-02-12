@@ -13,9 +13,6 @@ namespace Screenbox.Services
 {
     internal interface IFilesService
     {
-        ImmutableArray<string> SupportedAudioFormats { get; }
-        ImmutableArray<string> SupportedVideoFormats { get; }
-        ImmutableArray<string> SupportedFormats { get; }
         public Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file);
         public Task<StorageFile?> GetNextFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
