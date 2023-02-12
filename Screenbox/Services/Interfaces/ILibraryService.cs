@@ -12,5 +12,6 @@ namespace Screenbox.Services
         IReadOnlyList<MediaViewModel> Videos { get; }
         Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool useCache = true);
         Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true);
+        Task RemoveCacheAsync();
     }
 }
