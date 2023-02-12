@@ -12,5 +12,7 @@ namespace Screenbox.Services
         event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
         Task<MusicLibraryFetchResult> FetchMusicAsync(bool useCache = true);
         Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true);
+        MusicLibraryFetchResult GetMusicCache();
+        IReadOnlyList<MediaViewModel> GetVideosCache();
     }
 }

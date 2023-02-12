@@ -53,6 +53,16 @@ namespace Screenbox.Services
             _videos = new List<MediaViewModel>();
         }
 
+        public MusicLibraryFetchResult GetMusicCache()
+        {
+            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
+        }
+
+        public IReadOnlyList<MediaViewModel> GetVideosCache()
+        {
+            return _videos.AsReadOnly();
+        }
+
         public Task<MusicLibraryFetchResult> FetchMusicAsync(bool useCache = true)
         {
             lock (_lockObject)
@@ -62,7 +72,7 @@ namespace Screenbox.Services
                     return _loadMusicTask;
                 }
 
-                return _loadMusicTask = FetchSongsInternalAsync(useCache);
+                return _loadMusicTask = FetchMusicInternalAsync(useCache);
             }
         }
 
@@ -97,20 +107,16 @@ namespace Screenbox.Services
             _videos.Remove(media);
         }
 
-        private async Task<MusicLibraryFetchResult> FetchSongsInternalAsync(bool useCache)
+        private async Task<MusicLibraryFetchResult> FetchMusicInternalAsync(bool useCache)
         {
-            List<MediaViewModel> songs = _songs;
             if (useCache && !_invalidateMusicCache)
             {
-                if (songs.Count > 0)
-                {
-                    return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
-                }
+                return GetMusicCache();
             }
 
             await InitializeMusicLibraryAsync();
             StorageFileQueryResult queryResult = GetMusicLibraryQueryResult();
-            songs = await FetchMediaFromStorage(queryResult);
+            List<MediaViewModel> songs = await FetchMediaFromStorage(queryResult);
             _invalidateMusicCache = false;
             _songs = songs;
             _artists = _artistFactory.GetAllArtists();
@@ -120,18 +126,14 @@ namespace Screenbox.Services
 
         private async Task<IReadOnlyList<MediaViewModel>> FetchVideosInternalAsync(bool useCache)
         {
-            List<MediaViewModel> videos = _videos;
             if (useCache && !_invalidateVideosCache)
             {
-                if (videos.Count > 0)
-                {
-                    return videos;
-                }
+                return GetVideosCache();
             }
 
             await InitializeVideosLibraryAsync();
             StorageFileQueryResult queryResult = GetVideosLibraryQueryResult();
-            videos = await FetchMediaFromStorage(queryResult);
+            List<MediaViewModel> videos = await FetchMediaFromStorage(queryResult);
             _invalidateVideosCache = false;
             _videos = videos;
             return videos.AsReadOnly();
