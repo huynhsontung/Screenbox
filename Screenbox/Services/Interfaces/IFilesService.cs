@@ -7,7 +7,6 @@ using Windows.Storage;
 using Windows.Storage.Search;
 using Screenbox.Core.Playback;
 using Windows.Storage.FileProperties;
-using System.Collections.Immutable;
 
 namespace Screenbox.Services
 {
