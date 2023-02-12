@@ -35,23 +35,6 @@ namespace Screenbox.Factories
             return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
         }
 
-        public MediaViewModel GetSingleton(string localPath)
-        {
-            if (!_references.TryGetValue(localPath, out WeakReference<MediaViewModel> reference) ||
-                !reference.TryGetTarget(out MediaViewModel instance))
-            {
-                Uri uri = new(localPath);
-                instance = new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
-                if (!string.IsNullOrEmpty(localPath))
-                {
-                    _references[localPath] = new WeakReference<MediaViewModel>(instance);
-                    CleanUpStaleReferences();
-                }
-            }
-
-            return instance;
-        }
-
         public MediaViewModel GetSingleton(StorageFile file)
         {
             string path = file.Path;
