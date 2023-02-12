@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Media;
 using Screenbox.Core.Database;
 using Screenbox.Factories;
@@ -18,13 +19,8 @@ namespace Screenbox.Services
 {
     internal sealed class LibraryService : ILibraryService
     {
-        public event EventHandler<object>? MusicLibraryContentChanged; 
-        public event EventHandler<object>? VideosLibraryContentChanged; 
-
-        public IReadOnlyList<MediaViewModel> Songs => _songs.AsReadOnly();
-        public IReadOnlyList<AlbumViewModel> Albums => _albums.AsReadOnly();
-        public IReadOnlyList<ArtistViewModel> Artists => _artists.AsReadOnly();
-        public IReadOnlyList<MediaViewModel> Videos => _videos.AsReadOnly();
+        public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged; 
+        public event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
 
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
@@ -36,7 +32,7 @@ namespace Screenbox.Services
         private const string MusicSaveFileName = "music_library.bin";
         private const string VideosSaveFileName = "videos_library.bin";
 
-        private Task<IReadOnlyList<MediaViewModel>>? _loadSongsTask;
+        private Task<MusicLibraryFetchResult>? _loadMusicTask;
         private Task<IReadOnlyList<MediaViewModel>>? _loadVideosTask;
         private List<MediaViewModel> _songs;
         private List<AlbumViewModel> _albums;
@@ -63,16 +59,16 @@ namespace Screenbox.Services
             _videos = new List<MediaViewModel>();
         }
 
-        public Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool useCache = true)
+        public Task<MusicLibraryFetchResult> FetchMusicAsync(bool useCache = true)
         {
             lock (_lockObject)
             {
-                if (_loadSongsTask is { IsCompleted: false })
+                if (_loadMusicTask is { IsCompleted: false })
                 {
-                    return _loadSongsTask;
+                    return _loadMusicTask;
                 }
 
-                return _loadSongsTask = FetchSongsInternalAsync(useCache);
+                return _loadMusicTask = FetchSongsInternalAsync(useCache);
             }
         }
 
@@ -111,7 +107,7 @@ namespace Screenbox.Services
         {
             media.Album?.RelatedSongs.Remove(media);
 
-            foreach (ArtistViewModel artist in Artists)
+            foreach (ArtistViewModel artist in media.Artists)
             {
                 artist.RelatedSongs.Remove(media);
             }
@@ -130,7 +126,7 @@ namespace Screenbox.Services
             }
         }
 
-        private async Task<IReadOnlyList<MediaViewModel>> FetchSongsInternalAsync(bool useCache)
+        private async Task<MusicLibraryFetchResult> FetchSongsInternalAsync(bool useCache)
         {
             List<MediaViewModel> songs = _songs;
             bool firstTime = _musicLibrary == null;
@@ -142,24 +138,19 @@ namespace Screenbox.Services
                 {
                     songs = await FetchMediaFromCache(MusicSaveFileName);
                     using StorageLibraryChangeResult changeResult = await GetLibraryChangeAsync(library);
-                    if (songs.Count > 0 && changeResult.Status != StorageLibraryChangeStatus.Unknown)
+                    if (songs.Count > 0 && changeResult.Status == StorageLibraryChangeStatus.HasChange)
                     {
-                        if (changeResult.Status == StorageLibraryChangeStatus.HasChange)
-                        {
-                            await UpdateMediaList(changeResult, songs);
-                            await CacheAsync(songs, MusicSaveFileName);
-                            _songs = songs;
-                            _artists = _artistFactory.GetAllArtists();
-                            _albums = _albumFactory.GetAllAlbums();
-                        }
-                
-                        return songs.AsReadOnly();
+                        await UpdateMediaList(changeResult, songs);
+                        await CacheAsync(songs, MusicSaveFileName);
+                        _songs = songs;
+                        _artists = _artistFactory.GetAllArtists();
+                        _albums = _albumFactory.GetAllAlbums();
                     }
                 }
 
                 if (songs.Count > 0)
                 {
-                    return songs.AsReadOnly();
+                    return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
                 }
             }
 
@@ -169,7 +160,7 @@ namespace Screenbox.Services
             _songs = songs;
             _artists = _artistFactory.GetAllArtists();
             _albums = _albumFactory.GetAllAlbums();
-            return songs.AsReadOnly();
+            return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
         }
 
         private async Task<IReadOnlyList<MediaViewModel>> FetchVideosInternalAsync(bool useCache)
@@ -184,16 +175,11 @@ namespace Screenbox.Services
                 {
                     videos = await FetchMediaFromCache(VideosSaveFileName);
                     using StorageLibraryChangeResult changeResult = await GetLibraryChangeAsync(library);
-                    if (videos.Count > 0 && changeResult.Status != StorageLibraryChangeStatus.Unknown)
+                    if (videos.Count > 0 && changeResult.Status == StorageLibraryChangeStatus.HasChange)
                     {
-                        if (changeResult.Status == StorageLibraryChangeStatus.HasChange)
-                        {
-                            await UpdateMediaList(changeResult, videos);
-                            await CacheAsync(videos, VideosSaveFileName);
-                            _videos = videos;
-                        }
-
-                        return videos.AsReadOnly();
+                        await UpdateMediaList(changeResult, videos);
+                        await CacheAsync(videos, VideosSaveFileName);
+                        _videos = videos;
                     }
                 }
 
