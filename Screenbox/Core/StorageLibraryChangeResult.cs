@@ -19,28 +19,20 @@ namespace Screenbox.Core
         public List<StorageFile> AddedItems { get; }
         public List<string> RemovedItems { get; }
 
-        private readonly StorageLibraryChangeReader _changeReader;
+        private readonly StorageLibraryChangeReader? _changeReader;
 
         public StorageLibraryChangeResult(StorageLibraryChangeReader changeReader, List<StorageFile> addedItems, List<string> removedItems)
         {
             _changeReader = changeReader;
             AddedItems = addedItems;
             RemovedItems = removedItems;
-            ulong lastChangeId = changeReader.GetLastChangeId();
-            Status = StorageLibraryChangeStatus.NoChange;
-            if (lastChangeId == StorageLibraryLastChangeId.Unknown)
-            {
-                Status = StorageLibraryChangeStatus.Unknown;
-            }
-            else if (lastChangeId > 0)
-            {
-                Status = StorageLibraryChangeStatus.HasChange;
-            }
+            Status = addedItems.Count > 0 || removedItems.Count > 0
+                ? StorageLibraryChangeStatus.HasChange
+                : StorageLibraryChangeStatus.NoChange;
         }
 
-        public StorageLibraryChangeResult(StorageLibraryChangeStatus status, StorageLibraryChangeReader changeReader)
+        public StorageLibraryChangeResult(StorageLibraryChangeStatus status)
         {
-            _changeReader = changeReader;
             AddedItems = new List<StorageFile>();
             RemovedItems = new List<string>();
             Status = status;
@@ -50,7 +42,7 @@ namespace Screenbox.Core
         {
             try
             {
-                await _changeReader.AcceptChangesAsync();
+                await _changeReader?.AcceptChangesAsync();
             }
             catch (Exception)
             {

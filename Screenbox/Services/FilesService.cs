@@ -19,11 +19,11 @@ namespace Screenbox.Services
 {
     internal sealed class FilesService : IFilesService
     {
-        private ImmutableArray<string> SupportedAudioFormats { get; }
+        public ImmutableArray<string> SupportedAudioFormats { get; }
 
-        private ImmutableArray<string> SupportedVideoFormats { get; }
+        public ImmutableArray<string> SupportedVideoFormats { get; }
 
-        private ImmutableArray<string> SupportedFormats { get; }
+        public ImmutableArray<string> SupportedFormats { get; }
 
         public FilesService()
         {
