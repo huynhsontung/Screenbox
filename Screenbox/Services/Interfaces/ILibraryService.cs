@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Screenbox.Core;
 using Screenbox.ViewModels;
+using Windows.Foundation;
 
 namespace Screenbox.Services
 {
     internal interface ILibraryService
     {
-        IReadOnlyList<MediaViewModel> Songs { get; }
-        IReadOnlyList<AlbumViewModel> Albums { get; }
-        IReadOnlyList<ArtistViewModel> Artists { get; }
-        IReadOnlyList<MediaViewModel> Videos { get; }
-        Task<IReadOnlyList<MediaViewModel>> FetchSongsAsync(bool useCache = true);
+        event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged;
+        event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
+        Task<MusicLibraryFetchResult> FetchMusicAsync(bool useCache = true);
         Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true);
         Task RemoveCacheAsync();
     }

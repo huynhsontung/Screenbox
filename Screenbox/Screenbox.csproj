@@ -213,6 +213,7 @@
     <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Core\Messages\SettingsChangedMessage.cs" />
     <Compile Include="Core\Messages\ShowPlayPauseBadgeMessage.cs" />
+    <Compile Include="Core\MusicLibraryFetchResult.cs" />
     <Compile Include="Core\Playback\AudioTrack.cs" />
     <Compile Include="Core\Playback\IMediaPlayer.cs" />
     <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />
