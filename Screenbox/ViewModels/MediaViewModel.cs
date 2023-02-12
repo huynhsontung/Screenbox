@@ -156,7 +156,11 @@ namespace Screenbox.ViewModels
         private async Task LoadDetailsInternalAsync()
         {
             if (BasicProperties != null) return;
-            await TryConvertSourceToFileAsync();
+            if (Source is Uri)
+            {
+                await TryConvertSourceToFileAsync();
+            }
+
             if (Source is not StorageFile { IsAvailable: true } file) return;
             string[] additionalPropertyKeys =
             {
@@ -230,21 +234,23 @@ namespace Screenbox.ViewModels
         {
             if (Thumbnail == null)
             {
-                await TryConvertSourceToFileAsync();
-                if (Source is StorageFile file)
+                if (Source is Uri)
                 {
-                    StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
-                    if (source == null) return;
-                    BitmapImage image = new();
-                    await image.SetSourceAsync(ThumbnailSource);
-                    Thumbnail = image;
+                    await TryConvertSourceToFileAsync();
                 }
+
+                if (Source is not StorageFile { IsAvailable: true } file) return;
+                StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
+                if (source == null) return;
+                BitmapImage image = new();
+                await image.SetSourceAsync(ThumbnailSource);
+                Thumbnail = image;
             }
         }
 
         private async Task TryConvertSourceToFileAsync()
         {
-            if (Source is Uri uri)
+            if (Source is Uri { IsLoopback: true } uri)
             {
                 try
                 {
