@@ -20,7 +20,9 @@ namespace Screenbox.ViewModels
     {
         public string Location { get; }
 
-        public object Source { get; private set; }
+        public object Source { get; }
+
+        public string Glyph { get; }
 
         public StorageItemThumbnail? ThumbnailSource { get; set; }
 
@@ -51,7 +53,6 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;
         [ObservableProperty] private uint _year;
-        [ObservableProperty] private string _glyph;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
@@ -77,9 +78,9 @@ namespace Screenbox.ViewModels
             _artists = source._artists;
             _album = source._album;
             _caption = source._caption;
-            _glyph = source._glyph;
             Location = source.Location;
             Source = source.Source;
+            Glyph = source.Glyph;
         }
 
         public MediaViewModel(IFilesService filesService, IMediaService mediaService,
@@ -95,8 +96,8 @@ namespace Screenbox.ViewModels
             _loadThumbnailTask = Task.CompletedTask;
             _mediaType = GetMediaTypeForFile(file);
             _artists = Array.Empty<ArtistViewModel>();
-            _glyph = StorageItemGlyphConverter.Convert(file);
             Location = file.Path;
+            Glyph = StorageItemGlyphConverter.Convert(file);
         }
 
         public MediaViewModel(IFilesService filesService, IMediaService mediaService,
@@ -112,8 +113,8 @@ namespace Screenbox.ViewModels
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
             _artists = Array.Empty<ArtistViewModel>();
-            _glyph = "\ue774"; // Globe icon
-            Location = uri.OriginalString;
+            Location = uri.ToString();
+            Glyph = "\ue774"; // Globe icon
         }
 
         public MediaViewModel Clone()
@@ -155,12 +156,6 @@ namespace Screenbox.ViewModels
 
         private async Task LoadDetailsInternalAsync()
         {
-            if (BasicProperties != null) return;
-            if (Source is Uri)
-            {
-                await TryConvertSourceToFileAsync();
-            }
-
             if (Source is not StorageFile { IsAvailable: true } file) return;
             string[] additionalPropertyKeys =
             {
@@ -232,37 +227,13 @@ namespace Screenbox.ViewModels
 
         private async Task LoadThumbnailInternalAsync()
         {
-            if (Thumbnail == null)
+            if (Thumbnail == null && Source is StorageFile file)
             {
-                if (Source is Uri)
-                {
-                    await TryConvertSourceToFileAsync();
-                }
-
-                if (Source is not StorageFile { IsAvailable: true } file) return;
                 StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
                 if (source == null) return;
                 BitmapImage image = new();
                 await image.SetSourceAsync(ThumbnailSource);
                 Thumbnail = image;
-            }
-        }
-
-        private async Task TryConvertSourceToFileAsync()
-        {
-            if (Source is Uri { IsLoopback: true } uri)
-            {
-                try
-                {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    Source = file;
-                    Glyph = StorageItemGlyphConverter.Convert(file);
-                    MediaType = GetMediaTypeForFile(file);
-                }
-                catch (Exception)
-                {
-                    // pass
-                }
             }
         }
 
