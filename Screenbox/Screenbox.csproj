@@ -237,7 +237,6 @@
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\RendererEventArgs.cs" />
     <Compile Include="Core\SettingsOptions.cs" />
-    <Compile Include="Core\StorageLibraryChangeResult.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
     <Compile Include="Factories\AlbumViewModelFactory.cs" />
