@@ -55,7 +55,8 @@ namespace Screenbox.Services
 
         public MusicLibraryFetchResult GetMusicCache()
         {
-            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
+            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
+                _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
 
         public IReadOnlyList<MediaViewModel> GetVideosCache()
@@ -121,7 +122,8 @@ namespace Screenbox.Services
             _songs = songs;
             _artists = _artistFactory.GetAllArtists();
             _albums = _albumFactory.GetAllAlbums();
-            return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly());
+            return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
+                _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
 
         private async Task<IReadOnlyList<MediaViewModel>> FetchVideosInternalAsync(bool useCache)
