@@ -23,6 +23,7 @@ namespace Screenbox.ViewModels
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _refreshTimer;
         private IReadOnlyList<MediaViewModel> _songs;
 
         public SongsPageViewModel(ILibraryService libraryService)
@@ -30,17 +31,26 @@ namespace Screenbox.ViewModels
             _libraryService = libraryService;
             _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _refreshTimer = _dispatcherQueue.CreateTimer();
             _songs = Array.Empty<MediaViewModel>();
 
-            PopulateGroups();
+            libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+        }
+
+        public void OnNavigatedFrom()
+        {
+            _libraryService.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
+            _refreshTimer.Stop();
         }
 
         public async Task FetchSongsAsync()
         {
-            if (_songs.Count > 0) return;
             MusicLibraryFetchResult musicLibrary = await _libraryService.FetchMusicAsync();
             _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
             HasSongs = _songs.Count > 0;
+
+            GroupedSongs.Clear();
+            PopulateGroups();
             foreach (MediaViewModel song in _songs)
             {
                 GroupSongsByName(song);
@@ -61,6 +71,11 @@ namespace Screenbox.ViewModels
             {
                 GroupedSongs.AddGroup(key);
             }
+        }
+
+        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
+        {
+            _refreshTimer.Debounce(() => _ = FetchSongsAsync(), TimeSpan.FromSeconds(2));
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]

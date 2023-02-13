@@ -28,5 +28,11 @@ namespace Screenbox.Pages
             base.OnNavigatedTo(e);
             await ViewModel.FetchSongsAsync();
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ViewModel.OnNavigatedFrom();
+        }
     }
 }
