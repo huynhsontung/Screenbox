@@ -13,7 +13,7 @@ namespace Screenbox.Core.Messages
             AddNext = addNext;
         }
 
-        public QueuePlaylistMessage(IList<MediaViewModel> playlist, bool addNext = false) : base(playlist)
+        public QueuePlaylistMessage(IEnumerable<MediaViewModel> playlist, bool addNext = false) : base(playlist)
         {
             AddNext = addNext;
         }
