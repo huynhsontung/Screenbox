@@ -18,8 +18,9 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class SongsPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private ObservableGroupedCollection<string,MediaViewModel> _groupedSongs;
-        [ObservableProperty] private bool _hasSongs;
+        public ObservableGroupedCollection<string,MediaViewModel> GroupedSongs { get; }
+
+        private bool HasSongs => _songs.Count > 0;
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -29,10 +30,10 @@ namespace Screenbox.ViewModels
         public SongsPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
-            _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             _songs = Array.Empty<MediaViewModel>();
+            GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
 
             libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         }
@@ -47,22 +48,17 @@ namespace Screenbox.ViewModels
         {
             MusicLibraryFetchResult musicLibrary = await _libraryService.FetchMusicAsync();
             _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
-            HasSongs = _songs.Count > 0;
 
+            // Populate song groups with fetched result
             GroupedSongs.Clear();
             PopulateGroups();
             foreach (MediaViewModel song in _songs)
             {
-                GroupSongsByName(song);
+                GroupedSongs.AddItem(MusicPageViewModel.GetFirstLetterGroup(song.Name), song);
             }
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             PlayCommand.NotifyCanExecuteChanged();
-        }
-
-        private void GroupSongsByName(MediaViewModel song)
-        {
-            GroupedSongs.AddItem(MusicPageViewModel.GetFirstLetterGroup(song.Name), song);
         }
 
         private void PopulateGroups()
