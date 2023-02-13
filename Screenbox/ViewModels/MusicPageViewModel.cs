@@ -22,7 +22,6 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
         [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
         [ObservableProperty] private bool _isLoading;
 
@@ -39,7 +38,6 @@ namespace Screenbox.ViewModels
         private readonly DispatcherQueueTimer _timer;
         private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
-        private readonly HashSet<string> _albumNames;
         private readonly HashSet<string> _artistNames;
         private Task _loadSongsTask;
         private StorageLibrary? _library;
@@ -49,10 +47,8 @@ namespace Screenbox.ViewModels
             _libraryService = libraryService;
             _loadSongsTask = Task.CompletedTask;
             _lockObject = new object();
-            _groupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
             _groupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
             _songs = new List<MediaViewModel>();
-            _albumNames = new HashSet<string>();
             _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
@@ -152,22 +148,8 @@ namespace Screenbox.ViewModels
 
             foreach (MediaViewModel song in music.Songs)
             {
-                GroupAlbumsByName(song);
                 GroupArtistsByName(song);
             }
-        }
-
-        private void GroupAlbumsByName(MediaViewModel song)
-        {
-            if (song.Album == null || _albumNames.Contains(song.Album.ToString()))
-                return;
-
-            string albumName = song.Album.Name;
-            string key = albumName != Strings.Resources.UnknownAlbum
-                ? GetFirstLetterGroup(albumName)
-                : "\u2026";
-            GroupedAlbums.AddItem(key, song.Album);
-            _albumNames.Add(song.Album.ToString());
         }
 
         private void GroupArtistsByName(MediaViewModel song)
@@ -208,7 +190,6 @@ namespace Screenbox.ViewModels
             const string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
             foreach (string key in letters.Select(letter => letter.ToString()))
             {
-                GroupedAlbums.AddGroup(key);
                 GroupedArtists.AddGroup(key);
             }
         }
