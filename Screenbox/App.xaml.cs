@@ -69,6 +69,7 @@ namespace Screenbox
             services.AddTransient<PlaylistViewModel>();
             services.AddTransient<AlbumDetailsPageViewModel>();
             services.AddTransient<ArtistDetailsPageViewModel>();
+            services.AddTransient<SongsPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock

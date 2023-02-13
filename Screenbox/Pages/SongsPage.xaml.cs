@@ -1,4 +1,5 @@
 ﻿using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
 
@@ -11,15 +12,21 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class SongsPage : Page
     {
-        internal MusicPageViewModel ViewModel => (MusicPageViewModel)DataContext;
+        internal SongsPageViewModel ViewModel => (SongsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
 
         public SongsPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
+            DataContext = App.Services.GetRequiredService<SongsPageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ViewModel.FetchSongsAsync();
         }
     }
 }
