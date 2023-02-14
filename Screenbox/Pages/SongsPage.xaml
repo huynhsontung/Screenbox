@@ -64,24 +64,7 @@
     </Page.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Button
-            x:Name="ShufflePlayButton"
-            Grid.Row="0"
-            Margin="0,16,0,0"
-            Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-            Style="{StaticResource AccentButtonStyle}">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <FontIcon Glyph="&#xe8b1;" />
-                <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
-            </StackPanel>
-        </Button>
-
-        <SemanticZoom Grid.Row="1" Margin="0,24,0,0">
+        <SemanticZoom Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
@@ -154,7 +137,6 @@
                     <VisualState.Setters>
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

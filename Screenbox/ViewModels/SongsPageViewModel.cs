@@ -20,8 +20,6 @@ namespace Screenbox.ViewModels
     {
         public ObservableGroupedCollection<string,MediaViewModel> GroupedSongs { get; }
 
-        private bool HasSongs => _songs.Count > 0;
-
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
@@ -56,9 +54,6 @@ namespace Screenbox.ViewModels
             {
                 GroupedSongs.AddItem(MusicPageViewModel.GetFirstLetterGroup(song.Name), song);
             }
-
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
         }
 
         private void PopulateGroups()
@@ -74,7 +69,7 @@ namespace Screenbox.ViewModels
             _refreshTimer.Debounce(() => _ = FetchSongsAsync(), TimeSpan.FromSeconds(2));
         }
 
-        [RelayCommand(CanExecute = nameof(HasSongs))]
+        [RelayCommand]
         private void Play(MediaViewModel media)
         {
             if (_songs.Count == 0) return;
@@ -92,17 +87,6 @@ namespace Screenbox.ViewModels
         private void PlayNext(MediaViewModel media)
         {
             Messenger.SendPlayNext(media);
-        }
-
-        [RelayCommand(CanExecute = nameof(HasSongs))]
-        private void ShuffleAndPlay()
-        {
-            if (_songs.Count == 0) return;
-            Random rnd = new();
-            List<MediaViewModel> shuffledList = _songs.OrderBy(_ => rnd.Next()).ToList();
-            Messenger.Send(new ClearPlaylistMessage());
-            Messenger.Send(new QueuePlaylistMessage(shuffledList));
-            Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
         }
 
         [RelayCommand]

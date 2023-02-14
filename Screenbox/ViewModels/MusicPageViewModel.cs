@@ -7,14 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Services;
-using Screenbox.Controls;
 using Screenbox.Core;
 
 namespace Screenbox.ViewModels
@@ -48,7 +46,6 @@ namespace Screenbox.ViewModels
 
         public async Task FetchMusicAsync()
         {
-            _library ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
 
             MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
@@ -56,29 +53,8 @@ namespace Screenbox.ViewModels
             _songs.AddRange(music.Songs);
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
             _timer.Stop();
             IsLoading = false;
-        }
-
-        [RelayCommand(CanExecute = nameof(HasSongs))]
-        private void Play(MediaViewModel media)
-        {
-            if (_songs.Count == 0) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != _songs.Count || playlist.LastUpdate != _songs)
-            {
-                Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(_songs, false));
-            }
-
-            Messenger.Send(new PlayMediaMessage(media, true));
-        }
-
-        [RelayCommand]
-        private void PlayNext(MediaViewModel media)
-        {
-            Messenger.SendPlayNext(media);
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -95,14 +71,8 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private async Task AddFolder()
         {
+            _library ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
             await _library?.RequestAddFolderAsync();
-        }
-
-        [RelayCommand]
-        private async Task ShowPropertiesAsync(MediaViewModel media)
-        {
-            ContentDialog propertiesDialog = PropertiesView.GetDialog(media);
-            await propertiesDialog.ShowAsync();
         }
 
         public static string GetFirstLetterGroup(string name)
