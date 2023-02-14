@@ -49,7 +49,7 @@ namespace Screenbox.ViewModels
 
             GroupedAlbums.Clear();
             PopulateGroups();
-            foreach (AlbumViewModel album in musicLibrary.Albums)
+            foreach (AlbumViewModel album in musicLibrary.Albums.OrderBy(a => a.Name, StringComparer.CurrentCulture))
             {
                 string key = album == musicLibrary.UnknownAlbum
                     ? "\u2026"
