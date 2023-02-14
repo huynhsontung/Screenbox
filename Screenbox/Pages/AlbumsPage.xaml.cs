@@ -1,16 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.ViewModels;
@@ -24,15 +12,27 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class AlbumsPage : Page
     {
-        internal MusicPageViewModel ViewModel => (MusicPageViewModel)DataContext;
+        internal AlbumsPageViewModel ViewModel => (AlbumsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
 
         public AlbumsPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
+            DataContext = App.Services.GetRequiredService<AlbumsPageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ViewModel.FetchAlbumsAsync();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ViewModel.OnNavigatedFrom();
         }
 
         private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

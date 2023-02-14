@@ -22,6 +22,8 @@ namespace Screenbox.Factories
             UnknownArtist = new ArtistViewModel(Strings.Resources.UnknownArtist);
         }
 
+        public List<ArtistViewModel> GetAllArtists() => new(_allArtists.Values);
+
         public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
         {
             if (artists.Length == 0)

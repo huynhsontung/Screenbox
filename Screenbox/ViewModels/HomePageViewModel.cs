@@ -28,15 +28,18 @@ namespace Screenbox.ViewModels
 
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly IFilesService _filesService;
+        private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
 
         public HomePageViewModel(MediaViewModelFactory mediaFactory,
             IFilesService filesService,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            ILibraryService libraryService)
         {
             _mediaFactory = mediaFactory;
             _filesService = filesService;
             _settingsService = settingsService;
+            _libraryService = libraryService;
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
 
             // Activate the view model's messenger
@@ -61,6 +64,10 @@ namespace Screenbox.ViewModels
             {
                 Recent.Clear();
             }
+
+            // Pre-fetch libraries
+            await _libraryService.FetchMusicAsync(true);
+            await _libraryService.FetchVideosAsync(true);
         }
 
         private async Task UpdateRecentMediaList()

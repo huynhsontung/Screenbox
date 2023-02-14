@@ -6,15 +6,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
-using Screenbox.Factories;
 using Screenbox.Services;
 using Screenbox.Controls;
 using Screenbox.Core;
@@ -23,65 +21,44 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private ObservableGroupedCollection<string, MediaViewModel> _groupedSongs;
-        [ObservableProperty] private ObservableGroupedCollection<string, AlbumViewModel> _groupedAlbums;
-        [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
         [ObservableProperty] private bool _isLoading;
+
+        public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
 
         public string NavigationState { get; set; }
 
         public int Count => _songs.Count;
 
-        public bool IsLoaded => _library != null;
+        private bool HasSongs => _songs.Count > 0;
 
-        private readonly IFilesService _filesService;
-        private readonly INavigationService _navigationService;
-        private readonly MediaViewModelFactory _mediaFactory;
+        private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
-        private readonly object _lockObject;
+        private readonly DispatcherQueueTimer _timer;
         private readonly List<MediaViewModel> _songs;
-        private readonly HashSet<string> _albumNames;
-        private readonly HashSet<string> _artistNames;
-        private Task _loadSongsTask;
         private StorageLibrary? _library;
 
-        public MusicPageViewModel(IFilesService filesService,
-            INavigationService navigationService,
-            MediaViewModelFactory mediaFactory)
+        public MusicPageViewModel(ILibraryService libraryService)
         {
-            _filesService = filesService;
-            _mediaFactory = mediaFactory;
-            _navigationService = navigationService;
-            _loadSongsTask = Task.CompletedTask;
-            _lockObject = new object();
-            _groupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
-            _groupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
-            _groupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
+            _libraryService = libraryService;
             _songs = new List<MediaViewModel>();
-            _albumNames = new HashSet<string>();
-            _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _timer = _dispatcherQueue.CreateTimer();
             NavigationState = string.Empty;
-
-            PopulateGroups();
         }
 
-        public Task FetchSongsAsync()
+        public async Task FetchMusicAsync()
         {
-            lock (_lockObject)
-            {
-                if (!_loadSongsTask.IsCompleted)
-                {
-                    return _loadSongsTask;
-                }
+            _library ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
 
-                return _loadSongsTask = FetchSongsInternalAsync();
-            }
-        }
+            MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
+            _songs.Clear();
+            _songs.AddRange(music.Songs);
 
-        private bool HasSongs()
-        {
-            return _songs.Count != 0;
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
+            _timer.Stop();
+            IsLoading = false;
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -118,8 +95,7 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private async Task AddFolder()
         {
-            if (_library == null) return;
-            await _library.RequestAddFolderAsync();
+            await _library?.RequestAddFolderAsync();
         }
 
         [RelayCommand]
@@ -129,103 +105,7 @@ namespace Screenbox.ViewModels
             await propertiesDialog.ShowAsync();
         }
 
-        private async Task FetchSongsInternalAsync()
-        {
-            const int maxCount = 5000;
-
-            if (_songs.Count > 0) return;
-            IsLoading = true;
-            await InitializeLibraryAsync();
-            await FetchAndProcessSongsAsync(maxCount);
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
-            IsLoading = false;
-        }
-
-        private async Task InitializeLibraryAsync()
-        {
-            if (_library == null)
-            {
-                _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                _library.DefinitionChanged += LibraryOnDefinitionChanged;
-            }
-        }
-
-        private async Task FetchAndProcessSongsAsync(int maxCount)
-        {
-            StorageFileQueryResult queryResult = _filesService.GetSongsFromLibrary();
-            uint fetchIndex = 0;
-            while (_songs.Count < maxCount)
-            {
-                IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
-                if (files.Count == 0) break;
-                fetchIndex += (uint)files.Count;
-
-                List<MediaViewModel> songs = files.Select(_mediaFactory.GetSingleton).ToList();
-                _songs.AddRange(songs);
-                await Task.WhenAll(songs.Select(vm => vm.LoadDetailsAsync()));
-
-                foreach (MediaViewModel song in songs)
-                {
-                    GroupSongsByName(song);
-                    GroupAlbumsByName(song);
-                    GroupArtistsByName(song);
-                }
-            }
-        }
-
-        private void GroupSongsByName(MediaViewModel song)
-        {
-            GroupedSongs.AddItem(GetFirstLetterGroup(song.Name), song);
-        }
-
-        private void GroupAlbumsByName(MediaViewModel song)
-        {
-            if (song.Album == null || _albumNames.Contains(song.Album.ToString()))
-                return;
-
-            string albumName = song.Album.Name;
-            string key = albumName != Strings.Resources.UnknownAlbum
-                ? GetFirstLetterGroup(albumName)
-                : "\u2026";
-            GroupedAlbums.AddItem(key, song.Album);
-            _albumNames.Add(song.Album.ToString());
-        }
-
-        private void GroupArtistsByName(MediaViewModel song)
-        {
-            if (song.Artists == null || song.Artists.Length == 0)
-                return;
-
-            foreach (ArtistViewModel artist in song.Artists)
-            {
-                if (_artistNames.Contains(artist.Name))
-                    continue;
-
-                string key = artist.Name != Strings.Resources.UnknownArtist
-                    ? GetFirstLetterGroup(artist.Name)
-                    : "\u2026";
-                GroupedArtists.AddItem(key, artist);
-                _artistNames.Add(artist.Name);
-            }
-        }
-
-        private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
-        {
-            if (!_loadSongsTask.IsCompleted)
-            {
-                await _loadSongsTask;
-            }
-
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                GroupedSongs.Clear();
-                _songs.Clear();
-                FetchSongsAsync();
-            });
-        }
-
-        private string GetFirstLetterGroup(string name)
+        public static string GetFirstLetterGroup(string name)
         {
             char letter = char.ToUpper(name[0], CultureInfo.CurrentCulture);
             if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(letter))
@@ -233,18 +113,6 @@ namespace Screenbox.ViewModels
             if (char.IsNumber(letter)) return "#";
             if (char.IsSymbol(letter) || char.IsPunctuation(letter) || char.IsSeparator(letter)) return "&";
             return "\u2026";
-        }
-
-        private void PopulateGroups()
-        {
-            // TODO: Support other languages beside English
-            const string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
-            foreach (string key in letters.Select(letter => letter.ToString()))
-            {
-                GroupedSongs.AddGroup(key);
-                GroupedAlbums.AddGroup(key);
-                GroupedArtists.AddGroup(key);
-            }
         }
     }
 }

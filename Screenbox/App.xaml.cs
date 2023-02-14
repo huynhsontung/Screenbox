@@ -69,6 +69,9 @@ namespace Screenbox
             services.AddTransient<PlaylistViewModel>();
             services.AddTransient<AlbumDetailsPageViewModel>();
             services.AddTransient<ArtistDetailsPageViewModel>();
+            services.AddTransient<SongsPageViewModel>();
+            services.AddTransient<AlbumsPageViewModel>();
+            services.AddTransient<ArtistsPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
@@ -85,6 +88,7 @@ namespace Screenbox
             // Services
             services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
+            services.AddSingleton<ILibraryService, LibraryService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();

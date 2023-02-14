@@ -61,10 +61,7 @@ namespace Screenbox.Pages
                 UpdateSelectedNavItem(ContentSourcePageType);
             }
 
-            if (!ViewModel.IsLoaded)
-            {
-                await ViewModel.FetchSongsAsync();
-            }
+            await ViewModel.FetchMusicAsync();
 
             VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
         }
