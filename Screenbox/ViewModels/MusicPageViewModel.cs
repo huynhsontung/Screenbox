@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -22,7 +21,6 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class MusicPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private ObservableGroupedCollection<string, ArtistViewModel> _groupedArtists;
         [ObservableProperty] private bool _isLoading;
 
         public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
@@ -31,48 +29,36 @@ namespace Screenbox.ViewModels
 
         public int Count => _songs.Count;
 
-        public bool IsLoaded => _library != null;
+        private bool HasSongs => _songs.Count > 0;
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
-        private readonly object _lockObject;
         private readonly List<MediaViewModel> _songs;
-        private readonly HashSet<string> _artistNames;
-        private Task _loadSongsTask;
         private StorageLibrary? _library;
 
         public MusicPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
-            _loadSongsTask = Task.CompletedTask;
-            _lockObject = new object();
-            _groupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
             _songs = new List<MediaViewModel>();
-            _artistNames = new HashSet<string>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
             NavigationState = string.Empty;
-
-            PopulateGroups();
         }
 
-        public Task FetchSongsAsync()
+        public async Task FetchMusicAsync()
         {
-            lock (_lockObject)
-            {
-                if (!_loadSongsTask.IsCompleted)
-                {
-                    return _loadSongsTask;
-                }
+            _library ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
 
-                return _loadSongsTask = FetchSongsInternalAsync();
-            }
-        }
+            MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
+            _songs.Clear();
+            _songs.AddRange(music.Songs);
 
-        private bool HasSongs()
-        {
-            return _songs.Count != 0;
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+            PlayCommand.NotifyCanExecuteChanged();
+            _timer.Stop();
+            IsLoading = false;
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -109,8 +95,7 @@ namespace Screenbox.ViewModels
         [RelayCommand]
         private async Task AddFolder()
         {
-            if (_library == null) return;
-            await _library.RequestAddFolderAsync();
+            await _library?.RequestAddFolderAsync();
         }
 
         [RelayCommand]
@@ -118,80 +103,6 @@ namespace Screenbox.ViewModels
         {
             ContentDialog propertiesDialog = PropertiesView.GetDialog(media);
             await propertiesDialog.ShowAsync();
-        }
-
-        private async Task FetchSongsInternalAsync()
-        {
-            if (_songs.Count > 0) return;
-            _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
-            await InitializeLibraryAsync();
-            await FetchAndProcessSongsAsync();
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            PlayCommand.NotifyCanExecuteChanged();
-            _timer.Stop();
-            IsLoading = false;
-        }
-
-        private async Task InitializeLibraryAsync()
-        {
-            if (_library == null)
-            {
-                _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                _library.DefinitionChanged += LibraryOnDefinitionChanged;
-            }
-        }
-
-        private async Task FetchAndProcessSongsAsync()
-        {
-            MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
-            _songs.AddRange(music.Songs);
-
-            foreach (MediaViewModel song in music.Songs)
-            {
-                GroupArtistsByName(song);
-            }
-        }
-
-        private void GroupArtistsByName(MediaViewModel song)
-        {
-            if (song.Artists.Length == 0)
-                return;
-
-            foreach (ArtistViewModel artist in song.Artists)
-            {
-                if (_artistNames.Contains(artist.Name))
-                    continue;
-
-                string key = artist.Name != Strings.Resources.UnknownArtist
-                    ? GetFirstLetterGroup(artist.Name)
-                    : "\u2026";
-                GroupedArtists.AddItem(key, artist);
-                _artistNames.Add(artist.Name);
-            }
-        }
-
-        private async void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
-        {
-            if (!_loadSongsTask.IsCompleted)
-            {
-                await _loadSongsTask;
-            }
-
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                _songs.Clear();
-                FetchSongsAsync();
-            });
-        }
-
-        private void PopulateGroups()
-        {
-            // TODO: Support other languages beside English
-            const string letters = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
-            foreach (string key in letters.Select(letter => letter.ToString()))
-            {
-                GroupedArtists.AddGroup(key);
-            }
         }
 
         public static string GetFirstLetterGroup(string name)
