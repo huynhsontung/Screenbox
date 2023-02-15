@@ -10,52 +10,41 @@ using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Services;
 using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
 
 namespace Screenbox.ViewModels
 {
-    internal sealed partial class VideosPageViewModel : ObservableRecipient,
-        IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
+    internal sealed partial class VideosPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private string _titleText;
-        [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private bool _isFileOnly;
 
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
         private readonly INavigationService _navigationService;
-        private readonly IFilesService _filesService;
-        private readonly ISettingsService _settingsService;
         private StorageLibrary? _library;
 
-        public VideosPageViewModel(INavigationService navigationService,
-            IFilesService filesService,
-            ISettingsService settingsService)
+        public VideosPageViewModel(INavigationService navigationService, ISettingsService settingsService)
         {
             _navigationService = navigationService;
-            _filesService = filesService;
-            _settingsService = settingsService;
             _titleText = Strings.Resources.Videos;
             Breadcrumbs = new ObservableCollection<StorageFolder>();
-
-            _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _isFileOnly = !settingsService.ShowVideoFolders;
-
-            IsActive = true;
-        }
-
-        public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
-        {
-            NavigationViewDisplayMode = message.NewValue;
         }
 
         public void OnNavigatedTo()
         {
-            _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(FolderViewPageViewModel),
-                IsFileOnly ? _filesService.GetVideosFromLibrary() : new[] { KnownFolders.VideosLibrary });
+            if (IsFileOnly)
+            {
+                _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(AllVideosPageViewModel));
+            }
+            else
+            {
+                _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(FolderViewPageViewModel),
+                    new[] { KnownFolders.VideosLibrary });
+            }
         }
 
         public void OnFolderViewFrameNavigated(object sender, NavigationEventArgs e)
@@ -87,7 +76,10 @@ namespace Screenbox.ViewModels
             if (_library == null)
             {
                 _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-                _library.DefinitionChanged += LibraryOnDefinitionChanged;
+                if (!IsFileOnly)
+                {
+                    _library.DefinitionChanged += LibraryOnDefinitionChanged;
+                }
             }
 
             await _library.RequestAddFolderAsync();

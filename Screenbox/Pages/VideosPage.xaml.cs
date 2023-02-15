@@ -24,10 +24,13 @@ namespace Screenbox.Pages
 
         internal VideosPageViewModel ViewModel => (VideosPageViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         public VideosPage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

@@ -249,6 +249,9 @@
     <Compile Include="Pages\AlbumsPage.xaml.cs">
       <DependentUpon>AlbumsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AllVideosPage.xaml.cs">
+      <DependentUpon>AllVideosPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ArtistDetailsPage.xaml.cs">
       <DependentUpon>ArtistDetailsPage.xaml</DependentUpon>
     </Compile>
@@ -305,6 +308,7 @@
     <Compile Include="ViewModels\AlbumDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumsPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
+    <Compile Include="ViewModels\AllVideosPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
@@ -499,6 +503,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\AlbumsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AllVideosPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
