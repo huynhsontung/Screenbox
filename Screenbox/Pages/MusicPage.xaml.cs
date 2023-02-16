@@ -51,14 +51,14 @@ namespace Screenbox.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (string.IsNullOrEmpty(ViewModel.NavigationState))
+            if (Common.NavigationStates.TryGetValue(typeof(MusicPage), out string navigationState))
             {
-                LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
+                ContentFrame.SetNavigationState(navigationState);
+                UpdateSelectedNavItem(ContentSourcePageType);
             }
             else
             {
-                ContentFrame.SetNavigationState(ViewModel.NavigationState);
-                UpdateSelectedNavItem(ContentSourcePageType);
+                LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
             }
 
             await ViewModel.FetchMusicAsync();
@@ -70,7 +70,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
-            ViewModel.NavigationState = ContentFrame.GetNavigationState();
+            Common.NavigationStates[typeof(MusicPage)] = ContentFrame.GetNavigationState();
         }
 
         public void GoBack()

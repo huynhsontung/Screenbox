@@ -72,11 +72,11 @@ namespace Screenbox
             services.AddTransient<SongsPageViewModel>();
             services.AddTransient<AlbumsPageViewModel>();
             services.AddTransient<ArtistsPageViewModel>();
+            services.AddTransient<MusicPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
-            services.AddSingleton<MusicPageViewModel>(); // Prevent song library reload on every page navigation
             services.AddSingleton<MediaListViewModel>(); // Global playlist
 
             // Factories

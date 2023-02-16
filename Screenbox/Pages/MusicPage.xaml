@@ -196,7 +196,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderAddFolderButton.Margin" Value="0,0,16,0" />
+                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="NoMusicMessage.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="AddFolderButtonText.Visibility" Value="Collapsed" />

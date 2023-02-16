@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,6 +18,8 @@ namespace Screenbox.ViewModels
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityStates>>
     {
+        public Dictionary<Type, string> NavigationStates { get; }
+
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private Thickness _scrollBarMargin;
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
@@ -27,6 +31,7 @@ namespace Screenbox.ViewModels
         {
             _navigationService = navigationService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            NavigationStates = new Dictionary<Type, string>();
 
             // Activate the view model's messenger
             IsActive = true;

@@ -23,8 +23,6 @@ namespace Screenbox.ViewModels
 
         public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
 
-        public string NavigationState { get; set; }
-
         public int Count => _songs.Count;
 
         private bool HasSongs => _songs.Count > 0;
@@ -41,7 +39,6 @@ namespace Screenbox.ViewModels
             _songs = new List<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
-            NavigationState = string.Empty;
         }
 
         public async Task FetchMusicAsync()
