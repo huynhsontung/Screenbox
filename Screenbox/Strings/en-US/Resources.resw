@@ -477,4 +477,10 @@
     <value>{0} run time</value>
     <comment>#Format[String runtime]</comment>
   </data>
+  <data name="AllVideos" xml:space="preserve">
+    <value>All videos</value>
+  </data>
+  <data name="VideoFolders" xml:space="preserve">
+    <value>Video folders</value>
+  </data>
 </root>

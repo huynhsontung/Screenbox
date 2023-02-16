@@ -19,38 +19,25 @@ namespace Screenbox.ViewModels
     internal sealed partial class VideosPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private string _titleText;
-        [ObservableProperty] private bool _isFileOnly;
+        [ObservableProperty] private bool _shouldShowMenuItems;
 
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
         private readonly INavigationService _navigationService;
         private StorageLibrary? _library;
 
-        public VideosPageViewModel(INavigationService navigationService, ISettingsService settingsService)
+        public VideosPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
             _titleText = Strings.Resources.Videos;
-            Breadcrumbs = new ObservableCollection<StorageFolder>();
-            _isFileOnly = !settingsService.ShowVideoFolders;
+            Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
         }
 
-        public void OnNavigatedTo()
-        {
-            if (IsFileOnly)
-            {
-                _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(AllVideosPageViewModel));
-            }
-            else
-            {
-                _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(FolderViewPageViewModel),
-                    new[] { KnownFolders.VideosLibrary });
-            }
-        }
-
-        public void OnFolderViewFrameNavigated(object sender, NavigationEventArgs e)
+        public void OnContentFrameNavigated(object sender, NavigationEventArgs e)
         {
             IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
             UpdateBreadcrumbs(crumbs);
+            ShouldShowMenuItems = Breadcrumbs.Count <= 1;
         }
 
         public void OnBreadcrumbBarItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
@@ -62,11 +49,17 @@ namespace Screenbox.ViewModels
         private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
         {
             Breadcrumbs.Clear();
-            if (crumbs == null) return;
-            TitleText = crumbs.LastOrDefault()?.DisplayName ?? Strings.Resources.Videos;
-            foreach (StorageFolder storageFolder in crumbs)
+            if (crumbs == null)
             {
-                Breadcrumbs.Add(storageFolder);
+                Breadcrumbs.Add(KnownFolders.VideosLibrary);
+            }
+            else
+            {
+                TitleText = crumbs.LastOrDefault()?.DisplayName ?? Strings.Resources.Videos;
+                foreach (StorageFolder storageFolder in crumbs)
+                {
+                    Breadcrumbs.Add(storageFolder);
+                }
             }
         }
 
@@ -76,10 +69,7 @@ namespace Screenbox.ViewModels
             if (_library == null)
             {
                 _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-                if (!IsFileOnly)
-                {
-                    _library.DefinitionChanged += LibraryOnDefinitionChanged;
-                }
+                _library.DefinitionChanged += LibraryOnDefinitionChanged;
             }
 
             await _library.RequestAddFolderAsync();

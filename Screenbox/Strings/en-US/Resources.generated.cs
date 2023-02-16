@@ -1374,6 +1374,32 @@ namespace Screenbox.Strings{
             return string.Format(_resourceLoader.GetString("RunTime"), runtime);
         }
         #endregion
+
+        #region AllVideos
+        /// <summary>
+        ///   Looks up a localized string similar to: All videos
+        /// </summary>
+        public static string AllVideos
+        {
+            get
+            {
+                return _resourceLoader.GetString("AllVideos");
+            }
+        }
+        #endregion
+
+        #region VideoFolders
+        /// <summary>
+        ///   Looks up a localized string similar to: Video folders
+        /// </summary>
+        public static string VideoFolders
+        {
+            get
+            {
+                return _resourceLoader.GetString("VideoFolders");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1487,6 +1513,8 @@ namespace Screenbox.Strings{
             OpenFolder,
             OpenUrl,
             RunTime,
+            AllVideos,
+            VideoFolders,
         }
 
         private static ResourceLoader _resourceLoader;
