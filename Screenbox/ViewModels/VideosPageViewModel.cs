@@ -18,9 +18,6 @@ namespace Screenbox.ViewModels
 {
     internal sealed partial class VideosPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private string _titleText;
-        [ObservableProperty] private bool _shouldShowMenuItems;
-
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
         private readonly INavigationService _navigationService;
@@ -29,7 +26,6 @@ namespace Screenbox.ViewModels
         public VideosPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
-            _titleText = Strings.Resources.Videos;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
         }
 
@@ -37,7 +33,6 @@ namespace Screenbox.ViewModels
         {
             IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
             UpdateBreadcrumbs(crumbs);
-            ShouldShowMenuItems = Breadcrumbs.Count <= 1;
         }
 
         public void OnBreadcrumbBarItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
@@ -55,7 +50,6 @@ namespace Screenbox.ViewModels
             }
             else
             {
-                TitleText = crumbs.LastOrDefault()?.DisplayName ?? Strings.Resources.Videos;
                 foreach (StorageFolder storageFolder in crumbs)
                 {
                     Breadcrumbs.Add(storageFolder);

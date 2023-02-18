@@ -35,20 +35,18 @@
                     Margin="-4,0,16,0"
                     MaxLines="2"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
-                    Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+                    Text="{strings:Resources Key=Videos}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     Content="{strings:Resources Key=VideoFolders}"
                     FontSize="18"
-                    Tag="folders"
-                    Visibility="{x:Bind ViewModel.ShouldShowMenuItems, Mode=OneWay}" />
+                    Tag="folders" />
                 <muxc:NavigationViewItem
                     x:Name="AllVideosMenuItem"
                     Content="{strings:Resources Key=AllVideos}"
                     FontSize="18"
-                    Tag="all"
-                    Visibility="{x:Bind ViewModel.ShouldShowMenuItems, Mode=OneWay}" />
+                    Tag="all" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.PaneFooter>
                 <Button
@@ -56,8 +54,7 @@
                     Margin="{StaticResource ContentPageRightMargin}"
                     VerticalAlignment="Top"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
-                    Visibility="Collapsed">
+                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
                         <TextBlock
@@ -96,7 +93,6 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="BreadcrumbBar.Visibility" Value="Collapsed" />
-                        <Setter Target="HeaderAddFolderButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
