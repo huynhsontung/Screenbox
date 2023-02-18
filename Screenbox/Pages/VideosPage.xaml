@@ -70,14 +70,14 @@
 
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition x:Name="BreadcrumbBarRow" Height="40" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <muxc:BreadcrumbBar
                     x:Name="BreadcrumbBar"
                     Grid.Row="0"
-                    VerticalAlignment="Top"
+                    Margin="0,10,0,12"
                     ItemClicked="{x:Bind ViewModel.OnBreadcrumbBarItemClicked}"
                     ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
@@ -97,7 +97,6 @@
                     <VisualState.Setters>
                         <Setter Target="BreadcrumbBar.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderAddFolderButton.Visibility" Value="Visible" />
-                        <Setter Target="BreadcrumbBarRow.Height" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

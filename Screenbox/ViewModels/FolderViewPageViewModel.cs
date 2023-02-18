@@ -97,7 +97,8 @@ namespace Screenbox.ViewModels
 
         protected virtual void Navigate(object? parameter = null)
         {
-            _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
+            // _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
+            _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel), parameter);
         }
 
         [RelayCommand]
