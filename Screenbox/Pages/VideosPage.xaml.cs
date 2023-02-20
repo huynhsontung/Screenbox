@@ -62,7 +62,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            // Common.NavigationStates[typeof(VideosPage)] = ContentFrame.GetNavigationState();
+            Common.NavigationStates[typeof(VideosPage)] = ContentFrame.GetNavigationState();
             if (ContentFrame.Content is FolderViewPage page)
             {
                 page.ViewModel.Clean();
@@ -98,7 +98,7 @@ namespace Screenbox.Pages
             // Only navigate if the selected page isn't currently loaded.
             if (pageType is not null && preNavPageType != pageType)
             {
-                ContentFrame.Navigate(pageType, ViewModel.Breadcrumbs.ToArray(), new SuppressNavigationTransitionInfo());
+                ContentFrame.Navigate(pageType, "VideosLibrary", new SuppressNavigationTransitionInfo());
             }
         }
 

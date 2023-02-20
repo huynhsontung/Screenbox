@@ -77,6 +77,10 @@ namespace Screenbox.ViewModels
                 case StorageFileQueryResult queryResult:
                     await FetchQueryItemAsync(queryResult);
                     break;
+                case "VideosLibrary":
+                    Breadcrumbs = new[] { KnownFolders.VideosLibrary };
+                    await FetchFolderContentAsync(Breadcrumbs[0]);
+                    break;
             }
         }
 
