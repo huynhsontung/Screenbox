@@ -60,6 +60,7 @@ namespace Screenbox
             services.AddTransient<NetworkPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<FolderListViewPageViewModel>();
+            services.AddTransient<FolderViewWithHeaderPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();
             services.AddTransient<PlayerPageViewModel>();
@@ -72,6 +73,7 @@ namespace Screenbox
             services.AddTransient<SongsPageViewModel>();
             services.AddTransient<AlbumsPageViewModel>();
             services.AddTransient<ArtistsPageViewModel>();
+            services.AddTransient<AllVideosPageViewModel>();
             services.AddTransient<MusicPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
@@ -98,6 +100,7 @@ namespace Screenbox
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
                 new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
                 new KeyValuePair<Type, Type>(typeof(VideosPageViewModel), typeof(VideosPage)),
+                new KeyValuePair<Type, Type>(typeof(AllVideosPageViewModel), typeof(AllVideosPage)),
                 new KeyValuePair<Type, Type>(typeof(MusicPageViewModel), typeof(MusicPage)),
                 new KeyValuePair<Type, Type>(typeof(SongsPageViewModel), typeof(SongsPage)),
                 new KeyValuePair<Type, Type>(typeof(ArtistsPageViewModel), typeof(ArtistsPage)),
@@ -108,7 +111,8 @@ namespace Screenbox
                 new KeyValuePair<Type, Type>(typeof(AlbumDetailsPageViewModel), typeof(AlbumDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(ArtistDetailsPageViewModel), typeof(ArtistDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
-                new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage))
+                new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage)),
+                new KeyValuePair<Type, Type>(typeof(FolderViewWithHeaderPageViewModel), typeof(FolderViewWithHeaderPage))
             ));
 
             return services.BuildServiceProvider();

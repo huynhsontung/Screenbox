@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:storage="using:Windows.Storage"
@@ -11,71 +10,89 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
-            <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
-        </DataTemplate>
+        <ResourceDictionary>
+            <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
+                <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
+            </DataTemplate>
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition x:Name="BreadcrumbBarRow" Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid
-            x:Name="HeaderGrid"
-            Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                MaxLines="2"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{x:Bind ViewModel.TitleText, Mode=OneWay}" />
+        <muxc:NavigationView
+            x:Name="LibraryNavView"
+            Margin="0,44,0,0"
+            Background="Transparent"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Top"
+            SelectionChanged="LibraryNavView_OnSelectionChanged">
+            <muxc:NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+                <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+            </muxc:NavigationView.Resources>
+            <muxc:NavigationView.PaneHeader>
+                <TextBlock
+                    Margin="-4,0,16,0"
+                    MaxLines="2"
+                    Style="{StaticResource PageHeaderTextBlockStyle}"
+                    Text="{strings:Resources Key=Videos}" />
+            </muxc:NavigationView.PaneHeader>
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem
+                    Content="{strings:Resources Key=VideoFolders}"
+                    FontSize="18"
+                    Tag="folders" />
+                <muxc:NavigationViewItem
+                    x:Name="AllVideosMenuItem"
+                    Content="{strings:Resources Key=AllVideos}"
+                    FontSize="18"
+                    Tag="all" />
+            </muxc:NavigationView.MenuItems>
+            <muxc:NavigationView.PaneFooter>
+                <Button
+                    x:Name="HeaderAddFolderButton"
+                    Margin="{StaticResource ContentPageRightMargin}"
+                    VerticalAlignment="Top"
+                    Command="{x:Bind ViewModel.AddFolderCommand}"
+                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xe8f4;" />
+                        <TextBlock
+                            x:Name="HeaderAddFolderButtonText"
+                            Margin="8,0,0,0"
+                            Text="{x:Bind strings:Resources.AddFolder}" />
+                    </StackPanel>
+                </Button>
+            </muxc:NavigationView.PaneFooter>
 
-            <Button
-                x:Name="HeaderAddFolderButton"
-                Grid.Column="1"
-                VerticalAlignment="Top"
-                Command="{x:Bind ViewModel.AddFolderCommand}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
-                Visibility="Collapsed">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe8f4;" />
-                    <TextBlock
-                        x:Name="HeaderAddFolderButtonText"
-                        Margin="8,0,0,0"
-                        Text="{x:Bind strings:Resources.AddFolder}" />
-                </StackPanel>
-            </Button>
-        </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-        <muxc:BreadcrumbBar
-            x:Name="BreadcrumbBar"
-            Grid.Row="1"
-            VerticalAlignment="Top"
-            ItemClicked="{x:Bind ViewModel.OnBreadcrumbBarItemClicked}"
-            ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
-            ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
-        <Frame
-            x:Name="FolderViewFrame"
-            Grid.Row="2"
-            Navigated="{x:Bind ViewModel.OnFolderViewFrameNavigated}" />
+                <muxc:BreadcrumbBar
+                    x:Name="BreadcrumbBar"
+                    Grid.Row="0"
+                    Margin="0,10,0,12"
+                    ItemClicked="{x:Bind ViewModel.OnBreadcrumbBarItemClicked}"
+                    ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
+                    ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+                <Frame
+                    x:Name="ContentFrame"
+                    Grid.Row="1"
+                    Navigated="ContentFrame_OnNavigated" />
+            </Grid>
+        </muxc:NavigationView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="BrowsingTypes">
-                <VisualState x:Name="FolderView" />
                 <VisualState x:Name="FileView">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind ViewModel.IsFileOnly}" />
+                        <StateTrigger IsActive="{x:Bind AllVideosMenuItem.IsSelected, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="BreadcrumbBar.Visibility" Value="Collapsed" />
-                        <Setter Target="HeaderAddFolderButton.Visibility" Value="Visible" />
-                        <Setter Target="BreadcrumbBarRow.Height" Value="12" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -84,14 +101,14 @@
                 <VisualState x:Name="Compact" />
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
-                        <triggers:IsEqualStateTrigger Value="{x:Bind ViewModel.NavigationViewDisplayMode, Mode=OneWay}">
+                        <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
                                 <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>

@@ -158,12 +158,6 @@
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
-                <labs:SettingsCard
-                    Description="Keep the original file structure when browsing your video library"
-                    Header="Show video folders"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowVideoFolders, Mode=TwoWay}" />
-                </labs:SettingsCard>
 
                 <TextBlock
                     Margin="0,24,0,4"

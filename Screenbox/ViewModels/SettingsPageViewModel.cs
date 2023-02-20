@@ -21,7 +21,6 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
-        [ObservableProperty] private bool _showVideoFolders;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _showRecent;
 
@@ -69,12 +68,6 @@ namespace Screenbox.ViewModels
         {
             _settingsService.PlayerTapGesture = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
-        }
-
-        partial void OnShowVideoFoldersChanged(bool value)
-        {
-            _settingsService.ShowVideoFolders = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(ShowVideoFolders)));
         }
 
         partial void OnShowRecentChanged(bool value)
@@ -135,7 +128,6 @@ namespace Screenbox.ViewModels
             PlayerVolumeGesture = _settingsService.PlayerVolumeGesture;
             PlayerSeekGesture = _settingsService.PlayerSeekGesture;
             PlayerTapGesture = _settingsService.PlayerTapGesture;
-            ShowVideoFolders = _settingsService.ShowVideoFolders;
             ShowRecent = _settingsService.ShowRecent;
             int maxVolume = _settingsService.MaxVolume;
             VolumeBoost = maxVolume switch
