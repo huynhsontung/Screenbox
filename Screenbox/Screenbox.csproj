@@ -236,6 +236,7 @@
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\RendererEventArgs.cs" />
+    <Compile Include="Core\SearchResult.cs" />
     <Compile Include="Core\SettingsOptions.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
@@ -297,10 +298,12 @@
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\ISearchService.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
