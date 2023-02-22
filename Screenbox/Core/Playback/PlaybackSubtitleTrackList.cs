@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Playback
@@ -40,6 +39,7 @@ namespace Screenbox.Core.Playback
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
+            if (e.ParsedStatus != MediaParsedStatus.Done) return;
             _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
         }
