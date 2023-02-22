@@ -3,9 +3,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using Windows.Media.Core;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Playback;
 using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -66,8 +70,11 @@ namespace Screenbox.Controls
 
         private const double Spacing = 1;
 
+        private readonly DispatcherQueueTimer _chaptersUpdateTimer;
+
         public ChapterProgressBar()
         {
+            _chaptersUpdateTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
             ProgressItems = new ObservableCollection<ChapterViewModel>();
             this.InitializeComponent();
             SizeChanged += OnSizeChanged;
@@ -76,7 +83,17 @@ namespace Screenbox.Controls
         private static void OnChaptersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ChapterProgressBar view = (ChapterProgressBar)d;
-            view.PopulateProgressItems();
+            if (e.NewValue is PlaybackChapterList { Count: 0 } chapterList)
+            {
+                INotifyCollectionChanged observableCollection = chapterList;
+                observableCollection.CollectionChanged -= view.ChaptersOnCollectionChanged;
+                observableCollection.CollectionChanged += view.ChaptersOnCollectionChanged;
+            }
+            else
+            {
+                view.PopulateProgressItems();
+            }
+
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -104,6 +121,11 @@ namespace Screenbox.Controls
             {
                 item.Width = GetItemWidth(item);
             }
+        }
+
+        private void ChaptersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            _chaptersUpdateTimer.Debounce(PopulateProgressItems, TimeSpan.FromMilliseconds(50));
         }
 
         private void UpdateProgress()

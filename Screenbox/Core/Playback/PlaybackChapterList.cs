@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Media.Core;
 using LibVLCSharp.Shared.Structures;
 
 namespace Screenbox.Core.Playback
 {
-    public sealed class PlaybackChapterList : IReadOnlyList<ChapterCue>
+    public sealed class PlaybackChapterList : ReadOnlyObservableCollection<ChapterCue>
     {
-        public int Count => _chapters.Count;
+        private readonly ObservableCollection<ChapterCue> _chapters;
 
-        public ChapterCue this[int index] => _chapters[index];
-
-        private readonly List<ChapterCue> _chapters;
-
-        public PlaybackChapterList()
+        public PlaybackChapterList() : base(new ObservableCollection<ChapterCue>())
         {
-            _chapters = new List<ChapterCue>();
+            _chapters = (ObservableCollection<ChapterCue>)Items;
         }
 
         internal void Load(IEnumerable<ChapterDescription> vlcChapters)
@@ -30,17 +26,10 @@ namespace Screenbox.Core.Playback
             });
 
             _chapters.Clear();
-            _chapters.AddRange(chapterCues);
-        }
-
-        public IEnumerator<ChapterCue> GetEnumerator()
-        {
-            return _chapters.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _chapters.GetEnumerator();
+            foreach (ChapterCue chapterCue in chapterCues)
+            {
+                _chapters.Add(chapterCue);
+            }
         }
     }
 }
