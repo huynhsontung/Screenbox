@@ -83,10 +83,14 @@ namespace Screenbox.Controls
         private static void OnChaptersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ChapterProgressBar view = (ChapterProgressBar)d;
+            if (e.OldValue is INotifyCollectionChanged oldObservable)
+            {
+                oldObservable.CollectionChanged -= view.ChaptersOnCollectionChanged;
+            }
+
             if (e.NewValue is PlaybackChapterList { Count: 0 } chapterList)
             {
                 INotifyCollectionChanged observableCollection = chapterList;
-                observableCollection.CollectionChanged -= view.ChaptersOnCollectionChanged;
                 observableCollection.CollectionChanged += view.ChaptersOnCollectionChanged;
             }
             else
