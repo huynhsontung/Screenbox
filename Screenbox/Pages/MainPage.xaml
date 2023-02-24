@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:appModel="using:Windows.ApplicationModel"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -19,6 +20,17 @@
             <!--<Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>-->
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
+            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
+
+            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        Margin="0,0,8,0"
+                        FontSize="16"
+                        Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
+                    <TextBlock Text="{Binding Name}" />
+                </StackPanel>
+            </DataTemplate>
 
             <ThemeShadow x:Key="SharedShadow" />
         </ResourceDictionary>
@@ -105,7 +117,11 @@
                     Tag="queue" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.AutoSuggestBox>
-                <AutoSuggestBox PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}" QueryIcon="Find" />
+                <AutoSuggestBox
+                    ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
+                    PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}"
+                    QueryIcon="Find"
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}" />
             </muxc:NavigationView.AutoSuggestBox>
 
             <Grid x:Name="ContentGrid">

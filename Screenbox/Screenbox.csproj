@@ -189,6 +189,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MediaTypeAdaptiveLayoutOverrideConverter.cs" />
+    <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
