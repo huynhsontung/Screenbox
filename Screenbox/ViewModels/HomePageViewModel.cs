@@ -58,7 +58,7 @@ namespace Screenbox.ViewModels
         {
             if (_settingsService.ShowRecent)
             {
-                await UpdateRecentMediaList().ConfigureAwait(false);
+                await UpdateRecentMediaList();
             }
             else
             {
