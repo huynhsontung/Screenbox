@@ -3,7 +3,7 @@ using Screenbox.ViewModels;
 
 namespace Screenbox.Core
 {
-    internal readonly struct MusicLibraryFetchResult
+    internal class MusicLibraryFetchResult
     {
         public MusicLibraryFetchResult(IReadOnlyList<MediaViewModel> songs, IReadOnlyList<AlbumViewModel> albums,
             IReadOnlyList<ArtistViewModel> artists, AlbumViewModel unknownAlbum, ArtistViewModel unknownArtist)
