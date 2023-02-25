@@ -46,7 +46,7 @@ namespace Screenbox.Services
                 .Select(t => t.Video)
                 .ToImmutableList();
 
-            return new SearchResult(songs, videos, artists, albums);
+            return new SearchResult(query, songs, videos, artists, albums);
         }
     }
 }

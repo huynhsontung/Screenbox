@@ -5,14 +5,17 @@ namespace Screenbox.Core
 {
     internal class SearchResult
     {
-        public SearchResult(IReadOnlyList<MediaViewModel> songs, IReadOnlyList<MediaViewModel> videos,
+        public SearchResult(string query, IReadOnlyList<MediaViewModel> songs, IReadOnlyList<MediaViewModel> videos,
             IReadOnlyList<ArtistViewModel> artists, IReadOnlyList<AlbumViewModel> albums)
         {
+            Query = query;
             Songs = songs;
             Videos = videos;
             Artists = artists;
             Albums = albums;
         }
+
+        public string Query { get; }
 
         public IReadOnlyList<MediaViewModel> Songs { get; }
 
