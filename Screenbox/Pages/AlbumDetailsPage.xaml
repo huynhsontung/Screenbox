@@ -19,7 +19,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/MediaListViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <ThemeShadow x:Key="SharedShadow" />

@@ -13,14 +13,15 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Templates/AlbumGridViewItem.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <CollectionViewSource
                 x:Name="AlbumsSource"
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
-            <x:Double x:Key="StorageItemGridViewItemWidth">168</x:Double>
-            <x:Double x:Key="StorageItemGridViewItemHeight">220</x:Double>
-            <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">160</x:Double>
             <SolidColorBrush x:Key="GridViewHeaderItemDividerStroke" Color="Transparent" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
@@ -28,56 +29,6 @@
                     Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
-            </DataTemplate>
-
-            <DataTemplate x:Key="AlbumGridViewItemTemplate" x:DataType="viewModels:AlbumViewModel">
-                <Grid
-                    Width="{StaticResource StorageItemGridViewItemWidth}"
-                    Height="{StaticResource StorageItemGridViewItemHeight}"
-                    Padding="4">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid
-                        Grid.Row="0"
-                        Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="4">
-                        <FontIcon
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="52"
-                            Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="&#xe93c;" />
-                        <Border CornerRadius="4">
-                            <Image
-                                HorizontalAlignment="Center"
-                                x:Phase="1"
-                                Source="{x:Bind RelatedSongs[0].Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                                Stretch="UniformToFill" />
-                        </Border>
-                    </Grid>
-
-                    <TextBlock
-                        Grid.Row="1"
-                        Margin="4,0"
-                        FontWeight="SemiBold"
-                        MaxLines="2"
-                        Text="{x:Bind Name}"
-                        TextWrapping="Wrap" />
-
-                    <TextBlock
-                        Grid.Row="2"
-                        Margin="4,0"
-                        x:Phase="2"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind Artist}" />
-                </Grid>
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
