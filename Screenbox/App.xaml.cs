@@ -75,6 +75,7 @@ namespace Screenbox
             services.AddTransient<ArtistsPageViewModel>();
             services.AddTransient<AllVideosPageViewModel>();
             services.AddTransient<MusicPageViewModel>();
+            services.AddTransient<SearchResultPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
@@ -111,6 +112,7 @@ namespace Screenbox
                 new KeyValuePair<Type, Type>(typeof(SettingsPageViewModel), typeof(SettingsPage)),
                 new KeyValuePair<Type, Type>(typeof(AlbumDetailsPageViewModel), typeof(AlbumDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(ArtistDetailsPageViewModel), typeof(ArtistDetailsPage)),
+                new KeyValuePair<Type, Type>(typeof(SearchResultPageViewModel), typeof(SearchResultPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewWithHeaderPageViewModel), typeof(FolderViewWithHeaderPage))

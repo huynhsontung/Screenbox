@@ -1400,6 +1400,16 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SearchResultHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Search results for "{0}"
+        /// </summary>
+        public static string SearchResultHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultHeader"), query);
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1515,6 +1525,7 @@ namespace Screenbox.Strings{
             RunTime,
             AllVideos,
             VideoFolders,
+            SearchResultHeader,
         }
 
         private static ResourceLoader _resourceLoader;

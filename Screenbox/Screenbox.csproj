@@ -282,6 +282,9 @@
     <Compile Include="Pages\PlayQueuePage.xaml.cs">
       <DependentUpon>PlayQueuePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchResultPage.xaml.cs">
+      <DependentUpon>SearchResultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
@@ -357,6 +360,7 @@
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
@@ -567,6 +571,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\PlayQueuePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SearchResultPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

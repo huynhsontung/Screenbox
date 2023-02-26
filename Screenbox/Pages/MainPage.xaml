@@ -121,6 +121,7 @@
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
                     PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}"
                     QueryIcon="Find"
+                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}" />
             </muxc:NavigationView.AutoSuggestBox>
 

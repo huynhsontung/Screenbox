@@ -24,10 +24,12 @@ namespace Screenbox.ViewModels
         private NavigationViewDisplayMode _navigationViewDisplayMode;
 
         private readonly ISearchService _searchService;
+        private readonly INavigationService _navigationService;
 
-        public MainPageViewModel(ISearchService searchService)
+        public MainPageViewModel(ISearchService searchService, INavigationService navigationService)
         {
             _searchService = searchService;
+            _navigationService = navigationService;
             IsActive = true;
         }
 
@@ -56,6 +58,16 @@ namespace Screenbox.ViewModels
                 {
                     sender.ItemsSource = Array.Empty<object>();
                 }
+            }
+        }
+
+        public void AutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            string searchQuery = args.QueryText.Trim();
+            if (args.ChosenSuggestion == null && searchQuery.Length > 0)
+            {
+                SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
+                _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
             }
         }
 

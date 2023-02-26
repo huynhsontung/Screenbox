@@ -483,4 +483,8 @@
   <data name="VideoFolders" xml:space="preserve">
     <value>Video folders</value>
   </data>
+  <data name="SearchResultHeader" xml:space="preserve">
+    <value>Search results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
 </root>
