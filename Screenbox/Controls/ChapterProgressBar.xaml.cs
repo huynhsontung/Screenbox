@@ -9,7 +9,6 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Playback;
 using Screenbox.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -88,16 +87,12 @@ namespace Screenbox.Controls
                 oldObservable.CollectionChanged -= view.ChaptersOnCollectionChanged;
             }
 
-            if (e.NewValue is PlaybackChapterList { Count: 0 } chapterList)
+            if (e.NewValue is INotifyCollectionChanged newObservable)
             {
-                INotifyCollectionChanged observableCollection = chapterList;
-                observableCollection.CollectionChanged += view.ChaptersOnCollectionChanged;
-            }
-            else
-            {
-                view.PopulateProgressItems();
+                newObservable.CollectionChanged += view.ChaptersOnCollectionChanged;
             }
 
+            view.PopulateProgressItems();
         }
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -201,10 +196,10 @@ namespace Screenbox.Controls
 
         private void PopulateProgressItems()
         {
-            ChapterIndex = -1;
             ProgressItems.Clear();
             if (Chapters?.Count > 0)
             {
+                ChapterIndex = -1;
                 foreach (ChapterCue cue in Chapters)
                 {
                     ChapterViewModel progressItem = new()
