@@ -10,7 +10,7 @@
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
         <UserControl>
-            <Grid Height="46">
+            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
@@ -235,7 +235,7 @@
 
     <DataTemplate x:Key="MediaListViewItemWithoutMediaIconTemplate">
         <UserControl>
-            <Grid Height="46">
+            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
@@ -442,7 +442,7 @@
 
     <DataTemplate x:Key="AlbumMediaListViewItemTemplate">
         <UserControl>
-            <Grid Height="46">
+            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
