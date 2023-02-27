@@ -88,6 +88,7 @@
             CompactModeThresholdWidth="701"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             ExpandedModeThresholdWidth="1058"
+            IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
             IsTitleBarAutoPaddingEnabled="False"
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
@@ -122,6 +123,7 @@
                     PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
+                    Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
                     TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}" />
             </muxc:NavigationView.AutoSuggestBox>
 

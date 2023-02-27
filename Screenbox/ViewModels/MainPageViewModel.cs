@@ -18,6 +18,8 @@ namespace Screenbox.ViewModels
     {
         [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private bool _shouldUseMargin;
+        [ObservableProperty] private bool _isPaneOpen;
+        [ObservableProperty] private string _searchQuery;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -30,6 +32,7 @@ namespace Screenbox.ViewModels
         {
             _searchService = searchService;
             _navigationService = navigationService;
+            _searchQuery = string.Empty;
             IsActive = true;
         }
 
@@ -68,6 +71,11 @@ namespace Screenbox.ViewModels
             {
                 SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
                 _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
+                SearchQuery = string.Empty;
+                if (this.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
+                {
+                    IsPaneOpen = false;
+                }
             }
         }
 
