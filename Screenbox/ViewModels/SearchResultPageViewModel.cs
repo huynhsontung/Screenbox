@@ -23,6 +23,10 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _showAlbums;
         [ObservableProperty] private bool _showSongs;
         [ObservableProperty] private bool _showVideos;
+        [ObservableProperty] private bool _hasMoreArtists;
+        [ObservableProperty] private bool _hasMoreAlbums;
+        [ObservableProperty] private bool _hasMoreSongs;
+        [ObservableProperty] private bool _hasMoreVideos;
 
         private SearchResult? _searchResult;
 
@@ -66,6 +70,8 @@ namespace Screenbox.ViewModels
                     Videos.Add(video);
                 }
             }
+
+            UpdateHasMoreProperties(searchResult);
         }
 
         public void UpdateGridItems(int requestedCount)
@@ -73,6 +79,15 @@ namespace Screenbox.ViewModels
             if (_searchResult == null) return;
             SyncCollection(Artists, _searchResult.Artists, requestedCount);
             SyncCollection(Albums, _searchResult.Albums, requestedCount);
+            UpdateHasMoreProperties(_searchResult);
+        }
+
+        private void UpdateHasMoreProperties(SearchResult searchResult)
+        {
+            HasMoreArtists = Artists.Count < searchResult.Artists.Count;
+            HasMoreAlbums = Albums.Count < searchResult.Albums.Count;
+            HasMoreSongs = Songs.Count < searchResult.Songs.Count;
+            HasMoreVideos = Videos.Count < searchResult.Videos.Count;
         }
 
         [RelayCommand]

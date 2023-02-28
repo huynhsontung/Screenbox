@@ -103,11 +103,20 @@
                 XYFocusDownNavigationStrategy="RectilinearDistance"
                 XYFocusKeyboardNavigation="Enabled">
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowArtists}">
-                    <TextBlock
+                    <Grid
+                        x:Name="ArtistsResultHeader"
+                        Height="32"
                         Margin="{StaticResource SubtitleTextMargin}"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{strings:Resources Key=Artists}" />
+                        Padding="{StaticResource ContentPageRightMargin}">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="{strings:Resources Key=Artists}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Right"
+                            Content="{strings:Resources Key=SeeAll}"
+                            Visibility="{x:Bind ViewModel.HasMoreArtists, Mode=OneWay}" />
+                    </Grid>
                     <GridView
                         x:Name="ArtistGridView"
                         Padding="{StaticResource ContentPageThumbnailRightMargin}"
@@ -120,11 +129,20 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowAlbums}">
-                    <TextBlock
+                    <Grid
+                        x:Name="AlbumsResultHeader"
+                        Height="32"
                         Margin="{StaticResource SubtitleTextMargin}"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{strings:Resources Key=Albums}" />
+                        Padding="{StaticResource ContentPageRightMargin}">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="{strings:Resources Key=Albums}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Right"
+                            Content="{strings:Resources Key=SeeAll}"
+                            Visibility="{x:Bind ViewModel.HasMoreAlbums, Mode=OneWay}" />
+                    </Grid>
                     <GridView
                         x:Name="AlbumGridView"
                         Padding="{StaticResource ContentPageThumbnailRightMargin}"
@@ -136,11 +154,20 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowSongs}">
-                    <TextBlock
+                    <Grid
+                        x:Name="SongsResultHeader"
+                        Height="32"
                         Margin="{StaticResource SubtitleTextMargin}"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{strings:Resources Key=Songs}" />
+                        Padding="{StaticResource ContentPageRightMargin}">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="{strings:Resources Key=Songs}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Right"
+                            Content="{strings:Resources Key=SeeAll}"
+                            Visibility="{x:Bind ViewModel.HasMoreSongs, Mode=OneWay}" />
+                    </Grid>
                     <ListView
                         x:Name="SongListView"
                         Padding="{StaticResource ContentPageRightMargin}"
@@ -171,11 +198,20 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowVideos}">
-                    <TextBlock
+                    <Grid
+                        x:Name="VideosResultHeader"
+                        Height="32"
                         Margin="{StaticResource SubtitleTextMargin}"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{strings:Resources Key=Videos}" />
+                        Padding="{StaticResource ContentPageRightMargin}">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource SubtitleTextBlockStyle}"
+                            Text="{strings:Resources Key=Videos}" />
+                        <HyperlinkButton
+                            HorizontalAlignment="Right"
+                            Content="{strings:Resources Key=SeeAll}"
+                            Visibility="{x:Bind ViewModel.HasMoreVideos, Mode=OneWay}" />
+                    </Grid>
                     <GridView
                         x:Name="VideosGridView"
                         Padding="{StaticResource ContentPageThumbnailRightMargin}"
@@ -207,6 +243,10 @@
                         <Setter Target="AlbumGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="ArtistsResultHeader.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="AlbumsResultHeader.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="SongsResultHeader.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="VideosResultHeader.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

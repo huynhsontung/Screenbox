@@ -487,4 +487,7 @@
     <value>Search results for "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
+  <data name="SeeAll" xml:space="preserve">
+    <value>See all</value>
+  </data>
 </root>

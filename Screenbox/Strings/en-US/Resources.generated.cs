@@ -1410,6 +1410,19 @@ namespace Screenbox.Strings{
             return string.Format(_resourceLoader.GetString("SearchResultHeader"), query);
         }
         #endregion
+
+        #region SeeAll
+        /// <summary>
+        ///   Looks up a localized string similar to: See all
+        /// </summary>
+        public static string SeeAll
+        {
+            get
+            {
+                return _resourceLoader.GetString("SeeAll");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1526,6 +1539,7 @@ namespace Screenbox.Strings{
             AllVideos,
             VideoFolders,
             SearchResultHeader,
+            SeeAll,
         }
 
         private static ResourceLoader _resourceLoader;
