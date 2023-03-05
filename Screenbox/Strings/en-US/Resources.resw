@@ -490,4 +490,20 @@
   <data name="SeeAll" xml:space="preserve">
     <value>See all</value>
   </data>
+  <data name="SearchResultArtistHeader" xml:space="preserve">
+    <value>Artist results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultAlbumHeader" xml:space="preserve">
+    <value>Album results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultSongHeader" xml:space="preserve">
+    <value>Song results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultVideoHeader" xml:space="preserve">
+    <value>Video results for "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
 </root>

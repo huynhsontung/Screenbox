@@ -114,6 +114,7 @@
                             Text="{strings:Resources Key=Artists}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
+                            Command="{x:Bind ViewModel.SeeAllArtistsCommand}"
                             Content="{strings:Resources Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreArtists, Mode=OneWay}" />
                     </Grid>
@@ -140,6 +141,7 @@
                             Text="{strings:Resources Key=Albums}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
+                            Command="{x:Bind ViewModel.SeeAllAlbumsCommand}"
                             Content="{strings:Resources Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreAlbums, Mode=OneWay}" />
                     </Grid>
@@ -165,6 +167,7 @@
                             Text="{strings:Resources Key=Songs}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
+                            Command="{x:Bind ViewModel.SeeAllSongsCommand}"
                             Content="{strings:Resources Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreSongs, Mode=OneWay}" />
                     </Grid>
@@ -180,7 +183,7 @@
                         <ListView.Resources>
                             <XamlUICommand
                                 x:Key="MediaListViewItemPlayCommand"
-                                Command="{x:Bind ViewModel.PlayCommand}"
+                                Command="{x:Bind ViewModel.PlaySongCommand}"
                                 Label="{strings:Resources Key=Play}">
                                 <XamlUICommand.IconSource>
                                     <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
@@ -209,6 +212,7 @@
                             Text="{strings:Resources Key=Videos}" />
                         <HyperlinkButton
                             HorizontalAlignment="Right"
+                            Command="{x:Bind ViewModel.SeeAllVideosCommand}"
                             Content="{strings:Resources Key=SeeAll}"
                             Visibility="{x:Bind ViewModel.HasMoreVideos, Mode=OneWay}" />
                     </Grid>
