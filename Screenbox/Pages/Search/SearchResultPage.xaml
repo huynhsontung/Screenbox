@@ -95,7 +95,7 @@
 
         <ScrollViewer
             Grid.Row="1"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             HorizontalScrollMode="Disabled">
             <StackPanel
                 Orientation="Vertical"

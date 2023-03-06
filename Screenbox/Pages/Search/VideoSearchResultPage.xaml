@@ -92,10 +92,15 @@
             Grid.Row="1"
             Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Videos, FallbackValue={x:Null}}"
-            SelectionMode="None" />
+            SelectionMode="None">
+            <GridView.Footer>
+                <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </GridView.Footer>
+        </GridView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">

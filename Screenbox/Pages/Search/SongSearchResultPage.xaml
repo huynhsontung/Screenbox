@@ -42,6 +42,7 @@
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
@@ -55,6 +56,9 @@
                     </XamlUICommand.IconSource>
                 </XamlUICommand>
             </ListView.Resources>
+            <ListView.Footer>
+                <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
