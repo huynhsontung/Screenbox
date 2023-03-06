@@ -152,7 +152,11 @@
                         IsItemClickEnabled="True"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
-                        SelectionMode="None" />
+                        SelectionMode="None">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:ThumbnailGridViewBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </GridView>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowSongs}">
@@ -223,7 +227,11 @@
                         IsItemClickEnabled="True"
                         ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Videos}"
-                        SelectionMode="None" />
+                        SelectionMode="None">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:ThumbnailGridViewBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </GridView>
                 </StackPanel>
 
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
