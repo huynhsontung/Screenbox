@@ -1400,6 +1400,69 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SearchResultHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Search results for "{0}"
+        /// </summary>
+        public static string SearchResultHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultHeader"), query);
+        }
+        #endregion
+
+        #region SeeAll
+        /// <summary>
+        ///   Looks up a localized string similar to: See all
+        /// </summary>
+        public static string SeeAll
+        {
+            get
+            {
+                return _resourceLoader.GetString("SeeAll");
+            }
+        }
+        #endregion
+
+        #region SearchResultArtistHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Artist results for "{0}"
+        /// </summary>
+        public static string SearchResultArtistHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultArtistHeader"), query);
+        }
+        #endregion
+
+        #region SearchResultAlbumHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Album results for "{0}"
+        /// </summary>
+        public static string SearchResultAlbumHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultAlbumHeader"), query);
+        }
+        #endregion
+
+        #region SearchResultSongHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Song results for "{0}"
+        /// </summary>
+        public static string SearchResultSongHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultSongHeader"), query);
+        }
+        #endregion
+
+        #region SearchResultVideoHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Video results for "{0}"
+        /// </summary>
+        public static string SearchResultVideoHeader(string query)
+        {
+            return string.Format(_resourceLoader.GetString("SearchResultVideoHeader"), query);
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1515,6 +1578,12 @@ namespace Screenbox.Strings{
             RunTime,
             AllVideos,
             VideoFolders,
+            SearchResultHeader,
+            SeeAll,
+            SearchResultArtistHeader,
+            SearchResultAlbumHeader,
+            SearchResultSongHeader,
+            SearchResultVideoHeader,
         }
 
         private static ResourceLoader _resourceLoader;

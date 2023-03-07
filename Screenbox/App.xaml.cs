@@ -75,6 +75,7 @@ namespace Screenbox
             services.AddTransient<ArtistsPageViewModel>();
             services.AddTransient<AllVideosPageViewModel>();
             services.AddTransient<MusicPageViewModel>();
+            services.AddTransient<SearchResultPageViewModel>();
             services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
@@ -91,6 +92,7 @@ namespace Screenbox
             services.AddSingleton<LibVlcService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<ILibraryService, LibraryService>();
+            services.AddSingleton<ISearchService, SearchService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
             services.AddSingleton<IMediaService, MediaService>();
@@ -110,6 +112,11 @@ namespace Screenbox
                 new KeyValuePair<Type, Type>(typeof(SettingsPageViewModel), typeof(SettingsPage)),
                 new KeyValuePair<Type, Type>(typeof(AlbumDetailsPageViewModel), typeof(AlbumDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(ArtistDetailsPageViewModel), typeof(ArtistDetailsPage)),
+                new KeyValuePair<Type, Type>(typeof(SearchResultPageViewModel), typeof(SearchResultPage)),
+                new KeyValuePair<Type, Type>(typeof(ArtistSearchResultPageViewModel), typeof(ArtistSearchResultPage)),
+                new KeyValuePair<Type, Type>(typeof(AlbumSearchResultPageViewModel), typeof(AlbumSearchResultPage)),
+                new KeyValuePair<Type, Type>(typeof(SongSearchResultPageViewModel), typeof(SongSearchResultPage)),
+                new KeyValuePair<Type, Type>(typeof(VideoSearchResultPageViewModel), typeof(VideoSearchResultPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewWithHeaderPageViewModel), typeof(FolderViewWithHeaderPage))

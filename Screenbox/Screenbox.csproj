@@ -155,6 +155,7 @@
     </Compile>
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
@@ -189,6 +190,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\MediaTypeAdaptiveLayoutOverrideConverter.cs" />
+    <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\StorageItemGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
     <Compile Include="Core\RendererEventArgs.cs" />
+    <Compile Include="Core\SearchResult.cs" />
     <Compile Include="Core\SettingsOptions.cs" />
     <Compile Include="Core\ValueChangedEventArgs.cs" />
     <Compile Include="Core\ViewModeChangedEventArgs.cs" />
@@ -246,6 +249,9 @@
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Search\AlbumSearchResultPage.xaml.cs">
+      <DependentUpon>AlbumSearchResultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AlbumsPage.xaml.cs">
       <DependentUpon>AlbumsPage.xaml</DependentUpon>
     </Compile>
@@ -254,6 +260,9 @@
     </Compile>
     <Compile Include="Pages\ArtistDetailsPage.xaml.cs">
       <DependentUpon>ArtistDetailsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Search\ArtistSearchResultPage.xaml.cs">
+      <DependentUpon>ArtistSearchResultPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ArtistsPage.xaml.cs">
       <DependentUpon>ArtistsPage.xaml</DependentUpon>
@@ -280,11 +289,20 @@
     <Compile Include="Pages\PlayQueuePage.xaml.cs">
       <DependentUpon>PlayQueuePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Search\SearchResultPage.xaml.cs">
+      <DependentUpon>SearchResultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Search\SongSearchResultPage.xaml.cs">
+      <DependentUpon>SongSearchResultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SongsPage.xaml.cs">
       <DependentUpon>SongsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Search\VideoSearchResultPage.xaml.cs">
+      <DependentUpon>VideoSearchResultPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\VideosPage.xaml.cs">
       <DependentUpon>VideosPage.xaml</DependentUpon>
@@ -297,10 +315,12 @@
     <Compile Include="Services\Interfaces\IMediaService.cs" />
     <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
+    <Compile Include="Services\Interfaces\ISearchService.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
@@ -309,10 +329,12 @@
       <DependentUpon>Resources.resw</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AlbumDetailsPageViewModel.cs" />
+    <Compile Include="ViewModels\AlbumSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumsPageViewModel.cs" />
     <Compile Include="ViewModels\AlbumViewModel.cs" />
     <Compile Include="ViewModels\AllVideosPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistDetailsPageViewModel.cs" />
+    <Compile Include="ViewModels\ArtistSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
@@ -353,12 +375,15 @@
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SeekBarViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
+    <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SongsPageViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
+    <Compile Include="ViewModels\VideoSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
@@ -514,6 +539,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Search\AlbumSearchResultPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AlbumsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -523,6 +552,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ArtistDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Search\ArtistSearchResultPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -566,11 +599,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Search\SearchResultPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\Search\SongSearchResultPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SongsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Search\VideoSearchResultPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
