@@ -17,11 +17,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/VideoGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <x:Double x:Key="GridViewItemWidth">230</x:Double>
-            <x:Double x:Key="GridViewItemHeight">188</x:Double>
-            <x:Double x:Key="GridViewItemThumbnailHeight">126</x:Double>
 
             <MenuFlyout x:Name="ItemFlyout">
                 <MenuFlyoutItem
@@ -42,55 +39,6 @@
                     Icon="{ui:FontIcon Glyph=&#xe946;}"
                     Text="{strings:Resources Key=Properties}" />
             </MenuFlyout>
-
-            <DataTemplate x:Key="VideoGridViewItemTemplate" x:DataType="viewModels:MediaViewModel">
-                <Grid
-                    Width="{StaticResource GridViewItemWidth}"
-                    Height="{StaticResource GridViewItemHeight}"
-                    Padding="4">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid
-                        Grid.Row="0"
-                        Height="{StaticResource GridViewItemThumbnailHeight}"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="4">
-                        <FontIcon
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="32"
-                            Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind Glyph}" />
-                        <Border CornerRadius="4">
-                            <Image
-                                x:Phase="1"
-                                Source="{x:Bind Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                                Stretch="UniformToFill" />
-                        </Border>
-                    </Grid>
-
-                    <TextBlock
-                        Grid.Row="1"
-                        Margin="4,0"
-                        FontWeight="SemiBold"
-                        MaxLines="2"
-                        Text="{x:Bind Name}"
-                        TextWrapping="Wrap" />
-
-                    <TextBlock
-                        Grid.Row="2"
-                        Margin="4,0"
-                        x:Phase="2"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind Caption, Mode=OneWay}" />
-                </Grid>
-            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 
