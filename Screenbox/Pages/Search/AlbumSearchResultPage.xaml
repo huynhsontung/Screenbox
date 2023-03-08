@@ -15,6 +15,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/AlbumGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
