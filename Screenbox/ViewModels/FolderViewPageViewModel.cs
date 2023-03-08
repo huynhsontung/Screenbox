@@ -84,15 +84,6 @@ namespace Screenbox.ViewModels
             }
         }
 
-        public async Task LoadItemDetailsAsync(StorageItemViewModel item)
-        {
-            await item.UpdateCaptionAsync();
-            if (item.Media != null)
-            {
-                await item.Media.LoadThumbnailAsync();
-            }
-        }
-
         public void Clean()
         {
             _isActive = false;

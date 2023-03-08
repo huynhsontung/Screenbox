@@ -18,7 +18,7 @@ namespace Screenbox.Controls.Interactions
             AssociatedObject.ContainerContentChanging -= OnContainerContentChanging;
         }
 
-        private async void OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        private static async void OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (args.Phase != 0) return;
             switch (args.Item)

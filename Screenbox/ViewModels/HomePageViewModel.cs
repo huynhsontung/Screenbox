@@ -130,8 +130,11 @@ namespace Screenbox.ViewModels
                 Recent.RemoveAt(Recent.Count - 1);
             }
 
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media.LoadDetailsAndThumbnailAsync());
-            await Task.WhenAll(loadingTasks).ConfigureAwait(false);
+            // Load media details for the remaining items
+            foreach (MediaViewModelWithMruToken item in Recent)
+            {
+                await item.Media.LoadDetailsAndThumbnailAsync();
+            }
         }
 
         [RelayCommand]

@@ -109,7 +109,6 @@
             Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-            ContainerContentChanging="FolderView_OnContainerContentChanging"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
@@ -119,6 +118,7 @@
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
+                <interactions:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
         <TextBlock

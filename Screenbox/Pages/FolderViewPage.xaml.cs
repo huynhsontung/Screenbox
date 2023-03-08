@@ -36,12 +36,6 @@ namespace Screenbox.Pages
             ViewModel.Clean();
         }
 
-        private async void FolderView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase != 0) return;
-            if (args.Item != null) await ViewModel.LoadItemDetailsAsync((StorageItemViewModel)args.Item);
-        }
-
         private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
         {
             if (e.Item.Content is not StorageItemViewModel content || content.Media == null)

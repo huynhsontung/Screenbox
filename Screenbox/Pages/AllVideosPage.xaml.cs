@@ -28,14 +28,5 @@ namespace Screenbox.Pages
             base.OnNavigatedTo(e);
             await ViewModel.FetchVideosAsync();
         }
-
-        private async void VideosGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase != 0) return;
-            if (args.Item is MediaViewModel { Thumbnail: null } media)
-            {
-                await media.LoadThumbnailAsync();
-            }
-        }
     }
 }
