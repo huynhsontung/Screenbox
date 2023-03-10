@@ -29,11 +29,14 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private bool _zoomToFit;
-        [ObservableProperty] private bool _hasVideo;
         [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
         [ObservableProperty] private double _playbackSpeed;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
+        private bool _hasVideo;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ShowPropertiesCommand))]

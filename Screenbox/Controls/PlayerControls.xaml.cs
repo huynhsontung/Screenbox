@@ -117,6 +117,16 @@ namespace Screenbox.Controls
             }
         }
 
+        private bool IsCastButtonEnabled(bool hasActiveItem)
+        {
+            if (_castFlyout?.Content is CastControl control)
+            {
+                return control.ViewModel.IsCasting || hasActiveItem;
+            }
+
+            return hasActiveItem;
+        }
+
         private static bool IsValueEqualTag(double value, object? tag)
         {
             if (!double.TryParse(tag as string, out double tagValue)) return false;
