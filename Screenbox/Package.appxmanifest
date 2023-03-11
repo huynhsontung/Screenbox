@@ -98,5 +98,6 @@
     <uap:Capability Name="videosLibrary"/>
     <uap:Capability Name="musicLibrary"/>
     <Capability Name="privateNetworkClientServer"/>
+    <uap:Capability Name="picturesLibrary"/>
   </Capabilities>
 </Package>
