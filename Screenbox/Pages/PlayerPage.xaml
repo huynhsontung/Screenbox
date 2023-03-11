@@ -126,7 +126,7 @@
                 Margin="6,6,2,6"
                 Background="Transparent"
                 BorderThickness="0"
-                Click="{x:Bind ViewModel.OnBackRequested}"
+                Command="{x:Bind ViewModel.GoBackCommand}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>

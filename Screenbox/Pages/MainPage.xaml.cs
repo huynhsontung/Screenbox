@@ -218,9 +218,14 @@ namespace Screenbox.Pages
         {
             // Don't go back if the nav pane is overlayed.
             if (NavView.IsPaneOpen &&
-                (NavView.DisplayMode == muxc.NavigationViewDisplayMode.Compact ||
-                 NavView.DisplayMode == muxc.NavigationViewDisplayMode.Minimal))
+                NavView.DisplayMode is muxc.NavigationViewDisplayMode.Compact or muxc.NavigationViewDisplayMode.Minimal)
                 return false;
+
+            if (ViewModel.PlayerVisible && _playerFrame.Content is PlayerPage { ViewModel: { } vm })
+            {
+                vm.GoBack();
+                return true;
+            }
 
             if (ContentFrame.Content is IContentFrame { CanGoBack: true } page)
             {

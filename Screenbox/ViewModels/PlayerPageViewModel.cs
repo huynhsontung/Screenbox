@@ -136,13 +136,6 @@ namespace Screenbox.ViewModels
             OverrideControlsDelayHide(message.Delay);
         }
 
-        public void OnBackRequested()
-        {
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            bool hasItemsInQueue = playlist.Playlist.Count > 0;
-            PlayerVisibility = hasItemsInQueue ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Hidden;
-        }
-
         public void OnPlayerClick()
         {
             if (ControlsHidden)
@@ -213,6 +206,14 @@ namespace Screenbox.ViewModels
         partial void OnPlayerVisibilityChanged(PlayerVisibilityStates value)
         {
             Messenger.Send(new PlayerVisibilityChangedMessage(value));
+        }
+
+        [RelayCommand]
+        public void GoBack()
+        {
+            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+            bool hasItemsInQueue = playlist.Playlist.Count > 0;
+            PlayerVisibility = hasItemsInQueue ? PlayerVisibilityStates.Minimal : PlayerVisibilityStates.Hidden;
         }
 
         [RelayCommand]
