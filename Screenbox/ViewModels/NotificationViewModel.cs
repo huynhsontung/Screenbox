@@ -2,6 +2,8 @@
 
 using System;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -28,11 +30,13 @@ namespace Screenbox.ViewModels
 
         [ObservableProperty] private object? _content;
 
-        [ObservableProperty] private string? _buttonContent;
-
-        [ObservableProperty] private RelayCommand? _actionCommand;
-
         [ObservableProperty] private bool _isOpen;
+
+        [ObservableProperty] private ButtonBase? _actionButton;
+
+        public string? ButtonContent { get; private set; }
+
+        public RelayCommand? ActionCommand { get; private set; }
 
         private readonly INotificationService _notificationService;
         private readonly IFilesService _filesService;
@@ -76,6 +80,12 @@ namespace Screenbox.ViewModels
                 Severity = InfoBarSeverity.Success;
                 ButtonContent = message.Value.Name;
                 ActionCommand = new RelayCommand(() => _filesService.OpenFileLocationAsync(message.Value));
+
+                ActionButton = new HyperlinkButton
+                {
+                    Content = ButtonContent,
+                    Command = ActionCommand
+                };
                 
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
@@ -100,6 +110,12 @@ namespace Screenbox.ViewModels
                     Messenger.Send(new ChangeTimeRequestMessage(message.Value, debounce: false));
                 });
 
+                ActionButton = new Button
+                {
+                    Content = ButtonContent,
+                    Command = ActionCommand
+                };
+
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
             });
@@ -113,6 +129,7 @@ namespace Screenbox.ViewModels
             ButtonContent = default;
             ActionCommand = default;
             Content = default;
+            ActionButton = default;
             IsOpen = false;
         }
 
