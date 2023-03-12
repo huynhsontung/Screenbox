@@ -651,6 +651,7 @@
                         <Setter Target="AlbumArtPanel.Opacity" Value="0" />
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
+                        <Setter Target="PlayerControls.IsEnabled" Value="False" />
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />

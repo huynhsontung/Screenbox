@@ -338,6 +338,7 @@
                 x:Name="VolumeButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 Flyout="{StaticResource VolumeControlFlyout}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
                 <Button.KeyboardAccelerators>
@@ -356,6 +357,7 @@
                 x:Name="ShuffleButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
                 <FontIcon FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}" Glyph="{x:Bind ViewModel.Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
@@ -367,6 +369,7 @@
                 x:Name="RepeatButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
                 <FontIcon Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
@@ -380,6 +383,7 @@
                 VerticalAlignment="Stretch"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
                 AccessKey="C"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xED1F;" />
                 <Button.KeyboardAccelerators>
@@ -428,6 +432,7 @@
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
                 Flyout="{x:Bind PlayerContextMenu, Mode=OneWay}"
+                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                 <FontIcon Glyph="&#xE10C;" />
