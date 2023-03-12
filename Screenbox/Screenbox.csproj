@@ -153,6 +153,7 @@
     <Compile Include="Controls\ChapterProgressBar.xaml.cs">
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />

@@ -14,7 +14,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
@@ -30,8 +29,6 @@ namespace Screenbox.Pages
         private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
         private readonly Dictionary<string, Type> _pages;
-        private readonly Frame _playerFrame;
-        private Border? _contentRootBorder;
 
         public MainPage()
         {
@@ -42,7 +39,6 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             NotificationView.Translation = new Vector3(0, 0, 8);
 
-            _playerFrame = CreatePlayerFrame();
             _pages = new Dictionary<string, Type>
             {
                 { "home", typeof(HomePage) },
@@ -59,11 +55,14 @@ namespace Screenbox.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _playerFrame.Navigate(typeof(PlayerPage), e.Parameter);
+            PlayerFrame.Navigate(typeof(PlayerPage), e.Parameter);
             if (e.Parameter is true)
             {
                 ViewModel.PlayerVisible = true;
             }
+
+            // NavView remembers if the pane was open last time
+            ViewModel.IsPaneOpen = NavView.IsPaneOpen;
         }
 
         public void GoBack()
@@ -77,23 +76,6 @@ namespace Screenbox.Pages
             ContentFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
-        private static Frame CreatePlayerFrame()
-        {
-            /*
-             * Due to the current LibVLC limitation, there can only be one instance of
-             * the media player element per LibVLC instance. This means the player will
-             * break if you navigate away from the PlayerPage.
-             * This limitation will go away with LibVLC 4.x.
-             */
-
-            Frame playerFrame = new();
-            playerFrame.SetValue(Grid.RowProperty, 0);
-            playerFrame.SetValue(Grid.RowSpanProperty, 3);
-            playerFrame.SetValue(Grid.ColumnProperty, 0);
-            playerFrame.SetValue(Grid.ColumnSpanProperty, 2);
-            return playerFrame;
-        }
-
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
@@ -105,12 +87,6 @@ namespace Screenbox.Pages
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (NavView.FindDescendant("ContentRoot") is Grid contentRoot)
-            {
-                contentRoot.Children.Add(_playerFrame);
-                _contentRootBorder = contentRoot.FindChild<Border>();
-            }
-
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             ViewModel.NavigationViewDisplayMode = NavView.DisplayMode;
@@ -125,31 +101,16 @@ namespace Screenbox.Pages
         {
             if (e.PropertyName == nameof(ViewModel.PlayerVisible))
             {
-                if (_contentRootBorder != null)
-                {
-                    _contentRootBorder.Visibility = ViewModel.PlayerVisible ? Visibility.Collapsed : Visibility.Visible;
-                }
-
-                // Do not try to implement the following using XAML Behaviors APIs and VisualStates
-                // Will introduce visual artifacts with NavView
-                if (ViewModel.PlayerVisible)
-                {
-                    NavView.IsPaneVisible = false;
-                    NavView.IsPaneOpen = false;
-                    ContentGrid.Visibility = Visibility.Collapsed;
-                }
-                else
+                if (!ViewModel.PlayerVisible)
                 {
                     SetTitleBar();
-                    NavView.IsPaneVisible = true;
-                    ContentGrid.Visibility = Visibility.Visible;
                     if (ContentFrame.Content == null)
                     {
                         NavView.SelectedItem = NavView.MenuItems[0];
                     }
                 }
 
-                UpdateTitleBarState();
+                UpdateNavigationViewState(NavView.DisplayMode, NavView.IsPaneOpen);
             }
         }
 
@@ -162,7 +123,7 @@ namespace Screenbox.Pages
 
         private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+            throw new Exception("Failed to load Page " + e.SourcePageType.FullName, e.Exception);
         }
 
         private void NavView_SelectionChanged(muxc.NavigationView sender, muxc.NavigationViewSelectionChangedEventArgs args)
@@ -221,7 +182,7 @@ namespace Screenbox.Pages
                 NavView.DisplayMode is muxc.NavigationViewDisplayMode.Compact or muxc.NavigationViewDisplayMode.Minimal)
                 return false;
 
-            if (ViewModel.PlayerVisible && _playerFrame.Content is PlayerPage { ViewModel: { } vm })
+            if (ViewModel.PlayerVisible && PlayerFrame.Content is PlayerPage { ViewModel: { } vm })
             {
                 vm.GoBack();
                 return true;
@@ -263,11 +224,11 @@ namespace Screenbox.Pages
 
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
         {
-            UpdateTitleBarState();
+            UpdateNavigationViewState(args.DisplayMode, NavView.IsPaneOpen);
             ViewModel.NavigationViewDisplayMode = args.DisplayMode;
         }
 
-        private void UpdateTitleBarState()
+        private void UpdateNavigationViewState(muxc.NavigationViewDisplayMode displayMode, bool paneOpen)
         {
             if (ViewModel.PlayerVisible)
             {
@@ -275,12 +236,12 @@ namespace Screenbox.Pages
                 return;
             }
 
-            switch (NavView.DisplayMode)
+            switch (displayMode)
             {
                 case muxc.NavigationViewDisplayMode.Minimal:
                     VisualStateManager.GoToState(this, "Minimal", true);
                     break;
-                case muxc.NavigationViewDisplayMode.Expanded when NavView.IsPaneOpen:
+                case muxc.NavigationViewDisplayMode.Expanded when paneOpen:
                     VisualStateManager.GoToState(this, "Expanded", true);
                     break;
                 case muxc.NavigationViewDisplayMode.Expanded:
@@ -292,16 +253,12 @@ namespace Screenbox.Pages
 
         private void NavView_OnPaneOpening(muxc.NavigationView sender, object args)
         {
-            if (NavigationViewStates.CurrentState?.Name == "Hidden") return;
-            if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
-                VisualStateManager.GoToState(this, "Expanded", true);
+            UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
 
         private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
         {
-            if (NavigationViewStates.CurrentState?.Name == "Hidden") return;
-            if (sender.DisplayMode == muxc.NavigationViewDisplayMode.Expanded)
-                VisualStateManager.GoToState(this, "Compact", true);
+            UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
     }
 }
