@@ -45,6 +45,7 @@
         HorizontalAlignment="Center"
         VerticalAlignment="Bottom"
         ActionButton="{x:Bind ViewModel.ActionButton, Mode=OneWay}"
+        CloseButtonCommand="{x:Bind ViewModel.CloseCommand}"
         Content="{x:Bind ViewModel.Content, Mode=OneWay}"
         CornerRadius="8"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"

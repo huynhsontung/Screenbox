@@ -20,6 +20,7 @@ namespace Screenbox.ViewModels
     internal sealed partial class NotificationViewModel : ObservableRecipient,
         IRecipient<RaiseFrameSavedNotificationMessage>,
         IRecipient<RaiseResumePositionNotificationMessage>,
+        IRecipient<CloseNotificationMessage>,
         IRecipient<ErrorMessage>
     {
         [ObservableProperty] private InfoBarSeverity _severity;
@@ -71,6 +72,11 @@ namespace Screenbox.ViewModels
             _dispatcherQueue.TryEnqueue(SetNotification);
         }
 
+        public void Receive(CloseNotificationMessage message)
+        {
+            IsOpen = false;
+        }
+
         public void Receive(RaiseFrameSavedNotificationMessage message)
         {
             void SetNotification()
@@ -119,6 +125,13 @@ namespace Screenbox.ViewModels
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
             });
+        }
+
+        [RelayCommand]
+        private void Close()
+        {
+            // IsOpen = false;
+            Messenger.Send<CloseNotificationMessage>();
         }
 
         private void Reset()

@@ -200,6 +200,7 @@
     <Compile Include="Core\MessageHelpers.cs" />
     <Compile Include="Core\Messages\ChangeVolumeRequestMessage.cs" />
     <Compile Include="Core\Messages\ClearPlaylistMessage.cs" />
+    <Compile Include="Core\Messages\CloseNotificationMessage.cs" />
     <Compile Include="Core\Messages\RaiseResumePositionNotificationMessage.cs" />
     <Compile Include="Core\Messages\SuspendingMessage.cs" />
     <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />

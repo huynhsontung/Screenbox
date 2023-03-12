@@ -76,7 +76,7 @@ namespace Screenbox
             services.AddTransient<AllVideosPageViewModel>();
             services.AddTransient<MusicPageViewModel>();
             services.AddTransient<SearchResultPageViewModel>();
-            services.AddSingleton<NotificationViewModel>(); // Shared between multiple notification views
+            services.AddTransient<NotificationViewModel>();
             services.AddSingleton<CommonViewModel>();   // Shared between many pages
             services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
             services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
