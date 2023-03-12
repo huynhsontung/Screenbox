@@ -15,7 +15,9 @@
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.AudioTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
-            SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}">
+            SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False">
             <ListView.Header>
                 <TextBlock FontWeight="SemiBold" Text="Audio" />
             </ListView.Header>
@@ -26,7 +28,9 @@
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
-            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}">
+            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False">
             <ListView.Header>
                 <TextBlock FontWeight="SemiBold" Text="Subtitles" />
             </ListView.Header>
