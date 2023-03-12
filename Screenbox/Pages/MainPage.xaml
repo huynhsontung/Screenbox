@@ -23,6 +23,10 @@
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
+            <Thickness x:Key="AppTitleMarginExpanded">58,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleMarginCompact">74,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleMarginMinimal">98,0,0,0</Thickness>
+
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
@@ -64,10 +68,13 @@
             <StackPanel
                 x:Name="AppTitle"
                 Grid.Column="1"
-                Margin="58,0,0,0"
+                Margin="{StaticResource AppTitleMarginExpanded}"
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Orientation="Horizontal">
+                <StackPanel.Transitions>
+                    <RepositionThemeTransition />
+                </StackPanel.Transitions>
                 <Image
                     Width="18"
                     Height="18"
@@ -167,19 +174,19 @@
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded">
                     <VisualState.Setters>
-                        <Setter Target="OverlayGrid.Margin" Value="320,0,0,0" />
+                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Compact">
                     <VisualState.Setters>
-                        <Setter Target="AppTitle.Margin" Value="74,0,0,0" />
-                        <Setter Target="OverlayGrid.Margin" Value="48,0,0,0" />
+                        <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginCompact}" />
+                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimal">
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
-                        <Setter Target="AppTitle.Margin" Value="98,0,0,0" />
+                        <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
                         <Setter Target="ContentFrame.Padding" Value="16,0,0,0" />
                         <Setter Target="NotificationView.Margin" Value="8,8,8,146" />
                         <Setter Target="OverlayGrid.Margin" Value="0" />
@@ -198,7 +205,7 @@
                     <VisualTransition From="Compact" To="Expanded">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="320,0,0,0" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
                             </ObjectAnimationUsingKeyFrames>
                             <RepositionThemeAnimation FromHorizontalOffset="-200" TargetName="OverlayGrid" />
                         </Storyboard>
@@ -207,9 +214,20 @@
                     <VisualTransition From="Expanded" To="Compact">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="48,0,0,0" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
                             <RepositionThemeAnimation FromHorizontalOffset="200" TargetName="OverlayGrid" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition To="Minimal">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginMinimal}" />
+                            </ObjectAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>

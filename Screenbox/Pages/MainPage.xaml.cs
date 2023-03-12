@@ -260,5 +260,10 @@ namespace Screenbox.Pages
         {
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
+
+        private Thickness ToLeftOnlyMargin(double value)
+        {
+            return new Thickness(value, 0, 0, 0);
+        }
     }
 }
