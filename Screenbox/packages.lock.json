@@ -13,9 +13,9 @@
       },
       "CommunityToolkit.Labs.Uwp.SettingsControls": {
         "type": "Direct",
-        "requested": "[0.0.13, )",
-        "resolved": "0.0.13",
-        "contentHash": "YXglp8P/lcY6iAWXKzgcUy3mb3voRyvf/nx2vdzG7h6h3ipl8vfXeec15gxO4YOzCBuxAkWW0j+LtDHlRMobMQ==",
+        "requested": "[0.0.17, )",
+        "resolved": "0.0.17",
+        "contentHash": "vUSrq46I0+65EyDUq39Ko6L+XgXu6I4042vLGmRLV/2C992cDN6gJ0ePxNtc7NQrrCnULcAGu0UVsPNJT571Fg==",
         "dependencies": {
           "Microsoft.Toolkit.Uwp.UI": "7.1.2",
           "Microsoft.UI.Xaml": "2.7.0"
