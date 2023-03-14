@@ -141,8 +141,10 @@
                     PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
+                    SuggestionChosen="{x:Bind ViewModel.AutoSuggestBox_OnSuggestionChosen}"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
-                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}" />
+                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}"
+                    UpdateTextOnSelect="False" />
             </muxc:NavigationView.AutoSuggestBox>
             <controls:CustomNavigationView.OverlayContent>
                 <Grid x:Name="OverlayGrid">

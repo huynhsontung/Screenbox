@@ -79,6 +79,28 @@ namespace Screenbox.ViewModels
             }
         }
 
+        public void AutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            switch (args.SelectedItem)
+            {
+                case MediaViewModel media:
+                    Messenger.Send(new PlayMediaMessage(media));
+                    break;
+                case AlbumViewModel album:
+                    _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
+                    break;
+                case ArtistViewModel artist:
+                    _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+                    break;
+            }
+
+            SearchQuery = string.Empty;
+            if (this.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
+            {
+                IsPaneOpen = false;
+            }
+        }
+
         private IReadOnlyList<object> GetSuggestItems(SearchResult result, string searchQuery)
         {
             if (!result.HasItems) return Array.Empty<object>();
