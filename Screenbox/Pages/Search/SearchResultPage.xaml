@@ -47,6 +47,7 @@
             HorizontalScrollMode="Disabled">
             <StackPanel
                 Orientation="Vertical"
+                SizeChanged="GridView_OnSizeChanged"
                 Spacing="24"
                 XYFocusDownNavigationStrategy="RectilinearDistance"
                 XYFocusKeyboardNavigation="Enabled">
@@ -73,8 +74,7 @@
                         IsItemClickEnabled="True"
                         ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Artists}"
-                        SelectionMode="None"
-                        SizeChanged="ArtistGridView_OnSizeChanged" />
+                        SelectionMode="None" />
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowAlbums}">
