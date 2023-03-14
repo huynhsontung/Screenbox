@@ -72,9 +72,6 @@
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Orientation="Horizontal">
-                <StackPanel.Transitions>
-                    <RepositionThemeTransition />
-                </StackPanel.Transitions>
                 <Image
                     Width="18"
                     Height="18"
