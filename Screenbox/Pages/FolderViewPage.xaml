@@ -68,7 +68,7 @@
                             VerticalAlignment="Center"
                             FontSize="32"
                             Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
+                            Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                         <Border CornerRadius="4">
                             <Image
                                 x:Phase="1"

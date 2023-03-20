@@ -2,14 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:strings="using:Screenbox.Strings">
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:viewModels="using:Screenbox.ViewModels">
 
     <converters:MediaTypeAdaptiveLayoutOverrideConverter x:Key="AdaptiveLayoutOverrideConverter" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
-        <UserControl>
+        <UserControl d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}">
             <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
@@ -44,7 +46,7 @@
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                     FontSize="16"
-                    Glyph="{Binding Glyph}"
+                    Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
                     IsHitTestVisible="False" />
 
                 <AppBarButton

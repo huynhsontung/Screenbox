@@ -48,7 +48,7 @@
                     Grid.Column="0"
                     HorizontalAlignment="Center"
                     FontSize="16"
-                    Glyph="{x:Bind StorageItem, Converter={StaticResource StorageItemGlyphConverter}}" />
+                    Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                 <TextBlock
                     Grid.Column="1"
                     Margin="0,0,16,0"

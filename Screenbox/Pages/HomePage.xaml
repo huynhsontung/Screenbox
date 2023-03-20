@@ -68,7 +68,7 @@
                     Icon="{ui:FontIcon Glyph=&#xe8da;}"
                     Text="{strings:Resources Key=OpenFolder}" />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.OpenUrlCommand}"
+                    Click="OpenUrlMenuItem_OnClick"
                     Icon="{ui:SymbolIcon Symbol=Globe}"
                     Text="{strings:Resources Key=OpenUrl}" />
             </MenuFlyout>
@@ -95,7 +95,7 @@
                             VerticalAlignment="Center"
                             FontSize="52"
                             Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind Media.Source, Converter={StaticResource StorageItemGlyphConverter}}" />
+                            Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}" />
                         <Border CornerRadius="4">
                             <Image
                                 HorizontalAlignment="Center"

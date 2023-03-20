@@ -8,6 +8,8 @@ using Screenbox.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 
@@ -121,6 +123,11 @@ namespace Screenbox.Pages
                 .FirstOrDefault(n => n.Tag.Equals(item.Key));
 
             LibraryNavView.SelectedItem = selectedItem;
+        }
+
+        private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            ViewModel.OnBreadcrumbBarItemClicked(args.Index);
         }
     }
 }

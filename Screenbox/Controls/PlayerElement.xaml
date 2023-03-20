@@ -21,7 +21,7 @@
             VerticalAlignment="Stretch"
             AllowDrop="True"
             Click="{x:Bind InteractionViewModel.OnClick}"
-            DragOver="{x:Bind InteractionViewModel.OnDragOver}"
+            DragOver="VideoViewButton_OnDragOver"
             Drop="{x:Bind InteractionViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
             ManipulationCompleted="{x:Bind InteractionViewModel.VideoView_ManipulationCompleted}"
@@ -35,7 +35,7 @@
         <lvs:VideoView
             x:Name="VlcVideoView"
             Canvas.ZIndex="0"
-            Initialized="{x:Bind ViewModel.OnInitialized}"
+            Initialized="VlcVideoView_OnInitialized"
             IsHitTestVisible="False"
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"

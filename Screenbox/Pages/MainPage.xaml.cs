@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages

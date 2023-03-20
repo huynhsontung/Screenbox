@@ -89,7 +89,7 @@ namespace Screenbox.Controls
             }
         }
 
-        private string GetRemainingTime(double currentTime) => HumanizedDurationConverter.Convert(currentTime - Length);
+        private string GetRemainingTime(double currentTime) => Humanizer.ToDuration(currentTime - Length);
 
         private void TimeDisplay_OnTapped(object sender, TappedRoutedEventArgs e)
         {

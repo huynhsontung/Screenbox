@@ -1,7 +1,9 @@
 ﻿using System.Numerics;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.ViewModels;
+using Screenbox.Core;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -16,6 +18,21 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<NotificationViewModel>();
             InfoBar.Translation = new Vector3(0, 0, 8);
+        }
+
+        private InfoBarSeverity ConvertInfoBarSeverity(NotificationLevel level)
+        {
+            switch (level)
+            {
+                case NotificationLevel.Error:
+                    return InfoBarSeverity.Error;
+                case NotificationLevel.Warning:
+                    return InfoBarSeverity.Warning;
+                case NotificationLevel.Success:
+                    return InfoBarSeverity.Success;
+                default:
+                    return InfoBarSeverity.Informational;
+            }
         }
     }
 }

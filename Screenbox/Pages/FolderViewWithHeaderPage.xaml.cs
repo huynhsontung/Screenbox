@@ -2,6 +2,7 @@
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -29,6 +30,11 @@ namespace Screenbox.Pages
             base.OnNavigatedTo(e);
             ViewModel.OnNavigatedTo(e.Parameter);
             ContentFrame.Navigate(typeof(FolderViewPage), e.Parameter, new SuppressNavigationTransitionInfo());
+        }
+
+        private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
+        {
+            ViewModel.OnBreadcrumbBarItemClicked(args.Index);
         }
     }
 }

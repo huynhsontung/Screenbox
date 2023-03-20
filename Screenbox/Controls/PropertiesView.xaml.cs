@@ -29,6 +29,13 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PropertyViewModel>();
+            Loaded += OnLoaded;
+        }
+
+        private async void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Media == null) return;
+            await Media.LoadDetailsAsync();
         }
 
         internal static ContentDialog GetDialog(MediaViewModel media)
