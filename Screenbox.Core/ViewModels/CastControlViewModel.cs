@@ -4,18 +4,17 @@ using System.Collections.ObjectModel;
 using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Core;
 using Screenbox.Core.Events;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class CastControlViewModel : ObservableObject
     {
         public ObservableCollection<Renderer> Renderers { get; }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(CastCommand))]
+        [NotifyCanExecuteChangedFor(nameof(CastControlViewModel.CastCommand))]
         private Renderer? _selectedRenderer;
 
         [ObservableProperty] private Renderer? _castingDevice;

@@ -1,7 +1,8 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using Screenbox.ViewModels;
+
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Messages
 {

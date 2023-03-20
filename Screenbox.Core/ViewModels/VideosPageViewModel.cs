@@ -1,19 +1,19 @@
 ﻿#nullable enable
 
 using System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
-using Screenbox.Core.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class VideosPageViewModel : ObservableRecipient
     {

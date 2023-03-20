@@ -2,9 +2,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Screenbox.ViewModels;
+
 using Windows.Foundation;
 using Screenbox.Core.Models;
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {

@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class ChapterViewModel : ObservableObject
     {

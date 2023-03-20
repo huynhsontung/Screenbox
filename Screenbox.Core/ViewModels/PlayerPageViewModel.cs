@@ -6,19 +6,19 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using Screenbox.Core.Playback;
-using CommunityToolkit.Mvvm.Messaging.Messages;
-using Windows.UI.Xaml.Input;
-using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,

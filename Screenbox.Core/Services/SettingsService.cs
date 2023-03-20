@@ -3,6 +3,7 @@
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Services
 {

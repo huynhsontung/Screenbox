@@ -4,7 +4,8 @@ using System.Linq;
 using Windows.Storage;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
-using Screenbox.ViewModels;
+
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories
 {

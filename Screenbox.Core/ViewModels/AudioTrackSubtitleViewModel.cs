@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
-using Screenbox.Core;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {

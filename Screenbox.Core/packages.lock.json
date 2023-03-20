@@ -65,11 +65,14 @@
           "protobuf-net.Core": "3.1.33"
         }
       },
-      "VideoLAN.LibVLC.UWP": {
+      "ReswPlusLib": {
         "type": "Direct",
-        "requested": "[3.3.2, )",
-        "resolved": "3.3.2",
-        "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "zbgQieRrpin1Dy4ddUcRIrvgsD/WIrof2U7lmuCGD+9A9FDwsTayOvfq4qqvPFMc5fwBN4RdM7ER6hz0t5o8Jg==",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
+        }
       },
       "Microsoft.Bcl.AsyncInterfaces": {
         "type": "Transitive",

@@ -159,7 +159,6 @@
     <Compile Include="Controls\ChapterProgressBar.xaml.cs">
       <DependentUpon>ChapterProgressBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
@@ -176,6 +175,9 @@
     </Compile>
     <Compile Include="Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertiesDialog.xaml.cs">
+      <DependentUpon>PropertiesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
@@ -365,6 +367,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\PropertiesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Templates\AlbumGridViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -551,6 +557,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="VideoLAN.LibVLC.UWP">
+      <Version>3.3.2</Version>
     </PackageReference>
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>

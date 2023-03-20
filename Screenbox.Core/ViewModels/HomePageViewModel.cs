@@ -7,16 +7,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class HomePageViewModel : ObservableRecipient,
         IRecipient<PlaylistActiveItemChangedMessage>

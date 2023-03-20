@@ -11,9 +11,8 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
-using Screenbox.Core;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     {
@@ -49,7 +48,7 @@ namespace Screenbox.ViewModels
         {
             SortedItems.Source = value.RelatedSongs;
             TimeSpan totalDuration = GetTotalDuration(value.RelatedSongs);
-            string songsCount = ResourceHelper.GetString(ResourceHelper.SongsCount, value.RelatedSongs.Count);
+            string songsCount = ResourceHelper.GetPluralString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
             string runTime = ResourceHelper.GetString(ResourceHelper.RunTime, Humanizer.ToDuration(totalDuration));
             StringBuilder builder = new();
             if (value.Year != null)
@@ -85,7 +84,7 @@ namespace Screenbox.ViewModels
         {
             if (Source.RelatedSongs.Count == 0) return;
             Random rnd = new();
-            List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
+            List<MediaViewModel> shuffledList = Enumerable.OrderBy<MediaViewModel, int>(Source.RelatedSongs, _ => rnd.Next()).ToList();
             Messenger.Send(new ClearPlaylistMessage());
             Messenger.Send(new QueuePlaylistMessage(shuffledList));
             Messenger.Send(new PlayMediaMessage(shuffledList[0], true));

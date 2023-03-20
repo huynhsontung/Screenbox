@@ -61,7 +61,7 @@
 
             <XamlUICommand
                 x:Key="PropertiesCommand"
-                Command="{x:Bind ViewModel.ShowPropertiesCommand}"
+                Command="{x:Bind Common.ShowPropertiesCommand}"
                 IconSource="{ui:FontIconSource Glyph=&#xe946;}"
                 Label="{strings:Resources Key=Properties}" />
 

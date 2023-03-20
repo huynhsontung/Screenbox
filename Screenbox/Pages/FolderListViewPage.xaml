@@ -14,6 +14,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:viewModels="using:Screenbox.ViewModels"
+    xmlns:viewModels1="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <MenuFlyout x:Name="ItemFlyout">
@@ -30,13 +31,13 @@
                 Text="{strings:Resources Key=PlayNext}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
-                Command="{x:Bind ViewModel.ShowPropertiesCommand}"
-                CommandParameter="{Binding}"
+                Command="{x:Bind Common.ShowPropertiesCommand}"
+                CommandParameter="{Binding Media}"
                 Icon="{ui:FontIcon Glyph=&#xe946;}"
                 Text="{strings:Resources Key=Properties}" />
         </MenuFlyout>
 
-        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
+        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels1:StorageItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />

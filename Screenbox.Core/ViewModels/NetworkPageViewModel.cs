@@ -3,11 +3,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.Storage;
-using Screenbox.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class NetworkPageViewModel : ObservableRecipient
     {

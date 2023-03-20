@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Windows.UI.Xaml.Controls;
-using Screenbox.Core;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MainPageViewModel : ObservableRecipient,
         IRecipient<PlayerVisibilityChangedMessage>,

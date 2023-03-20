@@ -6,7 +6,7 @@ using System.Linq;
 using Screenbox.Core.Services;
 using Windows.Storage;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public class FolderViewWithHeaderPageViewModel
     {

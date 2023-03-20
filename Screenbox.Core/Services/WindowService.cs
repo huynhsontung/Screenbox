@@ -9,6 +9,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 
 namespace Screenbox.Core.Services

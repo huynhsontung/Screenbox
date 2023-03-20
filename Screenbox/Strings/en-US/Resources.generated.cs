@@ -187,7 +187,7 @@ namespace Screenbox.Strings{
         /// </summary>
         public static string AlbumsCount(int pluralCount)
         {
-            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "AlbumsCount", (double)pluralCount, false), pluralCount);
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(_resourceLoader, "AlbumsCount", (double)pluralCount, true), pluralCount);
         }
         #endregion
 

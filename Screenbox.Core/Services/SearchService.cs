@@ -4,11 +4,13 @@ using System.Collections.Immutable;
 using System.Linq;
 using Screenbox.Core;
 using Screenbox.Core.Models;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
+
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {
-    internal class SearchService : ISearchService
+    public sealed class SearchService : ISearchService
     {
         private readonly ILibraryService _libraryService;
 

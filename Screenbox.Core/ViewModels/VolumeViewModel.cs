@@ -2,16 +2,16 @@
 
 using System;
 using Windows.System;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class VolumeViewModel : ObservableRecipient,
         IRecipient<ChangeVolumeRequestMessage>,

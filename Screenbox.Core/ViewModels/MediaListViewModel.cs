@@ -14,13 +14,12 @@ using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MediaListViewModel : ObservableRecipient,
         IRecipient<PlayMediaMessage>,

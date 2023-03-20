@@ -2,14 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Threading.Tasks;
-using Screenbox.Core;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class StorageItemViewModel : ObservableObject
     {
@@ -59,7 +58,7 @@ namespace Screenbox.ViewModels
                 {
                     case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
                         uint itemCount = await _filesService.GetSupportedItemCountAsync(folder);
-                        CaptionText = ResourceHelper.GetString(ResourceHelper.ItemsCount, itemCount);
+                        CaptionText = ResourceHelper.GetPluralString(PluralResourceName.ItemsCount, itemCount);
                         break;
                     case StorageFile file:
                         if (!string.IsNullOrEmpty(Media?.Caption))

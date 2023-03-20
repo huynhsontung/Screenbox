@@ -6,10 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Screenbox.Core.Factories;
-using Screenbox.ViewModels;
+
 using Windows.Storage;
 using Windows.Storage.Search;
 using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {

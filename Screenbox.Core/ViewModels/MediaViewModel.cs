@@ -10,12 +10,11 @@ using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LibVLCSharp.Shared;
-using Screenbox.Core;
-using Screenbox.Core.Playback;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MediaViewModel : ObservableObject
     {

@@ -1,15 +1,12 @@
 ﻿#nullable enable
 
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.UI.Xaml.Input;
-using Screenbox.Controls.Interactions;
+using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

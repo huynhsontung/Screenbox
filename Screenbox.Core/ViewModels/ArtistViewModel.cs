@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed class ArtistViewModel
     {

@@ -8,11 +8,11 @@ using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
-using Microsoft.Toolkit.Uwp.UI;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class SeekBarViewModel :
         ObservableRecipient,

@@ -4,22 +4,21 @@ using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media;
+using Windows.Media.Playback;
 using Windows.System;
+using Windows.System.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Events;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using Screenbox.Core.Playback;
-using CommunityToolkit.Diagnostics;
-using Windows.Media.Playback;
-using Windows.System.Display;
-using Screenbox.Core;
+using Screenbox.Core.Services;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
         IRecipient<ChangeZoomToFitMessage>

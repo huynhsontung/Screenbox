@@ -1,9 +1,5 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,13 +8,15 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Factories;
-using Screenbox.Core;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public partial class FolderViewPageViewModel : ObservableRecipient,
         IRecipient<RefreshFolderMessage>

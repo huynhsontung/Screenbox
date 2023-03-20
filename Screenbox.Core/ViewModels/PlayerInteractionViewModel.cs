@@ -2,21 +2,21 @@
 
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.System;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Storage;
-using Screenbox.Core;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed class PlayerInteractionViewModel : ObservableRecipient,
         IRecipient<SettingsChangedMessage>,

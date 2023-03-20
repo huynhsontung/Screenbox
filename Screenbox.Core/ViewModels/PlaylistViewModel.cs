@@ -7,11 +7,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlaylistViewModel : ObservableRecipient
     {
@@ -22,10 +21,10 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private object? _selectedItem;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
-        [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
-        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
-        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.PlayNextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.RemoveSelectedCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.MoveSelectedItemUpCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.MoveSelectedItemDownCommand))]
         private int _selectionCount;
 
         public PlaylistViewModel(MediaListViewModel playlist)

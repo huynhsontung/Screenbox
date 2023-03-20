@@ -3,7 +3,7 @@
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     // To support navigation type matching
     public sealed class FolderListViewPageViewModel : FolderViewPageViewModel

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System.Collections.Generic;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AllVideosPageViewModel : ObservableRecipient
     {

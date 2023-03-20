@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
+
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core
 {

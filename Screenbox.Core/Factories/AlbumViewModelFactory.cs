@@ -1,8 +1,10 @@
 ﻿#nullable enable
 
-using Screenbox.ViewModels;
+
 using System.Collections.Generic;
 using System.Globalization;
+using Screenbox.Core.ViewModels;
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories
 {

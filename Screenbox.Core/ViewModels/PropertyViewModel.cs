@@ -5,10 +5,9 @@ using Windows.Media;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Screenbox.Core;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PropertyViewModel : ObservableObject
     {
@@ -21,7 +20,7 @@ namespace Screenbox.ViewModels
         public Dictionary<string, string> FileProperties { get; }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PropertyViewModel.OpenFileLocationCommand))]
         private bool _canNavigateToFile;
 
         private readonly IFilesService _filesService;
@@ -92,7 +91,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(CanNavigateToFile))]
+        [RelayCommand(CanExecute = nameof(PropertyViewModel.CanNavigateToFile))]
         private void OpenFileLocation()
         {
             if (_mediaFile == null) return;

@@ -16,12 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
-using Screenbox.Services;
-using Screenbox.ViewModels;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 using Windows.System;
-using Microsoft.Toolkit.Uwp.UI.Helpers;
-using Screenbox.Core;
+using Screenbox.Core.Enums;
+using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 

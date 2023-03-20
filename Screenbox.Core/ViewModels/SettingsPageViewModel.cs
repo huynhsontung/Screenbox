@@ -2,18 +2,18 @@
 
 using System;
 using System.Collections.ObjectModel;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Core;
-using Screenbox.Core.Services;
-using CommunityToolkit.Mvvm.Input;
 using System.Threading.Tasks;
-using Windows.System;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
@@ -49,31 +49,31 @@ namespace Screenbox.ViewModels
         partial void OnPlayerAutoResizeChanged(int value)
         {
             _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerAutoResize)));
         }
 
         partial void OnPlayerVolumeGestureChanged(bool value)
         {
             _settingsService.PlayerVolumeGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerVolumeGesture)));
         }
 
         partial void OnPlayerSeekGestureChanged(bool value)
         {
             _settingsService.PlayerSeekGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerSeekGesture)));
         }
 
         partial void OnPlayerTapGestureChanged(bool value)
         {
             _settingsService.PlayerTapGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerTapGesture)));
         }
 
         partial void OnShowRecentChanged(bool value)
         {
             _settingsService.ShowRecent = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.ShowRecent)));
         }
 
         partial void OnVolumeBoostChanged(int value)
@@ -85,7 +85,7 @@ namespace Screenbox.ViewModels
                 1 => 125,
                 _ => 100
             };
-            Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.VolumeBoost)));
         }
 
         [RelayCommand]

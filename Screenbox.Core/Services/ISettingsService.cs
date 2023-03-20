@@ -1,4 +1,5 @@
 ﻿using Screenbox.Core;
+using Screenbox.Core.Enums;
 
 namespace Screenbox.Core.Services
 {

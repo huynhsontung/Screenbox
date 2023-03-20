@@ -1,6 +1,7 @@
 ﻿using Windows.Storage;
 using Screenbox.Core.Services;
-using Screenbox.ViewModels;
+
+using StorageItemViewModel = Screenbox.Core.ViewModels.StorageItemViewModel;
 
 namespace Screenbox.Core.Factories
 {

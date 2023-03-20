@@ -1,4 +1,4 @@
-﻿namespace Screenbox.Core
+﻿namespace Screenbox.Core.Enums
 {
     public enum NotificationLevel
     {

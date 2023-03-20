@@ -124,6 +124,7 @@
     <Compile Include="Common\Humanizer.cs" />
     <Compile Include="Common\IContentFrame.cs" />
     <Compile Include="Common\IDialog.cs" />
+    <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
@@ -265,11 +266,11 @@
     <PackageReference Include="LibVLCSharp">
       <Version>3.6.7</Version>
     </PackageReference>
-    <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.2</Version>
-    </PackageReference>
     <PackageReference Include="protobuf-net">
       <Version>3.1.33</Version>
+    </PackageReference>
+    <PackageReference Include="ReswPlusLib">
+      <Version>2.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

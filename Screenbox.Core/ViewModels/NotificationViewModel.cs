@@ -8,12 +8,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class NotificationViewModel : ObservableRecipient,
         IRecipient<RaiseFrameSavedNotificationMessage>,

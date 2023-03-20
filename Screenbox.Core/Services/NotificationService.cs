@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 
 namespace Screenbox.Core.Services

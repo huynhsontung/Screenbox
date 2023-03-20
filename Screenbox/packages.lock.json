@@ -118,6 +118,12 @@
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
         }
       },
+      "VideoLAN.LibVLC.UWP": {
+        "type": "Direct",
+        "requested": "[3.3.2, )",
+        "resolved": "3.3.2",
+        "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
+      },
       "CommunityToolkit.Diagnostics": {
         "type": "Transitive",
         "resolved": "8.1.0",
@@ -442,11 +448,6 @@
         "resolved": "4.5.0",
         "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
       },
-      "VideoLAN.LibVLC.UWP": {
-        "type": "Transitive",
-        "resolved": "3.3.2",
-        "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
-      },
       "screenbox.core": {
         "type": "Project",
         "dependencies": {
@@ -455,7 +456,7 @@
           "LibVLCSharp": "[3.6.7, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Microsoft.Toolkit.Uwp.UI": "[7.1.3, )",
-          "VideoLAN.LibVLC.UWP": "[3.3.2, )",
+          "ReswPlusLib": "[2.0.0, )",
           "protobuf-net": "[3.1.33, )"
         }
       }

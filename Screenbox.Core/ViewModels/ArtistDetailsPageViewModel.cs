@@ -1,16 +1,15 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.Messages;
-using Screenbox.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     {
@@ -34,8 +33,8 @@ namespace Screenbox.ViewModels
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
             string totalDuration = Humanizer.ToDuration(GetTotalDuration(value.RelatedSongs));
-            string albumsCountText = ResourceHelper.GetString(ResourceHelper.AlbumsCount, Albums.Count);
-            string songsCountText = ResourceHelper.GetString(ResourceHelper.SongsCount, value.RelatedSongs.Count);
+            string albumsCountText = ResourceHelper.GetPluralString(PluralResourceName.AlbumsCount, Albums.Count);
+            string songsCountText = ResourceHelper.GetPluralString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
             string runTimeCountText = ResourceHelper.GetString(ResourceHelper.RunTime, totalDuration);
             Subtext = $"{albumsCountText} • {songsCountText} • {runTimeCountText}";
 

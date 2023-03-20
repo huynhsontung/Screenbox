@@ -7,11 +7,10 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class SearchResultPageViewModel : ObservableRecipient
     {
@@ -116,25 +115,25 @@ namespace Screenbox.ViewModels
             Messenger.Send(new PlayMediaMessage(media, true));
         }
 
-        [RelayCommand(CanExecute = nameof(HasMoreArtists))]
+        [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreArtists))]
         private void SeeAllArtists()
         {
             _navigationService.Navigate(typeof(ArtistSearchResultPageViewModel), this);
         }
 
-        [RelayCommand(CanExecute = nameof(HasMoreAlbums))]
+        [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreAlbums))]
         private void SeeAllAlbums()
         {
             _navigationService.Navigate(typeof(AlbumSearchResultPageViewModel), this);
         }
 
-        [RelayCommand(CanExecute = nameof(HasMoreSongs))]
+        [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreSongs))]
         private void SeeAllSongs()
         {
             _navigationService.Navigate(typeof(SongSearchResultPageViewModel), this);
         }
 
-        [RelayCommand(CanExecute = nameof(HasMoreVideos))]
+        [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreVideos))]
         private void SeeAllVideos()
         {
             _navigationService.Navigate(typeof(VideoSearchResultPageViewModel), this);

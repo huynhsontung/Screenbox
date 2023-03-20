@@ -7,18 +7,17 @@ using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
-using Screenbox.Core.Playback;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
-using Windows.UI.Xaml.Input;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
     {
@@ -34,13 +33,13 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private double _playbackSpeed;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.SaveSnapshotCommand))]
         private bool _hasVideo;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
-        [NotifyCanExecuteChangedFor(nameof(ToggleCompactLayoutCommand))]
-        [NotifyCanExecuteChangedFor(nameof(ToggleFullscreenCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.PlayPauseCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.ToggleCompactLayoutCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.ToggleFullscreenCommand))]
         private bool _hasActiveItem;
 
         private readonly DispatcherQueue _dispatcherQueue;
@@ -140,7 +139,7 @@ namespace Screenbox.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(Playlist.CurrentItem):
+                case nameof(MediaListViewModel.CurrentItem):
                     HasActiveItem = Playlist.CurrentItem != null;
                     break;
             }
@@ -196,7 +195,7 @@ namespace Screenbox.ViewModels
             PlaybackSpeed = double.Parse(speedText);
         }
 
-        [RelayCommand(CanExecute = nameof(HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
         private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
@@ -214,7 +213,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
         private void ToggleFullscreen()
         {
             if (IsCompact) return;
@@ -228,7 +227,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
         private void PlayPause()
         {
             if (IsPlaying)
@@ -241,7 +240,7 @@ namespace Screenbox.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasVideo))]
+        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasVideo))]
         private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)

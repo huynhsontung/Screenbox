@@ -2,17 +2,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Common;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed partial class CommonViewModel : ObservableRecipient,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
@@ -26,11 +28,13 @@ namespace Screenbox.ViewModels
         [ObservableProperty] private double _footerBottomPaddingHeight;
 
         private readonly INavigationService _navigationService;
+        private readonly Func<IPropertiesDialog> _propertiesDialogFactory;
 
-        public CommonViewModel(INavigationService navigationService)
+        public CommonViewModel(INavigationService navigationService, Func<IPropertiesDialog> propertiesDialogFactory)
         {
             _navigationService = navigationService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
+            _propertiesDialogFactory = propertiesDialogFactory;
             NavigationStates = new Dictionary<Type, string>();
 
             // Activate the view model's messenger
@@ -57,6 +61,8 @@ namespace Screenbox.ViewModels
                 : (double)Application.Current.Resources["ContentPageBottomPaddingHeight"];
         }
 
+        private bool HasMedia(MediaViewModel? media) => media != null;
+
         [RelayCommand]
         private void OpenAlbum(AlbumViewModel? album)
         {
@@ -69,6 +75,15 @@ namespace Screenbox.ViewModels
         {
             if (artist == null) return;
             _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+        }
+
+        [RelayCommand(CanExecute = nameof(HasMedia))]
+        private async Task ShowPropertiesAsync(MediaViewModel? media)
+        {
+            if (media == null) return;
+            IPropertiesDialog dialog = _propertiesDialogFactory();
+            dialog.Media = media;
+            await dialog.ShowAsync();
         }
     }
 }

@@ -4,7 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Playback;
-using Screenbox.ViewModels;
+
+using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {

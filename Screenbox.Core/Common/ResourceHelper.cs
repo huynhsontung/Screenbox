@@ -1,16 +1,21 @@
-﻿using Windows.ApplicationModel.Resources;
+﻿using System;
+using Windows.ApplicationModel.Resources;
 using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Core
 {
+    public enum PluralResourceName
+    {
+        ItemsCount,
+        SongsCount,
+        AlbumsCount
+    }
+
     internal static class ResourceHelper
     {
-        private static readonly ResourceLoader ResourceLoader = ResourceLoader.GetForViewIndependentUse("Screenbox/Resources");
+        private static readonly ResourceLoader ResourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
 
-        public const string ItemsCount = "ItemsCount";
-        public const string SongsCount = "SongsCount";
         public const string RunTime = "RunTime";
-        public const string AlbumsCount = "AlbumsCount";
         public const string PropertyTitle = "PropertyTitle";
         public const string PropertySubtitle = "PropertySubtitle";
         public const string PropertyYear = "PropertyYear";
@@ -32,7 +37,6 @@ namespace Screenbox.Core
         public const string UnknownAlbum = "UnknownAlbum";
         public const string UnknownGenre = "UnknownGenre";
         public const string Network = "Network";
-        public const string Videos = "Videos";
         public const string Disable = "Disable";
         public const string FailedToLoadSubtitleNotificationTitle = "FailedToLoadSubtitleNotificationTitle";
         public const string VolumeChangeStatusMessage = "VolumeChangeStatusMessage";
@@ -42,6 +46,33 @@ namespace Screenbox.Core
             string resource = ResourceLoader.GetString(resourceName);
             Guard.IsNotNullOrEmpty(resource);
             return parameters.Length > 0 ? string.Format(resource, parameters) : resource;
+        }
+
+        public static string GetPluralString(PluralResourceName name, double count, bool hasNoneState = true)
+        {
+            string resourceName = GetPluralResourceName(name);
+            return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(ResourceLoader, resourceName, count, hasNoneState), count);
+        }
+
+        private static string GetPluralResourceName(PluralResourceName name)
+        {
+            string resourceName;
+            switch (name)
+            {
+                case PluralResourceName.ItemsCount:
+                    resourceName = nameof(PluralResourceName.ItemsCount);
+                    break;
+                case PluralResourceName.SongsCount:
+                    resourceName = nameof(PluralResourceName.SongsCount);
+                    break;
+                case PluralResourceName.AlbumsCount:
+                    resourceName = nameof(PluralResourceName.SongsCount);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(name), name, null);
+            }
+
+            return resourceName;
         }
     }
 }

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.System;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using Windows.System;
 
-namespace Screenbox.ViewModels
+namespace Screenbox.Core.ViewModels
 {
     public sealed class ArtistsPageViewModel : ObservableRecipient
     {

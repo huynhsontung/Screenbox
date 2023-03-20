@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Controls.Interactions
 {
