@@ -141,7 +141,6 @@
     <Compile Include="Events\ViewModeChangedEventArgs.cs" />
     <Compile Include="Factories\AlbumViewModelFactory.cs" />
     <Compile Include="Factories\ArtistViewModelFactory.cs" />
-    <Compile Include="Factories\GenericFactory.cs" />
     <Compile Include="Factories\MediaViewModelFactory.cs" />
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
