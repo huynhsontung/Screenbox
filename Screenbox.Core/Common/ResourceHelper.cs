@@ -1,16 +1,10 @@
 ﻿using System;
 using Windows.ApplicationModel.Resources;
 using CommunityToolkit.Diagnostics;
+using Screenbox.Core.Enums;
 
 namespace Screenbox.Core
 {
-    public enum PluralResourceName
-    {
-        ItemsCount,
-        SongsCount,
-        AlbumsCount
-    }
-
     internal static class ResourceHelper
     {
         private static readonly ResourceLoader ResourceLoader = ResourceLoader.GetForViewIndependentUse("Resources");
@@ -48,7 +42,7 @@ namespace Screenbox.Core
             return parameters.Length > 0 ? string.Format(resource, parameters) : resource;
         }
 
-        public static string GetPluralString(PluralResourceName name, double count, bool hasNoneState = true)
+        public static string GetString(PluralResourceName name, double count, bool hasNoneState = true)
         {
             string resourceName = GetPluralResourceName(name);
             return string.Format(ReswPlusLib.ResourceLoaderExtension.GetPlural(ResourceLoader, resourceName, count, hasNoneState), count);

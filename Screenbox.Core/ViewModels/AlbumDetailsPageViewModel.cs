@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 
 namespace Screenbox.Core.ViewModels
@@ -48,7 +49,7 @@ namespace Screenbox.Core.ViewModels
         {
             SortedItems.Source = value.RelatedSongs;
             TimeSpan totalDuration = GetTotalDuration(value.RelatedSongs);
-            string songsCount = ResourceHelper.GetPluralString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
+            string songsCount = ResourceHelper.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
             string runTime = ResourceHelper.GetString(ResourceHelper.RunTime, Humanizer.ToDuration(totalDuration));
             StringBuilder builder = new();
             if (value.Year != null)

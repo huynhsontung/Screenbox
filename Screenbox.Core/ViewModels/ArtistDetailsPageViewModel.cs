@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 
 namespace Screenbox.Core.ViewModels
@@ -33,8 +34,8 @@ namespace Screenbox.Core.ViewModels
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
             string totalDuration = Humanizer.ToDuration(GetTotalDuration(value.RelatedSongs));
-            string albumsCountText = ResourceHelper.GetPluralString(PluralResourceName.AlbumsCount, Albums.Count);
-            string songsCountText = ResourceHelper.GetPluralString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
+            string albumsCountText = ResourceHelper.GetString(PluralResourceName.AlbumsCount, Albums.Count);
+            string songsCountText = ResourceHelper.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
             string runTimeCountText = ResourceHelper.GetString(ResourceHelper.RunTime, totalDuration);
             Subtext = $"{albumsCountText} • {songsCountText} • {runTimeCountText}";
 

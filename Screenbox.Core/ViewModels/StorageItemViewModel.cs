@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
@@ -58,7 +59,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
                         uint itemCount = await _filesService.GetSupportedItemCountAsync(folder);
-                        CaptionText = ResourceHelper.GetPluralString(PluralResourceName.ItemsCount, itemCount);
+                        CaptionText = ResourceHelper.GetString(PluralResourceName.ItemsCount, itemCount);
                         break;
                     case StorageFile file:
                         if (!string.IsNullOrEmpty(Media?.Caption))
