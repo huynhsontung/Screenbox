@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Screenbox.ViewModels"
+    xmlns:viewModels1="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
     <x:Double x:Key="VideoGridViewItemWidth">230</x:Double>
     <x:Double x:Key="VideoGridViewItemHeight">188</x:Double>
@@ -14,7 +15,7 @@
             Width="{StaticResource VideoGridViewItemWidth}"
             Height="{StaticResource VideoGridViewItemHeight}"
             Padding="4"
-            d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}">
+            d:DataContext="{d:DesignInstance Type=viewModels1:MediaViewModel}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -32,7 +33,7 @@
                     VerticalAlignment="Center"
                     FontSize="32"
                     Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                    Glyph="{Binding Glyph}" />
+                    Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}" />
                 <Border CornerRadius="4">
                     <Image Source="{Binding Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
                 </Border>

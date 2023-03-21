@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.ViewModels;
+using Screenbox.Controls;
+using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,6 +32,15 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
+        }
+
+        private async void OpenUrlMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Uri? uri = await OpenUrlDialog.GetUrlAsync();
+            if (uri != null)
+            {
+                ViewModel.OpenUrl(uri);
+            }
         }
     }
 }

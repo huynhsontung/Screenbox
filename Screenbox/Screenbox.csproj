@@ -167,16 +167,17 @@
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
-    <Compile Include="Controls\ManipulationLock.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\OpenUrlDialog.xaml.cs">
       <DependentUpon>OpenUrlDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PlayerVisibilityStates.cs" />
     <Compile Include="Controls\PlaylistView.xaml.cs">
       <DependentUpon>PlaylistView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PropertiesDialog.xaml.cs">
+      <DependentUpon>PropertiesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
@@ -199,61 +200,8 @@
     <Compile Include="Converters\MediaTypeAdaptiveLayoutOverrideConverter.cs" />
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
-    <Compile Include="Converters\StorageItemGlyphConverter.cs" />
+    <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
-    <Compile Include="Core\LastPositionTracker.cs" />
-    <Compile Include="Core\Database\MediaLastPosition.cs" />
-    <Compile Include="Core\MediaViewModelWithMruToken.cs" />
-    <Compile Include="Core\MessageHelpers.cs" />
-    <Compile Include="Core\Messages\ChangeVolumeRequestMessage.cs" />
-    <Compile Include="Core\Messages\ClearPlaylistMessage.cs" />
-    <Compile Include="Core\Messages\CloseNotificationMessage.cs" />
-    <Compile Include="Core\Messages\RaiseResumePositionNotificationMessage.cs" />
-    <Compile Include="Core\Messages\SuspendingMessage.cs" />
-    <Compile Include="Core\Messages\MediaPlayerChangedMessage.cs" />
-    <Compile Include="Core\Messages\NavigationViewDisplayModeRequestMessage.cs" />
-    <Compile Include="Core\Messages\OverrideControlsHideMessage.cs" />
-    <Compile Include="Core\Messages\PlayerVisibilityChangedMessage.cs" />
-    <Compile Include="Core\Messages\PlayFilesWithNeighborsMessage.cs" />
-    <Compile Include="Core\Messages\PlaylistActiveItemChangedMessage.cs" />
-    <Compile Include="Core\Messages\PlaylistRequestMessage.cs" />
-    <Compile Include="Core\Messages\QueuePlaylistMessage.cs" />
-    <Compile Include="Core\Messages\RefreshFolderMessage.cs" />
-    <Compile Include="Core\Messages\RepeatModeChangedMessage.cs" />
-    <Compile Include="Core\Messages\SettingsChangedMessage.cs" />
-    <Compile Include="Core\Messages\ShowPlayPauseBadgeMessage.cs" />
-    <Compile Include="Core\MusicLibraryFetchResult.cs" />
-    <Compile Include="Core\Playback\AudioTrack.cs" />
-    <Compile Include="Core\Playback\IMediaPlayer.cs" />
-    <Compile Include="Core\Playback\PlaybackVideoTrackList.cs" />
-    <Compile Include="Core\Playback\SingleSelectTrackList.cs" />
-    <Compile Include="Core\Playback\PlaybackAudioTrackList.cs" />
-    <Compile Include="Core\Playback\PlaybackChapterList.cs" />
-    <Compile Include="Core\Playback\PlaybackItem.cs" />
-    <Compile Include="Core\Playback\PlaybackSubtitleTrackList.cs" />
-    <Compile Include="Core\Playback\SubtitleTrack.cs" />
-    <Compile Include="Core\Playback\VideoTrack.cs" />
-    <Compile Include="Core\Playback\VlcMediaPlayer.cs" />
-    <Compile Include="Core\PlaylistInfo.cs" />
-    <Compile Include="Core\Renderer.cs" />
-    <Compile Include="Core\FolderViewNavigationEventArgs.cs" />
-    <Compile Include="Core\Messages\ChangeValueRequestMessage.cs" />
-    <Compile Include="Core\Messages\ErrorMessage.cs" />
-    <Compile Include="Core\Messages\ChangeZoomToFitMessage.cs" />
-    <Compile Include="Core\Messages\PlayMediaMessage.cs" />
-    <Compile Include="Core\Messages\ChangeTimeRequestMessage.cs" />
-    <Compile Include="Core\Messages\TimeChangeOverrideMessage.cs" />
-    <Compile Include="Core\Messages\RaiseFrameSavedNotificationMessage.cs" />
-    <Compile Include="Core\Messages\UpdateStatusMessage.cs" />
-    <Compile Include="Core\RendererEventArgs.cs" />
-    <Compile Include="Core\SearchResult.cs" />
-    <Compile Include="Core\SettingsOptions.cs" />
-    <Compile Include="Core\ValueChangedEventArgs.cs" />
-    <Compile Include="Core\ViewModeChangedEventArgs.cs" />
-    <Compile Include="Factories\AlbumViewModelFactory.cs" />
-    <Compile Include="Factories\ArtistViewModelFactory.cs" />
-    <Compile Include="Factories\MediaViewModelFactory.cs" />
-    <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
     </Compile>
@@ -284,7 +232,6 @@
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\IContentFrame.cs" />
     <Compile Include="Pages\MusicPage.xaml.cs">
       <DependentUpon>MusicPage.xaml</DependentUpon>
     </Compile>
@@ -316,85 +263,22 @@
       <DependentUpon>VideosPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Secrets.cs" />
-    <Compile Include="Services\CastService.cs" />
-    <Compile Include="Services\Interfaces\ILibraryService.cs" />
-    <Compile Include="Services\Interfaces\INavigationService.cs" />
-    <Compile Include="Services\Interfaces\ICastService.cs" />
-    <Compile Include="Services\Interfaces\IMediaService.cs" />
-    <Compile Include="Services\Interfaces\ISystemMediaTransportControlsService.cs" />
-    <Compile Include="Services\Interfaces\ISettingsService.cs" />
-    <Compile Include="Services\Interfaces\ISearchService.cs" />
-    <Compile Include="Services\LibraryService.cs" />
-    <Compile Include="Services\LibVlcService.cs" />
-    <Compile Include="Services\MediaService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\SearchService.cs" />
-    <Compile Include="Services\SettingsService.cs" />
-    <Compile Include="Services\SystemMediaTransportControlsService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resw</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\AlbumDetailsPageViewModel.cs" />
-    <Compile Include="ViewModels\AlbumSearchResultPageViewModel.cs" />
-    <Compile Include="ViewModels\AlbumsPageViewModel.cs" />
-    <Compile Include="ViewModels\AlbumViewModel.cs" />
-    <Compile Include="ViewModels\AllVideosPageViewModel.cs" />
-    <Compile Include="ViewModels\ArtistDetailsPageViewModel.cs" />
-    <Compile Include="ViewModels\ArtistSearchResultPageViewModel.cs" />
-    <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
-    <Compile Include="ViewModels\ArtistViewModel.cs" />
-    <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
-    <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="Controls\VLCLoginDialog.xaml.cs">
       <DependentUpon>VLCLoginDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Core\NotificationRaisedEventArgs.cs" />
-    <Compile Include="Core\ProgressUpdatedEventArgs.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\FilesService.cs" />
-    <Compile Include="Services\Interfaces\IFilesService.cs" />
     <Compile Include="Pages\PlayerPage.xaml.cs">
       <DependentUpon>PlayerPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Interfaces\INotificationService.cs" />
-    <Compile Include="Services\Interfaces\IWindowService.cs" />
-    <Compile Include="Services\LogService.cs" />
-    <Compile Include="Services\NotificationService.cs" />
-    <Compile Include="Services\WindowService.cs" />
-    <Compile Include="ViewModels\CommonViewModel.cs" />
-    <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
-    <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
-    <Compile Include="ViewModels\FolderViewWithHeaderPageViewModel.cs" />
-    <Compile Include="ViewModels\HomePageViewModel.cs" />
-    <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\MediaListViewModel.cs" />
-    <Compile Include="ViewModels\MusicPageViewModel.cs" />
-    <Compile Include="ViewModels\NetworkPageViewModel.cs" />
-    <Compile Include="ViewModels\NotificationViewModel.cs" />
-    <Compile Include="ViewModels\PlayerInteractionViewModel.cs" />
-    <Compile Include="ViewModels\PlayerPageViewModel.cs" />
-    <Compile Include="ViewModels\PlaylistViewModel.cs" />
-    <Compile Include="ViewModels\CastControlViewModel.cs" />
-    <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
-    <Compile Include="ViewModels\PropertyViewModel.cs" />
-    <Compile Include="ViewModels\SearchResultPageViewModel.cs" />
-    <Compile Include="ViewModels\SeekBarViewModel.cs" />
-    <Compile Include="ViewModels\MediaViewModel.cs" />
-    <Compile Include="ViewModels\SettingsPageViewModel.cs" />
-    <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
-    <Compile Include="ViewModels\SongsPageViewModel.cs" />
-    <Compile Include="ViewModels\StorageItemViewModel.cs" />
-    <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
-    <Compile Include="ViewModels\VideoSearchResultPageViewModel.cs" />
-    <Compile Include="ViewModels\VideosPageViewModel.cs" />
-    <Compile Include="ViewModels\PlayerElementViewModel.cs" />
-    <Compile Include="ViewModels\VolumeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -480,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PropertiesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -637,17 +525,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Diagnostics">
-      <Version>8.1.0</Version>
-    </PackageReference>
     <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls">
       <Version>0.0.17</Version>
-    </PackageReference>
-    <PackageReference Include="CommunityToolkit.Mvvm">
-      <Version>8.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="LibVLCSharp">
-      <Version>3.6.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.1</Version>
@@ -679,15 +558,18 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="protobuf-net">
-      <Version>3.1.33</Version>
+    <PackageReference Include="VideoLAN.LibVLC.UWP">
+      <Version>3.3.2</Version>
     </PackageReference>
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>
     </PackageReference>
-    <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.2</Version>
-    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj">
+      <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
+      <Name>Screenbox.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

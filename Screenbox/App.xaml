@@ -25,7 +25,7 @@
                     </ResourceDictionary.ThemeDictionaries>
 
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-                    <converters:StorageItemGlyphConverter x:Key="StorageItemGlyphConverter" />
+                    <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
                     <toolkitConverters:BoolToObjectConverter

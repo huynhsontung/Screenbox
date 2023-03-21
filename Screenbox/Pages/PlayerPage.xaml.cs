@@ -16,11 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 using CommunityToolkit.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
-using Screenbox.Services;
-using Screenbox.ViewModels;
-using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 using Windows.System;
-using Microsoft.Toolkit.Uwp.UI.Helpers;
+using Screenbox.Core.Enums;
+using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -64,12 +62,12 @@ namespace Screenbox.Pages
             if (e.Parameter is true)
             {
                 LayoutRoot.Transitions.Clear();
-                ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
+                ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
             }
         }
 
-        private bool GetControlsIsMinimal(PlayerVisibilityStates visibility) =>
-            visibility != PlayerVisibilityStates.Visible;
+        private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
+            visibility != PlayerVisibilityState.Visible;
 
         private void FocusVideoView()
         {
@@ -89,7 +87,7 @@ namespace Screenbox.Pages
 
         private void OnLoading(FrameworkElement sender, object args)
         {
-            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityState.Hidden)
                 VisualStateManager.GoToState(this, "Hidden", false);
         }
         
@@ -158,12 +156,12 @@ namespace Screenbox.Pages
                             VisualStateManager.GoToState(this, "Normal", true);
                             break;
                         case WindowViewMode.Compact:
-                            ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
+                            ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
                             VisualStateManager.GoToState(this, "CompactOverlay", true);
                             SetTitleBar();
                             break;
                         case WindowViewMode.FullScreen:
-                            ViewModel.PlayerVisibility = PlayerVisibilityStates.Visible;
+                            ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
                             VisualStateManager.GoToState(this, "Fullscreen", true);
                             break;
                         default:
@@ -179,15 +177,15 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.PlayerVisibility):
                     switch (ViewModel.PlayerVisibility)
                     {
-                        case PlayerVisibilityStates.Visible:
+                        case PlayerVisibilityState.Visible:
                             VisualStateManager.GoToState(this, "NoPreview", true);
                             VisualStateManager.GoToState(this, "Normal", true);
                             SetTitleBar();
                             break;
-                        case PlayerVisibilityStates.Minimal:
+                        case PlayerVisibilityState.Minimal:
                             VisualStateManager.GoToState(this, "MiniPlayer", true);
                             break;
-                        case PlayerVisibilityStates.Hidden:
+                        case PlayerVisibilityState.Hidden:
                             VisualStateManager.GoToState(this, "Hidden", true);
                             break;
                         default:
@@ -250,7 +248,7 @@ namespace Screenbox.Pages
 
         private void UpdatePreviewType()
         {
-            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoPreview", true);
             }
@@ -262,7 +260,7 @@ namespace Screenbox.Pages
 
         private void UpdateMiniPlayerMargin()
         {
-            if (ViewModel.PlayerVisibility == PlayerVisibilityStates.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
+            if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible || ViewModel.ViewMode == WindowViewMode.Compact)
             {
                 VisualStateManager.GoToState(this, "NoMargin", false);
             }
@@ -270,14 +268,14 @@ namespace Screenbox.Pages
             {
                 switch (ViewModel.NavigationViewDisplayMode)
                 {
-                    case NavigationViewDisplayMode.Minimal when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
+                    case NavigationViewDisplayMode.Minimal when ViewModel.PlayerVisibility == PlayerVisibilityState.Hidden:
                         VisualStateManager.GoToState(this, "HiddenMinimalMargin", false);
                         break;
                     case NavigationViewDisplayMode.Minimal:
                         VisualStateManager.GoToState(this, "MinimalMargin", false);
                         break;
-                    case NavigationViewDisplayMode.Compact when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
-                    case NavigationViewDisplayMode.Expanded when ViewModel.PlayerVisibility == PlayerVisibilityStates.Hidden:
+                    case NavigationViewDisplayMode.Compact when ViewModel.PlayerVisibility == PlayerVisibilityState.Hidden:
+                    case NavigationViewDisplayMode.Expanded when ViewModel.PlayerVisibility == PlayerVisibilityState.Hidden:
                         VisualStateManager.GoToState(this, "HiddenNormalMargin", false);
                         break;
                     case NavigationViewDisplayMode.Compact:

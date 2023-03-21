@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Controls.Interactions
 {

@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -54,12 +54,15 @@ namespace Screenbox.Controls
 
         internal PlayerControlsViewModel ViewModel => (PlayerControlsViewModel)DataContext;
 
+        internal CommonViewModel Common { get; }
+
         private Flyout? _castFlyout;
 
         public PlayerControls()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerControlsViewModel>();
+            Common = App.Services.GetRequiredService<CommonViewModel>();
             PlayerContextMenu = NormalPlayerContextMenu;
         }
 

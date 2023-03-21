@@ -33,7 +33,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="0,0,0,12"
-            ItemClicked="{x:Bind ViewModel.OnBreadcrumbBarItemClicked}"
+            ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
         <Frame x:Name="ContentFrame" Grid.Row="2" />

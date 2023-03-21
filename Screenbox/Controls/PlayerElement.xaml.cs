@@ -4,7 +4,9 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
+using LibVLCSharp.Platforms.UWP;
+using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -28,6 +30,17 @@ namespace Screenbox.Controls
             InteractionViewModel = App.Services.GetRequiredService<PlayerInteractionViewModel>();
             VideoViewButton.Click += (sender, args) => Click?.Invoke(sender, args);
             VideoViewButton.Drop += (_, _) => VideoViewButton.Focus(FocusState.Programmatic);
+        }
+
+        private void VideoViewButton_OnDragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Open;
+        }
+
+        private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
+        {
+            ViewModel.Initialize(e.SwapChainOptions);
         }
     }
 }

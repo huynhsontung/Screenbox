@@ -1,0 +1,18 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Controls.PropertiesDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="{strings:Resources Key=Properties}"
+    CloseButtonText="{strings:Resources Key=Close}"
+    DefaultButton="Close"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <local:PropertiesView MinWidth="400" Media="{x:Bind Media, Mode=OneWay}" />
+    </Grid>
+</ContentDialog>

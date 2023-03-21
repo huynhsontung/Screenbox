@@ -1,13 +1,16 @@
 ﻿#nullable enable
 
+using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Screenbox.Core;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Screenbox.Controls
 {
-    public sealed partial class VLCLoginDialog : ContentDialog
+    public sealed partial class VLCLoginDialog : ContentDialog, IVlcLoginDialog
     {
         public static readonly DependencyProperty UsernameProperty = DependencyProperty.Register(
             nameof(Username),

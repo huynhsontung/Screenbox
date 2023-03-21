@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Screenbox.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +13,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
@@ -89,7 +90,7 @@ namespace Screenbox.Pages
         {
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
-            ViewModel.NavigationViewDisplayMode = NavView.DisplayMode;
+            ViewModel.NavigationViewDisplayMode = (NavigationViewDisplayMode)NavView.DisplayMode;
             if (!ViewModel.PlayerVisible)
             {
                 SetTitleBar();
@@ -225,7 +226,7 @@ namespace Screenbox.Pages
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
         {
             UpdateNavigationViewState(args.DisplayMode, NavView.IsPaneOpen);
-            ViewModel.NavigationViewDisplayMode = args.DisplayMode;
+            ViewModel.NavigationViewDisplayMode = (NavigationViewDisplayMode)args.DisplayMode;
         }
 
         private void UpdateNavigationViewState(muxc.NavigationViewDisplayMode displayMode, bool paneOpen)

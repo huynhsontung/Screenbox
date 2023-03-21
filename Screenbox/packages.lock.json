@@ -2,15 +2,6 @@
   "version": 1,
   "dependencies": {
     "UAP,Version=v10.0.18362": {
-      "CommunityToolkit.Diagnostics": {
-        "type": "Direct",
-        "requested": "[8.1.0, )",
-        "resolved": "8.1.0",
-        "contentHash": "R9h5uw8W2ADbmzrJpUJHH7cBpOE2g7jJ0mL/6sJEucfDvTWk3Uq/d4ZgWfVsQTf+MX8wAsWEYsc+UNfeZ3o6LQ==",
-        "dependencies": {
-          "System.Memory": "4.5.5"
-        }
-      },
       "CommunityToolkit.Labs.Uwp.SettingsControls": {
         "type": "Direct",
         "requested": "[0.0.17, )",
@@ -19,29 +10,6 @@
         "dependencies": {
           "Microsoft.Toolkit.Uwp.UI": "7.1.2",
           "Microsoft.UI.Xaml": "2.7.0"
-        }
-      },
-      "CommunityToolkit.Mvvm": {
-        "type": "Direct",
-        "requested": "[8.1.0, )",
-        "resolved": "8.1.0",
-        "contentHash": "xxOt7lu9a5kB5Fs9RfcxzVlKnhuuPe+w7AXHtmCFtS3oldrsUhEMxHfNulluXSscUUoGxZ0jh55Om12ZP6abHA==",
-        "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "7.0.0",
-          "System.ComponentModel.Annotations": "5.0.0",
-          "System.Memory": "4.5.5",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        }
-      },
-      "LibVLCSharp": {
-        "type": "Direct",
-        "requested": "[3.6.7, )",
-        "resolved": "3.6.7",
-        "contentHash": "FYn2yxjdlxVN21Anv3xhPnJ3ARSwOCzpsrZMtJl8/hdlFbw1JXFcMUpbqhmlLnfYmAUUGOarYyF+OTdAnjsF3A==",
-        "dependencies": {
-          "SharpDX.Direct3D11": "4.2.0",
-          "System.Memory": "4.5.4",
-          "System.ValueTuple": "4.5.0"
         }
       },
       "Microsoft.AppCenter.Analytics": {
@@ -141,17 +109,6 @@
         "resolved": "2.0.1",
         "contentHash": "apwpIX7KU6//EzgbKmsoCPD2nLO8x+evVStxRr+Rjt8K1jw7ixuo8yHOSwpyt6K8MSLYONZP94cxC9Qbg8GIqQ=="
       },
-      "protobuf-net": {
-        "type": "Direct",
-        "requested": "[3.1.33, )",
-        "resolved": "3.1.33",
-        "contentHash": "tv6wc8QvCjGOY/grQ/irxUWqRtHpVzOLY87+jvINxYOD5n0o4TX9RukJ/FRkVyMeQtLLhf/0okQFb4rQgoWt8A==",
-        "dependencies": {
-          "System.Reflection.Emit": "4.7.0",
-          "System.Reflection.Emit.Lightweight": "4.7.0",
-          "protobuf-net.Core": "3.1.33"
-        }
-      },
       "ReswPlusLib": {
         "type": "Direct",
         "requested": "[2.0.0, )",
@@ -166,6 +123,35 @@
         "requested": "[3.3.2, )",
         "resolved": "3.3.2",
         "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
+      },
+      "CommunityToolkit.Diagnostics": {
+        "type": "Transitive",
+        "resolved": "8.1.0",
+        "contentHash": "R9h5uw8W2ADbmzrJpUJHH7cBpOE2g7jJ0mL/6sJEucfDvTWk3Uq/d4ZgWfVsQTf+MX8wAsWEYsc+UNfeZ3o6LQ==",
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        }
+      },
+      "CommunityToolkit.Mvvm": {
+        "type": "Transitive",
+        "resolved": "8.1.0",
+        "contentHash": "xxOt7lu9a5kB5Fs9RfcxzVlKnhuuPe+w7AXHtmCFtS3oldrsUhEMxHfNulluXSscUUoGxZ0jh55Om12ZP6abHA==",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "7.0.0",
+          "System.ComponentModel.Annotations": "5.0.0",
+          "System.Memory": "4.5.5",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        }
+      },
+      "LibVLCSharp": {
+        "type": "Transitive",
+        "resolved": "3.6.7",
+        "contentHash": "FYn2yxjdlxVN21Anv3xhPnJ3ARSwOCzpsrZMtJl8/hdlFbw1JXFcMUpbqhmlLnfYmAUUGOarYyF+OTdAnjsF3A==",
+        "dependencies": {
+          "SharpDX.Direct3D11": "4.2.0",
+          "System.Memory": "4.5.4",
+          "System.ValueTuple": "4.5.0"
+        }
       },
       "Microsoft.AppCenter": {
         "type": "Transitive",
@@ -250,6 +236,16 @@
         "type": "Transitive",
         "resolved": "13.0.1",
         "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
+      },
+      "protobuf-net": {
+        "type": "Transitive",
+        "resolved": "3.1.33",
+        "contentHash": "tv6wc8QvCjGOY/grQ/irxUWqRtHpVzOLY87+jvINxYOD5n0o4TX9RukJ/FRkVyMeQtLLhf/0okQFb4rQgoWt8A==",
+        "dependencies": {
+          "System.Reflection.Emit": "4.7.0",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "protobuf-net.Core": "3.1.33"
+        }
       },
       "protobuf-net.Core": {
         "type": "Transitive",
@@ -451,6 +447,18 @@
         "type": "Transitive",
         "resolved": "4.5.0",
         "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
+      },
+      "screenbox.core": {
+        "type": "Project",
+        "dependencies": {
+          "CommunityToolkit.Diagnostics": "[8.1.0, )",
+          "CommunityToolkit.Mvvm": "[8.1.0, )",
+          "LibVLCSharp": "[3.6.7, )",
+          "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
+          "Microsoft.Toolkit.Uwp.UI": "[7.1.3, )",
+          "ReswPlusLib": "[2.0.0, )",
+          "protobuf-net": "[3.1.33, )"
+        }
       }
     },
     "UAP,Version=v10.0.18362/win10-arm": {

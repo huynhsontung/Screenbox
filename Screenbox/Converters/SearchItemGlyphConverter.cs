@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.Media;
 using Windows.UI.Xaml.Data;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Converters
 {

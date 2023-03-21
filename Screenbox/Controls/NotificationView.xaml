@@ -50,5 +50,5 @@
         CornerRadius="8"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
         Message="{x:Bind ViewModel.Message, Mode=OneWay}"
-        Severity="{x:Bind ViewModel.Severity, Mode=OneWay}" />
+        Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Severity), Mode=OneWay}" />
 </UserControl>

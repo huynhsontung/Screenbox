@@ -3,7 +3,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
-using Screenbox.ViewModels;
+using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -12,7 +12,7 @@ namespace Screenbox.Controls
     public sealed partial class PropertiesView : UserControl
     {
         public static readonly DependencyProperty MediaProperty = DependencyProperty.Register(
-            "Media",
+            nameof(Media),
             typeof(MediaViewModel),
             typeof(PropertiesView),
             new PropertyMetadata(null, OnMediaChanged));
@@ -29,19 +29,13 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PropertyViewModel>();
+            Loaded += OnLoaded;
         }
 
-        internal static ContentDialog GetDialog(MediaViewModel media)
+        private async void OnLoaded(object sender, RoutedEventArgs e)
         {
-            ContentDialog propertiesDialog = new()
-            {
-                Title = Strings.Resources.Properties,
-                CloseButtonText = Strings.Resources.Close,
-                DefaultButton = ContentDialogButton.Close,
-                Content = new PropertiesView { Media = media, MinWidth = 400 }
-            };
-
-            return propertiesDialog;
+            if (Media == null) return;
+            await Media.LoadDetailsAsync();
         }
 
         private static void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
