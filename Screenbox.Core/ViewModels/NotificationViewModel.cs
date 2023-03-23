@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,6 +19,7 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class NotificationViewModel : ObservableRecipient,
         IRecipient<RaiseFrameSavedNotificationMessage>,
         IRecipient<RaiseResumePositionNotificationMessage>,
+        IRecipient<RaiseLibraryAccessDeniedNotificationMessage>,
         IRecipient<CloseNotificationMessage>,
         IRecipient<ErrorMessage>
     {
@@ -115,6 +117,53 @@ namespace Screenbox.Core.ViewModels
                 });
 
                 ActionButton = new Button
+                {
+                    Content = ButtonContent,
+                    Command = ActionCommand
+                };
+
+                IsOpen = true;
+                _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            });
+        }
+
+        public void Receive(RaiseLibraryAccessDeniedNotificationMessage message)
+        {
+            string title;
+            Uri link;
+            switch (message.Library)
+            {
+                case KnownLibraryId.Music:
+                    title = "Can't access music library";
+                    link = new Uri("ms-settings:privacy-musiclibrary");
+                    break;
+                case KnownLibraryId.Pictures:
+                    title = "Can't access pictures library";
+                    link = new Uri("ms-settings:privacy-pictures");
+                    break;
+                case KnownLibraryId.Videos:
+                    title = "Can't access videos library";
+                    link = new Uri("ms-settings:privacy-videos");
+                    break;
+                case KnownLibraryId.Documents:
+                default:
+                    return;
+            }
+
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Reset();
+                Title = title;
+                Severity = NotificationLevel.Error;
+                ButtonContent = "Open privacy settings";
+                Message = "Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.";
+                ActionCommand = new RelayCommand(() =>
+                {
+                    IsOpen = false;
+                    Launcher.LaunchUriAsync(link);
+                });
+
+                ActionButton = new HyperlinkButton
                 {
                     Content = ButtonContent,
                     Command = ActionCommand

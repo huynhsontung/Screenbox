@@ -124,6 +124,7 @@ namespace Screenbox.Core.Services
             _songs = songs;
             _artists = _artistFactory.GetAllArtists();
             _albums = _albumFactory.GetAllAlbums();
+            MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
             return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
                 _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
@@ -140,6 +141,7 @@ namespace Screenbox.Core.Services
             List<MediaViewModel> videos = await FetchMediaFromStorage(queryResult);
             _invalidateVideosCache = false;
             _videos = videos;
+            VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
             return videos.AsReadOnly();
         }
 

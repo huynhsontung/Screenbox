@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -34,9 +33,10 @@ namespace Screenbox.Core.ViewModels
             _refreshTimer.Stop();
         }
 
-        public async Task FetchAlbumsAsync()
+        public void FetchAlbums()
         {
-            MusicLibraryFetchResult musicLibrary = await _libraryService.FetchMusicAsync();
+            // No need to run fetch async. Music page should already called the method.
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
 
             GroupedAlbums.Clear();
             PopulateGroups();
@@ -59,7 +59,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
-            _refreshTimer.Debounce(() => _ = FetchAlbumsAsync(), TimeSpan.FromSeconds(2));
+            _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(2));
         }
     }
 }

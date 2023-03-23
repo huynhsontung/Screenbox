@@ -62,9 +62,16 @@ namespace Screenbox.Core.ViewModels
                 Recent.Clear();
             }
 
-            // Pre-fetch libraries
-            await _libraryService.FetchMusicAsync(true);
-            await _libraryService.FetchVideosAsync(true);
+            try
+            {
+                // Pre-fetch libraries
+                await _libraryService.FetchMusicAsync(true);
+                await _libraryService.FetchVideosAsync(true);
+            }
+            catch (Exception)
+            {
+                // pass
+            }
         }
 
         public void OpenUrl(Uri url)

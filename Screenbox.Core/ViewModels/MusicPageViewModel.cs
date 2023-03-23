@@ -45,9 +45,16 @@ namespace Screenbox.Core.ViewModels
         {
             _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
 
-            MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
-            _songs.Clear();
-            _songs.AddRange(music.Songs);
+            try
+            {
+                MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
+                _songs.Clear();
+                _songs.AddRange(music.Songs);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             _timer.Stop();
