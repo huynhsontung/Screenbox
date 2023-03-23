@@ -50,23 +50,13 @@ namespace Screenbox.Core
 
         private static string GetPluralResourceName(PluralResourceName name)
         {
-            string resourceName;
-            switch (name)
+            return name switch
             {
-                case PluralResourceName.ItemsCount:
-                    resourceName = nameof(PluralResourceName.ItemsCount);
-                    break;
-                case PluralResourceName.SongsCount:
-                    resourceName = nameof(PluralResourceName.SongsCount);
-                    break;
-                case PluralResourceName.AlbumsCount:
-                    resourceName = nameof(PluralResourceName.SongsCount);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(name), name, null);
-            }
-
-            return resourceName;
+                PluralResourceName.ItemsCount => nameof(PluralResourceName.ItemsCount),
+                PluralResourceName.SongsCount => nameof(PluralResourceName.SongsCount),
+                PluralResourceName.AlbumsCount => nameof(PluralResourceName.SongsCount),
+                _ => throw new ArgumentOutOfRangeException(nameof(name), name, null),
+            };
         }
     }
 }
