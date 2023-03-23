@@ -47,7 +47,7 @@ namespace Screenbox.Pages
             };
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string navigationState))
@@ -59,6 +59,8 @@ namespace Screenbox.Pages
             {
                 LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
             }
+
+            await ViewModel.FetchVideosAsync();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

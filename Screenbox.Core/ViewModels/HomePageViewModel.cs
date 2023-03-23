@@ -65,8 +65,7 @@ namespace Screenbox.Core.ViewModels
             try
             {
                 // Pre-fetch libraries
-                await _libraryService.FetchMusicAsync(true);
-                await _libraryService.FetchVideosAsync(true);
+                await Task.WhenAll(_libraryService.FetchMusicAsync(true), _libraryService.FetchVideosAsync(true));
             }
             catch (Exception)
             {

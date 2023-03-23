@@ -9,8 +9,6 @@ using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
@@ -19,13 +17,22 @@ namespace Screenbox.Core.ViewModels
     {
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
-        private readonly INavigationService _navigationService;
-        private StorageLibrary? _library;
+        private bool HasLibrary => _libraryService.VideosLibrary != null;
 
-        public VideosPageViewModel(INavigationService navigationService)
+        private readonly INavigationService _navigationService;
+        private readonly ILibraryService _libraryService;
+
+        public VideosPageViewModel(INavigationService navigationService, ILibraryService libraryService)
         {
             _navigationService = navigationService;
+            _libraryService = libraryService;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
+        }
+
+        public async Task FetchVideosAsync()
+        {
+            await _libraryService.FetchVideosAsync();
+            AddFolderCommand.NotifyCanExecuteChanged();
         }
 
         public void OnContentFrameNavigated(object sender, NavigationEventArgs e)
@@ -56,21 +63,10 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(HasLibrary))]
         private async Task AddFolder()
         {
-            if (_library == null)
-            {
-                _library = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-                _library.DefinitionChanged += LibraryOnDefinitionChanged;
-            }
-
-            await _library.RequestAddFolderAsync();
-        }
-
-        private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
-        {
-            Messenger.Send(new RefreshFolderMessage());
+            await _libraryService.VideosLibrary?.RequestAddFolderAsync();
         }
     }
 }

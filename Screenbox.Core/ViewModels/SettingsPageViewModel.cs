@@ -29,19 +29,20 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<StorageFolder> VideoLocations { get; }
 
         private readonly ISettingsService _settingsService;
+        private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
-        public SettingsPageViewModel(ISettingsService settingsService)
+        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
         {
             _settingsService = settingsService;
+            _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
 
             LoadValues();
-            LoadLibraryLocations();
 
             IsActive = true;
         }
@@ -139,14 +140,51 @@ namespace Screenbox.Core.ViewModels
             };
         }
 
-        private async void LoadLibraryLocations()
+        public async Task LoadLibraryLocations()
         {
-            if (_videosLibrary != null || _musicLibrary != null) return;
-            _videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            _musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            if (_videosLibrary == null)
+            {
+                if (_libraryService.VideosLibrary == null)
+                {
+                    try
+                    {
+                        await _libraryService.FetchVideosAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // pass
+                    }
+                }
+
+                _videosLibrary = _libraryService.VideosLibrary;
+                if (_videosLibrary != null)
+                {
+                    _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
+                }
+            }
+
+            if (_musicLibrary == null)
+            {
+                if (_libraryService.MusicLibrary == null)
+                {
+                    try
+                    {
+                        await _libraryService.FetchMusicAsync();
+                    }
+                    catch (Exception)
+                    {
+                        // pass
+                    }
+                }
+
+                _musicLibrary = _libraryService.MusicLibrary;
+                if (_musicLibrary != null)
+                {
+                    _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
+                }
+            }
+
             UpdateLibraryLocations();
-            _videosLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
-            _musicLibrary.DefinitionChanged += LibraryOnDefinitionChanged;
         }
 
         private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
@@ -156,18 +194,23 @@ namespace Screenbox.Core.ViewModels
 
         private void UpdateLibraryLocations()
         {
-            if (_videosLibrary == null || _musicLibrary == null) return;
-            VideoLocations.Clear();
-            MusicLocations.Clear();
-
-            foreach (StorageFolder folder in _musicLibrary.Folders)
+            if (_videosLibrary != null)
             {
-                MusicLocations.Add(folder);
+                VideoLocations.Clear();
+                foreach (StorageFolder folder in _videosLibrary.Folders)
+                {
+                    VideoLocations.Add(folder);
+                }
             }
 
-            foreach (StorageFolder folder in _videosLibrary.Folders)
+            if (_musicLibrary != null)
             {
-                VideoLocations.Add(folder);
+                MusicLocations.Clear();
+
+                foreach (StorageFolder folder in _musicLibrary.Folders)
+                {
+                    MusicLocations.Add(folder);
+                }
             }
         }
     }

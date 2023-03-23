@@ -3,6 +3,7 @@ using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Navigation;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.ViewModels;
 
@@ -23,6 +24,12 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<SettingsPageViewModel>();
             Common = App.Services.GetRequiredService<CommonViewModel>();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ViewModel.LoadLibraryLocations();
         }
 
         private void ContentRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
