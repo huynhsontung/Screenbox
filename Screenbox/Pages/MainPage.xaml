@@ -162,7 +162,7 @@
                 <controls:NotificationView
                     x:Name="NotificationView"
                     MaxWidth="400"
-                    Margin="10,10,10,148"
+                    Margin="10,0,10,16"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Shadow="{StaticResource SharedShadow}" />
@@ -187,7 +187,6 @@
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
                         <Setter Target="ContentFrame.Padding" Value="16,0,0,0" />
-                        <Setter Target="NotificationView.Margin" Value="8,8,8,146" />
                         <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
@@ -240,6 +239,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ContentFrame.Margin" Value="0,0,0,42" />
+                        <Setter Target="NotificationView.Margin" Value="10,0,10,148" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
