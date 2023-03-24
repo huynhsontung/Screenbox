@@ -9,6 +9,8 @@ using Windows.Storage;
 using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
@@ -31,7 +33,15 @@ namespace Screenbox.Core.ViewModels
 
         public async Task FetchVideosAsync()
         {
-            await _libraryService.FetchVideosAsync();
+            try
+            {
+                await _libraryService.FetchVideosAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
+
             AddFolderCommand.NotifyCanExecuteChanged();
         }
 
