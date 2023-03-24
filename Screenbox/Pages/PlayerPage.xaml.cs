@@ -100,6 +100,11 @@ namespace Screenbox.Pages
             };
                 
             LayoutRoot.Transitions.Add(transition);
+
+            if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
+            {
+                FocusVideoView();
+            }
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
