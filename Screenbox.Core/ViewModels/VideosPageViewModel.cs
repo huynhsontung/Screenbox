@@ -19,6 +19,8 @@ namespace Screenbox.Core.ViewModels
     {
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
+        [ObservableProperty] private bool _hasVideos;
+
         private bool HasLibrary => _libraryService.VideosLibrary != null;
 
         private readonly INavigationService _navigationService;
@@ -28,6 +30,7 @@ namespace Screenbox.Core.ViewModels
         {
             _navigationService = navigationService;
             _libraryService = libraryService;
+            _hasVideos = true;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
         }
 
@@ -35,10 +38,11 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchVideosAsync();
+                HasVideos = (await _libraryService.FetchVideosAsync()).Count > 0;
             }
             catch (UnauthorizedAccessException)
             {
+                HasVideos = false;
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
             }
 

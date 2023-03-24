@@ -1516,6 +1516,32 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region NoVideosPanelHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: We couldn't find any videos
+        /// </summary>
+        public static string NoVideosPanelHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoVideosPanelHeader");
+            }
+        }
+        #endregion
+
+        #region NoVideosPanelSubtext
+        /// <summary>
+        ///   Looks up a localized string similar to: Your music library doesn't contain any music content.
+        /// </summary>
+        public static string NoVideosPanelSubtext
+        {
+            get
+            {
+                return _resourceLoader.GetString("NoVideosPanelSubtext");
+            }
+        }
+        #endregion
+
         #region OpenPrivacySettingsButtonText
         /// <summary>
         ///   Looks up a localized string similar to: Open privacy settings
@@ -1653,6 +1679,8 @@ namespace Screenbox.Strings{
             AccessDeniedMusicLibraryTitle,
             AccessDeniedPicturesLibraryTitle,
             AccessDeniedVideosLibraryTitle,
+            NoVideosPanelHeader,
+            NoVideosPanelSubtext,
             OpenPrivacySettingsButtonText,
         }
 

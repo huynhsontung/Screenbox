@@ -522,6 +522,12 @@
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
     <value>Can't access videos library</value>
   </data>
+  <data name="NoVideosPanelHeader" xml:space="preserve">
+    <value>We couldn't find any videos</value>
+  </data>
+  <data name="NoVideosPanelSubtext" xml:space="preserve">
+    <value>Your music library doesn't contain any music content.</value>
+  </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Open privacy settings</value>
   </data>
