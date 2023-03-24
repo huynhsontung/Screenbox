@@ -34,6 +34,11 @@ namespace Screenbox.Core
         public const string Disable = "Disable";
         public const string FailedToLoadSubtitleNotificationTitle = "FailedToLoadSubtitleNotificationTitle";
         public const string VolumeChangeStatusMessage = "VolumeChangeStatusMessage";
+        public const string AccessDeniedMusicLibraryTitle = "AccessDeniedMusicLibraryTitle";
+        public const string AccessDeniedVideosLibraryTitle = "AccessDeniedVideosLibraryTitle";
+        public const string AccessDeniedPicturesLibraryTitle = "AccessDeniedPicturesLibraryTitle";
+        public const string OpenPrivacySettingsButtonText = "OpenPrivacySettingsButtonText";
+        public const string AccessDeniedMessage = "AccessDeniedMessage";
 
         public static string GetString(string resourceName, params object[] parameters)
         {

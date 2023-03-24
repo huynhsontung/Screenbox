@@ -134,15 +134,15 @@ namespace Screenbox.Core.ViewModels
             switch (message.Library)
             {
                 case KnownLibraryId.Music:
-                    title = "Can't access music library";
+                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedMusicLibraryTitle);
                     link = new Uri("ms-settings:privacy-musiclibrary");
                     break;
                 case KnownLibraryId.Pictures:
-                    title = "Can't access pictures library";
+                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedPicturesLibraryTitle);
                     link = new Uri("ms-settings:privacy-pictures");
                     break;
                 case KnownLibraryId.Videos:
-                    title = "Can't access videos library";
+                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedVideosLibraryTitle);
                     link = new Uri("ms-settings:privacy-videos");
                     break;
                 case KnownLibraryId.Documents:
@@ -155,8 +155,8 @@ namespace Screenbox.Core.ViewModels
                 Reset();
                 Title = title;
                 Severity = NotificationLevel.Error;
-                ButtonContent = "Open privacy settings";
-                Message = "Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.";
+                ButtonContent = ResourceHelper.GetString(ResourceHelper.OpenPrivacySettingsButtonText);
+                Message = ResourceHelper.GetString(ResourceHelper.AccessDeniedMessage);
                 ActionCommand = new RelayCommand(() =>
                 {
                     IsOpen = false;

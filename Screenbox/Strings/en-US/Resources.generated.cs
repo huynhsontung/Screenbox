@@ -1463,6 +1463,71 @@ namespace Screenbox.Strings{
             return string.Format(_resourceLoader.GetString("SearchResultVideoHeader"), query);
         }
         #endregion
+
+        #region AccessDeniedMessage
+        /// <summary>
+        ///   Looks up a localized string similar to: Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.
+        /// </summary>
+        public static string AccessDeniedMessage
+        {
+            get
+            {
+                return _resourceLoader.GetString("AccessDeniedMessage");
+            }
+        }
+        #endregion
+
+        #region AccessDeniedMusicLibraryTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Can't access music library
+        /// </summary>
+        public static string AccessDeniedMusicLibraryTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AccessDeniedMusicLibraryTitle");
+            }
+        }
+        #endregion
+
+        #region AccessDeniedPicturesLibraryTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Can't access pictures library
+        /// </summary>
+        public static string AccessDeniedPicturesLibraryTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AccessDeniedPicturesLibraryTitle");
+            }
+        }
+        #endregion
+
+        #region AccessDeniedVideosLibraryTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Can't access videos library
+        /// </summary>
+        public static string AccessDeniedVideosLibraryTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AccessDeniedVideosLibraryTitle");
+            }
+        }
+        #endregion
+
+        #region OpenPrivacySettingsButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Open privacy settings
+        /// </summary>
+        public static string OpenPrivacySettingsButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenPrivacySettingsButtonText");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1584,6 +1649,11 @@ namespace Screenbox.Strings{
             SearchResultAlbumHeader,
             SearchResultSongHeader,
             SearchResultVideoHeader,
+            AccessDeniedMessage,
+            AccessDeniedMusicLibraryTitle,
+            AccessDeniedPicturesLibraryTitle,
+            AccessDeniedVideosLibraryTitle,
+            OpenPrivacySettingsButtonText,
         }
 
         private static ResourceLoader _resourceLoader;
