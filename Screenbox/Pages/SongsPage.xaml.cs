@@ -23,10 +23,10 @@ namespace Screenbox.Pages
             Common = App.Services.GetRequiredService<CommonViewModel>();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.FetchSongsAsync();
+            ViewModel.FetchSongs();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

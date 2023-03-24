@@ -20,6 +20,9 @@ namespace Screenbox.Core.Services
         public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged; 
         public event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
 
+        public StorageLibrary? MusicLibrary { get; private set; }
+        public StorageLibrary? VideosLibrary { get; private set; }
+
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
@@ -34,8 +37,6 @@ namespace Screenbox.Core.Services
         private List<AlbumViewModel> _albums;
         private List<ArtistViewModel> _artists;
         private List<MediaViewModel> _videos;
-        private StorageLibrary? _musicLibrary;
-        private StorageLibrary? _videosLibrary;
         private StorageFileQueryResult? _musicLibraryQueryResult;
         private StorageFileQueryResult? _videosLibraryQueryResult;
         private bool _invalidateMusicCache;
@@ -124,6 +125,7 @@ namespace Screenbox.Core.Services
             _songs = songs;
             _artists = _artistFactory.GetAllArtists();
             _albums = _albumFactory.GetAllAlbums();
+            MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
             return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
                 _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
@@ -140,6 +142,7 @@ namespace Screenbox.Core.Services
             List<MediaViewModel> videos = await FetchMediaFromStorage(queryResult);
             _invalidateVideosCache = false;
             _videos = videos;
+            VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
             return videos.AsReadOnly();
         }
 
@@ -165,24 +168,24 @@ namespace Screenbox.Core.Services
 
         private async Task<StorageLibrary> InitializeMusicLibraryAsync()
         {
-            if (_musicLibrary == null)
+            if (MusicLibrary == null)
             {
-                _musicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-                _musicLibrary.DefinitionChanged += OnMusicLibraryContentChanged;
+                MusicLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+                MusicLibrary.DefinitionChanged += OnMusicLibraryContentChanged;
             }
 
-            return _musicLibrary;
+            return MusicLibrary;
         }
 
         private async Task<StorageLibrary> InitializeVideosLibraryAsync()
         {
-            if (_videosLibrary == null)
+            if (VideosLibrary == null)
             {
-                _videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-                _videosLibrary.DefinitionChanged += OnVideosLibraryContentChanged;
+                VideosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+                VideosLibrary.DefinitionChanged += OnVideosLibraryContentChanged;
             }
 
-            return _videosLibrary;
+            return VideosLibrary;
         }
 
         private StorageFileQueryResult GetMusicLibraryQueryResult()

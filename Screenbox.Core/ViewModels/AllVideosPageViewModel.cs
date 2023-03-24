@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -23,11 +25,18 @@ namespace Screenbox.Core.ViewModels
 
         public async Task FetchVideosAsync()
         {
-            IReadOnlyList<MediaViewModel> videos = await _libraryService.FetchVideosAsync();
-            Videos.Clear();
-            foreach (MediaViewModel video in videos)
+            try
             {
-                Videos.Add(video);
+                IReadOnlyList<MediaViewModel> videos = await _libraryService.FetchVideosAsync();
+                Videos.Clear();
+                foreach (MediaViewModel video in videos)
+                {
+                    Videos.Add(video);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
             }
         }
 

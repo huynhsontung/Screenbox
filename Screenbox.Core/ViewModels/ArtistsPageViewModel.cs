@@ -34,9 +34,10 @@ namespace Screenbox.Core.ViewModels
             _refreshTimer.Stop();
         }
 
-        public async Task FetchArtistsAsync()
+        public void FetchArtists()
         {
-            MusicLibraryFetchResult musicLibrary = await _libraryService.FetchMusicAsync();
+            // No need to run fetch async. Music page should already called the method.
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
 
             GroupedArtists.Clear();
             PopulateGroups();
@@ -59,7 +60,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
-            _refreshTimer.Debounce(() => _ = FetchArtistsAsync(), TimeSpan.FromSeconds(2));
+            _refreshTimer.Debounce(FetchArtists, TimeSpan.FromSeconds(2));
         }
     }
 }

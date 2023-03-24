@@ -27,11 +27,12 @@ namespace Screenbox.Core.ViewModels
 
         private bool HasSongs => _songs.Count > 0;
 
+        private bool LibraryLoaded => _libraryService.MusicLibrary != null;
+
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
         private readonly List<MediaViewModel> _songs;
-        private StorageLibrary? _library;
 
         public MusicPageViewModel(ILibraryService libraryService)
         {
@@ -45,9 +46,17 @@ namespace Screenbox.Core.ViewModels
         {
             _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
 
-            MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
-            _songs.Clear();
-            _songs.AddRange(music.Songs);
+            try
+            {
+                MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
+                _songs.Clear();
+                _songs.AddRange(music.Songs);
+                AddFolderCommand.NotifyCanExecuteChanged();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
 
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
             _timer.Stop();
@@ -65,11 +74,10 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
         }
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(LibraryLoaded))]
         private async Task AddFolder()
         {
-            _library ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            await _library?.RequestAddFolderAsync();
+            await _libraryService.MusicLibrary?.RequestAddFolderAsync();
         }
 
         public static string GetFirstLetterGroup(string name)

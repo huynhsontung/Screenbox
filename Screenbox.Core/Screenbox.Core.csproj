@@ -159,6 +159,7 @@
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
     <Compile Include="Messages\QueuePlaylistMessage.cs" />
+    <Compile Include="Messages\RaiseLibraryAccessDeniedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseFrameSavedNotificationMessage.cs" />
     <Compile Include="Messages\RaiseResumePositionNotificationMessage.cs" />
     <Compile Include="Messages\RefreshFolderMessage.cs" />
