@@ -194,7 +194,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        partial void OnCurrentItemChanged(MediaViewModel? value)
+        async partial void OnCurrentItemChanged(MediaViewModel? value)
         {
             if (value is { Source: IStorageItem item })
             {
@@ -202,8 +202,9 @@ namespace Screenbox.Core.ViewModels
             }
 
             Messenger.Send(new PlaylistActiveItemChangedMessage(value));
-            _transportControlsService.UpdateTransportControlsDisplay(value);
-            UpdateMediaBuffer();
+            await Task.WhenAll(
+                _transportControlsService.UpdateTransportControlsDisplayAsync(value),
+                UpdateMediaBufferAsync());
         }
 
         partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
@@ -261,7 +262,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void UpdateMediaBuffer()
+        private async Task UpdateMediaBufferAsync()
         {
             int playlistCount = Items.Count;
             if (CurrentIndex < 0 || playlistCount == 0) return;
@@ -291,7 +292,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             _mediaBuffer = newBuffer;
-            Task.WhenAll(toLoad.Select(x =>
+            await Task.WhenAll(toLoad.Select(x =>
                 x.Item.Source.IsParsed
                     ? x.LoadThumbnailAsync()
                     : Task.WhenAll(x.Item.Source.Parse(), x.LoadThumbnailAsync())));

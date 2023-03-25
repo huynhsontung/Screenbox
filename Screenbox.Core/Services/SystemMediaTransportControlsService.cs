@@ -31,7 +31,7 @@ namespace Screenbox.Core.Services
             _lastUpdated = DateTime.MinValue;
         }
 
-        public async Task UpdateTransportControlsDisplay(MediaViewModel? item)
+        public async Task UpdateTransportControlsDisplayAsync(MediaViewModel? item)
         {
             SystemMediaTransportControlsDisplayUpdater displayUpdater = TransportControls.DisplayUpdater;
             displayUpdater.ClearAll();
