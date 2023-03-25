@@ -160,7 +160,7 @@ namespace Screenbox.Core.ViewModels
                 ActionCommand = new RelayCommand(() =>
                 {
                     IsOpen = false;
-                    Launcher.LaunchUriAsync(link);
+                    _ = Launcher.LaunchUriAsync(link);
                 });
 
                 ActionButton = new HyperlinkButton
