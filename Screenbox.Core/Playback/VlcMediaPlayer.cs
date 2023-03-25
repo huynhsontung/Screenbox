@@ -420,13 +420,30 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Pause();
         }
 
-        public void Play()
+        public async void Play()
         {
             if (PlaybackItem?.Source == null) return;
             if (_readyToPlay)
             {
                 _readyToPlay = false;
-                VlcPlayer.Play(PlaybackItem.Source);
+                Media media = PlaybackItem.Source;
+                if (media.Mrl.StartsWith("winrt://"))
+                {
+                    VlcPlayer.Play(media);
+                }
+                else
+                {
+                    while (!media.IsParsed || media.ParsedStatus == MediaParsedStatus.Skipped)
+                    {
+                        await media.Parse(MediaParseOptions.ParseNetwork);
+                        if (media.SubItems.Count > 0)
+                        {
+                            media = media.SubItems[0] ?? media;
+                        }
+                    }
+
+                    VlcPlayer.Play(media);
+                }
             }
             else
             {
