@@ -45,16 +45,19 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
         private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
         private IMediaPlayer? _mediaPlayer;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
             IFilesService filesService,
-            IWindowService windowService)
+            IWindowService windowService,
+            IResourceService resourceService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
             _windowService = windowService;
+            _resourceService = resourceService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playPauseGlyph = GetPlayPauseGlyph(false);
             _playbackSpeed = 1.0;
@@ -253,7 +256,7 @@ namespace Screenbox.Core.ViewModels
                 catch (Exception e)
                 {
                     Messenger.Send(new ErrorMessage(
-                        ResourceHelper.GetString(ResourceHelper.FailedToLoadSubtitleNotificationTitle), e.ToString()));
+                        _resourceService.GetString(ResourceName.FailedToSaveFrameNotificationTitle), e.ToString()));
                     // TODO: track error
                 }
             }

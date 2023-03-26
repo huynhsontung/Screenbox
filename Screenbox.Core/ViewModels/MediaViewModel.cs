@@ -10,6 +10,7 @@ using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -32,6 +33,7 @@ namespace Screenbox.Core.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
+        private readonly IResourceService _resourceService;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
         private PlaybackItem? _item;
@@ -58,6 +60,7 @@ namespace Screenbox.Core.ViewModels
 
         private MediaViewModel(MediaViewModel source)
         {
+            _resourceService = source._resourceService;
             _filesService = source._filesService;
             _mediaService = source._mediaService;
             _albumFactory = source._albumFactory;
@@ -80,12 +83,13 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService, IResourceService resourceService,
             AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, StorageFile file)
         {
             _filesService = filesService;
             _mediaService = mediaService;
             Source = file;
+            _resourceService = resourceService;
             _artistFactory = artistFactory;
             _albumFactory = albumFactory;
             _name = file.Name;
@@ -96,12 +100,13 @@ namespace Screenbox.Core.ViewModels
             Location = file.Path;
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService, IResourceService resourceService,
             AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri)
         {
             _filesService = filesService;
             _mediaService = mediaService;
             Source = uri;
+            _resourceService = resourceService;
             _artistFactory = artistFactory;
             _albumFactory = albumFactory;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
@@ -187,7 +192,7 @@ namespace Screenbox.Core.ViewModels
                         {
                             TrackNumber = MusicProperties.TrackNumber;
                             Year = MusicProperties.Year;
-                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : ResourceHelper.GetString(ResourceHelper.UnknownGenre);
+                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : _resourceService.GetString(ResourceName.UnknownGenre);
                             Album ??= _albumFactory.AddSongToAlbum(this, MusicProperties.Album, MusicProperties.AlbumArtist, Year);
 
                             if (Artists.Length == 0)

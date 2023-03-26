@@ -61,6 +61,15 @@ namespace Screenbox.Services
                     return Resources.Disable;
                 case ResourceName.FailedToLoadSubtitleNotificationTitle:
                     return Resources.FailedToLoadSubtitleNotificationTitle;
+                case ResourceName.FailedToSaveFrameNotificationTitle:
+                    return Resources.FailedToSaveFrameNotificationTitle;
+                case ResourceName.FrameSavedNotificationTitle:
+                    return Resources.FrameSavedNotificationTitle;
+                case ResourceName.ResumePositionNotificationTitle:
+                    return Resources.ResumePositionNotificationTitle;
+                case ResourceName.GoToPosition:
+                    Guard.HasSizeGreaterThanOrEqualTo(parameters, 1);
+                    return Resources.GoToPosition((string)parameters[0]);
                 case ResourceName.VolumeChangeStatusMessage:
                     Guard.HasSizeGreaterThanOrEqualTo(parameters, 1);
                     return Resources.VolumeChangeStatusMessage((double)parameters[0]);

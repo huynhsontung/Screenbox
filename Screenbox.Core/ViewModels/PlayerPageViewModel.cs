@@ -54,14 +54,16 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _playPauseBadgeTimer;
         private readonly IWindowService _windowService;
+        private readonly IResourceService _resourceService;
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService)
+        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService)
         {
             _windowService = windowService;
+            _resourceService = resourceService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _openingTimer = _dispatcherQueue.CreateTimer();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -187,7 +189,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-            string volumeChangeMessage = ResourceHelper.GetString(ResourceHelper.VolumeChangeStatusMessage, volume);
+            string volumeChangeMessage = _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, volume);
             Messenger.Send(new UpdateStatusMessage(volumeChangeMessage));
         }
 

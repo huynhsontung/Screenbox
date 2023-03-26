@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -20,10 +21,12 @@ namespace Screenbox.Core.ViewModels
 
         public List<IGrouping<AlbumViewModel?, MediaViewModel>>? Albums { get; private set; }
 
+        private readonly IResourceService _resourceService;
         private List<MediaViewModel>? _itemList;
 
-        public ArtistDetailsPageViewModel()
+        public ArtistDetailsPageViewModel(IResourceService resourceService)
         {
+            _resourceService = resourceService;
             _subtext = string.Empty;
         }
 
@@ -34,9 +37,9 @@ namespace Screenbox.Core.ViewModels
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
             string totalDuration = Humanizer.ToDuration(GetTotalDuration(value.RelatedSongs));
-            string albumsCountText = ResourceHelper.GetString(PluralResourceName.AlbumsCount, Albums.Count);
-            string songsCountText = ResourceHelper.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
-            string runTimeCountText = ResourceHelper.GetString(ResourceHelper.RunTime, totalDuration);
+            string albumsCountText = _resourceService.GetString(PluralResourceName.AlbumsCount, Albums.Count);
+            string songsCountText = _resourceService.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
+            string runTimeCountText = _resourceService.GetString(ResourceName.RunTime, totalDuration);
             Subtext = $"{albumsCountText} • {songsCountText} • {runTimeCountText}";
 
             IEnumerable<Task> loadingTasks = Albums.Where(g => g.Key is { AlbumArt: null })

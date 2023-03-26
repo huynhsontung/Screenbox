@@ -41,13 +41,16 @@ namespace Screenbox.Core.ViewModels
 
         private readonly INotificationService _notificationService;
         private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
 
-        public NotificationViewModel(INotificationService notificationService, IFilesService filesService)
+        public NotificationViewModel(INotificationService notificationService, IFilesService filesService,
+            IResourceService resourceService)
         {
             _notificationService = notificationService;
             _filesService = filesService;
+            _resourceService = resourceService;
             _notificationService.NotificationRaised += NotificationServiceOnNotificationRaised;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
@@ -82,7 +85,7 @@ namespace Screenbox.Core.ViewModels
             void SetNotification()
             {
                 Reset();
-                Title = ResourceHelper.GetString("FrameSavedNotificationTitle");
+                Title = _resourceService.GetString(ResourceName.FrameSavedNotificationTitle);
                 Severity = NotificationLevel.Success;
                 ButtonContent = message.Value.Name;
                 ActionCommand = new RelayCommand(() => _filesService.OpenFileLocationAsync(message.Value));
@@ -107,9 +110,9 @@ namespace Screenbox.Core.ViewModels
             {
                 Reset();
                 if (message.Value <= TimeSpan.Zero) return;
-                Title = ResourceHelper.GetString("ResumePositionNotificationTitle");
+                Title = _resourceService.GetString(ResourceName.ResumePositionNotificationTitle);
                 Severity = NotificationLevel.Info;
-                ButtonContent = ResourceHelper.GetString("GoToPosition", Humanizer.ToDuration(message.Value));
+                ButtonContent = _resourceService.GetString(ResourceName.GoToPosition, Humanizer.ToDuration(message.Value));
                 ActionCommand = new RelayCommand(() =>
                 {
                     IsOpen = false;
@@ -134,15 +137,15 @@ namespace Screenbox.Core.ViewModels
             switch (message.Library)
             {
                 case KnownLibraryId.Music:
-                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedMusicLibraryTitle);
+                    title = _resourceService.GetString(ResourceName.AccessDeniedMusicLibraryTitle);
                     link = new Uri("ms-settings:privacy-musiclibrary");
                     break;
                 case KnownLibraryId.Pictures:
-                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedPicturesLibraryTitle);
+                    title = _resourceService.GetString(ResourceName.AccessDeniedPicturesLibraryTitle);
                     link = new Uri("ms-settings:privacy-pictures");
                     break;
                 case KnownLibraryId.Videos:
-                    title = ResourceHelper.GetString(ResourceHelper.AccessDeniedVideosLibraryTitle);
+                    title = _resourceService.GetString(ResourceName.AccessDeniedVideosLibraryTitle);
                     link = new Uri("ms-settings:privacy-videos");
                     break;
                 case KnownLibraryId.Documents:
@@ -155,8 +158,8 @@ namespace Screenbox.Core.ViewModels
                 Reset();
                 Title = title;
                 Severity = NotificationLevel.Error;
-                ButtonContent = ResourceHelper.GetString(ResourceHelper.OpenPrivacySettingsButtonText);
-                Message = ResourceHelper.GetString(ResourceHelper.AccessDeniedMessage);
+                ButtonContent = _resourceService.GetString(ResourceName.OpenPrivacySettingsButtonText);
+                Message = _resourceService.GetString(ResourceName.AccessDeniedMessage);
                 ActionCommand = new RelayCommand(() =>
                 {
                     IsOpen = false;

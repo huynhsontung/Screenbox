@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -23,6 +24,7 @@ namespace Screenbox.Core.ViewModels
 
         public AdvancedCollectionView SortedItems { get; }
 
+        private readonly IResourceService _resourceService;
         private List<MediaViewModel>? _itemList;
 
         private class TrackNumberComparer : IComparer
@@ -37,8 +39,9 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public AlbumDetailsPageViewModel()
+        public AlbumDetailsPageViewModel(IResourceService resourceService)
         {
+            _resourceService = resourceService;
             _subtext = string.Empty;
             SortedItems = new AdvancedCollectionView();
             SortedItems.SortDescriptions.Add(new SortDescription(nameof(MediaViewModel.MusicProperties),
@@ -49,8 +52,8 @@ namespace Screenbox.Core.ViewModels
         {
             SortedItems.Source = value.RelatedSongs;
             TimeSpan totalDuration = GetTotalDuration(value.RelatedSongs);
-            string songsCount = ResourceHelper.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
-            string runTime = ResourceHelper.GetString(ResourceHelper.RunTime, Humanizer.ToDuration(totalDuration));
+            string songsCount = _resourceService.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
+            string runTime = _resourceService.GetString(ResourceName.RunTime, Humanizer.ToDuration(totalDuration));
             StringBuilder builder = new();
             if (value.Year != null)
             {

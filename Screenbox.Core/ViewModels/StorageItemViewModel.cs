@@ -28,13 +28,15 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _captionText;
 
         private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
 
-        public StorageItemViewModel(IFilesService filesService,
+        public StorageItemViewModel(IFilesService filesService, IResourceService resourceService,
             MediaViewModelFactory mediaFactory,
             IStorageItem storageItem)
         {
             _filesService = filesService;
             StorageItem = storageItem;
+            _resourceService = resourceService;
             DateCreated = storageItem.DateCreated;
 
             if (storageItem is StorageFile file)
@@ -59,7 +61,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
                         uint itemCount = await _filesService.GetSupportedItemCountAsync(folder);
-                        CaptionText = ResourceHelper.GetString(PluralResourceName.ItemsCount, itemCount);
+                        CaptionText = _resourceService.GetString(PluralResourceName.ItemsCount, itemCount);
                         break;
                     case StorageFile file:
                         if (!string.IsNullOrEmpty(Media?.Caption))
