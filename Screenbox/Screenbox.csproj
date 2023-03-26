@@ -263,6 +263,7 @@
       <DependentUpon>VideosPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Secrets.cs" />
+    <Compile Include="Services\ResourceService.cs" />
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

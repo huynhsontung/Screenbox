@@ -126,7 +126,7 @@
     <Compile Include="Common\IDialog.cs" />
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
-    <Compile Include="Enums\PluralResourceName.cs" />
+    <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
@@ -196,6 +196,7 @@
     <Compile Include="Services\IMediaService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
