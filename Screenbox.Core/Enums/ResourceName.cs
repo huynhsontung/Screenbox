@@ -37,11 +37,4 @@
         OpenPrivacySettingsButtonText,
         AccessDeniedMessage
     }
-
-    public enum PluralResourceName
-    {
-        ItemsCount,
-        SongsCount,
-        AlbumsCount
-    }
 }

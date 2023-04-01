@@ -87,20 +87,5 @@ namespace Screenbox.Services
                     throw new ArgumentOutOfRangeException(nameof(name), name, null);
             }
         }
-
-        public string GetString(PluralResourceName name, double count, params object[] parameters)
-        {
-            switch (name)
-            {
-                case PluralResourceName.ItemsCount:
-                    return Resources.ItemsCount(count);
-                case PluralResourceName.SongsCount:
-                    return Resources.SongsCount((int)count);
-                case PluralResourceName.AlbumsCount:
-                    return Resources.AlbumsCount((int)count);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(name), name, null);
-            }
-        }
     }
 }
