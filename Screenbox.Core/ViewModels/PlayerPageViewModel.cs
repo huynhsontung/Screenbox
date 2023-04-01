@@ -35,6 +35,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _videoViewFocused;
         [ObservableProperty] private bool _isPlaying;
+        [ObservableProperty] private bool _isPlayingBadge;
         [ObservableProperty] private bool _isOpening;
         [ObservableProperty] private bool _showPlayPauseBadge;
         [ObservableProperty] private WindowViewMode _viewMode;
@@ -136,6 +137,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ShowPlayPauseBadgeMessage message)
         {
+            IsPlayingBadge = message.IsPlaying;
             BlinkPlayPauseBadge();
         }
 

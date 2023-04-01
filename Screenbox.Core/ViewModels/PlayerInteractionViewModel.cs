@@ -11,6 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
@@ -30,10 +31,12 @@ namespace Screenbox.Core.ViewModels
         private bool _manipulationCompleted;
 
         private readonly ISettingsService _settingsService;
+        private readonly DispatcherQueueTimer _toggleTimer;
 
         public PlayerInteractionViewModel(ISettingsService settingsService)
         {
             _settingsService = settingsService;
+            _toggleTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
             UpdateSettings();
             IsActive = true;
@@ -60,7 +63,7 @@ namespace Screenbox.Core.ViewModels
 
             if (_settingsService.PlayerTapGesture)
             {
-                TogglePlayPause();
+                TogglePlayPauseWithBadge(true);
             }
         }
 
@@ -116,7 +119,7 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.K when sender.Modifiers == VirtualKeyModifiers.None:
                 case VirtualKey.P when sender.Modifiers == VirtualKeyModifiers.None:
                 case VirtualKey.Space:
-                    TogglePlayPause();
+                    TogglePlayPauseWithBadge(false);
                     return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
@@ -266,6 +269,29 @@ namespace Screenbox.Core.ViewModels
             return false;
         }
 
+        private void TogglePlayPauseWithBadge(bool debounce)
+        {
+            if (_mediaPlayer?.PlaybackItem == null) return;
+            bool isPlayingNext = _toggleTimer.IsRunning
+                ? _mediaPlayer.PlaybackState == MediaPlaybackState.Playing
+                : _mediaPlayer.PlaybackState != MediaPlaybackState.Playing;
+            Messenger.Send(new ShowPlayPauseBadgeMessage(isPlayingNext));
+            if (_toggleTimer.IsRunning)
+            {
+                _toggleTimer.Stop();
+                return;
+            }
+
+            if (debounce)
+            {
+                _toggleTimer.Debounce(TogglePlayPause, TimeSpan.FromMilliseconds(200));
+            }
+            else
+            {
+                TogglePlayPause();
+            }
+        }
+
         private void TogglePlayPause()
         {
             if (_mediaPlayer?.PlaybackItem == null) return;
@@ -278,8 +304,6 @@ namespace Screenbox.Core.ViewModels
                     _mediaPlayer.Play();
                     break;
             }
-
-            Messenger.Send(new ShowPlayPauseBadgeMessage());
         }
 
         private void UpdateSettings()
