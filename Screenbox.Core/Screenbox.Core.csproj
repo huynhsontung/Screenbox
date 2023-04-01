@@ -126,11 +126,10 @@
     <Compile Include="Common\IDialog.cs" />
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
-    <Compile Include="Enums\PluralResourceName.cs" />
+    <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
-    <Compile Include="Common\ResourceHelper.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
     <Compile Include="Events\FolderViewNavigationEventArgs.cs" />
@@ -196,6 +195,7 @@
     <Compile Include="Services\IMediaService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
     <Compile Include="Services\ISystemMediaTransportControlsService.cs" />
@@ -270,11 +270,10 @@
     <PackageReference Include="protobuf-net">
       <Version>3.1.33</Version>
     </PackageReference>
-    <PackageReference Include="ReswPlusLib">
-      <Version>2.0.0</Version>
-    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.lock.json" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

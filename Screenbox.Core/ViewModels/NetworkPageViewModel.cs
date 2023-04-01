@@ -14,7 +14,7 @@ namespace Screenbox.Core.ViewModels
 
         public NetworkPageViewModel()
         {
-            _titleText = ResourceHelper.GetString(ResourceHelper.Network);
+            _titleText = string.Empty;
             Breadcrumbs = new ObservableCollection<string>();
         }
 
@@ -24,7 +24,7 @@ namespace Screenbox.Core.ViewModels
         {
             Breadcrumbs.Clear();
             if (crumbs == null) return;
-            TitleText = crumbs.LastOrDefault()?.DisplayName ?? ResourceHelper.GetString(ResourceHelper.Network);
+            TitleText = crumbs.LastOrDefault()?.DisplayName ?? string.Empty;
             foreach (StorageFolder storageFolder in crumbs)
             {
                 Breadcrumbs.Add(storageFolder.DisplayName);

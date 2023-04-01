@@ -8,10 +8,15 @@ namespace Screenbox.Core.ViewModels
 
         public string Name { get; }
 
-        public ArtistViewModel(string artist)
+        public ArtistViewModel()
+        {
+            Name = string.Empty;
+            RelatedSongs = new List<MediaViewModel>();
+        }
+
+        public ArtistViewModel(string artist) : this()
         {
             Name = artist;
-            RelatedSongs = new List<MediaViewModel>();
         }
 
         public override string ToString()

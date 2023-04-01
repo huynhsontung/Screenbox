@@ -67,7 +67,7 @@ namespace Screenbox.Core.ViewModels
             _loadTask = source._loadTask;
             _loadThumbnailTask = source._loadThumbnailTask;
             _duration = source._duration;
-            _thumbnail = source.Thumbnail;
+            _thumbnail = source._thumbnail;
             _mediaType = source._mediaType;
             _basicProperties = source._basicProperties;
             _videoProperties = source._videoProperties;
@@ -187,7 +187,7 @@ namespace Screenbox.Core.ViewModels
                         {
                             TrackNumber = MusicProperties.TrackNumber;
                             Year = MusicProperties.Year;
-                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : ResourceHelper.GetString(ResourceHelper.UnknownGenre);
+                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : null;
                             Album ??= _albumFactory.AddSongToAlbum(this, MusicProperties.Album, MusicProperties.AlbumArtist, Year);
 
                             if (Artists.Length == 0)

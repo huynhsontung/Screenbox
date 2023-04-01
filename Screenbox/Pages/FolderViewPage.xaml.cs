@@ -36,6 +36,9 @@ namespace Screenbox.Pages
             ViewModel.Clean();
         }
 
+        private static string GetCaptionText(bool isFile, string fileInfo, uint itemCount) =>
+            isFile ? fileInfo : Strings.Resources.ItemsCount(itemCount);
+
         private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
         {
             if (e.Item.Content is not StorageItemViewModel content || content.Media == null)

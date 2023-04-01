@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 
@@ -25,7 +24,8 @@ namespace Screenbox.Core.ViewModels
 
         public bool IsFile { get; }
 
-        [ObservableProperty] private string? _captionText;
+        [ObservableProperty] private string _captionText;
+        [ObservableProperty] private uint _itemCount;
 
         private readonly IFilesService _filesService;
 
@@ -35,6 +35,7 @@ namespace Screenbox.Core.ViewModels
         {
             _filesService = filesService;
             StorageItem = storageItem;
+            _captionText = string.Empty;
             DateCreated = storageItem.DateCreated;
 
             if (storageItem is StorageFile file)
@@ -58,13 +59,12 @@ namespace Screenbox.Core.ViewModels
                 switch (StorageItem)
                 {
                     case StorageFolder folder when !string.IsNullOrEmpty(folder.Path):
-                        uint itemCount = await _filesService.GetSupportedItemCountAsync(folder);
-                        CaptionText = ResourceHelper.GetString(PluralResourceName.ItemsCount, itemCount);
+                        ItemCount = await _filesService.GetSupportedItemCountAsync(folder);
                         break;
                     case StorageFile file:
                         if (!string.IsNullOrEmpty(Media?.Caption))
                         {
-                            CaptionText = Media?.Caption;
+                            CaptionText = Media?.Caption ?? string.Empty;
                         }
                         else
                         {

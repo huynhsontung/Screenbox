@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
@@ -17,10 +19,10 @@ namespace Screenbox.Core.Factories
 
         private static readonly string[] ArtistNameSeparators = { " & ", ", " };
 
-        public ArtistViewModelFactory()
+        public ArtistViewModelFactory(IResourceService resourceService)
         {
             _allArtists = new Dictionary<string, ArtistViewModel>();
-            UnknownArtist = new ArtistViewModel(ResourceHelper.GetString(ResourceHelper.UnknownArtist));
+            UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
 
         public List<ArtistViewModel> GetAllArtists() => new(_allArtists.Values);

@@ -91,7 +91,7 @@
                         x:Phase="2"
                         Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind CaptionText, Mode=OneWay}" />
+                        Text="{x:Bind local:FolderViewPage.GetCaptionText(IsFile, CaptionText, ItemCount), Mode=OneWay}" />
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>

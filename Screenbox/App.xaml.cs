@@ -22,6 +22,7 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Pages;
+using Screenbox.Services;
 
 namespace Screenbox
 {
@@ -95,6 +96,7 @@ namespace Screenbox
 
             // Services
             services.AddSingleton<LibVlcService>();
+            services.AddSingleton<IResourceService, ResourceService>();
             services.AddSingleton<IFilesService, FilesService>();
             services.AddSingleton<ILibraryService, LibraryService>();
             services.AddSingleton<ISearchService, SearchService>();

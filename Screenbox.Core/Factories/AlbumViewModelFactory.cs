@@ -1,8 +1,9 @@
 ﻿#nullable enable
 
-
 using System.Collections.Generic;
 using System.Globalization;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
@@ -13,10 +14,12 @@ namespace Screenbox.Core.Factories
         public AlbumViewModel UnknownAlbum { get; }
 
         private readonly Dictionary<string, AlbumViewModel> _allAlbums;
+        private readonly IResourceService _resourceService;
 
-        public AlbumViewModelFactory()
+        public AlbumViewModelFactory(IResourceService resourceService)
         {
-            UnknownAlbum = new AlbumViewModel(ResourceHelper.GetString(ResourceHelper.UnknownAlbum), ResourceHelper.GetString(ResourceHelper.UnknownArtist));
+            _resourceService = resourceService;
+            UnknownAlbum = new AlbumViewModel(resourceService.GetString(ResourceName.UnknownAlbum), resourceService.GetString(ResourceName.UnknownArtist));
             _allAlbums = new Dictionary<string, AlbumViewModel>();
         }
 
@@ -24,7 +27,7 @@ namespace Screenbox.Core.Factories
 
         public AlbumViewModel GetAlbumFromName(string albumName, string artistName)
         {
-            if (string.IsNullOrEmpty(albumName) || albumName == ResourceHelper.GetString(ResourceHelper.UnknownAlbum))
+            if (string.IsNullOrEmpty(albumName) || albumName == _resourceService.GetString(ResourceName.UnknownAlbum))
             {
                 return UnknownAlbum;
             }

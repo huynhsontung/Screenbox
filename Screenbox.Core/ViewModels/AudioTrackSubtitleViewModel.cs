@@ -7,6 +7,7 @@ using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -28,11 +29,13 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _subtitleTrackIndex;
         [ObservableProperty] private int _audioTrackIndex;
         private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
         private IMediaPlayer? _mediaPlayer;
 
-        public AudioTrackSubtitleViewModel(IFilesService filesService)
+        public AudioTrackSubtitleViewModel(IFilesService filesService, IResourceService resourceService)
         {
             _filesService = filesService;
+            _resourceService = resourceService;
             SubtitleTracks = new ObservableCollection<string>();
             AudioTracks = new ObservableCollection<string>();
 
@@ -70,7 +73,7 @@ namespace Screenbox.Core.ViewModels
             catch (Exception e)
             {
                 Messenger.Send(new ErrorMessage(
-                    ResourceHelper.GetString(ResourceHelper.FailedToLoadSubtitleNotificationTitle), e.ToString()));
+                    _resourceService.GetString(ResourceName.FailedToLoadSubtitleNotificationTitle), e.ToString()));
             }
         }
 
@@ -101,7 +104,7 @@ namespace Screenbox.Core.ViewModels
             SubtitleTracks.Clear();
             if (ItemSubtitleTrackList.Count <= 0) return;
 
-            SubtitleTracks.Add(ResourceHelper.GetString(ResourceHelper.Disable));
+            SubtitleTracks.Add(_resourceService.GetString(ResourceName.Disable));
             for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];

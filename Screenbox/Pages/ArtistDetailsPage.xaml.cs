@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
+using Screenbox.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -154,6 +155,14 @@ namespace Screenbox.Pages
         {
             double headerHeight = Header.Height + Header.Margin.Bottom;
             return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
+        }
+
+        private static string GetSubtext(int albumsCount, int songsCount, TimeSpan duration)
+        {
+            string albumsCountText = Strings.Resources.AlbumsCount(albumsCount);
+            string songsCountText = Strings.Resources.SongsCount(songsCount);
+            string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
+            return $"{albumsCountText} • {songsCountText} • {runTime}";
         }
     }
 }

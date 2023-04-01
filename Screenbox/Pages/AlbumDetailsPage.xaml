@@ -119,7 +119,7 @@
                         Margin="0,8,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         MaxLines="1"
-                        Text="{x:Bind ViewModel.Subtext, Mode=OneWay}" />
+                        Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel

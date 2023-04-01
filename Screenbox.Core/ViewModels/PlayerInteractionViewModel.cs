@@ -30,10 +30,12 @@ namespace Screenbox.Core.ViewModels
         private bool _manipulationCompleted;
 
         private readonly ISettingsService _settingsService;
+        private readonly IResourceService _resourceService;
 
-        public PlayerInteractionViewModel(ISettingsService settingsService)
+        public PlayerInteractionViewModel(ISettingsService settingsService, IResourceService resourceService)
         {
             _settingsService = settingsService;
+            _resourceService = resourceService;
 
             UpdateSettings();
             IsActive = true;
@@ -99,7 +101,7 @@ namespace Screenbox.Core.ViewModels
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
-            string volumeChangeMessage = ResourceHelper.GetString(ResourceHelper.VolumeChangeStatusMessage, volume);
+            string volumeChangeMessage = _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, volume);
             Messenger.Send(new UpdateStatusMessage(volumeChangeMessage));
         }
 
@@ -182,7 +184,7 @@ namespace Screenbox.Core.ViewModels
             if (volumeChange != 0)
             {
                 int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-                string volumeChangeMessage = ResourceHelper.GetString(ResourceHelper.VolumeChangeStatusMessage, volume);
+                string volumeChangeMessage = _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, volume);
                 Messenger.Send(new UpdateStatusMessage(volumeChangeMessage));
             }
         }
@@ -213,7 +215,7 @@ namespace Screenbox.Core.ViewModels
             {
                 _manipulationLock = ManipulationLock.Vertical;
                 int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-verticalChange, true));
-                string volumeChangeMessage = ResourceHelper.GetString(ResourceHelper.VolumeChangeStatusMessage, volume);
+                string volumeChangeMessage = _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, volume);
                 Messenger.Send(new UpdateStatusMessage(volumeChangeMessage, true));
                 return;
             }

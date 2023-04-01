@@ -11,6 +11,7 @@
     xmlns:viewModels1="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
 
+    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
     <converters:MediaTypeAdaptiveLayoutOverrideConverter x:Key="AdaptiveLayoutOverrideConverter" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
@@ -120,7 +121,7 @@
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Genre}"
+                    Text="{Binding Genre, Converter={StaticResource GenreTextConverter}}"
                     Visibility="Collapsed" />
 
                 <TextBlock
@@ -334,7 +335,7 @@
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Genre}"
+                    Text="{Binding Genre, Converter={StaticResource GenreTextConverter}}"
                     Visibility="Collapsed" />
 
                 <TextBlock
@@ -537,7 +538,7 @@
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Genre}"
+                    Text="{Binding Genre, Converter={StaticResource GenreTextConverter}}"
                     Visibility="Collapsed" />
 
                 <TextBlock

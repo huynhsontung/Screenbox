@@ -177,7 +177,7 @@
                         FontWeight="Normal"
                         MaxLines="1"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Subtext}" />
+                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}" />
                 </StackPanel>
 
                 <StackPanel
