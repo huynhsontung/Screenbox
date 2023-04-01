@@ -30,7 +30,10 @@ namespace Screenbox.Core.Factories
         public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
         {
             if (artists.Length == 0)
+            {
+                AddSongToArtist(song);
                 return new[] { UnknownArtist };
+            }
 
             IEnumerable<string> artistNames = artists;
             if (artists.Length == 1)
