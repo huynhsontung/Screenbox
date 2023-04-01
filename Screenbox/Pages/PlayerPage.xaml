@@ -394,7 +394,7 @@
                 FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
                 FontSize="26"
                 Foreground="White"
-                Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
