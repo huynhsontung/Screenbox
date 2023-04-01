@@ -65,7 +65,7 @@ namespace Screenbox.Services
                     return Resources.GoToPosition((string)parameters[0]);
                 case ResourceName.VolumeChangeStatusMessage:
                     Guard.HasSizeGreaterThanOrEqualTo(parameters, 1);
-                    return Resources.VolumeChangeStatusMessage((double)parameters[0]);
+                    return Resources.VolumeChangeStatusMessage(Convert.ToDouble(parameters[0]));
                 case ResourceName.AccessDeniedMusicLibraryTitle:
                     return Resources.AccessDeniedMusicLibraryTitle;
                 case ResourceName.AccessDeniedVideosLibraryTitle:
