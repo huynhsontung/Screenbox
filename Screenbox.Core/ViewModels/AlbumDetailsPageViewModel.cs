@@ -4,27 +4,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Windows.Storage.FileProperties;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AlbumDetailsPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private AlbumViewModel _source = null!;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Year))]
+        [NotifyPropertyChangedFor(nameof(SongsCount))]
+        [NotifyPropertyChangedFor(nameof(TotalDuration))]
+        private AlbumViewModel _source = null!;
 
-        [ObservableProperty] private string _subtext;
+        public uint? Year => Source.Year;
+
+        public int SongsCount => Source.RelatedSongs.Count;
+
+        public TimeSpan TotalDuration => GetTotalDuration(Source.RelatedSongs);
 
         public AdvancedCollectionView SortedItems { get; }
 
-        private readonly IResourceService _resourceService;
         private List<MediaViewModel>? _itemList;
 
         private class TrackNumberComparer : IComparer
@@ -39,10 +43,8 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public AlbumDetailsPageViewModel(IResourceService resourceService)
+        public AlbumDetailsPageViewModel()
         {
-            _resourceService = resourceService;
-            _subtext = string.Empty;
             SortedItems = new AdvancedCollectionView();
             SortedItems.SortDescriptions.Add(new SortDescription(nameof(MediaViewModel.MusicProperties),
                 SortDirection.Ascending, new TrackNumberComparer()));
@@ -51,18 +53,6 @@ namespace Screenbox.Core.ViewModels
         async partial void OnSourceChanged(AlbumViewModel value)
         {
             SortedItems.Source = value.RelatedSongs;
-            TimeSpan totalDuration = GetTotalDuration(value.RelatedSongs);
-            string songsCount = _resourceService.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
-            string runTime = _resourceService.GetString(ResourceName.RunTime, Humanizer.ToDuration(totalDuration));
-            StringBuilder builder = new();
-            if (value.Year != null)
-            {
-                builder.Append(value.Year);
-                builder.Append(" • ");
-            }
-
-            builder.AppendJoin(" • ", songsCount, runTime);
-            Subtext = builder.ToString();
             if (value.AlbumArt == null)
             {
                 await value.LoadAlbumArtAsync();
@@ -88,7 +78,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (Source.RelatedSongs.Count == 0) return;
             Random rnd = new();
-            List<MediaViewModel> shuffledList = Enumerable.OrderBy<MediaViewModel, int>(Source.RelatedSongs, _ => rnd.Next()).ToList();
+            List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
             Messenger.Send(new ClearPlaylistMessage());
             Messenger.Send(new QueuePlaylistMessage(shuffledList));
             Messenger.Send(new PlayMediaMessage(shuffledList[0], true));

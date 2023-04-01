@@ -17,6 +17,10 @@ using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
+using Newtonsoft.Json.Linq;
+using Screenbox.Core.Enums;
+using Screenbox.Core;
+using System.Text;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -225,6 +229,21 @@ namespace Screenbox.Pages
         {
             double headerHeight = Header.Height + Header.Margin.Bottom;
             return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
+        }
+
+        private static string GetSubtext(uint? year, int songsCount, TimeSpan duration)
+        {
+            string songsCountText = Strings.Resources.SongsCount(songsCount);
+            string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
+            StringBuilder builder = new();
+            if (year != null)
+            {
+                builder.Append(year);
+                builder.Append(" • ");
+            }
+
+            builder.AppendJoin(" • ", songsCountText, runTime);
+            return builder.ToString();
         }
     }
 }

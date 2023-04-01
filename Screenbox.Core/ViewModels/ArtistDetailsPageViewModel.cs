@@ -7,27 +7,33 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class ArtistDetailsPageViewModel : ObservableRecipient
     {
-        [ObservableProperty] private ArtistViewModel _source = null!;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TotalDuration))]
+        [NotifyPropertyChangedFor(nameof(SongsCount))]
+        private ArtistViewModel _source;
 
-        [ObservableProperty] private string _subtext;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(AlbumsCount))]
+        private List<IGrouping<AlbumViewModel?, MediaViewModel>> _albums;
 
-        public List<IGrouping<AlbumViewModel?, MediaViewModel>>? Albums { get; private set; }
+        public TimeSpan TotalDuration => GetTotalDuration(Source.RelatedSongs);
 
-        private readonly IResourceService _resourceService;
+        public int AlbumsCount => Albums.Count;
+
+        public int SongsCount => Source.RelatedSongs.Count;
+
         private List<MediaViewModel>? _itemList;
 
-        public ArtistDetailsPageViewModel(IResourceService resourceService)
+        public ArtistDetailsPageViewModel()
         {
-            _resourceService = resourceService;
-            _subtext = string.Empty;
+            _source = new ArtistViewModel();
+            _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
         }
 
         async partial void OnSourceChanged(ArtistViewModel value)
@@ -36,11 +42,6 @@ namespace Screenbox.Core.ViewModels
                 .OrderBy(m => m.MusicProperties?.TrackNumber ?? 0)
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
-            string totalDuration = Humanizer.ToDuration(GetTotalDuration(value.RelatedSongs));
-            string albumsCountText = _resourceService.GetString(PluralResourceName.AlbumsCount, Albums.Count);
-            string songsCountText = _resourceService.GetString(PluralResourceName.SongsCount, value.RelatedSongs.Count);
-            string runTimeCountText = _resourceService.GetString(ResourceName.RunTime, totalDuration);
-            Subtext = $"{albumsCountText} • {songsCountText} • {runTimeCountText}";
 
             IEnumerable<Task> loadingTasks = Albums.Where(g => g.Key is { AlbumArt: null })
                 .Select(g => g.Key?.LoadAlbumArtAsync())
@@ -51,7 +52,6 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void Play(MediaViewModel? media)
         {
-            if (Albums == null) return;
             _itemList ??= Albums.SelectMany(g => g).ToList();
             PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
             if (playlist.Playlist.Count != _itemList.Count || playlist.LastUpdate != _itemList)
