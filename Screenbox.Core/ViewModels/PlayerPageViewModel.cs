@@ -22,6 +22,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
+        IRecipient<UpdateVolumeStatusMessage>,
         IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
@@ -107,6 +108,12 @@ namespace Screenbox.Core.ViewModels
             await _lastPositionTracker.LoadFromDiskAsync();
         }
 
+        public void Receive(UpdateVolumeStatusMessage message)
+        {
+            Receive(new UpdateStatusMessage(
+                _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, message.Value), message.Persistent));
+        }
+
         public void Receive(UpdateStatusMessage message)
         {
             _dispatcherQueue.TryEnqueue(() =>
@@ -189,8 +196,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-            string volumeChangeMessage = _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, volume);
-            Messenger.Send(new UpdateStatusMessage(volumeChangeMessage));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
         }
 
         partial void OnVideoViewFocusedChanged(bool value)

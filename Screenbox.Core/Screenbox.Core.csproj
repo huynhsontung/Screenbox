@@ -168,6 +168,7 @@
     <Compile Include="Messages\SuspendingMessage.cs" />
     <Compile Include="Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
+    <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
     <Compile Include="Models\LastPositionTracker.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />
