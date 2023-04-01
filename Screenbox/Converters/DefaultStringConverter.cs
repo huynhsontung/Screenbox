@@ -1,19 +1,18 @@
-﻿#nullable enable
-
-using System;
+﻿using System;
 using Windows.UI.Xaml.Data;
-using Screenbox.Strings;
 
 namespace Screenbox.Converters
 {
-    internal class GenreTextConverter : IValueConverter
+    internal class DefaultStringConverter : IValueConverter
     {
-        public object Convert(object? value, Type targetType, object parameter, string language)
+        public string Default { get; set; } = string.Empty;
+
+        public object Convert(object value, Type targetType, object parameter, string language)
         {
             return value switch
             {
-                null => Resources.UnknownGenre,
-                string str => string.IsNullOrEmpty(str) ? Resources.UnknownGenre : str,
+                null => Default,
+                string str => string.IsNullOrEmpty(str) ? Default : str,
                 _ => value
             };
         }

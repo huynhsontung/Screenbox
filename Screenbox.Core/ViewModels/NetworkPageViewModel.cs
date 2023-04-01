@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -14,12 +12,9 @@ namespace Screenbox.Core.ViewModels
     {
         [ObservableProperty] private string _titleText;
 
-        private readonly IResourceService _resourceService;
-
-        public NetworkPageViewModel(IResourceService resourceService)
+        public NetworkPageViewModel()
         {
-            _resourceService = resourceService;
-            _titleText = resourceService.GetString(ResourceName.Network);
+            _titleText = string.Empty;
             Breadcrumbs = new ObservableCollection<string>();
         }
 
@@ -29,7 +24,7 @@ namespace Screenbox.Core.ViewModels
         {
             Breadcrumbs.Clear();
             if (crumbs == null) return;
-            TitleText = crumbs.LastOrDefault()?.DisplayName ?? _resourceService.GetString(ResourceName.Network);
+            TitleText = crumbs.LastOrDefault()?.DisplayName ?? string.Empty;
             foreach (StorageFolder storageFolder in crumbs)
             {
                 Breadcrumbs.Add(storageFolder.DisplayName);

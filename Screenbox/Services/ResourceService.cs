@@ -12,9 +12,6 @@ namespace Screenbox.Services
         {
             switch (name)
             {
-                case ResourceName.RunTime:
-                    Guard.HasSizeGreaterThanOrEqualTo(parameters, 1);
-                    return Resources.RunTime((string)parameters[0]);
                 case ResourceName.PropertyTitle:
                     return Resources.PropertyTitle;
                 case ResourceName.PropertySubtitle:
@@ -53,10 +50,6 @@ namespace Screenbox.Services
                     return Resources.UnknownArtist;
                 case ResourceName.UnknownAlbum:
                     return Resources.UnknownAlbum;
-                case ResourceName.UnknownGenre:
-                    return Resources.UnknownGenre;
-                case ResourceName.Network:
-                    return Resources.Network;
                 case ResourceName.Disable:
                     return Resources.Disable;
                 case ResourceName.FailedToLoadSubtitleNotificationTitle:

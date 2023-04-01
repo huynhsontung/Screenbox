@@ -2,7 +2,6 @@
 {
     public enum ResourceName
     {
-        RunTime,
         PropertyTitle,
         PropertySubtitle,
         PropertyYear,
@@ -22,8 +21,6 @@
         PropertyLastModified,
         UnknownArtist,
         UnknownAlbum,
-        UnknownGenre,
-        Network,
         Disable,
         GoToPosition,
         FailedToLoadSubtitleNotificationTitle,

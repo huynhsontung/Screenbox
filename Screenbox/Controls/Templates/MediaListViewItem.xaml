@@ -11,7 +11,7 @@
     xmlns:viewModels1="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
 
-    <converters:GenreTextConverter x:Key="GenreTextConverter" />
+    <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
     <converters:MediaTypeAdaptiveLayoutOverrideConverter x:Key="AdaptiveLayoutOverrideConverter" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
