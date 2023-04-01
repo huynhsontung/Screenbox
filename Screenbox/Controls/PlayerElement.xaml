@@ -17,6 +17,7 @@
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}">
         <Button
             x:Name="VideoViewButton"
+            Margin="{x:Bind ButtonMargin, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowDrop="True"
