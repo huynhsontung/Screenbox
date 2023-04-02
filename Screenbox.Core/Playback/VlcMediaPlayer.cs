@@ -422,11 +422,11 @@ namespace Screenbox.Core.Playback
 
         public async void Play()
         {
-            if (PlaybackItem?.Source == null) return;
+            if (PlaybackItem?.Media == null) return;
             if (_readyToPlay)
             {
                 _readyToPlay = false;
-                Media media = PlaybackItem.Source;
+                Media media = PlaybackItem.Media;
                 if (media.Mrl.StartsWith("winrt://"))
                 {
                     VlcPlayer.Play(media);

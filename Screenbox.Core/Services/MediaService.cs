@@ -20,20 +20,27 @@ namespace Screenbox.Core.Services
             StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
-        public Media? CreateMedia(object source)
+        public Media CreateMedia(object source)
         {
             return source switch
             {
                 IStorageFile file => CreateMedia(file),
                 string str => CreateMedia(str),
                 Uri uri => CreateMedia(uri),
-                _ => null
+                _ => throw new ArgumentOutOfRangeException(nameof(source))
             };
         }
 
-        public Media? CreateMedia(string str)
+        public Media CreateMedia(string str)
         {
-            return Uri.TryCreate(str, UriKind.Absolute, out Uri uri) ? CreateMedia(uri) : null;
+            if (Uri.TryCreate(str, UriKind.Absolute, out Uri uri))
+            {
+                return CreateMedia(uri);
+            }
+
+            Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
+            LibVLC libVlc = _libVlcService.LibVlc;
+            return new Media(libVlc, str);
         }
 
         public Media CreateMedia(IStorageFile file)

@@ -293,9 +293,9 @@ namespace Screenbox.Core.ViewModels
 
             _mediaBuffer = newBuffer;
             await Task.WhenAll(toLoad.Select(x =>
-                x.Item.Source.IsParsed
+                x.Item?.Media.IsParsed ?? true
                     ? x.LoadThumbnailAsync()
-                    : Task.WhenAll(x.Item.Source.Parse(), x.LoadThumbnailAsync())));
+                    : Task.WhenAll(x.Item?.Media.Parse(), x.LoadThumbnailAsync())));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
