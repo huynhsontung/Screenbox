@@ -221,9 +221,24 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         public void GoBack()
         {
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            bool hasItemsInQueue = playlist.Playlist.Count > 0;
-            PlayerVisibility = hasItemsInQueue ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Hidden;
+            // Only allow back when not in fullscreen or compact overlay
+            // Doing so would break layout logic
+            switch (_windowService.ViewMode)
+            {
+                case WindowViewMode.FullScreen:
+                    _windowService.ExitFullScreen();
+                    break;
+                case WindowViewMode.Compact:
+                    _windowService.TryExitCompactLayoutAsync();
+                    break;
+                case WindowViewMode.Default:
+                    PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+                    bool hasItemsInQueue = playlist.Playlist.Count > 0;
+                    PlayerVisibility = hasItemsInQueue ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Hidden;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         [RelayCommand]
