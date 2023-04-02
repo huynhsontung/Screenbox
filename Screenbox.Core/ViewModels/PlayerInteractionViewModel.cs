@@ -69,31 +69,38 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnDrop(object sender, DragEventArgs e)
         {
-            if (e.DataView.Contains(StandardDataFormats.StorageItems))
+            try
             {
-                IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
-                if (items.Count > 0)
+                if (e.DataView.Contains(StandardDataFormats.StorageItems))
                 {
-                    if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    if (items.Count > 0)
                     {
-                        _mediaPlayer?.AddSubtitle(file);
-                    }
-                    else
-                    {
-                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
-                    }
+                        if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                        {
+                            _mediaPlayer?.AddSubtitle(file);
+                        }
+                        else
+                        {
+                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        }
 
-                    return;
+                        return;
+                    }
+                }
+
+                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                {
+                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    if (uri.IsFile)
+                    {
+                        Messenger.Send(new PlayMediaMessage(uri));
+                    }
                 }
             }
-
-            if (e.DataView.Contains(StandardDataFormats.WebLink))
+            catch (Exception exception)
             {
-                Uri? uri = await e.DataView.GetWebLinkAsync();
-                if (uri.IsFile)
-                {
-                    Messenger.Send(new PlayMediaMessage(uri));
-                }
+                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
             }
         }
 
