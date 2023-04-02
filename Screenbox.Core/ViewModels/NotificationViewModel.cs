@@ -88,8 +88,8 @@ namespace Screenbox.Core.ViewModels
                 Reset();
                 Title = _resourceService.GetString(ResourceName.FailedToLoadMediaNotificationTitle);
                 Severity = NotificationLevel.Error;
-                Message = string.IsNullOrEmpty(message.Reason)
-                    ? message.Path
+                Message = string.IsNullOrEmpty(message.Reason) || string.IsNullOrEmpty(message.Path)
+                    ? $"{message.Path}{message.Reason}"
                     : $"{message.Path}{Environment.NewLine}{message.Reason}";
 
                 IsOpen = true;
