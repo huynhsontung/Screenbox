@@ -76,6 +76,8 @@ namespace Screenbox.Services
                     return Resources.OpenPrivacySettingsButtonText;
                 case ResourceName.AccessDeniedMessage:
                     return Resources.AccessDeniedMessage;
+                case ResourceName.FailedToLoadMediaNotificationTitle:
+                    return Resources.FailedToLoadMediaNotificationTitle;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(name), name, null);
             }

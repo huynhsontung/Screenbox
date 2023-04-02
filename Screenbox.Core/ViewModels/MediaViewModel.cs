@@ -9,13 +9,15 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class MediaViewModel : ObservableObject
+    public sealed partial class MediaViewModel : ObservableRecipient
     {
         public string Location { get; }
 
@@ -134,9 +136,9 @@ namespace Screenbox.Core.ViewModels
                     // Coding error. Rethrow.
                     throw;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    // pass
+                    Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
                 }
             }
 

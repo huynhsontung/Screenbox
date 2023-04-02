@@ -1554,6 +1554,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToLoadMediaNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Unable to load media
+        /// </summary>
+        public static string FailedToLoadMediaNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToLoadMediaNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1682,6 +1695,7 @@ namespace Screenbox.Strings{
             NoVideosPanelHeader,
             NoVideosPanelSubtext,
             OpenPrivacySettingsButtonText,
+            FailedToLoadMediaNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;

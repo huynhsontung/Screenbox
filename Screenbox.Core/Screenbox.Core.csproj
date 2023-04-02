@@ -148,6 +148,7 @@
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Messages\CloseNotificationMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Messages\MessageHelpers.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />

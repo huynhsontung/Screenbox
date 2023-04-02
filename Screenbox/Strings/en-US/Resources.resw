@@ -531,4 +531,7 @@
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Open privacy settings</value>
   </data>
+  <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
+    <value>Unable to load media</value>
+  </data>
 </root>
