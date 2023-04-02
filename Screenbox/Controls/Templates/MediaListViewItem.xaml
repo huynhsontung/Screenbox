@@ -86,14 +86,14 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
-                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
+                    CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
                         x:Name="ArtistText"
                         MaxLines="1"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{Binding Artists[0].Name, FallbackValue=''}"
+                        Text="{Binding MainArtist.Name, FallbackValue=''}"
                         TextTrimming="CharacterEllipsis" />
                 </HyperlinkButton>
 
@@ -244,7 +244,10 @@
 
     <DataTemplate x:Key="MediaListViewItemWithoutMediaIconTemplate">
         <UserControl>
-            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
+            <Grid
+                Height="46"
+                d:DataContext="{d:DesignInstance Type=viewModels1:MediaViewModel}"
+                XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
@@ -300,14 +303,14 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
-                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
+                    CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
                         x:Name="ArtistText"
                         MaxLines="1"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{Binding Artists[0].Name, FallbackValue=''}"
+                        Text="{Binding MainArtist.Name, FallbackValue=''}"
                         TextTrimming="CharacterEllipsis" />
                 </HyperlinkButton>
 
@@ -451,7 +454,10 @@
 
     <DataTemplate x:Key="AlbumMediaListViewItemTemplate">
         <UserControl>
-            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
+            <Grid
+                Height="46"
+                d:DataContext="{d:DesignInstance Type=viewModels1:MediaViewModel}"
+                XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
@@ -519,14 +525,14 @@
                     Grid.Column="3"
                     Margin="4,0"
                     VerticalAlignment="Center"
-                    CommandParameter="{Binding Artists[0], FallbackValue={x:Null}}"
+                    CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
                     Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
                     Visibility="Collapsed">
                     <TextBlock
                         x:Name="ArtistText"
                         MaxLines="1"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{Binding Artists[0].Name, FallbackValue=''}"
+                        Text="{Binding MainArtist.Name, FallbackValue=''}"
                         TextTrimming="CharacterEllipsis" />
                 </HyperlinkButton>
 

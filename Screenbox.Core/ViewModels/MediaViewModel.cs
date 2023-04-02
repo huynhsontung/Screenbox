@@ -9,7 +9,6 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
-using LibVLCSharp.Shared;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -23,6 +22,8 @@ namespace Screenbox.Core.ViewModels
         public object Source { get; }
 
         public StorageItemThumbnail? ThumbnailSource { get; set; }
+
+        public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
         public PlaybackItem Item => _item ??= Source is StorageFile file
             ? new PlaybackItem(_mediaService.CreateMedia(file))
@@ -46,11 +47,14 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private VideoProperties? _videoProperties;
         [ObservableProperty] private MusicProperties? _musicProperties;
         [ObservableProperty] private string? _genre;
-        [ObservableProperty] private ArtistViewModel[] _artists;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;
         [ObservableProperty] private uint _year;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(MainArtist))]
+        private ArtistViewModel[] _artists;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
