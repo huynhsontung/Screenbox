@@ -143,7 +143,8 @@ namespace Screenbox.Pages
 
         private void OnLayoutVisualStateChanged(object _, VisualStateChangedEventArgs args)
         {
-            if (args.OldState?.Name == "MiniPlayer" && (args.NewState == null || args.NewState.Name == "Normal"))
+            if (args.OldState?.Name == "MiniPlayer" || args.OldState?.Name == "Hidden" &&
+                (args.NewState == null || args.NewState.Name == "Normal"))
                 FocusVideoView();
         }
 
