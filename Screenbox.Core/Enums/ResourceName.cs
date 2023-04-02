@@ -27,6 +27,7 @@
         FailedToSaveFrameNotificationTitle,
         FrameSavedNotificationTitle,
         ResumePositionNotificationTitle,
+        FailedToLoadMediaNotificationTitle,
         VolumeChangeStatusMessage,
         AccessDeniedMusicLibraryTitle,
         AccessDeniedVideosLibraryTitle,

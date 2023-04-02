@@ -20,6 +20,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<RaiseFrameSavedNotificationMessage>,
         IRecipient<RaiseResumePositionNotificationMessage>,
         IRecipient<RaiseLibraryAccessDeniedNotificationMessage>,
+        IRecipient<MediaLoadFailedNotificationMessage>,
         IRecipient<CloseNotificationMessage>,
         IRecipient<ErrorMessage>
     {
@@ -78,6 +79,22 @@ namespace Screenbox.Core.ViewModels
         public void Receive(CloseNotificationMessage message)
         {
             IsOpen = false;
+        }
+
+        public void Receive(MediaLoadFailedNotificationMessage message)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Reset();
+                Title = _resourceService.GetString(ResourceName.FailedToLoadMediaNotificationTitle);
+                Severity = NotificationLevel.Error;
+                Message = string.IsNullOrEmpty(message.Reason)
+                    ? message.Path
+                    : $"{message.Path}{Environment.NewLine}{message.Reason}";
+
+                IsOpen = true;
+                _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(15));
+            });
         }
 
         public void Receive(RaiseFrameSavedNotificationMessage message)

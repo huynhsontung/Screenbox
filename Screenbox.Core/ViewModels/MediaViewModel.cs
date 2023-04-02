@@ -9,13 +9,15 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class MediaViewModel : ObservableObject
+    public sealed partial class MediaViewModel : ObservableRecipient
     {
         public string Location { get; }
 
@@ -25,9 +27,7 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public PlaybackItem Item => _item ??= Source is StorageFile file
-            ? new PlaybackItem(_mediaService.CreateMedia(file))
-            : new PlaybackItem(_mediaService.CreateMedia((Uri)Source));
+        public PlaybackItem? Item => GetPlaybackItem();
 
         public bool ShouldDisplayTrackNumber => TrackNumber > 0;    // Helper for binding
 
@@ -38,6 +38,7 @@ namespace Screenbox.Core.ViewModels
         private PlaybackItem? _item;
         private Task _loadTask;
         private Task _loadThumbnailTask;
+        private bool _loaded;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isPlaying;
@@ -121,12 +122,36 @@ namespace Screenbox.Core.ViewModels
             return new MediaViewModel(this);
         }
 
+        public PlaybackItem? GetPlaybackItem()
+        {
+            if (!_loaded)
+            {
+                _loaded = true;
+                try
+                {
+                    _item = new PlaybackItem(Source, _mediaService);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    // Coding error. Rethrow.
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
+                }
+            }
+
+            return _item;
+        }
+
         public void Clean()
         {
+            _loaded = false;
             PlaybackItem? item = _item;
             _item = null;
             if (item == null) return;
-            _mediaService.DisposeMedia(item.Source);
+            _mediaService.DisposeMedia(item.Media);
         }
 
         public async Task LoadDetailsAndThumbnailAsync()

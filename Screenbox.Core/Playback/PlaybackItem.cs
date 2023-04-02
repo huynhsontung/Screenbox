@@ -2,12 +2,15 @@
 
 using System;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Services;
 
 namespace Screenbox.Core.Playback
 {
     public class PlaybackItem
     {
-        public Media Source { get; }
+        internal Media Media { get; }
+
+        public object OriginalSource { get; }
 
         public bool IsDisabledInPlaybackList { get; set; }
 
@@ -21,11 +24,13 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan StartTime { get; set; }
 
-        public TimeSpan? Duration => Source.Duration > 0 ? TimeSpan.FromMilliseconds(Source.Duration) : null;
+        public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-        public PlaybackItem(Media media)
+        public PlaybackItem(object source, IMediaService mediaService)
         {
-            Source = media;
+            OriginalSource = source;
+            Media media = mediaService.CreateMedia(source);
+            Media = media;
             AudioTracks = new PlaybackAudioTrackList(media);
             VideoTracks = new PlaybackVideoTrackList(media);
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
