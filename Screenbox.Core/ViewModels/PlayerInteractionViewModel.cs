@@ -105,6 +105,39 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
         }
 
+        public void ProcessGamepadKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            args.Handled = true;
+            int volumeChange = 0;
+            switch (args.Key)
+            {
+                case VirtualKey.GamepadRightThumbstickLeft:
+                    Seek(-5000);
+                    break;
+                case VirtualKey.GamepadRightThumbstickRight:
+                    Seek(5000);
+                    break;
+                case VirtualKey.GamepadRightThumbstickUp:
+                    volumeChange = 2;
+                    break;
+                case VirtualKey.GamepadRightThumbstickDown:
+                    volumeChange = -2;
+                    break;
+                case VirtualKey.GamepadX:
+                    TogglePlayPauseWithBadge(false);
+                    break;
+                default:
+                    args.Handled = false;
+                    return;
+            }
+
+            if (volumeChange != 0)
+            {
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+            }
+        }
+
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (_mediaPlayer == null) return;

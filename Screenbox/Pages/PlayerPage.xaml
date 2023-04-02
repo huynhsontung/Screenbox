@@ -255,7 +255,8 @@
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
             Click="{x:Bind ViewModel.OnPlayerClick}"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
+            KeyDown="OnGamepadKeyDown">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="GotFocus">
                     <core:ChangePropertyAction
