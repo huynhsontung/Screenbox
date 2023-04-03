@@ -17,6 +17,7 @@
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}">
         <Button
             x:Name="VideoViewButton"
+            Margin="{x:Bind ButtonMargin, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowDrop="True"
@@ -24,6 +25,7 @@
             DragOver="VideoViewButton_OnDragOver"
             Drop="{x:Bind InteractionViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+            KeyDown="{x:Bind InteractionViewModel.ProcessGamepadKeyDown}"
             ManipulationCompleted="{x:Bind InteractionViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind InteractionViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"

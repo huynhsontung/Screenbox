@@ -21,7 +21,8 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
-        IRecipient<ChangeZoomToFitMessage>
+        IRecipient<ChangeZoomToFitMessage>,
+        IRecipient<MediaPlayerRequestMessage>
     {
         public MediaPlayer? VlcPlayer { get; private set; }
 
@@ -59,6 +60,11 @@ namespace Screenbox.Core.ViewModels
         {
             _zoomToFit = message.Value;
             SetCropGeometry(_viewSize);
+        }
+
+        public void Receive(MediaPlayerRequestMessage message)
+        {
+            message.Reply(_mediaPlayer);
         }
 
         public void Initialize(string[] swapChainOptions)

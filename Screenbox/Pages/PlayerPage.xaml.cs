@@ -318,5 +318,21 @@ namespace Screenbox.Pages
             // Set in code due to XAML compiler not setting it in Release
             BackgroundAcrylicBrush.TintLuminosityOpacity = theme == ElementTheme.Light ? 0.5 : 0.4;
         }
+
+        private void OnGamepadKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.GamepadY && ViewModel.VideoViewFocused)
+            {
+                e.Handled = true;
+                AudioTrackSubtitlePicker control = new();
+                Flyout flyout = new()
+                {
+                    Content = control
+                };
+
+                flyout.Opening += (_, _) => control.ViewModel.OnAudioCaptionFlyoutOpening();
+                flyout.ShowAt(PlayerControls);
+            }
+        }
     }
 }

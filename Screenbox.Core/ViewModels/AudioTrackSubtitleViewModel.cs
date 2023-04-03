@@ -38,6 +38,7 @@ namespace Screenbox.Core.ViewModels
             _resourceService = resourceService;
             SubtitleTracks = new ObservableCollection<string>();
             AudioTracks = new ObservableCollection<string>();
+            _mediaPlayer = Messenger.Send(new MediaPlayerRequestMessage()).Response;
 
             IsActive = true;
         }

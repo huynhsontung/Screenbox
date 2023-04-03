@@ -2,7 +2,7 @@
     x:Class="Screenbox.Pages.AlbumDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Screenbox.Controls"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:controls1="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -13,7 +13,6 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewModels="using:Screenbox.ViewModels"
     Loaded="AlbumDetailsPage_OnLoaded"
     mc:Ignorable="d">
     <Page.Resources>
@@ -138,6 +137,9 @@
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
+                        <interactivity:Interaction.Behaviors>
+                            <behaviors:AutoFocusBehavior />
+                        </interactivity:Interaction.Behaviors>
                     </Button>
 
                     <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">

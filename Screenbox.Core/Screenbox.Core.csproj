@@ -150,6 +150,7 @@
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\MediaPlayerChangedMessage.cs" />
+    <Compile Include="Messages\MediaPlayerRequestMessage.cs" />
     <Compile Include="Messages\MessageHelpers.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideMessage.cs" />

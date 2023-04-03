@@ -253,8 +253,10 @@
             Grid.Column="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            ButtonMargin="0,52,0,84"
             Click="{x:Bind ViewModel.OnPlayerClick}"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
+            KeyDown="OnGamepadKeyDown">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="GotFocus">
                     <core:ChangePropertyAction
@@ -555,6 +557,7 @@
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,70,0,104" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
@@ -578,6 +581,7 @@
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
                         <Setter Target="StatusMessageText.FontSize" Value="16" />
                         <Setter Target="StatusMessage.Margin" Value="8,4" />
                         <Setter Target="PlayerStateBadge.Width" Value="50" />

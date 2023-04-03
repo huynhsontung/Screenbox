@@ -14,6 +14,18 @@ namespace Screenbox.Controls
 {
     public sealed partial class PlayerElement : UserControl
     {
+        public static readonly DependencyProperty ButtonMarginProperty = DependencyProperty.Register(
+            nameof(ButtonMargin),
+            typeof(Thickness),
+            typeof(PlayerElement),
+            new PropertyMetadata(default(Thickness)));
+
+        public Thickness ButtonMargin
+        {
+            get => (Thickness)GetValue(ButtonMarginProperty);
+            set => SetValue(ButtonMarginProperty, value);
+        }
+
         public event RoutedEventHandler? Click;
 
         internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
