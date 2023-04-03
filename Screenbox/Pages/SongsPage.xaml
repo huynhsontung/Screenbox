@@ -4,17 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:controls1="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewModels="using:Screenbox.ViewModels"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -64,10 +61,6 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
-    </interactivity:Interaction.Behaviors>
-
     <Grid>
         <SemanticZoom Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
@@ -93,6 +86,7 @@
                         </XamlUICommand>
                     </ListView.Resources>
                     <interactivity:Interaction.Behaviors>
+                        <behaviors:AutoFocusBehavior />
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
