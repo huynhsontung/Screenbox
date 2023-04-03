@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using Windows.ApplicationModel.Core;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -88,6 +89,7 @@ namespace Screenbox.Pages
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            Window.Current.Dispatcher.AcceleratorKeyActivated += CoreDispatcher_AcceleratorKeyActivated;
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
             ViewModel.NavigationViewDisplayMode = (NavigationViewDisplayMode)NavView.DisplayMode;
@@ -151,6 +153,20 @@ namespace Screenbox.Pages
             if (!(pageType is null) && !Type.Equals(preNavPageType, pageType))
             {
                 ContentFrame.Navigate(pageType, null, new SuppressNavigationTransitionInfo());
+            }
+        }
+
+        private void CoreDispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        {
+            if (args is
+                {
+                    EventType: CoreAcceleratorKeyEventType.SystemKeyDown,
+                    VirtualKey: VirtualKey.Left,
+                    KeyStatus.IsMenuKeyDown: true,
+                    Handled: false
+                })
+            {
+                args.Handled = TryGoBack();
             }
         }
 
