@@ -101,9 +101,10 @@ namespace Screenbox.Controls
 
         private void GoToCurrentItem()
         {
-            if (ViewModel.Playlist.CurrentItem != null && PlaylistListView.FindChild<ListViewBase>() is { } listView)
+            if (ViewModel.Playlist.CurrentItem != null)
             {
-                listView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
+                PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
+                (PlaylistListView.ContainerFromItem(ViewModel.Playlist.CurrentItem) as Control)?.Focus(FocusState.Programmatic);
             }
         }
 
