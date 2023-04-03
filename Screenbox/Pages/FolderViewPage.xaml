@@ -98,10 +98,6 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
-    </interactivity:Interaction.Behaviors>
-
     <Grid>
         <muxc:ProgressBar
             x:Name="LoadingProgressBar"
@@ -122,6 +118,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
+                <behaviors:AutoFocusBehavior />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
                 <interactions:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
