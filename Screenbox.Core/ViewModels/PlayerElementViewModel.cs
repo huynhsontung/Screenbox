@@ -1,21 +1,21 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
-using Windows.System.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using CommunityToolkit.Diagnostics;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Playback;
-using Screenbox.Core.Services;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
@@ -31,11 +31,11 @@ namespace Screenbox.Core.ViewModels
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private bool _zoomToFit;
         private bool _forceResize;
         private VlcMediaPlayer? _mediaPlayer;
-        private DisplayRequest? _displayRequest;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -48,6 +48,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _requestTracker = new DisplayRequestTracker();
 
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
             transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
@@ -153,28 +154,10 @@ namespace Screenbox.Core.ViewModels
 
         private void OnPlaybackStateChanged(IMediaPlayer sender, object? args)
         {
-            if (sender.NaturalVideoHeight > 0 &&
-                sender.PlaybackState == MediaPlaybackState.Playing &&
-                _displayRequest == null)
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    _displayRequest?.RequestRelease();
-                    DisplayRequest request = _displayRequest = new DisplayRequest();
-                    request.RequestActive();
-                });
-            }
-
-            if ((sender.NaturalVideoHeight <= 0 ||
-                sender.PlaybackState != MediaPlaybackState.Playing) &&
-                _displayRequest != null)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    _displayRequest?.RequestRelease();
-                    _displayRequest = null;
-                });
-            }
+                UpdateDisplayRequest(sender.PlaybackState, _requestTracker);
+            });
 
             _transportControlsService.UpdatePlaybackStatus(sender.PlaybackState);
         }
@@ -226,6 +209,22 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 _mediaPlayer.NormalizedSourceRect = defaultSize;
+            }
+        }
+
+        private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)
+        {
+            bool shouldActive = state
+                is MediaPlaybackState.Playing
+                or MediaPlaybackState.Buffering
+                or MediaPlaybackState.Opening;
+            if (shouldActive && !tracker.IsActive)
+            {
+                tracker.RequestActive();
+            }
+            else if (!shouldActive && tracker.IsActive)
+            {
+                tracker.RequestRelease();
             }
         }
     }

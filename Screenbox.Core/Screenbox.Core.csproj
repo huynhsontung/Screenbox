@@ -179,6 +179,7 @@
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
+    <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
     <Compile Include="Playback\PlaybackAudioTrackList.cs" />
     <Compile Include="Playback\PlaybackChapterList.cs" />
@@ -277,6 +278,7 @@
   <ItemGroup>
     <None Include="packages.lock.json" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
