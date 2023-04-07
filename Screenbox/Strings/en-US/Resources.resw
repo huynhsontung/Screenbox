@@ -534,4 +534,70 @@
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
     <value>Unable to load media</value>
   </data>
+  <data name="ThirdGenerationFileFriendlyName" xml:space="preserve">
+    <value>3GPP Multimedia File</value>
+  </data>
+  <data name="ThirdGeneration2FileFriendlyName" xml:space="preserve">
+    <value>3GPP2 Multimedia File</value>
+  </data>
+  <data name="AdvancedAudioFileFriendlyName" xml:space="preserve">
+    <value>Advanced Audio Coding File</value>
+  </data>
+  <data name="FlacFileFriendlyName" xml:space="preserve">
+    <value>Free Lossless Audio Codec File</value>
+  </data>
+  <data name="FlashFileFriendlyName" xml:space="preserve">
+    <value>Flash Video</value>
+  </data>
+  <data name="iTunesVideoFileFriendlyName" xml:space="preserve">
+    <value>iTunes Video</value>
+  </data>
+  <data name="MatroskaAudioFileFriendlyName" xml:space="preserve">
+    <value>Matroska Audio</value>
+  </data>
+  <data name="MatroskaVideoFileFriendlyName" xml:space="preserve">
+    <value>Matroska Video</value>
+  </data>
+  <data name="MicrosoftVideoFileFriendlyName" xml:space="preserve">
+    <value>Audio Video Interleave File</value>
+  </data>
+  <data name="MidiFileFriendlyName" xml:space="preserve">
+    <value>MIDI Music Data</value>
+  </data>
+  <data name="MpegFileFriendlyName" xml:space="preserve">
+    <value>MPEG Video</value>
+  </data>
+  <data name="MP3FileFriendlyName" xml:space="preserve">
+    <value>MP3 Audio</value>
+  </data>
+  <data name="MP4AudioFileFriendlyName" xml:space="preserve">
+    <value>MPEG-4 Audio</value>
+  </data>
+  <data name="MP4VideoFileFriendlyName" xml:space="preserve">
+    <value>MPEG-4 Video</value>
+  </data>
+  <data name="OggAudioFileFriendlyName" xml:space="preserve">
+    <value>Ogg Vorbis Audio</value>
+  </data>
+  <data name="OggVideoFileFriendlyName" xml:space="preserve">
+    <value>Ogg Video</value>
+  </data>
+  <data name="QuickTimeFileFriendlyName" xml:space="preserve">
+    <value>QuickTime Movie</value>
+  </data>
+  <data name="WaveFileFriendlyName" xml:space="preserve">
+    <value>WAVE Audio</value>
+  </data>
+  <data name="WebAudioFileFriendlyName" xml:space="preserve">
+    <value>WebM Audio</value>
+  </data>
+  <data name="WebMediaFileFriendlyName" xml:space="preserve">
+    <value>WebM Video</value>
+  </data>
+  <data name="WindowsMediaAudioFileFriendlyName" xml:space="preserve">
+    <value>Windows Media Audio</value>
+  </data>
+  <data name="WindowsMediaVideoFileFriendlyName" xml:space="preserve">
+    <value>Windows Media Video</value>
+  </data>
 </root>
