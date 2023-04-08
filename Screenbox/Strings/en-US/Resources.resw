@@ -541,10 +541,10 @@
     <value>3GPP2 Multimedia File</value>
   </data>
   <data name="AdvancedAudioFileFriendlyName" xml:space="preserve">
-    <value>Advanced Audio Coding File</value>
+    <value>AAC Audio</value>
   </data>
   <data name="FlacFileFriendlyName" xml:space="preserve">
-    <value>Free Lossless Audio Codec File</value>
+    <value>FLAC Audio</value>
   </data>
   <data name="FlashFileFriendlyName" xml:space="preserve">
     <value>Flash Video</value>
@@ -559,7 +559,7 @@
     <value>Matroska Video</value>
   </data>
   <data name="MicrosoftVideoFileFriendlyName" xml:space="preserve">
-    <value>Audio Video Interleave File</value>
+    <value>AVI Video</value>
   </data>
   <data name="MidiFileFriendlyName" xml:space="preserve">
     <value>MIDI Music Data</value>

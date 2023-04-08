@@ -1596,7 +1596,7 @@ namespace Screenbox.Strings{
 
         #region AdvancedAudioFileFriendlyName
         /// <summary>
-        ///   Looks up a localized string similar to: Advanced Audio Coding File
+        ///   Looks up a localized string similar to: AAC Audio
         /// </summary>
         public static string AdvancedAudioFileFriendlyName
         {
@@ -1609,7 +1609,7 @@ namespace Screenbox.Strings{
 
         #region FlacFileFriendlyName
         /// <summary>
-        ///   Looks up a localized string similar to: Free Lossless Audio Codec File
+        ///   Looks up a localized string similar to: FLAC Audio
         /// </summary>
         public static string FlacFileFriendlyName
         {
@@ -1674,7 +1674,7 @@ namespace Screenbox.Strings{
 
         #region MicrosoftVideoFileFriendlyName
         /// <summary>
-        ///   Looks up a localized string similar to: Audio Video Interleave File
+        ///   Looks up a localized string similar to: AVI Video
         /// </summary>
         public static string MicrosoftVideoFileFriendlyName
         {
