@@ -50,7 +50,7 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="ThirdGeneration">
+          <uap:FileTypeAssociation Name="third-generation">
             <uap:DisplayName>ms-resource:ThirdGenerationFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociation3GP.png</uap:Logo>
@@ -61,7 +61,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="ThirdGenerationTwo">
+          <uap:FileTypeAssociation Name="third-generation-two">
             <uap:DisplayName>ms-resource:ThirdGeneration2FileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociation3GP.png</uap:Logo>
@@ -72,7 +72,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="AdvancedAudio">
+          <uap:FileTypeAssociation Name="aac">
             <uap:DisplayName>ms-resource:AdvancedAudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationAAC.png</uap:Logo>
@@ -83,7 +83,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="Flac">
+          <uap:FileTypeAssociation Name="flac">
             <uap:DisplayName>ms-resource:FlacFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationFLAC.png</uap:Logo>
@@ -93,7 +93,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="Flash">
+          <uap:FileTypeAssociation Name="flash">
             <uap:DisplayName>ms-resource:FlashFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationFLV.png</uap:Logo>
@@ -103,7 +103,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="iTunesVideo">
+          <uap:FileTypeAssociation Name="itunes-video">
             <uap:DisplayName>ms-resource:iTunesVideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationM4V.png</uap:Logo>
@@ -113,7 +113,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MatroskaAudio">
+          <uap:FileTypeAssociation Name="matroska-audio">
             <uap:DisplayName>ms-resource:MatroskaAudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMKA.png</uap:Logo>
@@ -123,7 +123,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MatroskaVideo">
+          <uap:FileTypeAssociation Name="matroska-video">
             <uap:DisplayName>ms-resource:MatroskaVideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMKV.png</uap:Logo>
@@ -133,7 +133,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MicrosoftVideo">
+          <uap:FileTypeAssociation Name="avi">
             <uap:DisplayName>ms-resource:MicrosoftVideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationAVI.png</uap:Logo>
@@ -143,7 +143,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="Midi">
+          <uap:FileTypeAssociation Name="midi">
             <uap:DisplayName>ms-resource:MidiFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMIDI.png</uap:Logo>
@@ -154,7 +154,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MPEG">
+          <uap:FileTypeAssociation Name="mpeg">
             <uap:DisplayName>ms-resource:MpegFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMPEG.png</uap:Logo>
@@ -165,7 +165,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MpegThreeAudio">
+          <uap:FileTypeAssociation Name="mpeg-three-audio">
             <uap:DisplayName>ms-resource:MP3FileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMP3.png</uap:Logo>
@@ -175,7 +175,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MpegFourAudio">
+          <uap:FileTypeAssociation Name="mpeg-four-audio">
             <uap:DisplayName>ms-resource:MP4AudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationM4A.png</uap:Logo>
@@ -185,7 +185,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="MpegFourVideo">
+          <uap:FileTypeAssociation Name="mpeg-four-video">
             <uap:DisplayName>ms-resource:MP4VideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMP4.png</uap:Logo>
@@ -196,7 +196,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="OggAudio">
+          <uap:FileTypeAssociation Name="ogg-audio">
             <uap:DisplayName>ms-resource:OggAudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationOGG.png</uap:Logo>
@@ -207,7 +207,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="OggVideo">
+          <uap:FileTypeAssociation Name="ogg-video">
             <uap:DisplayName>ms-resource:OggVideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationOGV.png</uap:Logo>
@@ -217,7 +217,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="QuickTime">
+          <uap:FileTypeAssociation Name="quicktime">
             <uap:DisplayName>ms-resource:QuickTimeFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationMOV.png</uap:Logo>
@@ -228,7 +228,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="Wave">
+          <uap:FileTypeAssociation Name="wave">
             <uap:DisplayName>ms-resource:WaveFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationWAV.png</uap:Logo>
@@ -238,7 +238,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="WebAudio">
+          <uap:FileTypeAssociation Name="webaudio">
             <uap:DisplayName>ms-resource:WebAudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationWEBA.png</uap:Logo>
@@ -248,7 +248,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="WebMedia">
+          <uap:FileTypeAssociation Name="webmedia">
             <uap:DisplayName>ms-resource:WebMediaFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationWEBM.png</uap:Logo>
@@ -258,7 +258,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="WindowsMediaAudio">
+          <uap:FileTypeAssociation Name="wma">
             <uap:DisplayName>ms-resource:WindowsMediaAudioFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationWMA.png</uap:Logo>
@@ -268,7 +268,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="WindowsMediaVideo">
+          <uap:FileTypeAssociation Name="wmv">
             <uap:DisplayName>ms-resource:WindowsMediaVideoFileFriendlyName</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets/FileAssociationWMV.png</uap:Logo>
