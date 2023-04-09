@@ -1567,6 +1567,292 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region ThirdGenerationFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: 3GPP Multimedia File
+        /// </summary>
+        public static string ThirdGenerationFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("ThirdGenerationFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region ThirdGeneration2FileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: 3GPP2 Multimedia File
+        /// </summary>
+        public static string ThirdGeneration2FileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("ThirdGeneration2FileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region AdvancedAudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: AAC Audio
+        /// </summary>
+        public static string AdvancedAudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("AdvancedAudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region FlacFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: FLAC Audio
+        /// </summary>
+        public static string FlacFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("FlacFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region FlashFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Flash Video
+        /// </summary>
+        public static string FlashFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("FlashFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region iTunesVideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: iTunes Video
+        /// </summary>
+        public static string iTunesVideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("iTunesVideoFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MatroskaAudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Matroska Audio
+        /// </summary>
+        public static string MatroskaAudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MatroskaAudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MatroskaVideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Matroska Video
+        /// </summary>
+        public static string MatroskaVideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MatroskaVideoFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MicrosoftVideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: AVI Video
+        /// </summary>
+        public static string MicrosoftVideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MicrosoftVideoFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MidiFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: MIDI Music Data
+        /// </summary>
+        public static string MidiFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MidiFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MpegFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: MPEG Video
+        /// </summary>
+        public static string MpegFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MpegFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MP3FileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: MP3 Audio
+        /// </summary>
+        public static string MP3FileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MP3FileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MP4AudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: MPEG-4 Audio
+        /// </summary>
+        public static string MP4AudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MP4AudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region MP4VideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: MPEG-4 Video
+        /// </summary>
+        public static string MP4VideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("MP4VideoFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region OggAudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Ogg Vorbis Audio
+        /// </summary>
+        public static string OggAudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("OggAudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region OggVideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Ogg Video
+        /// </summary>
+        public static string OggVideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("OggVideoFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region QuickTimeFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: QuickTime Movie
+        /// </summary>
+        public static string QuickTimeFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("QuickTimeFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region WaveFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: WAVE Audio
+        /// </summary>
+        public static string WaveFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("WaveFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region WebAudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: WebM Audio
+        /// </summary>
+        public static string WebAudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("WebAudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region WebMediaFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: WebM Video
+        /// </summary>
+        public static string WebMediaFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("WebMediaFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region WindowsMediaAudioFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Windows Media Audio
+        /// </summary>
+        public static string WindowsMediaAudioFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("WindowsMediaAudioFileFriendlyName");
+            }
+        }
+        #endregion
+
+        #region WindowsMediaVideoFileFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Windows Media Video
+        /// </summary>
+        public static string WindowsMediaVideoFileFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("WindowsMediaVideoFileFriendlyName");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1696,6 +1982,28 @@ namespace Screenbox.Strings{
             NoVideosPanelSubtext,
             OpenPrivacySettingsButtonText,
             FailedToLoadMediaNotificationTitle,
+            ThirdGenerationFileFriendlyName,
+            ThirdGeneration2FileFriendlyName,
+            AdvancedAudioFileFriendlyName,
+            FlacFileFriendlyName,
+            FlashFileFriendlyName,
+            iTunesVideoFileFriendlyName,
+            MatroskaAudioFileFriendlyName,
+            MatroskaVideoFileFriendlyName,
+            MicrosoftVideoFileFriendlyName,
+            MidiFileFriendlyName,
+            MpegFileFriendlyName,
+            MP3FileFriendlyName,
+            MP4AudioFileFriendlyName,
+            MP4VideoFileFriendlyName,
+            OggAudioFileFriendlyName,
+            OggVideoFileFriendlyName,
+            QuickTimeFileFriendlyName,
+            WaveFileFriendlyName,
+            WebAudioFileFriendlyName,
+            WebMediaFileFriendlyName,
+            WindowsMediaAudioFileFriendlyName,
+            WindowsMediaVideoFileFriendlyName,
         }
 
         private static ResourceLoader _resourceLoader;
