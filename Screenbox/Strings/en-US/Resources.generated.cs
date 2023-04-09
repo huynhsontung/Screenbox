@@ -1762,6 +1762,7 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
         #region OggVideoFileFriendlyName
         /// <summary>
         ///   Looks up a localized string similar to: Ogg Video
@@ -1852,7 +1853,6 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
-
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1982,6 +1982,28 @@ namespace Screenbox.Strings{
             NoVideosPanelSubtext,
             OpenPrivacySettingsButtonText,
             FailedToLoadMediaNotificationTitle,
+            ThirdGenerationFileFriendlyName,
+            ThirdGeneration2FileFriendlyName,
+            AdvancedAudioFileFriendlyName,
+            FlacFileFriendlyName,
+            FlashFileFriendlyName,
+            iTunesVideoFileFriendlyName,
+            MatroskaAudioFileFriendlyName,
+            MatroskaVideoFileFriendlyName,
+            MicrosoftVideoFileFriendlyName,
+            MidiFileFriendlyName,
+            MpegFileFriendlyName,
+            MP3FileFriendlyName,
+            MP4AudioFileFriendlyName,
+            MP4VideoFileFriendlyName,
+            OggAudioFileFriendlyName,
+            OggVideoFileFriendlyName,
+            QuickTimeFileFriendlyName,
+            WaveFileFriendlyName,
+            WebAudioFileFriendlyName,
+            WebMediaFileFriendlyName,
+            WindowsMediaAudioFileFriendlyName,
+            WindowsMediaVideoFileFriendlyName,
         }
 
         private static ResourceLoader _resourceLoader;
