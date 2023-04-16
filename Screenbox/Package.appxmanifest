@@ -277,6 +277,7 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
+        <Extension Category="windows.updateTask" EntryPoint="Background.UpdateTask"/>
        </Extensions>
     </Application>
   </Applications>

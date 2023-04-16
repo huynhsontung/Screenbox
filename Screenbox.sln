@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.Core", "Screenbox.Core\Screenbox.Core.csproj", "{46D79C78-F483-4319-A3D1-9D837A135BEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Background", "Background\Background.csproj", "{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,26 @@ Global
 		{46D79C78-F483-4319-A3D1-9D837A135BEF}.Release|x64.Build.0 = Release|x64
 		{46D79C78-F483-4319-A3D1-9D837A135BEF}.Release|x86.ActiveCfg = Release|x86
 		{46D79C78-F483-4319-A3D1-9D837A135BEF}.Release|x86.Build.0 = Release|x86
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|ARM.Build.0 = Debug|ARM
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|ARM64.Build.0 = Debug|ARM64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|x64.ActiveCfg = Debug|x64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|x64.Build.0 = Debug|x64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|x86.ActiveCfg = Debug|x86
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Debug|x86.Build.0 = Debug|x86
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|ARM.ActiveCfg = Release|ARM
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|ARM.Build.0 = Release|ARM
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|ARM64.ActiveCfg = Release|ARM64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|ARM64.Build.0 = Release|ARM64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|x64.ActiveCfg = Release|x64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|x64.Build.0 = Release|x64
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|x86.ActiveCfg = Release|x86
+		{FD1E61B7-C73A-4AAB-886D-4D0DA27B143E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
