@@ -1,23 +1,22 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Factories;
+using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Screenbox.Core.Factories;
-
 using Windows.Storage;
 using Windows.Storage.Search;
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {
     public sealed class LibraryService : ILibraryService
     {
-        public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged; 
+        public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged;
         public event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
 
         public StorageLibrary? MusicLibrary { get; private set; }
@@ -150,6 +149,19 @@ namespace Screenbox.Core.Services
         {
             List<MediaViewModel> media = new();
             uint fetchIndex = 0;
+            uint count;
+            try
+            {
+                count = await queryResult.GetItemCountAsync();
+            }
+            catch (Exception)
+            {
+                count = 0;
+            }
+
+            if (count == 0)
+                return media;
+
             while (fetchIndex < MaxLoadCount)
             {
                 IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
@@ -195,7 +207,7 @@ namespace Screenbox.Core.Services
                 _musicLibraryQueryResult = _filesService.GetSongsFromLibrary();
                 _musicLibraryQueryResult.ContentsChanged += OnMusicLibraryContentChanged;
             }
-            
+
             return _musicLibraryQueryResult;
         }
 
