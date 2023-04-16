@@ -448,6 +448,12 @@
         "resolved": "4.5.0",
         "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
       },
+      "background": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )"
+        }
+      },
       "screenbox.core": {
         "type": "Project",
         "dependencies": {
