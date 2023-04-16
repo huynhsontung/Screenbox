@@ -2,11 +2,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
-
-using Windows.ApplicationModel;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
@@ -45,16 +44,16 @@ namespace Screenbox.Core.Services
             {
                 if (file.ContentType.StartsWith("audio"))
                 {
-                    await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
-                    if (string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
+                    bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
+                    if (success && string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
                     {
                         displayUpdater.MusicProperties.Title = item.Name;
                     }
                 }
                 else if (file.ContentType.StartsWith("video"))
                 {
-                    await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
-                    if (string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
+                    bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
+                    if (success && string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
                     {
                         displayUpdater.VideoProperties.Title = item.Name;
                     }
