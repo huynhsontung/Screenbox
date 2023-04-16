@@ -1,5 +1,11 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,12 +13,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -47,7 +47,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (message.Value is { Source: IStorageItem } && _settingsService.ShowRecent)
             {
-                await UpdateRecentMediaList().ConfigureAwait(false);
+                await UpdateRecentMediaListAsync().ConfigureAwait(false);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_settingsService.ShowRecent)
             {
-                await UpdateRecentMediaList();
+                await UpdateRecentMediaListAsync();
             }
             else
             {
@@ -78,23 +78,23 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlayMediaMessage(url));
         }
 
-        private async Task UpdateRecentMediaList()
+        private async Task UpdateRecentMediaListAsync()
         {
-            Tuple<string, Task<StorageFile?>>[] tuples = StorageApplicationPermissions.MostRecentlyUsedList.Entries
+            string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries
                 .OrderByDescending(x => x.Metadata)
-                .Select(x => new Tuple<string, Task<StorageFile?>>(x.Token, ConvertMruTokenToStorageFile(x.Token)))
+                .Select(x => x.Token)
                 .ToArray();
 
-            if (tuples.Length == 0)
+            if (tokens.Length == 0)
             {
                 Recent.Clear();
                 return;
             }
 
-            for (int i = 0; i < tuples.Length; i++)
+            for (int i = 0; i < tokens.Length; i++)
             {
-                StorageFile? file = await tuples[i].Item2;
-                string token = tuples[i].Item1;
+                string token = tokens[i];
+                StorageFile? file = await ConvertMruTokenToStorageFileAsync(token);
                 if (file == null)
                 {
                     StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
@@ -107,33 +107,12 @@ namespace Screenbox.Core.ViewModels
                 }
                 else if (!file.IsEqual(Recent[i].Media.Source as IStorageItem))
                 {
-                    // Find index of the VM of the same file
-                    // There is no FindIndex method for ObservableCollection :(
-                    int existingIndex = -1;
-                    for (int j = i + 1; j < Recent.Count; j++)
-                    {
-                        if (file.IsEqual(Recent[j].Media.Source as IStorageItem))
-                        {
-                            existingIndex = j;
-                            break;
-                        }
-                    }
-
-                    if (existingIndex == -1)
-                    {
-                        Recent.Insert(i, new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
-                    }
-                    else
-                    {
-                        MediaViewModelWithMruToken toInsert = Recent[existingIndex];
-                        Recent.RemoveAt(existingIndex);
-                        Recent.Insert(i, toInsert);
-                    }
+                    MoveOrInsert(file, token, i);
                 }
             }
 
             // Remove stale items
-            while (Recent.Count > tuples.Length)
+            while (Recent.Count > tokens.Length)
             {
                 Recent.RemoveAt(Recent.Count - 1);
             }
@@ -141,6 +120,32 @@ namespace Screenbox.Core.ViewModels
             // Load media details for the remaining items
             IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media.LoadDetailsAndThumbnailAsync());
             await Task.WhenAll(loadingTasks);
+        }
+
+        private void MoveOrInsert(StorageFile file, string token, int desiredIndex)
+        {
+            // Find index of the VM of the same file
+            // There is no FindIndex method for ObservableCollection :(
+            int existingIndex = -1;
+            for (int j = desiredIndex + 1; j < Recent.Count; j++)
+            {
+                if (file.IsEqual(Recent[j].Media.Source as IStorageItem))
+                {
+                    existingIndex = j;
+                    break;
+                }
+            }
+
+            if (existingIndex == -1)
+            {
+                Recent.Insert(desiredIndex, new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
+            }
+            else
+            {
+                MediaViewModelWithMruToken toInsert = Recent[existingIndex];
+                Recent.RemoveAt(existingIndex);
+                Recent.Insert(desiredIndex, toInsert);
+            }
         }
 
         [RelayCommand]
@@ -181,7 +186,7 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlayMediaMessage(files));
         }
 
-        private static async Task<StorageFile?> ConvertMruTokenToStorageFile(string token)
+        private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)
         {
             try
             {
