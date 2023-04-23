@@ -91,7 +91,6 @@ namespace Screenbox.Core.ViewModels
                     else
                     {
                         subtitleTracks.SelectedIndex = 0;
-
                     }
                     break;
 
