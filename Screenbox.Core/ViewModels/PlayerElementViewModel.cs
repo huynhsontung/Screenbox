@@ -190,7 +190,7 @@ namespace Screenbox.Core.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (_mediaPlayer == null) return;
+            if (_mediaPlayer == null || size.Width < 0 || size.Height < 0) return;
             Rect defaultSize = new(0, 0, 1, 1);
             if (size == Size.Empty)
             {
