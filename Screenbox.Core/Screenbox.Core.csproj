@@ -145,7 +145,6 @@
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
-    <Compile Include="Messages\ChangeZoomToFitMessage.cs" />
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Messages\CloseNotificationMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
