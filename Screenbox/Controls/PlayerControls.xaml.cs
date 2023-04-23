@@ -88,7 +88,8 @@ namespace Screenbox.Controls
 
         private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-
+            Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
+            customAspectFlyout.ShowAt(MoreButton);
         }
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -133,6 +134,23 @@ namespace Screenbox.Controls
             }
 
             return hasActiveItem;
+        }
+
+        private void AspectRatioTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            string aspectRatio = AspectRatioTextBox.Text;
+            if (!aspectRatio.Contains(':')) return;
+            if (AspectRatioSubMenu.Items?.FirstOrDefault(x => (string)x.Tag == aspectRatio) is RadioMenuFlyoutItem
+                matchItem)
+            {
+                matchItem.IsChecked = true;
+                matchItem.Command?.Execute(matchItem.CommandParameter);
+            }
+            else
+            {
+                CustomAspectRatioMenuItem.IsChecked = true;
+                ViewModel.SetAspectRatioCommand.Execute(aspectRatio);
+            }
         }
 
         private static bool IsValueEqualTag(double value, object? tag)

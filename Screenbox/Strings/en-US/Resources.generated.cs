@@ -191,19 +191,6 @@ namespace Screenbox.Strings{
         }
         #endregion
 
-        #region ZoomToFit
-        /// <summary>
-        ///   Looks up a localized string similar to: Zoom to fit
-        /// </summary>
-        public static string ZoomToFit
-        {
-            get
-            {
-                return _resourceLoader.GetString("ZoomToFit");
-            }
-        }
-        #endregion
-
         #region FrameSavedNotificationTitle
         /// <summary>
         ///   Looks up a localized string similar to: Frame saved
@@ -1108,15 +1095,15 @@ namespace Screenbox.Strings{
         }
         #endregion
 
-        #region CustomPlaybackSpeed
+        #region Custom
         /// <summary>
         ///   Looks up a localized string similar to: Custom
         /// </summary>
-        public static string CustomPlaybackSpeed
+        public static string Custom
         {
             get
             {
-                return _resourceLoader.GetString("CustomPlaybackSpeed");
+                return _resourceLoader.GetString("Custom");
             }
         }
         #endregion
@@ -1853,6 +1840,58 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region AspectRatio
+        /// <summary>
+        ///   Looks up a localized string similar to: Aspect ratio
+        /// </summary>
+        public static string AspectRatio
+        {
+            get
+            {
+                return _resourceLoader.GetString("AspectRatio");
+            }
+        }
+        #endregion
+
+        #region Fit
+        /// <summary>
+        ///   Looks up a localized string similar to: Fit
+        /// </summary>
+        public static string Fit
+        {
+            get
+            {
+                return _resourceLoader.GetString("Fit");
+            }
+        }
+        #endregion
+
+        #region Fill
+        /// <summary>
+        ///   Looks up a localized string similar to: Fill
+        /// </summary>
+        public static string Fill
+        {
+            get
+            {
+                return _resourceLoader.GetString("Fill");
+            }
+        }
+        #endregion
+
+        #region CustomAspectRatio
+        /// <summary>
+        ///   Looks up a localized string similar to: Custom aspect ratio
+        /// </summary>
+        public static string CustomAspectRatio
+        {
+            get
+            {
+                return _resourceLoader.GetString("CustomAspectRatio");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1874,7 +1913,6 @@ namespace Screenbox.Strings{
             ShuffleMode,
             SongsCount,
             AlbumsCount,
-            ZoomToFit,
             FrameSavedNotificationTitle,
             SaveCurrentFrame,
             Loop,
@@ -1945,7 +1983,7 @@ namespace Screenbox.Strings{
             PropertyTrack,
             PropertyWriters,
             PropertyYear,
-            CustomPlaybackSpeed,
+            Custom,
             Network,
             NoNetworkDrivePanelHeader,
             NoNetworkDrivePanelSubtext,
@@ -2004,6 +2042,10 @@ namespace Screenbox.Strings{
             WebMediaFileFriendlyName,
             WindowsMediaAudioFileFriendlyName,
             WindowsMediaVideoFileFriendlyName,
+            AspectRatio,
+            Fit,
+            Fill,
+            CustomAspectRatio,
         }
 
         private static ResourceLoader _resourceLoader;

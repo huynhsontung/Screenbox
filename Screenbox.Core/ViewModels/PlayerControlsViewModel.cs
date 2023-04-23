@@ -204,7 +204,7 @@ namespace Screenbox.Core.ViewModels
                     _aspectRatio = new Size(double.NaN, double.NaN);
                     break;
                 default:
-                    string[] values = aspect.Split(':');
+                    string[] values = aspect.Split(':', StringSplitOptions.RemoveEmptyEntries);
                     if (values.Length != 2) return;
                     if (!double.TryParse(values[0], out double width)) return;
                     if (!double.TryParse(values[1], out double height)) return;
