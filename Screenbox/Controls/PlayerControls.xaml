@@ -132,7 +132,8 @@
                     <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{strings:Resources Key=CustomAspectRatio}" />
                     <TextBox
                         x:Name="AspectRatioTextBox"
-                        PlaceholderText="Example: 16:9 or 1.77:1"
+                        AutomationProperties.Name="Custom aspect ratio TextBox"
+                        PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
                 </StackPanel>
             </Flyout>
