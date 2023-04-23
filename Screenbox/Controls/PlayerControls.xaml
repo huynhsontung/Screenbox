@@ -124,6 +124,17 @@
                 </Grid>
             </Flyout>
 
+            <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
+                <StackPanel Width="180" Orientation="Vertical">
+                    <TextBox
+                        x:Name="AspectRatioTextBox"
+                        AutomationProperties.Name="Custom aspect ratio TextBox"
+                        Header="{strings:Resources Key=CustomAspectRatio}"
+                        PlaceholderText="16:9"
+                        TextChanged="AspectRatioTextBox_OnTextChanged" />
+                </StackPanel>
+            </Flyout>
+
             <MenuFlyout x:Name="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind Common.ShowPropertiesCommand}"
@@ -201,7 +212,7 @@
                         x:Name="CustomPlaybackSpeedMenuItem"
                         Click="CustomSpeedMenuItem_OnClick"
                         GroupName="SpeedGroup"
-                        Text="{x:Bind strings:Resources.CustomPlaybackSpeed}" />
+                        Text="{strings:Resources Key=Custom}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
@@ -217,18 +228,64 @@
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
+                    x:Name="AspectRatioSubMenu"
+                    Icon="{ui:FontIcon Glyph=&#xe799;}"
+                    IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
+                    Text="{strings:Resources Key=AspectRatio}">
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="Fit"
+                        GroupName="AspectRatioGroup"
+                        IsChecked="True"
+                        Tag="0:0"
+                        Text="{strings:Resources Key=Fit}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="Fill"
+                        GroupName="AspectRatioGroup"
+                        Text="{strings:Resources Key=Fill}" />
+                    <MenuFlyoutSeparator />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="16:9"
+                        GroupName="AspectRatioGroup"
+                        Tag="16:9"
+                        Text="16:9" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="4:3"
+                        GroupName="AspectRatioGroup"
+                        Tag="4:3"
+                        Text="4:3" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="21:9"
+                        GroupName="AspectRatioGroup"
+                        Tag="21:9"
+                        Text="21:9" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="1.85:1"
+                        GroupName="AspectRatioGroup"
+                        Tag="1.85:1"
+                        Text="1.85:1" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetAspectRatioCommand}"
+                        CommandParameter="1:1"
+                        GroupName="AspectRatioGroup"
+                        Tag="1:1"
+                        Text="1:1" />
+                    <muxc:RadioMenuFlyoutItem
+                        x:Name="CustomAspectRatioMenuItem"
+                        Click="CustomAspectRatioMenuItem_OnClick"
+                        GroupName="AspectRatioGroup"
+                        Text="{strings:Resources Key=Custom}" />
+                </MenuFlyoutSubItem>
+                <!--<MenuFlyoutSubItem
                     Icon="{ui:FontIcon Glyph=&#xe714;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.VideoSettings}">
-                    <ToggleMenuFlyoutItem
-                        Icon="{ui:FontIcon Glyph=&#xE9A6;}"
-                        IsChecked="{x:Bind ViewModel.ZoomToFit, Mode=TwoWay}"
-                        Text="{x:Bind strings:Resources.ZoomToFit}">
-                        <MenuFlyoutItem.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Z" Modifiers="Control,Shift" />
-                        </MenuFlyoutItem.KeyboardAccelerators>
-                    </ToggleMenuFlyoutItem>
-                </MenuFlyoutSubItem>
+                </MenuFlyoutSubItem>-->
 
                 <MenuFlyoutSeparator x:Name="ExtraOptionsSeparator" Visibility="Collapsed" />
                 <MenuFlyoutItem

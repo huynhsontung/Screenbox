@@ -1,14 +1,14 @@
 ﻿#nullable enable
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Linq;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -29,7 +29,7 @@ namespace Screenbox.Controls
             new PropertyMetadata(default(MenuFlyout)));
 
         public static readonly DependencyProperty BackgroundTransitionProperty = DependencyProperty.Register(
-            "BackgroundTransition",
+            nameof(BackgroundTransition),
             typeof(BrushTransition),
             typeof(PlayerControls),
             new PropertyMetadata(null));
@@ -86,6 +86,12 @@ namespace Screenbox.Controls
             }
         }
 
+        private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
+            customAspectFlyout.ShowAt(MoreButton);
+        }
+
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             ViewModel.PlaybackSpeed = e.NewValue;
@@ -128,6 +134,23 @@ namespace Screenbox.Controls
             }
 
             return hasActiveItem;
+        }
+
+        private void AspectRatioTextBox_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            string aspectRatio = AspectRatioTextBox.Text;
+            if (!aspectRatio.Contains(':')) return;
+            if (AspectRatioSubMenu.Items?.FirstOrDefault(x => (string)x.Tag == aspectRatio) is RadioMenuFlyoutItem
+                matchItem)
+            {
+                matchItem.IsChecked = true;
+                matchItem.Command?.Execute(matchItem.CommandParameter);
+            }
+            else
+            {
+                CustomAspectRatioMenuItem.IsChecked = true;
+                ViewModel.SetAspectRatioCommand.Execute(aspectRatio);
+            }
         }
 
         private static bool IsValueEqualTag(double value, object? tag)

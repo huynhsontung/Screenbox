@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ZoomToFit" xml:space="preserve">
-    <value>Zoom to fit</value>
-  </data>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
     <value>Frame saved</value>
   </data>
@@ -379,7 +376,7 @@
   <data name="PropertyYear" xml:space="preserve">
     <value>Year</value>
   </data>
-  <data name="CustomPlaybackSpeed" xml:space="preserve">
+  <data name="Custom" xml:space="preserve">
     <value>Custom</value>
   </data>
   <data name="Network" xml:space="preserve">
@@ -599,5 +596,17 @@
   </data>
   <data name="WindowsMediaVideoFileFriendlyName" xml:space="preserve">
     <value>Windows Media Video</value>
+  </data>
+  <data name="AspectRatio" xml:space="preserve">
+    <value>Aspect ratio</value>
+  </data>
+  <data name="Fit" xml:space="preserve">
+    <value>Fit</value>
+  </data>
+  <data name="Fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
+  <data name="CustomAspectRatio" xml:space="preserve">
+    <value>Custom aspect ratio</value>
   </data>
 </root>

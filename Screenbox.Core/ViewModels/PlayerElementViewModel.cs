@@ -21,7 +21,7 @@ using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
-        IRecipient<ChangeZoomToFitMessage>,
+        IRecipient<ChangeAspectRatioMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
         public MediaPlayer? VlcPlayer { get; private set; }
@@ -33,7 +33,7 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
-        private bool _zoomToFit;
+        private Size _aspectRatio;
         private bool _forceResize;
         private VlcMediaPlayer? _mediaPlayer;
 
@@ -57,10 +57,10 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        public void Receive(ChangeZoomToFitMessage message)
+        public void Receive(ChangeAspectRatioMessage message)
         {
-            _zoomToFit = message.Value;
-            SetCropGeometry(_viewSize);
+            _aspectRatio = message.Value;
+            SetCropGeometry(message.Value);
         }
 
         public void Receive(MediaPlayerRequestMessage message)
@@ -120,7 +120,7 @@ namespace Screenbox.Core.ViewModels
         public void OnSizeChanged(object sender, SizeChangedEventArgs args)
         {
             _viewSize = args.NewSize;
-            SetCropGeometry(_viewSize);
+            SetCropGeometry(_aspectRatio);
         }
 
         private void TransportControlsOnPlaybackPositionChangeRequested(SystemMediaTransportControls sender, PlaybackPositionChangeRequestedEventArgs args)
@@ -190,11 +190,20 @@ namespace Screenbox.Core.ViewModels
 
         private void SetCropGeometry(Size size)
         {
-            if (_mediaPlayer == null) return;
-            Rect defaultSize = new Rect(0, 0, 1, 1);
-            if (!_zoomToFit && _mediaPlayer.NormalizedSourceRect == defaultSize) return;
-            if (_zoomToFit)
+            if (_mediaPlayer == null || size.Width < 0 || size.Height < 0) return;
+            Rect defaultSize = new(0, 0, 1, 1);
+            if (size == Size.Empty)
             {
+                if (_mediaPlayer.NormalizedSourceRect == defaultSize) return;
+                _mediaPlayer.NormalizedSourceRect = defaultSize;
+            }
+            else
+            {
+                if (double.IsNaN(size.Width) || double.IsNaN(size.Height))
+                {
+                    size = _viewSize;
+                }
+
                 double leftOffset = 0.5, topOffset = 0.5;
                 double widthRatio = size.Width / _mediaPlayer.NaturalVideoWidth;
                 double heightRatio = size.Height / _mediaPlayer.NaturalVideoHeight;
@@ -205,10 +214,6 @@ namespace Screenbox.Core.ViewModels
                 topOffset -= height / 2;
 
                 _mediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
-            }
-            else
-            {
-                _mediaPlayer.NormalizedSourceRect = defaultSize;
             }
         }
 
