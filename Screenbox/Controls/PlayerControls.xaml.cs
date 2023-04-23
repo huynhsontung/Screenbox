@@ -1,14 +1,14 @@
 ﻿#nullable enable
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Linq;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -29,7 +29,7 @@ namespace Screenbox.Controls
             new PropertyMetadata(default(MenuFlyout)));
 
         public static readonly DependencyProperty BackgroundTransitionProperty = DependencyProperty.Register(
-            "BackgroundTransition",
+            nameof(BackgroundTransition),
             typeof(BrushTransition),
             typeof(PlayerControls),
             new PropertyMetadata(null));
@@ -84,6 +84,11 @@ namespace Screenbox.Controls
             {
                 SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackSpeed);
             }
+        }
+
+        private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)

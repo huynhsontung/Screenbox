@@ -1,13 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,6 +8,14 @@ using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Media.Playback;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -26,7 +26,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private bool _isFullscreen;
-        [ObservableProperty] private bool _zoomToFit;
         [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
@@ -47,6 +46,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private IMediaPlayer? _mediaPlayer;
+        private Size _aspectRatio;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
@@ -66,7 +66,7 @@ namespace Screenbox.Core.ViewModels
 
             IsActive = true;
         }
-        
+
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
@@ -91,7 +91,7 @@ namespace Screenbox.Core.ViewModels
                     else
                     {
                         subtitleTracks.SelectedIndex = 0;
-                        
+
                     }
                     break;
 
@@ -125,11 +125,6 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(subtitleTracks.SelectedIndex == -1
                 ? new UpdateStatusMessage("Subtitle: None")
                 : new UpdateStatusMessage($"Subtitle: {subtitleTracks[subtitleTracks.SelectedIndex].Label}"));
-        }
-
-        partial void OnZoomToFitChanged(bool value)
-        {
-            Messenger.Send(new ChangeZoomToFitMessage(value));
         }
 
         partial void OnPlaybackSpeedChanged(double value)
@@ -196,6 +191,29 @@ namespace Screenbox.Core.ViewModels
         private void SetPlaybackSpeed(string speedText)
         {
             PlaybackSpeed = double.Parse(speedText);
+        }
+
+        [RelayCommand]
+        private void SetAspectRatio(string aspect)
+        {
+            switch (aspect)
+            {
+                case "Fit":
+                    _aspectRatio = Size.Empty;
+                    break;
+                case "Fill":
+                    _aspectRatio = new Size(double.NaN, double.NaN);
+                    break;
+                default:
+                    string[] values = aspect.Split(':');
+                    if (values.Length != 2) return;
+                    if (!double.TryParse(values[0], out double width)) return;
+                    if (!double.TryParse(values[1], out double height)) return;
+                    _aspectRatio = new Size(width, height);
+                    break;
+            }
+
+            Messenger.Send(new ChangeAspectRatioMessage(_aspectRatio));
         }
 
         [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
