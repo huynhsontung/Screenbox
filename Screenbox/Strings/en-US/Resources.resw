@@ -609,4 +609,7 @@
   <data name="CustomAspectRatio" xml:space="preserve">
     <value>Custom aspect ratio</value>
   </data>
+  <data name="CustomPlaybackSpeed" xml:space="preserve">
+    <value>Custom playback speed</value>
+  </data>
 </root>

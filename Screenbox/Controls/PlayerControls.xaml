@@ -104,24 +104,21 @@
             </Flyout>
 
             <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
-                <Grid MinWidth="180">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" HorizontalAlignment="Center"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
+                <StackPanel
+                    Width="180"
+                    Orientation="Vertical"
+                    Spacing="8">
                     <Slider
                         x:Name="SpeedSlider"
-                        Grid.Row="1"
-                        Margin="0,8,0,0"
+                        Header="{strings:Resources Key=CustomPlaybackSpeed}"
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0.05"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
                         Value="1.0" />
-                </Grid>
+                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
+                </StackPanel>
             </Flyout>
 
             <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
