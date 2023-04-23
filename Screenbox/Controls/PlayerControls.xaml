@@ -125,14 +125,11 @@
             </Flyout>
 
             <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
-                <StackPanel
-                    Width="180"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{strings:Resources Key=CustomAspectRatio}" />
+                <StackPanel Width="180" Orientation="Vertical">
                     <TextBox
                         x:Name="AspectRatioTextBox"
                         AutomationProperties.Name="Custom aspect ratio TextBox"
+                        Header="{strings:Resources Key=CustomAspectRatio}"
                         PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
                 </StackPanel>
