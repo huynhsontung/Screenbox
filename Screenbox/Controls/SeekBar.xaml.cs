@@ -1,6 +1,10 @@
 ﻿#nullable enable
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.System;
@@ -9,9 +13,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -33,7 +34,6 @@ namespace Screenbox.Controls
 
         internal SeekBarViewModel ViewModel => (SeekBarViewModel)DataContext;
         private readonly DispatcherQueueTimer _previewToolTipTimer;
-        private bool _showPreviewToolTip;
         private bool _overridePreviewToolTipDelay;
         private Thumb? _seekBarThumb;
 
@@ -44,6 +44,16 @@ namespace Screenbox.Controls
             RegisterSeekBarPointerHandlers();
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _previewToolTipTimer = dispatcherQueue.CreateTimer();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.ShouldShowPreview) && !ViewModel.ShouldShowPreview)
+            {
+                ResetPreviewToolTip();
+            }
         }
 
         private void RegisterSeekBarPointerHandlers()
@@ -58,11 +68,11 @@ namespace Screenbox.Controls
         {
             e.Handled = true;
             ViewModel.OnSeekBarPointerEvent(false);
-            if (!_showPreviewToolTip)
+            if (!ViewModel.ShouldShowPreview)
             {
                 _previewToolTipTimer.Debounce(() =>
                 {
-                    _showPreviewToolTip = true;
+                    ViewModel.ShouldShowPreview = true;
                 }, TimeSpan.FromMilliseconds(500));
             }
         }
@@ -71,15 +81,13 @@ namespace Screenbox.Controls
         {
             e.Handled = true;
             ViewModel.OnSeekBarPointerEvent(true);
-            _showPreviewToolTip = false;
-            _previewToolTipTimer.Stop();
-            PreviewToolTip.IsOpen = false;
+            ViewModel.ShouldShowPreview = false;
         }
 
         private void PointerMovedEventHandler(object s, PointerRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!_showPreviewToolTip) return;
+            if (!ViewModel.ShouldShowPreview) return;
             PointerPoint pointerPoint = e.GetCurrentPoint(SeekBarSlider);
             if (PreviewToolTip.IsOpen || _overridePreviewToolTipDelay)
             {
@@ -95,7 +103,7 @@ namespace Screenbox.Controls
 
         private void SeekBarSlider_OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            _showPreviewToolTip = true;
+            ViewModel.ShouldShowPreview = true;
             _previewToolTipTimer.Stop();
             PreviewToolTip.IsOpen = false;
             ToolTipService.SetToolTip(SeekBarSlider, null);
@@ -119,13 +127,17 @@ namespace Screenbox.Controls
 
         private void SeekBarThumb_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            _showPreviewToolTip = true;
+            ViewModel.ShouldShowPreview = true;
             _overridePreviewToolTipDelay = true;
         }
 
         private void SeekBarThumb_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            _showPreviewToolTip = false;
+            ViewModel.ShouldShowPreview = false;
+        }
+
+        private void ResetPreviewToolTip()
+        {
             _previewToolTipTimer.Stop();
             PreviewToolTip.IsOpen = false;
         }

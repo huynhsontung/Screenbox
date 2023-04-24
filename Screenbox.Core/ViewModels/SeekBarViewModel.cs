@@ -1,16 +1,16 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI.Xaml.Controls.Primitives;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Playback;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -31,6 +31,8 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private IReadOnlyCollection<ChapterCue>? _chapters;
 
         [ObservableProperty] private double _previewTime;
+
+        [ObservableProperty] private bool _shouldShowPreview;
 
         private IMediaPlayer? _mediaPlayer;
 
