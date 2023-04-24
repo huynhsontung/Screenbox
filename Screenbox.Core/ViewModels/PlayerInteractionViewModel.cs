@@ -1,5 +1,12 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
@@ -9,13 +16,6 @@ using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Playback;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -32,11 +32,15 @@ namespace Screenbox.Core.ViewModels
 
         private readonly ISettingsService _settingsService;
         private readonly DispatcherQueueTimer _toggleTimer;
+        private readonly DispatcherQueueTimer _seekOriginTimer;
 
         public PlayerInteractionViewModel(ISettingsService settingsService)
         {
             _settingsService = settingsService;
-            _toggleTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+            DispatcherQueue? dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _toggleTimer = dispatcherQueue.CreateTimer();
+            _seekOriginTimer = dispatcherQueue.CreateTimer();
+            _seekOriginTimer.IsRepeating = false;
 
             UpdateSettings();
             IsActive = true;
@@ -284,9 +288,12 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer?.CanSeek ?? false)
             {
+                _seekOriginTimer.Debounce(() => _timeBeforeManipulation = _mediaPlayer.Position, TimeSpan.FromSeconds(1), true);
                 TimeSpan newPosition = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.FromMilliseconds(amount), true, false));
+
+                double persistentOffset = (newPosition - _timeBeforeManipulation).TotalMilliseconds;
                 Messenger.Send(new UpdateStatusMessage(
-                    $"{Humanizer.ToDuration(newPosition)} / {Humanizer.ToDuration(_mediaPlayer.NaturalDuration)} ({(amount > 0 ? '+' : string.Empty)}{Humanizer.ToDuration(amount)})"));
+                    $"{Humanizer.ToDuration(newPosition)} / {Humanizer.ToDuration(_mediaPlayer.NaturalDuration)} ({(persistentOffset > 0 ? '+' : string.Empty)}{Humanizer.ToDuration(persistentOffset)})"));
             }
         }
 
