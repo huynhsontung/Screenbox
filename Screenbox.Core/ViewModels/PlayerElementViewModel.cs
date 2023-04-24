@@ -30,6 +30,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IWindowService _windowService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
+        private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
@@ -41,12 +42,14 @@ namespace Screenbox.Core.ViewModels
             LibVlcService libVlcService,
             IWindowService windowService,
             ISettingsService settingsService,
-            ISystemMediaTransportControlsService transportControlsService)
+            ISystemMediaTransportControlsService transportControlsService,
+            IResourceService resourceService)
         {
             _libVlcService = libVlcService;
             _windowService = windowService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
+            _resourceService = resourceService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _requestTracker = new DisplayRequestTracker();
 
@@ -181,7 +184,8 @@ namespace Screenbox.Core.ViewModels
             double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
             if (actualScalar > 0)
             {
-                Messenger.Send(new UpdateStatusMessage($"Scale {actualScalar * 100:0.##}%"));
+                string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
+                Messenger.Send(new UpdateStatusMessage(status));
                 return true;
             }
 

@@ -612,4 +612,19 @@
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Custom playback speed</value>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ScaleStatus" xml:space="preserve">
+    <value>Scale: {0}</value>
+    <comment>#Format[String scale]</comment>
+  </data>
+  <data name="SubtitleStatus" xml:space="preserve">
+    <value>Subtitle: {0}</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="TrackIndex" xml:space="preserve">
+    <value>Track {0}</value>
+    <comment>#Format[Int index]</comment>
+  </data>
 </root>

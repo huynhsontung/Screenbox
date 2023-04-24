@@ -1905,6 +1905,49 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region None
+        /// <summary>
+        ///   Looks up a localized string similar to: None
+        /// </summary>
+        public static string None
+        {
+            get
+            {
+                return _resourceLoader.GetString("None");
+            }
+        }
+        #endregion
+
+        #region ScaleStatus
+        /// <summary>
+        ///   Looks up a localized string similar to: Scale: {0}
+        /// </summary>
+        public static string ScaleStatus(string scale)
+        {
+            return string.Format(_resourceLoader.GetString("ScaleStatus"), scale);
+        }
+        #endregion
+
+        #region SubtitleStatus
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitle: {0}
+        /// </summary>
+        public static string SubtitleStatus(string name)
+        {
+            return string.Format(_resourceLoader.GetString("SubtitleStatus"), name);
+        }
+        #endregion
+
+        #region TrackIndex
+        /// <summary>
+        ///   Looks up a localized string similar to: Track {0}
+        /// </summary>
+        public static string TrackIndex(int index)
+        {
+            return string.Format(_resourceLoader.GetString("TrackIndex"), index);
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2060,6 +2103,10 @@ namespace Screenbox.Strings{
             Fill,
             CustomAspectRatio,
             CustomPlaybackSpeed,
+            None,
+            ScaleStatus,
+            SubtitleStatus,
+            TrackIndex,
         }
 
         private static ResourceLoader _resourceLoader;
