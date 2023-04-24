@@ -66,7 +66,6 @@ namespace Screenbox.Controls
 
         private void PointerReleasedEventHandler(object sender, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             ViewModel.OnSeekBarPointerEvent(false);
             if (!ViewModel.ShouldShowPreview)
             {
@@ -79,14 +78,12 @@ namespace Screenbox.Controls
 
         private void PointerPressedEventHandler(object sender, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             ViewModel.OnSeekBarPointerEvent(true);
             ViewModel.ShouldShowPreview = false;
         }
 
         private void PointerMovedEventHandler(object s, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
             if (!ViewModel.ShouldShowPreview) return;
             PointerPoint pointerPoint = e.GetCurrentPoint(SeekBarSlider);
             if (PreviewToolTip.IsOpen || _overridePreviewToolTipDelay)
