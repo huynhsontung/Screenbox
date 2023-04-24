@@ -1,12 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Threading.Tasks;
-using Windows.Media;
-using Windows.Media.Playback;
-using Windows.System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -17,6 +10,13 @@ using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using System;
+using System.Threading.Tasks;
+using Windows.Media;
+using Windows.Media.Playback;
+using Windows.System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -46,7 +46,7 @@ namespace Screenbox.Core.ViewModels
         [NotifyPropertyChangedRecipients]
         private PlayerVisibilityState _playerVisibility;
 
-        public bool SeekBarPointerPressed { get; set; }
+        public bool SeekBarPointerInteracting { get; set; }
 
         private bool AudioOnlyInternal => AudioOnly ?? false;
 
@@ -98,7 +98,7 @@ namespace Screenbox.Core.ViewModels
         public void Receive(SuspendingMessage message)
         {
             message.Reply(_lastPositionTracker.SaveToDiskAsync());
-        } 
+        }
 
         public async void Receive(MediaPlayerChangedMessage message)
         {
@@ -171,7 +171,7 @@ namespace Screenbox.Core.ViewModels
                 ShowControls();
             }
 
-            if (SeekBarPointerPressed) return;
+            if (SeekBarPointerInteracting) return;
             DelayHideControls();
         }
 
@@ -270,7 +270,7 @@ namespace Screenbox.Core.ViewModels
             if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnlyInternal) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (IsPlaying && VideoViewFocused && !AudioOnlyInternal)
+                if (IsPlaying && VideoViewFocused && !SeekBarPointerInteracting && !AudioOnlyInternal)
                 {
                     HideControls();
 

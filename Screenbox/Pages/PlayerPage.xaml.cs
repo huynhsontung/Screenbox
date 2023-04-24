@@ -1,9 +1,16 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Controls;
+using Screenbox.Core.Enums;
+using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Threading;
 using Windows.ApplicationModel.Core;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -12,13 +19,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
-using CommunityToolkit.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Controls;
-using Windows.System;
-using Screenbox.Core.Enums;
-using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -42,7 +42,7 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
-            
+
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
             UpdateBackgroundAcrylicOpacity(LayoutRoot.ActualTheme);
@@ -90,7 +90,7 @@ namespace Screenbox.Pages
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Hidden)
                 VisualStateManager.GoToState(this, "Hidden", false);
         }
-        
+
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (LayoutRoot.Transitions.Count != 0) return;
@@ -98,7 +98,7 @@ namespace Screenbox.Pages
             {
                 Edge = EdgeTransitionLocation.Bottom
             };
-                
+
             LayoutRoot.Transitions.Add(transition);
 
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
@@ -125,20 +125,27 @@ namespace Screenbox.Pages
         {
             SeekBar? seekBar = PlayerControls.FindDescendant<SeekBar>();
             Guard.IsNotNull(seekBar, nameof(seekBar));
-            seekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)SeekBarPointerPressedEventHandler, true);
+            seekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)SeekBarPointerPressedOrEnteredEventHandler, true);
             seekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
             seekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
+            seekBar.AddHandler(PointerEnteredEvent, (PointerEventHandler)SeekBarPointerPressedOrEnteredEventHandler, false);
+            seekBar.AddHandler(PointerExitedEvent, (PointerEventHandler)SeekBarPointerExitedEventHandler, false);
         }
 
-        private void SeekBarPointerPressedEventHandler(object s, PointerRoutedEventArgs e)
+        private void SeekBarPointerPressedOrEnteredEventHandler(object s, PointerRoutedEventArgs e)
         {
-            ViewModel.SeekBarPointerPressed = true;
+            ViewModel.SeekBarPointerInteracting = true;
         }
 
         private void SeekBarPointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
         {
-            ViewModel.SeekBarPointerPressed = false;
+            ViewModel.SeekBarPointerInteracting = false;
             FocusVideoView();
+        }
+
+        private void SeekBarPointerExitedEventHandler(object s, PointerRoutedEventArgs e)
+        {
+            ViewModel.SeekBarPointerInteracting = false;
         }
 
         private void OnLayoutVisualStateChanged(object _, VisualStateChangedEventArgs args)
