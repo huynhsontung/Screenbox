@@ -111,14 +111,9 @@ namespace Screenbox.Core.ViewModels
                 _debounceOverride = true;
 
             // Assume UI thread
-            if (message.IsOffset)
-            {
-                Time += message.Value.TotalMilliseconds;
-            }
-            else
-            {
-                Time = message.Value.TotalMilliseconds;
-            }
+            Time = message.IsOffset
+                ? Math.Clamp(Time + message.Value.TotalMilliseconds, 0, Length)
+                : message.Value.TotalMilliseconds;
 
             message.Reply(TimeSpan.FromMilliseconds(Time));
         }
