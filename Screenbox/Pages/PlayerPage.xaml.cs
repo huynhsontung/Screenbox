@@ -125,14 +125,14 @@ namespace Screenbox.Pages
         {
             SeekBar? seekBar = PlayerControls.FindDescendant<SeekBar>();
             Guard.IsNotNull(seekBar, nameof(seekBar));
-            seekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)SeekBarPointerPressedOrEnterEventHandler, true);
+            seekBar.AddHandler(PointerPressedEvent, (PointerEventHandler)SeekBarPointerPressedOrEnteredEventHandler, true);
             seekBar.AddHandler(PointerReleasedEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
             seekBar.AddHandler(PointerCanceledEvent, (PointerEventHandler)SeekBarPointerReleasedEventHandler, true);
-            seekBar.AddHandler(PointerEnteredEvent, (PointerEventHandler)SeekBarPointerPressedOrEnterEventHandler, false);
+            seekBar.AddHandler(PointerEnteredEvent, (PointerEventHandler)SeekBarPointerPressedOrEnteredEventHandler, false);
             seekBar.AddHandler(PointerExitedEvent, (PointerEventHandler)SeekBarPointerExitedEventHandler, false);
         }
 
-        private void SeekBarPointerPressedOrEnterEventHandler(object s, PointerRoutedEventArgs e)
+        private void SeekBarPointerPressedOrEnteredEventHandler(object s, PointerRoutedEventArgs e)
         {
             ViewModel.SeekBarPointerInteracting = true;
         }
