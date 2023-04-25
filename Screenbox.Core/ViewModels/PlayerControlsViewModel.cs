@@ -198,7 +198,7 @@ namespace Screenbox.Core.ViewModels
             switch (aspect)
             {
                 case "Fit":
-                    _aspectRatio = Size.Empty;
+                    _aspectRatio = new Size(0, 0);
                     break;
                 case "Fill":
                     _aspectRatio = new Size(double.NaN, double.NaN);

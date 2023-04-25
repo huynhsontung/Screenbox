@@ -192,7 +192,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null || size.Width < 0 || size.Height < 0) return;
             Rect defaultSize = new(0, 0, 1, 1);
-            if (size == Size.Empty)
+            if (size is { Width: 0, Height: 0 })
             {
                 if (_mediaPlayer.NormalizedSourceRect == defaultSize) return;
                 _mediaPlayer.NormalizedSourceRect = defaultSize;
