@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using LibVLCSharp.Shared.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ using Windows.Media.Devices;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using LibVLCSharp.Shared.Structures;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.Playback
@@ -147,12 +147,34 @@ namespace Screenbox.Core.Playback
                 else
                 {
                     _normalizedSourceRect = value;
-                    double rightOffset = value.Right * NaturalVideoWidth;
-                    double bottomOffset = value.Bottom * NaturalVideoHeight;
-                    double leftOffset = value.Left * NaturalVideoWidth;
-                    double topOffset = value.Top * NaturalVideoHeight;
-                    VlcPlayer.CropGeometry = $"{rightOffset:F0}x{bottomOffset:F0}+{leftOffset:F0}+{topOffset:F0}";
-                    //VlcPlayer.CropGeometry = $"{value.Width:F0}:{value.Height:F0}";
+
+                    /*
+                    This is how CropGeometry is parsed. Note that it only takes integer inputs.
+                    https://code.videolan.org/videolan/vlc/-/blob/56222b9290dd9bf08e02b10b1e9ee13d68931fc2/src/video_output/vout_intf.c#L452-464
+
+                    if (sscanf(newval.psz_string, "%u:%u", &num, &den) == 2) {
+                       vout_ControlChangeCropRatio(vout, num, den);
+                    } else if (sscanf(newval.psz_string, "%ux%u+%u+%u", &width, &height, &x, &y) == 4) {
+                       vout_ControlChangeCropWindow(vout, x, y, width, height);
+                    } else if (sscanf(newval.psz_string, "%u+%u+%u+%u", &left, &top, &right, &bottom) == 4) {
+                       vout_ControlChangeCropBorder(vout, left, top, right, bottom);
+                    } else if (*newval.psz_string == '\0') {
+                       vout_ControlChangeCropRatio(vout, 0, 0);
+                    } else {
+                       msg_Err(object, "Unknown crop format (%s)", newval.psz_string);
+                    }
+                    */
+
+                    // double rightOffset = value.Right * NaturalVideoWidth;
+                    // double bottomOffset = value.Bottom * NaturalVideoHeight;
+                    // double leftOffset = value.Left * NaturalVideoWidth;
+                    // double topOffset = value.Top * NaturalVideoHeight;
+                    // VlcPlayer.CropGeometry = $"{rightOffset:F0}x{bottomOffset:F0}+{leftOffset:F0}+{topOffset:F0}";
+
+                    // Use crop ratio to avoid conflict with subtitle rendering
+                    double newWidth = value.Width * NaturalVideoWidth;
+                    double newHeight = value.Height * NaturalVideoHeight;
+                    VlcPlayer.CropGeometry = $"{newWidth:F0}:{newHeight:F0}";
                 }
             }
         }
@@ -309,7 +331,7 @@ namespace Screenbox.Core.Playback
 
             if (PlaybackItem == null) return;
 
-                // Update chapter list
+            // Update chapter list
             if (VlcPlayer.ChapterCount > 0)
             {
                 List<ChapterDescription> chapterDescriptions = new();
