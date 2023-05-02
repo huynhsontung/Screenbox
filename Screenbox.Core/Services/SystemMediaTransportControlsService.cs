@@ -40,34 +40,42 @@ namespace Screenbox.Core.Services
                 return;
             }
 
-            if (item.Source is StorageFile file)
+            try
             {
-                if (file.ContentType.StartsWith("audio"))
+                if (item.Source is StorageFile file)
                 {
-                    bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
-                    if (success && string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
+                    if (file.ContentType.StartsWith("audio"))
                     {
-                        displayUpdater.MusicProperties.Title = item.Name;
+                        bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
+                        if (success && string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
+                        {
+                            displayUpdater.MusicProperties.Title = item.Name;
+                        }
+                    }
+                    else if (file.ContentType.StartsWith("video"))
+                    {
+                        bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
+                        if (success && string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
+                        {
+                            displayUpdater.VideoProperties.Title = item.Name;
+                        }
                     }
                 }
-                else if (file.ContentType.StartsWith("video"))
+
+                // DisplayUpdater can only have type of Video, Audio, or Image
+                if (displayUpdater.Type == MediaPlaybackType.Unknown)
                 {
-                    bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
-                    if (success && string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
-                    {
-                        displayUpdater.VideoProperties.Title = item.Name;
-                    }
+                    displayUpdater.Type = MediaPlaybackType.Video;
+                    displayUpdater.VideoProperties.Title = item.Name;
                 }
-            }
 
-            // DisplayUpdater can only have type of Video, Audio, or Image
-            if (displayUpdater.Type == MediaPlaybackType.Unknown)
+                displayUpdater.Update();
+            }
+            catch (Exception)
             {
-                displayUpdater.Type = MediaPlaybackType.Video;
-                displayUpdater.VideoProperties.Title = item.Name;
+                // System.Exception: The request is not supported. The media type has not been initialized. Please provide a valid media type first in order to access these properties.
+                // Pass
             }
-
-            displayUpdater.Update();
         }
 
         public void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime)
