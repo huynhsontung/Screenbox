@@ -50,7 +50,7 @@
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="third-generation">
+          <uap:FileTypeAssociation Name="3gpp">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociation3GP.png</uap:Logo>
@@ -61,7 +61,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="third-generation-two">
+          <uap:FileTypeAssociation Name="3gpp2">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP2</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociation3GP.png</uap:Logo>
@@ -79,6 +79,16 @@
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/aac">.aac</uap:FileType>
               <uap:FileType ContentType="audio/aac">.adts</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="avi">
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAVI</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\FileAssociationAVI.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="video/x-msvideo">.avi</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
@@ -103,7 +113,17 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="itunes-video">
+          <uap:FileTypeAssociation Name="m4a">
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Audio</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\FileAssociationM4A.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="audio/mp4">.m4a</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="m4v">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Video</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationM4V.png</uap:Logo>
@@ -113,7 +133,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="matroska-audio">
+          <uap:FileTypeAssociation Name="matroskaaudio">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMatroskaAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationMKA.png</uap:Logo>
@@ -123,22 +143,12 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="matroska-video">
+          <uap:FileTypeAssociation Name="matroskavideo">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMatroskaVideo</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationMKV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-matroska">.mkv</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="avi">
-            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAVI</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationAVI.png</uap:Logo>
-            <uap:SupportedFileTypes>
-              <uap:FileType ContentType="video/x-msvideo">.avi</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
@@ -154,6 +164,27 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="mp3">
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP3</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\FileAssociationMP3.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="mp4">
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\FileAssociationMP4.png</uap:Logo>
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
+              <uap:FileType ContentType="video/mp4">.mpg4</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="mpeg">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMPEG</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
@@ -165,38 +196,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="mpeg-three-audio">
-            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP3</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMP3.png</uap:Logo>
-            <uap:SupportedFileTypes>
-              <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="mpeg-four-audio">
-            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Audio</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationM4A.png</uap:Logo>
-            <uap:SupportedFileTypes>
-              <uap:FileType ContentType="audio/mp4">.m4a</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="mpeg-four-video">
-            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Video</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMP4.png</uap:Logo>
-            <uap:SupportedFileTypes>
-              <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
-              <uap:FileType ContentType="video/mp4">.mpg4</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileTypeAssociation>
-        </uap:Extension>
-        <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="ogg-audio">
+          <uap:FileTypeAssociation Name="ogg">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameOggAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationOGG.png</uap:Logo>
@@ -207,7 +207,7 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="ogg-video">
+          <uap:FileTypeAssociation Name="ogv">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameOggVideo</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationOGV.png</uap:Logo>

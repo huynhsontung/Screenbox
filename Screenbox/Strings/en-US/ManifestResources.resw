@@ -156,14 +156,14 @@
   <data name="FileDisplayNameMP3" xml:space="preserve">
     <value>MP3 Audio</value>
   </data>
+  <data name="FileDisplayNameMP4" xml:space="preserve">
+    <value>MPEG-4 Video</value>
+  </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
     <value>MPEG-4 Audio</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
     <value>iTunes Video</value>
-  </data>
-  <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
     <value>MPEG Video</value>
