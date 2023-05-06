@@ -75,7 +75,7 @@
           <uap:FileTypeAssociation Name="aac">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAAC</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationAAC.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationAAC.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/aac">.aac</uap:FileType>
               <uap:FileType ContentType="audio/aac">.adts</uap:FileType>
@@ -96,7 +96,7 @@
           <uap:FileTypeAssociation Name="flac">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameFLAC</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationFLAC.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationFLAC.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/flac">.flac</uap:FileType>
             </uap:SupportedFileTypes>
@@ -136,7 +136,7 @@
           <uap:FileTypeAssociation Name="matroskaaudio">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMatroskaAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMKA.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationMKA.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/x-matroska">.mka</uap:FileType>
             </uap:SupportedFileTypes>
@@ -156,7 +156,7 @@
           <uap:FileTypeAssociation Name="midi">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMIDI</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMIDI.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationMIDI.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/midi">.mid</uap:FileType>
               <uap:FileType ContentType="audio/midi">.midi</uap:FileType>
@@ -167,7 +167,7 @@
           <uap:FileTypeAssociation Name="mp3">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP3</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMP3.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationMP3.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
             </uap:SupportedFileTypes>
@@ -199,7 +199,7 @@
           <uap:FileTypeAssociation Name="ogg">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameOggAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationOGG.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationOGG.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/ogg">.ogg</uap:FileType>
               <uap:FileType ContentType="audio/ogg">.oga</uap:FileType>
@@ -231,7 +231,7 @@
           <uap:FileTypeAssociation Name="wave">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWave</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationWAV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationWAV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/wav">.wav</uap:FileType>
             </uap:SupportedFileTypes>
@@ -241,7 +241,7 @@
           <uap:FileTypeAssociation Name="webaudio">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWebAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationWEBA.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationWEBA.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/webm">.weba</uap:FileType>
             </uap:SupportedFileTypes>
@@ -261,7 +261,7 @@
           <uap:FileTypeAssociation Name="wma">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWindowsMediaAudio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationWMA.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationWMA.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/x-ms-wma">.wma</uap:FileType>
             </uap:SupportedFileTypes>
