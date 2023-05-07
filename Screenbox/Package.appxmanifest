@@ -218,7 +218,7 @@
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="quicktime">
-            <uap:DisplayName>mms-resource:ManifestResources/FileDisplayNameQuickTime</uap:DisplayName>
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameQuickTime</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\FileAssociationMOV.png</uap:Logo>
             <uap:SupportedFileTypes>
