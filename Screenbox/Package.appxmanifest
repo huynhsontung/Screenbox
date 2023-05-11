@@ -53,7 +53,7 @@
           <uap:FileTypeAssociation Name="3gpp">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociation3GP.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociation3GP.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/3gpp">.3gp</uap:FileType>
               <uap:FileType ContentType="video/3gpp">.3gpp</uap:FileType>
@@ -64,7 +64,7 @@
           <uap:FileTypeAssociation Name="3gpp2">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP2</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociation3GP.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociation3GP.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/3gpp2">.3g2</uap:FileType>
               <uap:FileType ContentType="video/3gpp2">.3gp2</uap:FileType>
@@ -106,7 +106,7 @@
           <uap:FileTypeAssociation Name="flash">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameFlash</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationFLV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationFLV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-flv">.flv</uap:FileType>
             </uap:SupportedFileTypes>
@@ -126,7 +126,7 @@
           <uap:FileTypeAssociation Name="m4v">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Video</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationM4V.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationM4V.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/mp4">.m4v</uap:FileType>
             </uap:SupportedFileTypes>
@@ -146,7 +146,7 @@
           <uap:FileTypeAssociation Name="matroskavideo">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMatroskaVideo</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMKV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationMKV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-matroska">.mkv</uap:FileType>
             </uap:SupportedFileTypes>
@@ -177,7 +177,7 @@
           <uap:FileTypeAssociation Name="mp4">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMP4.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationMP4.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
               <uap:FileType ContentType="video/mp4">.mpg4</uap:FileType>
@@ -210,7 +210,7 @@
           <uap:FileTypeAssociation Name="ogv">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameOggVideo</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationOGV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationOGV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/ogg">.ogv</uap:FileType>
             </uap:SupportedFileTypes>
@@ -220,7 +220,7 @@
           <uap:FileTypeAssociation Name="quicktime">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameQuickTime</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMOV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationMOV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/quicktime">.mov</uap:FileType>
               <uap:FileType ContentType="video/quicktime">.qt</uap:FileType>
@@ -251,7 +251,7 @@
           <uap:FileTypeAssociation Name="webmedia">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWebMedia</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationWEBM.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationWEBM.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/webm">.webm</uap:FileType>
             </uap:SupportedFileTypes>
@@ -271,7 +271,7 @@
           <uap:FileTypeAssociation Name="wmv">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWindowsMediaVideo</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationWMV.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationWMV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-ms-wmv">.wmv</uap:FileType>
             </uap:SupportedFileTypes>
