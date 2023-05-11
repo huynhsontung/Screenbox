@@ -86,7 +86,7 @@
           <uap:FileTypeAssociation Name="avi">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAVI</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationAVI.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationAVI.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-msvideo">.avi</uap:FileType>
             </uap:SupportedFileTypes>
@@ -116,7 +116,7 @@
           <uap:FileTypeAssociation Name="m4a">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4Audio</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationM4A.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationM4A.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/mp4">.m4a</uap:FileType>
             </uap:SupportedFileTypes>
@@ -188,7 +188,7 @@
           <uap:FileTypeAssociation Name="mpeg">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMPEG</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\FileAssociationMPEG.png</uap:Logo>
+            <uap:Logo>Assets\Icons\Video\FileAssociationMPEG.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/mpeg">.mpg</uap:FileType>
               <uap:FileType ContentType="video/mpeg">.mpeg</uap:FileType>
