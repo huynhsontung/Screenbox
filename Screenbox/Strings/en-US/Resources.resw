@@ -627,4 +627,13 @@
     <value>Track {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
+  <data name="AddSubtitle" xml:space="preserve">
+    <value>Add subtitle</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="Subtitles" xml:space="preserve">
+    <value>Subtitles</value>
+  </data>
 </root>

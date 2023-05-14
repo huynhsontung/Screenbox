@@ -1948,6 +1948,45 @@ namespace Screenbox.Strings{
             return string.Format(_resourceLoader.GetString("TrackIndex"), index);
         }
         #endregion
+
+        #region AddSubtitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Add subtitle
+        /// </summary>
+        public static string AddSubtitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddSubtitle");
+            }
+        }
+        #endregion
+
+        #region Audio
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio
+        /// </summary>
+        public static string Audio
+        {
+            get
+            {
+                return _resourceLoader.GetString("Audio");
+            }
+        }
+        #endregion
+
+        #region Subtitles
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitles
+        /// </summary>
+        public static string Subtitles
+        {
+            get
+            {
+                return _resourceLoader.GetString("Subtitles");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2107,6 +2146,9 @@ namespace Screenbox.Strings{
             ScaleStatus,
             SubtitleStatus,
             TrackIndex,
+            AddSubtitle,
+            Audio,
+            Subtitles,
         }
 
         private static ResourceLoader _resourceLoader;
