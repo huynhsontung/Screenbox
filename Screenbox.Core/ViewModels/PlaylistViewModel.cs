@@ -1,14 +1,11 @@
 ﻿#nullable enable
 
-using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -34,6 +31,11 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
 
+        public void EnqueuePlaylist(IReadOnlyList<IStorageItem> items)
+        {
+            Playlist.Enqueue(items);
+        }
+
         private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasItems = Playlist.Items.Count > 0;
@@ -47,16 +49,6 @@ namespace Screenbox.Core.ViewModels
         {
             if (!value)
                 SelectedItem = null;
-        }
-
-        public async Task EnqueueDataView(DataPackageView dataView)
-        {
-            if (!dataView.Contains(StandardDataFormats.StorageItems)) return;
-            IReadOnlyList<IStorageItem>? items = await dataView.GetStorageItemsAsync();
-            if (items?.Count > 0)
-            {
-                Playlist.Enqueue(items);
-            }
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
