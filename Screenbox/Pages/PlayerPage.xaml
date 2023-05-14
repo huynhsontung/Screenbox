@@ -145,9 +145,12 @@
                 Height="46"
                 Margin="2,6,6,6"
                 HorizontalAlignment="Right"
+                AllowDrop="True"
                 Background="Transparent"
                 BorderThickness="0"
                 Click="PlayQueueButton_OnClick"
+                DragEnter="PlayQueueButton_OnDragEnter"
+                DragLeave="PlayQueueButton_OnDragLeave"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                 <SymbolIcon Symbol="MusicInfo" />
                 <Button.Flyout>

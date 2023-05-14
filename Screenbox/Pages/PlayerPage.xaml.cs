@@ -10,6 +10,7 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -36,12 +37,14 @@ namespace Screenbox.Pages
         private const VirtualKey AddKey = (VirtualKey)0x6B;
         private const VirtualKey SubtractKey = (VirtualKey)0x6D;
 
+        private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
         private CancellationTokenSource? _animationCancellationTokenSource;
 
         public PlayerPage()
         {
             this.InitializeComponent();
             DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
@@ -340,6 +343,18 @@ namespace Screenbox.Pages
                 flyout.Opening += (_, _) => control.ViewModel.OnAudioCaptionFlyoutOpening();
                 flyout.ShowAt(PlayerControls);
             }
+        }
+
+        private void PlayQueueButton_OnDragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
+            FindName(nameof(PlayQueueFlyout));  // Trigger element lazy load
+            _delayFlyoutOpenTimer.Debounce(() => PlayQueueFlyout.ShowAt(PlayQueueButton), TimeSpan.FromMilliseconds(500));
+        }
+
+        private void PlayQueueButton_OnDragLeave(object sender, DragEventArgs e)
+        {
+            _delayFlyoutOpenTimer.Stop();
         }
     }
 }
