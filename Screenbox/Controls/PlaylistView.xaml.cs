@@ -1,12 +1,15 @@
 ﻿#nullable enable
 
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
-using Windows.ApplicationModel.DataTransfer;
 using Screenbox.Core.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -69,14 +72,21 @@ namespace Screenbox.Controls
 
         private async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
         {
+            if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
             e.Handled = true;
-            await ViewModel.EnqueueDataView(e.DataView);
+            IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+            if (items?.Count > 0)
+            {
+                ViewModel.EnqueuePlaylist(items);
+            }
         }
 
         private void PlaylistListView_OnDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
-            e.AcceptedOperation = DataPackageOperation.Link;
+            e.AcceptedOperation = e.DataView.Contains(StandardDataFormats.StorageItems)
+                ? DataPackageOperation.Copy
+                : DataPackageOperation.None;
             if (e.DragUIOverride != null)
             {
                 e.DragUIOverride.Caption = Strings.Resources.AddToQueue;
