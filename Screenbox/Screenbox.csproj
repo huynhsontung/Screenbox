@@ -199,6 +199,7 @@
     </Compile>
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\MediaTypeAdaptiveLayoutOverrideConverter.cs" />
+    <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />

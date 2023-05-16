@@ -2261,6 +2261,45 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region Always
+        /// <summary>
+        ///   Looks up a localized string similar to: Always
+        /// </summary>
+        public static string Always
+        {
+            get
+            {
+                return _resourceLoader.GetString("Always");
+            }
+        }
+        #endregion
+
+        #region Never
+        /// <summary>
+        ///   Looks up a localized string similar to: Never
+        /// </summary>
+        public static string Never
+        {
+            get
+            {
+                return _resourceLoader.GetString("Never");
+            }
+        }
+        #endregion
+
+        #region OnLaunch
+        /// <summary>
+        ///   Looks up a localized string similar to: On launch
+        /// </summary>
+        public static string OnLaunch
+        {
+            get
+            {
+                return _resourceLoader.GetString("OnLaunch");
+            }
+        }
+        #endregion
+
         #region VersionText
         /// <summary>
         ///   Looks up a localized string similar to: Version {0}
@@ -2453,6 +2492,9 @@ namespace Screenbox.Strings{
             HyperlinkSourceCode,
             HyperlinkDiscord,
             HyperlinkSponsor,
+            Always,
+            Never,
+            OnLaunch,
             VersionText,
         }
 

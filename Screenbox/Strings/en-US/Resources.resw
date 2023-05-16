@@ -699,6 +699,15 @@
   <data name="HyperlinkSponsor" xml:space="preserve">
     <value>Support the development ☕</value>
   </data>
+  <data name="Always" xml:space="preserve">
+    <value>Always</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="OnLaunch" xml:space="preserve">
+    <value>On launch</value>
+  </data>
   <data name="VersionText" xml:space="preserve">
     <value>Version {0}</value>
     <comment>#Format[String version]</comment>
