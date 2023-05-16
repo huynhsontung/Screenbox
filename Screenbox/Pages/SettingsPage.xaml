@@ -123,10 +123,10 @@
                 <TextBlock
                     Margin="0,8,0,4"
                     FontWeight="SemiBold"
-                    Text="Libraries" />
+                    Text="{strings:Resources Key=SettingsCategoryLibraries}" />
                 <labs:SettingsExpander
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
-                    Header="Music library locations"
+                    Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}">
                     <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
@@ -146,7 +146,7 @@
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
-                    Header="Video library locations"
+                    Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}">
                     <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
@@ -168,14 +168,14 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
-                    Text="General" />
+                    Text="{strings:Resources Key=SettingsCategoryGeneral}" />
                 <labs:SettingsExpander
-                    Description="Display recently played media on the home page"
-                    Header="Show recent"
+                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
+                    Header="{strings:Resources Key=SettingsShowRecentHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="Clear recent media history">
+                        <labs:SettingsCard Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
@@ -184,10 +184,10 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
-                    Text="Player" />
+                    Text="{strings:Resources Key=SettingsCategoryPlayer}" />
                 <labs:SettingsCard
-                    Description="Resize the app window to best match a video's native resolution when the video plays"
-                    Header="Auto resize"
+                    Description="{strings:Resources Key=SettingsAutoResizeDescription}"
+                    Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe799;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <x:String>Always</x:String>
@@ -196,8 +196,8 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <labs:SettingsCard
-                    Description="Allow the maximum volume to go above 100%"
-                    Header="Volume boost"
+                    Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
+                    Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <x:String>None</x:String>
@@ -207,18 +207,18 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <labs:SettingsExpander
-                    Header="Gestures"
+                    Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
                     IsExpanded="True">
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="Drag horizontally to seek" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                            <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
                         <labs:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="Drag vertically to adjust volume" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                            <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
                         <labs:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="Tap anywhere to play or pause" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                            <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
@@ -226,30 +226,30 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
-                    Text="About" />
+                    Text="{strings:Resources Key=SettingsCategoryAbout}" />
                 <labs:SettingsCard
                     Margin="0,0,0,24"
                     HorizontalContentAlignment="Left"
                     ContentAlignment="Vertical"
-                    Header="Screenbox Media Player"
+                    Header="{strings:Resources Key=AppFriendlyName}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe946;}">
                     <labs:SettingsCard.Description>
-                        <TextBlock><Run Text="Version" /> <Run Text="{x:Bind rpl:Macros.AppVersionFull}" />
+                        <TextBlock><Run Text="{x:Bind strings:Resources.VersionText(rpl:Macros.AppVersionFull)}" />
                             <LineBreak />
                             Made with ❤️ by Tung Huynh</TextBlock>
                     </labs:SettingsCard.Description>
                     <StackPanel Margin="0,8,0,0" Orientation="Vertical">
                         <HyperlinkButton
                             Margin="-12,0,0,0"
-                            Content="Source code"
+                            Content="{strings:Resources Key=HyperlinkSourceCode}"
                             NavigateUri="https://github.com/huynhsontung/Screenbox" />
                         <HyperlinkButton
                             Margin="-12,0,0,0"
-                            Content="Discord"
+                            Content="{strings:Resources Key=HyperlinkDiscord}"
                             NavigateUri="https://discord.gg/HZPZXjANxz" />
                         <HyperlinkButton
                             Margin="-12,0,0,0"
-                            Content="Support the development ☕"
+                            Content="{strings:Resources Key=HyperlinkSponsor}"
                             NavigateUri="https://github.com/sponsors/huynhsontung" />
                     </StackPanel>
                 </labs:SettingsCard>
