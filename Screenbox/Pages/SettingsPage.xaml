@@ -246,7 +246,7 @@
                     Header="{strings:Resources Key=AppFriendlyName}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe946;}">
                     <labs:SettingsCard.Description>
-                        <TextBlock><Run Text="{x:Bind strings:Resources.VersionText(rpl:Macros.AppVersionFull)}" />
+                        <TextBlock><Run Text="{x:Bind strings:Resources.VersionText}" />
                             <LineBreak />
                             Made with ❤️ by Tung Huynh</TextBlock>
                     </labs:SettingsCard.Description>

@@ -710,6 +710,6 @@
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Version {0}</value>
-    <comment>#Format[String version]</comment>
+    <comment>#Format[VERSION]</comment>
   </data>
 </root>

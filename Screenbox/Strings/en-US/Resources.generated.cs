@@ -2304,9 +2304,12 @@ namespace Screenbox.Strings{
         /// <summary>
         ///   Looks up a localized string similar to: Version {0}
         /// </summary>
-        public static string VersionText(string version)
+        public static string VersionText
         {
-            return string.Format(_resourceLoader.GetString("VersionText"), version);
+            get
+            {
+                return string.Format(_resourceLoader.GetString("VersionText"), ReswPlusLib.Macros.AppVersionFull);
+            }
         }
         #endregion
     }
