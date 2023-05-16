@@ -121,9 +121,11 @@ namespace Screenbox.Core.ViewModels
                     return;
             }
 
-            Messenger.Send(subtitleTracks.SelectedIndex == -1
-                ? new UpdateStatusMessage("Subtitle: None")
-                : new UpdateStatusMessage($"Subtitle: {subtitleTracks[subtitleTracks.SelectedIndex].Label}"));
+            string status = subtitleTracks.SelectedIndex == -1
+                ? _resourceService.GetString(ResourceName.SubtitleStatus, _resourceService.GetString(ResourceName.None))
+                : _resourceService.GetString(ResourceName.SubtitleStatus, subtitleTracks[subtitleTracks.SelectedIndex].Label);
+
+            Messenger.Send(new UpdateStatusMessage(status));
         }
 
         partial void OnPlaybackSpeedChanged(double value)

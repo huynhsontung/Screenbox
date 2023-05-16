@@ -1,9 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -11,6 +7,10 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.Storage;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
@@ -95,7 +95,8 @@ namespace Screenbox.Core.ViewModels
             for (int index = 0; index < ItemAudioTrackList.Count; index++)
             {
                 AudioTrack audioTrack = ItemAudioTrackList[index];
-                AudioTracks.Add(audioTrack.Label ?? $"Track {index + 1}");
+                string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+                AudioTracks.Add(audioTrack.Label ?? defaultTrackLabel);
             }
         }
 
@@ -109,7 +110,8 @@ namespace Screenbox.Core.ViewModels
             for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
-                SubtitleTracks.Add(subtitleTrack.Label ?? $"Track {index + 1}");
+                string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+                SubtitleTracks.Add(subtitleTrack.Label ?? defaultTrackLabel);
             }
         }
     }

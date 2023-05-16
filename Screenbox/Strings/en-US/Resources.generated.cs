@@ -1619,6 +1619,413 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region None
+        /// <summary>
+        ///   Looks up a localized string similar to: None
+        /// </summary>
+        public static string None
+        {
+            get
+            {
+                return _resourceLoader.GetString("None");
+            }
+        }
+        #endregion
+
+        #region ScaleStatus
+        /// <summary>
+        ///   Looks up a localized string similar to: Scale: {0}
+        /// </summary>
+        public static string ScaleStatus(string scale)
+        {
+            return string.Format(_resourceLoader.GetString("ScaleStatus"), scale);
+        }
+        #endregion
+
+        #region SubtitleStatus
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitle: {0}
+        /// </summary>
+        public static string SubtitleStatus(string name)
+        {
+            return string.Format(_resourceLoader.GetString("SubtitleStatus"), name);
+        }
+        #endregion
+
+        #region TrackIndex
+        /// <summary>
+        ///   Looks up a localized string similar to: Track {0}
+        /// </summary>
+        public static string TrackIndex(int index)
+        {
+            return string.Format(_resourceLoader.GetString("TrackIndex"), index);
+        }
+        #endregion
+
+        #region AddSubtitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Add subtitle
+        /// </summary>
+        public static string AddSubtitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddSubtitle");
+            }
+        }
+        #endregion
+
+        #region Audio
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio
+        /// </summary>
+        public static string Audio
+        {
+            get
+            {
+                return _resourceLoader.GetString("Audio");
+            }
+        }
+        #endregion
+
+        #region SettingsCategoryAbout
+        /// <summary>
+        ///   Looks up a localized string similar to: About
+        /// </summary>
+        public static string SettingsCategoryAbout
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryAbout");
+            }
+        }
+        #endregion
+
+        #region SettingsCategoryGeneral
+        /// <summary>
+        ///   Looks up a localized string similar to: General
+        /// </summary>
+        public static string SettingsCategoryGeneral
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryGeneral");
+            }
+        }
+        #endregion
+
+        #region SettingsCategoryLibraries
+        /// <summary>
+        ///   Looks up a localized string similar to: Libraries
+        /// </summary>
+        public static string SettingsCategoryLibraries
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryLibraries");
+            }
+        }
+        #endregion
+
+        #region SettingsCategoryPlayer
+        /// <summary>
+        ///   Looks up a localized string similar to: Player
+        /// </summary>
+        public static string SettingsCategoryPlayer
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryPlayer");
+            }
+        }
+        #endregion
+
+        #region SettingsMusicLibraryLocationsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Music library locations
+        /// </summary>
+        public static string SettingsMusicLibraryLocationsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsMusicLibraryLocationsHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsShowRecentHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Show recent
+        /// </summary>
+        public static string SettingsShowRecentHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsShowRecentHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsVideoLibraryLocationsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: VIdeo library locations
+        /// </summary>
+        public static string SettingsVideoLibraryLocationsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsVideoLibraryLocationsHeader");
+            }
+        }
+        #endregion
+
+        #region Subtitles
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitles
+        /// </summary>
+        public static string Subtitles
+        {
+            get
+            {
+                return _resourceLoader.GetString("Subtitles");
+            }
+        }
+        #endregion
+
+        #region SettingsShowRecentDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Display recently played media on the home page
+        /// </summary>
+        public static string SettingsShowRecentDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsShowRecentDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsClearRecentHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Clear recent media history
+        /// </summary>
+        public static string SettingsClearRecentHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsClearRecentHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsAutoResizeHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Auto resize
+        /// </summary>
+        public static string SettingsAutoResizeHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAutoResizeHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsAutoResizeDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Resize the app window to best match a video's native resolution on playback
+        /// </summary>
+        public static string SettingsAutoResizeDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAutoResizeDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsVolumeBoostHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Volume boost
+        /// </summary>
+        public static string SettingsVolumeBoostHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsVolumeBoostHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsVolumeBoostDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Allow the maximum volume to go above 100%
+        /// </summary>
+        public static string SettingsVolumeBoostDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsVolumeBoostDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsGesturesHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Gestures
+        /// </summary>
+        public static string SettingsGesturesHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGesturesHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsGestureSeek
+        /// <summary>
+        ///   Looks up a localized string similar to: Drag horizontally to seek
+        /// </summary>
+        public static string SettingsGestureSeek
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGestureSeek");
+            }
+        }
+        #endregion
+
+        #region SettingsGestureVolume
+        /// <summary>
+        ///   Looks up a localized string similar to: Drag vertically to adjust volume
+        /// </summary>
+        public static string SettingsGestureVolume
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGestureVolume");
+            }
+        }
+        #endregion
+
+        #region SettingsGestureTap
+        /// <summary>
+        ///   Looks up a localized string similar to: Tap anywhere to play or pause
+        /// </summary>
+        public static string SettingsGestureTap
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGestureTap");
+            }
+        }
+        #endregion
+
+        #region AppFriendlyName
+        /// <summary>
+        ///   Looks up a localized string similar to: Screenbox Media Player
+        /// </summary>
+        public static string AppFriendlyName
+        {
+            get
+            {
+                return _resourceLoader.GetString("AppFriendlyName");
+            }
+        }
+        #endregion
+
+        #region HyperlinkSourceCode
+        /// <summary>
+        ///   Looks up a localized string similar to: Source code
+        /// </summary>
+        public static string HyperlinkSourceCode
+        {
+            get
+            {
+                return _resourceLoader.GetString("HyperlinkSourceCode");
+            }
+        }
+        #endregion
+
+        #region HyperlinkDiscord
+        /// <summary>
+        ///   Looks up a localized string similar to: Discord
+        /// </summary>
+        public static string HyperlinkDiscord
+        {
+            get
+            {
+                return _resourceLoader.GetString("HyperlinkDiscord");
+            }
+        }
+        #endregion
+
+        #region HyperlinkSponsor
+        /// <summary>
+        ///   Looks up a localized string similar to: Support the development ☕
+        /// </summary>
+        public static string HyperlinkSponsor
+        {
+            get
+            {
+                return _resourceLoader.GetString("HyperlinkSponsor");
+            }
+        }
+        #endregion
+
+        #region Always
+        /// <summary>
+        ///   Looks up a localized string similar to: Always
+        /// </summary>
+        public static string Always
+        {
+            get
+            {
+                return _resourceLoader.GetString("Always");
+            }
+        }
+        #endregion
+
+        #region Never
+        /// <summary>
+        ///   Looks up a localized string similar to: Never
+        /// </summary>
+        public static string Never
+        {
+            get
+            {
+                return _resourceLoader.GetString("Never");
+            }
+        }
+        #endregion
+
+        #region OnLaunch
+        /// <summary>
+        ///   Looks up a localized string similar to: On launch
+        /// </summary>
+        public static string OnLaunch
+        {
+            get
+            {
+                return _resourceLoader.GetString("OnLaunch");
+            }
+        }
+        #endregion
+
+        #region VersionText
+        /// <summary>
+        ///   Looks up a localized string similar to: Version {0}
+        /// </summary>
+        public static string VersionText
+        {
+            get
+            {
+                return string.Format(_resourceLoader.GetString("VersionText"), ReswPlusLib.Macros.AppVersionFull);
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -1774,6 +2181,38 @@ namespace Screenbox.Strings{
             Fill,
             CustomAspectRatio,
             CustomPlaybackSpeed,
+            None,
+            ScaleStatus,
+            SubtitleStatus,
+            TrackIndex,
+            AddSubtitle,
+            Audio,
+            SettingsCategoryAbout,
+            SettingsCategoryGeneral,
+            SettingsCategoryLibraries,
+            SettingsCategoryPlayer,
+            SettingsMusicLibraryLocationsHeader,
+            SettingsShowRecentHeader,
+            SettingsVideoLibraryLocationsHeader,
+            Subtitles,
+            SettingsShowRecentDescription,
+            SettingsClearRecentHeader,
+            SettingsAutoResizeHeader,
+            SettingsAutoResizeDescription,
+            SettingsVolumeBoostHeader,
+            SettingsVolumeBoostDescription,
+            SettingsGesturesHeader,
+            SettingsGestureSeek,
+            SettingsGestureVolume,
+            SettingsGestureTap,
+            AppFriendlyName,
+            HyperlinkSourceCode,
+            HyperlinkDiscord,
+            HyperlinkSponsor,
+            Always,
+            Never,
+            OnLaunch,
+            VersionText,
         }
 
         private static ResourceLoader _resourceLoader;

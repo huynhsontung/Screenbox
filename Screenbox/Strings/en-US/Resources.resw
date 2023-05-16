@@ -546,4 +546,104 @@
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Custom playback speed</value>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="ScaleStatus" xml:space="preserve">
+    <value>Scale: {0}</value>
+    <comment>#Format[String scale]</comment>
+  </data>
+  <data name="SubtitleStatus" xml:space="preserve">
+    <value>Subtitle: {0}</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="TrackIndex" xml:space="preserve">
+    <value>Track {0}</value>
+    <comment>#Format[Int index]</comment>
+  </data>
+  <data name="AddSubtitle" xml:space="preserve">
+    <value>Add subtitle</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="SettingsCategoryAbout" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SettingsCategoryLibraries" xml:space="preserve">
+    <value>Libraries</value>
+  </data>
+  <data name="SettingsCategoryPlayer" xml:space="preserve">
+    <value>Player</value>
+  </data>
+  <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
+    <value>Music library locations</value>
+  </data>
+  <data name="SettingsShowRecentHeader" xml:space="preserve">
+    <value>Show recent</value>
+  </data>
+  <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
+    <value>VIdeo library locations</value>
+  </data>
+  <data name="Subtitles" xml:space="preserve">
+    <value>Subtitles</value>
+  </data>
+  <data name="SettingsShowRecentDescription" xml:space="preserve">
+    <value>Display recently played media on the home page</value>
+  </data>
+  <data name="SettingsClearRecentHeader" xml:space="preserve">
+    <value>Clear recent media history</value>
+  </data>
+  <data name="SettingsAutoResizeHeader" xml:space="preserve">
+    <value>Auto resize</value>
+  </data>
+  <data name="SettingsAutoResizeDescription" xml:space="preserve">
+    <value>Resize the app window to best match a video's native resolution on playback</value>
+  </data>
+  <data name="SettingsVolumeBoostHeader" xml:space="preserve">
+    <value>Volume boost</value>
+  </data>
+  <data name="SettingsVolumeBoostDescription" xml:space="preserve">
+    <value>Allow the maximum volume to go above 100%</value>
+  </data>
+  <data name="SettingsGesturesHeader" xml:space="preserve">
+    <value>Gestures</value>
+  </data>
+  <data name="SettingsGestureSeek" xml:space="preserve">
+    <value>Drag horizontally to seek</value>
+  </data>
+  <data name="SettingsGestureVolume" xml:space="preserve">
+    <value>Drag vertically to adjust volume</value>
+  </data>
+  <data name="SettingsGestureTap" xml:space="preserve">
+    <value>Tap anywhere to play or pause</value>
+  </data>
+  <data name="AppFriendlyName" xml:space="preserve">
+    <value>Screenbox Media Player</value>
+  </data>
+  <data name="HyperlinkSourceCode" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="HyperlinkDiscord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="HyperlinkSponsor" xml:space="preserve">
+    <value>Support the development ☕</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>Always</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="OnLaunch" xml:space="preserve">
+    <value>On launch</value>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Version {0}</value>
+    <comment>#Format[VERSION]</comment>
+  </data>
 </root>

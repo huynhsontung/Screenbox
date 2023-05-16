@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -19,7 +20,7 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <TextBlock FontWeight="SemiBold" Text="Audio" />
+                <TextBlock FontWeight="SemiBold" Text="{strings:Resources Key=Audio}" />
             </ListView.Header>
         </ListView>
         <MenuFlyoutSeparator Margin="-11,4,-11,8" IsTabStop="False" />
@@ -32,14 +33,14 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <TextBlock FontWeight="SemiBold" Text="Subtitles" />
+                <TextBlock FontWeight="SemiBold" Text="{strings:Resources Key=Subtitles}" />
             </ListView.Header>
             <ListView.Footer>
                 <Button
                     Margin="0,4,0,0"
                     HorizontalAlignment="Right"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="Add subtitle" />
+                    Content="{strings:Resources Key=AddSubtitle}" />
             </ListView.Footer>
         </ListView>
     </StackPanel>
