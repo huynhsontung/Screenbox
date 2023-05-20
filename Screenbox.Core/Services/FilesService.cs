@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -8,12 +9,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.System;
-using Screenbox.Core.Playback;
-using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
@@ -226,7 +226,15 @@ namespace Screenbox.Core.Services
         public void AddToRecent(IStorageItem item)
         {
             string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-            StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
+            try
+            {
+                StorageApplicationPermissions.MostRecentlyUsedList.Add(item, metadata);
+            }
+            catch (Exception)
+            {
+                // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
+                // Ownership issue?
+            }
         }
 
         private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)
