@@ -288,6 +288,15 @@
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameM3U8</uap:DisplayName>
           </uap:FileTypeAssociation>
         </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="mpeg-ts">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="video/mp2t">.ts</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMPEGTS</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
        </Extensions>
     </Application>
   </Applications>
