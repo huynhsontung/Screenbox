@@ -96,7 +96,8 @@
                             VerticalAlignment="Center"
                             FontSize="52"
                             Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}" />
+                            Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
+                            Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                         <Border CornerRadius="4">
                             <Image
                                 HorizontalAlignment="Center"

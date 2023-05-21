@@ -29,7 +29,8 @@
                     VerticalAlignment="Center"
                     FontSize="52"
                     Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                    Glyph="&#xe93c;" />
+                    Glyph="&#xe93c;"
+                    Visibility="{Binding RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                 <Border CornerRadius="4">
                     <Image
                         HorizontalAlignment="Center"
