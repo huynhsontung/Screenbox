@@ -192,4 +192,10 @@
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
     <value>Windows Media Video</value>
   </data>
+  <data name="FileDisplayNameM3U8" xml:space="preserve">
+    <value>M3U8 Playlist</value>
+  </data>
+  <data name="FileDisplayNameMPEGTS" xml:space="preserve">
+    <value>MPEG Transport Stream</value>
+  </data>
 </root>
