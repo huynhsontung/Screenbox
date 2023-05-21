@@ -33,6 +33,10 @@
                         FalseValue="Visible"
                         TrueValue="Collapsed" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+                    <toolkitConverters:EmptyObjectToObjectConverter
+                        x:Key="InverseEmptyObjectToVisibilityConverter"
+                        EmptyValue="Visible"
+                        NotEmptyValue="Collapsed" />
                     <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
                     <toolkitConverters:DoubleToObjectConverter
                         x:Key="DoubleToBoolConverter"

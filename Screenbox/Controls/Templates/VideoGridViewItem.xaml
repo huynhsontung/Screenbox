@@ -33,7 +33,8 @@
                     VerticalAlignment="Center"
                     FontSize="32"
                     Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                    Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}" />
+                    Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
+                    Visibility="{Binding Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                 <Border CornerRadius="4">
                     <Image Source="{Binding Thumbnail, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
                 </Border>

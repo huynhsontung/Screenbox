@@ -51,7 +51,8 @@
                                 VerticalAlignment="Center"
                                 FontSize="42"
                                 Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                                Glyph="&#xe93c;" />
+                                Glyph="&#xe93c;"
+                                Visibility="{Binding Key.RelatedSongs[0].Thumbnail, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                             <Image Source="{Binding Key.RelatedSongs[0].Thumbnail, FallbackValue={x:Null}}" />
                         </Grid>
 

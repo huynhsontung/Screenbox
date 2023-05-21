@@ -88,7 +88,8 @@
                         VerticalAlignment="Center"
                         FontSize="64"
                         Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                        Glyph="&#xe93c;" />
+                        Glyph="&#xe93c;"
+                        Visibility="{x:Bind ViewModel.Source.RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                     <Border CornerRadius="8">
                         <Image
                             HorizontalAlignment="Center"
