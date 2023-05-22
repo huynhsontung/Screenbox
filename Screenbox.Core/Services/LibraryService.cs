@@ -82,6 +82,7 @@ namespace Screenbox.Core.Services
 
         public async Task FetchMusicAsync()
         {
+            if (IsLoadingMusic) return;
             IsLoadingMusic = true;
             try
             {
@@ -111,6 +112,7 @@ namespace Screenbox.Core.Services
 
         public async Task FetchVideosAsync()
         {
+            if (IsLoadingVideos) return;
             IsLoadingVideos = true;
             try
             {

@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -18,6 +19,8 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class MusicPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private bool _isLoading;
+
+        [ObservableProperty] private bool _hasContent;
 
         public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
 
@@ -39,6 +42,7 @@ namespace Screenbox.Core.ViewModels
             _songs = new List<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
+            _hasContent = true;
         }
 
         public void UpdateSongs()
@@ -46,8 +50,18 @@ namespace Screenbox.Core.ViewModels
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
             _songs = new List<MediaViewModel>(musicLibrary.Songs);
             IsLoading = _libraryService.IsLoadingMusic;
+            HasContent = _songs.Count > 0 || IsLoading;
             AddFolderCommand.NotifyCanExecuteChanged();
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
+
+            if (IsLoading)
+            {
+                _timer.Debounce(UpdateSongs, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _timer.Stop();
+            }
         }
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)

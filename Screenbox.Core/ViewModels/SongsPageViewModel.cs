@@ -52,6 +52,16 @@ namespace Screenbox.Core.ViewModels
             {
                 GroupedSongs.AddItem(MusicPageViewModel.GetFirstLetterGroup(song.Name), song);
             }
+
+            // Progressively update when it's still loading
+            if (_libraryService.IsLoadingMusic)
+            {
+                _refreshTimer.Debounce(FetchSongs, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _refreshTimer.Stop();
+            }
         }
 
         private void PopulateGroups()
@@ -64,7 +74,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
-            _refreshTimer.Debounce(FetchSongs, TimeSpan.FromSeconds(2));
+            _dispatcherQueue.TryEnqueue(FetchSongs);
         }
 
         [RelayCommand]

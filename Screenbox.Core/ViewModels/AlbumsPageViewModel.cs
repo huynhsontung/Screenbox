@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using Windows.System;
-using CommunityToolkit.Mvvm.Collections;
+﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using System;
+using System.Linq;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -47,6 +47,16 @@ namespace Screenbox.Core.ViewModels
                     : MusicPageViewModel.GetFirstLetterGroup(album.Name);
                 GroupedAlbums.AddItem(key, album);
             }
+
+            // Progressively update when it's still loading
+            if (_libraryService.IsLoadingMusic)
+            {
+                _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _refreshTimer.Stop();
+            }
         }
 
         private void PopulateGroups()
@@ -59,7 +69,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
-            _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(2));
+            _dispatcherQueue.TryEnqueue(FetchAlbums);
         }
     }
 }

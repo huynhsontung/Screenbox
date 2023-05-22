@@ -1,10 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -15,9 +18,13 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<MediaViewModel> Videos { get; }
 
         private readonly ILibraryService _libraryService;
+        private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _timer;
 
         public AllVideosPageViewModel(ILibraryService libraryService)
         {
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _timer = _dispatcherQueue.CreateTimer();
             _libraryService = libraryService;
             _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             Videos = new ObservableCollection<MediaViewModel>();
@@ -32,11 +39,21 @@ namespace Screenbox.Core.ViewModels
             {
                 Videos.Add(video);
             }
+
+            // Progressively update when it's still loading
+            if (IsLoading)
+            {
+                _timer.Debounce(UpdateVideos, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _timer.Stop();
+            }
         }
 
         private void OnVideosLibraryContentChanged(ILibraryService sender, object args)
         {
-            UpdateVideos();
+            _dispatcherQueue.TryEnqueue(UpdateVideos);
         }
 
         [RelayCommand]
