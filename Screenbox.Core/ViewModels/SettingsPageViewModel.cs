@@ -1,17 +1,17 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.AccessCache;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -148,7 +148,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     try
                     {
-                        await _libraryService.FetchVideosAsync();
+                        await _libraryService.InitializeVideosLibraryAsync();
                     }
                     catch (Exception)
                     {
@@ -169,7 +169,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     try
                     {
-                        await _libraryService.FetchMusicAsync();
+                        await _libraryService.InitializeMusicLibraryAsync();
                     }
                     catch (Exception)
                     {

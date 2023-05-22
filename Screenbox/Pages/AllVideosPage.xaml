@@ -46,6 +46,14 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
+        <controls:ProgressBar
+            x:Name="LoadingIndicator"
+            Margin="0,8,0,0"
+            Padding="{StaticResource ContentPageRightMargin}"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="VideosGridView"
             Margin="0,16,0,0"
@@ -78,6 +86,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

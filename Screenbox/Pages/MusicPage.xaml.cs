@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,9 +11,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 
@@ -49,7 +49,7 @@ namespace Screenbox.Pages
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Common.NavigationStates.TryGetValue(typeof(MusicPage), out string navigationState))
@@ -62,9 +62,8 @@ namespace Screenbox.Pages
                 LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
             }
 
-            await ViewModel.FetchMusicAsync();
-
-            VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
+            ViewModel.UpdateSongs();
+            VisualStateManager.GoToState(this, ViewModel.Count > 0 || ViewModel.IsLoading ? "Normal" : "NoMusic", false);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

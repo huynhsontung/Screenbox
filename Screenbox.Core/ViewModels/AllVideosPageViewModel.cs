@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Windows.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AllVideosPageViewModel : ObservableRecipient
     {
+        [ObservableProperty] private bool _isLoading;
+
         public ObservableCollection<MediaViewModel> Videos { get; }
 
         private readonly ILibraryService _libraryService;
@@ -20,24 +19,24 @@ namespace Screenbox.Core.ViewModels
         public AllVideosPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
+            _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             Videos = new ObservableCollection<MediaViewModel>();
         }
 
-        public async Task FetchVideosAsync()
+        public void UpdateVideos()
         {
-            try
+            IsLoading = _libraryService.IsLoadingVideos;
+            Videos.Clear();
+            IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosCache();
+            foreach (MediaViewModel video in videos)
             {
-                IReadOnlyList<MediaViewModel> videos = await _libraryService.FetchVideosAsync();
-                Videos.Clear();
-                foreach (MediaViewModel video in videos)
-                {
-                    Videos.Add(video);
-                }
+                Videos.Add(video);
             }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
-            }
+        }
+
+        private void OnVideosLibraryContentChanged(ILibraryService sender, object args)
+        {
+            UpdateVideos();
         }
 
         [RelayCommand]

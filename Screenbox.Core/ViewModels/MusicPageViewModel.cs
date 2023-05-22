@@ -1,19 +1,17 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -32,35 +30,29 @@ namespace Screenbox.Core.ViewModels
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
-        private readonly List<MediaViewModel> _songs;
+        private List<MediaViewModel> _songs;
 
         public MusicPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
+            _libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             _songs = new List<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
         }
 
-        public async Task FetchMusicAsync()
+        public void UpdateSongs()
         {
-            _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
-
-            try
-            {
-                MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
-                _songs.Clear();
-                _songs.AddRange(music.Songs);
-                AddFolderCommand.NotifyCanExecuteChanged();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
-            }
-
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
+            _songs = new List<MediaViewModel>(musicLibrary.Songs);
+            IsLoading = _libraryService.IsLoadingMusic;
+            AddFolderCommand.NotifyCanExecuteChanged();
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            _timer.Stop();
-            IsLoading = false;
+        }
+
+        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
+        {
+            _dispatcherQueue.TryEnqueue(UpdateSongs);
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]

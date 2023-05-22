@@ -62,20 +62,37 @@ namespace Screenbox.Core.ViewModels
                 Recent.Clear();
             }
 
-            try
-            {
-                // Pre-fetch libraries
-                await Task.WhenAll(_libraryService.FetchMusicAsync(true), _libraryService.FetchVideosAsync(true));
-            }
-            catch (Exception)
-            {
-                // pass
-            }
+            // Pre-fetch libraries
+            await Task.WhenAll(PrefetchMusicLibrary(), PrefetchVideosLibrary());
         }
 
         public void OpenUrl(Uri url)
         {
             Messenger.Send(new PlayMediaMessage(url));
+        }
+
+        private async Task PrefetchMusicLibrary()
+        {
+            try
+            {
+                await _libraryService.PrefetchMusicAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
+        }
+
+        private async Task PrefetchVideosLibrary()
+        {
+            try
+            {
+                await _libraryService.PrefetchVideosAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
         }
 
         private async Task UpdateRecentMediaListAsync()
