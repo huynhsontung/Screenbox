@@ -27,7 +27,7 @@ namespace Screenbox.Core.ViewModels
         {
             IsLoading = _libraryService.IsLoadingVideos;
             Videos.Clear();
-            IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosCache();
+            IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult();
             foreach (MediaViewModel video in videos)
             {
                 Videos.Add(video);

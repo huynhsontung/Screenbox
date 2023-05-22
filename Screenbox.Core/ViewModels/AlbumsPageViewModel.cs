@@ -36,7 +36,7 @@ namespace Screenbox.Core.ViewModels
         public void FetchAlbums()
         {
             // No need to run fetch async. Music page should already called the method.
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
 
             GroupedAlbums.Clear();
             PopulateGroups();

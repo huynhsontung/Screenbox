@@ -43,7 +43,7 @@ namespace Screenbox.Core.ViewModels
 
         public void UpdateSongs()
         {
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
             _songs = new List<MediaViewModel>(musicLibrary.Songs);
             IsLoading = _libraryService.IsLoadingMusic;
             AddFolderCommand.NotifyCanExecuteChanged();

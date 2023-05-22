@@ -38,7 +38,7 @@ namespace Screenbox.Core.ViewModels
 
         public void UpdateVideos()
         {
-            HasVideos = _libraryService.GetVideosCache().Count > 0;
+            HasVideos = _libraryService.GetVideosFetchResult().Count > 0;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
 

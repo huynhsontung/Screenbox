@@ -75,7 +75,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.PrefetchMusicAsync();
+                await _libraryService.FetchMusicAsync();
             }
             catch (UnauthorizedAccessException)
             {
@@ -87,7 +87,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.PrefetchVideosAsync();
+                await _libraryService.FetchVideosAsync();
             }
             catch (UnauthorizedAccessException)
             {
