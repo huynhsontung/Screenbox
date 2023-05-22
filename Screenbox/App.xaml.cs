@@ -1,28 +1,30 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using Screenbox.Controls;
+using Screenbox.Core;
+using Screenbox.Core.Common;
+using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
+using Screenbox.Pages;
+using Screenbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+
+#if !DEBUG
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.Extensions.DependencyInjection;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Controls;
-using Screenbox.Core;
-using Screenbox.Core.Common;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
-using Screenbox.Pages;
-using Screenbox.Services;
+#endif
 
 namespace Screenbox
 {
@@ -45,6 +47,7 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             _services = ConfigureServices();
+            CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(_services);
             InitializeComponent();
             Suspending += OnSuspending;
         }

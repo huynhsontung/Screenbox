@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using System;
@@ -9,6 +8,7 @@ using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -61,8 +61,8 @@ namespace Screenbox.Controls
         public PlayerControls()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PlayerControlsViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             PlayerContextMenu = NormalPlayerContextMenu;
         }
 

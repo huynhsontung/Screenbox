@@ -11,16 +11,14 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
-using Newtonsoft.Json.Linq;
-using Screenbox.Core.Enums;
 using Screenbox.Core;
 using System.Text;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,8 +46,8 @@ namespace Screenbox.Pages
         public AlbumDetailsPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<AlbumDetailsPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<AlbumDetailsPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

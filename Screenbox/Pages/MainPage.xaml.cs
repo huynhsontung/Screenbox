@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,9 +16,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using muxc = Microsoft.UI.Xaml.Controls;
 
 namespace Screenbox.Pages
@@ -51,7 +51,7 @@ namespace Screenbox.Pages
                 { "settings", typeof(SettingsPage) }
             };
 
-            DataContext = App.Services.GetRequiredService<MainPageViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
@@ -234,7 +234,7 @@ namespace Screenbox.Pages
                 muxc.NavigationViewItem? selectedItem = NavView.MenuItems
                     .OfType<muxc.NavigationViewItem>()
                     .FirstOrDefault(n => n.Tag.Equals(item.Key));
-                
+
                 NavView.SelectedItem = selectedItem;
             }
         }

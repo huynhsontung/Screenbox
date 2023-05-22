@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.ViewModels;
 using System;
@@ -10,6 +9,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -36,8 +36,8 @@ namespace Screenbox.Controls
         public PlaylistView()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PlaylistViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         public async Task SmoothScrollActiveItemIntoViewAsync()

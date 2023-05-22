@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
@@ -37,8 +37,8 @@ namespace Screenbox.Pages
         public VideosPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<VideosPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<VideosPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
 
             _pages = new Dictionary<string, Type>
             {

@@ -1,7 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Screenbox.Core;

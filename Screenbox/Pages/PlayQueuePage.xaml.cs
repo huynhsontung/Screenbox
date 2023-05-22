@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -19,8 +19,8 @@ namespace Screenbox.Pages
         public PlayQueuePage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PlayQueuePageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayQueuePageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)

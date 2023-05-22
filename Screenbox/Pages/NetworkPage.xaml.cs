@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +11,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -35,8 +35,8 @@ namespace Screenbox.Pages
         public NetworkPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<NetworkPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<NetworkPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

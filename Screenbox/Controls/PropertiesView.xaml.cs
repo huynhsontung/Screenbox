@@ -2,7 +2,7 @@
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -28,7 +28,7 @@ namespace Screenbox.Controls
         public PropertiesView()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PropertyViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PropertyViewModel>();
             Loaded += OnLoaded;
         }
 

@@ -3,8 +3,8 @@
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel.DataTransfer;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.UWP;
 using Screenbox.Core.ViewModels;
 
@@ -38,8 +38,8 @@ namespace Screenbox.Controls
         public PlayerElement()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PlayerElementViewModel>();
-            InteractionViewModel = App.Services.GetRequiredService<PlayerInteractionViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
+            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
             VideoViewButton.Click += (sender, args) => Click?.Invoke(sender, args);
             VideoViewButton.Drop += (_, _) => VideoViewButton.Focus(FocusState.Programmatic);
         }
