@@ -33,8 +33,6 @@ namespace Screenbox.Core.Services
         private Task<MusicLibraryFetchResult>? _loadMusicTask;
         private Task<IReadOnlyList<MediaViewModel>>? _loadVideosTask;
         private List<MediaViewModel> _songs;
-        private List<AlbumViewModel> _albums;
-        private List<ArtistViewModel> _artists;
         private List<MediaViewModel> _videos;
         private StorageFileQueryResult? _musicLibraryQueryResult;
         private StorageFileQueryResult? _videosLibraryQueryResult;
@@ -50,14 +48,14 @@ namespace Screenbox.Core.Services
             _artistFactory = artistFactory;
             _lockObject = new object();
             _songs = new List<MediaViewModel>();
-            _albums = new List<AlbumViewModel>();
-            _artists = new List<ArtistViewModel>();
             _videos = new List<MediaViewModel>();
+            _invalidateMusicCache = true;
+            _invalidateVideosCache = true;
         }
 
         public MusicLibraryFetchResult GetMusicCache()
         {
-            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
+            return new MusicLibraryFetchResult(_songs.AsReadOnly(), _albumFactory.AllAlbums.ToList(), _artistFactory.AllArtists.ToList(),
                 _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
 
@@ -112,7 +110,7 @@ namespace Screenbox.Core.Services
 
         private async Task<MusicLibraryFetchResult> FetchMusicInternalAsync(bool useCache)
         {
-            if (useCache && !_invalidateMusicCache && _musicLibraryQueryResult != null)
+            if (useCache && !_invalidateMusicCache)
             {
                 return GetMusicCache();
             }
@@ -122,10 +120,8 @@ namespace Screenbox.Core.Services
             List<MediaViewModel> songs = await FetchMediaFromStorage(queryResult);
             _invalidateMusicCache = false;
             _songs = songs;
-            _artists = _artistFactory.GetAllArtists();
-            _albums = _albumFactory.GetAllAlbums();
             MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
-            return new MusicLibraryFetchResult(songs.AsReadOnly(), _albums.AsReadOnly(), _artists.AsReadOnly(),
+            return new MusicLibraryFetchResult(songs.AsReadOnly(), _albumFactory.AllAlbums.ToList(), _artistFactory.AllArtists.ToList(),
                 _albumFactory.UnknownAlbum, _artistFactory.UnknownArtist);
         }
 
