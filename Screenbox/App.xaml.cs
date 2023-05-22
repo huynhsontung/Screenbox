@@ -33,12 +33,6 @@ namespace Screenbox
     /// </summary>
     sealed partial class App : Application
     {
-        public static App DerivedCurrent => (App)Current;
-
-        public static IServiceProvider Services => DerivedCurrent._services;
-
-        private readonly IServiceProvider _services;
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -46,8 +40,8 @@ namespace Screenbox
         public App()
         {
             ConfigureAppCenter();
-            _services = ConfigureServices();
-            CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(_services);
+            IServiceProvider services = ConfigureServices();
+            CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
             InitializeComponent();
             Suspending += OnSuspending;
         }
