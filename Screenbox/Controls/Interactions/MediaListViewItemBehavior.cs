@@ -1,14 +1,14 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Xaml.Interactivity;
+using Screenbox.Core.ViewModels;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.ViewModels;
 
 namespace Screenbox.Controls.Interactions
 {
@@ -22,7 +22,7 @@ namespace Screenbox.Controls.Interactions
 
         public MediaListViewItemBehavior()
         {
-            _common = App.Services.GetRequiredService<CommonViewModel>();
+            _common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnAttached()

@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls.Interactions;
 using Screenbox.Core.ViewModels;
 
@@ -20,8 +20,8 @@ namespace Screenbox.Pages
         public FolderViewPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<FolderViewPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<FolderViewPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

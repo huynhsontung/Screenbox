@@ -4,7 +4,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 
@@ -24,8 +24,8 @@ namespace Screenbox.Pages
         public HomePage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<HomePageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<HomePageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

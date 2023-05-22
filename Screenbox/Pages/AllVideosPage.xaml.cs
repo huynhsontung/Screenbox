@@ -1,6 +1,6 @@
 ﻿using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -19,8 +19,8 @@ namespace Screenbox.Pages
         public AllVideosPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<AllVideosPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<AllVideosPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

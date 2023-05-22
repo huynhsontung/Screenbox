@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 
@@ -21,8 +21,8 @@ namespace Screenbox.Pages
         public SearchResultPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<SearchResultPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<SearchResultPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

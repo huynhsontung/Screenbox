@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
@@ -36,8 +36,8 @@ namespace Screenbox.Pages
         public MusicPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<MusicPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<MusicPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
 
             _pages = new Dictionary<string, Type>
             {

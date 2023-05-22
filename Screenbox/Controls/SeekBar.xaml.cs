@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.ViewModels;
 using System;
@@ -13,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -40,7 +40,7 @@ namespace Screenbox.Controls
         public SeekBar()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<SeekBarViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<SeekBarViewModel>();
             RegisterSeekBarPointerHandlers();
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _previewToolTipTimer = dispatcherQueue.CreateTimer();

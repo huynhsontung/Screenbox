@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
@@ -20,6 +19,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -43,7 +43,7 @@ namespace Screenbox.Pages
         public PlayerPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<PlayerPageViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
             _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
             RegisterSeekBarPointerHandlers();

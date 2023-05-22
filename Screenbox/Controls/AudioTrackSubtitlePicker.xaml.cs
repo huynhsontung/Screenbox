@@ -1,6 +1,6 @@
-﻿using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -13,7 +13,7 @@ namespace Screenbox.Controls
         public AudioTrackSubtitlePicker()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<AudioTrackSubtitleViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<AudioTrackSubtitleViewModel>();
         }
     }
 }

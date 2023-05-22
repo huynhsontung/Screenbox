@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
-using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -21,7 +21,7 @@ namespace Screenbox.Pages
         public SongSearchResultPage()
         {
             this.InitializeComponent();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

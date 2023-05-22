@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Navigation;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
 using Windows.UI.Composition;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
@@ -35,8 +35,8 @@ namespace Screenbox.Pages
         public ArtistDetailsPage()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<ArtistDetailsPageViewModel>();
-            Common = App.Services.GetRequiredService<CommonViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<ArtistDetailsPageViewModel>();
+            Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
@@ -16,7 +16,7 @@ namespace Screenbox.Controls
         public NotificationView()
         {
             this.InitializeComponent();
-            DataContext = App.Services.GetRequiredService<NotificationViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<NotificationViewModel>();
             InfoBar.Translation = new Vector3(0, 0, 8);
         }
 
