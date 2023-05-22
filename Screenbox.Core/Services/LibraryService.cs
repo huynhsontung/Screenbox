@@ -149,22 +149,20 @@ namespace Screenbox.Core.Services
         {
             List<MediaViewModel> media = new();
             uint fetchIndex = 0;
-            uint count;
-            try
-            {
-                count = await queryResult.GetItemCountAsync();
-            }
-            catch (Exception)
-            {
-                count = 0;
-            }
-
-            if (count == 0)
-                return media;
 
             while (fetchIndex < MaxLoadCount)
             {
-                IReadOnlyList<StorageFile> files = await queryResult.GetFilesAsync(fetchIndex, 50);
+                IReadOnlyList<StorageFile> files;
+                try
+                {
+                    files = await queryResult.GetFilesAsync(fetchIndex, 50);
+                }
+                catch (Exception e)
+                {
+                    files = Array.Empty<StorageFile>();
+                    LogService.Log(e);
+                }
+
                 if (files.Count == 0) break;
                 fetchIndex += (uint)files.Count;
                 media.AddRange(files.Select(_mediaFactory.GetSingleton));
