@@ -113,6 +113,7 @@ namespace Screenbox.Core.ViewModels
             string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries
                 .OrderByDescending(x => x.Metadata)
                 .Select(x => x.Token)
+                .Where(t => !string.IsNullOrEmpty(t))
                 .ToArray();
 
             if (tokens.Length == 0)
@@ -127,7 +128,14 @@ namespace Screenbox.Core.ViewModels
                 StorageFile? file = await ConvertMruTokenToStorageFileAsync(token);
                 if (file == null)
                 {
-                    StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                    try
+                    {
+                        StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                    }
+                    catch (Exception e)
+                    {
+                        LogService.Log(e);
+                    }
                     continue;
                 }
 
