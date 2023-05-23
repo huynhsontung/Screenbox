@@ -1,19 +1,28 @@
 ﻿#nullable enable
 
+using LibVLCSharp.Shared;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using LibVLCSharp.Shared;
+
+#if !DEBUG
+using Microsoft.AppCenter.Crashes;
+#endif
 
 namespace Screenbox.Core.Services
 {
     public static class LogService
     {
-        [Conditional("DEBUG")]
         public static void Log(object? message, [CallerMemberName] string? source = default)
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
+#if !DEBUG
+            if (message is Exception e)
+            {
+                Crashes.TrackError(e);
+            }
+#endif
         }
 
         [Conditional("DEBUG")]
