@@ -21,13 +21,20 @@ public static class CollectionExtensions
         for (int i = 0; i < reference.Count; i++)
         {
             T item = reference[i];
-            int existingIndex = target.IndexOf(item);
-            if (existingIndex >= 0 && existingIndex != i)
+            if (i >= target.Count)
             {
-                target.RemoveAt(existingIndex);
+                target.Add(item);
             }
+            else
+            {
+                int existingIndex = target.IndexOf(item);
+                if (existingIndex >= 0 && existingIndex != i)
+                {
+                    target.RemoveAt(existingIndex);
+                }
 
-            target.Insert(i, item);
+                target.Insert(i, item);
+            }
         }
 
         // Remove items not in "reference"
