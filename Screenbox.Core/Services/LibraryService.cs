@@ -93,18 +93,7 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult queryResult = GetMusicLibraryQueryResult();
                 List<MediaViewModel> songs = new();
                 _songs = songs;
-                while (songs.Count < MaxLoadCount)
-                {
-                    List<MediaViewModel> songsBatch = await FetchMediaFromStorage(queryResult, (uint)songs.Count);
-                    if (songsBatch.Count == 0) break;
-                    songs.AddRange(songsBatch);
-                }
-
-                foreach (MediaViewModel song in songs)
-                {
-                    // Expect UI thread
-                    await song.LoadDetailsAsync();
-                }
+                await BatchFetchMediaAsync(queryResult, songs);
             }
             finally
             {
@@ -124,18 +113,7 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult queryResult = GetVideosLibraryQueryResult();
                 List<MediaViewModel> videos = new();
                 _videos = videos;
-                while (videos.Count < MaxLoadCount)
-                {
-                    List<MediaViewModel> videosBatch = await FetchMediaFromStorage(queryResult, (uint)videos.Count);
-                    if (videosBatch.Count == 0) break;
-                    videos.AddRange(videosBatch);
-                }
-
-                foreach (MediaViewModel video in videos)
-                {
-                    // Expect UI thread
-                    await video.LoadDetailsAsync();
-                }
+                await BatchFetchMediaAsync(queryResult, videos);
             }
             finally
             {
@@ -161,6 +139,25 @@ namespace Screenbox.Core.Services
             media.Artists = Array.Empty<ArtistViewModel>();
             _songs.Remove(media);
             _videos.Remove(media);
+        }
+
+        private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target)
+        {
+            // Use count to stabilize query result
+            uint count = await queryResult.GetItemCountAsync();
+
+            while (target.Count < MaxLoadCount)
+            {
+                List<MediaViewModel> batch = await FetchMediaFromStorage(queryResult, (uint)target.Count);
+                if (batch.Count == 0) break;
+                target.AddRange(batch);
+            }
+
+            foreach (MediaViewModel media in target)
+            {
+                // Expect UI thread
+                await media.LoadDetailsAsync();
+            }
         }
 
         private async Task<List<MediaViewModel>> FetchMediaFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
