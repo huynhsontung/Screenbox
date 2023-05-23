@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.System;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
@@ -28,6 +29,7 @@ namespace Screenbox.Core.Services
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
+        private readonly DispatcherQueue _dispatcherQueue;  // TODO: Refactor away the need for DispatcherQueue
 
         private const int MaxLoadCount = 5000;
 
@@ -43,6 +45,7 @@ namespace Screenbox.Core.Services
             _mediaFactory = mediaFactory;
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _songs = new List<MediaViewModel>();
             _videos = new List<MediaViewModel>();
         }
@@ -99,6 +102,7 @@ namespace Screenbox.Core.Services
 
                 foreach (MediaViewModel song in songs)
                 {
+                    // Expect UI thread
                     await song.LoadDetailsAsync();
                 }
             }
@@ -129,6 +133,7 @@ namespace Screenbox.Core.Services
 
                 foreach (MediaViewModel video in videos)
                 {
+                    // Expect UI thread
                     await video.LoadDetailsAsync();
                 }
             }
@@ -197,14 +202,16 @@ namespace Screenbox.Core.Services
             return _videosLibraryQueryResult;
         }
 
-        private async void OnVideosLibraryContentChanged(object sender, object args)
+        private void OnVideosLibraryContentChanged(object sender, object args)
         {
-            await FetchVideosAsync();
+            async void FetchAction() => await FetchVideosAsync();
+            _dispatcherQueue.TryEnqueue(FetchAction);
         }
 
-        private async void OnMusicLibraryContentChanged(object sender, object args)
+        private void OnMusicLibraryContentChanged(object sender, object args)
         {
-            await FetchMusicAsync();
+            async void FetchAction() => await FetchMusicAsync();
+            _dispatcherQueue.TryEnqueue(FetchAction);
         }
     }
 }
