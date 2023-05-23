@@ -142,6 +142,8 @@
     <Compile Include="Factories\ArtistViewModelFactory.cs" />
     <Compile Include="Factories\MediaViewModelFactory.cs" />
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
+    <Compile Include="Helpers\GroupedCollectionExtensions.cs" />
+    <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />

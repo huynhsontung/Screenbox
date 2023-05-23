@@ -21,8 +21,8 @@ namespace Screenbox.Core.Services
 
         public SearchResult SearchLocalLibrary(string query)
         {
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
-            IReadOnlyList<MediaViewModel> videosLibrary = _libraryService.GetVideosCache();
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            IReadOnlyList<MediaViewModel> videosLibrary = _libraryService.GetVideosFetchResult();
 
             ImmutableList<MediaViewModel> songs = musicLibrary.Songs
                 .Select(m => (Song: m, Index: m.Name.IndexOf(query, StringComparison.CurrentCultureIgnoreCase)))

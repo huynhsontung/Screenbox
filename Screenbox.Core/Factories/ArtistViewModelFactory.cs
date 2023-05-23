@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories
@@ -15,6 +15,8 @@ namespace Screenbox.Core.Factories
     {
         public ArtistViewModel UnknownArtist { get; }
 
+        public IReadOnlyCollection<ArtistViewModel> AllArtists { get; }
+
         private readonly Dictionary<string, ArtistViewModel> _allArtists;
 
         private static readonly string[] ArtistNameSeparators = { " & ", ", " };
@@ -22,10 +24,9 @@ namespace Screenbox.Core.Factories
         public ArtistViewModelFactory(IResourceService resourceService)
         {
             _allArtists = new Dictionary<string, ArtistViewModel>();
+            AllArtists = _allArtists.Values;
             UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
-
-        public List<ArtistViewModel> GetAllArtists() => new(_allArtists.Values);
 
         public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
         {

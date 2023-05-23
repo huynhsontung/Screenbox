@@ -1,11 +1,10 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Windows.Foundation;
 using Windows.Storage;
-using Screenbox.Core.Models;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
@@ -16,9 +15,13 @@ namespace Screenbox.Core.Services
         event TypedEventHandler<ILibraryService, object>? VideosLibraryContentChanged;
         StorageLibrary? MusicLibrary { get; }
         StorageLibrary? VideosLibrary { get; }
-        Task<MusicLibraryFetchResult> FetchMusicAsync(bool useCache = true);
-        Task<IReadOnlyList<MediaViewModel>> FetchVideosAsync(bool useCache = true);
-        MusicLibraryFetchResult GetMusicCache();
-        IReadOnlyList<MediaViewModel> GetVideosCache();
+        public bool IsLoadingVideos { get; }
+        public bool IsLoadingMusic { get; }
+        Task<StorageLibrary> InitializeMusicLibraryAsync();
+        Task<StorageLibrary> InitializeVideosLibraryAsync();
+        Task FetchMusicAsync();
+        Task FetchVideosAsync();
+        MusicLibraryFetchResult GetMusicFetchResult();
+        IReadOnlyList<MediaViewModel> GetVideosFetchResult();
     }
 }

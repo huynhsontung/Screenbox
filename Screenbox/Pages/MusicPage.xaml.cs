@@ -1,16 +1,14 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 
@@ -45,11 +43,9 @@ namespace Screenbox.Pages
                 { "artists", typeof(ArtistsPage) },
                 { "albums", typeof(AlbumsPage) }
             };
-
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Common.NavigationStates.TryGetValue(typeof(MusicPage), out string navigationState))
@@ -62,15 +58,12 @@ namespace Screenbox.Pages
                 LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
             }
 
-            await ViewModel.FetchMusicAsync();
-
-            VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
+            ViewModel.UpdateSongs();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
             Common.NavigationStates[typeof(MusicPage)] = ContentFrame.GetNavigationState();
         }
 
@@ -82,14 +75,6 @@ namespace Screenbox.Pages
         public void NavigateContent(Type pageType, object? parameter)
         {
             ContentFrame.Navigate(pageType, parameter);
-        }
-
-        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.IsLoading) && !ViewModel.IsLoading)
-            {
-                VisualStateManager.GoToState(this, ViewModel.Count > 0 ? "Normal" : "NoMusic", false);
-            }
         }
 
         private void LibraryNavView_OnSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

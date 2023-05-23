@@ -181,6 +181,9 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="NoMusic">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.HasContent, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Visibility" Value="Visible" />
                         <Setter Target="NoMusicMessage.Visibility" Value="Visible" />

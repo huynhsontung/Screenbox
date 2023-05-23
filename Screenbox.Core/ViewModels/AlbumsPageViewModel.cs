@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using Windows.System;
-using CommunityToolkit.Mvvm.Collections;
+﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using System;
+using System.Linq;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -23,6 +24,7 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
+            PopulateGroups();
 
             libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         }
@@ -35,23 +37,32 @@ namespace Screenbox.Core.ViewModels
 
         public void FetchAlbums()
         {
-            // No need to run fetch async. Music page should already called the method.
-            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicCache();
+            // No need to run fetch async. HomePageViewModel should already called the method.
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
 
-            GroupedAlbums.Clear();
-            PopulateGroups();
+            GroupedAlbums.ClearItems();
             foreach (AlbumViewModel album in musicLibrary.Albums.OrderBy(a => a.Name, StringComparer.CurrentCulture))
             {
                 string key = album == musicLibrary.UnknownAlbum
                     ? "\u2026"
-                    : MusicPageViewModel.GetFirstLetterGroup(album.Name);
+                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name);
                 GroupedAlbums.AddItem(key, album);
+            }
+
+            // Progressively update when it's still loading
+            if (_libraryService.IsLoadingMusic)
+            {
+                _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _refreshTimer.Stop();
             }
         }
 
         private void PopulateGroups()
         {
-            foreach (string key in MusicPageViewModel.GroupHeaders.Select(letter => letter.ToString()))
+            foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
             {
                 GroupedAlbums.AddGroup(key);
             }
@@ -59,7 +70,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
-            _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(2));
+            _dispatcherQueue.TryEnqueue(FetchAlbums);
         }
     }
 }

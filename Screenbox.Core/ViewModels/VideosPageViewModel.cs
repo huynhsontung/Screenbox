@@ -1,17 +1,16 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -25,27 +24,21 @@ namespace Screenbox.Core.ViewModels
 
         private readonly INavigationService _navigationService;
         private readonly ILibraryService _libraryService;
+        private readonly DispatcherQueue _dispatcherQueue;
 
         public VideosPageViewModel(INavigationService navigationService, ILibraryService libraryService)
         {
             _navigationService = navigationService;
             _libraryService = libraryService;
+            _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         }
 
-        public async Task FetchVideosAsync()
+        public void UpdateVideos()
         {
-            try
-            {
-                HasVideos = (await _libraryService.FetchVideosAsync()).Count > 0;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                HasVideos = false;
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
-            }
-
+            HasVideos = _libraryService.GetVideosFetchResult().Count > 0;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
 
@@ -75,6 +68,11 @@ namespace Screenbox.Core.ViewModels
                     Breadcrumbs.Add(storageFolder);
                 }
             }
+        }
+
+        private void OnVideosLibraryContentChanged(ILibraryService sender, object args)
+        {
+            _dispatcherQueue.TryEnqueue(UpdateVideos);
         }
 
         [RelayCommand(CanExecute = nameof(HasLibrary))]

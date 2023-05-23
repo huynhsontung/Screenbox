@@ -1,12 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -14,6 +7,11 @@ using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -21,7 +19,7 @@ namespace Screenbox.Core.ViewModels
     {
         [ObservableProperty] private bool _isLoading;
 
-        public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
+        [ObservableProperty] private bool _hasContent;
 
         public int Count => _songs.Count;
 
@@ -32,35 +30,40 @@ namespace Screenbox.Core.ViewModels
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _timer;
-        private readonly List<MediaViewModel> _songs;
+        private List<MediaViewModel> _songs;
 
         public MusicPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
+            _libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             _songs = new List<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _timer = _dispatcherQueue.CreateTimer();
+            _hasContent = true;
         }
 
-        public async Task FetchMusicAsync()
+        public void UpdateSongs()
         {
-            _timer.Debounce(() => IsLoading = true, TimeSpan.FromMilliseconds(200));
-
-            try
-            {
-                MusicLibraryFetchResult music = await _libraryService.FetchMusicAsync();
-                _songs.Clear();
-                _songs.AddRange(music.Songs);
-                AddFolderCommand.NotifyCanExecuteChanged();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
-            }
-
+            MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            _songs = new List<MediaViewModel>(musicLibrary.Songs);
+            IsLoading = _libraryService.IsLoadingMusic;
+            HasContent = _songs.Count > 0 || IsLoading;
+            AddFolderCommand.NotifyCanExecuteChanged();
             ShuffleAndPlayCommand.NotifyCanExecuteChanged();
-            _timer.Stop();
-            IsLoading = false;
+
+            if (IsLoading)
+            {
+                _timer.Debounce(UpdateSongs, TimeSpan.FromSeconds(5));
+            }
+            else
+            {
+                _timer.Stop();
+            }
+        }
+
+        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
+        {
+            _dispatcherQueue.TryEnqueue(UpdateSongs);
         }
 
         [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -78,16 +81,6 @@ namespace Screenbox.Core.ViewModels
         private async Task AddFolder()
         {
             await _libraryService.MusicLibrary?.RequestAddFolderAsync();
-        }
-
-        public static string GetFirstLetterGroup(string name)
-        {
-            char letter = char.ToUpper(name[0], CultureInfo.CurrentCulture);
-            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(letter))
-                return letter.ToString();
-            if (char.IsNumber(letter)) return "#";
-            if (char.IsSymbol(letter) || char.IsPunctuation(letter) || char.IsSeparator(letter)) return "&";
-            return "\u2026";
         }
     }
 }

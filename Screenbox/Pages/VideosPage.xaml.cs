@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
 
@@ -47,7 +47,7 @@ namespace Screenbox.Pages
             };
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string navigationState))
@@ -60,7 +60,7 @@ namespace Screenbox.Pages
                 LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
             }
 
-            await ViewModel.FetchVideosAsync();
+            ViewModel.UpdateVideos();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -27,6 +27,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
+        private bool _isLoaded; // Assume this class is a singleton
 
         public HomePageViewModel(MediaViewModelFactory mediaFactory,
             IFilesService filesService,
@@ -53,29 +54,58 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnLoaded()
         {
+            // Only run once. Assume this class is a singleton.
+            if (_isLoaded) return;
+            _isLoaded = true;
+            await UpdateContentAsync();
+        }
+
+        public void OpenUrl(Uri url)
+        {
+            Messenger.Send(new PlayMediaMessage(url));
+        }
+
+        private async Task UpdateContentAsync()
+        {
+            // Pre-fetch libraries
+            List<Task> tasks = new(3) { PrefetchMusicLibraryAsync(), PrefetchVideosLibraryAsync() };
+
+            // Update recent media
             if (_settingsService.ShowRecent)
             {
-                await UpdateRecentMediaListAsync();
+                tasks.Add(UpdateRecentMediaListAsync());
             }
             else
             {
                 Recent.Clear();
             }
 
+            // Await for all of them
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task PrefetchMusicLibraryAsync()
+        {
             try
             {
-                // Pre-fetch libraries
-                await Task.WhenAll(_libraryService.FetchMusicAsync(true), _libraryService.FetchVideosAsync(true));
+                await _libraryService.FetchMusicAsync();
             }
-            catch (Exception)
+            catch (UnauthorizedAccessException)
             {
-                // pass
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
             }
         }
 
-        public void OpenUrl(Uri url)
+        private async Task PrefetchVideosLibraryAsync()
         {
-            Messenger.Send(new PlayMediaMessage(url));
+            try
+            {
+                await _libraryService.FetchVideosAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
         }
 
         private async Task UpdateRecentMediaListAsync()
