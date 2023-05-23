@@ -43,7 +43,7 @@ namespace Screenbox.Core.ViewModels
 
         public void FetchSongs()
         {
-            // No need to run fetch async. Music page should already called the method.
+            // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
             _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
 
