@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -23,6 +24,7 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
+            PopulateGroups();
 
             libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         }
@@ -38,13 +40,12 @@ namespace Screenbox.Core.ViewModels
             // No need to run fetch async. Music page should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
 
-            GroupedAlbums.Clear();
-            PopulateGroups();
+            GroupedAlbums.ClearItems();
             foreach (AlbumViewModel album in musicLibrary.Albums.OrderBy(a => a.Name, StringComparer.CurrentCulture))
             {
                 string key = album == musicLibrary.UnknownAlbum
                     ? "\u2026"
-                    : MusicPageViewModel.GetFirstLetterGroup(album.Name);
+                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name);
                 GroupedAlbums.AddItem(key, album);
             }
 
@@ -61,7 +62,7 @@ namespace Screenbox.Core.ViewModels
 
         private void PopulateGroups()
         {
-            foreach (string key in MusicPageViewModel.GroupHeaders.Select(letter => letter.ToString()))
+            foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
             {
                 GroupedAlbums.AddGroup(key);
             }

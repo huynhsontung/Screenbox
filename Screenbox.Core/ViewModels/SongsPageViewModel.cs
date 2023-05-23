@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -29,6 +30,7 @@ namespace Screenbox.Core.ViewModels
             _refreshTimer = _dispatcherQueue.CreateTimer();
             _songs = Array.Empty<MediaViewModel>();
             GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
+            PopulateGroups();
 
             libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         }
@@ -46,11 +48,10 @@ namespace Screenbox.Core.ViewModels
             _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
 
             // Populate song groups with fetched result
-            GroupedSongs.Clear();
-            PopulateGroups();
+            GroupedSongs.ClearItems();
             foreach (MediaViewModel song in _songs)
             {
-                GroupedSongs.AddItem(MusicPageViewModel.GetFirstLetterGroup(song.Name), song);
+                GroupedSongs.AddItem(MediaGroupingHelpers.GetFirstLetterGroup(song.Name), song);
             }
 
             // Progressively update when it's still loading
@@ -66,7 +67,7 @@ namespace Screenbox.Core.ViewModels
 
         private void PopulateGroups()
         {
-            foreach (string key in MusicPageViewModel.GroupHeaders.Select(letter => letter.ToString()))
+            foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
             {
                 GroupedSongs.AddGroup(key);
             }

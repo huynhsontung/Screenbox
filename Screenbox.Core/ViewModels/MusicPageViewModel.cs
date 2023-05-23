@@ -9,7 +9,6 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
@@ -21,8 +20,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isLoading;
 
         [ObservableProperty] private bool _hasContent;
-
-        public const string GroupHeaders = "&#ABCDEFGHIJKLMNOPQRSTUVWXYZ\u2026";
 
         public int Count => _songs.Count;
 
@@ -84,16 +81,6 @@ namespace Screenbox.Core.ViewModels
         private async Task AddFolder()
         {
             await _libraryService.MusicLibrary?.RequestAddFolderAsync();
-        }
-
-        public static string GetFirstLetterGroup(string name)
-        {
-            char letter = char.ToUpper(name[0], CultureInfo.CurrentCulture);
-            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(letter))
-                return letter.ToString();
-            if (char.IsNumber(letter)) return "#";
-            if (char.IsSymbol(letter) || char.IsPunctuation(letter) || char.IsSeparator(letter)) return "&";
-            return "\u2026";
         }
     }
 }
