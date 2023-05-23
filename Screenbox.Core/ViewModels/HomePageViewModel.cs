@@ -27,6 +27,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
+        private bool _isLoaded; // Assume this class is a singleton
 
         public HomePageViewModel(MediaViewModelFactory mediaFactory,
             IFilesService filesService,
@@ -53,17 +54,10 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnLoaded()
         {
-            if (_settingsService.ShowRecent)
-            {
-                await UpdateRecentMediaListAsync();
-            }
-            else
-            {
-                Recent.Clear();
-            }
-
-            // Pre-fetch libraries
-            await Task.WhenAll(PrefetchMusicLibrary(), PrefetchVideosLibrary());
+            // Only run once. Assume this class is a singleton.
+            if (_isLoaded) return;
+            _isLoaded = true;
+            await UpdateContentAsync();
         }
 
         public void OpenUrl(Uri url)
@@ -71,7 +65,26 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlayMediaMessage(url));
         }
 
-        private async Task PrefetchMusicLibrary()
+        private async Task UpdateContentAsync()
+        {
+            // Pre-fetch libraries
+            List<Task> tasks = new(3) { PrefetchMusicLibraryAsync(), PrefetchVideosLibraryAsync() };
+
+            // Update recent media
+            if (_settingsService.ShowRecent)
+            {
+                tasks.Add(UpdateRecentMediaListAsync());
+            }
+            else
+            {
+                Recent.Clear();
+            }
+
+            // Await for all of them
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task PrefetchMusicLibraryAsync()
         {
             try
             {
@@ -83,7 +96,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private async Task PrefetchVideosLibrary()
+        private async Task PrefetchVideosLibraryAsync()
         {
             try
             {
