@@ -48,11 +48,9 @@ namespace Screenbox.Core.ViewModels
             _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
 
             // Populate song groups with fetched result
-            GroupedSongs.ClearItems();
-            foreach (MediaViewModel song in _songs)
-            {
-                GroupedSongs.AddItem(MediaGroupingHelpers.GetFirstLetterGroup(song.Name), song);
-            }
+            IEnumerable<IGrouping<string, MediaViewModel>> groupings =
+                _songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name));
+            GroupedSongs.SyncObservableGroups(groupings);
 
             // Progressively update when it's still loading
             if (_libraryService.IsLoadingMusic)

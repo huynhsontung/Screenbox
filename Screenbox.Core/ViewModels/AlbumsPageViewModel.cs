@@ -5,6 +5,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 
@@ -40,14 +41,12 @@ namespace Screenbox.Core.ViewModels
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
 
-            GroupedAlbums.ClearItems();
-            foreach (AlbumViewModel album in musicLibrary.Albums.OrderBy(a => a.Name, StringComparer.CurrentCulture))
-            {
-                string key = album == musicLibrary.UnknownAlbum
+            IEnumerable<IGrouping<string, AlbumViewModel>> groupings = musicLibrary.Albums
+                .OrderBy(a => a.Name, StringComparer.CurrentCulture)
+                .GroupBy(album => album == musicLibrary.UnknownAlbum
                     ? "\u2026"
-                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name);
-                GroupedAlbums.AddItem(key, album);
-            }
+                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name));
+            GroupedAlbums.SyncObservableGroups(groupings);
 
             // Progressively update when it's still loading
             if (_libraryService.IsLoadingMusic)
