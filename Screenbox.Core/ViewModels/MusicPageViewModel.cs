@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels
@@ -80,7 +81,11 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand(CanExecute = nameof(LibraryLoaded))]
         private async Task AddFolder()
         {
-            await _libraryService.MusicLibrary?.RequestAddFolderAsync();
+            StorageFolder? addedFolder = await _libraryService.MusicLibrary?.RequestAddFolderAsync();
+            if (addedFolder != null)
+            {
+                _timer.Debounce(() => IsLoading = _libraryService.IsLoadingMusic, TimeSpan.FromSeconds(1));
+            }
         }
     }
 }
