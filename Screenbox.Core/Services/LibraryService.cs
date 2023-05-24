@@ -219,12 +219,14 @@ namespace Screenbox.Core.Services
         private void OnVideosLibraryContentChanged(object sender, object args)
         {
             async void FetchAction() => await FetchVideosAsync();
+            // Delay fetch due to query result not yet updated at this time
             _videosRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
         }
 
         private void OnMusicLibraryContentChanged(object sender, object args)
         {
             async void FetchAction() => await FetchMusicAsync();
+            // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
         }
     }
