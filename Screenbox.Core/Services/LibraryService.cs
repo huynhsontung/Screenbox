@@ -65,11 +65,13 @@ namespace Screenbox.Core.Services
 
         public async Task<StorageLibrary> InitializeMusicLibraryAsync()
         {
+            // No need to add handler for StorageLibrary.DefinitionChanged
             return MusicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
         }
 
         public async Task<StorageLibrary> InitializeVideosLibraryAsync()
         {
+            // No need to add handler for StorageLibrary.DefinitionChanged
             return VideosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
         }
 
