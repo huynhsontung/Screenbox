@@ -460,6 +460,7 @@
           "CommunityToolkit.Diagnostics": "[8.1.0, )",
           "CommunityToolkit.Mvvm": "[8.0.0, )",
           "LibVLCSharp": "[3.6.7, )",
+          "Microsoft.AppCenter.Crashes": "[5.0.1, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Microsoft.Toolkit.Uwp.UI": "[7.1.3, )",
           "protobuf-net": "[3.1.33, )"

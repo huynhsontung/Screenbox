@@ -258,6 +258,9 @@
     <EmbeddedResource Include="Properties\Screenbox.Core.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>5.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
@@ -280,7 +283,11 @@
   <ItemGroup>
     <None Include="packages.lock.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Microsoft.AppCenter.Crashes">
+      <HintPath>..\..\..\..\.nuget\packages\microsoft.appcenter.crashes\5.0.1\lib\uap10.0.16299\Microsoft.AppCenter.Crashes.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
