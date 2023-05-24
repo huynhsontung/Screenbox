@@ -28,6 +28,7 @@ public static class CollectionExtensions
             else
             {
                 int existingIndex = target.IndexOf(item);
+                if (existingIndex == i) continue;
                 if (existingIndex >= 0 && existingIndex != i)
                 {
                     target.RemoveAt(existingIndex);
