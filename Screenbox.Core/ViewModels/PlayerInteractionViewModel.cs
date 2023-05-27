@@ -73,6 +73,7 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnDrop(object sender, DragEventArgs e)
         {
+            if (_mediaPlayer == null) return;
             try
             {
                 if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -82,7 +83,8 @@ namespace Screenbox.Core.ViewModels
                     {
                         if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
                         {
-                            _mediaPlayer?.AddSubtitle(file);
+                            _mediaPlayer.AddSubtitle(file);
+                            Messenger.Send(new SubtitleAddedNotificationMessage(file));
                         }
                         else
                         {

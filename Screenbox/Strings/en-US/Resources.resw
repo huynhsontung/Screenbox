@@ -646,4 +646,7 @@
     <value>Version {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
+  <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
+    <value>Subtitle added</value>
+  </data>
 </root>

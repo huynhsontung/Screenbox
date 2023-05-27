@@ -69,7 +69,8 @@ namespace Screenbox.Core.ViewModels
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
                 if (file == null) return;
 
-                _mediaPlayer?.AddSubtitle(file);
+                _mediaPlayer.AddSubtitle(file);
+                Messenger.Send(new SubtitleAddedNotificationMessage(file));
             }
             catch (Exception e)
             {

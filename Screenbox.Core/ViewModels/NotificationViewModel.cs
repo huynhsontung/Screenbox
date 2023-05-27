@@ -1,10 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using Windows.Storage;
-using Windows.System;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -13,6 +8,11 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
+using Windows.Storage;
+using Windows.System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -22,6 +22,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<RaiseLibraryAccessDeniedNotificationMessage>,
         IRecipient<MediaLoadFailedNotificationMessage>,
         IRecipient<CloseNotificationMessage>,
+        IRecipient<SubtitleAddedNotificationMessage>,
         IRecipient<ErrorMessage>
     {
         [ObservableProperty] private NotificationLevel _severity;
@@ -81,6 +82,20 @@ namespace Screenbox.Core.ViewModels
             IsOpen = false;
         }
 
+        public void Receive(SubtitleAddedNotificationMessage message)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                Reset();
+                Title = _resourceService.GetString(ResourceName.SubtitleAddedNotificationTitle);
+                Severity = NotificationLevel.Success;
+                Message = message.File.Name;
+
+                IsOpen = true;
+                _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(5));
+            });
+        }
+
         public void Receive(MediaLoadFailedNotificationMessage message)
         {
             _dispatcherQueue.TryEnqueue(() =>
@@ -112,7 +127,7 @@ namespace Screenbox.Core.ViewModels
                     Content = ButtonContent,
                     Command = ActionCommand
                 };
-                
+
                 IsOpen = true;
                 _timer.Debounce(() => IsOpen = false, TimeSpan.FromSeconds(8));
             }

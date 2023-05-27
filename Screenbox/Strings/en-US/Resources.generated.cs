@@ -2026,6 +2026,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SubtitleAddedNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Subtitle added
+        /// </summary>
+        public static string SubtitleAddedNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("SubtitleAddedNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2154,28 +2167,6 @@ namespace Screenbox.Strings{
             NoVideosPanelSubtext,
             OpenPrivacySettingsButtonText,
             FailedToLoadMediaNotificationTitle,
-            ThirdGenerationFileFriendlyName,
-            ThirdGeneration2FileFriendlyName,
-            AdvancedAudioFileFriendlyName,
-            FlacFileFriendlyName,
-            FlashFileFriendlyName,
-            iTunesVideoFileFriendlyName,
-            MatroskaAudioFileFriendlyName,
-            MatroskaVideoFileFriendlyName,
-            MicrosoftVideoFileFriendlyName,
-            MidiFileFriendlyName,
-            MpegFileFriendlyName,
-            MP3FileFriendlyName,
-            MP4AudioFileFriendlyName,
-            MP4VideoFileFriendlyName,
-            OggAudioFileFriendlyName,
-            OggVideoFileFriendlyName,
-            QuickTimeFileFriendlyName,
-            WaveFileFriendlyName,
-            WebAudioFileFriendlyName,
-            WebMediaFileFriendlyName,
-            WindowsMediaAudioFileFriendlyName,
-            WindowsMediaVideoFileFriendlyName,
             AspectRatio,
             Fit,
             Fill,
@@ -2213,6 +2204,7 @@ namespace Screenbox.Strings{
             Never,
             OnLaunch,
             VersionText,
+            SubtitleAddedNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;
