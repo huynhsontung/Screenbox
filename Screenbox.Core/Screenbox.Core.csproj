@@ -169,6 +169,7 @@
     <Compile Include="Messages\RepeatModeChangedMessage.cs" />
     <Compile Include="Messages\SettingsChangedMessage.cs" />
     <Compile Include="Messages\ShowPlayPauseBadgeMessage.cs" />
+    <Compile Include="Messages\SubtitleAddedNotificationMessage.cs" />
     <Compile Include="Messages\SuspendingMessage.cs" />
     <Compile Include="Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />

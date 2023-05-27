@@ -32,6 +32,7 @@
         FrameSavedNotificationTitle,
         ResumePositionNotificationTitle,
         FailedToLoadMediaNotificationTitle,
+        SubtitleAddedNotificationTitle,
         VolumeChangeStatusMessage,
         AccessDeniedMusicLibraryTitle,
         AccessDeniedVideosLibraryTitle,
