@@ -219,6 +219,24 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
+                    Text="Advanced" />
+                <labs:SettingsCard Description="Advanced mode allows you to customize libVLC's behavior using command line arguments." Header="Advanced mode">
+                    <ToggleSwitch />
+                </labs:SettingsCard>
+                <labs:SettingsCard
+                    Description="Command line arguments that apply to all media playback. You can set file specific arguments in the file context menu."
+                    Header="Default arguments"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe756;}">
+                    <TextBox
+                        Width="180"
+                        AcceptsReturn="False"
+                        MaxLength="1024"
+                        PlaceholderText="--sout-all --sout #display" />
+                </labs:SettingsCard>
+
+                <TextBlock
+                    Margin="0,24,0,4"
+                    FontWeight="SemiBold"
                     Text="{strings:Resources Key=SettingsCategoryAbout}" />
                 <labs:SettingsCard
                     Margin="0,0,0,24"
