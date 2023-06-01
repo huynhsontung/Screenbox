@@ -464,7 +464,9 @@
                 x:Name="CompactOverlayButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                Style="{StaticResource PlayerButtonStyle}">
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="{ui:OnDevice Desktop=Visible,
+                                         Default=Collapsed}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
@@ -476,7 +478,9 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                Style="{StaticResource PlayerButtonStyle}">
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="{ui:OnDevice Desktop=Visible,
+                                         Default=Collapsed}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
@@ -511,9 +515,9 @@
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
                         <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
-                        <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
-                        <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
-                        <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="ExtraOptionsSeparator.Visibility" Value="{ui:OnDevice Desktop=Visible, Default=Collapsed}" />
+                        <Setter Target="FullscreenMenuItem.Visibility" Value="{ui:OnDevice Desktop=Visible, Default=Collapsed}" />
+                        <Setter Target="CompactOverlayMenuItem.Visibility" Value="{ui:OnDevice Desktop=Visible, Default=Collapsed}" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="ShuffleButton" />
