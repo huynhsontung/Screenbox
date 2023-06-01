@@ -23,6 +23,8 @@ namespace Screenbox.Core.Services
 
         private ImmutableArray<string> SupportedVideoFormats { get; }
 
+        private ImmutableArray<string> SupportedPlaylistFormats { get; }
+
         private ImmutableArray<string> SupportedFormats { get; }
 
         public FilesService()
@@ -31,7 +33,8 @@ namespace Screenbox.Core.Services
                 ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
             SupportedAudioFormats = ImmutableArray.Create(
                 ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba", ".flac", ".m4a");
-            SupportedFormats = SupportedVideoFormats.AddRange(SupportedAudioFormats);
+            SupportedPlaylistFormats = ImmutableArray.Create(".m3u8", ".m3u", ".ts");
+            SupportedFormats = SupportedVideoFormats.AddRange(SupportedAudioFormats).AddRange(SupportedPlaylistFormats);
         }
 
         public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
