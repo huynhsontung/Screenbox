@@ -255,6 +255,7 @@
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
+                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </interactivity:Interaction.Behaviors>
         </ListView>
 

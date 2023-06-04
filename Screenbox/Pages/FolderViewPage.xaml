@@ -121,6 +121,7 @@
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoFocusBehavior />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
+                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
