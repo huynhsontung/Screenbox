@@ -256,6 +256,7 @@
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
         </ListView>
 

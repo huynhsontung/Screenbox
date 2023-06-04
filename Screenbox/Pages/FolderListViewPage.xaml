@@ -91,6 +91,7 @@
                     AlternateBorderThickness="1" />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

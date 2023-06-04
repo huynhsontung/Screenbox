@@ -163,6 +163,7 @@
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
