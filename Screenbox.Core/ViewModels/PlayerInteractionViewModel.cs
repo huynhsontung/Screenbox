@@ -198,6 +198,12 @@ namespace Screenbox.Core.ViewModels
                         $"{Humanizer.ToDuration(newPosition)} / {Humanizer.ToDuration(_mediaPlayer.NaturalDuration)} ({percent}%)";
                     Messenger.Send(new UpdateStatusMessage(updateText));
                     break;
+                case (VirtualKey)190 when sender.Modifiers == VirtualKeyModifiers.Shift:
+                    TogglePlaybackRate(true);
+                    return;
+                case (VirtualKey)188 when sender.Modifiers == VirtualKeyModifiers.Shift:
+                    TogglePlaybackRate(false);
+                    return;
                 case (VirtualKey)190:   // Period (".")
                     JumpFrame(false);
                     return;
@@ -284,6 +290,35 @@ namespace Screenbox.Core.ViewModels
         public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             _manipulationLock = ManipulationLock.None;
+        }
+
+        private void TogglePlaybackRate(bool speedUp)
+        {
+            if (_mediaPlayer == null) return;
+            Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4 };
+            double lastPositiveStep = steps[0];
+            foreach (double step in steps)
+            {
+                double diff = step - _mediaPlayer.PlaybackRate;
+                if (speedUp && diff > 0)
+                {
+                    _mediaPlayer.PlaybackRate = step;
+                    return;
+                }
+
+                if (!speedUp)
+                {
+                    if (-diff > 0)
+                    {
+                        lastPositiveStep = step;
+                    }
+                    else
+                    {
+                        _mediaPlayer.PlaybackRate = lastPositiveStep;
+                        return;
+                    }
+                }
+            }
         }
 
         private void Seek(long amount)

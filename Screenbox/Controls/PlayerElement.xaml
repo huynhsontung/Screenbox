@@ -104,6 +104,14 @@
                 <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PeriodKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="{x:Bind local:PlayerElement.CommaKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
+                <KeyboardAccelerator
+                    Key="{x:Bind local:PlayerElement.PeriodKey}"
+                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Shift" />
+                <KeyboardAccelerator
+                    Key="{x:Bind local:PlayerElement.CommaKey}"
+                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                    Modifiers="Shift" />
             </lvs:VideoView.KeyboardAccelerators>
         </lvs:VideoView>
     </Grid>
