@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Screenbox.Core;
 using Screenbox.Core.Enums;
+using Windows.Foundation.Collections;
+using Windows.Media;
+using Windows.Storage;
 
 namespace Screenbox.Core.Services
 {
@@ -18,6 +18,7 @@ namespace Screenbox.Core.Services
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
+        private const string PersistentRepeatModeKey = "Values/RepeatMode";
 
         public PlayerAutoResizeOption PlayerAutoResize
         {
@@ -61,15 +62,22 @@ namespace Screenbox.Core.Services
             set => SetValue(GeneralShowRecent, value);
         }
 
+        public MediaPlaybackAutoRepeatMode PersistentRepeatMode
+        {
+            get => (MediaPlaybackAutoRepeatMode)GetValue<int>(PersistentRepeatModeKey);
+            set => SetValue(PersistentRepeatModeKey, (int)value);
+        }
+
         public SettingsService()
         {
-            SetDefault(PlayerAutoResizeKey, 0);
+            SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
             SetDefault(PersistentVolumeKey, 100);
             SetDefault(MaxVolumeKey, 100);
             SetDefault(GeneralShowRecent, true);
+            SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
         }
 
         private T? GetValue<T>(string key)
@@ -84,8 +92,7 @@ namespace Screenbox.Core.Services
 
         private void SetValue<T>(string key, T value)
         {
-            if (!_settingsStorage.ContainsKey(key)) _settingsStorage.Add(key, value);
-            else _settingsStorage[key] = value;
+            _settingsStorage[key] = value;
         }
 
         private void SetDefault<T>(string key, T value)

@@ -1,5 +1,12 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,13 +18,6 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Playback;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -46,6 +46,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _currentIndex;
 
         private readonly IFilesService _filesService;
+        private readonly ISettingsService _settingsService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -67,16 +68,18 @@ namespace Screenbox.Core.ViewModels
             public List<MediaViewModel> Removals { get; } = Removals ?? new List<MediaViewModel>();
         }
 
-        public MediaListViewModel(IFilesService filesService,
+        public MediaListViewModel(IFilesService filesService, ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService,
             MediaViewModelFactory mediaFactory)
         {
             Items = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _filesService = filesService;
+            _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _mediaFactory = mediaFactory;
             _mediaBuffer = new List<MediaViewModel>(0);
+            _repeatMode = settingsService.PersistentRepeatMode;
             _currentIndex = -1;
 
             Items.CollectionChanged += OnCollectionChanged;
@@ -211,6 +214,7 @@ namespace Screenbox.Core.ViewModels
         {
             Messenger.Send(new RepeatModeChangedMessage(value));
             _transportControlsService.TransportControls.AutoRepeatMode = value;
+            _settingsService.PersistentRepeatMode = value;
         }
 
         partial void OnShuffleModeChanged(bool value)

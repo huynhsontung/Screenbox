@@ -1,5 +1,5 @@
-﻿using Screenbox.Core;
-using Screenbox.Core.Enums;
+﻿using Screenbox.Core.Enums;
+using Windows.Media;
 
 namespace Screenbox.Core.Services
 {
@@ -12,5 +12,6 @@ namespace Screenbox.Core.Services
         int PersistentVolume { get; set; }
         bool ShowRecent { get; set; }
         int MaxVolume { get; set; }
+        MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
 }
