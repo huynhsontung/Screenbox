@@ -23,6 +23,7 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class PlayerPageViewModel : ObservableRecipient,
         IRecipient<UpdateStatusMessage>,
         IRecipient<UpdateVolumeStatusMessage>,
+        IRecipient<TogglePlayerVisibilityMessage>,
         IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
@@ -80,6 +81,19 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(TogglePlayerVisibilityMessage message)
+        {
+            switch (PlayerVisibility)
+            {
+                case PlayerVisibilityState.Visible:
+                    GoBack();
+                    break;
+                case PlayerVisibilityState.Minimal:
+                    RestorePlayer();
+                    break;
+            }
         }
 
         public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)

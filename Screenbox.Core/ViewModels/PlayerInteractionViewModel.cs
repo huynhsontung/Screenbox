@@ -120,6 +120,15 @@ namespace Screenbox.Core.ViewModels
 
         public void ProcessGamepadKeyDown(object sender, KeyRoutedEventArgs args)
         {
+            bool playerActive = _mediaPlayer is
+            {
+                Source: not null,
+                PlaybackState: MediaPlaybackState.Paused
+                or MediaPlaybackState.Playing
+                or MediaPlaybackState.Buffering
+            };
+
+            if (!playerActive) return;
             args.Handled = true;
             int volumeChange = 0;
             switch (args.Key)
@@ -138,6 +147,9 @@ namespace Screenbox.Core.ViewModels
                     break;
                 case VirtualKey.GamepadX:
                     TogglePlayPauseWithBadge(false);
+                    break;
+                case VirtualKey.GamepadView:
+                    Messenger.Send(new TogglePlayerVisibilityMessage());
                     break;
                 default:
                     args.Handled = false;
