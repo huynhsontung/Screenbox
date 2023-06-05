@@ -295,7 +295,7 @@ namespace Screenbox.Core.ViewModels
         private void TogglePlaybackRate(bool speedUp)
         {
             if (_mediaPlayer == null) return;
-            Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4 };
+            Span<double> steps = stackalloc[] { 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 };
             double lastPositiveStep = steps[0];
             foreach (double step in steps)
             {
@@ -303,6 +303,7 @@ namespace Screenbox.Core.ViewModels
                 if (speedUp && diff > 0)
                 {
                     _mediaPlayer.PlaybackRate = step;
+                    Messenger.Send(new UpdateStatusMessage($"{step}×"));
                     return;
                 }
 
@@ -315,6 +316,7 @@ namespace Screenbox.Core.ViewModels
                     else
                     {
                         _mediaPlayer.PlaybackRate = lastPositiveStep;
+                        Messenger.Send(new UpdateStatusMessage($"{step}×"));
                         return;
                     }
                 }
