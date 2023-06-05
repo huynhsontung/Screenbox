@@ -221,7 +221,8 @@
                 <labs:SettingsExpander
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
-                    IsExpanded="True">
+                    IsExpanded="True"
+                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />

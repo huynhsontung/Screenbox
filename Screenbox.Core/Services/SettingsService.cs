@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Microsoft.Toolkit.Uwp.Helpers;
 using Screenbox.Core.Enums;
 using Windows.Foundation.Collections;
 using Windows.Media;
@@ -78,6 +79,14 @@ namespace Screenbox.Core.Services
             SetDefault(MaxVolumeKey, 100);
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
+
+            // Device family specific overrides
+            if (SystemInformation.Instance.DeviceFamily == "Windows.Xbox")
+            {
+                SetValue(PlayerTapGestureKey, false);
+                SetValue(PlayerSeekGestureKey, false);
+                SetValue(PlayerVolumeGestureKey, false);
+            }
         }
 
         private T? GetValue<T>(string key)
