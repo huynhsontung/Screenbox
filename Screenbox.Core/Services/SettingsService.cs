@@ -86,6 +86,7 @@ namespace Screenbox.Core.Services
                 SetValue(PlayerTapGestureKey, false);
                 SetValue(PlayerSeekGestureKey, false);
                 SetValue(PlayerVolumeGestureKey, false);
+                SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             }
         }
 

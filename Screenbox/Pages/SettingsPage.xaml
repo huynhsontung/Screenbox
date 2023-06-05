@@ -190,7 +190,8 @@
                 <labs:SettingsCard
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe799;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
+                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
