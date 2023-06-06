@@ -21,6 +21,7 @@
     toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
+    KeyDown="OnGamepadKeyDown"
     Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">
@@ -148,7 +149,6 @@
                 AllowDrop="True"
                 Background="Transparent"
                 BorderThickness="0"
-                Click="PlayQueueButton_OnClick"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
@@ -156,7 +156,6 @@
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
-                        x:Load="False"
                         Opened="PlayQueueFlyout_OnOpened"
                         Placement="BottomEdgeAlignedLeft">
                         <controls:PlaylistView
@@ -258,8 +257,7 @@
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
             Click="{x:Bind ViewModel.OnPlayerClick}"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
-            KeyDown="OnGamepadKeyDown">
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="GotFocus">
                     <core:ChangePropertyAction

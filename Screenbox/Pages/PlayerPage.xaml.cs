@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
@@ -19,7 +20,6 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -304,14 +304,6 @@ namespace Screenbox.Pages
             }
         }
 
-        private void PlayQueueButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (PlayQueueFlyout == null)
-            {
-                FindName(nameof(PlayQueueFlyout));
-            }
-        }
-
         private async void PlayQueueFlyout_OnOpened(object sender, object e)
         {
             if (PlaylistView == null) return;
@@ -331,17 +323,12 @@ namespace Screenbox.Pages
 
         private void OnGamepadKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.GamepadY && ViewModel.VideoViewFocused)
+            if (e.Key == VirtualKey.GamepadY &&
+                ViewModel.PlayerVisibility == PlayerVisibilityState.Visible &&
+                ViewModel.ViewMode != WindowViewMode.Compact)
             {
                 e.Handled = true;
-                AudioTrackSubtitlePicker control = new();
-                Flyout flyout = new()
-                {
-                    Content = control
-                };
-
-                flyout.Opening += (_, _) => control.ViewModel.OnAudioCaptionFlyoutOpening();
-                flyout.ShowAt(PlayerControls);
+                PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
             }
         }
 
