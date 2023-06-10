@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
@@ -12,7 +14,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -37,6 +38,8 @@ namespace Screenbox.Controls
         private bool _overridePreviewToolTipDelay;
         private Thumb? _seekBarThumb;
 
+        private readonly ToolTip _previewToolTip;
+
         public SeekBar()
         {
             this.InitializeComponent();
@@ -44,6 +47,7 @@ namespace Screenbox.Controls
             RegisterSeekBarPointerHandlers();
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _previewToolTipTimer = dispatcherQueue.CreateTimer();
+            _previewToolTip = new ToolTip { Padding = new Thickness(8, 3, 8, 5), FontSize = 14 };
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
@@ -86,7 +90,8 @@ namespace Screenbox.Controls
         {
             if (!ViewModel.ShouldShowPreview) return;
             PointerPoint pointerPoint = e.GetCurrentPoint(SeekBarSlider);
-            if (PreviewToolTip.IsOpen || _overridePreviewToolTipDelay)
+            UpdatePreviewTime(pointerPoint);
+            if (_previewToolTip.IsOpen || _overridePreviewToolTipDelay)
             {
                 _overridePreviewToolTipDelay = false;
                 _previewToolTipTimer.Stop();
@@ -102,13 +107,13 @@ namespace Screenbox.Controls
         {
             ViewModel.ShouldShowPreview = true;
             _previewToolTipTimer.Stop();
-            PreviewToolTip.IsOpen = false;
+            _previewToolTip.IsOpen = false;
             ToolTipService.SetToolTip(SeekBarSlider, null);
         }
 
         private void SeekBarSlider_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            PreviewToolTip.PlacementRect = new Rect(new Point(0, 0), e.NewSize);
+            _previewToolTip.PlacementRect = new Rect(new Point(0, 0), e.NewSize);
         }
 
         private void SeekBarSlider_OnLoaded(object sender, RoutedEventArgs e)
@@ -136,16 +141,26 @@ namespace Screenbox.Controls
         private void ResetPreviewToolTip()
         {
             _previewToolTipTimer.Stop();
-            PreviewToolTip.IsOpen = false;
+            _previewToolTip.IsOpen = false;
         }
 
         private void ShowPreviewToolTip(PointerPoint pointerPoint)
         {
+            double halfWidth = SeekBarSlider.ActualWidth / 2;
             if (ToolTipService.GetToolTip(SeekBarSlider) is not ToolTip)
             {
-                ToolTipService.SetToolTip(SeekBarSlider, PreviewToolTip);
+                ToolTipService.SetToolTip(SeekBarSlider, _previewToolTip);
+            }
+            else
+            {
+                _previewToolTip.IsOpen = true;
             }
 
+            _previewToolTip.Translation = new Vector3((float)(-halfWidth + pointerPoint.Position.X), 0, 0);
+        }
+
+        private void UpdatePreviewTime(PointerPoint pointerPoint)
+        {
             double pointerOffset = pointerPoint.Position.X;
             double pointerOffsetRelative = pointerOffset / SeekBarSlider.ActualWidth; // have not accounted for padding
             double thumbOffset = 0;
@@ -157,9 +172,7 @@ namespace Screenbox.Controls
 
             double normalizedPosition = (pointerOffset + thumbOffset) / SeekBarSlider.ActualWidth;
             ViewModel.UpdatePreviewTime(normalizedPosition);
-            double halfWidth = SeekBarSlider.ActualWidth / 2;
-            PreviewToolTip.Translation = new Vector3((float)(-halfWidth + pointerPoint.Position.X), 0, 0);
-            PreviewToolTip.IsOpen = true;
+            _previewToolTip.Content = Humanizer.ToDuration(ViewModel.PreviewTime);
         }
     }
 }
