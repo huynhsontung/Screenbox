@@ -279,6 +279,10 @@ namespace Screenbox.Core.ViewModels
                     StorageFile file = await _filesService.SaveSnapshotAsync(_mediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
+                catch (UnauthorizedAccessException)
+                {
+                    Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Pictures));
+                }
                 catch (Exception e)
                 {
                     Messenger.Send(new ErrorMessage(
