@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistActiveItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideMessage>,
+        IRecipient<PlayerVisibilityRequestMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool? _audioOnly;
@@ -81,6 +82,11 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PlayerVisibilityRequestMessage message)
+        {
+            message.Reply(PlayerVisibility);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
