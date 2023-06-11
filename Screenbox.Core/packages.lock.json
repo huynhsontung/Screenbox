@@ -4,9 +4,9 @@
     "UAP,Version=v10.0.17763": {
       "CommunityToolkit.Diagnostics": {
         "type": "Direct",
-        "requested": "[8.1.0, )",
-        "resolved": "8.1.0",
-        "contentHash": "R9h5uw8W2ADbmzrJpUJHH7cBpOE2g7jJ0mL/6sJEucfDvTWk3Uq/d4ZgWfVsQTf+MX8wAsWEYsc+UNfeZ3o6LQ==",
+        "requested": "[8.2.0, )",
+        "resolved": "8.2.0",
+        "contentHash": "kF2qZTYvuS+uTAWmZm4UB1rdd2/F4JidWbIiySzdCwf5UfueUBuSMWFSnTptafWRkG0F9auAp/eL5wUAvH51mg==",
         "dependencies": {
           "System.Memory": "4.5.5"
         }
@@ -25,20 +25,20 @@
       },
       "LibVLCSharp": {
         "type": "Direct",
-        "requested": "[3.6.7, )",
-        "resolved": "3.6.7",
-        "contentHash": "FYn2yxjdlxVN21Anv3xhPnJ3ARSwOCzpsrZMtJl8/hdlFbw1JXFcMUpbqhmlLnfYmAUUGOarYyF+OTdAnjsF3A==",
+        "requested": "[3.7.0, )",
+        "resolved": "3.7.0",
+        "contentHash": "N9NV+BamKr+1YiRktX9JroE4m9C+pEszUNW4qa3A5mychhCWBvvoDolZKWk2yxhZvHewgaXXahBcw5ivCXjKYA==",
         "dependencies": {
           "System.Memory": "4.5.4"
         }
       },
       "Microsoft.AppCenter.Crashes": {
         "type": "Direct",
-        "requested": "[5.0.1, )",
-        "resolved": "5.0.1",
-        "contentHash": "TNKkvX9H8fSRCgkFwvrPxBRyrhyX8x05RyyeVUL2XUPPM7SnXUY9Ef6BP2ZRbBU2+IbKBJdPFeRdUmVleAjQpg==",
+        "requested": "[5.0.2, )",
+        "resolved": "5.0.2",
+        "contentHash": "v20yNCKbP3j6l0BcUjU9C9IZsl5Gq6vv+VXPzMV4W04j/Nsmn7WKKxoYqe5a0Djxm5vKCkVxTftQt/eQ0r3ZSw==",
         "dependencies": {
-          "Microsoft.AppCenter": "5.0.1",
+          "Microsoft.AppCenter": "5.0.2",
           "System.Reflection.Metadata": "1.7.0"
         }
       },
@@ -77,11 +77,11 @@
       },
       "Microsoft.AppCenter": {
         "type": "Transitive",
-        "resolved": "5.0.1",
-        "contentHash": "FaFm30WIY0NxeEdwkcU7ebkHLlAkPFaXQrakVYnmAdKJTQ8Ox6qoGbgjllfhYrZ8UvEXLaVwMr+K9ieGNSd2og==",
+        "resolved": "5.0.2",
+        "contentHash": "AIxHDJsNpjvF7Gp+JU7N+iiSCKETzNCUD+SLt4LsgUc3NGo9FhPxqqJJxhN9RWSSFEtxKwCniPtBYqvjJLMS3w==",
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "6.2.8",
-          "Newtonsoft.Json": "13.0.1",
+          "Newtonsoft.Json": "13.0.2",
           "SQLitePCLRaw.bundle_green": "2.1.0"
         }
       },
@@ -142,8 +142,8 @@
       },
       "Newtonsoft.Json": {
         "type": "Transitive",
-        "resolved": "13.0.1",
-        "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
+        "resolved": "13.0.2",
+        "contentHash": "R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg=="
       },
       "protobuf-net.Core": {
         "type": "Transitive",

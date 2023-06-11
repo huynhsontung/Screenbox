@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using LibVLCSharp.Platforms.Windows;
+using Screenbox.Core.ViewModels;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.ApplicationModel.DataTransfer;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using LibVLCSharp.Platforms.UWP;
-using Screenbox.Core.ViewModels;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
