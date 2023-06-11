@@ -92,9 +92,11 @@
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             AlternateBorderThickness="1" />
                         <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                        <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                        <interactions:FocusOnItemClickBehavior />
                     </interactivity:Interaction.Behaviors>
                     <ListView.Footer>
-                        <Border Height="{StaticResource ContentPageBottomPaddingHeight}" />
+                        <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </ListView.Footer>
                     <ListView.GroupStyle>
                         <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />

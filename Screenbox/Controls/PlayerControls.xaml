@@ -464,7 +464,9 @@
                 x:Name="CompactOverlayButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                Style="{StaticResource PlayerButtonStyle}">
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="{ui:OnDevice Desktop=Visible,
+                                         Default=Collapsed}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
@@ -476,7 +478,9 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                Style="{StaticResource PlayerButtonStyle}">
+                Style="{StaticResource PlayerButtonStyle}"
+                Visibility="{ui:OnDevice Desktop=Visible,
+                                         Default=Collapsed}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
@@ -502,7 +506,7 @@
                         <triggers:ControlSizeTrigger
                             x:Name="AdaptiveHiddenControlSizeTrigger"
                             MaxWidth="720"
-                            CanTrigger="{x:Bind ViewModel.IsCompact, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                            CanTrigger="{x:Bind ViewModel.ShouldBeAdaptive, Mode=OneWay}"
                             TargetElement="{x:Bind}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>

@@ -13,6 +13,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    KeyDown="{x:Bind InteractionViewModel.ProcessGamepadKeyDown}"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
 

@@ -54,12 +54,6 @@
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
             Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
-            Value="{x:Bind ViewModel.Time, Mode=TwoWay}">
-            <ToolTipService.ToolTip>
-                <ToolTip x:Name="PreviewToolTip" Padding="8,3,8,5">
-                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind ViewModel.PreviewTime, Converter={StaticResource HumanizedDurationConverter}, Mode=OneWay}" />
-                </ToolTip>
-            </ToolTipService.ToolTip>
-        </Slider>
+            Value="{x:Bind ViewModel.Time, Mode=TwoWay}" />
     </Grid>
 </UserControl>

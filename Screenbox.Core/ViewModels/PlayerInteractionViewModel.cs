@@ -37,7 +37,7 @@ namespace Screenbox.Core.ViewModels
         public PlayerInteractionViewModel(ISettingsService settingsService)
         {
             _settingsService = settingsService;
-            DispatcherQueue? dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _toggleTimer = dispatcherQueue.CreateTimer();
             _seekOriginTimer = dispatcherQueue.CreateTimer();
             _seekOriginTimer.IsRepeating = false;
@@ -120,15 +120,33 @@ namespace Screenbox.Core.ViewModels
 
         public void ProcessGamepadKeyDown(object sender, KeyRoutedEventArgs args)
         {
-            args.Handled = true;
+            PlayerVisibilityState playerVisibility = Messenger.Send<PlayerVisibilityRequestMessage>();
+            bool playerActive = _mediaPlayer is
+            {
+                Source: not null,
+                PlaybackState: MediaPlaybackState.Paused
+                or MediaPlaybackState.Playing
+                or MediaPlaybackState.Buffering
+            };
+
+            if (!playerActive) return;
+            bool handled = true;
             int volumeChange = 0;
             switch (args.Key)
             {
                 case VirtualKey.GamepadRightThumbstickLeft:
+                case VirtualKey.GamepadLeftShoulder:
                     Seek(-5000);
                     break;
                 case VirtualKey.GamepadRightThumbstickRight:
+                case VirtualKey.GamepadRightShoulder:
                     Seek(5000);
+                    break;
+                case VirtualKey.GamepadLeftTrigger when playerVisibility == PlayerVisibilityState.Visible:
+                    Seek(-30_000);
+                    break;
+                case VirtualKey.GamepadRightTrigger when playerVisibility == PlayerVisibilityState.Visible:
+                    Seek(30_000);
                     break;
                 case VirtualKey.GamepadRightThumbstickUp:
                     volumeChange = 2;
@@ -139,9 +157,12 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.GamepadX:
                     TogglePlayPauseWithBadge(false);
                     break;
+                case VirtualKey.GamepadView:
+                    Messenger.Send(new TogglePlayerVisibilityMessage());
+                    break;
                 default:
-                    args.Handled = false;
-                    return;
+                    handled = false;
+                    break;
             }
 
             if (volumeChange != 0)
@@ -149,6 +170,8 @@ namespace Screenbox.Core.ViewModels
                 int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
                 Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
             }
+
+            args.Handled = handled;
         }
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

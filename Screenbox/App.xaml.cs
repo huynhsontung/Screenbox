@@ -40,10 +40,12 @@ namespace Screenbox
         public App()
         {
             ConfigureAppCenter();
+            InitializeComponent();
+            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
+            Suspending += OnSuspending;
+
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
-            InitializeComponent();
-            Suspending += OnSuspending;
         }
 
         private static IServiceProvider ConfigureServices()

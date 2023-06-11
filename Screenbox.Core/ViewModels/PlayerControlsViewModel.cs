@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Messages;
@@ -23,22 +24,27 @@ namespace Screenbox.Core.ViewModels
     {
         public MediaListViewModel Playlist { get; }
 
+        public bool ShouldBeAdaptive => !IsCompact && SystemInformation.Instance.DeviceFamily == "Windows.Desktop";
+
         [ObservableProperty] private bool _isPlaying;
-        [ObservableProperty] private bool _isCompact;
         [ObservableProperty] private bool _isFullscreen;
-        [ObservableProperty] private string? _titleName;    // TODO: Handle VLC title name
+        [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private string _playPauseGlyph;
         [ObservableProperty] private double _playbackSpeed;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.SaveSnapshotCommand))]
+        [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
+        private bool _isCompact;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveSnapshotCommand))]
         private bool _hasVideo;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.PlayPauseCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.ToggleCompactLayoutCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PlayerControlsViewModel.ToggleFullscreenCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToggleCompactLayoutCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ToggleFullscreenCommand))]
         private bool _hasActiveItem;
 
         private readonly DispatcherQueue _dispatcherQueue;
@@ -92,6 +98,7 @@ namespace Screenbox.Core.ViewModels
                     {
                         subtitleTracks.SelectedIndex = 0;
                     }
+
                     break;
 
                 case VirtualKeyModifiers.Control:
@@ -103,6 +110,7 @@ namespace Screenbox.Core.ViewModels
                     {
                         subtitleTracks.SelectedIndex++;
                     }
+
                     break;
 
                 case VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift:
@@ -114,6 +122,7 @@ namespace Screenbox.Core.ViewModels
                     {
                         subtitleTracks.SelectedIndex--;
                     }
+
                     break;
 
                 default:
@@ -123,7 +132,8 @@ namespace Screenbox.Core.ViewModels
 
             string status = subtitleTracks.SelectedIndex == -1
                 ? _resourceService.GetString(ResourceName.SubtitleStatus, _resourceService.GetString(ResourceName.None))
-                : _resourceService.GetString(ResourceName.SubtitleStatus, subtitleTracks[subtitleTracks.SelectedIndex].Label);
+                : _resourceService.GetString(ResourceName.SubtitleStatus,
+                    subtitleTracks[subtitleTracks.SelectedIndex].Label);
 
             Messenger.Send(new UpdateStatusMessage(status));
         }
@@ -161,10 +171,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnChapterChanged(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                ChapterName = sender.Chapter?.Title;
-            });
+            _dispatcherQueue.TryEnqueue(() => ChapterName = sender.Chapter?.Title);
         }
 
         private void WindowServiceOnViewModeChanged(object sender, ViewModeChangedEventArgs e)
@@ -217,7 +224,7 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new ChangeAspectRatioMessage(_aspectRatio));
         }
 
-        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
@@ -235,7 +242,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private void ToggleFullscreen()
         {
             if (IsCompact) return;
@@ -249,7 +256,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasActiveItem))]
+        [RelayCommand(CanExecute = nameof(HasActiveItem))]
         private void PlayPause()
         {
             if (IsPlaying)
@@ -262,7 +269,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(PlayerControlsViewModel.HasVideo))]
+        [RelayCommand(CanExecute = nameof(HasVideo))]
         private async Task SaveSnapshotAsync()
         {
             if (_mediaPlayer?.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Playing)

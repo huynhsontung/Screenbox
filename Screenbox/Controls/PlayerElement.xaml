@@ -25,7 +25,6 @@
             DragOver="VideoViewButton_OnDragOver"
             Drop="{x:Bind InteractionViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-            KeyDown="{x:Bind InteractionViewModel.ProcessGamepadKeyDown}"
             ManipulationCompleted="{x:Bind InteractionViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind InteractionViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"

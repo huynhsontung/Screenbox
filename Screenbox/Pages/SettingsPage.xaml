@@ -6,6 +6,7 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:local="using:Screenbox.Pages"
@@ -122,6 +123,9 @@
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
+                <interactivity:Interaction.Behaviors>
+                    <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                </interactivity:Interaction.Behaviors>
                 <TextBlock
                     Margin="0,8,0,4"
                     FontWeight="SemiBold"
@@ -190,7 +194,8 @@
                 <labs:SettingsCard
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe799;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
+                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -221,7 +226,8 @@
                 <labs:SettingsExpander
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
-                    IsExpanded="True">
+                    IsExpanded="True"
+                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />

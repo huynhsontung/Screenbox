@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -23,6 +24,8 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _showRecent;
+
+        public bool IsXbox => SystemInformation.Instance.DeviceFamily == "Windows.Xbox";
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 

@@ -205,6 +205,7 @@
             CanReorderItems="True"
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
+            IsItemClickEnabled="True"
             ItemTemplate="{StaticResource MediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
@@ -225,6 +226,8 @@
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
             <ListView.Footer>
                 <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

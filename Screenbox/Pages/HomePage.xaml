@@ -259,6 +259,7 @@
                 </GridView.Footer>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                    <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </interactivity:Interaction.Behaviors>
             </GridView>
         </Grid>
