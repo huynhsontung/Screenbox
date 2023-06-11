@@ -339,7 +339,7 @@ namespace Screenbox.Core.ViewModels
                     else
                     {
                         _mediaPlayer.PlaybackRate = lastPositiveStep;
-                        Messenger.Send(new UpdateStatusMessage($"{step}×"));
+                        Messenger.Send(new UpdateStatusMessage($"{lastPositiveStep}×"));
                         return;
                     }
                 }
