@@ -5,10 +5,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls.Interactions;
 
-internal class BringIntoViewWithOffsetBehavior : Behavior<ListViewBase>
+internal class BringIntoViewWithOffsetBehavior : Behavior<UIElement>
 {
     public static readonly DependencyProperty FromBottomProperty = DependencyProperty.Register(
-        nameof(FromBottom), typeof(double), typeof(BringIntoViewWithOffsetBehavior), new PropertyMetadata(0.0));
+        nameof(FromBottom),
+        typeof(double),
+        typeof(BringIntoViewWithOffsetBehavior),
+        new PropertyMetadata(0.0));
 
     public double FromBottom
     {
@@ -19,31 +22,43 @@ internal class BringIntoViewWithOffsetBehavior : Behavior<ListViewBase>
     protected override void OnAttached()
     {
         base.OnAttached();
-        if (AssociatedObject.ItemsPanelRoot != null)
+        if (AssociatedObject is ListViewBase listView)
         {
-            AssociatedObject.ItemsPanelRoot.BringIntoViewRequested += OnBringIntoViewRequested;
+            if (listView.ItemsPanelRoot != null)
+            {
+                listView.ItemsPanelRoot.BringIntoViewRequested += OnBringIntoViewRequested;
+            }
+            else if (!listView.IsLoaded)
+            {
+                listView.Loaded += OnLoaded;
+            }
         }
-        else if (!AssociatedObject.IsLoaded)
+        else
         {
-            AssociatedObject.Loaded += OnLoaded;
+            AssociatedObject.BringIntoViewRequested += OnBringIntoViewRequested;
         }
     }
 
     protected override void OnDetaching()
     {
         base.OnDetaching();
-        if (AssociatedObject.ItemsPanelRoot != null)
+        if (AssociatedObject is ListViewBase { ItemsPanelRoot: not null } listView)
         {
-            AssociatedObject.ItemsPanelRoot.BringIntoViewRequested -= OnBringIntoViewRequested;
+            listView.ItemsPanelRoot.BringIntoViewRequested -= OnBringIntoViewRequested;
+        }
+        else
+        {
+            AssociatedObject.BringIntoViewRequested -= OnBringIntoViewRequested;
         }
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        AssociatedObject.Loaded -= OnLoaded;
-        if (AssociatedObject.ItemsPanelRoot != null)
+        if (AssociatedObject is not ListViewBase listView) return;
+        listView.Loaded -= OnLoaded;
+        if (listView.ItemsPanelRoot != null)
         {
-            AssociatedObject.ItemsPanelRoot.BringIntoViewRequested += OnBringIntoViewRequested;
+            listView.ItemsPanelRoot.BringIntoViewRequested += OnBringIntoViewRequested;
         }
     }
 
