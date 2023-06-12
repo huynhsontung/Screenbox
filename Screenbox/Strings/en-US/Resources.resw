@@ -649,4 +649,10 @@
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
     <value>Subtitle added</value>
   </data>
+  <data name="CriticalError" xml:space="preserve">
+    <value>Critical error</value>
+  </data>
+  <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
+    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+  </data>
 </root>

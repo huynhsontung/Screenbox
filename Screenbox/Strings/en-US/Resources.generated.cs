@@ -2039,6 +2039,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region CriticalError
+        /// <summary>
+        ///   Looks up a localized string similar to: Critical error
+        /// </summary>
+        public static string CriticalError
+        {
+            get
+            {
+                return _resourceLoader.GetString("CriticalError");
+            }
+        }
+        #endregion
+
+        #region CriticalErrorDirect3D11NotAvailable
+        /// <summary>
+        ///   Looks up a localized string similar to: No compatible renderer available. Please make sure Direct3D 11 is available on your device.
+        /// </summary>
+        public static string CriticalErrorDirect3D11NotAvailable
+        {
+            get
+            {
+                return _resourceLoader.GetString("CriticalErrorDirect3D11NotAvailable");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2205,6 +2231,8 @@ namespace Screenbox.Strings{
             OnLaunch,
             VersionText,
             SubtitleAddedNotificationTitle,
+            CriticalError,
+            CriticalErrorDirect3D11NotAvailable,
         }
 
         private static ResourceLoader _resourceLoader;

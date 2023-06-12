@@ -197,6 +197,7 @@
     <Compile Include="Controls\PlayerElement.xaml.cs">
       <DependentUpon>PlayerElement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VideoView.cs" />
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>

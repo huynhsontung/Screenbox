@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MainPageViewModel : ObservableRecipient,
         IRecipient<PlayerVisibilityChangedMessage>,
-        IRecipient<NavigationViewDisplayModeRequestMessage>
+        IRecipient<NavigationViewDisplayModeRequestMessage>,
+        IRecipient<CriticalErrorMessage>
     {
         [ObservableProperty] private bool _playerVisible;
         [ObservableProperty] private bool _shouldUseMargin;
         [ObservableProperty] private bool _isPaneOpen;
         [ObservableProperty] private string _searchQuery;
+        [ObservableProperty] private string _criticalErrorMessage;
+        [ObservableProperty] private bool _hasCriticalError;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -31,7 +34,14 @@ namespace Screenbox.Core.ViewModels
             _searchService = searchService;
             _navigationService = navigationService;
             _searchQuery = string.Empty;
+            _criticalErrorMessage = string.Empty;
             IsActive = true;
+        }
+
+        public void Receive(CriticalErrorMessage message)
+        {
+            HasCriticalError = true;
+            CriticalErrorMessage = message.Message;
         }
 
         public void Receive(PlayerVisibilityChangedMessage message)

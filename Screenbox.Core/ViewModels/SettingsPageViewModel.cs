@@ -103,7 +103,15 @@ namespace Screenbox.Core.ViewModels
         private async Task RemoveVideosFolderAsync(StorageFolder folder)
         {
             if (_videosLibrary == null) return;
-            await _videosLibrary.RequestRemoveFolderAsync(folder);
+            try
+            {
+                await _videosLibrary.RequestRemoveFolderAsync(folder);
+            }
+            catch (Exception)
+            {
+                // System.Exception: The remote procedure call was cancelled.
+                // pass
+            }
         }
 
         [RelayCommand]
@@ -117,7 +125,15 @@ namespace Screenbox.Core.ViewModels
         private async Task RemoveMusicFolderAsync(StorageFolder folder)
         {
             if (_musicLibrary == null) return;
-            await _musicLibrary.RequestRemoveFolderAsync(folder);
+            try
+            {
+                await _musicLibrary.RequestRemoveFolderAsync(folder);
+            }
+            catch (Exception)
+            {
+                // System.Exception: The remote procedure call was cancelled.
+                // pass
+            }
         }
 
         [RelayCommand]
