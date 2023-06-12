@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
-    xmlns:lvs="using:LibVLCSharp.Platforms.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -33,7 +32,7 @@
             PointerWheelChanged="{x:Bind InteractionViewModel.OnPointerWheelChanged}"
             Style="{x:Null}" />
 
-        <lvs:VideoView
+        <local:VideoView
             x:Name="VlcVideoView"
             Canvas.ZIndex="0"
             Initialized="VlcVideoView_OnInitialized"
@@ -42,7 +41,7 @@
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
             SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
-            <lvs:VideoView.KeyboardAccelerators>
+            <local:VideoView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="Left"
                     Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
@@ -111,7 +110,7 @@
                     Key="{x:Bind local:PlayerElement.CommaKey}"
                     Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
                     Modifiers="Shift" />
-            </lvs:VideoView.KeyboardAccelerators>
-        </lvs:VideoView>
+            </local:VideoView.KeyboardAccelerators>
+        </local:VideoView>
     </Grid>
 </UserControl>

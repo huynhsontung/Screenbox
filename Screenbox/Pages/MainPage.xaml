@@ -11,6 +11,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:services="using:Screenbox.Core.Services"
     xmlns:strings="using:Screenbox.Strings"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     KeyDown="{x:Bind InteractionViewModel.ProcessGamepadKeyDown}"
@@ -170,7 +171,44 @@
             </Grid>
         </controls:CustomNavigationView>
 
+        <Grid
+            x:Name="CriticalErrorPanel"
+            Padding="80,80"
+            Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Grid.Column="0"
+                Margin="0,0,40,0"
+                FontSize="90"
+                Text=":(" />
+            <TextBlock
+                Grid.Column="1"
+                Margin="0,40,0,0"
+                FontSize="20"
+                TextWrapping="Wrap">
+                <Run
+                    FontSize="24"
+                    FontWeight="Bold"
+                    Text="{strings:Resources Key=CriticalError}" /><LineBreak /><Run Text="{x:Bind ViewModel.CriticalErrorMessage, Mode=OneWay}" />
+            </TextBlock>
+        </Grid>
+
         <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CriticalErrorStates">
+                <VisualState x:Name="CriticalErrorVisible">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind ViewModel.HasCriticalError, Mode=OneWay}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavView.Visibility" Value="Collapsed" />
+                        <Setter Target="CriticalErrorPanel.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded">
                     <VisualState.Setters>
