@@ -6,6 +6,7 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -195,7 +196,7 @@
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
-                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -227,7 +228,7 @@
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
                     IsExpanded="True"
-                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />

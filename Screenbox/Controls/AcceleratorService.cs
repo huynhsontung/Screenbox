@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.Helpers;
+using Screenbox.Core.Helpers;
 using System.Linq;
 using System.Text;
 using Windows.System;
@@ -24,7 +24,7 @@ namespace Screenbox.Controls
         {
             element.SetValue(ToolTipProperty, value);
             KeyboardAccelerator? accelerator = element.KeyboardAccelerators.FirstOrDefault(x => x.IsEnabled);
-            bool shouldShowShortcut = SystemInformation.Instance.DeviceFamily == "Windows.Desktop";
+            bool shouldShowShortcut = SystemInformationExtensions.IsDesktop;
             if (accelerator != null && shouldShowShortcut)
             {
                 string shortcut = ToShortcut(accelerator);
