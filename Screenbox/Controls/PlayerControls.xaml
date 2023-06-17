@@ -5,6 +5,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -214,7 +215,8 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon Glyph=&#xEE71;}"
-                    Text="{x:Bind strings:Resources.SaveCurrentFrame}" />
+                    Text="{x:Bind strings:Resources.SaveCurrentFrame}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
                 <MenuFlyoutItem
                     Click="CastMenuFlyoutItem_OnClick"
                     Icon="{ui:FontIcon Glyph=&#xEC15;}"
@@ -465,8 +467,7 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{ui:OnDevice Desktop=Visible,
-                                         Default=Collapsed}">
+                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
@@ -479,8 +480,7 @@
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{ui:OnDevice Desktop=Visible,
-                                         Default=Collapsed}">
+                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />

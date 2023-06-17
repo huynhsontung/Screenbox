@@ -144,6 +144,7 @@
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
+    <Compile Include="Helpers\SystemInformationExtensions.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />

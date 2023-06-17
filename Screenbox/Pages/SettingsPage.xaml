@@ -6,6 +6,7 @@
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
@@ -129,11 +130,13 @@
                 <TextBlock
                     Margin="0,8,0,4"
                     FontWeight="SemiBold"
-                    Text="{strings:Resources Key=SettingsCategoryLibraries}" />
+                    Text="{strings:Resources Key=SettingsCategoryLibraries}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
                 <labs:SettingsExpander
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
@@ -153,7 +156,8 @@
                 <labs:SettingsExpander
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
@@ -195,7 +199,7 @@
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
-                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -227,7 +231,7 @@
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
                     IsExpanded="True"
-                    Visibility="{x:Bind ViewModel.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />

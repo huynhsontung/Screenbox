@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -91,7 +92,8 @@
                 Margin="0,8,0,0"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Style="{StaticResource AccentButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
+                ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
+                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe8f4;" />
                     <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
@@ -138,7 +140,8 @@
                     Margin="{StaticResource ContentPageRightMargin}"
                     VerticalAlignment="Top"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
+                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
                         <TextBlock

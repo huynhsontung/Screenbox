@@ -3,9 +3,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -24,7 +24,7 @@ namespace Screenbox.Core.ViewModels
     {
         public MediaListViewModel Playlist { get; }
 
-        public bool ShouldBeAdaptive => !IsCompact && SystemInformation.Instance.DeviceFamily == "Windows.Desktop";
+        public bool ShouldBeAdaptive => !IsCompact && SystemInformationExtensions.IsDesktop;
 
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isFullscreen;

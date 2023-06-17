@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.Helpers;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
@@ -81,7 +81,7 @@ namespace Screenbox.Core.Services
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
 
             // Device family specific overrides
-            if (SystemInformation.Instance.DeviceFamily == "Windows.Xbox")
+            if (SystemInformationExtensions.IsXbox)
             {
                 SetValue(PlayerTapGestureKey, false);
                 SetValue(PlayerSeekGestureKey, false);
