@@ -31,13 +31,13 @@ namespace Screenbox.Core.Services
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
-        private readonly StorageFileQueryResult _musicLibraryQueryResult;
-        private readonly StorageFileQueryResult _videosLibraryQueryResult;
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
 
         private const int MaxLoadCount = 5000;
 
+        private StorageFileQueryResult? _musicLibraryQueryResult;
+        private StorageFileQueryResult? _videosLibraryQueryResult;
         private List<MediaViewModel> _songs;
         private List<MediaViewModel> _videos;
         private CancellationTokenSource? _musicFetchCts;
@@ -55,12 +55,6 @@ namespace Screenbox.Core.Services
             _videosRefreshTimer = dispatcherQueue.CreateTimer();
             _songs = new List<MediaViewModel>();
             _videos = new List<MediaViewModel>();
-
-            // Init library queries
-            _musicLibraryQueryResult = filesService.GetSongsFromLibrary();
-            _musicLibraryQueryResult.ContentsChanged += OnMusicLibraryContentChanged;
-            _videosLibraryQueryResult = filesService.GetVideosFromLibrary();
-            _videosLibraryQueryResult.ContentsChanged += OnVideosLibraryContentChanged;
         }
 
         public async Task<StorageLibrary> InitializeMusicLibraryAsync()
@@ -143,11 +137,29 @@ namespace Screenbox.Core.Services
             IsLoadingMusic = true;
             try
             {
+                if (_musicLibraryQueryResult == null)
+                {
+                    _musicLibraryQueryResult = _filesService.GetSongsFromLibrary();
+                    _musicLibraryQueryResult.ContentsChanged += OnMusicLibraryContentChanged;
+                }
+
                 await InitializeMusicLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> songs = new();
                 _songs = songs;
                 await BatchFetchMediaAsync(_musicLibraryQueryResult, songs, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                if (e.HResult == unchecked((int)0x80270200))    // LIBRARY_E_NO_SAVE_LOCATION
+                {
+                    LogService.Log(e);
+                    return;
+                }
+                else
+                {
+                    throw;
+                }
             }
             finally
             {
@@ -165,11 +177,29 @@ namespace Screenbox.Core.Services
             IsLoadingVideos = true;
             try
             {
+                if (_videosLibraryQueryResult == null)
+                {
+                    _videosLibraryQueryResult = _filesService.GetVideosFromLibrary();
+                    _videosLibraryQueryResult.ContentsChanged += OnVideosLibraryContentChanged;
+                }
+
                 await InitializeVideosLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> videos = new();
                 _videos = videos;
                 await BatchFetchMediaAsync(_videosLibraryQueryResult, videos, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                if (e.HResult == unchecked((int)0x80270200))    // LIBRARY_E_NO_SAVE_LOCATION
+                {
+                    LogService.Log(e);
+                    return;
+                }
+                else
+                {
+                    throw;
+                }
             }
             finally
             {
