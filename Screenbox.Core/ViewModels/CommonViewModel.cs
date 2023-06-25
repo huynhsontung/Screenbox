@@ -1,10 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -13,6 +8,12 @@ using Screenbox.Core.Common;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -28,11 +29,16 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private double _footerBottomPaddingHeight;
 
         private readonly INavigationService _navigationService;
+        private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
         private readonly Func<IPropertiesDialog> _propertiesDialogFactory;
 
-        public CommonViewModel(INavigationService navigationService, Func<IPropertiesDialog> propertiesDialogFactory)
+        public CommonViewModel(INavigationService navigationService, IFilesService filesService, IResourceService resourceService,
+            Func<IPropertiesDialog> propertiesDialogFactory)
         {
             _navigationService = navigationService;
+            _filesService = filesService;
+            _resourceService = resourceService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _propertiesDialogFactory = propertiesDialogFactory;
             NavigationStates = new Dictionary<Type, string>();
@@ -84,6 +90,22 @@ namespace Screenbox.Core.ViewModels
             IPropertiesDialog dialog = _propertiesDialogFactory();
             dialog.Media = media;
             await dialog.ShowAsync();
+        }
+
+        [RelayCommand]
+        private async Task OpenFilesAsync()
+        {
+            try
+            {
+                IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+                if (files == null || files.Count == 0) return;
+                Messenger.Send(new PlayMediaMessage(files));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(
+                    _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            }
         }
     }
 }

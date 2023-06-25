@@ -206,14 +206,6 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private async Task OpenFilesAsync()
-        {
-            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return;
-            Messenger.Send(new PlayMediaMessage(files));
-        }
-
-        [RelayCommand]
         private async Task OpenFolderAsync()
         {
             StorageFolder? folder = await _filesService.PickFolderAsync();

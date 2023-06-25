@@ -135,6 +135,15 @@
 
             <MenuFlyout x:Name="NormalPlayerContextMenu">
                 <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenFilesCommand}"
+                    Icon="{ui:FontIcon Glyph=&#xe838;}"
+                    Text="{strings:Resources Key=OpenFiles}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="O" Modifiers="Control" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
                     Command="{x:Bind Common.ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
@@ -491,7 +500,7 @@
             <Button
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
-                Flyout="{x:Bind PlayerContextMenu, Mode=OneWay}"
+                Flyout="{x:Bind NormalPlayerContextMenu}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">

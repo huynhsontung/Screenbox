@@ -2065,6 +2065,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToOpenFilesNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Failed to open file(s)
+        /// </summary>
+        public static string FailedToOpenFilesNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToOpenFilesNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2233,6 +2246,7 @@ namespace Screenbox.Strings{
             SubtitleAddedNotificationTitle,
             CriticalError,
             CriticalErrorDirect3D11NotAvailable,
+            FailedToOpenFilesNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;
