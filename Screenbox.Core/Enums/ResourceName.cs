@@ -29,6 +29,7 @@
         None,
         FailedToLoadSubtitleNotificationTitle,
         FailedToSaveFrameNotificationTitle,
+        FailedToOpenFilesNotificationTitle,
         FrameSavedNotificationTitle,
         ResumePositionNotificationTitle,
         FailedToLoadMediaNotificationTitle,

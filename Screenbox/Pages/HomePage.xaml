@@ -61,7 +61,7 @@
 
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.OpenFilesCommand}"
+                    Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon Glyph=&#xe838;}"
                     Text="{strings:Resources Key=OpenFiles}" />
                 <MenuFlyoutItem
@@ -155,7 +155,7 @@
                 Height="32"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                Command="{x:Bind ViewModel.OpenFilesCommand}"
+                Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal">
@@ -216,7 +216,7 @@
                 Margin="0,8,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Command="{x:Bind ViewModel.OpenFilesCommand}"
+                Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
