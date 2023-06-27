@@ -5,6 +5,7 @@
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -23,7 +24,8 @@
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon Glyph=&#xe8da;}"
-                Text="{strings:Resources Key=AddFolder}" />
+                Text="{strings:Resources Key=AddFolder}"
+                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
             <MenuFlyoutItem
                 Click="AddUrlMenuItem_OnClick"
                 Icon="{ui:SymbolIcon Symbol=Globe}"
