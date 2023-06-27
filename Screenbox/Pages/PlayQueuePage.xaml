@@ -50,12 +50,12 @@
             <muxc:SplitButton
                 Height="32"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top"
+                Margin="0,4,0,0"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe838;" />
+                    <FontIcon FontSize="12" Glyph="&#xe838;" />
                     <TextBlock
                         x:Name="HeaderAddFileButtonText"
                         Margin="8,0,0,0"

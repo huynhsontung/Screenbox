@@ -111,15 +111,15 @@
 
                     <TextBlock
                         Grid.Row="1"
-                        Margin="4,0"
-                        FontWeight="SemiBold"
+                        Margin="4,4"
                         MaxLines="2"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
                         Text="{x:Bind Media.Name, Mode=OneWay}"
                         TextWrapping="Wrap" />
 
                     <TextBlock
                         Grid.Row="2"
-                        Margin="4,0"
+                        Margin="4,-4"
                         x:Phase="2"
                         Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
@@ -156,12 +156,12 @@
                 x:Name="HeaderOpenButton"
                 Height="32"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top"
+                Margin="0,4,0,0"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe838;" />
+                    <FontIcon FontSize="12" Glyph="&#xe838;" />
                     <TextBlock
                         x:Name="HeaderOpenFilesText"
                         Margin="8,0,0,0"
@@ -193,21 +193,21 @@
                 Grid.RowSpan="3"
                 Grid.Column="0"
                 Margin="0,-16,16,0"
-                FontSize="86"
+                FontSize="126"
                 Text="👋" />
 
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
                 VerticalAlignment="Bottom"
-                Style="{StaticResource SubtitleTextBlockStyle}"
+                Style="{StaticResource TitleTextBlockStyle}"
                 Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
 
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="1"
-                VerticalAlignment="Top"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Margin="0,8,0,8"
+                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                 Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
                 TextWrapping="Wrap" />
 
@@ -215,15 +215,15 @@
                 x:Name="OpenButton"
                 Grid.Row="2"
                 Grid.Column="1"
-                Margin="0,8,0,0"
-                HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xe838;" />
-                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontSize="12" Glyph="&#xe838;" />
+                    <TextBlock
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
             </controls:SplitButton>
         </Grid>
@@ -248,7 +248,7 @@
             <GridView
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
-                Margin="0,16,0,0"
+                Margin="0,28,0,0"
                 Padding="{StaticResource ContentPageThumbnailRightMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
