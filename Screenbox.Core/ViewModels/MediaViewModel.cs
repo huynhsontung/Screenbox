@@ -1,5 +1,11 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Factories;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +14,6 @@ using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Playback;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -86,7 +86,7 @@ namespace Screenbox.Core.ViewModels
         }
 
         public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, StorageFile file)
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, IStorageFile file)
         {
             _filesService = filesService;
             _mediaService = mediaService;
