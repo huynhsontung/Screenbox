@@ -2,9 +2,15 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Screenbox.Core.ViewModels
@@ -18,15 +24,20 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private object? _selectedItem;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.PlayNextCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.RemoveSelectedCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.MoveSelectedItemUpCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PlaylistViewModel.MoveSelectedItemDownCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
+        [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
         private int _selectionCount;
 
-        public PlaylistViewModel(MediaListViewModel playlist)
+        private readonly IFilesService _filesService;
+        private readonly IResourceService _resourceService;
+
+        public PlaylistViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
         {
             Playlist = playlist;
+            _filesService = filesService;
+            _resourceService = resourceService;
             _hasItems = playlist.Items.Count > 0;
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
@@ -137,6 +148,22 @@ namespace Screenbox.Core.ViewModels
         {
             EnableMultiSelect = false;
             SelectedItem = null;
+        }
+
+        [RelayCommand]
+        private async Task AddFilesAsync()
+        {
+            try
+            {
+                IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
+                if (files == null || files.Count == 0) return;
+                Playlist.Enqueue(files);
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(
+                    _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            }
         }
     }
 }

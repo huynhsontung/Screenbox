@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Screenbox.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Storage;
-using Screenbox.Core.Services;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories
@@ -25,7 +25,7 @@ namespace Screenbox.Core.Factories
             _albumFactory = albumFactory;
         }
 
-        public MediaViewModel GetTransient(StorageFile file)
+        public MediaViewModel GetTransient(IStorageFile file)
         {
             return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
         }
@@ -35,7 +35,7 @@ namespace Screenbox.Core.Factories
             return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
         }
 
-        public MediaViewModel GetSingleton(StorageFile file)
+        public MediaViewModel GetSingleton(IStorageFile file)
         {
             string path = file.Path;
             if (!_references.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||

@@ -16,9 +16,18 @@
     mc:Ignorable="d">
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
-            <MenuFlyoutItem Icon="{ui:FontIcon Glyph=&#xe838;}" Text="{strings:Resources Key=AddFiles}" />
-            <MenuFlyoutItem Icon="{ui:FontIcon Glyph=&#xe8da;}" Text="{strings:Resources Key=AddFolder}" />
-            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}" />
+            <MenuFlyoutItem
+                Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
+                Icon="{ui:FontIcon Glyph=&#xe838;}"
+                Text="{strings:Resources Key=AddFiles}" />
+            <MenuFlyoutItem
+                Command="{x:Bind ViewModel.AddFolderCommand}"
+                Icon="{ui:FontIcon Glyph=&#xe8da;}"
+                Text="{strings:Resources Key=AddFolder}" />
+            <MenuFlyoutItem
+                Click="AddUrlMenuItem_OnClick"
+                Icon="{ui:SymbolIcon Symbol=Globe}"
+                Text="{strings:Resources Key=AddUrl}" />
         </MenuFlyout>
     </Page.Resources>
 
@@ -40,10 +49,11 @@
                 Height="32"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe8da;" />
+                    <FontIcon Glyph="&#xe838;" />
                     <TextBlock
                         x:Name="HeaderAddFileButtonText"
                         Margin="8,0,0,0"
