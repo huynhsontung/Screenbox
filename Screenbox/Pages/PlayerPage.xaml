@@ -85,7 +85,7 @@
             x:Name="HeaderBackground"
             Grid.Row="0"
             Grid.Column="0"
-            Height="70"
+            Height="60"
             MinHeight="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
@@ -122,9 +122,9 @@
             <Button
                 x:Name="BackButton"
                 Grid.Column="1"
-                Width="46"
-                Height="46"
-                Margin="6,6,2,6"
+                Width="40"
+                Height="36"
+                Margin="4,6,0,6"
                 Background="Transparent"
                 BorderThickness="0"
                 Command="{x:Bind ViewModel.GoBackCommand}"
@@ -142,9 +142,9 @@
             <Button
                 x:Name="PlayQueueButton"
                 Grid.Column="2"
-                Width="46"
-                Height="46"
-                Margin="2,6,6,6"
+                Width="40"
+                Height="36"
+                Margin="4,6,0,6"
                 HorizontalAlignment="Right"
                 AllowDrop="True"
                 Background="Transparent"
@@ -152,7 +152,7 @@
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
-                <SymbolIcon Symbol="MusicInfo" />
+                <FontIcon Glyph="&#xe142;" />
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
@@ -173,7 +173,7 @@
             <StackPanel
                 x:Name="TitleTextPanel"
                 Grid.Column="3"
-                Margin="36,0,0,0"
+                Margin="16,0,0,0"
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Orientation="Vertical">
@@ -182,8 +182,7 @@
                 </StackPanel.Transitions>
                 <TextBlock
                     x:Name="TitleText"
-                    FontSize="20"
-                    FontWeight="SemiBold"
+                    Style="{StaticResource BodyHeaderTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextTrimming="CharacterEllipsis" />
 
@@ -285,7 +284,7 @@
             Grid.Column="0"
             MinWidth="64"
             MaxWidth="300"
-            Margin="32,0,0,0"
+            Margin="16,0,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             AspectRatio="1:1"
@@ -366,8 +365,7 @@
             </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
-                FontSize="20"
-                FontWeight="SemiBold"
+                Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
         </Border>
 
