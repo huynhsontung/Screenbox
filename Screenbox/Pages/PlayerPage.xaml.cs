@@ -304,6 +304,13 @@ namespace Screenbox.Pages
             }
         }
 
+        private void PlayQueueFlyout_OnOpening(object sender, object e)
+        {
+            // Delay load PlaylistView until flyout is opening
+            // Save loading time when launching from file
+            FindName(nameof(PlaylistView));
+        }
+
         private async void PlayQueueFlyout_OnOpened(object sender, object e)
         {
             if (PlaylistView == null) return;
@@ -335,7 +342,6 @@ namespace Screenbox.Pages
         private void PlayQueueButton_OnDragEnter(object sender, DragEventArgs e)
         {
             if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
-            FindName(nameof(PlayQueueFlyout));  // Trigger element lazy load
             _delayFlyoutOpenTimer.Debounce(() => PlayQueueFlyout.ShowAt(PlayQueueButton), TimeSpan.FromMilliseconds(500));
         }
 

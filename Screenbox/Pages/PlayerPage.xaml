@@ -157,12 +157,14 @@
                     <Flyout
                         x:Name="PlayQueueFlyout"
                         Opened="PlayQueueFlyout_OnOpened"
+                        Opening="PlayQueueFlyout_OnOpening"
                         Placement="BottomEdgeAlignedLeft">
                         <controls:PlaylistView
                             x:Name="PlaylistView"
                             Width="420"
                             MinHeight="200"
                             MaxHeight="500"
+                            x:Load="False"
                             IsFlyout="True" />
                     </Flyout>
                 </Button.Flyout>
