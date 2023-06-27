@@ -85,16 +85,31 @@
             x:Name="ActionButtonRow"
             Grid.Row="0"
             Height="50"
-            HorizontalAlignment="Left"
+            Margin="{x:Bind Padding, Mode=OneWay}"
             Orientation="Horizontal">
             <Button
+                x:Name="AddFilesButton"
+                Margin="0,0,12,0"
+                Command="{x:Bind ViewModel.AddFilesCommand}"
+                Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Glyph="&#xe838;" />
+                    <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
+                </StackPanel>
+            </Button>
+
+            <Button
+                x:Name="ClearButton"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe74d;" />
-                    <TextBlock Text="{x:Bind strings:Resources.Clear}" />
+                    <TextBlock
+                        x:Name="ClearButtonLabel"
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.Clear}" />
                 </StackPanel>
             </Button>
 
@@ -103,9 +118,12 @@
                 VerticalAlignment="Center"
                 IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe762;" />
-                    <TextBlock Text="{x:Bind strings:Resources.Multiselect}" />
+                    <TextBlock
+                        x:Name="MultiSelectToggleLabel"
+                        Margin="8,0,0,0"
+                        Text="{x:Bind strings:Resources.Multiselect}" />
                 </StackPanel>
             </ToggleButton>
         </StackPanel>
@@ -287,6 +305,7 @@
                         <Setter Target="PlayNextButton.Width" Value="40" />
                         <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.PlayNext}" />
+                        <Setter Target="AddFilesButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
