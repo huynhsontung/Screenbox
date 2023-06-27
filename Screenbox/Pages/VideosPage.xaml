@@ -43,7 +43,7 @@
             <TextBlock
                 Grid.Column="0"
                 MaxLines="2"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleLargeTextBlockStyle}"
                 Text="{strings:Resources Key=Videos}" />
         </Grid>
 
@@ -119,7 +119,7 @@
                 <TextBlock
                     Margin="-4,0,16,0"
                     MaxLines="2"
-                    Style="{StaticResource PageHeaderTextBlockStyle}"
+                    Style="{StaticResource TitleLargeTextBlockStyle}"
                     Text="{strings:Resources Key=Videos}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>

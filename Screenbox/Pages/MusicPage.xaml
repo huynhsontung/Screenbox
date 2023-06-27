@@ -35,7 +35,7 @@
             <TextBlock
                 Grid.Column="0"
                 MaxLines="2"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleLargeTextBlockStyle}"
                 Text="{strings:Resources Key=Music}" />
         </Grid>
 
@@ -111,7 +111,7 @@
                 <TextBlock
                     Margin="-4,0,16,0"
                     MaxLines="2"
-                    Style="{StaticResource PageHeaderTextBlockStyle}"
+                    Style="{StaticResource TitleLargeTextBlockStyle}"
                     Text="{x:Bind strings:Resources.Music}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>

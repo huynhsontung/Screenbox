@@ -33,7 +33,7 @@
             <TextBlock
                 Grid.Column="0"
                 MaxLines="2"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleLargeTextBlockStyle}"
                 Text="{x:Bind ViewModel.TitleText, Converter={StaticResource DefaultTitleTextConverter}, Mode=OneWay}" />
         </Grid>
 

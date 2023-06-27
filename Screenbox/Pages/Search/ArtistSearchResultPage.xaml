@@ -30,7 +30,7 @@
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}"
             MaxLines="2"
-            Style="{StaticResource PageHeaderTextBlockStyle}"
+            Style="{StaticResource TitleLargeTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultArtistHeader(ViewModel.SearchQuery), FallbackValue={}}" />
 
         <GridView

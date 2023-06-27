@@ -45,7 +45,7 @@
             Margin="{StaticResource ContentPageHeaderMargin}">
             <TextBlock
                 HorizontalAlignment="Left"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleLargeTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
                 Height="32"
