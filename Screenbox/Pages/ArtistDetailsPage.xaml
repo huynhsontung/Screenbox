@@ -60,12 +60,11 @@
                             x:Name="TextPanel"
                             Margin="8,0"
                             HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Top"
                             Orientation="Vertical">
                             <TextBlock
-                                FontWeight="SemiBold"
                                 MaxLines="2"
-                                Style="{StaticResource BodyTextBlockStyle}"
+                                Style="{StaticResource BodyHeaderTextBlockStyle}"
                                 Text="{Binding Key.Name}" />
                             <TextBlock
                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
@@ -172,10 +171,11 @@
                     <TextBlock
                         x:Name="TitleText"
                         MaxLines="1"
-                        Style="{StaticResource TitleTextBlockStyle}"
+                        Style="{StaticResource TitleLargeTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Name}" />
                     <TextBlock
                         x:Name="Subtext"
+                        Margin="0,8,0,0"
                         FontWeight="Normal"
                         MaxLines="1"
                         Style="{StaticResource SubtitleTextBlockStyle}"
@@ -192,7 +192,7 @@
                     Spacing="16">
                     <Button Command="{x:Bind ViewModel.PlayCommand}" Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe768;" />
+                            <FontIcon FontSize="12" Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
@@ -202,7 +202,7 @@
 
                     <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe8b1;" />
+                            <FontIcon FontSize="12" Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
