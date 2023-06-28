@@ -158,12 +158,12 @@
                 <Button
                     x:Name="ShufflePlayButton"
                     Grid.Row="0"
-                    Margin="0,16,0,0"
+                    Margin="0,24,0,0"
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     XYFocusDown="{x:Bind ContentFrame}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xe8b1;" />
+                        <FontIcon FontSize="12" Glyph="&#xe8b1;" />
                         <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                     </StackPanel>
                 </Button>

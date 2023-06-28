@@ -56,7 +56,7 @@
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="VideosGridView"
-            Margin="0,16,0,0"
+            Margin="0,24,0,0"
             Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"

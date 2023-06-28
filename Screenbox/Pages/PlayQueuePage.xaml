@@ -38,13 +38,12 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}">
             <TextBlock
-                HorizontalAlignment="Left"
+                MaxLines="2"
                 Style="{StaticResource TitleLargeTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton

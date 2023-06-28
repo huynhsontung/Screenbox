@@ -176,9 +176,8 @@
                     <TextBlock
                         x:Name="Subtext"
                         Margin="0,8,0,0"
-                        FontWeight="Normal"
                         MaxLines="1"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Style="{StaticResource SubtitleNormalBlockStyle}"
                         Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}" />
                 </StackPanel>
 
@@ -192,7 +191,7 @@
                     Spacing="16">
                     <Button Command="{x:Bind ViewModel.PlayCommand}" Style="{StaticResource AccentButtonStyle}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontSize="12" Glyph="&#xe768;" />
+                            <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
@@ -202,7 +201,7 @@
 
                     <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon FontSize="12" Glyph="&#xe8b1;" />
+                            <FontIcon Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>

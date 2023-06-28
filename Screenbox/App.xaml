@@ -44,8 +44,8 @@
                         GreaterThan="0"
                         NullValue="False"
                         TrueValue="True" />
-                    <Thickness x:Key="ContentPageHeaderMargin">0,36,56,12</Thickness>
-                    <Thickness x:Key="ContentPageHeaderMarginMinimal">0,36,16,12</Thickness>
+                    <Thickness x:Key="ContentPageHeaderMargin">0,44,56,12</Thickness>
+                    <Thickness x:Key="ContentPageHeaderMarginMinimal">0,44,16,12</Thickness>
                     <Thickness x:Key="ContentPageRightMargin">0,0,56,0</Thickness>
                     <Thickness x:Key="ContentPageThumbnailRightMargin">0,0,24,0</Thickness>
                     <Thickness x:Key="ContentPageRightMarginMinimal">0,0,16,0</Thickness>
@@ -71,6 +71,13 @@
                         BasedOn="{StaticResource BodyTextBlockStyle}"
                         TargetType="TextBlock">
                         <Setter Property="FontWeight" Value="SemiBold" />
+                    </Style>
+
+                    <Style
+                        x:Key="SubtitleNormalBlockStyle"
+                        BasedOn="{StaticResource SubtitleTextBlockStyle}"
+                        TargetType="TextBlock">
+                        <Setter Property="FontWeight" Value="Normal" />
                     </Style>
 
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
