@@ -155,13 +155,13 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
-                    Icon="{ui:FontIcon Glyph=&#xEC57;}"
+                    Icon="{ui:FontIcon Glyph=&#xec49;}"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
-                        GroupName="SpeedGroup"
+                        GroupName="SpeedGroup"   
                         Tag="0.25"
                         Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
@@ -384,23 +384,6 @@
                 </Button.KeyboardAccelerators>
             </Button>
 
-            <local:TimeDisplay
-                x:Name="TimeDisplay"
-                MinWidth="0"
-                Margin="6,0,0,0"
-                VerticalAlignment="Center"
-                ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
-                FontSize="14"
-                Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
-                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
-                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
-        </StackPanel>
-
-        <StackPanel
-            Grid.Row="1"
-            Grid.Column="1"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
             <Button
                 x:Name="VolumeButton"
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
@@ -419,6 +402,24 @@
                 Width="140"
                 Margin="2,0,8,0"
                 ShowValueText="False" />
+
+            <local:TimeDisplay
+                x:Name="TimeDisplay"
+                MinWidth="0"
+                Margin="6,0,0,0"
+                VerticalAlignment="Center"
+                ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
+                FontSize="14"
+                Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
+                Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
+                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
 
             <ToggleButton
                 x:Name="ShuffleButton"
@@ -478,6 +479,9 @@
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                 <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator
+                        Key="M"
+                        Modifiers="Control" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
                 <FontIcon x:Name="CompactOverlayButtonIcon" Glyph="&#xEE49;" />
