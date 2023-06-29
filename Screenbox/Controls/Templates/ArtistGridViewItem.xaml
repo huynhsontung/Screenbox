@@ -43,8 +43,8 @@
                 Grid.Row="1"
                 Margin="4,4"
                 HorizontalAlignment="Center"
-                FontWeight="SemiBold"
                 MaxLines="2"
+                Style="{StaticResource BodyStrongTextBlockStyle}"
                 Text="{Binding Name}"
                 TextWrapping="Wrap" />
         </Grid>

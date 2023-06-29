@@ -81,15 +81,15 @@
 
                     <TextBlock
                         Grid.Row="1"
-                        Margin="4,0"
-                        FontWeight="SemiBold"
+                        Margin="4,4"
                         MaxLines="2"
+                        Style="{StaticResource BodyStrongTextBlockStyle}"
                         Text="{x:Bind Name}"
                         TextWrapping="Wrap" />
 
                     <TextBlock
                         Grid.Row="2"
-                        Margin="4,0"
+                        Margin="4,-4"
                         x:Phase="2"
                         Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
