@@ -24,7 +24,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <x:Double x:Key="StorageItemGridViewItemWidth">230</x:Double>
-            <x:Double x:Key="StorageItemGridViewItemHeight">188</x:Double>
+            <x:Double x:Key="StorageItemGridViewItemHeight">192</x:Double>
             <x:Double x:Key="StorageItemGridViewItemThumbnailHeight">126</x:Double>
 
             <MenuFlyout x:Name="ItemFlyout">
@@ -81,8 +81,8 @@
 
                     <TextBlock
                         Grid.Row="1"
-                        Padding="4,0"
                         Margin="0,4,0,0"
+                        Padding="4,0"
                         MaxLines="2"
                         Style="{StaticResource BodyStrongTextBlockStyle}"
                         Text="{x:Bind Name}"
