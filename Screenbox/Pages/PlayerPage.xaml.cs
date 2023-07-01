@@ -32,6 +32,8 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
+        internal PlayerInteractionViewModel InteractionViewModel { get; }
+
         private const VirtualKey PlusKey = (VirtualKey)0xBB;
         private const VirtualKey MinusKey = (VirtualKey)0xBD;
         private const VirtualKey AddKey = (VirtualKey)0x6B;
@@ -44,6 +46,7 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
+            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
             _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
             RegisterSeekBarPointerHandlers();
@@ -71,11 +74,6 @@ namespace Screenbox.Pages
 
         private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
             visibility != PlayerVisibilityState.Visible;
-
-        private void FocusVideoView()
-        {
-            VideoView.Focus(FocusState.Programmatic);
-        }
 
         private void SetTitleBar()
         {
@@ -106,7 +104,7 @@ namespace Screenbox.Pages
 
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
             {
-                FocusVideoView();
+                PlayerControls.FocusFirstButton();
             }
         }
 
@@ -143,7 +141,7 @@ namespace Screenbox.Pages
         private void SeekBarPointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
         {
             ViewModel.SeekBarPointerInteracting = false;
-            FocusVideoView();
+            PlayerControls.FocusFirstButton();
         }
 
         private void SeekBarPointerExitedEventHandler(object s, PointerRoutedEventArgs e)
@@ -155,7 +153,7 @@ namespace Screenbox.Pages
         {
             if (args.OldState?.Name == "MiniPlayer" || args.OldState?.Name == "Hidden" &&
                 (args.NewState == null || args.NewState.Name == "Normal"))
-                FocusVideoView();
+                PlayerControls.FocusFirstButton();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -348,6 +346,12 @@ namespace Screenbox.Pages
         private void PlayQueueButton_OnDragLeave(object sender, DragEventArgs e)
         {
             _delayFlyoutOpenTimer.Stop();
+        }
+
+        private void PlayerControlsBackground_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            PlayerControls.FocusFirstButton(FocusState.Pointer);
+            e.Handled = true;
         }
     }
 }

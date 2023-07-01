@@ -79,6 +79,42 @@
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="Left"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Left"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Modifiers="Control"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Left"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Modifiers="Shift"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Right"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Right"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Modifiers="Control"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Right"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Modifiers="Shift"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Up"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                ScopeOwner="{x:Bind}" />
+            <KeyboardAccelerator
+                Key="Down"
+                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                ScopeOwner="{x:Bind}" />
         </Grid.KeyboardAccelerators>
 
         <Border
@@ -426,7 +462,7 @@
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
             Grid.Column="0"
-            Tapped="{x:Bind FocusVideoView}">
+            Tapped="PlayerControlsBackground_OnTapped">
             <Border.Background>
                 <LinearGradientBrush x:Name="ControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                     <GradientStop Offset="0" Color="#00000000" />

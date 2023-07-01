@@ -7,6 +7,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -40,8 +41,6 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
             InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
-            VideoViewButton.Click += (sender, args) => Click?.Invoke(sender, args);
-            VideoViewButton.Drop += (_, _) => VideoViewButton.Focus(FocusState.Programmatic);
         }
 
         private void VideoViewButton_OnDragOver(object sender, DragEventArgs e)
@@ -53,6 +52,14 @@ namespace Screenbox.Controls
         private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
         {
             ViewModel.Initialize(e.SwapChainOptions);
+        }
+
+        private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!IsEnabled) return;
+            InteractionViewModel.OnClick();
+            Click?.Invoke(sender, e);
+            e.Handled = true;
         }
     }
 }

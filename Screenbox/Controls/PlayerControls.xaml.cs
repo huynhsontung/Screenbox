@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using System;
@@ -8,7 +9,6 @@ using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -64,6 +64,11 @@ namespace Screenbox.Controls
             DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             PlayerContextMenu = NormalPlayerContextMenu;
+        }
+
+        public void FocusFirstButton(FocusState value = FocusState.Programmatic)
+        {
+            PlayPauseButton.Focus(value);
         }
 
         private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
