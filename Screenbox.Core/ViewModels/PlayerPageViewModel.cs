@@ -221,6 +221,11 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
         }
 
+        partial void OnControlsHiddenChanged(bool value)
+        {
+            Messenger.Send(new PlayerControlsVisibilityChangedMessage(!value));
+        }
+
         partial void OnVideoViewFocusedChanged(bool value)
         {
             if (value)
