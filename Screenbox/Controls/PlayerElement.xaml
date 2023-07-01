@@ -14,6 +14,7 @@
         BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
         BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}">
+        <!--  Fake button for interaction. Can "Click" but cannot receive focus  -->
         <UserControl
             x:Name="VideoViewButton"
             Margin="{x:Bind ButtonMargin, Mode=OneWay}"
@@ -43,8 +44,6 @@
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
             SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
             <local:VideoView.KeyboardAccelerators>
-                <KeyboardAccelerator Key="P" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="K" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="J" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="L" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />

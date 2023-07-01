@@ -176,6 +176,7 @@
     <Compile Include="Messages\SuspendingMessage.cs" />
     <Compile Include="Messages\TimeChangeOverrideMessage.cs" />
     <Compile Include="Messages\TogglePlayerVisibilityMessage.cs" />
+    <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
     <Compile Include="Models\LastPositionTracker.cs" />

@@ -28,17 +28,14 @@ namespace Screenbox.Core.ViewModels
         private TimeSpan _timeBeforeManipulation;
         private bool _playerSeekGesture;
         private bool _playerVolumeGesture;
-        private bool _manipulationCompleted;
 
         private readonly ISettingsService _settingsService;
-        private readonly DispatcherQueueTimer _toggleTimer;
         private readonly DispatcherQueueTimer _seekOriginTimer;
 
         public PlayerInteractionViewModel(ISettingsService settingsService)
         {
             _settingsService = settingsService;
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _toggleTimer = dispatcherQueue.CreateTimer();
             _seekOriginTimer = dispatcherQueue.CreateTimer();
             _seekOriginTimer.IsRepeating = false;
 
@@ -54,21 +51,6 @@ namespace Screenbox.Core.ViewModels
         public void Receive(SettingsChangedMessage message)
         {
             UpdateSettings();
-        }
-
-        public void OnClick()
-        {
-            // Manipulation will trigger click event
-            if (_manipulationCompleted)
-            {
-                _manipulationCompleted = false;
-                return;
-            }
-
-            if (_settingsService.PlayerTapGesture)
-            {
-                TogglePlayPauseWithBadge(true);
-            }
         }
 
         public async void OnDrop(object sender, DragEventArgs e)
@@ -155,7 +137,7 @@ namespace Screenbox.Core.ViewModels
                     volumeChange = -2;
                     break;
                 case VirtualKey.GamepadX:
-                    TogglePlayPauseWithBadge(false);
+                    Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
                 case VirtualKey.GamepadView:
                     Messenger.Send(new TogglePlayerVisibilityMessage());
@@ -185,11 +167,6 @@ namespace Screenbox.Core.ViewModels
 
             switch (key)
             {
-                case VirtualKey.K when sender.Modifiers == VirtualKeyModifiers.None:
-                case VirtualKey.P when sender.Modifiers == VirtualKeyModifiers.None:
-                case VirtualKey.Space:
-                    TogglePlayPauseWithBadge(false);
-                    return;
                 case VirtualKey.Left:
                 case VirtualKey.J:
                     direction = -1;
@@ -266,7 +243,6 @@ namespace Screenbox.Core.ViewModels
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (_manipulationLock == ManipulationLock.None) return;
-            _manipulationCompleted = true;
             Messenger.Send(new OverrideControlsHideMessage(100));
             Messenger.Send(new UpdateStatusMessage(null));
             Messenger.Send(new TimeChangeOverrideMessage(false));
@@ -376,43 +352,6 @@ namespace Screenbox.Core.ViewModels
             }
 
             return false;
-        }
-
-        private void TogglePlayPauseWithBadge(bool debounce)
-        {
-            if (_mediaPlayer?.PlaybackItem == null) return;
-            bool isPlayingNext = _toggleTimer.IsRunning
-                ? _mediaPlayer.PlaybackState == MediaPlaybackState.Playing
-                : _mediaPlayer.PlaybackState != MediaPlaybackState.Playing;
-            Messenger.Send(new ShowPlayPauseBadgeMessage(isPlayingNext));
-            if (_toggleTimer.IsRunning)
-            {
-                _toggleTimer.Stop();
-                return;
-            }
-
-            if (debounce)
-            {
-                _toggleTimer.Debounce(TogglePlayPause, TimeSpan.FromMilliseconds(200));
-            }
-            else
-            {
-                TogglePlayPause();
-            }
-        }
-
-        private void TogglePlayPause()
-        {
-            if (_mediaPlayer?.PlaybackItem == null) return;
-            switch (_mediaPlayer.PlaybackState)
-            {
-                case MediaPlaybackState.Playing:
-                    _mediaPlayer.Pause();
-                    break;
-                case MediaPlaybackState.Paused or MediaPlaybackState.None:
-                    _mediaPlayer.Play();
-                    break;
-            }
         }
 
         private void UpdateSettings()

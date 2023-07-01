@@ -20,7 +20,9 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class PlayerControlsViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
+    public sealed partial class PlayerControlsViewModel : ObservableRecipient,
+        IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<TogglePlayPauseMessage>
     {
         public MediaListViewModel Playlist { get; }
 
@@ -79,6 +81,27 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.ChapterChanged += OnChapterChanged;
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
+        }
+
+        public void Receive(TogglePlayPauseMessage message)
+        {
+            if (!HasActiveItem || _mediaPlayer == null) return;
+            if (message.ShowBadge)
+            {
+                PlayPauseWithBadge();
+            }
+            else
+            {
+                PlayPause();
+            }
+
+        }
+
+        public void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            // Override default keyboard accelerator to show badge
+            args.Handled = true;
+            PlayPauseWithBadge();
         }
 
         public void ToggleSubtitle(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -290,6 +313,13 @@ namespace Screenbox.Core.ViewModels
                     // TODO: track error
                 }
             }
+        }
+
+        private void PlayPauseWithBadge()
+        {
+            if (!HasActiveItem) return;
+            Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
+            PlayPause();
         }
 
         private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";

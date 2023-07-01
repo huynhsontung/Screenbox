@@ -3,6 +3,7 @@
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -32,6 +33,7 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _clickTimer;
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
@@ -51,6 +53,7 @@ namespace Screenbox.Core.ViewModels
             _transportControlsService = transportControlsService;
             _resourceService = resourceService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _clickTimer = _dispatcherQueue.CreateTimer();
             _requestTracker = new DisplayRequestTracker();
 
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
@@ -108,6 +111,18 @@ namespace Screenbox.Core.ViewModels
                     ResizeWindow(0);
                     break;
             }
+        }
+
+        public void OnClick()
+        {
+            if (!_settingsService.PlayerTapGesture || _mediaPlayer?.PlaybackItem == null) return;
+            if (_clickTimer.IsRunning)
+            {
+                _clickTimer.Stop();
+                return;
+            }
+
+            _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
         }
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)

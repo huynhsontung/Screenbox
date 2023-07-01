@@ -57,7 +57,7 @@ namespace Screenbox.Controls
         private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (!IsEnabled) return;
-            InteractionViewModel.OnClick();
+            ViewModel.OnClick();
             Click?.Invoke(sender, e);
             e.Handled = true;
         }

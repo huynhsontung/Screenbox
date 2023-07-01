@@ -352,8 +352,12 @@
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="P" />
-                    <KeyboardAccelerator Key="K" />
+                    <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+                    <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+                    <KeyboardAccelerator
+                        Key="Space"
+                        Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}"
+                        ScopeOwner="{x:Bind PlayPauseButton}" />
                 </Button.KeyboardAccelerators>
                 <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
             </Button>
