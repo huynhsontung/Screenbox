@@ -114,10 +114,11 @@
             <muxc:NavigationView.Resources>
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+                <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
             </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
-                    Margin="-4,0,16,0"
+                    Margin="0,0,16,0"
                     MaxLines="2"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
                     Text="{strings:Resources Key=Videos}" />
