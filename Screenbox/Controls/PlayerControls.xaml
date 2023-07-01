@@ -478,6 +478,9 @@
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                 <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator
+                        Key="M"
+                        Modifiers="Control" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
                 <FontIcon x:Name="CompactOverlayButtonIcon" Glyph="&#xEE49;" />
