@@ -244,7 +244,7 @@ namespace Screenbox.Core.ViewModels
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (_manipulationLock == ManipulationLock.None) return;
-            Messenger.Send(new OverrideControlsHideMessage(100));
+            Messenger.Send(new OverrideControlsHideDelayMessage(100));
             Messenger.Send(new UpdateStatusMessage(null));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }

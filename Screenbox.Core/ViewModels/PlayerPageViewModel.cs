@@ -28,7 +28,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistActiveItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
-        IRecipient<OverrideControlsHideMessage>,
+        IRecipient<OverrideControlsHideDelayMessage>,
         IRecipient<PlayerVisibilityRequestMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
@@ -163,7 +163,7 @@ namespace Screenbox.Core.ViewModels
             BlinkPlayPauseBadge();
         }
 
-        public void Receive(OverrideControlsHideMessage message)
+        public void Receive(OverrideControlsHideDelayMessage message)
         {
             OverrideControlsDelayHide(message.Delay);
         }
