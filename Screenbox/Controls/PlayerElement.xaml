@@ -22,6 +22,7 @@
             VerticalAlignment="Stretch"
             AllowDrop="True"
             AllowFocusOnInteraction="False"
+            DoubleTapped="VideoViewButton_OnDoubleTapped"
             DragOver="VideoViewButton_OnDragOver"
             Drop="{x:Bind InteractionViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"

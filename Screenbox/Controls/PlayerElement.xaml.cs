@@ -59,7 +59,13 @@ namespace Screenbox.Controls
             if (!IsEnabled) return;
             ViewModel.OnClick();
             Click?.Invoke(sender, e);
-            e.Handled = true;
+        }
+
+        private void VideoViewButton_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (!IsEnabled) return;
+            ViewModel.OnClick();
+            Click?.Invoke(sender, e);
         }
     }
 }
