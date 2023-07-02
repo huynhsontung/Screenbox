@@ -144,6 +144,7 @@
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
+    <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformationExtensions.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
@@ -155,7 +156,6 @@
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\MediaPlayerChangedMessage.cs" />
     <Compile Include="Messages\MediaPlayerRequestMessage.cs" />
-    <Compile Include="Messages\MessageHelpers.cs" />
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerVisibilityChangedMessage.cs" />
@@ -186,6 +186,7 @@
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
+    <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
@@ -247,7 +248,6 @@
     <Compile Include="ViewModels\NotificationViewModel.cs" />
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
-    <Compile Include="ViewModels\PlayerInteractionViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />

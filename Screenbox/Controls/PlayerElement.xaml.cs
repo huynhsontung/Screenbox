@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -31,16 +30,10 @@ namespace Screenbox.Controls
 
         internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
 
-        internal PlayerInteractionViewModel InteractionViewModel { get; }
-
-        private const VirtualKey PeriodKey = (VirtualKey)190;
-        private const VirtualKey CommaKey = (VirtualKey)188;
-
         public PlayerElement()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
-            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
         }
 
         private void VideoViewButton_OnDragOver(object sender, DragEventArgs e)

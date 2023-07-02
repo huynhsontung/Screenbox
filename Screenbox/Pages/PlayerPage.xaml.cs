@@ -32,12 +32,12 @@ namespace Screenbox.Pages
     {
         internal PlayerPageViewModel ViewModel => (PlayerPageViewModel)DataContext;
 
-        internal PlayerInteractionViewModel InteractionViewModel { get; }
-
         private const VirtualKey PlusKey = (VirtualKey)0xBB;
         private const VirtualKey MinusKey = (VirtualKey)0xBD;
         private const VirtualKey AddKey = (VirtualKey)0x6B;
         private const VirtualKey SubtractKey = (VirtualKey)0x6D;
+        private const VirtualKey PeriodKey = (VirtualKey)190;
+        private const VirtualKey CommaKey = (VirtualKey)188;
 
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
         private CancellationTokenSource? _animationCancellationTokenSource;
@@ -46,7 +46,6 @@ namespace Screenbox.Pages
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
-            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
             _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
 
             RegisterSeekBarPointerHandlers();

@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.System;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -53,6 +56,54 @@ namespace Screenbox.Core.ViewModels
         public void Receive(NavigationViewDisplayModeRequestMessage message)
         {
             message.Reply(NavigationViewDisplayMode);
+        }
+
+        public void ProcessGamepadKeyDown(object sender, KeyRoutedEventArgs args)
+        {
+            // All Gamepad keys are in the range of [195, 218]
+            if ((int)args.Key < 195 || (int)args.Key > 218) return;
+            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
+            if (playlist.ActiveItem == null) return;
+            int volumeChange = 0;
+            switch (args.Key)
+            {
+                case VirtualKey.GamepadRightThumbstickLeft:
+                case VirtualKey.GamepadLeftShoulder:
+                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-5000));
+                    break;
+                case VirtualKey.GamepadRightThumbstickRight:
+                case VirtualKey.GamepadRightShoulder:
+                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(5000));
+                    break;
+                case VirtualKey.GamepadLeftTrigger when PlayerVisible:
+                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-30_000));
+                    break;
+                case VirtualKey.GamepadRightTrigger when PlayerVisible:
+                    Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(30_000));
+                    break;
+                case VirtualKey.GamepadRightThumbstickUp:
+                    volumeChange = 2;
+                    break;
+                case VirtualKey.GamepadRightThumbstickDown:
+                    volumeChange = -2;
+                    break;
+                case VirtualKey.GamepadX:
+                    Messenger.Send(new TogglePlayPauseMessage(true));
+                    break;
+                case VirtualKey.GamepadView:
+                    Messenger.Send(new TogglePlayerVisibilityMessage());
+                    break;
+                default:
+                    return;
+            }
+
+            if (volumeChange != 0)
+            {
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+            }
+
+            args.Handled = true;
         }
 
         public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

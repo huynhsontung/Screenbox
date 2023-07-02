@@ -10,11 +10,15 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.System;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
@@ -23,6 +27,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerElementViewModel : ObservableRecipient,
         IRecipient<ChangeAspectRatioMessage>,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
         public MediaPlayer? VlcPlayer { get; private set; }
@@ -39,6 +44,10 @@ namespace Screenbox.Core.ViewModels
         private Size _aspectRatio;
         private bool _forceResize;
         private VlcMediaPlayer? _mediaPlayer;
+        private ManipulationLock _manipulationLock;
+        private TimeSpan _timeBeforeManipulation;
+        private bool _playerSeekGesture;
+        private bool _playerVolumeGesture;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -55,12 +64,18 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _clickTimer = _dispatcherQueue.CreateTimer();
             _requestTracker = new DisplayRequestTracker();
+            LoadSettings();
 
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
             transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
 
             // View model does not receive any message
             IsActive = true;
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            LoadSettings();
         }
 
         public void Receive(ChangeAspectRatioMessage message)
@@ -123,6 +138,104 @@ namespace Screenbox.Core.ViewModels
             }
 
             _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
+        }
+
+        public async void OnDrop(object sender, DragEventArgs e)
+        {
+            if (_mediaPlayer == null) return;
+            try
+            {
+                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    if (items.Count > 0)
+                    {
+                        if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                        {
+                            _mediaPlayer.AddSubtitle(file);
+                            Messenger.Send(new SubtitleAddedNotificationMessage(file));
+                        }
+                        else
+                        {
+                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        }
+
+                        return;
+                    }
+                }
+
+                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                {
+                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    if (uri.IsFile)
+                    {
+                        Messenger.Send(new PlayMediaMessage(uri));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
+            }
+        }
+
+        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
+            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+        }
+
+        public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if (_manipulationLock == ManipulationLock.None) return;
+            Messenger.Send(new OverrideControlsHideDelayMessage(100));
+            Messenger.Send(new UpdateStatusMessage(null));
+            Messenger.Send(new TimeChangeOverrideMessage(false));
+        }
+
+        public void VideoView_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            const double horizontalChangePerPixel = 200;
+            double horizontalChange = e.Delta.Translation.X;
+            double verticalChange = e.Delta.Translation.Y;
+            double horizontalCumulative = e.Cumulative.Translation.X;
+            double verticalCumulative = e.Cumulative.Translation.Y;
+
+            if (_mediaPlayer != null && _manipulationLock == ManipulationLock.None)
+                _timeBeforeManipulation = _mediaPlayer.Position;
+
+            if ((_manipulationLock == ManipulationLock.Vertical ||
+                _manipulationLock == ManipulationLock.None && Math.Abs(verticalCumulative) >= 50) &&
+                _playerVolumeGesture)
+            {
+                _manipulationLock = ManipulationLock.Vertical;
+                int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-verticalChange, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume, true));
+                return;
+            }
+
+            if ((_manipulationLock == ManipulationLock.Horizontal ||
+                 _manipulationLock == ManipulationLock.None && Math.Abs(horizontalCumulative) >= 50) &&
+                (_mediaPlayer?.CanSeek ?? false) &&
+                _playerSeekGesture)
+            {
+                _manipulationLock = ManipulationLock.Horizontal;
+                Messenger.Send(new TimeChangeOverrideMessage(true));
+                TimeSpan timeChange = TimeSpan.FromMilliseconds(horizontalChange * horizontalChangePerPixel);
+                TimeSpan newTime = Messenger.Send(new ChangeTimeRequestMessage(timeChange, true)).Response.NewPosition;
+
+                string changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
+                if (changeText[0] != '-') changeText = '+' + changeText;
+                string status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
+                Messenger.Send(new UpdateStatusMessage(status, true));
+            }
+        }
+
+        public void VideoView_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            _manipulationLock = ManipulationLock.None;
         }
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
@@ -234,6 +347,12 @@ namespace Screenbox.Core.ViewModels
 
                 _mediaPlayer.NormalizedSourceRect = new Rect(leftOffset, topOffset, width, height);
             }
+        }
+
+        private void LoadSettings()
+        {
+            _playerSeekGesture = _settingsService.PlayerSeekGesture;
+            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)

@@ -79,26 +79,48 @@
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="Left" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
+            <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Left" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator
                 Key="Left"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
                 Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Left"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="Right" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
+            <KeyboardAccelerator Key="Right" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator
                 Key="Right"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
                 Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Right"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="Up" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-            <KeyboardAccelerator Key="Down" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
+            <KeyboardAccelerator Key="Up" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Down" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.PeriodKey}"
+                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.CommaKey}"
+                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
         </Grid.KeyboardAccelerators>
 
         <Border

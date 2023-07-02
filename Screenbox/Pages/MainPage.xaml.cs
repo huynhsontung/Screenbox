@@ -30,8 +30,6 @@ namespace Screenbox.Pages
 
         private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
-        private PlayerInteractionViewModel InteractionViewModel { get; }
-
         private readonly Dictionary<string, Type> _pages;
 
         public MainPage()
@@ -54,7 +52,6 @@ namespace Screenbox.Pages
             };
 
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
-            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 

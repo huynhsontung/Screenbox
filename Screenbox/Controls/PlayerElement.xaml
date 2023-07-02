@@ -24,13 +24,13 @@
             AllowFocusOnInteraction="False"
             DoubleTapped="VideoViewButton_OnDoubleTapped"
             DragOver="VideoViewButton_OnDragOver"
-            Drop="{x:Bind InteractionViewModel.OnDrop}"
+            Drop="{x:Bind ViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-            ManipulationCompleted="{x:Bind InteractionViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="{x:Bind InteractionViewModel.VideoView_ManipulationDelta}"
+            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind InteractionViewModel.VideoView_ManipulationStarted}"
-            PointerWheelChanged="{x:Bind InteractionViewModel.OnPointerWheelChanged}"
+            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
+            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Tapped="VideoViewButton_OnTapped">
             <Border Background="Transparent" />
         </UserControl>
@@ -45,32 +45,10 @@
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
             SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
             <local:VideoView.KeyboardAccelerators>
-                <KeyboardAccelerator Key="J" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="L" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PeriodKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.CommaKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator
-                    Key="{x:Bind local:PlayerElement.PeriodKey}"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift" />
-                <KeyboardAccelerator
-                    Key="{x:Bind local:PlayerElement.CommaKey}"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift" />
             </local:VideoView.KeyboardAccelerators>
         </local:VideoView>
     </Grid>

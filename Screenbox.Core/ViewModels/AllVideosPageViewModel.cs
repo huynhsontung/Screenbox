@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.System;
+using Screenbox.Core.Helpers;
 
 namespace Screenbox.Core.ViewModels
 {
