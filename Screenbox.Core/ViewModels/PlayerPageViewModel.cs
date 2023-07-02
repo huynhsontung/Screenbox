@@ -299,6 +299,7 @@ namespace Screenbox.Core.ViewModels
 
         private void FocusManagerOnFocusChanged(object sender, FocusManagerGotFocusEventArgs e)
         {
+            if (_visibilityOverride) return;
             if (ControlsHidden)
             {
                 ShowControls();
