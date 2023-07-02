@@ -158,7 +158,8 @@ namespace Screenbox.Core.ViewModels
 
         public void ProcessKeyboardAccelerators(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (_mediaPlayer == null) return;
+            PlayerVisibilityState playerVisibility = Messenger.Send(new PlayerVisibilityRequestMessage());
+            if (_mediaPlayer == null || playerVisibility != PlayerVisibilityState.Visible) return;
             args.Handled = true;
             long seekAmount = 0;
             int volumeChange = 0;

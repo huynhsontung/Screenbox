@@ -99,6 +99,10 @@ namespace Screenbox.Core.ViewModels
 
         public void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
+            PlayerVisibilityState playerVisibility = Messenger.Send(new PlayerVisibilityRequestMessage());
+            if (args.KeyboardAccelerator.Key == VirtualKey.Space &&
+                playerVisibility != PlayerVisibilityState.Visible) return;
+
             // Override default keyboard accelerator to show badge
             args.Handled = true;
             PlayPauseWithBadge();

@@ -151,9 +151,12 @@ namespace Screenbox.Pages
 
         private void OnLayoutVisualStateChanged(object _, VisualStateChangedEventArgs args)
         {
-            if (args.OldState?.Name == "MiniPlayer" || args.OldState?.Name == "Hidden" &&
-                (args.NewState == null || args.NewState.Name == "Normal"))
-                PlayerControls.FocusFirstButton();
+            bool expanding = args.OldState?.Name == nameof(MiniPlayer) || args.OldState?.Name == nameof(Hidden) &&
+                (args.NewState == null || args.NewState.Name == nameof(Normal));
+
+            bool collapsing = args.OldState?.Name == nameof(Normal) && args.NewState?.Name == nameof(MiniPlayer);
+
+            if (expanding || collapsing) PlayerControls.FocusFirstButton();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)

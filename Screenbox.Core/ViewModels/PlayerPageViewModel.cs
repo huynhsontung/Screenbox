@@ -35,7 +35,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool? _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
-        [ObservableProperty] private bool _videoViewFocused;
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isPlayingBadge;
         [ObservableProperty] private bool _isOpening;
@@ -58,16 +57,18 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueueTimer _statusMessageTimer;
         private readonly DispatcherQueueTimer _playPauseBadgeTimer;
         private readonly IWindowService _windowService;
+        private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService)
+        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService)
         {
             _windowService = windowService;
             _resourceService = resourceService;
+            _settingsService = settingsService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _openingTimer = _dispatcherQueue.CreateTimer();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -78,6 +79,7 @@ namespace Screenbox.Core.ViewModels
             _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
 
+            FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
             // Activate the view model's messenger
@@ -175,7 +177,7 @@ namespace Screenbox.Core.ViewModels
             }
             else if (IsPlaying && !_visibilityOverride &&
                      PlayerVisibility == PlayerVisibilityState.Visible &&
-                     !AudioOnlyInternal)
+                     !AudioOnlyInternal && !_settingsService.PlayerTapGesture)
             {
                 HideControls();
                 // Keep hiding even when pointer moved right after
@@ -219,18 +221,6 @@ namespace Screenbox.Core.ViewModels
 
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
-        }
-
-        partial void OnVideoViewFocusedChanged(bool value)
-        {
-            if (value)
-            {
-                DelayHideControls();
-            }
-            else
-            {
-                ShowControls();
-            }
         }
 
         partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
@@ -285,25 +275,36 @@ namespace Screenbox.Core.ViewModels
             _windowService.HideCursor();
         }
 
-        private void DelayHideControls()
+        private void DelayHideControls(int delayInSeconds = 3)
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnlyInternal) return;
             _controlsVisibilityTimer.Debounce(() =>
             {
-                if (IsPlaying && VideoViewFocused && !SeekBarPointerInteracting && !AudioOnlyInternal)
+                if (PlayerVisibility == PlayerVisibilityState.Visible && IsPlaying &&
+                    !SeekBarPointerInteracting && !AudioOnlyInternal)
                 {
                     HideControls();
 
                     // Workaround for PointerMoved is raised when show/hide cursor
                     OverrideControlsDelayHide();
                 }
-            }, TimeSpan.FromSeconds(3));
+            }, TimeSpan.FromSeconds(delayInSeconds));
         }
 
         private void OverrideControlsDelayHide(int delay = 400)
         {
             _visibilityOverride = true;
             Task.Delay(delay).ContinueWith(_ => _visibilityOverride = false);
+        }
+
+        private void FocusManagerOnFocusChanged(object sender, FocusManagerGotFocusEventArgs e)
+        {
+            if (ControlsHidden)
+            {
+                ShowControls();
+            }
+
+            DelayHideControls(4);
         }
 
         private async void ProcessOpeningMedia(MediaViewModel? current)

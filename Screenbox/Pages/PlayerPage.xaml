@@ -79,42 +79,26 @@
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Left" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
             <KeyboardAccelerator
                 Key="Left"
                 Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                ScopeOwner="{x:Bind}" />
+                Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Left"
                 Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                Modifiers="Control"
-                ScopeOwner="{x:Bind}" />
-            <KeyboardAccelerator
-                Key="Left"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                Modifiers="Shift"
-                ScopeOwner="{x:Bind}" />
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="Right" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
             <KeyboardAccelerator
                 Key="Right"
                 Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                ScopeOwner="{x:Bind}" />
+                Modifiers="Control" />
             <KeyboardAccelerator
                 Key="Right"
                 Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                Modifiers="Control"
-                ScopeOwner="{x:Bind}" />
-            <KeyboardAccelerator
-                Key="Right"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                Modifiers="Shift"
-                ScopeOwner="{x:Bind}" />
-            <KeyboardAccelerator
-                Key="Up"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                ScopeOwner="{x:Bind}" />
-            <KeyboardAccelerator
-                Key="Down"
-                Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                ScopeOwner="{x:Bind}" />
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="Up" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
+            <KeyboardAccelerator Key="Down" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
         </Grid.KeyboardAccelerators>
 
         <Border
@@ -297,18 +281,6 @@
             Click="{x:Bind ViewModel.OnPlayerClick}"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="GotFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="True" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="LostFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="False" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="DoubleTapped">
                     <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
                 </core:EventTriggerBehavior>
