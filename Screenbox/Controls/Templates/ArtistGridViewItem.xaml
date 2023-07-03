@@ -41,8 +41,8 @@
 
             <TextBlock
                 Grid.Row="1"
-                Padding="4,0"
                 Margin="0,4,0,0"
+                Padding="4,0"
                 HorizontalAlignment="Center"
                 MaxLines="2"
                 Style="{StaticResource BodyStrongTextBlockStyle}"
