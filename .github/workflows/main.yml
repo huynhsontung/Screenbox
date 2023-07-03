@@ -13,8 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  xaml-lint:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.x'
+    
+    - name: Restore dotnet tools
+      run: dotnet tool restore
+
+    - name: Lint XAML files
+      run: .\scripts\lint-xaml.ps1
+  
   build:
-    runs-on: windows-latest  
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
