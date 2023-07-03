@@ -106,10 +106,11 @@
             <muxc:NavigationView.Resources>
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+                <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
             </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
-                    Margin="-4,0,16,0"
+                    Margin="0,0,16,0"
                     MaxLines="2"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
                     Text="{x:Bind strings:Resources.Music}" />
@@ -132,7 +133,7 @@
                 <Button
                     x:Name="HeaderAddFolderButton"
                     Grid.Column="1"
-                    Margin="0,0,56,0"
+                    Margin="{StaticResource ContentPageRightMargin}"
                     VerticalAlignment="Top"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
