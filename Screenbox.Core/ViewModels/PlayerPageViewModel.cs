@@ -381,6 +381,14 @@ namespace Screenbox.Core.ViewModels
             if (value)
             {
                 _windowService.HideCursor();
+
+                // Hide ToolTip when controls are hidden
+                if (FocusManager.GetFocusedElement() is Control control &&
+                    ToolTipService.GetToolTip(control) is string tooltip)
+                {
+                    ToolTipService.SetToolTip(control, null);
+                    ToolTipService.SetToolTip(control, tooltip);
+                }
             }
             else
             {
