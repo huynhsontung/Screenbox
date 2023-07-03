@@ -146,6 +146,9 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(UpdateStatusMessage message)
         {
+            // Don't show status message when player is not visible
+            if (PlayerVisibility != PlayerVisibilityState.Visible && !string.IsNullOrEmpty(message.Value)) return;
+
             _dispatcherQueue.TryEnqueue(() =>
             {
                 StatusMessage = message.Value;
