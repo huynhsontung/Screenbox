@@ -58,7 +58,7 @@ namespace Screenbox.Core.ViewModels
             message.Reply(NavigationViewDisplayMode);
         }
 
-        public void ProcessGamepadKeyDown(object sender, KeyRoutedEventArgs args)
+        public void ProcessGamepadKeyDown(KeyRoutedEventArgs args)
         {
             // All Gamepad keys are in the range of [195, 218]
             if ((int)args.Key < 195 || (int)args.Key > 218) return;
@@ -90,7 +90,7 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.GamepadX:
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
-                case VirtualKey.GamepadView:
+                case VirtualKey.GamepadY when !PlayerVisible:
                     Messenger.Send(new TogglePlayerVisibilityMessage());
                     break;
                 default:

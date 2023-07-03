@@ -1,11 +1,11 @@
 ﻿#nullable enable
 
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Animations;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
@@ -91,6 +91,14 @@ namespace Screenbox.Controls
             // Don't set implicit animations on _paneContentGrid because of conflict with base NavView
             // _paneContentGrid?.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
             // _paneContentGrid?.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
+        }
+
+        protected override void OnKeyDown(KeyRoutedEventArgs e)
+        {
+            if (ContentVisibility == Visibility.Visible)
+            {
+                base.OnKeyDown(e);
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

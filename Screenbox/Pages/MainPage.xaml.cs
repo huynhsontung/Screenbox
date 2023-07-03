@@ -14,6 +14,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
@@ -65,6 +66,12 @@ namespace Screenbox.Pages
 
             // NavView remembers if the pane was open last time
             ViewModel.IsPaneOpen = NavView.IsPaneOpen;
+        }
+
+        protected override void OnKeyDown(KeyRoutedEventArgs e)
+        {
+            base.OnKeyDown(e);
+            ViewModel.ProcessGamepadKeyDown(e);
         }
 
         public void GoBack()
