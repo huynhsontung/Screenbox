@@ -1,5 +1,24 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
+using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
+using System;
+using System.Threading.Tasks;
+using Windows.Media;
+using Windows.Media.Playback;
+using Windows.System;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
