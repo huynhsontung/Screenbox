@@ -194,10 +194,7 @@ namespace Screenbox.Core.ViewModels
         public void OnPointerMoved()
         {
             if (_visibilityOverride) return;
-            if (ControlsHidden)
-            {
-                ControlsHidden = false;
-            }
+            ControlsHidden = false;
 
             if (SeekBarPointerInteracting) return;
             DelayHideControls();
@@ -403,6 +400,7 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
         {
+            if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
             Messenger.Send(new PlayerVisibilityChangedMessage(value));
         }
 
@@ -479,11 +477,7 @@ namespace Screenbox.Core.ViewModels
         private void FocusManagerOnFocusChanged(object sender, FocusManagerGotFocusEventArgs e)
         {
             if (_visibilityOverride) return;
-            if (ControlsHidden)
-            {
-                ControlsHidden = false;
-            }
-
+            ControlsHidden = false;
             DelayHideControls(4);
         }
 
@@ -521,7 +515,7 @@ namespace Screenbox.Core.ViewModels
                 IsPlaying = state == MediaPlaybackState.Playing;
                 IsOpening = false;
 
-                if (ControlsHidden && !IsPlaying)
+                if (!IsPlaying)
                 {
                     ControlsHidden = false;
                 }
