@@ -72,6 +72,29 @@ namespace Screenbox.Pages
             }
         }
 
+        protected override void OnKeyDown(KeyRoutedEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
+            switch (e.Key)
+            {
+                case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
+                    PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
+                    break;
+                case VirtualKey.GamepadMenu:
+                    VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Auto });
+                    break;
+                case VirtualKey.Escape when ViewModel.ControlsHidden:
+                case VirtualKey.GamepadB when ViewModel.ControlsHidden:
+                    ViewModel.ControlsHidden = false;
+                    break;
+                default:
+                    return;
+            }
+
+            e.Handled = true;
+        }
+
         private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
             visibility != PlayerVisibilityState.Visible;
 
@@ -327,29 +350,6 @@ namespace Screenbox.Pages
         {
             // Set in code due to XAML compiler not setting it in Release
             BackgroundAcrylicBrush.TintLuminosityOpacity = theme == ElementTheme.Light ? 0.5 : 0.4;
-        }
-
-        private void OnGamepadKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            // All Gamepad keys are in the range of [195, 218]
-            if ((int)e.Key < 195 || (int)e.Key > 218) return;
-            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
-            switch (e.Key)
-            {
-                case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
-                    PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
-                    break;
-                case VirtualKey.GamepadMenu:
-                    VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Auto });
-                    break;
-                case VirtualKey.GamepadB when ViewModel.ControlsHidden:
-                    ViewModel.ControlsHidden = false;
-                    break;
-                default:
-                    return;
-            }
-
-            e.Handled = true;
         }
 
         private void PlayQueueButton_OnDragEnter(object sender, DragEventArgs e)
