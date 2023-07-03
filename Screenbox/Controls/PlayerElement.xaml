@@ -14,23 +14,26 @@
         BorderBrush="{x:Bind BorderBrush, Mode=OneWay}"
         BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
         CornerRadius="{x:Bind CornerRadius, Mode=OneWay}">
-        <Button
+        <!--  Fake button for interaction. Can "Click" but cannot receive focus  -->
+        <UserControl
             x:Name="VideoViewButton"
             Margin="{x:Bind ButtonMargin, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowDrop="True"
-            Click="{x:Bind InteractionViewModel.OnClick}"
+            AllowFocusOnInteraction="False"
+            DoubleTapped="VideoViewButton_OnDoubleTapped"
             DragOver="VideoViewButton_OnDragOver"
-            Drop="{x:Bind InteractionViewModel.OnDrop}"
+            Drop="{x:Bind ViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
-            ManipulationCompleted="{x:Bind InteractionViewModel.VideoView_ManipulationCompleted}"
-            ManipulationDelta="{x:Bind InteractionViewModel.VideoView_ManipulationDelta}"
+            ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
+            ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
             ManipulationMode="TranslateX,TranslateY"
-            ManipulationStarted="{x:Bind InteractionViewModel.VideoView_ManipulationStarted}"
-            Opacity="0"
-            PointerWheelChanged="{x:Bind InteractionViewModel.OnPointerWheelChanged}"
-            Style="{x:Null}" />
+            ManipulationStarted="{x:Bind ViewModel.VideoView_ManipulationStarted}"
+            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+            Tapped="VideoViewButton_OnTapped">
+            <Border Background="Transparent" />
+        </UserControl>
 
         <local:VideoView
             x:Name="VlcVideoView"
@@ -42,74 +45,10 @@
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
             SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
             <local:VideoView.KeyboardAccelerators>
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Control"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Left"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Control"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Right"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Up"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Down"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator
-                    Key="Space"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    ScopeOwner="{x:Bind VideoViewButton}" />
-                <KeyboardAccelerator Key="P" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="K" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="J" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="L" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
                 <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
                 <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.PeriodKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator Key="{x:Bind local:PlayerElement.CommaKey}" Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}" />
-                <KeyboardAccelerator
-                    Key="{x:Bind local:PlayerElement.PeriodKey}"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift" />
-                <KeyboardAccelerator
-                    Key="{x:Bind local:PlayerElement.CommaKey}"
-                    Invoked="{x:Bind InteractionViewModel.ProcessKeyboardAccelerators}"
-                    Modifiers="Shift" />
             </local:VideoView.KeyboardAccelerators>
         </local:VideoView>
     </Grid>

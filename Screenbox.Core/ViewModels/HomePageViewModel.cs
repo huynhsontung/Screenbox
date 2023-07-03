@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Screenbox.Core.Helpers;
 
 namespace Screenbox.Core.ViewModels
 {

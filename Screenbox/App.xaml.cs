@@ -54,7 +54,6 @@ namespace Screenbox
 
             // View models
             services.AddTransient<PlayerElementViewModel>();
-            services.AddTransient<PlayerInteractionViewModel>();
             services.AddTransient<PropertyViewModel>();
             services.AddTransient<ChapterViewModel>();
             services.AddTransient<AudioTrackSubtitleViewModel>();

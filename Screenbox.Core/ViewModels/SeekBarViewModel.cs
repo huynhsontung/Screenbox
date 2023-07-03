@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,8 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _seekTimer;
+        private readonly DispatcherQueueTimer _originalPositionTimer;
+        private TimeSpan _originalPosition;
         private bool _timeChangeOverride;
         private bool _debounceOverride;
 
@@ -48,6 +51,7 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
             _seekTimer = _dispatcherQueue.CreateTimer();
+            _originalPositionTimer = _dispatcherQueue.CreateTimer();
             _shouldShowPreview = true;
 
             // Activate the view model's messenger
@@ -120,12 +124,16 @@ namespace Screenbox.Core.ViewModels
             if (!message.Debounce)
                 _debounceOverride = true;
 
+            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
+            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
+
             // Assume UI thread
             Time = message.IsOffset
                 ? Math.Clamp(Time + message.Value.TotalMilliseconds, 0, Length)
                 : message.Value.TotalMilliseconds;
 
-            message.Reply(TimeSpan.FromMilliseconds(Time));
+            message.Reply(new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
+                _originalPosition, TimeSpan.FromMilliseconds(Length)));
         }
 
         public void OnSeekBarPointerEvent(bool pressed)

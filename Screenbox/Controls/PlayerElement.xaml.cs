@@ -4,9 +4,9 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -30,18 +30,10 @@ namespace Screenbox.Controls
 
         internal PlayerElementViewModel ViewModel => (PlayerElementViewModel)DataContext;
 
-        internal PlayerInteractionViewModel InteractionViewModel { get; }
-
-        private const VirtualKey PeriodKey = (VirtualKey)190;
-        private const VirtualKey CommaKey = (VirtualKey)188;
-
         public PlayerElement()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
-            InteractionViewModel = Ioc.Default.GetRequiredService<PlayerInteractionViewModel>();
-            VideoViewButton.Click += (sender, args) => Click?.Invoke(sender, args);
-            VideoViewButton.Drop += (_, _) => VideoViewButton.Focus(FocusState.Programmatic);
         }
 
         private void VideoViewButton_OnDragOver(object sender, DragEventArgs e)
@@ -53,6 +45,20 @@ namespace Screenbox.Controls
         private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)
         {
             ViewModel.Initialize(e.SwapChainOptions);
+        }
+
+        private void VideoViewButton_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!IsEnabled) return;
+            ViewModel.OnClick();
+            Click?.Invoke(sender, e);
+        }
+
+        private void VideoViewButton_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (!IsEnabled) return;
+            ViewModel.OnClick();
+            Click?.Invoke(sender, e);
         }
     }
 }

@@ -79,6 +79,49 @@
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Left" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="Left"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
+            <KeyboardAccelerator
+                Key="Left"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="Right" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="Right"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
+            <KeyboardAccelerator
+                Key="Right"
+                Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="Up" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Down" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.PeriodKey}"
+                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.CommaKey}"
+                Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
+                Modifiers="Shift" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad3" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad4" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad5" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad6" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <!-- <KeyboardAccelerator Key="Escape" Invoked="{x:Bind ViewModel.OnManualHideControlsKeyboardAcceleratorInvoked}" /> -->
         </Grid.KeyboardAccelerators>
 
         <Border
@@ -259,20 +302,9 @@
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
             Click="{x:Bind ViewModel.OnPlayerClick}"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}">
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
+            ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="GotFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="True" />
-                </core:EventTriggerBehavior>
-                <core:EventTriggerBehavior EventName="LostFocus">
-                    <core:ChangePropertyAction
-                        PropertyName="VideoViewFocused"
-                        TargetObject="{x:Bind ViewModel}"
-                        Value="False" />
-                </core:EventTriggerBehavior>
                 <core:EventTriggerBehavior EventName="DoubleTapped">
                     <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
                 </core:EventTriggerBehavior>
@@ -426,7 +458,7 @@
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
             Grid.Column="0"
-            Tapped="{x:Bind FocusVideoView}">
+            Tapped="PlayerControlsBackground_OnTapped">
             <Border.Background>
                 <LinearGradientBrush x:Name="ControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                     <GradientStop Offset="0" Color="#00000000" />

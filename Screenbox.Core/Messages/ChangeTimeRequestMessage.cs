@@ -1,9 +1,10 @@
-﻿using System;
-using CommunityToolkit.Mvvm.Messaging.Messages;
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Models;
+using System;
 
 namespace Screenbox.Core.Messages
 {
-    public sealed class ChangeTimeRequestMessage : RequestMessage<TimeSpan>
+    public sealed class ChangeTimeRequestMessage : RequestMessage<PositionChangedResult>
     {
         public bool Debounce { get; }
 

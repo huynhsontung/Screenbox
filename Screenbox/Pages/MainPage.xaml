@@ -14,7 +14,7 @@
     xmlns:services="using:Screenbox.Core.Services"
     xmlns:strings="using:Screenbox.Strings"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
-    KeyDown="{x:Bind InteractionViewModel.ProcessGamepadKeyDown}"
+    KeyDown="{x:Bind ViewModel.ProcessGamepadKeyDown}"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
 
