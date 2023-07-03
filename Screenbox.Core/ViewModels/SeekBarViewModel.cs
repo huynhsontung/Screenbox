@@ -19,6 +19,7 @@ namespace Screenbox.Core.ViewModels
         ObservableRecipient,
         IRecipient<TimeChangeOverrideMessage>,
         IRecipient<ChangeTimeRequestMessage>,
+        IRecipient<PlayerControlsVisibilityChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private double _length;
@@ -55,6 +56,14 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PlayerControlsVisibilityChangedMessage message)
+        {
+            if (!message.Value && ShouldShowPreview)
+            {
+                ShouldShowPreview = false;
+            }
         }
 
         public void Receive(MediaPlayerChangedMessage message)
