@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -178,16 +179,12 @@ namespace Screenbox.Core.ViewModels
         {
             if (ControlsHidden)
             {
-                ShowControls();
+                ControlsHidden = false;
                 DelayHideControls();
             }
-            else if (IsPlaying && !_visibilityOverride &&
-                     PlayerVisibility == PlayerVisibilityState.Visible &&
-                     !AudioOnlyInternal && !_settingsService.PlayerTapGesture)
+            else if (!_settingsService.PlayerTapGesture)
             {
-                HideControls();
-                // Keep hiding even when pointer moved right after
-                OverrideControlsDelayHide();
+                TryHideControls();
             }
         }
 
@@ -196,7 +193,7 @@ namespace Screenbox.Core.ViewModels
             if (_visibilityOverride) return;
             if (ControlsHidden)
             {
-                ShowControls();
+                ControlsHidden = false;
             }
 
             if (SeekBarPointerInteracting) return;
@@ -338,6 +335,16 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        public void OnManualHideControlsKeyboardAcceleratorInvoked(KeyboardAccelerator sender,
+            KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (_windowService.ViewMode != WindowViewMode.Default) return;
+            if (TryHideControls())
+            {
+                args.Handled = true;
+            }
+        }
+
         private void TogglePlaybackRate(bool speedUp)
         {
             if (_mediaPlayer == null) return;
@@ -371,6 +378,15 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnControlsHiddenChanged(bool value)
         {
+            if (value)
+            {
+                _windowService.HideCursor();
+            }
+            else
+            {
+                _windowService.ShowCursor();
+            }
+
             Messenger.Send(new PlayerControlsVisibilityChangedMessage(!value));
         }
 
@@ -414,32 +430,33 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
         }
 
-        private void ShowControls()
+        private bool TryHideControls()
         {
-            _windowService.ShowCursor();
-            ControlsHidden = false;
-        }
+            if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
+                SeekBarPointerInteracting || AudioOnlyInternal) return false;
 
-        private void HideControls()
-        {
+            Control? focused = FocusManager.GetFocusedElement() as Control;
+            // Don't hide controls when a Slider is in focus since user can interact with Slider
+            // using arrow keys without affecting focus.
+            if (focused is Slider) return false;
+
+            // Don't hide controls when a flyout is in focus
+            // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
+            Control? root = focused?.FindAscendant<Control>(control => control == Window.Current.Content);
+            if (root == null) return false;
+
             ControlsHidden = true;
-            _windowService.HideCursor();
+
+            // Workaround for PointerMoved is raised when show/hide cursor
+            OverrideControlsDelayHide();
+
+            return true;
         }
 
         private void DelayHideControls(int delayInSeconds = 3)
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnlyInternal) return;
-            _controlsVisibilityTimer.Debounce(() =>
-            {
-                if (PlayerVisibility == PlayerVisibilityState.Visible && IsPlaying &&
-                    !SeekBarPointerInteracting && !AudioOnlyInternal)
-                {
-                    HideControls();
-
-                    // Workaround for PointerMoved is raised when show/hide cursor
-                    OverrideControlsDelayHide();
-                }
-            }, TimeSpan.FromSeconds(delayInSeconds));
+            _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));
         }
 
         private void OverrideControlsDelayHide(int delay = 400)
@@ -453,7 +470,7 @@ namespace Screenbox.Core.ViewModels
             if (_visibilityOverride) return;
             if (ControlsHidden)
             {
-                ShowControls();
+                ControlsHidden = false;
             }
 
             DelayHideControls(4);
@@ -495,7 +512,7 @@ namespace Screenbox.Core.ViewModels
 
                 if (ControlsHidden && !IsPlaying)
                 {
-                    ShowControls();
+                    ControlsHidden = false;
                 }
 
                 if (!ControlsHidden && IsPlaying)
