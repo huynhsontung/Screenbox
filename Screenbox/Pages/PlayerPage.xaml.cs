@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -330,13 +331,25 @@ namespace Screenbox.Pages
 
         private void OnGamepadKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == VirtualKey.GamepadY &&
-                ViewModel.PlayerVisibility == PlayerVisibilityState.Visible &&
-                ViewModel.ViewMode != WindowViewMode.Compact)
+            // All Gamepad keys are in the range of [195, 218]
+            if ((int)e.Key < 195 || (int)e.Key > 218) return;
+            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
+            switch (e.Key)
             {
-                e.Handled = true;
-                PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
+                case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
+                    PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
+                    break;
+                case VirtualKey.GamepadMenu:
+                    VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Auto });
+                    break;
+                case VirtualKey.GamepadB when ViewModel.ControlsHidden:
+                    ViewModel.ControlsHidden = false;
+                    break;
+                default:
+                    return;
             }
+
+            e.Handled = true;
         }
 
         private void PlayQueueButton_OnDragEnter(object sender, DragEventArgs e)
@@ -354,6 +367,14 @@ namespace Screenbox.Pages
         {
             PlayerControls.FocusFirstButton(FocusState.Pointer);
             e.Handled = true;
+        }
+
+        private async void VideoView_OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            // Reset focus after manipulation
+            // Must be queued in Dispatcher or risk losing focus right after
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low,
+                () => PlayerControls.FocusFirstButton(FocusState.Programmatic));
         }
     }
 }
