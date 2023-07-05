@@ -187,7 +187,7 @@ namespace Screenbox.Core.ViewModels
             }
             else if (!_settingsService.PlayerTapGesture)
             {
-                TryHideControls();
+                TryHideControls(true);
             }
         }
 
@@ -345,6 +345,11 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        public void RevealControls()
+        {
+            ControlsHidden = false;
+        }
+
         private void TogglePlaybackRate(bool speedUp)
         {
             if (_mediaPlayer == null) return;
@@ -381,14 +386,6 @@ namespace Screenbox.Core.ViewModels
             if (value)
             {
                 _windowService.HideCursor();
-
-                // Hide ToolTip when controls are hidden
-                if (FocusManager.GetFocusedElement() is Control control &&
-                    ToolTipService.GetToolTip(control) is string tooltip)
-                {
-                    ToolTipService.SetToolTip(control, null);
-                    ToolTipService.SetToolTip(control, tooltip);
-                }
             }
             else
             {
@@ -439,20 +436,23 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer.Debounce(() => ShowPlayPauseBadge = false, TimeSpan.FromMilliseconds(100));
         }
 
-        private bool TryHideControls()
+        public bool TryHideControls(bool skipFocusCheck = false)
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
                 SeekBarPointerInteracting || AudioOnlyInternal) return false;
 
-            Control? focused = FocusManager.GetFocusedElement() as Control;
-            // Don't hide controls when a Slider is in focus since user can interact with Slider
-            // using arrow keys without affecting focus.
-            if (focused is Slider) return false;
+            if (!skipFocusCheck)
+            {
+                Control? focused = FocusManager.GetFocusedElement() as Control;
+                // Don't hide controls when a Slider is in focus since user can interact with Slider
+                // using arrow keys without affecting focus.
+                if (focused is Slider { IsFocusEngaged: true }) return false;
 
-            // Don't hide controls when a flyout is in focus
-            // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
-            Control? root = focused?.FindAscendant<Control>(control => control == Window.Current.Content);
-            if (root == null) return false;
+                // Don't hide controls when a flyout is in focus
+                // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
+                Control? root = focused?.FindAscendant<Control>(control => control == Window.Current.Content);
+                if (root == null) return false;
+            }
 
             ControlsHidden = true;
 
