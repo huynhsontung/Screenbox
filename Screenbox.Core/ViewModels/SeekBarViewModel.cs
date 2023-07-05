@@ -52,6 +52,7 @@ namespace Screenbox.Core.ViewModels
             _bufferingTimer = _dispatcherQueue.CreateTimer();
             _seekTimer = _dispatcherQueue.CreateTimer();
             _originalPositionTimer = _dispatcherQueue.CreateTimer();
+            _originalPositionTimer.IsRepeating = false;
             _shouldShowPreview = true;
 
             // Activate the view model's messenger
