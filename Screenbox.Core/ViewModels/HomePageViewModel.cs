@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
@@ -13,7 +14,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Screenbox.Core.Helpers;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -144,9 +144,18 @@ namespace Screenbox.Core.ViewModels
                 {
                     Recent.Add(new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
                 }
-                else if (!file.IsEqual(Recent[i].Media.Source as IStorageItem))
+                else if (Recent[i].Media.Source is IStorageItem existing)
                 {
-                    MoveOrInsert(file, token, i);
+                    try
+                    {
+                        if (!file.IsEqual(existing)) MoveOrInsert(file, token, i);
+                    }
+                    catch (Exception)
+                    {
+                        // StorageFile.IsEqual() throws an exception
+                        // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
+                        // pass
+                    }
                 }
             }
 
