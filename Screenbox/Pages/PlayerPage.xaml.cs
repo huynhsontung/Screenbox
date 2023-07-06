@@ -84,9 +84,9 @@ namespace Screenbox.Pages
                 case VirtualKey.GamepadMenu:
                     VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Auto });
                     break;
-                case VirtualKey.Escape when ViewModel.ControlsHidden:
-                case VirtualKey.GamepadB when ViewModel.ControlsHidden:
-                    ViewModel.ControlsHidden = false;
+                case VirtualKey.Escape when ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default }:
+                case VirtualKey.GamepadB when ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default }:
+                    ViewModel.TryHideControls();
                     break;
                 default:
                     return;
@@ -188,6 +188,11 @@ namespace Screenbox.Pages
             {
                 case nameof(PlayerPageViewModel.ControlsHidden):
                     VisualStateManager.GoToState(this, ViewModel.ControlsHidden ? "ControlsHidden" : "ControlsVisible", true);
+                    if (!ViewModel.ControlsHidden)
+                    {
+                        PlayerControls.FocusFirstButton();
+                    }
+
                     break;
                 case nameof(PlayerPageViewModel.ViewMode):
                     switch (ViewModel.ViewMode)
@@ -375,6 +380,14 @@ namespace Screenbox.Pages
             // Must be queued in Dispatcher or risk losing focus right after
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low,
                 () => PlayerControls.FocusFirstButton(FocusState.Programmatic));
+        }
+
+        private void ControlsVisibilityStates_OnCurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            if (e.NewState.Name == nameof(ControlsHidden))
+            {
+                HiddenButton.Focus(FocusState.Programmatic);
+            }
         }
     }
 }

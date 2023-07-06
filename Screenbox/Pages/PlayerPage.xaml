@@ -310,6 +310,15 @@
             </interactivity:Interaction.Behaviors>
         </controls:PlayerElement>
 
+        <Button
+            x:Name="HiddenButton"
+            Grid.Row="0"
+            Grid.Column="0"
+            Click="{x:Bind ViewModel.RevealControls}"
+            Opacity="0"
+            Style="{x:Null}"
+            Visibility="Collapsed" />
+
         <controls1:ConstrainedBox
             x:Name="AlbumArtPanel"
             Grid.Row="1"
@@ -474,7 +483,7 @@
             IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="ControlsVisibilityStates">
+            <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">
                 <VisualStateGroup.Transitions>
                     <VisualTransition GeneratedDuration="0:0:0.167" From="ControlsHidden">
                         <VisualTransition.GeneratedEasingFunction>
@@ -494,6 +503,7 @@
                         <Setter Target="TitleBarArea.Opacity" Value="0" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
+                        <Setter Target="HiddenButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
