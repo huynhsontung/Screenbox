@@ -37,13 +37,14 @@
             Foreground="Orange"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <Slider
+        <local:CustomSlider
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             Background="{x:Bind Background, Mode=OneWay}"
             Foreground="{x:Bind Foreground, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
+            IsKeyDownEnabled="{x:Bind ViewModel.ShouldHandleKeyDown, Mode=OneWay}"
             LargeChange="10000"
             Loaded="SeekBarSlider_OnLoaded"
             Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
@@ -51,6 +52,7 @@
             PointerExited="SeekBarSlider_OnPointerExited"
             SizeChanged="SeekBarSlider_OnSizeChanged"
             SmallChange="1000"
+            Style="{StaticResource DefaultSliderStyle}"
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
             Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"

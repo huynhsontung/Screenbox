@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -20,6 +21,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<TimeChangeOverrideMessage>,
         IRecipient<ChangeTimeRequestMessage>,
         IRecipient<PlayerControlsVisibilityChangedMessage>,
+        IRecipient<PlayerVisibilityChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private double _length;
@@ -35,6 +37,8 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private double _previewTime;
 
         [ObservableProperty] private bool _shouldShowPreview;
+
+        [ObservableProperty] private bool _shouldHandleKeyDown;
 
         private IMediaPlayer? _mediaPlayer;
 
@@ -54,9 +58,15 @@ namespace Screenbox.Core.ViewModels
             _originalPositionTimer = _dispatcherQueue.CreateTimer();
             _originalPositionTimer.IsRepeating = false;
             _shouldShowPreview = true;
+            _shouldHandleKeyDown = true;
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PlayerVisibilityChangedMessage message)
+        {
+            ShouldHandleKeyDown = message.Value != PlayerVisibilityState.Visible;
         }
 
         public void Receive(PlayerControlsVisibilityChangedMessage message)
