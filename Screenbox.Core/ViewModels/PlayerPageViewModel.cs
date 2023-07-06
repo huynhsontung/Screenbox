@@ -439,7 +439,7 @@ namespace Screenbox.Core.ViewModels
         public bool TryHideControls(bool skipFocusCheck = false)
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
-                SeekBarPointerInteracting || AudioOnlyInternal) return false;
+                SeekBarPointerInteracting || AudioOnlyInternal || ControlsHidden) return false;
 
             if (!skipFocusCheck)
             {

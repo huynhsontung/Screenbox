@@ -76,8 +76,8 @@ namespace Screenbox.Pages
         {
             base.OnKeyDown(e);
             if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
-            bool shouldHideControls = ViewModel is
-            { ControlsHidden: false, IsPlaying: true, ViewMode: WindowViewMode.Default };
+            bool handled = true;
+            bool shouldHideControls = ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default };
             switch (e.Key)
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
@@ -90,13 +90,13 @@ namespace Screenbox.Pages
                     break;
                 case VirtualKey.Escape when shouldHideControls:
                 case VirtualKey.GamepadB when shouldHideControls:
-                    ViewModel.TryHideControls();
+                    handled = ViewModel.TryHideControls();
                     break;
                 default:
                     return;
             }
 
-            e.Handled = true;
+            e.Handled = handled;
         }
 
         private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
