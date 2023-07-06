@@ -76,16 +76,20 @@ namespace Screenbox.Pages
         {
             base.OnKeyDown(e);
             if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
+            bool shouldHideControls = ViewModel is
+            { ControlsHidden: false, IsPlaying: true, ViewMode: WindowViewMode.Default };
             switch (e.Key)
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
-                    PlayQueueFlyout.ShowAt(TitleBarArea, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
+                    PlayQueueFlyout.ShowAt(TitleBarArea,
+                        new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
                     break;
                 case VirtualKey.GamepadMenu:
-                    VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions() { Placement = FlyoutPlacementMode.Auto });
+                    VideoView.ContextFlyout.ShowAt(VideoView,
+                        new FlyoutShowOptions { Placement = FlyoutPlacementMode.Auto });
                     break;
-                case VirtualKey.Escape when ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default }:
-                case VirtualKey.GamepadB when ViewModel is { ControlsHidden: false, ViewMode: WindowViewMode.Default }:
+                case VirtualKey.Escape when shouldHideControls:
+                case VirtualKey.GamepadB when shouldHideControls:
                     ViewModel.TryHideControls();
                     break;
                 default:
