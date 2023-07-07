@@ -393,5 +393,13 @@ namespace Screenbox.Pages
                 HiddenButton.Focus(FocusState.Programmatic);
             }
         }
+
+        private void VideoView_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!ViewModel.OnPlayerClick())
+            {
+                PlayerControls.FocusFirstButton();
+            }
+        }
     }
 }

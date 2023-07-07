@@ -178,17 +178,12 @@ namespace Screenbox.Core.ViewModels
             OverrideControlsDelayHide(message.Delay);
         }
 
-        public void OnPlayerClick()
+        public bool OnPlayerClick()
         {
-            if (ControlsHidden)
-            {
-                ControlsHidden = false;
-                DelayHideControls();
-            }
-            else if (!_settingsService.PlayerTapGesture)
-            {
-                TryHideControls(true);
-            }
+            if (!ControlsHidden) return !_settingsService.PlayerTapGesture && TryHideControls(true);
+            ControlsHidden = false;
+            DelayHideControls();
+            return true;
         }
 
         public void OnPointerMoved()

@@ -300,7 +300,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
-            Click="{x:Bind ViewModel.OnPlayerClick}"
+            Click="VideoView_OnClick"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
