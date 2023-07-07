@@ -71,9 +71,9 @@ jobs:
     - name: Update package manifest
       run: .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
       
-    - name: Build solution
+    - name: Build store package
       run: |
-        msbuild $((Get-Item *.sln).Name) `
+        msbuild Screenbox.sln `
         -v:d `
         -p:RestoreConfigFile=nuget.config `
         -p:RestoreLockedMode=true `
@@ -82,12 +82,13 @@ jobs:
         -p:AppxBundle=Always `
         -p:AppxBundlePlatforms="$env:BuildPlatforms" `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
-        -p:AppxPackageDir=C:\DeployOutput `
+        -p:AppxPackageDir=$env:PackageDir `
         -p:AppxPackageSigningEnabled=false `
         -restore
       env:
         BuildMode: StoreUpload
         BuildPlatforms: x86|x64|ARM
+        PackageDir: C:\DeployOutput\Packages
     
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v3
@@ -95,8 +96,27 @@ jobs:
       with:
         name: store-upload
         path: |
-          C:\DeployOutput\*.msixupload
-          C:\DeployOutput\*.appxupload
+          C:\DeployOutput\Packages\*.msixupload
+          C:\DeployOutput\Packages\*.appxupload
+
+    # Only allow sideload x64 due to VS packaging issue
+    # See: https://developercommunity.visualstudio.com/t/get-merge-failure-for-shared-merged-pri-file-0x800/107928
+    - name: Build sideload
+      if: github.ref_type == 'tag'
+      run: |
+        msbuild Screenbox.sln `
+        -v:d `
+        -p:Configuration=Release `
+        -p:Platform=x64 `
+        -p:AppxBundle=Always `
+        -p:AppxBundlePlatforms="$env:BuildPlatforms" `
+        -p:UapAppxPackageBuildMode=$env:BuildMode `
+        -p:AppxPackageDir=$env:PackageDir `
+        -p:AppxPackageSigningEnabled=false
+      env:
+        BuildMode: StoreUpload
+        BuildPlatforms: x64
+        PackageDir: C:\DeployOutput
 
     - name: Create sideload artifact
       uses: actions/upload-artifact@v3
@@ -127,7 +147,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         draft: true
-        prerelease: true
         generate_release_notes: true
         files: |
           sideload.zip
