@@ -454,14 +454,6 @@
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-        <controls:NotificationView
-            x:Name="NotificationView"
-            Grid.Row="1"
-            Grid.Column="0"
-            Margin="12,0,12,-12"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom" />
-
         <Border
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
@@ -474,6 +466,14 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
+
+        <controls:NotificationView
+            x:Name="NotificationView"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="12,0,12,-12"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom" />
 
         <controls:PlayerControls
             x:Name="PlayerControls"
