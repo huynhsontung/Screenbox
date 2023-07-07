@@ -81,6 +81,7 @@ namespace Screenbox.Pages
             switch (e.Key)
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
+                    ViewModel.RevealControls();
                     PlayQueueFlyout.ShowAt(TitleBarArea,
                         new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
                     break;
