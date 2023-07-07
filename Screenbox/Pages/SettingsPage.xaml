@@ -121,6 +121,9 @@
                 Padding="{StaticResource ContentPageRightMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
                 Spacing="4">
+                <StackPanel.Transitions>
+                    <EntranceThemeTransition />
+                </StackPanel.Transitions>
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
