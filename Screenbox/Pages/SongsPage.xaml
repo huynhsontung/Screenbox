@@ -74,6 +74,7 @@
                     IsItemClickEnabled="True"
                     ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
+                    Loaded="SongListView_OnLoaded"
                     SelectionMode="None">
                     <ListView.Resources>
                         <XamlUICommand

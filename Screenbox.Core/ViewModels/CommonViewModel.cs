@@ -23,6 +23,8 @@ namespace Screenbox.Core.ViewModels
     {
         public Dictionary<Type, string> NavigationStates { get; }
 
+        public Dictionary<string, double> ScrollingStates { get; }
+
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private Thickness _scrollBarMargin;
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
@@ -42,6 +44,7 @@ namespace Screenbox.Core.ViewModels
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _propertiesDialogFactory = propertiesDialogFactory;
             NavigationStates = new Dictionary<Type, string>();
+            ScrollingStates = new Dictionary<string, double>();
 
             // Activate the view model's messenger
             IsActive = true;

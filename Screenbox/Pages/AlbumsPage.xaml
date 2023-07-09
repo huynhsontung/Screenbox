@@ -49,6 +49,7 @@
                     IsItemClickEnabled="True"
                     ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View}"
+                    Loaded="AlbumGridView_OnLoaded"
                     SelectionMode="None">
                     <GridView.Resources>
                         <ResourceDictionary>
