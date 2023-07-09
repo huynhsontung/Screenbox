@@ -73,14 +73,16 @@ namespace Screenbox.Core.ViewModels
         private void OpenAlbum(AlbumViewModel? album)
         {
             if (album == null) return;
-            _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
+            _navigationService.Navigate(typeof(AlbumDetailsPageViewModel),
+                new NavigationMetadata(typeof(MusicPageViewModel), album));
         }
 
         [RelayCommand]
         private void OpenArtist(ArtistViewModel? artist)
         {
             if (artist == null) return;
-            _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+            _navigationService.Navigate(typeof(ArtistDetailsPageViewModel),
+                new NavigationMetadata(typeof(MusicPageViewModel), artist));
         }
 
         [RelayCommand(CanExecute = nameof(HasMedia))]

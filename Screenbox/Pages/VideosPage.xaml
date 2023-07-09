@@ -166,7 +166,6 @@
                     x:Name="BreadcrumbBar"
                     Grid.Row="0"
                     Margin="0,10,0,12"
-                    ItemClicked="BreadcrumbBar_OnItemClicked"
                     ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                     XYFocusDown="{x:Bind ContentFrame}"

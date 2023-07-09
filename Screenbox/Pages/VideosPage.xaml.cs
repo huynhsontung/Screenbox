@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
@@ -125,11 +124,6 @@ namespace Screenbox.Pages
                 .FirstOrDefault(n => n.Tag.Equals(item.Key));
 
             LibraryNavView.SelectedItem = selectedItem;
-        }
-
-        private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
-        {
-            ViewModel.OnBreadcrumbBarItemClicked(args.Index);
         }
     }
 }

@@ -1,13 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Search;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,6 +8,14 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Search;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -26,6 +26,8 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
+        internal NavigationMetadata? NavData;
+
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;
 
@@ -35,8 +37,8 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _loadingTimer;
         private readonly List<MediaViewModel> _playableItems;
-        private object? _source;
         private bool _isActive;
+        private object? _source;
 
         public FolderViewPageViewModel(IFilesService filesService, INavigationService navigationService,
             StorageItemViewModelFactory storageVmFactory)
@@ -59,10 +61,16 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(RefreshFolderContent);
         }
 
-        public async Task FetchContentAsync(object? parameter)
+        public async Task OnNavigatedTo(object? parameter)
         {
             _isActive = true;
             _source = parameter;
+            NavData = parameter as NavigationMetadata;
+            await FetchContentAsync(NavData?.Parameter ?? parameter);
+        }
+
+        private async Task FetchContentAsync(object? parameter)
+        {
             switch (parameter)
             {
                 case IReadOnlyList<StorageFolder> { Count: > 0 } breadcrumbs:
@@ -75,8 +83,10 @@ namespace Screenbox.Core.ViewModels
                 case StorageFileQueryResult queryResult:
                     await FetchQueryItemAsync(queryResult);
                     break;
-                case "VideosLibrary":
+                case "VideosLibrary":   // Special case for VideosPage
+                    // VideosPage needs to serialize navigation state so it cannot set nav data
                     Breadcrumbs = new[] { KnownFolders.VideosLibrary };
+                    NavData = new NavigationMetadata(typeof(VideosPageViewModel), Breadcrumbs);
                     await FetchFolderContentAsync(Breadcrumbs[0]);
                     break;
             }
@@ -91,7 +101,9 @@ namespace Screenbox.Core.ViewModels
         protected virtual void Navigate(object? parameter = null)
         {
             // _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
-            _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel), parameter);
+            _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel),
+                new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderViewWithHeaderPageViewModel),
+                    parameter));
         }
 
         [RelayCommand]
@@ -212,7 +224,7 @@ namespace Screenbox.Core.ViewModels
 
         private async void RefreshFolderContent()
         {
-            await FetchContentAsync(_source);
+            await FetchContentAsync(NavData?.Parameter ?? _source);
         }
     }
 }

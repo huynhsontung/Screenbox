@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Screenbox.Core;
 
 namespace Screenbox.Core.Services
 {
@@ -12,9 +11,14 @@ namespace Screenbox.Core.Services
     {
         private readonly Dictionary<Type, Type> _vmPageMapping;
 
-        public NavigationService(params KeyValuePair<Type,Type>[] mapping)
+        public NavigationService(params KeyValuePair<Type, Type>[] mapping)
         {
             _vmPageMapping = new Dictionary<Type, Type>(mapping);
+        }
+
+        public bool TryGetPageType(Type vmType, out Type pageType)
+        {
+            return _vmPageMapping.TryGetValue(vmType, out pageType);
         }
 
         public void Navigate(Type vmType, object? parameter = null)
@@ -40,7 +44,7 @@ namespace Screenbox.Core.Services
                 if (page.ContentSourcePageType == parentPageType && page.FrameContent is IContentFrame childPage)
                 {
                     childPage.NavigateContent(targetPageType, parameter);
-                    break;
+                    return;
                 }
 
                 page = page.FrameContent as IContentFrame;
