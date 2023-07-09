@@ -50,15 +50,9 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string navigationState))
-            {
-                ContentFrame.SetNavigationState(navigationState);
-                UpdateSelectedNavItem(ContentSourcePageType);
-            }
-            else
-            {
-                LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
-            }
+            LibraryNavView.SelectedItem = Common.NavigationStates.TryGetValue(typeof(VideosPage), out string tag)
+                ? LibraryNavView.MenuItems[tag == "folders" ? 0 : 1]
+                : LibraryNavView.MenuItems[0];
 
             ViewModel.UpdateVideos();
         }
@@ -66,7 +60,8 @@ namespace Screenbox.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Common.NavigationStates[typeof(VideosPage)] = ContentFrame.GetNavigationState();
+            Common.NavigationStates[typeof(VideosPage)] =
+                LibraryNavView.SelectedItem == LibraryNavView.MenuItems[0] ? "folders" : "all";
             if (ContentFrame.Content is FolderViewPage page)
             {
                 page.ViewModel.Clean();
@@ -102,7 +97,8 @@ namespace Screenbox.Pages
             // Only navigate if the selected page isn't currently loaded.
             if (pageType is not null && preNavPageType != pageType)
             {
-                ContentFrame.Navigate(pageType, "VideosLibrary", new SuppressNavigationTransitionInfo());
+                NavigationMetadata metadata = new(typeof(VideosPage), "VideosLibrary");
+                ContentFrame.Navigate(pageType, metadata, new SuppressNavigationTransitionInfo());
             }
         }
 

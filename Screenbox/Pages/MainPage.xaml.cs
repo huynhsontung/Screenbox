@@ -236,14 +236,26 @@ namespace Screenbox.Pages
             }
             else if (ContentFrame.SourcePageType != null)
             {
-                KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == e.SourcePageType);
+                muxc.NavigationViewItem? selectedItem = GetNavigationItemForPageType(e.SourcePageType);
 
-                muxc.NavigationViewItem? selectedItem = NavView.MenuItems
-                    .OfType<muxc.NavigationViewItem>()
-                    .FirstOrDefault(n => n.Tag.Equals(item.Key));
+                if (selectedItem == null && e.Parameter is NavigationMetadata metadata)
+                {
+                    selectedItem = GetNavigationItemForPageType(metadata.RootPageType);
+                }
 
                 NavView.SelectedItem = selectedItem;
             }
+        }
+
+        private muxc.NavigationViewItem? GetNavigationItemForPageType(Type pageType)
+        {
+            KeyValuePair<string, Type> item = _pages.FirstOrDefault(p => p.Value == pageType);
+
+            muxc.NavigationViewItem? selectedItem = NavView.MenuItems
+                .OfType<muxc.NavigationViewItem>()
+                .FirstOrDefault(n => n.Tag.Equals(item.Key));
+
+            return selectedItem;
         }
 
         private void NavView_OnDisplayModeChanged(muxc.NavigationView sender, muxc.NavigationViewDisplayModeChangedEventArgs args)
