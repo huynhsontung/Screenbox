@@ -1,13 +1,13 @@
 ﻿#nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -34,6 +34,16 @@ namespace Screenbox.Core.ViewModels
         {
             _source = new ArtistViewModel();
             _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
+        }
+
+        public void OnNavigatedTo(object? parameter)
+        {
+            Source = parameter switch
+            {
+                NavigationMetadata { Parameter: ArtistViewModel source } => source,
+                ArtistViewModel source => source,
+                _ => throw new ArgumentException("Navigation parameter is not an artist")
+            };
         }
 
         async partial void OnSourceChanged(ArtistViewModel value)

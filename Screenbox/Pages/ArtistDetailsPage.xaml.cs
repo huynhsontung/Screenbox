@@ -1,16 +1,16 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
+using System;
+using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
-using Windows.UI.Composition;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
-using Screenbox.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -42,10 +42,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is not ArtistViewModel artist)
-                throw new ArgumentException("Navigation parameter is not an album");
-
-            ViewModel.Source = artist;
+            ViewModel.OnNavigatedTo(e.Parameter);
         }
 
         private void ArtistDetailsPage_OnLoaded(object sender, RoutedEventArgs e)

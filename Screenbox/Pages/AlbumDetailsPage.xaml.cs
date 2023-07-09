@@ -1,8 +1,14 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Numerics;
+using System.Text;
 using Windows.Storage.Streams;
 using Windows.UI;
 using Windows.UI.Composition;
@@ -11,14 +17,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
-using Screenbox.Core.ViewModels;
 using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
-using Screenbox.Core;
-using System.Text;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -53,10 +53,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is not AlbumViewModel album)
-                throw new ArgumentException("Navigation parameter is not an album");
-
-            ViewModel.Source = album;
+            ViewModel.OnNavigatedTo(e.Parameter);
         }
 
         private void AlbumDetailsPage_OnLoaded(object sender, RoutedEventArgs e)
@@ -78,7 +75,7 @@ namespace Screenbox.Pages
 
             // Get references to our property sets for use with ExpressionNodes
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-            
+
             CreateHeaderAnimation(scrollingProperties.Translation.Y);
             MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
             if (firstSong.ThumbnailSource != null)
@@ -150,7 +147,7 @@ namespace Screenbox.Pages
             artistNameVisual.StartAnimation("Opacity", textFadeAnimation);
             textFadeAnimation.SetScalarParameter("fadeThreshold", 0.2f);
             subtextVisual.StartAnimation("Opacity", textFadeAnimation);
-            
+
 
             // Get the backing visuals for the button containers so that their properties can be animated
             Visual buttonVisual = ElementCompositionPreview.GetElementVisual(ButtonPanel);
