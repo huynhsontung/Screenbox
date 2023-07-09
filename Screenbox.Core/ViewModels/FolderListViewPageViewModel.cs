@@ -21,7 +21,7 @@ namespace Screenbox.Core.ViewModels
         protected override void Navigate(object? parameter = null)
         {
             _navigationService.NavigateExisting(typeof(FolderListViewPageViewModel),
-                new NavigationMetadata(NavData?.RootPageType ?? typeof(FolderListViewPageViewModel), parameter));
+                new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderListViewPageViewModel), parameter));
         }
     }
 }

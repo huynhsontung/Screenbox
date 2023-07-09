@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
@@ -56,6 +58,13 @@ namespace Screenbox.Core.ViewModels
         public void Receive(NavigationViewDisplayModeRequestMessage message)
         {
             message.Reply(NavigationViewDisplayMode);
+        }
+
+        public bool TryGetPageTypeFromParameter(object? parameter, out Type pageType)
+        {
+            pageType = typeof(object);
+            return parameter is NavigationMetadata metadata &&
+                   _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
         }
 
         public void ProcessGamepadKeyDown(KeyRoutedEventArgs args)

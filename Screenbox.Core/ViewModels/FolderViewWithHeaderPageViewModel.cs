@@ -15,7 +15,7 @@ namespace Screenbox.Core.ViewModels
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
         private readonly INavigationService _navigationService;
-        private NavigationMetadata? _source;
+        private NavigationMetadata? _navData;
 
         public FolderViewWithHeaderPageViewModel(INavigationService navigationService)
         {
@@ -27,7 +27,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (parameter is NavigationMetadata { Parameter: IReadOnlyList<StorageFolder> breadcrumbs } source)
             {
-                _source = source;
+                _navData = source;
                 Breadcrumbs = breadcrumbs;
             }
         }
@@ -35,8 +35,23 @@ namespace Screenbox.Core.ViewModels
         public void OnBreadcrumbBarItemClicked(int index)
         {
             IReadOnlyList<StorageFolder> crumbs = Breadcrumbs.Take(index + 1).ToArray();
-            _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel),
-                new NavigationMetadata(_source?.RootPageType ?? typeof(FolderViewWithHeaderPageViewModel), crumbs));
+            if (_navData != null)
+            {
+                if (index == 0)
+                {
+                    _navigationService.Navigate(_navData.RootViewModelType);
+                }
+                else
+                {
+                    _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel),
+                        new NavigationMetadata(_navData.RootViewModelType, crumbs));
+                }
+            }
+            else
+            {
+                _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel),
+                    new NavigationMetadata(typeof(FolderViewWithHeaderPageViewModel), crumbs));
+            }
         }
     }
 }

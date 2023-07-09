@@ -238,9 +238,9 @@ namespace Screenbox.Pages
             {
                 muxc.NavigationViewItem? selectedItem = GetNavigationItemForPageType(e.SourcePageType);
 
-                if (selectedItem == null && e.Parameter is NavigationMetadata metadata)
+                if (selectedItem == null && ViewModel.TryGetPageTypeFromParameter(e.Parameter, out Type pageType))
                 {
-                    selectedItem = GetNavigationItemForPageType(metadata.RootPageType);
+                    selectedItem = GetNavigationItemForPageType(pageType);
                 }
 
                 NavView.SelectedItem = selectedItem;

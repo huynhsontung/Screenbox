@@ -16,6 +16,11 @@ namespace Screenbox.Core.Services
             _vmPageMapping = new Dictionary<Type, Type>(mapping);
         }
 
+        public bool TryGetPageType(Type vmType, out Type pageType)
+        {
+            return _vmPageMapping.TryGetValue(vmType, out pageType);
+        }
+
         public void Navigate(Type vmType, object? parameter = null)
         {
             if (!_vmPageMapping.TryGetValue(vmType, out Type pageType)) return;

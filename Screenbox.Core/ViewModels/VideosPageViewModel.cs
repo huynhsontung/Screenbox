@@ -6,7 +6,6 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
@@ -18,22 +17,23 @@ namespace Screenbox.Core.ViewModels
     {
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
+        public object NavigationParameter { get; }
+
         [ObservableProperty] private bool _hasVideos;
 
         private bool HasLibrary => _libraryService.VideosLibrary != null;
 
-        private readonly INavigationService _navigationService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public VideosPageViewModel(INavigationService navigationService, ILibraryService libraryService)
+        public VideosPageViewModel(ILibraryService libraryService)
         {
-            _navigationService = navigationService;
             _libraryService = libraryService;
             _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            NavigationParameter = new NavigationMetadata(typeof(VideosPageViewModel), KnownFolders.VideosLibrary);
         }
 
         public void UpdateVideos()
@@ -46,12 +46,6 @@ namespace Screenbox.Core.ViewModels
         {
             IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
             UpdateBreadcrumbs(crumbs);
-        }
-
-        public void OnBreadcrumbBarItemClicked(int index)
-        {
-            IReadOnlyList<StorageFolder> crumbs = Breadcrumbs.Take(index + 1).ToArray();
-            _navigationService.NavigateChild(typeof(VideosPageViewModel), typeof(FolderViewPageViewModel), crumbs);
         }
 
         private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)

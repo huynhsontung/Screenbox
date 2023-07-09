@@ -4,15 +4,15 @@ using System;
 
 namespace Screenbox.Core;
 
-public class NavigationMetadata
+internal class NavigationMetadata
 {
-    public Type RootPageType { get; }
+    public Type RootViewModelType { get; }
 
     public object? Parameter { get; }
 
-    public NavigationMetadata(Type rootPageType, object? parameter)
+    public NavigationMetadata(Type rootViewModelType, object? parameter)
     {
-        RootPageType = rootPageType;
+        RootViewModelType = rootViewModelType;
         Parameter = parameter;
     }
 }
