@@ -77,15 +77,17 @@ namespace Screenbox.Core.ViewModels
                     Breadcrumbs = breadcrumbs;
                     await FetchFolderContentAsync(breadcrumbs.Last());
                     break;
-                case StorageFolder folder:
-                    Breadcrumbs = new[] { folder };
-                    await FetchFolderContentAsync(folder);
-                    break;
                 case StorageLibrary library:
                     await FetchFolderContentAsync(library);
                     break;
                 case StorageFileQueryResult queryResult:
                     await FetchQueryItemAsync(queryResult);
+                    break;
+                case "VideosLibrary":   // Special case for VideosPage
+                    // VideosPage needs to serialize navigation state so it cannot set nav data
+                    Breadcrumbs = new[] { KnownFolders.VideosLibrary };
+                    NavData = new NavigationMetadata(typeof(VideosPageViewModel), Breadcrumbs);
+                    await FetchFolderContentAsync(Breadcrumbs[0]);
                     break;
             }
         }
