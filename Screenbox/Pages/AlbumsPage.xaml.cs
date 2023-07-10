@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,15 +42,14 @@ namespace Screenbox.Pages
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            if (AlbumGridView.FindDescendant<ScrollViewer>() is { } scrollViewer)
-                Common.ScrollingStates[nameof(AlbumsPage) + Frame.BackStackDepth] = scrollViewer.VerticalOffset;
+            Common.SaveScrollingState(AlbumGridView, this);
         }
 
         private void AlbumGridView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack && Common.ScrollingStates.TryGetValue(nameof(AlbumsPage) + Frame.BackStackDepth, out double verticalOffset))
+            if (_navigatedBack)
             {
-                AlbumGridView.FindDescendant<ScrollViewer>()?.ChangeView(null, verticalOffset, null, true);
+                Common.TryRestoreScrollingState(AlbumGridView, this);
             }
         }
 

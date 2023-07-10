@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,15 +42,14 @@ namespace Screenbox.Pages
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             base.OnNavigatingFrom(e);
-            if (SongListView.FindDescendant<ScrollViewer>() is { } scrollViewer)
-                Common.ScrollingStates[nameof(SongsPage) + Frame.BackStackDepth] = scrollViewer.VerticalOffset;
+            Common.SaveScrollingState(SongListView, this);
         }
 
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack && Common.ScrollingStates.TryGetValue(nameof(SongsPage) + Frame.BackStackDepth, out double verticalOffset))
+            if (_navigatedBack)
             {
-                SongListView.FindDescendant<ScrollViewer>()?.ChangeView(null, verticalOffset, null, true);
+                Common.TryRestoreScrollingState(SongListView, this);
             }
         }
     }
