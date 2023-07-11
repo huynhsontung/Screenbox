@@ -12,8 +12,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Screenbox</value>
+  </data>
+  <data name="AppShortName" xml:space="preserve">
+    <value>Screenbox</value>
+  </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。 </value>
+    <value>一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>3GPP 多媒体文件</value>

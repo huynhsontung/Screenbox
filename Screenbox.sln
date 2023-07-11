@@ -108,6 +108,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		RESX_EnableXlifSync = True
 		SolutionGuid = {A6A15B98-A3D8-4053-843B-10AFB810500C}
 	EndGlobalSection
 EndGlobal

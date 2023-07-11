@@ -8,15 +8,15 @@
       <group id="SCREENBOX/STRINGS/EN-US/MANIFESTRESOURCES.RESW" datatype="resx">
         <trans-unit id="AppDisplayName" translate="yes" xml:space="preserve">
           <source>Screenbox</source>
-          <target state="new">Screenbox</target>
+          <target state="translated">Screenbox</target>
         </trans-unit>
         <trans-unit id="AppShortName" translate="yes" xml:space="preserve">
           <source>Screenbox</source>
-          <target state="new">Screenbox</target>
+          <target state="translated">Screenbox</target>
         </trans-unit>
         <trans-unit id="AppDescription" translate="yes" xml:space="preserve">
           <source>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</source>
-          <target state="translated">一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。 </target>
+          <target state="translated">一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。</target>
         </trans-unit>
         <trans-unit id="FileDisplayName3GPP" translate="yes" xml:space="preserve">
           <source>3GPP Multimedia File</source>
@@ -360,7 +360,7 @@
         </trans-unit>
         <trans-unit id="NoMusicPanelSubtext" translate="yes" xml:space="preserve">
           <source>Your music library doesn't contain any music content.</source>
-          <target state="translated">你的音乐资料库不包含任何音乐内容</target>
+          <target state="translated">你的音乐资料库不包含任何音乐内容。</target>
         </trans-unit>
         <trans-unit id="OpenFiles" translate="yes" xml:space="preserve">
           <source>Open file(s)</source>
@@ -797,7 +797,7 @@
         </trans-unit>
         <trans-unit id="HyperlinkDiscord" translate="yes" xml:space="preserve">
           <source>Discord</source>
-          <target state="new">Discord</target>
+          <target state="translated">Discord</target>
         </trans-unit>
         <trans-unit id="HyperlinkSponsor" translate="yes" xml:space="preserve">
           <source>Support the development ☕</source>

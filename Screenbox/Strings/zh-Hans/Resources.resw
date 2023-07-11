@@ -191,7 +191,7 @@
     <value>我们找不到任何音乐</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>你的音乐资料库不包含任何音乐内容</value>
+    <value>你的音乐资料库不包含任何音乐内容。</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>打开文件</value>
@@ -521,6 +521,9 @@
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
     <value>源代码</value>
+  </data>
+  <data name="HyperlinkDiscord" xml:space="preserve">
+    <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
     <value>支持开发☕</value>
