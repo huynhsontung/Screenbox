@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDisplayName" xml:space="preserve">
+    <value>Screenbox</value>
+  </data>
+  <data name="AppShortName" xml:space="preserve">
+    <value>Screenbox</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。</value>
+  </data>
+  <data name="FileDisplayName3GPP" xml:space="preserve">
+    <value>3GPP 多媒体文件</value>
+  </data>
+  <data name="FileDisplayName3GPP2" xml:space="preserve">
+    <value>3GPP2 多媒体文件</value>
+  </data>
+  <data name="FileDisplayNameAAC" xml:space="preserve">
+    <value>AAC 音频</value>
+  </data>
+  <data name="FileDisplayNameAVI" xml:space="preserve">
+    <value>AVI 视频</value>
+  </data>
+  <data name="FileDisplayNameFLAC" xml:space="preserve">
+    <value>FLAC 音频</value>
+  </data>
+  <data name="FileDisplayNameFlash" xml:space="preserve">
+    <value>Flash 视频</value>
+  </data>
+  <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
+    <value>Matroska 音频</value>
+  </data>
+  <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
+    <value>Matroska 视频</value>
+  </data>
+  <data name="FileDisplayNameMIDI" xml:space="preserve">
+    <value>MIDI 音乐数据</value>
+  </data>
+  <data name="FileDisplayNameMP3" xml:space="preserve">
+    <value>MP3 音频</value>
+  </data>
+  <data name="FileDisplayNameMP4" xml:space="preserve">
+    <value>MPEG-4 视频</value>
+  </data>
+  <data name="FileDisplayNameMP4Audio" xml:space="preserve">
+    <value>MPEG-4 音频</value>
+  </data>
+  <data name="FileDisplayNameMP4Video" xml:space="preserve">
+    <value>iTunes 视频</value>
+  </data>
+  <data name="FileDisplayNameMPEG" xml:space="preserve">
+    <value>MPEG 视频</value>
+  </data>
+  <data name="FileDisplayNameOggAudio" xml:space="preserve">
+    <value>Ogg Vorbis 音频</value>
+  </data>
+  <data name="FileDisplayNameOggVideo" xml:space="preserve">
+    <value>Ogg 视频</value>
+  </data>
+  <data name="FileDisplayNameQuickTime" xml:space="preserve">
+    <value>QuickTime 影片</value>
+  </data>
+  <data name="FileDisplayNameWave" xml:space="preserve">
+    <value>WAVE 音频</value>
+  </data>
+  <data name="FileDisplayNameWebAudio" xml:space="preserve">
+    <value>WebM 音频</value>
+  </data>
+  <data name="FileDisplayNameWebMedia" xml:space="preserve">
+    <value>WebM 视频</value>
+  </data>
+  <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
+    <value>Windows 媒体音频</value>
+  </data>
+  <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
+    <value>Windows 媒体视频</value>
+  </data>
+  <data name="FileDisplayNameM3U8" xml:space="preserve">
+    <value>M3U8 播放列表</value>
+  </data>
+  <data name="FileDisplayNameMPEGTS" xml:space="preserve">
+    <value>MPEG 传输流</value>
+  </data>
+</root>
