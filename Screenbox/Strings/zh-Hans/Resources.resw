@@ -1,0 +1,553 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FrameSavedNotificationTitle" xml:space="preserve">
+    <value>帧已保存</value>
+  </data>
+  <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
+    <value>画中画</value>
+  </data>
+  <data name="SaveCurrentFrame" xml:space="preserve">
+    <value>保存当前帧</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>循环</value>
+  </data>
+  <data name="PlaybackSpeed" xml:space="preserve">
+    <value>播放速度</value>
+  </data>
+  <data name="VolumeChangeStatusMessage" xml:space="preserve">
+    <value>音量 {0:F0}%</value>
+    <comment>#Format[Double volume]</comment>
+  </data>
+  <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
+    <value>无法保存帧</value>
+  </data>
+  <data name="ChapterName" xml:space="preserve">
+    <value>第 {0} 章</value>
+    <comment>#Format[Int32 chapter]</comment>
+  </data>
+  <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
+    <value>无法加载字幕</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="MuteToggle_Variant0" xml:space="preserve">
+    <value>静音</value>
+  </data>
+  <data name="MuteToggle_Variant1" xml:space="preserve">
+    <value>取消静音</value>
+  </data>
+  <data name="FullscreenToggle_Variant0" xml:space="preserve">
+    <value>全屏</value>
+  </data>
+  <data name="AudioAndCaption" xml:space="preserve">
+    <value>音频和字幕</value>
+  </data>
+  <data name="FullscreenToggle_Variant1" xml:space="preserve">
+    <value>退出全屏</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>音量</value>
+  </data>
+  <data name="Seek" xml:space="preserve">
+    <value>定位</value>
+  </data>
+  <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
+    <value>退出画中画</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>下一个</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>上一个</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>播放</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>暂停</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>更多</value>
+  </data>
+  <data name="PlayQueue" xml:space="preserve">
+    <value>播放队列</value>
+  </data>
+  <data name="RepeatMode_Variant0" xml:space="preserve">
+    <value>重复：关闭</value>
+  </data>
+  <data name="RepeatMode_Variant2" xml:space="preserve">
+    <value>重复：全部</value>
+  </data>
+  <data name="RepeatMode_Variant1" xml:space="preserve">
+    <value>重复：单曲</value>
+  </data>
+  <data name="ItemsSelected_One" xml:space="preserve">
+    <value>{0} 项已选择</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ItemsSelected_Other" xml:space="preserve">
+    <value>{0} 项已选择</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AddToQueue" xml:space="preserve">
+    <value>添加到队列</value>
+  </data>
+  <data name="ClearSelection" xml:space="preserve">
+    <value>清除选择</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="PlayNext" xml:space="preserve">
+    <value>下一个播放</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>上移</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>下移</value>
+  </data>
+  <data name="IsPlaying" xml:space="preserve">
+    <value>正在播放</value>
+    <comment>Tool tip on which item is currently playing</comment>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="EmptyFolder" xml:space="preserve">
+    <value>此文件夹为空</value>
+  </data>
+  <data name="ItemsCount_One" xml:space="preserve">
+    <value>{0} 项</value>
+    <comment>#Format[Plural]</comment>
+  </data>
+  <data name="ItemsCount_Other" xml:space="preserve">
+    <value>{0} 项</value>
+    <comment>#Format[Plural]</comment>
+  </data>
+  <data name="ItemsCount_None" xml:space="preserve">
+    <value>空</value>
+  </data>
+  <data name="RestoreView" xml:space="preserve">
+    <value>恢复视频视图</value>
+  </data>
+  <data name="Cast" xml:space="preserve">
+    <value>投放</value>
+  </data>
+  <data name="StopCast" xml:space="preserve">
+    <value>停止投放</value>
+  </data>
+  <data name="CastingTo" xml:space="preserve">
+    <value>投放到</value>
+  </data>
+  <data name="CastToDevice" xml:space="preserve">
+    <value>投放到一个设备</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>显示</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>音乐</value>
+  </data>
+  <data name="ShuffleAndPlay" xml:space="preserve">
+    <value>随机播放</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>未知艺术家</value>
+  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>未知专辑</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>未知流派</value>
+  </data>
+  <data name="AddFolder" xml:space="preserve">
+    <value>添加文件夹</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="Multiselect" xml:space="preserve">
+    <value>选择多个</value>
+  </data>
+  <data name="NoMusicPanelHeader" xml:space="preserve">
+    <value>我们找不到任何音乐</value>
+  </data>
+  <data name="NoMusicPanelSubtext" xml:space="preserve">
+    <value>你的音乐资料库不包含任何音乐内容</value>
+  </data>
+  <data name="OpenFiles" xml:space="preserve">
+    <value>打开文件</value>
+  </data>
+  <data name="SearchBoxPlaceholderText" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="WelcomePanelHeader" xml:space="preserve">
+    <value>欢迎使用 Screenbox</value>
+  </data>
+  <data name="WelcomePanelSubtext" xml:space="preserve">
+    <value>让我们开始播放一些媒体内容，让事情进展起来吧！</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>属性</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="OpenFileLocation" xml:space="preserve">
+    <value>打开文件位置</value>
+  </data>
+  <data name="PropertyAlbum" xml:space="preserve">
+    <value>专辑</value>
+  </data>
+  <data name="PropertyAlbumArtist" xml:space="preserve">
+    <value>专辑艺术家</value>
+  </data>
+  <data name="PropertyBitRate" xml:space="preserve">
+    <value>比特率</value>
+  </data>
+  <data name="PropertyContentType" xml:space="preserve">
+    <value>内容类型</value>
+  </data>
+  <data name="PropertyContributingArtists" xml:space="preserve">
+    <value>参与创作的艺术家</value>
+  </data>
+  <data name="PropertyFileLocation" xml:space="preserve">
+    <value>文件位置</value>
+  </data>
+  <data name="PropertyFileType" xml:space="preserve">
+    <value>项目类型</value>
+  </data>
+  <data name="PropertyGenre" xml:space="preserve">
+    <value>流派</value>
+  </data>
+  <data name="PropertyLastModified" xml:space="preserve">
+    <value>修改日期</value>
+  </data>
+  <data name="PropertyLength" xml:space="preserve">
+    <value>时长</value>
+  </data>
+  <data name="PropertyProducers" xml:space="preserve">
+    <value>制作人</value>
+  </data>
+  <data name="PropertyResolution" xml:space="preserve">
+    <value>分辨率</value>
+  </data>
+  <data name="PropertySize" xml:space="preserve">
+    <value>大小</value>
+  </data>
+  <data name="PropertySubtitle" xml:space="preserve">
+    <value>副标题</value>
+  </data>
+  <data name="PropertyTitle" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="PropertyTrack" xml:space="preserve">
+    <value>曲目</value>
+  </data>
+  <data name="PropertyWriters" xml:space="preserve">
+    <value>作家</value>
+  </data>
+  <data name="PropertyYear" xml:space="preserve">
+    <value>年份</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>自定义</value>
+  </data>
+  <data name="Network" xml:space="preserve">
+    <value>网络</value>
+  </data>
+  <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
+    <value>没有可用的网络设备</value>
+  </data>
+  <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
+    <value>找不到您的媒体？请确保您的网络设备已在 Windows 设置中配对。</value>
+  </data>
+  <data name="Recent" xml:space="preserve">
+    <value>最近播放</value>
+  </data>
+  <data name="VideoSettings" xml:space="preserve">
+    <value>视频设置</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>打开</value>
+  </data>
+  <data name="LocationSpecified_One" xml:space="preserve">
+    <value>指定了 {0} 位置</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="LocationSpecified_Other" xml:space="preserve">
+    <value>指定了 {0} 位置</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ShuffleMode_Variant0" xml:space="preserve">
+    <value>随机播放：关</value>
+  </data>
+  <data name="ShuffleMode_Variant1" xml:space="preserve">
+    <value>随机播放：开</value>
+  </data>
+  <data name="ResumePositionNotificationTitle" xml:space="preserve">
+    <value>从上次中断的地方继续</value>
+  </data>
+  <data name="GoToPosition" xml:space="preserve">
+    <value>跳转至 {0}</value>
+    <comment>#Format[String position]</comment>
+  </data>
+  <data name="Albums" xml:space="preserve">
+    <value>专辑</value>
+  </data>
+  <data name="Artists" xml:space="preserve">
+    <value>艺术家</value>
+  </data>
+  <data name="Songs" xml:space="preserve">
+    <value>歌曲</value>
+  </data>
+  <data name="OpenFilesToolTip" xml:space="preserve">
+    <value>浏览文件以进行播放</value>
+  </data>
+  <data name="AddFiles" xml:space="preserve">
+    <value>添加文件</value>
+  </data>
+  <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
+    <value>浏览文件以添加至播放队列</value>
+  </data>
+  <data name="AddMusicFolderToolTip" xml:space="preserve">
+    <value>将文件夹添加到音乐资料库</value>
+  </data>
+  <data name="AddUrl" xml:space="preserve">
+    <value>从 URL 添加媒体</value>
+  </data>
+  <data name="AddVideoFolderToolTip" xml:space="preserve">
+    <value>将文件夹添加到视频资料库</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>打开文件夹</value>
+  </data>
+  <data name="OpenUrl" xml:space="preserve">
+    <value>打开 URL</value>
+  </data>
+  <data name="SongsCount_None" xml:space="preserve">
+    <value>空</value>
+  </data>
+  <data name="SongsCount_One" xml:space="preserve">
+    <value>{0} 首歌</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SongsCount_Other" xml:space="preserve">
+    <value>{0} 首歌</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AlbumsCount_One" xml:space="preserve">
+    <value>{0} 个专辑</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AlbumsCount_Other" xml:space="preserve">
+    <value>{0} 个专辑</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>{0} 播放时长</value>
+    <comment>#Format[String runtime]</comment>
+  </data>
+  <data name="AllVideos" xml:space="preserve">
+    <value>所有视频</value>
+  </data>
+  <data name="VideoFolders" xml:space="preserve">
+    <value>视频文件夹</value>
+  </data>
+  <data name="SearchResultHeader" xml:space="preserve">
+    <value>关于 "{0}" 的搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SeeAll" xml:space="preserve">
+    <value>查看全部</value>
+  </data>
+  <data name="SearchResultArtistHeader" xml:space="preserve">
+    <value>关于 "{0}" 的艺术家搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultAlbumHeader" xml:space="preserve">
+    <value>关于 "{0}" 的专辑搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultSongHeader" xml:space="preserve">
+    <value>关于 "{0}" 的歌曲搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultVideoHeader" xml:space="preserve">
+    <value>关于 "{0}" 的视频搜索结果</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="AlbumsCount_None" xml:space="preserve">
+    <value>无专辑</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AccessDeniedMessage" xml:space="preserve">
+    <value>访问被拒绝。请验证您的隐私设置，确保 Screenbox 具有足够的权限。</value>
+  </data>
+  <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
+    <value>无法访问音乐资料库</value>
+  </data>
+  <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
+    <value>无法访问图片资料库</value>
+  </data>
+  <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
+    <value>无法访问视频资料库</value>
+  </data>
+  <data name="NoVideosPanelHeader" xml:space="preserve">
+    <value>我们找不到任何视频</value>
+  </data>
+  <data name="NoVideosPanelSubtext" xml:space="preserve">
+    <value>您的音乐资料库不包含任何音乐内容。</value>
+  </data>
+  <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
+    <value>打开隐私设置</value>
+  </data>
+  <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
+    <value>无法加载媒体</value>
+  </data>
+  <data name="AspectRatio" xml:space="preserve">
+    <value>长宽比</value>
+  </data>
+  <data name="Fit" xml:space="preserve">
+    <value>适应</value>
+  </data>
+  <data name="Fill" xml:space="preserve">
+    <value>填充</value>
+  </data>
+  <data name="CustomAspectRatio" xml:space="preserve">
+    <value>自定义长宽比</value>
+  </data>
+  <data name="CustomPlaybackSpeed" xml:space="preserve">
+    <value>自定义播放速度</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="ScaleStatus" xml:space="preserve">
+    <value>缩放比例：{0}</value>
+    <comment>#Format[String scale]</comment>
+  </data>
+  <data name="SubtitleStatus" xml:space="preserve">
+    <value>字幕：{0}</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="TrackIndex" xml:space="preserve">
+    <value>曲目 {0}</value>
+    <comment>#Format[Int index]</comment>
+  </data>
+  <data name="AddSubtitle" xml:space="preserve">
+    <value>添加字幕</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>音频</value>
+  </data>
+  <data name="SettingsCategoryAbout" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="SettingsCategoryLibraries" xml:space="preserve">
+    <value>库</value>
+  </data>
+  <data name="SettingsCategoryPlayer" xml:space="preserve">
+    <value>播放器</value>
+  </data>
+  <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
+    <value>音乐资料库位置</value>
+  </data>
+  <data name="SettingsShowRecentHeader" xml:space="preserve">
+    <value>显示最近播放</value>
+  </data>
+  <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
+    <value>视频资料库位置</value>
+  </data>
+  <data name="Subtitles" xml:space="preserve">
+    <value>字幕</value>
+  </data>
+  <data name="SettingsShowRecentDescription" xml:space="preserve">
+    <value>在主页上显示最近播放的媒体</value>
+  </data>
+  <data name="SettingsClearRecentHeader" xml:space="preserve">
+    <value>清除最近播放媒体历史记录</value>
+  </data>
+  <data name="SettingsAutoResizeHeader" xml:space="preserve">
+    <value>自动调整大小</value>
+  </data>
+  <data name="SettingsAutoResizeDescription" xml:space="preserve">
+    <value>调整应用窗口的大小，使其在播放时与视频的原始分辨率最匹配</value>
+  </data>
+  <data name="SettingsVolumeBoostHeader" xml:space="preserve">
+    <value>提高音量上限</value>
+  </data>
+  <data name="SettingsVolumeBoostDescription" xml:space="preserve">
+    <value>允许最大音量超过 100%</value>
+  </data>
+  <data name="SettingsGesturesHeader" xml:space="preserve">
+    <value>手势</value>
+  </data>
+  <data name="SettingsGestureSeek" xml:space="preserve">
+    <value>水平拖动以定位</value>
+  </data>
+  <data name="SettingsGestureVolume" xml:space="preserve">
+    <value>垂直拖动以调节音量</value>
+  </data>
+  <data name="SettingsGestureTap" xml:space="preserve">
+    <value>点击任意位置进行播放或暂停</value>
+  </data>
+  <data name="AppFriendlyName" xml:space="preserve">
+    <value>Screenbox 媒体播放器</value>
+  </data>
+  <data name="HyperlinkSourceCode" xml:space="preserve">
+    <value>源代码</value>
+  </data>
+  <data name="HyperlinkSponsor" xml:space="preserve">
+    <value>支持开发☕</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>总是</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>从不</value>
+  </data>
+  <data name="OnLaunch" xml:space="preserve">
+    <value>当启动时</value>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>版本 {0}</value>
+    <comment>#Format[VERSION]</comment>
+  </data>
+  <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
+    <value>添加了字幕</value>
+  </data>
+  <data name="CriticalError" xml:space="preserve">
+    <value>严重错误</value>
+  </data>
+  <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
+    <value>没有兼容的渲染器可用。请确保 Direct3D 11 在你的设备上可用。</value>
+  </data>
+  <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
+    <value>无法打开文件</value>
+  </data>
+</root>
