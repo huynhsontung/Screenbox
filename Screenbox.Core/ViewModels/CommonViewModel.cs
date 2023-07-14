@@ -76,10 +76,12 @@ namespace Screenbox.Core.ViewModels
                 _scrollingStates[page.GetType().Name + page.Frame.BackStackDepth] = scrollViewer.VerticalOffset;
         }
 
-        public bool TryRestoreScrollingState(ListViewBase element, Page page)
+        public bool TryRestoreScrollingStateOnce(ListViewBase element, Page page)
         {
-            if (_scrollingStates.TryGetValue(page.GetType().Name + page.Frame.BackStackDepth, out double verticalOffset))
+            string key = page.GetType().Name + page.Frame.BackStackDepth;
+            if (_scrollingStates.TryGetValue(key, out double verticalOffset))
             {
+                _scrollingStates.Remove(key);
                 return element.FindDescendant<ScrollViewer>()?.ChangeView(null, verticalOffset, null, true) ?? false;
             }
 

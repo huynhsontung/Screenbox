@@ -49,7 +49,7 @@ namespace Screenbox.Pages
         {
             if (_navigatedBack)
             {
-                Common.TryRestoreScrollingState(AlbumGridView, this);
+                Common.TryRestoreScrollingStateOnce(AlbumGridView, this);
             }
         }
 

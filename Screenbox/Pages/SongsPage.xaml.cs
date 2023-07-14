@@ -49,7 +49,7 @@ namespace Screenbox.Pages
         {
             if (_navigatedBack)
             {
-                Common.TryRestoreScrollingState(SongListView, this);
+                Common.TryRestoreScrollingStateOnce(SongListView, this);
             }
         }
     }
