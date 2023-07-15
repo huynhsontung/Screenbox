@@ -2,13 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.System;
-using Screenbox.Core.Helpers;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -34,12 +34,8 @@ namespace Screenbox.Core.ViewModels
         public void UpdateVideos()
         {
             IsLoading = _libraryService.IsLoadingVideos;
-            Videos.Clear();
             IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult();
-            foreach (MediaViewModel video in videos)
-            {
-                Videos.Add(video);
-            }
+            Videos.SyncItems(videos);
 
             // Progressively update when it's still loading
             if (IsLoading)

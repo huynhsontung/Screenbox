@@ -15,7 +15,7 @@ public static class CollectionExtensions
         }
     }
 
-    public static void SyncItems<T>(this IList<T> target, IList<T> reference)
+    public static void SyncItems<T>(this IList<T> target, IReadOnlyList<T> reference)
     {
         // Sync items in order. Assume items are unique
         for (int i = 0; i < reference.Count; i++)
@@ -51,9 +51,9 @@ public static class CollectionExtensions
         Dictionary<TKey, List<TValue>> groupings = reference.ToDictionary(g => g.Key, g => g.ToList());
         foreach (ObservableGroup<TKey, TValue> observableGroup in target)
         {
-            if (groupings.ContainsKey(observableGroup.Key))
+            if (groupings.TryGetValue(observableGroup.Key, out List<TValue> grouping))
             {
-                observableGroup.SyncItems(groupings[observableGroup.Key]);
+                observableGroup.SyncItems(grouping);
             }
             else
             {
