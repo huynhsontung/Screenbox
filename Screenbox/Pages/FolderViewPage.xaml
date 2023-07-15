@@ -12,6 +12,7 @@
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -97,18 +98,45 @@
                         Text="{x:Bind local:FolderViewPage.GetCaptionText(IsFile, CaptionText, ItemCount), Mode=OneWay}" />
                 </Grid>
             </DataTemplate>
+
+            <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
+                <muxc:BreadcrumbBarItem AutomationProperties.Name="{x:Bind DisplayName}" Content="{x:Bind DisplayName}" />
+            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock
+            x:Name="TitleText"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPageHeaderMargin}"
+            MaxLines="2"
+            Style="{StaticResource PageHeaderTextBlockStyle}"
+            Text="{x:Bind ViewModel.TitleText}" />
+
+        <muxc:BreadcrumbBar
+            x:Name="BreadcrumbBar"
+            Grid.Row="1"
+            Margin="0,0,0,12"
+            ItemClicked="BreadcrumbBar_OnItemClicked"
+            ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
+            ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+
         <muxc:ProgressBar
             x:Name="LoadingProgressBar"
+            Grid.Row="2"
             Margin="{StaticResource ContentPageRightMargin}"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="FolderView"
+            Grid.Row="2"
             Padding="{StaticResource ContentPageThumbnailRightMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -128,6 +156,7 @@
         </GridView>
         <TextBlock
             x:Name="NoContentText"
+            Grid.Row="2"
             Margin="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
@@ -150,6 +179,7 @@
                         <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="NoContentText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="TitleText.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

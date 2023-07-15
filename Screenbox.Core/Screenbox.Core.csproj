@@ -240,7 +240,6 @@
     <Compile Include="ViewModels\CommonViewModel.cs" />
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
-    <Compile Include="ViewModels\FolderViewWithHeaderPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MediaListViewModel.cs" />

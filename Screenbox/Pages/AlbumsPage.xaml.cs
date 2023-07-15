@@ -1,7 +1,8 @@
-﻿using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -16,6 +17,8 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
+        private bool _navigatedBack;
+
         public AlbumsPage()
         {
             this.InitializeComponent();
@@ -27,12 +30,27 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchAlbums();
+            _navigatedBack = e.NavigationMode == NavigationMode.Back;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+        }
+
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        {
+            base.OnNavigatingFrom(e);
+            Common.SaveScrollingState(AlbumGridView, this);
+        }
+
+        private void AlbumGridView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (_navigatedBack)
+            {
+                Common.TryRestoreScrollingStateOnce(AlbumGridView, this);
+            }
         }
 
         private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

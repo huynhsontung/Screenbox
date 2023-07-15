@@ -49,6 +49,7 @@
                     IsItemClickEnabled="True"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
+                    Loaded="ArtistGridView_OnLoaded"
                     SelectionMode="None">
                     <GridView.Resources>
                         <ResourceDictionary>
