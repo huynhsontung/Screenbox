@@ -1,10 +1,10 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.Storage;
-using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -20,7 +20,20 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<string> Breadcrumbs { get; }
 
-        public void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
+        public void OnNavigatedTo(object? parameter)
+        {
+            switch (parameter)
+            {
+                case NavigationMetadata { Parameter: IReadOnlyList<StorageFolder> crumbs }:
+                    UpdateBreadcrumbs(crumbs);
+                    break;
+                case IReadOnlyList<StorageFolder> crumbs:
+                    UpdateBreadcrumbs(crumbs);
+                    break;
+            }
+        }
+
+        private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
         {
             Breadcrumbs.Clear();
             if (crumbs == null) return;

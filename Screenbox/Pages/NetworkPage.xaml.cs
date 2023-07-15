@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
@@ -11,7 +12,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -65,9 +65,8 @@ namespace Screenbox.Pages
 
         private void FolderViewFrame_OnNavigated(object sender, NavigationEventArgs e)
         {
-            IReadOnlyList<StorageFolder>? crumbs = e.Parameter as IReadOnlyList<StorageFolder>;
-            ViewModel.UpdateBreadcrumbs(crumbs);
-            if (crumbs?.Count == 1)
+            ViewModel.OnNavigatedTo(e.Parameter);
+            if (ViewModel.Breadcrumbs.Count == 1)
             {
                 FolderListViewPage page = (FolderListViewPage)e.Content;
                 page.ViewModel.PropertyChanged -= FolderViewModel_PropertyChanged;
