@@ -22,11 +22,13 @@ namespace Screenbox.Core.ViewModels
     public partial class FolderViewPageViewModel : ObservableRecipient,
         IRecipient<RefreshFolderMessage>
     {
+        public string TitleText => Breadcrumbs.LastOrDefault()?.Name ?? string.Empty;
+
         public ObservableCollection<StorageItemViewModel> Items { get; }
 
         public IReadOnlyList<StorageFolder> Breadcrumbs { get; private set; }
 
-        internal NavigationMetadata? NavData;
+        internal NavigationMetadata? NavData { get; private set; }
 
         [ObservableProperty] private bool _isEmpty;
         [ObservableProperty] private bool _isLoading;
@@ -69,6 +71,28 @@ namespace Screenbox.Core.ViewModels
             await FetchContentAsync(NavData?.Parameter ?? parameter);
         }
 
+        public void OnBreadcrumbBarItemClicked(int index)
+        {
+            IReadOnlyList<StorageFolder> crumbs = Breadcrumbs.Take(index + 1).ToArray();
+            if (NavData != null)
+            {
+                if (index == 0)
+                {
+                    _navigationService.Navigate(NavData.RootViewModelType);
+                }
+                else
+                {
+                    _navigationService.Navigate(typeof(FolderViewPageViewModel),
+                        new NavigationMetadata(NavData.RootViewModelType, crumbs));
+                }
+            }
+            else
+            {
+                _navigationService.Navigate(typeof(FolderViewPageViewModel),
+                    new NavigationMetadata(typeof(FolderViewPageViewModel), crumbs));
+            }
+        }
+
         private async Task FetchContentAsync(object? parameter)
         {
             switch (parameter)
@@ -101,9 +125,8 @@ namespace Screenbox.Core.ViewModels
         protected virtual void Navigate(object? parameter = null)
         {
             // _navigationService.NavigateExisting(typeof(FolderViewPageViewModel), parameter);
-            _navigationService.Navigate(typeof(FolderViewWithHeaderPageViewModel),
-                new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderViewWithHeaderPageViewModel),
-                    parameter));
+            _navigationService.Navigate(typeof(FolderViewPageViewModel),
+                new NavigationMetadata(NavData?.RootViewModelType ?? typeof(FolderViewPageViewModel), parameter));
         }
 
         [RelayCommand]
