@@ -62,7 +62,6 @@ namespace Screenbox
             services.AddTransient<NetworkPageViewModel>();
             services.AddTransient<FolderViewPageViewModel>();
             services.AddTransient<FolderListViewPageViewModel>();
-            services.AddTransient<FolderViewWithHeaderPageViewModel>();
             services.AddTransient<PlayerControlsViewModel>();
             services.AddTransient<CastControlViewModel>();
             services.AddTransient<PlayerPageViewModel>();
@@ -123,8 +122,7 @@ namespace Screenbox
                 new KeyValuePair<Type, Type>(typeof(SongSearchResultPageViewModel), typeof(SongSearchResultPage)),
                 new KeyValuePair<Type, Type>(typeof(VideoSearchResultPageViewModel), typeof(VideoSearchResultPage)),
                 new KeyValuePair<Type, Type>(typeof(FolderViewPageViewModel), typeof(FolderViewPage)),
-                new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage)),
-                new KeyValuePair<Type, Type>(typeof(FolderViewWithHeaderPageViewModel), typeof(FolderViewWithHeaderPage))
+                new KeyValuePair<Type, Type>(typeof(FolderListViewPageViewModel), typeof(FolderListViewPage))
             ));
 
             return services.BuildServiceProvider();
