@@ -265,6 +265,9 @@
     <EmbeddedResource Include="Properties\Screenbox.Core.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AppCenter.Analytics">
+      <Version>5.0.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
       <Version>5.0.2</Version>
     </PackageReference>
