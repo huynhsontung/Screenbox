@@ -1,14 +1,13 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Microsoft.AppCenter.Crashes;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-
-#if !DEBUG
-using Microsoft.AppCenter.Crashes;
-#endif
 
 namespace Screenbox.Core.Services
 {
@@ -18,10 +17,7 @@ namespace Screenbox.Core.Services
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
 #if !DEBUG
-            if (message is Exception e)
-            {
-                Crashes.TrackError(e);
-            }
+            if (message is Exception e) TrackError(e);
 #endif
         }
 
@@ -35,6 +31,24 @@ namespace Screenbox.Core.Services
         private static void LibVLC_Log(object sender, LogEventArgs e)
         {
             Log(e.FormattedLog, "LibVLC");
+        }
+
+        private static void TrackError(Exception e)
+        {
+            if (e.Data.Count > 0)
+            {
+                Dictionary<string, string> dict = new(e.Data.Count);
+                foreach (DictionaryEntry entry in e.Data)
+                {
+                    dict[entry.Key.ToString()] = entry.Value.ToString();
+                }
+
+                Crashes.TrackError(e, dict);
+            }
+            else
+            {
+                Crashes.TrackError(e);
+            }
         }
     }
 }
