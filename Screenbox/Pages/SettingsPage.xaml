@@ -45,17 +45,8 @@
             Label="{strings:Resources Key=Remove}" />
 
         <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind Path}" />
+            <labs:SettingsCard Header="{x:Bind DisplayName}" Description="{x:Bind Path}">
                 <Button
-                    Grid.Column="1"
                     Height="32"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -64,21 +55,12 @@
                     CommandParameter="{x:Bind}">
                     <FontIcon FontSize="16" Glyph="&#xe894;" />
                 </Button>
-            </Grid>
+            </labs:SettingsCard>
         </DataTemplate>
 
         <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                    Grid.Column="0"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind Path}" />
+            <labs:SettingsCard Header="{x:Bind DisplayName}" Description="{x:Bind Path}">
                 <Button
-                    Grid.Column="1"
                     Height="32"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -87,7 +69,7 @@
                     CommandParameter="{x:Bind}">
                     <FontIcon FontSize="16" Glyph="&#xe894;" />
                 </Button>
-            </Grid>
+            </labs:SettingsCard>
         </DataTemplate>
     </Page.Resources>
 
@@ -139,6 +121,8 @@
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
+                    ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
+                    ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
@@ -146,20 +130,13 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard HorizontalAlignment="Stretch" ContentAlignment="Vertical">
-                            <controls:ItemsRepeater
-                                HorizontalAlignment="Stretch"
-                                ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
-                                ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
-                                Layout="{StaticResource VerticalStackLayout}" />
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
+                    ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
+                    ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
@@ -167,15 +144,6 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard HorizontalAlignment="Stretch" ContentAlignment="Vertical">
-                            <controls:ItemsRepeater
-                                HorizontalAlignment="Stretch"
-                                ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
-                                ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
-                                Layout="{StaticResource VerticalStackLayout}" />
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 
                 <TextBlock
