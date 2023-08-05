@@ -214,7 +214,7 @@ namespace Screenbox.Core.ViewModels
                 _dispatcherQueue.TryEnqueue(() =>
                 {
                     // Check if Time is close enough to Length. Sometimes a new file is already loaded at this point.
-                    if (Math.Abs(Length - Time) < 400)
+                    if (Length - Time is > 0 and < 400)
                     {
                         // Round Time to Length to avoid gap at the end
                         Time = Length;
