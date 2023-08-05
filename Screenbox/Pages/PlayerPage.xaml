@@ -236,15 +236,11 @@
                     Text=" –"
                     Visibility="Collapsed" />
 
-                <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}">
-                    <TextBlock
-                        x:Name="SubtitleText"
-                        Text="{x:Bind ViewModel.Media.MusicProperties.Artist, Mode=OneWay, FallbackValue={}}"
-                        TextTrimming="CharacterEllipsis" />
-                    <TextBlock FontSize="{x:Bind SubtitleText.FontSize, Mode=OneWay}" Visibility="{x:Bind ViewModel.Media.MusicProperties.Album, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay, FallbackValue=Collapsed}">
-                        <Run Text=" – " /><Run Text="{x:Bind ViewModel.Media.MusicProperties.Album, Mode=OneWay, FallbackValue={}}" />
-                    </TextBlock>
-                </StackPanel>
+                <TextBlock
+                    x:Name="SubtitleText"
+                    Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
             </StackPanel>
         </Grid>
 

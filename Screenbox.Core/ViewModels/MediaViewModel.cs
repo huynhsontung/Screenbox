@@ -50,7 +50,8 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _genre;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
-        [ObservableProperty] private string? _caption;
+        [ObservableProperty] private string? _caption;  // For list item subtitle
+        [ObservableProperty] private string? _altCaption;   // For player page subtitle
         [ObservableProperty] private uint _year;
 
         [ObservableProperty]
@@ -81,6 +82,7 @@ namespace Screenbox.Core.ViewModels
             _artists = source._artists;
             _album = source._album;
             _caption = source._caption;
+            _altCaption = source._altCaption;
             Location = source.Location;
             Source = source.Source;
         }
@@ -194,6 +196,10 @@ namespace Screenbox.Core.ViewModels
                 if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
                 {
                     Name = name;
+                    if (MediaType == MediaPlaybackType.Video && name != file.Name)
+                    {
+                        AltCaption = file.Name;
+                    }
                 }
 
                 if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
@@ -227,9 +233,16 @@ namespace Screenbox.Core.ViewModels
                                 Artists = _artistFactory.ParseArtists(contributingArtists, this);
                             }
 
-                            if (!string.IsNullOrEmpty(MusicProperties.Artist))
+                            if (string.IsNullOrEmpty(MusicProperties.Artist))
+                            {
+                                AltCaption = MusicProperties.Album;
+                            }
+                            else
                             {
                                 Caption = MusicProperties.Artist;
+                                AltCaption = string.IsNullOrEmpty(MusicProperties.Album)
+                                    ? MusicProperties.Artist
+                                    : $"{MusicProperties.Artist} – {MusicProperties.Album}";
                             }
                         }
 
