@@ -241,6 +241,8 @@ namespace Screenbox.Core.Services
             catch (Exception e)
             {
                 files = Array.Empty<StorageFile>();
+                e.Data[nameof(fetchIndex)] = fetchIndex;
+                e.Data[nameof(batchSize)] = batchSize;
                 LogService.Log(e);
             }
 

@@ -460,6 +460,7 @@
           "CommunityToolkit.Diagnostics": "[8.2.0, )",
           "CommunityToolkit.Mvvm": "[8.0.0, )",
           "LibVLCSharp": "[3.7.0, )",
+          "Microsoft.AppCenter.Analytics": "[5.0.2, )",
           "Microsoft.AppCenter.Crashes": "[5.0.2, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Microsoft.Toolkit.Uwp.UI": "[7.1.3, )",

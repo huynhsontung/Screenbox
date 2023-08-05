@@ -1,11 +1,13 @@
 ﻿#nullable enable
 
-using System.Collections.ObjectModel;
-using Windows.System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Events;
 using Screenbox.Core.Services;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -52,6 +54,13 @@ namespace Screenbox.Core.ViewModels
             _castService.SetActiveRenderer(SelectedRenderer);
             CastingDevice = SelectedRenderer;
             IsCasting = true;
+            Analytics.TrackEvent("StartCasting", new Dictionary<string, string>
+            {
+                {"rendererHash", SelectedRenderer.Name.GetHashCode().ToString()},
+                {"type", SelectedRenderer.Type},
+                {"canRenderAudio", SelectedRenderer.CanRenderAudio.ToString()},
+                {"canRenderVideo", SelectedRenderer.CanRenderVideo.ToString()},
+            });
         }
 
         private bool CanCast() => SelectedRenderer is { IsAvailable: true };
@@ -62,6 +71,7 @@ namespace Screenbox.Core.ViewModels
             _castService.SetActiveRenderer(null);
             IsCasting = false;
             StartDiscovering();
+            Analytics.TrackEvent("StopCasting");
         }
 
         private void CastServiceOnRendererLost(object sender, RendererLostEventArgs e)
