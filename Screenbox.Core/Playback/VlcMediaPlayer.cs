@@ -79,7 +79,10 @@ namespace Screenbox.Core.Playback
                 if (VlcPlayer.State == VLCState.Ended)
                 {
                     if (value == NaturalDuration)
+                    {
+                        _position = value;
                         return;
+                    }
 
                     Replay();
                 }
