@@ -169,7 +169,8 @@ namespace Screenbox.Pages
         private void SeekBarPointerReleasedEventHandler(object s, PointerRoutedEventArgs e)
         {
             ViewModel.SeekBarPointerInteracting = false;
-            PlayerControls.FocusFirstButton();
+            if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
+                PlayerControls.FocusFirstButton();
         }
 
         private void SeekBarPointerExitedEventHandler(object s, PointerRoutedEventArgs e)
