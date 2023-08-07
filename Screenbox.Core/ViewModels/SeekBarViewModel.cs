@@ -88,43 +88,6 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.SourceChanged += OnSourceChanged;
         }
 
-        private void OnSourceChanged(IMediaPlayer sender, object? args)
-        {
-            _seekTimer.Stop();
-            if (sender.Source == null)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    IsSeekable = false;
-                    Time = 0;
-                    Chapters = sender.PlaybackItem?.Chapters;
-                });
-            }
-            else
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    Time = 0;
-                });
-            }
-        }
-
-        private void OnBufferingEnded(IMediaPlayer sender, object? args)
-        {
-            _bufferingTimer.Stop();
-            _dispatcherQueue.TryEnqueue(() => BufferingVisible = false);
-        }
-
-        private void OnBufferingStarted(IMediaPlayer sender, object? args)
-        {
-            // When the player is paused, the following still triggers a buffering
-            if (sender.Position == sender.NaturalDuration)
-                return;
-
-            // Only show buffering if it takes more than 0.5s
-            _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
-        }
-
         public void Receive(TimeChangeOverrideMessage message)
         {
             _timeChangeOverride = message.Value;
@@ -168,18 +131,63 @@ namespace Screenbox.Core.ViewModels
                 bool shouldUpdate = oldDiffMs < 50 && newDiffMs > 400;
                 bool shouldOverride = _timeChangeOverride && newDiffMs > 100;
                 bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
-                if (_debounceOverride)
+                if (shouldUpdate || paused || shouldOverride)
                 {
+                    SetPlayerPosition(TimeSpan.FromMilliseconds(args.NewValue), !_debounceOverride);
                     _debounceOverride = false;
-                    _seekTimer.Stop();
-                    _mediaPlayer.Position = TimeSpan.FromMilliseconds(args.NewValue);
-                }
-                else if (shouldUpdate || paused || shouldOverride)
-                {
-                    _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(args.NewValue),
-                        TimeSpan.FromMilliseconds(50));
                 }
             }
+        }
+
+        private void SetPlayerPosition(TimeSpan position, bool debounce)
+        {
+            if (!IsSeekable || _mediaPlayer == null) return;
+            if (debounce)
+            {
+                _seekTimer.Debounce(() => _mediaPlayer.Position = position, TimeSpan.FromMilliseconds(50));
+            }
+            else
+            {
+                _seekTimer.Stop();
+                _mediaPlayer.Position = position;
+            }
+        }
+
+        private void OnSourceChanged(IMediaPlayer sender, object? args)
+        {
+            _seekTimer.Stop();
+            if (sender.Source == null)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    IsSeekable = false;
+                    Time = 0;
+                    Chapters = sender.PlaybackItem?.Chapters;
+                });
+            }
+            else
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    Time = 0;
+                });
+            }
+        }
+
+        private void OnBufferingEnded(IMediaPlayer sender, object? args)
+        {
+            _bufferingTimer.Stop();
+            _dispatcherQueue.TryEnqueue(() => BufferingVisible = false);
+        }
+
+        private void OnBufferingStarted(IMediaPlayer sender, object? args)
+        {
+            // When the player is paused, the following still triggers a buffering
+            if (sender.Position == sender.NaturalDuration)
+                return;
+
+            // Only show buffering if it takes more than 0.5s
+            _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
         }
 
         private void OnPositionChanged(IMediaPlayer sender, object? args)
