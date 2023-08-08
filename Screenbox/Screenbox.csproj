@@ -492,6 +492,24 @@
     <Content Include="Assets\Icons\Audio\FileAssociationWMA.targetsize-72.png" />
     <Content Include="Assets\Icons\Audio\FileAssociationWMA.targetsize-80.png" />
     <Content Include="Assets\Icons\Audio\FileAssociationWMA.targetsize-96.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-128.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-129.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-16.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-20.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-24.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-256.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-30.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-32.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-336.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-36.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-40.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-48.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-60.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-63.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-64.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-72.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-80.png" />
+    <Content Include="Assets\Icons\Playlist\FileAssociationPlaylist.targetsize-96.png" />
     <Content Include="Assets\Icons\Video\FileAssociation3GP.targetsize-128.png" />
     <Content Include="Assets\Icons\Video\FileAssociation3GP.targetsize-129.png" />
     <Content Include="Assets\Icons\Video\FileAssociation3GP.targetsize-16.png" />
@@ -996,6 +1014,7 @@
   <ItemGroup>
     <XliffResource Include="MultilingualResources\Screenbox.zh-Hans.xlf" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
