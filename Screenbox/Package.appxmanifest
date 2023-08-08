@@ -286,6 +286,7 @@
             </uap:SupportedFileTypes>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameM3U8</uap:DisplayName>
+            <uap:Logo>Assets\Icons\Playlist\FileAssociationPlaylist.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
@@ -295,6 +296,7 @@
             </uap:SupportedFileTypes>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMPEGTS</uap:DisplayName>
+            <uap:Logo>Assets\Icons\Playlist\FileAssociationPlaylist.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
        </Extensions>
