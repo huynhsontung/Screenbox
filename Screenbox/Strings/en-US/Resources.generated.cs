@@ -1769,7 +1769,7 @@ namespace Screenbox.Strings{
 
         #region SettingsVideoLibraryLocationsHeader
         /// <summary>
-        ///   Looks up a localized string similar to: VIdeo library locations
+        ///   Looks up a localized string similar to: Video library locations
         /// </summary>
         public static string SettingsVideoLibraryLocationsHeader
         {

@@ -586,7 +586,7 @@
     <value>Show recent</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>VIdeo library locations</value>
+    <value>Video library locations</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Subtitles</value>
