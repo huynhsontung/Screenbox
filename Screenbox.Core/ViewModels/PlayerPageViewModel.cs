@@ -340,9 +340,15 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void RevealControls()
+        // Hidden button acts as a focus sink when controls are hidden
+        public void HiddenButtonOnClick()
         {
             ControlsHidden = false;
+            if (SystemInformationExtensions.IsDesktop)
+            {
+                // On Desktop, user expect Space to pause without needing to see the controls
+                Messenger.Send(new TogglePlayPauseMessage(true));
+            }
         }
 
         private void TogglePlaybackRate(bool speedUp)

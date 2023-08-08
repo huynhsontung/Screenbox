@@ -310,7 +310,7 @@
             x:Name="HiddenButton"
             Grid.Row="0"
             Grid.Column="0"
-            Click="{x:Bind ViewModel.RevealControls}"
+            Click="{x:Bind ViewModel.HiddenButtonOnClick}"
             Opacity="0"
             Style="{x:Null}"
             Visibility="Collapsed" />
