@@ -48,7 +48,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueueTimer _originalPositionTimer;
         private TimeSpan _originalPosition;
         private bool _timeChangeOverride;
-        private bool _debounceOverride;
 
         public SeekBarViewModel()
         {
@@ -88,6 +87,73 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.SourceChanged += OnSourceChanged;
         }
 
+        public void Receive(TimeChangeOverrideMessage message)
+        {
+            _timeChangeOverride = message.Value;
+        }
+
+        public void Receive(ChangeTimeRequestMessage message)
+        {
+            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
+            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
+
+            // Assume UI thread
+            Time = message.IsOffset
+                ? Math.Clamp(Time + message.Value.TotalMilliseconds, 0, Length)
+                : message.Value.TotalMilliseconds;
+            SetPlayerPosition(TimeSpan.FromMilliseconds(Time), message.Debounce);
+
+            message.Reply(new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
+                _originalPosition, TimeSpan.FromMilliseconds(Length)));
+        }
+
+        public void OnSeekBarPointerEvent(bool pressed)
+        {
+            _timeChangeOverride = pressed;
+        }
+
+        public void UpdatePreviewTime(double normalizedPosition)
+        {
+            normalizedPosition = Math.Clamp(normalizedPosition, 0, 1);
+            PreviewTime = (long)(normalizedPosition * Length);
+        }
+
+        public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
+        {
+            // Only update player position when there is a user interaction.
+            // SeekBar should have OneWay binding to Time, so when Time changes and invokes
+            // this handler, Time = args.NewValue. The only exception is when the change is
+            // coming from user.
+            // We can detect user interaction by checking if Time != args.NewValue
+            if (IsSeekable && _mediaPlayer != null && Math.Abs(Time - args.NewValue) > 50)
+            {
+                Time = args.NewValue;
+                double currentMs = _mediaPlayer.Position.TotalMilliseconds;
+                double newDiffMs = Math.Abs(args.NewValue - currentMs);
+                bool shouldUpdate = newDiffMs > 400;
+                bool shouldOverride = _timeChangeOverride && newDiffMs > 100;
+                bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
+                if (shouldUpdate || paused || shouldOverride)
+                {
+                    SetPlayerPosition(TimeSpan.FromMilliseconds(args.NewValue), true);
+                }
+            }
+        }
+
+        private void SetPlayerPosition(TimeSpan position, bool debounce)
+        {
+            if (!IsSeekable || _mediaPlayer == null) return;
+            if (debounce)
+            {
+                _seekTimer.Debounce(() => _mediaPlayer.Position = position, TimeSpan.FromMilliseconds(50));
+            }
+            else
+            {
+                _seekTimer.Stop();
+                _mediaPlayer.Position = position;
+            }
+        }
+
         private void OnSourceChanged(IMediaPlayer sender, object? args)
         {
             _seekTimer.Stop();
@@ -123,63 +189,6 @@ namespace Screenbox.Core.ViewModels
 
             // Only show buffering if it takes more than 0.5s
             _bufferingTimer.Debounce(() => BufferingVisible = true, TimeSpan.FromSeconds(0.5));
-        }
-
-        public void Receive(TimeChangeOverrideMessage message)
-        {
-            _timeChangeOverride = message.Value;
-        }
-
-        public void Receive(ChangeTimeRequestMessage message)
-        {
-            if (!message.Debounce)
-                _debounceOverride = true;
-
-            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
-            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
-
-            // Assume UI thread
-            Time = message.IsOffset
-                ? Math.Clamp(Time + message.Value.TotalMilliseconds, 0, Length)
-                : message.Value.TotalMilliseconds;
-
-            message.Reply(new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
-                _originalPosition, TimeSpan.FromMilliseconds(Length)));
-        }
-
-        public void OnSeekBarPointerEvent(bool pressed)
-        {
-            _timeChangeOverride = pressed;
-        }
-
-        public void UpdatePreviewTime(double normalizedPosition)
-        {
-            normalizedPosition = Math.Clamp(normalizedPosition, 0, 1);
-            PreviewTime = (long)(normalizedPosition * Length);
-        }
-
-        public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
-        {
-            if (IsSeekable && _mediaPlayer != null)
-            {
-                double currentMs = _mediaPlayer.Position.TotalMilliseconds;
-                double newDiffMs = Math.Abs(args.NewValue - currentMs);
-                double oldDiffMs = Math.Abs(args.OldValue - currentMs);
-                bool shouldUpdate = oldDiffMs < 50 && newDiffMs > 400;
-                bool shouldOverride = _timeChangeOverride && newDiffMs > 100;
-                bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
-                if (_debounceOverride)
-                {
-                    _debounceOverride = false;
-                    _seekTimer.Stop();
-                    _mediaPlayer.Position = TimeSpan.FromMilliseconds(args.NewValue);
-                }
-                else if (shouldUpdate || paused || shouldOverride)
-                {
-                    _seekTimer.Debounce(() => _mediaPlayer.Position = TimeSpan.FromMilliseconds(args.NewValue),
-                        TimeSpan.FromMilliseconds(50));
-                }
-            }
         }
 
         private void OnPositionChanged(IMediaPlayer sender, object? args)
