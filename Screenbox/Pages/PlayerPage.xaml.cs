@@ -81,7 +81,7 @@ namespace Screenbox.Pages
             switch (e.Key)
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
-                    ViewModel.RevealControls();
+                    ViewModel.ControlsHidden = false;
                     PlayQueueFlyout.ShowAt(TitleBarArea,
                         new FlyoutShowOptions { Placement = FlyoutPlacementMode.Bottom });
                     break;
@@ -392,6 +392,8 @@ namespace Screenbox.Pages
         {
             if (e.NewState.Name == nameof(ControlsHidden))
             {
+                // Handle Space key when the controls are not visible.
+                // Also hide tooltip if there is any.
                 HiddenButton.Focus(FocusState.Programmatic);
             }
         }
