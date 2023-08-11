@@ -206,7 +206,7 @@
     <value>欢迎使用 Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>让我们开始播放一些媒体内容，让事情进展起来吧！</value>
+    <value>让我们开始播放一些媒体内容，让事情进展起来吧。</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>属性</value>

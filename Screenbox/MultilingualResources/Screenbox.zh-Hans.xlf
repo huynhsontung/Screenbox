@@ -146,6 +146,7 @@
         <trans-unit id="VolumeChangeStatusMessage" translate="yes" xml:space="preserve">
           <source>Volume {0:F0}%</source>
           <target state="translated">音量 {0:F0}%</target>
+          <note from="resx" priority="2">#Format[Double volume]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Double volume]</note>
         </trans-unit>
         <trans-unit id="FailedToSaveFrameNotificationTitle" translate="yes" xml:space="preserve">
@@ -155,6 +156,7 @@
         <trans-unit id="ChapterName" translate="yes" xml:space="preserve">
           <source>Chapter {0}</source>
           <target state="translated">第 {0} 章</target>
+          <note from="resx" priority="2">#Format[Int32 chapter]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Int32 chapter]</note>
         </trans-unit>
         <trans-unit id="FailedToLoadSubtitleNotificationTitle" translate="yes" xml:space="preserve">
@@ -236,11 +238,13 @@
         <trans-unit id="ItemsSelected_One" translate="yes" xml:space="preserve">
           <source>{0} item selected</source>
           <target state="translated">{0} 项已选择</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="ItemsSelected_Other" translate="yes" xml:space="preserve">
           <source>{0} items selected</source>
           <target state="translated">{0} 项已选择</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="AddToQueue" translate="yes" xml:space="preserve">
@@ -270,6 +274,7 @@
         <trans-unit id="IsPlaying" translate="yes" xml:space="preserve">
           <source>Is playing</source>
           <target state="translated">正在播放</target>
+          <note from="resx" priority="2">Tool tip on which item is currently playing</note>
           <note from="MultilingualBuild" annotates="source" priority="2">Tool tip on which item is currently playing</note>
         </trans-unit>
         <trans-unit id="Videos" translate="yes" xml:space="preserve">
@@ -283,11 +288,13 @@
         <trans-unit id="ItemsCount_One" translate="yes" xml:space="preserve">
           <source>{0} item</source>
           <target state="translated">{0} 项</target>
+          <note from="resx" priority="2">#Format[Plural]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural]</note>
         </trans-unit>
         <trans-unit id="ItemsCount_Other" translate="yes" xml:space="preserve">
           <source>{0} items</source>
           <target state="translated">{0} 项</target>
+          <note from="resx" priority="2">#Format[Plural]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural]</note>
         </trans-unit>
         <trans-unit id="ItemsCount_None" translate="yes" xml:space="preserve">
@@ -380,7 +387,7 @@
         </trans-unit>
         <trans-unit id="WelcomePanelSubtext" translate="yes" xml:space="preserve">
           <source>Let's start playing some of your media content to get things going.</source>
-          <target state="translated">让我们开始播放一些媒体内容，让事情进展起来吧！</target>
+          <target state="translated">让我们开始播放一些媒体内容，让事情进展起来吧。</target>
         </trans-unit>
         <trans-unit id="Properties" translate="yes" xml:space="preserve">
           <source>Properties</source>
@@ -497,11 +504,13 @@
         <trans-unit id="LocationSpecified_One" translate="yes" xml:space="preserve">
           <source>{0} location specified</source>
           <target state="translated">指定了 {0} 位置</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="LocationSpecified_Other" translate="yes" xml:space="preserve">
           <source>{0} locations specified</source>
           <target state="translated">指定了 {0} 位置</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="ShuffleMode_Variant0" translate="yes" xml:space="preserve">
@@ -519,6 +528,7 @@
         <trans-unit id="GoToPosition" translate="yes" xml:space="preserve">
           <source>Go to {0}</source>
           <target state="translated">跳转至 {0}</target>
+          <note from="resx" priority="2">#Format[String position]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String position]</note>
         </trans-unit>
         <trans-unit id="Albums" translate="yes" xml:space="preserve">
@@ -572,26 +582,31 @@
         <trans-unit id="SongsCount_One" translate="yes" xml:space="preserve">
           <source>{0} song</source>
           <target state="translated">{0} 首歌</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="SongsCount_Other" translate="yes" xml:space="preserve">
           <source>{0} songs</source>
           <target state="translated">{0} 首歌</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="AlbumsCount_One" translate="yes" xml:space="preserve">
           <source>{0} album</source>
           <target state="translated">{0} 个专辑</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="AlbumsCount_Other" translate="yes" xml:space="preserve">
           <source>{0} albums</source>
           <target state="translated">{0} 个专辑</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="RunTime" translate="yes" xml:space="preserve">
           <source>{0} run time</source>
           <target state="translated">{0} 播放时长</target>
+          <note from="resx" priority="2">#Format[String runtime]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String runtime]</note>
         </trans-unit>
         <trans-unit id="AllVideos" translate="yes" xml:space="preserve">
@@ -605,6 +620,7 @@
         <trans-unit id="SearchResultHeader" translate="yes" xml:space="preserve">
           <source>Search results for "{0}"</source>
           <target state="translated">关于 "{0}" 的搜索结果</target>
+          <note from="resx" priority="2">#Format[String query]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String query]</note>
         </trans-unit>
         <trans-unit id="SeeAll" translate="yes" xml:space="preserve">
@@ -614,26 +630,31 @@
         <trans-unit id="SearchResultArtistHeader" translate="yes" xml:space="preserve">
           <source>Artist results for "{0}"</source>
           <target state="translated">关于 "{0}" 的艺术家搜索结果</target>
+          <note from="resx" priority="2">#Format[String query]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String query]</note>
         </trans-unit>
         <trans-unit id="SearchResultAlbumHeader" translate="yes" xml:space="preserve">
           <source>Album results for "{0}"</source>
           <target state="translated">关于 "{0}" 的专辑搜索结果</target>
+          <note from="resx" priority="2">#Format[String query]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String query]</note>
         </trans-unit>
         <trans-unit id="SearchResultSongHeader" translate="yes" xml:space="preserve">
           <source>Song results for "{0}"</source>
           <target state="translated">关于 "{0}" 的歌曲搜索结果</target>
+          <note from="resx" priority="2">#Format[String query]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String query]</note>
         </trans-unit>
         <trans-unit id="SearchResultVideoHeader" translate="yes" xml:space="preserve">
           <source>Video results for "{0}"</source>
           <target state="translated">关于 "{0}" 的视频搜索结果</target>
+          <note from="resx" priority="2">#Format[String query]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String query]</note>
         </trans-unit>
         <trans-unit id="AlbumsCount_None" translate="yes" xml:space="preserve">
           <source>No album</source>
           <target state="translated">无专辑</target>
+          <note from="resx" priority="2">#Format[Plural Int]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Plural Int]</note>
         </trans-unit>
         <trans-unit id="AccessDeniedMessage" translate="yes" xml:space="preserve">
@@ -695,16 +716,19 @@
         <trans-unit id="ScaleStatus" translate="yes" xml:space="preserve">
           <source>Scale: {0}</source>
           <target state="translated">缩放比例：{0}</target>
+          <note from="resx" priority="2">#Format[String scale]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String scale]</note>
         </trans-unit>
         <trans-unit id="SubtitleStatus" translate="yes" xml:space="preserve">
           <source>Subtitle: {0}</source>
           <target state="translated">字幕：{0}</target>
+          <note from="resx" priority="2">#Format[String name]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[String name]</note>
         </trans-unit>
         <trans-unit id="TrackIndex" translate="yes" xml:space="preserve">
           <source>Track {0}</source>
           <target state="translated">曲目 {0}</target>
+          <note from="resx" priority="2">#Format[Int index]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[Int index]</note>
         </trans-unit>
         <trans-unit id="AddSubtitle" translate="yes" xml:space="preserve">
@@ -740,7 +764,7 @@
           <target state="translated">显示最近播放</target>
         </trans-unit>
         <trans-unit id="SettingsVideoLibraryLocationsHeader" translate="yes" xml:space="preserve">
-          <source>VIdeo library locations</source>
+          <source>Video library locations</source>
           <target state="translated">视频资料库位置</target>
         </trans-unit>
         <trans-unit id="Subtitles" translate="yes" xml:space="preserve">
@@ -818,6 +842,7 @@
         <trans-unit id="VersionText" translate="yes" xml:space="preserve">
           <source>Version {0}</source>
           <target state="translated">版本 {0}</target>
+          <note from="resx" priority="2">#Format[VERSION]</note>
           <note from="MultilingualBuild" annotates="source" priority="2">#Format[VERSION]</note>
         </trans-unit>
         <trans-unit id="SubtitleAddedNotificationTitle" translate="yes" xml:space="preserve">
