@@ -40,6 +40,7 @@ namespace Screenbox.Core.Services
                 Dictionary<string, string> dict = new(e.Data.Count);
                 foreach (DictionaryEntry entry in e.Data)
                 {
+                    if (entry.Value == null || entry.Key == null) return;
                     dict[entry.Key.ToString()] = entry.Value.ToString();
                 }
 
