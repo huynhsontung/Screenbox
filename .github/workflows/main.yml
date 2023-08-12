@@ -87,8 +87,8 @@ jobs:
         -restore
       env:
         BuildMode: StoreUpload
-        BuildPlatforms: x86|x64|ARM
-        PackageDir: C:\DeployOutput\Packages
+        BuildPlatforms: x86|x64
+        PackageDir: C:\DeployOutput
     
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v3
@@ -96,27 +96,8 @@ jobs:
       with:
         name: store-upload
         path: |
-          C:\DeployOutput\Packages\*.msixupload
-          C:\DeployOutput\Packages\*.appxupload
-
-    # Only allow sideload x64 due to VS packaging issue
-    # See: https://developercommunity.visualstudio.com/t/get-merge-failure-for-shared-merged-pri-file-0x800/107928
-    - name: Build sideload
-      if: github.ref_type == 'tag'
-      run: |
-        msbuild Screenbox.sln `
-        -v:d `
-        -p:Configuration=Release `
-        -p:Platform=x64 `
-        -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="$env:BuildPlatforms" `
-        -p:UapAppxPackageBuildMode=$env:BuildMode `
-        -p:AppxPackageDir=$env:PackageDir `
-        -p:AppxPackageSigningEnabled=false
-      env:
-        BuildMode: StoreUpload
-        BuildPlatforms: x64
-        PackageDir: C:\DeployOutput
+          C:\DeployOutput\*.msixupload
+          C:\DeployOutput\*.appxupload
 
     - name: Create sideload artifact
       uses: actions/upload-artifact@v3
