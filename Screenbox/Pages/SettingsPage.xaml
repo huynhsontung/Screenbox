@@ -45,7 +45,7 @@
             Label="{strings:Resources Key=Remove}" />
 
         <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <labs:SettingsCard Header="{x:Bind DisplayName}" Description="{x:Bind Path}">
+            <labs:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                 <Button
                     Height="32"
                     VerticalAlignment="Center"
@@ -59,7 +59,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-            <labs:SettingsCard Header="{x:Bind DisplayName}" Description="{x:Bind Path}">
+            <labs:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                 <Button
                     Height="32"
                     VerticalAlignment="Center"
