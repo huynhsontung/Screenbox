@@ -45,6 +45,7 @@
                 <ResourceDictionary x:Key="HighContrast" />
             </ResourceDictionary.ThemeDictionaries>
 
+            <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
             <converters1:BoolToObjectConverter
                 x:Key="BoolToPlayPauseTextConverter"
@@ -360,7 +361,7 @@
                     <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                     <KeyboardAccelerator Key="Space" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                 </Button.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind ViewModel.PlayPauseGlyph, Mode=OneWay}" />
+                <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
             </Button>
 
             <Button

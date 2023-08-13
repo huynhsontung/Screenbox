@@ -165,14 +165,7 @@
             ItemsSource="{x:Bind ViewModel.SortedItems}"
             SelectionMode="None">
             <ListView.Resources>
-                <XamlUICommand
-                    x:Key="MediaListViewItemPlayCommand"
-                    Command="{x:Bind ViewModel.PlayCommand}"
-                    Label="{strings:Resources Key=Play}">
-                    <XamlUICommand.IconSource>
-                        <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                    </XamlUICommand.IconSource>
-                </XamlUICommand>
+                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>
             <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />

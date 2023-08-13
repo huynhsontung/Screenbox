@@ -229,14 +229,7 @@
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <ListView.Resources>
-                <XamlUICommand
-                    x:Key="MediaListViewItemPlayCommand"
-                    Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
-                    Label="{strings:Resources Key=Play}">
-                    <XamlUICommand.IconSource>
-                        <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                    </XamlUICommand.IconSource>
-                </XamlUICommand>
+                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
             </ListView.Resources>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
