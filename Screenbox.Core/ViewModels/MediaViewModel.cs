@@ -41,7 +41,7 @@ namespace Screenbox.Core.ViewModels
         private bool _loaded;
 
         [ObservableProperty] private string _name;
-        [ObservableProperty] private bool _isPlaying;
+        [ObservableProperty] private bool _isMediaActive;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private BasicProperties? _basicProperties;
@@ -61,6 +61,9 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
         private uint _trackNumber;
+
+        [ObservableProperty]
+        private bool? _isPlaying;
 
         private MediaViewModel(MediaViewModel source)
         {

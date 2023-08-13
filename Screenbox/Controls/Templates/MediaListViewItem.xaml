@@ -140,7 +140,7 @@
                         <VisualState x:Name="NotPlaying" />
                         <VisualState x:Name="IsPlaying">
                             <VisualState.StateTriggers>
-                                <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                                <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
                             <VisualState.Setters>
                                 <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />

@@ -193,6 +193,10 @@ namespace Screenbox.Core.ViewModels
             {
                 IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
                 PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
+                if (Playlist.CurrentItem != null)
+                {
+                    Playlist.CurrentItem.IsPlaying = IsPlaying;
+                }
             });
         }
 
