@@ -4,9 +4,9 @@
     "UAP,Version=v10.0.18362": {
       "CommunityToolkit.Labs.Uwp.SettingsControls": {
         "type": "Direct",
-        "requested": "[0.0.17, )",
-        "resolved": "0.0.17",
-        "contentHash": "vUSrq46I0+65EyDUq39Ko6L+XgXu6I4042vLGmRLV/2C992cDN6gJ0ePxNtc7NQrrCnULcAGu0UVsPNJT571Fg==",
+        "requested": "[0.0.18, )",
+        "resolved": "0.0.18",
+        "contentHash": "W6kyOn73naXPuMNi1nOk97IFkMQrzma2hACTATiyA/oiySKKaYcCZ83zVXnxSv+SBvQZrffVjXOJ46NL0KTQoA==",
         "dependencies": {
           "Microsoft.Toolkit.Uwp.UI": "7.1.2",
           "Microsoft.UI.Xaml": "2.7.0"
@@ -96,9 +96,9 @@
       },
       "Microsoft.UI.Xaml": {
         "type": "Direct",
-        "requested": "[2.8.4, )",
-        "resolved": "2.8.4",
-        "contentHash": "b4rHKILateNKHzL+PoLNNSptXDCpSfiGb2ZUMvxUfbZoZFyc6GipIzmrR0E3c/T7dxMDlA3C99znQo8U0qwrLw==",
+        "requested": "[2.8.5, )",
+        "resolved": "2.8.5",
+        "contentHash": "R+LsMZ3+Vj6hUqy2c9D6/ZwgAqbw0aAiRNt51NTNv/8pdW3CBqf4ngastI31/IUdUs1tuihYqjQ5AjTIx9BDBA==",
         "dependencies": {
           "Microsoft.Web.WebView2": "1.0.1264.42"
         }
@@ -126,8 +126,8 @@
       },
       "CommunityToolkit.Diagnostics": {
         "type": "Transitive",
-        "resolved": "8.2.0",
-        "contentHash": "kF2qZTYvuS+uTAWmZm4UB1rdd2/F4JidWbIiySzdCwf5UfueUBuSMWFSnTptafWRkG0F9auAp/eL5wUAvH51mg==",
+        "resolved": "8.2.1",
+        "contentHash": "s8URwNarXZZLDtVf9B1AvdKMYg4tNFEuikjrMJYlwgAdSoQT0Y7W8mCYA2o2H+dKiCRVLJUXBdxflk/+QS9QBg==",
         "dependencies": {
           "System.Memory": "4.5.5"
         }
@@ -457,7 +457,7 @@
       "screenbox.core": {
         "type": "Project",
         "dependencies": {
-          "CommunityToolkit.Diagnostics": "[8.2.0, )",
+          "CommunityToolkit.Diagnostics": "[8.2.1, )",
           "CommunityToolkit.Mvvm": "[8.0.0, )",
           "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.2, )",
