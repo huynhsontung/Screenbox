@@ -232,8 +232,8 @@
                         <VisualState x:Name="Normal" />
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
                                 <Setter Target="PlayButton.Visibility" Value="Visible" />
+                                <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
