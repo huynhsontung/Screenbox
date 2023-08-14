@@ -181,12 +181,13 @@ namespace Screenbox.Core.ViewModels
 
             if (CurrentItem != null)
             {
-                CurrentItem.IsPlaying = false;
+                CurrentItem.IsMediaActive = false;
+                CurrentItem.IsPlaying = null;
             }
 
             if (value != null)
             {
-                value.IsPlaying = true;
+                value.IsMediaActive = true;
                 // Setting current index here to handle updating playlist before calling PlaySingle
                 // If playlist is updated after, CollectionChanged handler will update the index
                 CurrentIndex = Items.IndexOf(value);

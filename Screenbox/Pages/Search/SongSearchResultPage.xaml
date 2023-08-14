@@ -47,14 +47,7 @@
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
             <ListView.Resources>
-                <XamlUICommand
-                    x:Key="MediaListViewItemPlayCommand"
-                    Command="{x:Bind ViewModel.PlaySongCommand, FallbackValue={x:Null}}"
-                    Label="{strings:Resources Key=Play}">
-                    <XamlUICommand.IconSource>
-                        <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                    </XamlUICommand.IconSource>
-                </XamlUICommand>
+                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand, FallbackValue={x:Null}}" />
             </ListView.Resources>
             <ListView.Footer>
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

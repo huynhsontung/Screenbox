@@ -90,6 +90,19 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.Remove(item);
         }
 
+        [RelayCommand]
+        private void PlaySingle(MediaViewModel media)
+        {
+            if (Playlist.CurrentItem == media && (media.IsPlaying ?? false))
+            {
+                Messenger.Send(new TogglePlayPauseMessage(false));
+            }
+            else
+            {
+                Messenger.Send(new PlayMediaMessage(media, true));
+            }
+        }
+
         [RelayCommand(CanExecute = nameof(HasSelection))]
         private void PlaySelectedNext(IList<object>? selectedItems)
         {

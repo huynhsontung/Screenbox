@@ -1,14 +1,15 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -105,14 +106,7 @@ namespace Screenbox.Core.ViewModels
         private void PlaySong(MediaViewModel media)
         {
             if (SearchResult == null) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != SearchResult.Songs.Count || playlist.LastUpdate != SearchResult.Songs)
-            {
-                Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(SearchResult.Songs, false));
-            }
-
-            Messenger.Send(new PlayMediaMessage(media, true));
+            Messenger.SendQueueAndPlay(media, SearchResult.Songs);
         }
 
         [RelayCommand(CanExecute = nameof(SearchResultPageViewModel.HasMoreArtists))]

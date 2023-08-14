@@ -2,17 +2,22 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:viewModels="using:Screenbox.ViewModels"
     xmlns:viewModels1="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
 
     <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
+    <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
     <converters:MediaTypeAdaptiveLayoutOverrideConverter x:Key="AdaptiveLayoutOverrideConverter" />
+    <converters1:BoolToObjectConverter
+        x:Key="BoolToPlayPauseTextConverter"
+        FalseValue="{strings:Resources Key=Play}"
+        TrueValue="{strings:Resources Key=Pause}" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
         <UserControl>
@@ -39,7 +44,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
-                    FontSize="16"
+                    FontSize="{StaticResource DefaultIconFontSize}"
                     Glyph="A"
                     IsHitTestVisible="False"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
@@ -52,24 +57,27 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    FontSize="16"
+                    FontSize="{StaticResource DefaultIconFontSize}"
                     Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
                     IsHitTestVisible="False" />
 
-                <AppBarButton
+                <Button
                     x:Name="PlayButton"
                     Grid.Column="1"
                     Width="32"
+                    Height="32"
                     Padding="6"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
                     CommandParameter="{Binding}"
-                    IsCompact="True"
-                    LabelPosition="Collapsed"
+                    ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
                     Visibility="Collapsed">
-                    <SymbolIcon Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                </AppBarButton>
+                    <FontIcon
+                        FontSize="{StaticResource DefaultIconFontSize}"
+                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                        Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                </Button>
 
                 <TextBlock
                     x:Name="TitleText"
@@ -140,7 +148,7 @@
                         <VisualState x:Name="NotPlaying" />
                         <VisualState x:Name="IsPlaying">
                             <VisualState.StateTriggers>
-                                <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                                <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
                             <VisualState.Setters>
                                 <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
@@ -224,8 +232,8 @@
                         <VisualState x:Name="Normal" />
                         <VisualState x:Name="PointerOver">
                             <VisualState.Setters>
-                                <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
                                 <Setter Target="PlayButton.Visibility" Value="Visible" />
+                                <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
@@ -267,26 +275,29 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
-                    FontSize="16"
+                    FontSize="{StaticResource DefaultIconFontSize}"
                     Glyph="A"
                     IsHitTestVisible="False"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
                     Visibility="Collapsed" />
 
-                <AppBarButton
+                <Button
                     x:Name="PlayButton"
                     Grid.Column="1"
                     Width="32"
+                    Height="32"
                     Padding="6"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
                     CommandParameter="{Binding}"
-                    IsCompact="True"
-                    LabelPosition="Collapsed"
+                    ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
                     Visibility="Collapsed">
-                    <SymbolIcon Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                </AppBarButton>
+                    <FontIcon
+                        FontSize="{StaticResource DefaultIconFontSize}"
+                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                        Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                </Button>
 
                 <TextBlock
                     x:Name="TitleText"
@@ -357,7 +368,7 @@
                         <VisualState x:Name="NotPlaying" />
                         <VisualState x:Name="IsPlaying">
                             <VisualState.StateTriggers>
-                                <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                                <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
                             <VisualState.Setters>
                                 <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
@@ -476,7 +487,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
-                    FontSize="16"
+                    FontSize="{StaticResource DefaultIconFontSize}"
                     Glyph="A"
                     IsHitTestVisible="False"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
@@ -495,20 +506,23 @@
                     Text="{Binding TrackNumber, FallbackValue=''}"
                     Visibility="{Binding ShouldDisplayTrackNumber}" />
 
-                <AppBarButton
+                <Button
                     x:Name="PlayButton"
                     Grid.Column="1"
                     Width="32"
+                    Height="32"
                     Padding="6"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
                     CommandParameter="{Binding}"
-                    IsCompact="True"
-                    LabelPosition="Collapsed"
+                    ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
                     Visibility="Collapsed">
-                    <SymbolIcon Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                </AppBarButton>
+                    <FontIcon
+                        FontSize="{StaticResource DefaultIconFontSize}"
+                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                        Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                </Button>
 
                 <TextBlock
                     x:Name="TitleText"
@@ -563,7 +577,7 @@
                         <VisualState x:Name="NotPlaying" />
                         <VisualState x:Name="IsPlaying">
                             <VisualState.StateTriggers>
-                                <StateTrigger IsActive="{Binding IsPlaying, Mode=OneWay, FallbackValue=False}" />
+                                <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
                             <VisualState.Setters>
                                 <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />

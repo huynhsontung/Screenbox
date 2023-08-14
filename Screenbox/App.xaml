@@ -53,10 +53,10 @@
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
                     <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
-
+                    <x:Double x:Key="DefaultIconFontSize">16</x:Double>
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
-                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />
                     </Style>
 
                     <Style

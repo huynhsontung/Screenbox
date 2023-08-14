@@ -133,14 +133,7 @@
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         SelectionMode="None">
                         <ListView.Resources>
-                            <XamlUICommand
-                                x:Key="MediaListViewItemPlayCommand"
-                                Command="{x:Bind ViewModel.PlaySongCommand}"
-                                Label="{strings:Resources Key=Play}">
-                                <XamlUICommand.IconSource>
-                                    <SymbolIconSource Foreground="{ThemeResource AccentFillColorDefaultBrush}" Symbol="Play" />
-                                </XamlUICommand.IconSource>
-                            </XamlUICommand>
+                            <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand}" />
                         </ListView.Resources>
                         <interactivity:Interaction.Behaviors>
                             <interactions:AlternatingListViewBehavior
