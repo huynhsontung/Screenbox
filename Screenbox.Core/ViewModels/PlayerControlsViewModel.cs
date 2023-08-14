@@ -32,7 +32,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
-        [ObservableProperty] private string _playPauseGlyph;
         [ObservableProperty] private double _playbackSpeed;
 
         [ObservableProperty]
@@ -67,7 +66,6 @@ namespace Screenbox.Core.ViewModels
             _windowService = windowService;
             _resourceService = resourceService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
-            _playPauseGlyph = GetPlayPauseGlyph(false);
             _playbackSpeed = 1.0;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
@@ -192,7 +190,6 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
-                PlayPauseGlyph = GetPlayPauseGlyph(IsPlaying);
                 if (Playlist.CurrentItem != null)
                 {
                     Playlist.CurrentItem.IsPlaying = IsPlaying;
@@ -329,7 +326,5 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
             PlayPause();
         }
-
-        private static string GetPlayPauseGlyph(bool isPlaying) => isPlaying ? "\uE103" : "\uE102";
     }
 }
