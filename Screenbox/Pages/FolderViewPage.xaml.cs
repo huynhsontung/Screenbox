@@ -54,6 +54,10 @@ namespace Screenbox.Pages
             TitleText.Visibility = HeaderVisibility;
             BreadcrumbBar.Visibility = HeaderVisibility;
             await ViewModel.OnNavigatedTo(e.Parameter);
+
+            // Manually set value after loading since UI maybe cached on navigated back
+            TitleText.Text = ViewModel.TitleText;
+            BreadcrumbBar.ItemsSource = ViewModel.Breadcrumbs;
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)

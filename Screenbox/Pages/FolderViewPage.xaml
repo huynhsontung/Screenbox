@@ -122,6 +122,7 @@
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
+            Height="28"
             Margin="0,0,0,12"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
