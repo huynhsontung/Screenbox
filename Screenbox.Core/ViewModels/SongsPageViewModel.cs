@@ -1,10 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -80,14 +78,7 @@ namespace Screenbox.Core.ViewModels
         private void Play(MediaViewModel media)
         {
             if (_songs.Count == 0) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != _songs.Count || playlist.LastUpdate != _songs)
-            {
-                Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(_songs, false));
-            }
-
-            Messenger.Send(new PlayMediaMessage(media, true));
+            Messenger.SendQueueAndPlay(media, _songs);
         }
 
         [RelayCommand]

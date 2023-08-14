@@ -229,7 +229,7 @@
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
+                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}" />
             </ListView.Resources>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior

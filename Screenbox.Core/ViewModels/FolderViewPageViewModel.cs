@@ -133,14 +133,7 @@ namespace Screenbox.Core.ViewModels
         private void Play(StorageItemViewModel item)
         {
             if (item.Media == null) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != _playableItems.Count || playlist.LastUpdate != _playableItems)
-            {
-                Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(_playableItems, false));
-            }
-
-            Messenger.Send(new PlayMediaMessage(item.Media, true));
+            Messenger.SendQueueAndPlay(item.Media, _playableItems, false);
         }
 
         [RelayCommand]

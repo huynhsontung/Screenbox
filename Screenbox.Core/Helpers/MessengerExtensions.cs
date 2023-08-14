@@ -1,13 +1,35 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using System;
+using System.Collections.Generic;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Helpers
 {
     internal static class MessengerExtensions
     {
+        public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
+            IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
+        {
+            PlaylistInfo playlist = messenger.Send(new PlaylistRequestMessage());
+            if (playlist.ActiveItem == media && (media.IsPlaying ?? false) && pauseIfExists)
+            {
+                messenger.Send(new TogglePlayPauseMessage(false));
+                return;
+            }
+
+            if (playlist.Playlist.Count != queue.Count || playlist.LastUpdate != queue)
+            {
+                messenger.Send(new ClearPlaylistMessage());
+                messenger.Send(new QueuePlaylistMessage(queue, false));
+            }
+
+            messenger.Send(new PlayMediaMessage(media, true));
+        }
+
         public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
         {
             // Clone to prevent queuing duplications

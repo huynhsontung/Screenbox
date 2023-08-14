@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using System;
 using System.Collections;
@@ -73,14 +74,7 @@ namespace Screenbox.Core.ViewModels
         private void Play(MediaViewModel item)
         {
             _itemList ??= SortedItems.OfType<MediaViewModel>().ToList();
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.Playlist.Count != _itemList.Count || playlist.LastUpdate != _itemList)
-            {
-                Messenger.Send(new ClearPlaylistMessage());
-                Messenger.Send(new QueuePlaylistMessage(_itemList, false));
-            }
-
-            Messenger.Send(new PlayMediaMessage(item, true));
+            Messenger.SendQueueAndPlay(item, _itemList);
         }
 
         [RelayCommand]
