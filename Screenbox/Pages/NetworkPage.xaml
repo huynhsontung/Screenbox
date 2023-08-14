@@ -47,41 +47,58 @@
             Grid.Row="2"
             Navigated="FolderViewFrame_OnNavigated" />
 
-        <RelativePanel
+        <!--  Network-Drive-is-empty content  -->
+        <Grid
             x:Name="NoNetworkDrivePanel"
-            Grid.Row="1"
-            Grid.RowSpan="2"
-            MaxWidth="540"
+            Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            ColumnSpacing="24"
             Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+
             <FontIcon
-                x:Name="NoNetworkDriveIcon"
-                Margin="0,0,32,0"
-                FontSize="86"
+                x:Name="NoNetworkDrivePanelIcon"
+                Grid.Column="0"
+                FontSize="126"
                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                 Glyph="&#xe8cd;" />
-            <TextBlock
-                x:Name="NoNetworkDriveHeaderText"
-                RelativePanel.RightOf="NoNetworkDriveIcon"
-                Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}" />
-            <TextBlock
-                x:Name="NoNetworkDriveDescriptionText"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                RelativePanel.AlignLeftWith="NoNetworkDriveHeaderText"
-                RelativePanel.Below="NoNetworkDriveHeaderText"
-                Text="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}"
-                TextWrapping="Wrap" />
-            <HyperlinkButton
-                Margin="-12,6,0,0"
-                Content="Open Connected Devices settings"
-                NavigateUri="ms-settings:connecteddevices"
-                RelativePanel.AlignLeftWith="NoNetworkDriveDescriptionText"
-                RelativePanel.Below="NoNetworkDriveDescriptionText" />
-        </RelativePanel>
+
+            <StackPanel
+                Grid.Column="1"
+                MaxWidth="416"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+
+                <TextBlock
+                    Margin="0,0,0,8"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}" />
+
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontWeight="SemiLight"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    LineHeight="20"
+                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}"
+                    TextWrapping="Wrap" />
+
+                <HyperlinkButton
+                    Margin="-12,0,0,0"
+                    Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}"
+                    NavigateUri="ms-settings:connecteddevices" />
+            </StackPanel>
+        </Grid>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
@@ -98,7 +115,8 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoNetworkDrivePanel.MaxWidth" Value="440" />
+                        <Setter Target="NoNetworkDrivePanel.ColumnSpacing" Value="10" />
+                        <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="88" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -39,58 +39,61 @@
                 Text="{strings:Resources Key=Music}" />
         </Grid>
 
+        <!--  Library-is-empty content  -->
         <Grid
-            x:Name="NoMusicMessage"
+            x:Name="NoMusicPanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            ColumnSpacing="16"
             Visibility="Collapsed">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <FontIcon
-                Grid.Row="0"
-                Grid.RowSpan="3"
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+
+            <TextBlock
+                x:Name="NoMusicPanelIcon"
                 Grid.Column="0"
-                Margin="0,0,16,0"
-                FontSize="86"
-                Glyph="&#xe8d6;" />
+                FontSize="126"
+                Text="🎶" />
 
-            <TextBlock
-                Grid.Row="0"
+            <StackPanel
                 Grid.Column="1"
-                VerticalAlignment="Bottom"
-                Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
+                MaxWidth="416"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
 
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                VerticalAlignment="Top"
-                Opacity="0.6"
-                Text="{x:Bind strings:Resources.NoMusicPanelSubtext}" />
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontWeight="SemiLight"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    LineHeight="20"
+                    Text="{x:Bind strings:Resources.NoMusicPanelSubtext}"
+                    TextWrapping="Wrap" />
 
-            <Button
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="0,8,0,0"
-                Command="{x:Bind ViewModel.AddFolderCommand}"
-                Style="{StaticResource AccentButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
-                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe8f4;" />
-                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
-                </StackPanel>
-            </Button>
+                <Button
+                    Command="{x:Bind ViewModel.AddFolderCommand}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xe8f4;" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
 
         <muxc:NavigationView
@@ -163,9 +166,9 @@
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     XYFocusDown="{x:Bind ContentFrame}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8b1;" />
-                        <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                     </StackPanel>
                 </Button>
 
@@ -196,7 +199,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Visibility" Value="Visible" />
-                        <Setter Target="NoMusicMessage.Visibility" Value="Visible" />
+                        <Setter Target="NoMusicPanel.Visibility" Value="Visible" />
                         <Setter Target="LibraryNavView.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
@@ -216,7 +219,9 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoMusicMessage.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="NoMusicPanel.ColumnSpacing" Value="4" />
+                        <Setter Target="NoMusicPanelIcon.FontSize" Value="88" />
                         <Setter Target="AddFolderButtonText.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
