@@ -137,10 +137,7 @@ namespace Screenbox.Core.Services
         {
             string[] customPropertyKeys =
             {
-                SystemProperties.Title,
-                "System.Thumbnail",
-                "System.ThumbnailStream",
-                "System.ThumbnailCacheId"
+                SystemProperties.Title
             };
 
             QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedVideoFormats)
