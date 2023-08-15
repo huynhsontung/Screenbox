@@ -6,6 +6,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels
@@ -33,6 +34,8 @@ namespace Screenbox.Core.ViewModels
         {
             IsLoading = _libraryService.IsLoadingVideos;
             IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult();
+            if (videos.Count > 0)
+                videos = videos.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
             Videos.SyncItems(videos);
 
             // Progressively update when it's still loading
