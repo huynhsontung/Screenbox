@@ -254,7 +254,9 @@ namespace Screenbox.Core.ViewModels
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                // System.Exception: The RPC server is unavailable.
+                if (e.HResult != unchecked((int)0x800706BA))
+                    LogService.Log(e);
             }
         }
 
