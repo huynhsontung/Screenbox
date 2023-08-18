@@ -122,9 +122,8 @@ namespace Screenbox.Core.Services
                 SystemProperties.Media.Duration
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedAudioFormats)
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats)
             {
-                FolderDepth = FolderDepth.Deep,
                 IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
             queryOptions.SetPropertyPrefetch(
@@ -140,9 +139,8 @@ namespace Screenbox.Core.Services
                 SystemProperties.Title
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedVideoFormats)
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats)
             {
-                FolderDepth = FolderDepth.Deep,
                 IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
             queryOptions.SetPropertyPrefetch(
