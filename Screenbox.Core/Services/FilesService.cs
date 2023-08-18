@@ -136,7 +136,8 @@ namespace Screenbox.Core.Services
         {
             string[] customPropertyKeys =
             {
-                SystemProperties.Title
+                SystemProperties.Title,
+                SystemProperties.Media.Duration
             };
 
             QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats)
