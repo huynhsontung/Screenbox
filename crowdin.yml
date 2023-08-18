@@ -1,3 +1,3 @@
 files:
-  - source: /Screenbox/Strings/en-US/*.resw
+  - source: /Screenbox/MultilingualResources/*.xlf
     translation: /Screenbox/MultilingualResources/Screenbox.%locale%.xlf
