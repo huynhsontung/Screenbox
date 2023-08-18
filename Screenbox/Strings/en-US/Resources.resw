@@ -523,7 +523,7 @@
     <value>We couldn't find any videos</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>Your video library doesn't contain any video content.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Open privacy settings</value>

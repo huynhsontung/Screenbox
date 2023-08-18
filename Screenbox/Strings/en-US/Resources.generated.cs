@@ -1518,7 +1518,7 @@ namespace Screenbox.Strings{
 
         #region NoVideosPanelSubtext
         /// <summary>
-        ///   Looks up a localized string similar to: Your music library doesn't contain any music content.
+        ///   Looks up a localized string similar to: Your video library doesn't contain any video content.
         /// </summary>
         public static string NoVideosPanelSubtext
         {
