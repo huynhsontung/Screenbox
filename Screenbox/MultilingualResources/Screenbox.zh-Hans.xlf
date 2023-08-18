@@ -861,6 +861,14 @@
           <source>Failed to open file(s)</source>
           <target state="translated">无法打开文件</target>
         </trans-unit>
+        <trans-unit id="OpenUrlTitle" translate="yes" xml:space="preserve">
+          <source>Open a URL</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="EnterUrlPlaceholder" translate="yes" xml:space="preserve">
+          <source>Enter the URL for a file or stream</source>
+          <target state="new"></target>
+        </trans-unit>
       </group>
     </body>
   </file>

@@ -553,4 +553,10 @@
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>无法打开文件</value>
   </data>
+  <data name="OpenUrlTitle" xml:space="preserve">
+    <value>Open a URL</value>
+  </data>
+  <data name="EnterUrlPlaceholder" xml:space="preserve">
+    <value>Enter the URL for a file or stream</value>
+  </data>
 </root>

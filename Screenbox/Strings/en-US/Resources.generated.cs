@@ -2078,6 +2078,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region OpenUrlTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Open a URL
+        /// </summary>
+        public static string OpenUrlTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenUrlTitle");
+            }
+        }
+        #endregion
+
+        #region EnterUrlPlaceholder
+        /// <summary>
+        ///   Looks up a localized string similar to: Enter the URL for a file or stream
+        /// </summary>
+        public static string EnterUrlPlaceholder
+        {
+            get
+            {
+                return _resourceLoader.GetString("EnterUrlPlaceholder");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2247,6 +2273,8 @@ namespace Screenbox.Strings{
             CriticalError,
             CriticalErrorDirect3D11NotAvailable,
             FailedToOpenFilesNotificationTitle,
+            OpenUrlTitle,
+            EnterUrlPlaceholder,
         }
 
         private static ResourceLoader _resourceLoader;
