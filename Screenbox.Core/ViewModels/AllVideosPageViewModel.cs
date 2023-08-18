@@ -33,7 +33,20 @@ namespace Screenbox.Core.ViewModels
         {
             IsLoading = _libraryService.IsLoadingVideos;
             IReadOnlyList<MediaViewModel> videos = _libraryService.GetVideosFetchResult();
-            Videos.SyncItems(videos);
+            if (videos.Count < 5000)
+            {
+                // Only sync when the number of items is low enough
+                // Sync on too many items can cause UI hang
+                Videos.SyncItems(videos);
+            }
+            else
+            {
+                Videos.Clear();
+                foreach (MediaViewModel video in videos)
+                {
+                    Videos.Add(video);
+                }
+            }
 
             // Progressively update when it's still loading
             if (IsLoading)

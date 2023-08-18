@@ -43,12 +43,25 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
-            _songs = musicLibrary.Songs.OrderBy(m => m.Name, StringComparer.CurrentCulture).ToList();
+            _songs = musicLibrary.Songs;
 
             // Populate song groups with fetched result
             IEnumerable<IGrouping<string, MediaViewModel>> groupings =
                 _songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name));
-            GroupedSongs.SyncObservableGroups(groupings);
+            if (_songs.Count < 5000)
+            {
+                // Only sync when the number of items is low enough
+                // Sync on too many items can cause UI hang
+                GroupedSongs.SyncObservableGroups(groupings);
+            }
+            else
+            {
+                GroupedSongs.Clear();
+                foreach (IGrouping<string, MediaViewModel> grouping in groupings)
+                {
+                    GroupedSongs.AddGroup(grouping);
+                }
+            }
 
             // Progressively update when it's still loading
             if (_libraryService.IsLoadingMusic)
