@@ -16,7 +16,7 @@
     <value>Frame saved</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>Minileitor</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Save current frame</value>
@@ -45,19 +45,19 @@
     <value>Back</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>Sem som</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>Ativar som</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>Ecrã inteiro</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>Áudio &amp; legendas</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>Sair do ecrã inteiro</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
@@ -66,7 +66,7 @@
     <value>Seek</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>Sair do minileitor</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Next</value>
