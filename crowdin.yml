@@ -1,0 +1,3 @@
+files:
+  - source: /Screenbox/Strings/en-US/*.resw
+    translation: /Screenbox/MultilingualResources/Screenbox.%locale%.xlf
