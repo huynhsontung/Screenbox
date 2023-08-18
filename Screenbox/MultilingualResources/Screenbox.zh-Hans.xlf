@@ -679,7 +679,7 @@
         </trans-unit>
         <trans-unit id="NoVideosPanelSubtext" translate="yes" xml:space="preserve">
           <source>Your video library doesn't contain any video content.</source>
-          <target state="needs-review-translation">您的音乐资料库不包含任何音乐内容。</target>
+          <target state="translated">您的视频库不包含任何视频内容。</target>
         </trans-unit>
         <trans-unit id="OpenPrivacySettingsButtonText" translate="yes" xml:space="preserve">
           <source>Open privacy settings</source>
