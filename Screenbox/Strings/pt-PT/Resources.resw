@@ -104,7 +104,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>Adicionar à fila</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Limpar seleção</value>
@@ -129,7 +129,7 @@
     <value>Vídeos</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>A pasta está vazia</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} item</value>
@@ -167,13 +167,13 @@
     <value>Baralhar e reproduzir</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Artista desconhecido</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Álbum desconhecido</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Género desconhecido</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Adicionar pasta</value>
@@ -221,7 +221,7 @@
     <value>Álbum</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Intérprete do álbum</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Taxa de bits</value>
@@ -230,7 +230,7 @@
     <value>Tipo de conteúdo</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Intérpretes participantes</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
     <value>Localização do ficheiro</value>
@@ -257,7 +257,7 @@
     <value>Tamanho</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Legenda</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
     <value>Título</value>
@@ -275,7 +275,7 @@
     <value>Custom</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Rede</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
     <value>Nenhum dispositivo de rede disponível</value>
