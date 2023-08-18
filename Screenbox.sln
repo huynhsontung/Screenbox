@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		crowdin.yml = crowdin.yml
 		LICENSE = LICENSE
 		nuget.config = nuget.config
 		PRIVACY.md = PRIVACY.md
@@ -108,7 +109,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_EnableXlifSync = True
 		SolutionGuid = {A6A15B98-A3D8-4053-843B-10AFB810500C}
+		RESX_EnableXlifSync = True
 	EndGlobalSection
 EndGlobal
