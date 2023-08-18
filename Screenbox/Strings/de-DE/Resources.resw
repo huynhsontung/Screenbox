@@ -553,4 +553,7 @@
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Failed to open file(s)</value>
   </data>
+  <data name="OpenUrlPlaceholder" xml:space="preserve">
+    <value>Enter the URL for a file or stream</value>
+  </data>
 </root>
