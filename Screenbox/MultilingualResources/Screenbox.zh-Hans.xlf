@@ -131,6 +131,10 @@
           <source>Picture in picture</source>
           <target state="translated">画中画</target>
         </trans-unit>
+        <trans-unit id="OpenUrlPlaceholder" translate="yes" xml:space="preserve">
+          <source>Enter the URL for a file or stream</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="SaveCurrentFrame" translate="yes" xml:space="preserve">
           <source>Save current frame</source>
           <target state="translated">保存当前帧</target>

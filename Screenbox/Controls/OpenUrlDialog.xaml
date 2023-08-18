@@ -6,8 +6,8 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="Open a URL"
-    CloseButtonText="Close"
+    Title="{strings:Resources Key=OpenUrl}"
+    CloseButtonText="{strings:Resources Key=Close}"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind CanOpen(UrlBox.Text), Mode=OneWay}"
     PrimaryButtonText="{strings:Resources Key=Open}"
@@ -15,6 +15,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBox x:Name="UrlBox" PlaceholderText="Enter the URL for a file or stream" />
+        <TextBox x:Name="UrlBox" PlaceholderText="{strings:Resources Key=OpenUrlPlaceholder}" />
     </Grid>
 </ContentDialog>
