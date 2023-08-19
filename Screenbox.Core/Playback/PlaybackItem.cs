@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
-using System;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Services;
+using System;
 
 namespace Screenbox.Core.Playback
 {
@@ -34,7 +34,7 @@ namespace Screenbox.Core.Playback
             AudioTracks = new PlaybackAudioTrackList(media);
             VideoTracks = new PlaybackVideoTrackList(media);
             SubtitleTracks = new PlaybackSubtitleTrackList(media);
-            Chapters = new PlaybackChapterList();
+            Chapters = new PlaybackChapterList(this);
             StartTime = TimeSpan.Zero;
         }
     }
