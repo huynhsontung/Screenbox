@@ -2091,6 +2091,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region OpenConnectedDevicesSettingsButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Open Connected Devices settings
+        /// </summary>
+        public static string OpenConnectedDevicesSettingsButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenConnectedDevicesSettingsButtonText");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2261,6 +2274,7 @@ namespace Screenbox.Strings{
             CriticalErrorDirect3D11NotAvailable,
             FailedToOpenFilesNotificationTitle,
             OpenUrlPlaceholder,
+            OpenConnectedDevicesSettingsButtonText,
         }
 
         private static ResourceLoader _resourceLoader;
