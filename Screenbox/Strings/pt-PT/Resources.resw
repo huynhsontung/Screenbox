@@ -188,10 +188,10 @@
     <value>Select multiple</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>Não conseguimos encontrar qualquer música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>A sua biblioteca de música não contém qualquer conteúdo de musical.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Abrir ficheiro(s)</value>
@@ -415,10 +415,10 @@
     <value>Can't access videos library</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Não conseguimos localizar nenhum vídeo</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>A sua biblioteca de vídeo não contém qualquer conteúdo de vídeo.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Abrir definições de privacidade</value>
@@ -490,7 +490,7 @@
     <value>Display recently played media on the home page</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Limpar histórico de multimédia recente</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
     <value>Auto resize</value>
@@ -526,7 +526,7 @@
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Apoiar o desenvolvimento ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
     <value>Sempre</value>
