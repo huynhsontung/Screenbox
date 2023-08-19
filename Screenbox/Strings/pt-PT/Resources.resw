@@ -427,7 +427,7 @@
     <value>Unable to load media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Proporção</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Ajustar</value>
@@ -436,7 +436,7 @@
     <value>Preencher</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Proporção personalizada</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Custom playback speed</value>
