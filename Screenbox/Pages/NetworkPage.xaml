@@ -77,7 +77,7 @@
                 TextWrapping="Wrap" />
             <HyperlinkButton
                 Margin="-12,6,0,0"
-                Content="Open Connected Devices settings"
+                Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}"
                 NavigateUri="ms-settings:connecteddevices"
                 RelativePanel.AlignLeftWith="NoNetworkDriveDescriptionText"
                 RelativePanel.Below="NoNetworkDriveDescriptionText" />
