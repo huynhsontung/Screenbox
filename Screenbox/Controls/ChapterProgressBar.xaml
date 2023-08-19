@@ -18,11 +18,11 @@
 
             <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
                 <muxc:ProgressBar
-                    Width="{x:Bind Width, Mode=OneWay}"
-                    Maximum="{x:Bind Maximum, Mode=OneWay}"
-                    Minimum="{x:Bind Minimum, Mode=OneWay}"
+                    Width="{Binding Width}"
+                    Maximum="{Binding Maximum}"
+                    Minimum="{Binding Minimum}"
                     Style="{StaticResource NoAnimationProgressBar}"
-                    Value="{x:Bind Value, Mode=OneWay}" />
+                    Value="{Binding Value}" />
             </DataTemplate>
 
             <muxc:StackLayout
