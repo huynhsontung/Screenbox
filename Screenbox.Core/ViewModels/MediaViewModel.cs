@@ -27,7 +27,7 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public PlaybackItem? Item => GetPlaybackItem();
+        public PlaybackItem? Item => _item ?? GetPlaybackItem();
 
         public bool ShouldDisplayTrackNumber => TrackNumber > 0;    // Helper for binding
 
@@ -127,24 +127,22 @@ namespace Screenbox.Core.ViewModels
             return new MediaViewModel(this);
         }
 
-        public PlaybackItem? GetPlaybackItem()
+        private PlaybackItem? GetPlaybackItem()
         {
-            if (!_loaded)
+            if (_loaded) return _item;
+            _loaded = true;
+            try
             {
-                _loaded = true;
-                try
-                {
-                    _item = new PlaybackItem(Source, _mediaService);
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    // Coding error. Rethrow.
-                    throw;
-                }
-                catch (Exception e)
-                {
-                    Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
-                }
+                _item = new PlaybackItem(Source, _mediaService);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                // Coding error. Rethrow.
+                throw;
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
             }
 
             return _item;
@@ -254,7 +252,9 @@ namespace Screenbox.Core.ViewModels
             }
             catch (Exception e)
             {
-                LogService.Log(e);
+                // System.Exception: The RPC server is unavailable.
+                if (e.HResult != unchecked((int)0x800706BA))
+                    LogService.Log(e);
             }
         }
 

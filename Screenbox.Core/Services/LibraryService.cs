@@ -34,8 +34,6 @@ namespace Screenbox.Core.Services
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
 
-        private const int MaxLoadCount = 5000;
-
         private StorageFileQueryResult? _musicLibraryQueryResult;
         private StorageFileQueryResult? _videosLibraryQueryResult;
         private List<MediaViewModel> _songs;
@@ -215,7 +213,7 @@ namespace Screenbox.Core.Services
         private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            while (target.Count < MaxLoadCount)
+            while (true)
             {
                 List<MediaViewModel> batch = await FetchMediaFromStorage(queryResult, (uint)target.Count);
                 if (batch.Count == 0) break;

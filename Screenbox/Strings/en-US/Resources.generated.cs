@@ -1518,7 +1518,7 @@ namespace Screenbox.Strings{
 
         #region NoVideosPanelSubtext
         /// <summary>
-        ///   Looks up a localized string similar to: Your music library doesn't contain any music content.
+        ///   Looks up a localized string similar to: Your video library doesn't contain any video content.
         /// </summary>
         public static string NoVideosPanelSubtext
         {
@@ -2078,6 +2078,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region OpenUrlPlaceholder
+        /// <summary>
+        ///   Looks up a localized string similar to: Enter the URL for a file or stream
+        /// </summary>
+        public static string OpenUrlPlaceholder
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenUrlPlaceholder");
+            }
+        }
+        #endregion
+
+        #region OpenConnectedDevicesSettingsButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Open Connected Devices settings
+        /// </summary>
+        public static string OpenConnectedDevicesSettingsButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenConnectedDevicesSettingsButtonText");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2247,6 +2273,8 @@ namespace Screenbox.Strings{
             CriticalError,
             CriticalErrorDirect3D11NotAvailable,
             FailedToOpenFilesNotificationTitle,
+            OpenUrlPlaceholder,
+            OpenConnectedDevicesSettingsButtonText,
         }
 
         private static ResourceLoader _resourceLoader;

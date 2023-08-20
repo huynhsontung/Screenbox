@@ -8,7 +8,7 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.System;
@@ -32,13 +32,13 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private bool _bufferingVisible;
 
-        [ObservableProperty] private IReadOnlyCollection<ChapterCue>? _chapters;
-
         [ObservableProperty] private double _previewTime;
 
         [ObservableProperty] private bool _shouldShowPreview;
 
         [ObservableProperty] private bool _shouldHandleKeyDown;
+
+        public ObservableCollection<ChapterCue> Chapters { get; }
 
         private IMediaPlayer? _mediaPlayer;
 
@@ -58,6 +58,7 @@ namespace Screenbox.Core.ViewModels
             _originalPositionTimer.IsRepeating = false;
             _shouldShowPreview = true;
             _shouldHandleKeyDown = true;
+            Chapters = new ObservableCollection<ChapterCue>();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -157,13 +158,13 @@ namespace Screenbox.Core.ViewModels
         private void OnSourceChanged(IMediaPlayer sender, object? args)
         {
             _seekTimer.Stop();
-            if (sender.Source == null)
+            if (sender.PlaybackItem == null)
             {
                 _dispatcherQueue.TryEnqueue(() =>
                 {
                     IsSeekable = false;
                     Time = 0;
-                    Chapters = sender.PlaybackItem?.Chapters;
+                    Chapters.Clear();
                 });
             }
             else
@@ -171,6 +172,7 @@ namespace Screenbox.Core.ViewModels
                 _dispatcherQueue.TryEnqueue(() =>
                 {
                     Time = 0;
+                    Chapters.Clear();
                 });
             }
         }
@@ -212,7 +214,7 @@ namespace Screenbox.Core.ViewModels
             {
                 Length = sender.NaturalDuration.TotalMilliseconds;
                 IsSeekable = sender.CanSeek;
-                Chapters = sender.PlaybackItem?.Chapters;
+                UpdateChapters(sender.PlaybackItem?.Chapters);
             });
         }
 
@@ -230,6 +232,22 @@ namespace Screenbox.Core.ViewModels
                     }
                 });
             }
+        }
+
+        private void UpdateChapters(PlaybackChapterList? chapterList)
+        {
+            Chapters.Clear();
+            if (chapterList == null) return;
+            if (_mediaPlayer != null)
+            {
+                chapterList.Load(_mediaPlayer);
+            }
+
+            foreach (ChapterCue chapterCue in chapterList)
+            {
+                Chapters.Add(chapterCue);
+            }
+            // Chapters.SyncItems(chapterList);
         }
     }
 }

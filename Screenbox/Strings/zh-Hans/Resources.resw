@@ -418,7 +418,7 @@
     <value>我们找不到任何视频</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>您的音乐资料库不包含任何音乐内容。</value>
+    <value>您的视频库不包含任何视频内容。</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>打开隐私设置</value>

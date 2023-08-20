@@ -1,10 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
-using LibVLCSharp.Shared.Structures;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
@@ -331,26 +328,6 @@ namespace Screenbox.Core.Playback
                 NaturalVideoHeight = py;
                 NaturalVideoSizeChanged?.Invoke(this, null);
             }
-
-            if (PlaybackItem == null) return;
-
-            // Update chapter list
-            if (VlcPlayer.ChapterCount > 0)
-            {
-                List<ChapterDescription> chapterDescriptions = new();
-                for (int i = 0; i < VlcPlayer.TitleCount; i++)
-                {
-                    chapterDescriptions.AddRange(VlcPlayer.FullChapterDescriptions(i));
-                }
-
-                PlaybackItem.Chapters.Load(chapterDescriptions);
-            }
-            else
-            {
-                PlaybackItem.Chapters.Load(VlcPlayer.FullChapterDescriptions());
-            }
-
-            Chapter = PlaybackItem.Chapters.FirstOrDefault();
         }
 
         private void VlcPlayer_EndReached(object sender, EventArgs e)

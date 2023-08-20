@@ -93,7 +93,9 @@ namespace Screenbox.Core.Services
             catch (Exception e)
             {
                 // System.Exception: The data necessary to complete this operation is not yet available.
-                if (e.HResult != unchecked((int)0x8000000A))
+                if (e.HResult != unchecked((int)0x8000000A) &&
+                    // System.Exception: The RPC server is unavailable.
+                    e.HResult != unchecked((int)0x800706BA))
                     LogService.Log(e);
             }
 
@@ -137,9 +139,7 @@ namespace Screenbox.Core.Services
             string[] customPropertyKeys =
             {
                 SystemProperties.Title,
-                "System.Thumbnail",
-                "System.ThumbnailStream",
-                "System.ThumbnailCacheId"
+                SystemProperties.Media.Duration
             };
 
             QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats)

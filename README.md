@@ -44,7 +44,11 @@ Feel free to open an issue if you want to report a bug, give feedback, or just w
 
 ## Translation
 
-If you wish to translate the app to other languages, follow the steps below.
+[![Crowdin](https://badges.crowdin.net/screenbox/localized.svg)](https://crowdin.com/project/screenbox)
+
+Help translate the app on [Crowdin](https://crowdin.com/project/screenbox)! Crowdin offers an intuitive UX for you to get started with localization and is therefore the recommended tool for the job.
+
+If you wish to translate the app to other languages without Crowdin, follow the steps below.
 
 ### Adding a new language
 

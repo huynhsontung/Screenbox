@@ -1,0 +1,9 @@
+pull_request_title: "[l10n] Crowdin updates"
+pull_request_labels:
+  - crowdin
+  - l10n
+
+files:
+  - source: /Screenbox/Strings/en-US/*.resw
+    translation: /Screenbox/Strings/%locale%/%original_file_name%
+    update_option: update_as_unapproved

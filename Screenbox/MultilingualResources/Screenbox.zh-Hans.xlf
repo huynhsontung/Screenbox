@@ -131,6 +131,14 @@
           <source>Picture in picture</source>
           <target state="translated">画中画</target>
         </trans-unit>
+        <trans-unit id="OpenConnectedDevicesSettingsButtonText" translate="yes" xml:space="preserve">
+          <source>Open Connected Devices settings</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="OpenUrlPlaceholder" translate="yes" xml:space="preserve">
+          <source>Enter the URL for a file or stream</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="SaveCurrentFrame" translate="yes" xml:space="preserve">
           <source>Save current frame</source>
           <target state="translated">保存当前帧</target>
@@ -678,8 +686,8 @@
           <target state="translated">我们找不到任何视频</target>
         </trans-unit>
         <trans-unit id="NoVideosPanelSubtext" translate="yes" xml:space="preserve">
-          <source>Your music library doesn't contain any music content.</source>
-          <target state="translated">您的音乐资料库不包含任何音乐内容。</target>
+          <source>Your video library doesn't contain any video content.</source>
+          <target state="translated">您的视频库不包含任何视频内容。</target>
         </trans-unit>
         <trans-unit id="OpenPrivacySettingsButtonText" translate="yes" xml:space="preserve">
           <source>Open privacy settings</source>
