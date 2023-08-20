@@ -451,7 +451,8 @@ namespace Screenbox.Core.ViewModels
 
                 // Don't hide controls when a flyout is in focus
                 // Flyout is not in the same XAML tree of the Window content, use this fact to detect flyout opened
-                Control? root = focused?.FindAscendant<Control>(control => control == Window.Current.Content);
+                Control? root = focused?.FindAscendant<Frame>(frame => frame == Window.Current.Content) ??
+                                focused?.FindChild<Frame>(frame => frame == Window.Current.Content);
                 if (root == null) return false;
             }
 
