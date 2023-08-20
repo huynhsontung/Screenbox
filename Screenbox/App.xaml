@@ -54,6 +54,8 @@
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
                     <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
                     <x:Double x:Key="DefaultIconFontSize">16</x:Double>
+                    <x:Double x:Key="PanelIconFontSize">126</x:Double>
+                    <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
                         <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />

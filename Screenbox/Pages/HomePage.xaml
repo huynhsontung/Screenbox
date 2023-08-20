@@ -171,6 +171,7 @@
             </controls:SplitButton>
         </Grid>
 
+        <!--  Recent-is-empty content  -->
         <Grid
             x:Name="WelcomePanel"
             Grid.Row="1"
@@ -178,55 +179,52 @@
             Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
+            ColumnSpacing="16"
             Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
 
             <TextBlock
-                Grid.Row="0"
-                Grid.RowSpan="3"
+                x:Name="WelcomePanelIcon"
                 Grid.Column="0"
-                Margin="0,-16,16,0"
-                FontSize="86"
+                Margin="0,-16,0,0"
+                FontSize="{StaticResource PanelIconFontSize}"
                 Text="👋" />
 
-            <TextBlock
-                Grid.Row="0"
+            <StackPanel
                 Grid.Column="1"
-                VerticalAlignment="Bottom"
-                Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
+                MaxWidth="416"
+                VerticalAlignment="Center"
+                Orientation="Vertical">
+                <TextBlock
+                    Margin="0,0,0,4"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
 
-            <TextBlock
-                Grid.Row="1"
-                Grid.Column="1"
-                VerticalAlignment="Top"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
-                TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="0,0,0,12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
+                    TextWrapping="Wrap" />
 
-            <controls:SplitButton
-                x:Name="OpenButton"
-                Grid.Row="2"
-                Grid.Column="1"
-                Margin="0,8,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{x:Bind Common.OpenFilesCommand}"
-                Flyout="{StaticResource OpenFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="&#xe838;" />
-                    <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
-                </StackPanel>
-            </controls:SplitButton>
+                <controls:SplitButton
+                    x:Name="OpenButton"
+                    Command="{x:Bind Common.OpenFilesCommand}"
+                    Flyout="{StaticResource OpenFlyout}"
+                    ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xe838;" />
+                        <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
+                    </StackPanel>
+                </controls:SplitButton>
+            </StackPanel>
         </Grid>
 
         <Grid
@@ -282,6 +280,9 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderOpenFilesText.Visibility" Value="Collapsed" />
                         <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
+                        <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
