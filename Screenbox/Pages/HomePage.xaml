@@ -195,7 +195,7 @@
                 x:Name="WelcomePanelIcon"
                 Grid.Column="0"
                 Margin="0,-16,0,0"
-                FontSize="126"
+                FontSize="{StaticResource PanelIconFontSize}"
                 Text="👋" />
 
             <StackPanel
@@ -204,15 +204,13 @@
                 VerticalAlignment="Center"
                 Orientation="Vertical">
                 <TextBlock
-                    Margin="0,0,0,8"
+                    Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
                     Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
 
                 <TextBlock
-                    Margin="0,0,0,8"
-                    FontWeight="SemiLight"
+                    Margin="0,0,0,12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    LineHeight="20"
                     Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
                     TextWrapping="Wrap" />
 
@@ -284,7 +282,7 @@
                         <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
-                        <Setter Target="WelcomePanelIcon.FontSize" Value="88" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />

@@ -55,7 +55,7 @@
             Padding="{StaticResource ContentPageRightMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            ColumnSpacing="16"
+            ColumnSpacing="32"
             Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -67,11 +67,12 @@
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
 
-            <TextBlock
+            <FontIcon
                 Name="NoVideosPanelIcon"
                 Grid.Column="0"
-                FontSize="126"
-                Text="🎞" />
+                FontSize="{StaticResource PanelIconFontSize}"
+                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                Glyph="&#xe8b2;" />
 
             <StackPanel
                 Grid.Column="1"
@@ -79,15 +80,13 @@
                 VerticalAlignment="Center"
                 Orientation="Vertical">
                 <TextBlock
-                    Margin="0,0,0,8"
+                    Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
                     Text="{strings:Resources Key=NoVideosPanelHeader}" />
 
                 <TextBlock
-                    Margin="0,0,0,8"
-                    FontWeight="SemiLight"
+                    Margin="0,0,0,12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    LineHeight="20"
                     Text="{strings:Resources Key=NoVideosPanelSubtext}"
                     TextWrapping="Wrap" />
 
@@ -220,8 +219,8 @@
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="NoVideosPanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoVideosPanel.ColumnSpacing" Value="4" />
-                        <Setter Target="NoVideosPanelIcon.FontSize" Value="88" />
+                        <Setter Target="NoVideosPanel.ColumnSpacing" Value="16" />
+                        <Setter Target="NoVideosPanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
