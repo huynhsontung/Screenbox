@@ -553,4 +553,10 @@
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>无法打开文件</value>
   </data>
+  <data name="OpenUrlPlaceholder" xml:space="preserve">
+    <value>输入文件或流的 URL</value>
+  </data>
+  <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
+    <value>打开已连接的设备设置</value>
+  </data>
 </root>
