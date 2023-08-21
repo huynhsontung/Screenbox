@@ -133,11 +133,11 @@
         </trans-unit>
         <trans-unit id="OpenConnectedDevicesSettingsButtonText" translate="yes" xml:space="preserve">
           <source>Open Connected Devices settings</source>
-          <target state="new"></target>
+          <target state="translated">打开已连接的设备设置</target>
         </trans-unit>
         <trans-unit id="OpenUrlPlaceholder" translate="yes" xml:space="preserve">
           <source>Enter the URL for a file or stream</source>
-          <target state="new"></target>
+          <target state="translated">输入文件或流的 URL</target>
         </trans-unit>
         <trans-unit id="SaveCurrentFrame" translate="yes" xml:space="preserve">
           <source>Save current frame</source>
