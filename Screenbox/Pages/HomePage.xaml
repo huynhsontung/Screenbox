@@ -91,55 +91,98 @@
             </MenuFlyout>
 
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
-                <Grid
-                    Width="{StaticResource StorageItemGridViewItemWidth}"
-                    Height="{StaticResource StorageItemGridViewItemHeight}"
-                    Padding="4">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <UserControl>
                     <Grid
-                        Grid.Row="0"
-                        Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="4">
-                        <FontIcon
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="52"
-                            Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
-                            Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
-                        <Border CornerRadius="4">
-                            <Image
+                        Width="{StaticResource StorageItemGridViewItemWidth}"
+                        Height="{StaticResource StorageItemGridViewItemHeight}"
+                        Padding="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.Row="0"
+                            Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
+                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <FontIcon
                                 HorizontalAlignment="Center"
-                                x:Phase="1"
-                                Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                                Stretch="UniformToFill" />
-                        </Border>
+                                VerticalAlignment="Center"
+                                FontSize="52"
+                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
+                                Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
+                            <Border CornerRadius="4">
+                                <Image
+                                    HorizontalAlignment="Center"
+                                    x:Phase="1"
+                                    Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                                    Stretch="UniformToFill" />
+                            </Border>
+                            <Grid
+                                x:Name="IsPlayingIcon"
+                                Margin="8"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Visibility="{x:Bind Media.IsPlaying, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <Ellipse
+                                    Width="40"
+                                    Height="40"
+                                    Fill="#99000000" />
+                                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
+                            </Grid>
+                            <Button
+                                x:Name="PlayButton"
+                                Width="40"
+                                Height="40"
+                                Margin="8"
+                                Padding="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                CommandParameter="{x:Bind}"
+                                CornerRadius="99"
+                                Opacity="0"
+                                Style="{StaticResource AccentButtonStyle}">
+                                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding Media.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="0,4,0,0"
+                            Padding="4,0"
+                            MaxLines="2"
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="{x:Bind Media.Name, Mode=OneWay}"
+                            TextWrapping="Wrap" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Padding="4,0"
+                            x:Phase="2"
+                            Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind Media.Caption, Mode=OneWay}" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="PlayButton.Opacity" Value="1" />
+                                        <Setter Target="IsPlayingIcon.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
-
-                    <TextBlock
-                        Grid.Row="1"
-                        Margin="0,4,0,0"
-                        Padding="4,0"
-                        MaxLines="2"
-                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                        Text="{x:Bind Media.Name, Mode=OneWay}"
-                        TextWrapping="Wrap" />
-
-                    <TextBlock
-                        Grid.Row="2"
-                        Padding="4,0"
-                        x:Phase="2"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind Media.Caption, Mode=OneWay}" />
-                </Grid>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:MediaListViewItemBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </UserControl>
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
@@ -272,6 +315,9 @@
                 <GridView.Footer>
                     <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </GridView.Footer>
+                <GridView.Resources>
+                    <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+                </GridView.Resources>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
