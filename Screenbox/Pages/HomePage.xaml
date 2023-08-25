@@ -131,7 +131,9 @@
                                 <Ellipse
                                     Width="40"
                                     Height="40"
-                                    Fill="#99000000" />
+                                    Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                    Stroke="{ThemeResource TextFillColorTertiaryBrush}"
+                                    StrokeThickness="0.8" />
                                 <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
                             </Grid>
                             <Button
