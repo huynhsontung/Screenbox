@@ -132,7 +132,7 @@
                                     Width="40"
                                     Height="40"
                                     Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                                    Stroke="{ThemeResource TextFillColorTertiaryBrush}"
+                                    Stroke="{ThemeResource ControlElevationBorderBrush}"
                                     StrokeThickness="0.8" />
                                 <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
                             </Grid>
