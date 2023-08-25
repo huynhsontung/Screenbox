@@ -77,6 +77,9 @@
             <GridView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
+            <GridView.Resources>
+                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+            </GridView.Resources>
             <interactivity:Interaction.Behaviors>
                 <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
