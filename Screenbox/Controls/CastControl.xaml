@@ -2,12 +2,12 @@
     x:Class="Screenbox.Controls.CastControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     Width="280"
     d:DesignHeight="300"
@@ -32,7 +32,7 @@
             Margin="0,0,0,12"
             Style="{StaticResource SubtitleTextBlockStyle}"
             Text="{x:Bind strings:Resources.CastToDevice}" />
-        <controls:ProgressBar
+        <muxc:ProgressBar
             x:Name="DiscoverProgressBar"
             Grid.Row="1"
             IsIndeterminate="True" />

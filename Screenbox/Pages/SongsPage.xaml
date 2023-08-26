@@ -3,12 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -125,7 +125,7 @@
                     <VisualState.StateTriggers>
                         <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
-                                <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
+                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>

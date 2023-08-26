@@ -2,10 +2,10 @@
     x:Class="Screenbox.Controls.SeekBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -29,7 +29,7 @@
             Chapters="{x:Bind ViewModel.Chapters, Mode=OneWay}"
             Maximum="{x:Bind SeekBarSlider.Maximum, Mode=OneWay}"
             Value="{x:Bind SeekBarSlider.Value, Mode=OneWay}" />
-        <controls:ProgressBar
+        <muxc:ProgressBar
             x:Name="BufferingProgressBar"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
