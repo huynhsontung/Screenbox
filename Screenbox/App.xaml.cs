@@ -6,6 +6,7 @@ using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.Common;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
@@ -41,6 +42,7 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             InitializeComponent();
+
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
             Suspending += OnSuspending;
 
@@ -167,15 +169,15 @@ namespace Screenbox
             if (e.PrelaunchActivated == false)
             {
                 Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
-            }
+                if (rootFrame.Content == null)
+                {
+                    SetMinWindowSize();
+                    rootFrame.Navigate(typeof(MainPage));
+                }
 
-            if (rootFrame.Content == null)
-            {
-                SetMinWindowSize();
-                rootFrame.Navigate(typeof(MainPage));
+                // Ensure the current window is active
+                Window.Current.Activate();
             }
-            // Ensure the current window is active
-            Window.Current.Activate();
         }
 
         /// <summary>
@@ -217,6 +219,14 @@ namespace Screenbox
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
                 SetMinWindowSize();
+
+                // Turn off overscan on Xbox
+                // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/turn-off-overscan
+                if (SystemInformationExtensions.IsXbox)
+                {
+                    Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
+                        .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
+                }
             }
 
             return rootFrame;
