@@ -1,0 +1,31 @@
+﻿<ContentDialog
+    x:Class="Screenbox.Controls.SetOptionsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Set playback options"
+    CloseButtonText="Close"
+    DefaultButton="Primary"
+    PrimaryButtonText="Set"
+    SecondaryButtonText="Set and Play"
+    Style="{StaticResource DefaultContentDialogStyle}"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" Spacing="8">
+        <TextBlock TextWrapping="Wrap">
+            <Run Text="VLC options that apply to a specific stream." /><LineBreak /><Run Text="See" />
+            <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
+                <Run Text="VLC command-line help" />
+            </Hyperlink>
+            <Run Text="for the full list of available options." /><LineBreak /><Run Text="Some options may only be set globally." />
+        </TextBlock>
+        <TextBox
+            x:Name="OptionsTextBox"
+            AcceptsReturn="False"
+            IsSpellCheckEnabled="False"
+            PlaceholderText=":option=value"
+            Text="{x:Bind Options, Mode=TwoWay}" />
+    </StackPanel>
+</ContentDialog>
