@@ -2,12 +2,14 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using LibVLCSharp.Shared;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -29,12 +31,15 @@ namespace Screenbox.Core.ViewModels
 
         public PlaybackItem? Item => _item ?? GetPlaybackItem();
 
+        public IReadOnlyList<string> Options { get; }
+
         public bool ShouldDisplayTrackNumber => TrackNumber > 0;    // Helper for binding
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
+        private readonly List<string> _options;
         private PlaybackItem? _item;
         private Task _loadTask;
         private Task _loadThumbnailTask;
@@ -86,6 +91,8 @@ namespace Screenbox.Core.ViewModels
             _album = source._album;
             _caption = source._caption;
             _altCaption = source._altCaption;
+            _options = new List<string>(source.Options);
+            Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
         }
@@ -103,6 +110,8 @@ namespace Screenbox.Core.ViewModels
             _loadThumbnailTask = Task.CompletedTask;
             _mediaType = GetMediaTypeForFile(file);
             _artists = Array.Empty<ArtistViewModel>();
+            _options = new List<string>();
+            Options = new ReadOnlyCollection<string>(_options);
             Location = file.Path;
         }
 
@@ -119,6 +128,8 @@ namespace Screenbox.Core.ViewModels
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
             _artists = Array.Empty<ArtistViewModel>();
+            _options = new List<string>();
+            Options = new ReadOnlyCollection<string>(_options);
             Location = uri.ToString();
         }
 
@@ -133,7 +144,8 @@ namespace Screenbox.Core.ViewModels
             _loaded = true;
             try
             {
-                _item = new PlaybackItem(Source, _mediaService);
+                Media media = _mediaService.CreateMedia(Source, _options.ToArray());
+                _item = new PlaybackItem(Source, media);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -146,6 +158,26 @@ namespace Screenbox.Core.ViewModels
             }
 
             return _item;
+        }
+
+        public void SetOptions(string options)
+        {
+            string[] opts = options.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(o => o.StartsWith(":") && o.Length > 1).ToArray();
+
+            // Check if new options and existing options are the same
+            if (opts.Length == _options.Count && opts.Length > 0)
+            {
+                bool same = !opts.Where((o, i) => o != _options[i]).Any();
+                if (same) return;
+            }
+
+            _options.Clear();
+            _options.AddRange(opts);
+
+            if (_item == null) return;
+            Clean();
+            GetPlaybackItem();
         }
 
         public void Clean()

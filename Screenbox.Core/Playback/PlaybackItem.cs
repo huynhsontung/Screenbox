@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
-using Screenbox.Core.Services;
 using System;
 
 namespace Screenbox.Core.Playback
@@ -26,10 +25,9 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-        public PlaybackItem(object source, IMediaService mediaService)
+        public PlaybackItem(object source, Media media)
         {
             OriginalSource = source;
-            Media media = mediaService.CreateMedia(source);
             Media = media;
             AudioTracks = new PlaybackAudioTrackList(media);
             VideoTracks = new PlaybackVideoTrackList(media);
