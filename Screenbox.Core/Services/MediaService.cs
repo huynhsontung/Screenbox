@@ -40,7 +40,7 @@ namespace Screenbox.Core.Services
 
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
-            return new Media(libVlc, str);
+            return new Media(libVlc, str, FromType.FromPath, options);
         }
 
         public Media CreateMedia(IStorageFile file, params string[] options)
@@ -48,7 +48,7 @@ namespace Screenbox.Core.Services
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
-            return new Media(libVlc, mrl, FromType.FromLocation);
+            return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
 
         public Media CreateMedia(Uri uri, params string[] options)
