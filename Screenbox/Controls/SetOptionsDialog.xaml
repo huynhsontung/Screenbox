@@ -15,7 +15,7 @@
 
     <StackPanel Orientation="Vertical" Spacing="8">
         <TextBlock TextWrapping="Wrap">
-            <Run Text="VLC options that apply to a specific stream." /><LineBreak /><Run Text="See" />
+            <Run Text="Set VLC options that apply to a stream." /><LineBreak /><Run Text="See" />
             <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
                 <Run Text="VLC command-line help" />
             </Hyperlink>
