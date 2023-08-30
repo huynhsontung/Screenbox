@@ -19,10 +19,10 @@
     <value>Picture in picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Guardar fotograma actual</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>Bucle</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
     <value>Playback speed</value>
