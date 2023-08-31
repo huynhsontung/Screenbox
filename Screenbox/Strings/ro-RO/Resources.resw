@@ -502,61 +502,61 @@
     <value>Amplificare volum</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Permite volumului maxim să depășească 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Gesturi</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Trageți orizontal pentru a căuta</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Trageți vertical pentru a ajusta volumul</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Atingeți oriunde pentru a reda sau a întrerupe</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Cod sursă</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Susțineți dezvoltarea ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Întotdeauna</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Niciodată</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>La lansare</value>
   </data>
   <data name="VersionText" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>Versiune {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Subtitrare adăugată</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Eroare critică</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Nu este disponibil niciun dispozitiv de redare compatibil. Asigurați-vă că Direct3D 11 este disponibil pe dispozitivul dvs.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>Deschiderea fișierelor a eșuat</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>Introduceți adresa URL pentru un fișier sau o transmisiune live</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>Deschidere setările Dispozitive Conectate</value>
   </data>
 </root>
