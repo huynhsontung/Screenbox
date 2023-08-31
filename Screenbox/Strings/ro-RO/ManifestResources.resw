@@ -19,37 +19,37 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Un video player modern cu accent pe performanță și ușurință de utilizare pe o gamă largă de dispozitive Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>Fișier Multimedia 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>Fișier Multimedia 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>Fișier Audio AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>Fișier Video AVI</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>Fișier Audio FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Videoclip Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Audio Matroska</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Videoclip Matroska</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>Date muzicale MIDI</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>Fișier Audio MP3</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
     <value>MPEG-4 Video</value>
