@@ -310,7 +310,7 @@
                 <MenuFlyoutItem
                     x:Name="FullscreenMenuItem"
                     Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xE1D9;}"
+                    Icon="{ui:FontIcon Glyph=&#xE740;}"
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -371,7 +371,7 @@
                 Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                 CornerRadius="4,0,0,4"
                 Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon Glyph="&#xE100;" />
+                <FontIcon Glyph="&#xE892;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="PageUp" />
                 </Button.KeyboardAccelerators>
@@ -383,7 +383,7 @@
                 Command="{x:Bind ViewModel.Playlist.NextCommand}"
                 CornerRadius="0,4,4,0"
                 Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon Glyph="&#xE101;" />
+                <FontIcon Glyph="&#xE893;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="PageDown" />
                 </Button.KeyboardAccelerators>
@@ -500,7 +500,7 @@
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
-                <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE1D9;" />
+                <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE740;" />
             </Button>
 
             <Button
@@ -510,7 +510,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
-                <FontIcon Glyph="&#xE10C;" />
+                <FontIcon Glyph="&#xE712;" />
             </Button>
         </StackPanel>
 
@@ -560,7 +560,7 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="FullscreenButtonIcon.Glyph" Value="&#xE1D8;" />
+                        <Setter Target="FullscreenButtonIcon.Glyph" Value="&#xE73F;" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Compact">

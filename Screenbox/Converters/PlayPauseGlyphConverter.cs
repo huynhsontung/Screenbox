@@ -8,10 +8,10 @@ internal class PlayPauseGlyphConverter : IValueConverter
     {
         if (value is bool b)
         {
-            return b ? "\uE103" : "\uE102";
+            return b ? "\uE769" : "\uE768";
         }
 
-        return "\uE102";
+        return "\uE768";
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)
