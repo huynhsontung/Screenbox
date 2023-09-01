@@ -42,7 +42,6 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             InitializeComponent();
-
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
             Suspending += OnSuspending;
 
@@ -52,7 +51,7 @@ namespace Screenbox
 
         private static IServiceProvider ConfigureServices()
         {
-            var services = new ServiceCollection();
+            ServiceCollection services = new();
 
             // View models
             services.AddTransient<PlayerElementViewModel>();
@@ -146,7 +145,7 @@ namespace Screenbox
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
-            var rootFrame = InitRootFrame();
+            Frame rootFrame = InitRootFrame();
             if (rootFrame.Content is not MainPage)
             {
                 rootFrame.Navigate(typeof(MainPage), true);
@@ -163,21 +162,19 @@ namespace Screenbox
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            var rootFrame = InitRootFrame();
+            Frame rootFrame = InitRootFrame();
             LibVLCSharp.Shared.Core.Initialize();
 
-            if (e.PrelaunchActivated == false)
+            if (e.PrelaunchActivated) return;
+            Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
+            if (rootFrame.Content == null)
             {
-                Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
-                if (rootFrame.Content == null)
-                {
-                    SetMinWindowSize();
-                    rootFrame.Navigate(typeof(MainPage));
-                }
-
-                // Ensure the current window is active
-                Window.Current.Activate();
+                SetMinWindowSize();
+                rootFrame.Navigate(typeof(MainPage));
             }
+
+            // Ensure the current window is active
+            Window.Current.Activate();
         }
 
         /// <summary>
