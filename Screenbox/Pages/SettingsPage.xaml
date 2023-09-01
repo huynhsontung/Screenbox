@@ -92,11 +92,29 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="HeaderText"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
                 MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Settings}" />
+            <muxc:InfoBar
+                x:Name="UnappliedChangesInfoBar"
+                Grid.Column="1"
+                MaxWidth="400"
+                IsClosable="False"
+                IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
+                Message="Relaunch the app for changes to take effect"
+                Severity="Warning">
+                <!-- <muxc:InfoBar.ActionButton> -->
+                <!--     <Button Content="Relaunch" /> -->
+                <!-- </muxc:InfoBar.ActionButton> -->
+            </muxc:InfoBar>
         </Grid>
 
         <ScrollViewer
@@ -231,21 +249,7 @@
                     Header="Advanced mode"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
-                    <labs:SettingsExpander.ItemsHeader>
-                        <muxc:InfoBar
-                            Title="Unapplied changes"
-                            BorderThickness="0"
-                            CornerRadius="0"
-                            IsClosable="False"
-                            IsOpen="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
-                            Message="Relaunch the app for changes to take effect"
-                            Severity="Warning">
-                            <!-- <muxc:InfoBar.ActionButton> -->
-                            <!--     <Button Content="Relaunch" /> -->
-                            <!-- </muxc:InfoBar.ActionButton> -->
-                        </muxc:InfoBar>
-                    </labs:SettingsExpander.ItemsHeader>
-                    <ToggleSwitch x:Name="AdvancedModeToggleSwitch" />
+                    <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard Header="Global options" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <labs:SettingsCard.Description>
@@ -262,7 +266,8 @@
                                 Width="180"
                                 AcceptsReturn="False"
                                 MaxLength="1024"
-                                PlaceholderText="--option=value" />
+                                PlaceholderText="--option=value"
+                                Text="{x:Bind ViewModel.GlobalArguments, Mode=TwoWay}" />
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
@@ -315,6 +320,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="UnappliedChangesInfoBar.MaxWidth" Value="360" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
