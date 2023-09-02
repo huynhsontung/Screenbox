@@ -61,7 +61,7 @@
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="Set playback options"
+                    Text="{strings:Resources Key=SetPlaybackOptions}"
                     Visibility="{x:Bind ViewModel.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />

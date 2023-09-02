@@ -2104,6 +2104,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SetPlaybackOptions
+        /// <summary>
+        ///   Looks up a localized string similar to: Set playback options
+        /// </summary>
+        public static string SetPlaybackOptions
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptions");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2275,6 +2288,7 @@ namespace Screenbox.Strings{
             FailedToOpenFilesNotificationTitle,
             OpenUrlPlaceholder,
             OpenConnectedDevicesSettingsButtonText,
+            SetPlaybackOptions,
         }
 
         private static ResourceLoader _resourceLoader;

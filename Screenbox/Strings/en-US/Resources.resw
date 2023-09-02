@@ -559,4 +559,7 @@
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
     <value>Open Connected Devices settings</value>
   </data>
+  <data name="SetPlaybackOptions" xml:space="preserve">
+    <value>Set playback options</value>
+  </data>
 </root>

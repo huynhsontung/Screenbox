@@ -151,6 +151,10 @@
           <source>Playback speed</source>
           <target state="translated">播放速度</target>
         </trans-unit>
+        <trans-unit id="SetPlaybackOptions" translate="yes" xml:space="preserve">
+          <source>Set playback options</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="VolumeChangeStatusMessage" translate="yes" xml:space="preserve">
           <source>Volume {0:F0}%</source>
           <target state="translated">音量 {0:F0}%</target>
