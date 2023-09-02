@@ -36,7 +36,7 @@
             <XamlUICommand
                 x:Key="RemoveMusicFolderCommand"
                 Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
-                Description="Remove folder"
+                Description="{strings:Resources Key=RemoveFolder}"
                 IconSource="{ui:FontIconSource FontSize=16,
                                                Glyph=&#xe894;}"
                 Label="{strings:Resources Key=Remove}" />
@@ -44,7 +44,7 @@
             <XamlUICommand
                 x:Key="RemoveVideosFolderCommand"
                 Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
-                Description="Remove folder"
+                Description="{strings:Resources Key=RemoveFolder}"
                 IconSource="{ui:FontIconSource FontSize=16,
                                                Glyph=&#xe894;}"
                 Label="{strings:Resources Key=Remove}" />
@@ -104,17 +104,13 @@
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Settings}" />
             <muxc:InfoBar
-                x:Name="UnappliedChangesInfoBar"
+                x:Name="PendingChangesInfoBar"
+                Title="{strings:Resources Key=PendingChanges}"
                 Grid.Column="1"
-                MaxWidth="400"
                 IsClosable="False"
                 IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
-                Message="Relaunch the app for changes to take effect"
-                Severity="Warning">
-                <!-- <muxc:InfoBar.ActionButton> -->
-                <!--     <Button Content="Relaunch" /> -->
-                <!-- </muxc:InfoBar.ActionButton> -->
-            </muxc:InfoBar>
+                Message="{strings:Resources Key=RelaunchForChangesMessage}"
+                Severity="Warning" />
         </Grid>
 
         <ScrollViewer
@@ -243,23 +239,22 @@
                 <TextBlock
                     Margin="0,24,0,4"
                     FontWeight="SemiBold"
-                    Text="Advanced" />
+                    Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
                 <labs:SettingsExpander
-                    Description="Advanced mode allows you to customize libVLC's behavior using command line arguments."
-                    Header="Advanced mode"
+                    Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
+                    Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="Global options" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                        <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <labs:SettingsCard.Description>
                                 <TextBlock>
-                                    <Run Text="Command line arguments that apply to all media playback." />
-                                    <Run Text="See" />
+                                    <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
                                     <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
-                                        <Run Text="VLC command-line help" />
+                                        <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
                                     </Hyperlink>
-                                    <Run Text="for the full list of available options." />
+                                    <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
                                 </TextBlock>
                             </labs:SettingsCard.Description>
                             <TextBox
@@ -320,7 +315,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="UnappliedChangesInfoBar.MaxWidth" Value="360" />
+                        <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

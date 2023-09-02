@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -19,11 +20,19 @@ namespace Screenbox.Pages
         internal SettingsPageViewModel ViewModel => (SettingsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
+
+        private string[] VlcCommandLineHelpTextParts { get; }
+
         public SettingsPage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<SettingsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+            VlcCommandLineHelpTextParts = new string[2];
+            string[] parts = Strings.Resources.VlcCommandLineHelpText
+                .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim()).ToArray();
+            Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

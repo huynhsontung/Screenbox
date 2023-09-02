@@ -24,8 +24,10 @@ public sealed partial class SetOptionsDialog : ContentDialog
         this.InitializeComponent();
         Options = existingOptions;
         OptionsTextBox.Text = Options;
-        VlcCommandLineHelpTextParts = Strings.Resources.VlcCommandLineHelpText
+        VlcCommandLineHelpTextParts = new string[2];
+        string[] parts = Strings.Resources.VlcCommandLineHelpText
             .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
             .Select(s => s.Trim()).ToArray();
+        Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
     }
 }

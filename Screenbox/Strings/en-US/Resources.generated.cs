@@ -2195,6 +2195,110 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsCategoryAdvanced
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced
+        /// </summary>
+        public static string SettingsCategoryAdvanced
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryAdvanced");
+            }
+        }
+        #endregion
+
+        #region SettingsAdvancedModeHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced mode
+        /// </summary>
+        public static string SettingsAdvancedModeHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAdvancedModeHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsAdvancedModeDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments.
+        /// </summary>
+        public static string SettingsAdvancedModeDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAdvancedModeDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsGlobalArgumentsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Global arguments
+        /// </summary>
+        public static string SettingsGlobalArgumentsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGlobalArgumentsHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsGlobalArgumentsDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback.
+        /// </summary>
+        public static string SettingsGlobalArgumentsDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGlobalArgumentsDescription");
+            }
+        }
+        #endregion
+
+        #region RemoveFolder
+        /// <summary>
+        ///   Looks up a localized string similar to: Remove folder
+        /// </summary>
+        public static string RemoveFolder
+        {
+            get
+            {
+                return _resourceLoader.GetString("RemoveFolder");
+            }
+        }
+        #endregion
+
+        #region PendingChanges
+        /// <summary>
+        ///   Looks up a localized string similar to: Pending changes
+        /// </summary>
+        public static string PendingChanges
+        {
+            get
+            {
+                return _resourceLoader.GetString("PendingChanges");
+            }
+        }
+        #endregion
+
+        #region RelaunchForChangesMessage
+        /// <summary>
+        ///   Looks up a localized string similar to: Relaunch the app for changes to take effect
+        /// </summary>
+        public static string RelaunchForChangesMessage
+        {
+            get
+            {
+                return _resourceLoader.GetString("RelaunchForChangesMessage");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2373,6 +2477,14 @@ namespace Screenbox.Strings{
             SetPlaybackOptionsHelpTextLine2,
             VlcCommandLineHelpLink,
             VlcCommandLineHelpText,
+            SettingsCategoryAdvanced,
+            SettingsAdvancedModeHeader,
+            SettingsAdvancedModeDescription,
+            SettingsGlobalArgumentsHeader,
+            SettingsGlobalArgumentsDescription,
+            RemoveFolder,
+            PendingChanges,
+            RelaunchForChangesMessage,
         }
 
         private static ResourceLoader _resourceLoader;
