@@ -41,6 +41,7 @@ internal class SetPlaybackOptionsCommand : IRelayCommand
     {
         MediaViewModel media => media,
         MediaViewModelWithMruToken mediaWithMru => mediaWithMru.Media,
+        StorageItemViewModel storageItemViewModel => storageItemViewModel.Media,
         _ => null
     };
 }
