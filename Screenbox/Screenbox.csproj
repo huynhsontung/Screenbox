@@ -149,6 +149,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
       <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>

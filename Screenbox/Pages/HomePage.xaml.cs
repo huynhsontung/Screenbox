@@ -2,7 +2,6 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls;
-using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
 using Windows.UI.Xaml;
@@ -41,19 +40,6 @@ namespace Screenbox.Pages
             if (uri != null)
             {
                 ViewModel.OpenUrl(uri);
-            }
-        }
-
-        private async void SetOptionsMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (sender is not FrameworkElement { DataContext: MediaViewModelWithMruToken item }) return;
-            SetOptionsDialog dialog = new(string.Join(' ', item.Media.Options));
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.None) return;
-            item.Media.SetOptions(dialog.Options);
-            if (result == ContentDialogResult.Secondary)
-            {
-                ViewModel.PlayCommand.Execute(item);
             }
         }
     }
