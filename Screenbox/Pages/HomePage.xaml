@@ -57,12 +57,12 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
                 <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding Media}" />
-                <MenuFlyoutSeparator Visibility="{x:Bind ViewModel.IsAdvancedModeEnabled}" />
+                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
                     Text="{strings:Resources Key=SetPlaybackOptions}"
-                    Visibility="{x:Bind ViewModel.IsAdvancedModeEnabled}">
+                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
                     </MenuFlyoutItem.Command>

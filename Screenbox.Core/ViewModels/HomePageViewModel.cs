@@ -18,12 +18,9 @@ using Windows.Storage.AccessCache;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class HomePageViewModel : ObservableRecipient,
-        IRecipient<PlaylistActiveItemChangedMessage>,
-        IRecipient<SettingsChangedMessage>
+        IRecipient<PlaylistActiveItemChangedMessage>
     {
         public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
-
-        [ObservableProperty] private bool _isAdvancedModeEnabled;
 
         public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0 && _settingsService.ShowRecent;
 
@@ -42,7 +39,6 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _settingsService = settingsService;
             _libraryService = libraryService;
-            IsAdvancedModeEnabled = settingsService.AdvancedMode;
             Recent = new ObservableCollection<MediaViewModelWithMruToken>();
 
             // Activate the view model's messenger
@@ -54,14 +50,6 @@ namespace Screenbox.Core.ViewModels
             if (message.Value is { Source: IStorageItem } && _settingsService.ShowRecent)
             {
                 await UpdateRecentMediaListAsync().ConfigureAwait(false);
-            }
-        }
-
-        public void Receive(SettingsChangedMessage message)
-        {
-            if (message.SettingsName == nameof(_settingsService.AdvancedMode))
-            {
-                IsAdvancedModeEnabled = _settingsService.AdvancedMode;
             }
         }
 
