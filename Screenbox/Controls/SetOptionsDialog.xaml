@@ -2,30 +2,37 @@
     x:Class="Screenbox.Controls.SetOptionsDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Screenbox.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Set playback options"
-    CloseButtonText="Close"
+    xmlns:strings="using:Screenbox.Strings"
+    Title="{strings:Resources Key=SetPlaybackOptions}"
+    CloseButtonText="{strings:Resources Key=Close}"
     DefaultButton="Primary"
-    PrimaryButtonText="Set"
-    SecondaryButtonText="Set and Play"
+    PrimaryButtonText="{strings:Resources Key=Set}"
+    SecondaryButtonText="{strings:Resources Key=SetAndPlay}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical" Spacing="8">
-        <TextBlock TextWrapping="Wrap">
-            <Run Text="Set VLC options that apply to a stream." /><LineBreak /><Run Text="See" />
+    <StackPanel Orientation="Vertical" Spacing="12">
+        <TextBlock MaxWidth="420" TextWrapping="Wrap">
+            <Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine1}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
             <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
-                <Run Text="VLC command-line help" />
+                <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
             </Hyperlink>
-            <Run Text="for the full list of available options." /><LineBreak /><Run Text="Some options may only be set globally." />
+            <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
+            <Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine2}" />
         </TextBlock>
         <TextBox
             x:Name="OptionsTextBox"
             AcceptsReturn="False"
             IsSpellCheckEnabled="False"
             PlaceholderText=":option=value"
-            Text="{x:Bind Options, Mode=TwoWay}" />
+            Text="{x:Bind Options, Mode=TwoWay}">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:AutoFocusBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBox>
     </StackPanel>
 </ContentDialog>

@@ -562,4 +562,23 @@
   <data name="SetPlaybackOptions" xml:space="preserve">
     <value>Set playback options</value>
   </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="SetAndPlay" xml:space="preserve">
+    <value>Set and Play</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
+    <value>Set VLC options that apply to a stream.</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
+    <value>Some options may only be set globally.</value>
+  </data>
+  <data name="VlcCommandLineHelpLink" xml:space="preserve">
+    <value>VLC command-line help</value>
+  </data>
+  <data name="VlcCommandLineHelpText" xml:space="preserve">
+    <value>See {0} for the full list of available options.</value>
+    <comment>{0} = VLC command-line help</comment>
+  </data>
 </root>

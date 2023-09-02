@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -15,10 +17,15 @@ public sealed partial class SetOptionsDialog : ContentDialog
         set { SetValue(OptionsProperty, value); }
     }
 
+    private string[] VlcCommandLineHelpTextParts { get; }
+
     public SetOptionsDialog(string existingOptions)
     {
         this.InitializeComponent();
         Options = existingOptions;
         OptionsTextBox.Text = Options;
+        VlcCommandLineHelpTextParts = Strings.Resources.VlcCommandLineHelpText
+            .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim()).ToArray();
     }
 }

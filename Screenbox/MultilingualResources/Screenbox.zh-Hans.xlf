@@ -151,9 +151,34 @@
           <source>Playback speed</source>
           <target state="translated">播放速度</target>
         </trans-unit>
+        <trans-unit id="Set" translate="yes" xml:space="preserve">
+          <source>Set</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetAndPlay" translate="yes" xml:space="preserve">
+          <source>Set and Play</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="SetPlaybackOptions" translate="yes" xml:space="preserve">
           <source>Set playback options</source>
           <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetPlaybackOptionsHelpTextLine1" translate="yes" xml:space="preserve">
+          <source>Set VLC options that apply to a stream.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetPlaybackOptionsHelpTextLine2" translate="yes" xml:space="preserve">
+          <source>Some options may only be set globally.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="VlcCommandLineHelpLink" translate="yes" xml:space="preserve">
+          <source>VLC command-line help</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="VlcCommandLineHelpText" translate="yes" xml:space="preserve">
+          <source>See {0} for the full list of available options.</source>
+          <target state="new"></target>
+          <note from="MultilingualBuild" priority="2">{0} = VLC command-line help</note>
         </trans-unit>
         <trans-unit id="VolumeChangeStatusMessage" translate="yes" xml:space="preserve">
           <source>Volume {0:F0}%</source>

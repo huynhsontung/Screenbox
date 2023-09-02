@@ -2117,6 +2117,84 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Set
+        /// <summary>
+        ///   Looks up a localized string similar to: Set
+        /// </summary>
+        public static string Set
+        {
+            get
+            {
+                return _resourceLoader.GetString("Set");
+            }
+        }
+        #endregion
+
+        #region SetAndPlay
+        /// <summary>
+        ///   Looks up a localized string similar to: Set and Play
+        /// </summary>
+        public static string SetAndPlay
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetAndPlay");
+            }
+        }
+        #endregion
+
+        #region SetPlaybackOptionsHelpTextLine1
+        /// <summary>
+        ///   Looks up a localized string similar to: Set VLC options that apply to a stream.
+        /// </summary>
+        public static string SetPlaybackOptionsHelpTextLine1
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptionsHelpTextLine1");
+            }
+        }
+        #endregion
+
+        #region SetPlaybackOptionsHelpTextLine2
+        /// <summary>
+        ///   Looks up a localized string similar to: Some options may only be set globally.
+        /// </summary>
+        public static string SetPlaybackOptionsHelpTextLine2
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptionsHelpTextLine2");
+            }
+        }
+        #endregion
+
+        #region VlcCommandLineHelpLink
+        /// <summary>
+        ///   Looks up a localized string similar to: VLC command-line help
+        /// </summary>
+        public static string VlcCommandLineHelpLink
+        {
+            get
+            {
+                return _resourceLoader.GetString("VlcCommandLineHelpLink");
+            }
+        }
+        #endregion
+
+        #region VlcCommandLineHelpText
+        /// <summary>
+        ///   Looks up a localized string similar to: See {0} for the full list of available options.
+        /// </summary>
+        public static string VlcCommandLineHelpText
+        {
+            get
+            {
+                return _resourceLoader.GetString("VlcCommandLineHelpText");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2289,6 +2367,12 @@ namespace Screenbox.Strings{
             OpenUrlPlaceholder,
             OpenConnectedDevicesSettingsButtonText,
             SetPlaybackOptions,
+            Set,
+            SetAndPlay,
+            SetPlaybackOptionsHelpTextLine1,
+            SetPlaybackOptionsHelpTextLine2,
+            VlcCommandLineHelpLink,
+            VlcCommandLineHelpText,
         }
 
         private static ResourceLoader _resourceLoader;
