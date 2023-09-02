@@ -123,6 +123,10 @@
     </header>
     <body>
       <group id="SCREENBOX/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
+        <trans-unit id="FailedToInitializeNotificationTitle" translate="yes" xml:space="preserve">
+          <source>Failed to initialize</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="FrameSavedNotificationTitle" translate="yes" xml:space="preserve">
           <source>Frame saved</source>
           <target state="translated">帧已保存</target>

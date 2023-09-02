@@ -3,6 +3,7 @@
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using LibVLCSharp.Shared;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
@@ -98,7 +99,18 @@ namespace Screenbox.Core.ViewModels
                     ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
                         .Concat(swapChainOptions).ToArray()
                     : swapChainOptions;
-                _libVlcService.Initialize(args);
+
+                try
+                {
+                    _libVlcService.Initialize(args);
+                }
+                catch (VLCException e)
+                {
+                    _libVlcService.Initialize(swapChainOptions);
+                    Messenger.Send(new ErrorMessage(
+                        _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
+                }
+
                 _mediaPlayer = _libVlcService.MediaPlayer;
                 Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
                 VlcPlayer = _mediaPlayer.VlcPlayer;

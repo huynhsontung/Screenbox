@@ -710,4 +710,7 @@
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>Relaunch the app for changes to take effect</value>
   </data>
+  <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
+    <value>Failed to initialize</value>
+  </data>
 </root>

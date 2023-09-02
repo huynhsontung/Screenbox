@@ -2299,6 +2299,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToInitializeNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Failed to initialize
+        /// </summary>
+        public static string FailedToInitializeNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToInitializeNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2485,6 +2498,7 @@ namespace Screenbox.Strings{
             RemoveFolder,
             PendingChanges,
             RelaunchForChangesMessage,
+            FailedToInitializeNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;
