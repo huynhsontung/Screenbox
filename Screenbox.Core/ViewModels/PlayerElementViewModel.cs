@@ -11,6 +11,7 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -93,7 +94,11 @@ namespace Screenbox.Core.ViewModels
         {
             Task.Run(() =>
             {
-                _libVlcService.Initialize(swapChainOptions);
+                string[] args = _settingsService.GlobalArguments.Length > 0
+                    ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                        .Concat(swapChainOptions).ToArray()
+                    : swapChainOptions;
+                _libVlcService.Initialize(args);
                 _mediaPlayer = _libVlcService.MediaPlayer;
                 Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
                 VlcPlayer = _mediaPlayer.VlcPlayer;
