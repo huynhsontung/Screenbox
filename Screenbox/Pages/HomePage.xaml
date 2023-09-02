@@ -58,11 +58,12 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
                 <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding Media}" />
-                <MenuFlyoutSeparator />
+                <MenuFlyoutSeparator Visibility="{x:Bind ViewModel.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     Click="SetOptionsMenuItem_OnClick"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="Set playback options" />
+                    Text="Set playback options"
+                    Visibility="{x:Bind ViewModel.IsAdvancedModeEnabled}" />
             </MenuFlyout>
 
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
@@ -264,7 +265,7 @@
                     <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </GridView.Footer>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:ListViewContextTriggerBehavior ContextRequested="ListViewContextTriggerBehavior_OnContextRequested" Flyout="{x:Bind ItemFlyout}" />
+                    <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </interactivity:Interaction.Behaviors>
             </GridView>
