@@ -166,7 +166,7 @@ namespace Screenbox.Core.ViewModels
                 .Where(o => o.StartsWith(":") && o.Length > 1).ToArray();
 
             // Check if new options and existing options are the same
-            if (opts.Length == _options.Count && opts.Length > 0)
+            if (opts.Length == _options.Count)
             {
                 bool same = !opts.Where((o, i) => o != _options[i]).Any();
                 if (same) return;
