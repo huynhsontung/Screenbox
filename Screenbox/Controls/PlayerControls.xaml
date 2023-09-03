@@ -145,7 +145,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind Common.ShowPropertiesCommand}"
+                    Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
