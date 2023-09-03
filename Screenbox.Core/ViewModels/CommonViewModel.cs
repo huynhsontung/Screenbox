@@ -24,6 +24,8 @@ namespace Screenbox.Core.ViewModels
     {
         public Dictionary<Type, string> NavigationStates { get; }
 
+        public bool IsAdvancedModeEnabled => _settingsService.AdvancedMode;
+
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private Thickness _scrollBarMargin;
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
@@ -32,15 +34,20 @@ namespace Screenbox.Core.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
+        private readonly ISettingsService _settingsService;
         private readonly Func<IPropertiesDialog> _propertiesDialogFactory;
         private readonly Dictionary<string, double> _scrollingStates;
 
-        public CommonViewModel(INavigationService navigationService, IFilesService filesService, IResourceService resourceService,
+        public CommonViewModel(INavigationService navigationService,
+            IFilesService filesService,
+            IResourceService resourceService,
+            ISettingsService settingsService,
             Func<IPropertiesDialog> propertiesDialogFactory)
         {
             _navigationService = navigationService;
             _filesService = filesService;
             _resourceService = resourceService;
+            _settingsService = settingsService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _propertiesDialogFactory = propertiesDialogFactory;
             NavigationStates = new Dictionary<Type, string>();

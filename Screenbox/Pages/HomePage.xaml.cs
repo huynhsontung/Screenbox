@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Controls;
+using Screenbox.Core.ViewModels;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Controls;
-using Screenbox.Core.ViewModels;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 

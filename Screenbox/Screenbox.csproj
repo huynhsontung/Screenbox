@@ -149,6 +149,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
       <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
@@ -188,6 +189,9 @@
     </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SetOptionsDialog.xaml.cs">
+      <DependentUpon>SetOptionsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TimeDisplay.xaml.cs">
       <DependentUpon>TimeDisplay.xaml</DependentUpon>
@@ -809,6 +813,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\PropertiesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SetOptionsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

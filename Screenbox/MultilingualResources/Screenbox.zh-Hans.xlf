@@ -123,6 +123,10 @@
     </header>
     <body>
       <group id="SCREENBOX/STRINGS/EN-US/RESOURCES.RESW" datatype="resx">
+        <trans-unit id="FailedToInitializeNotificationTitle" translate="yes" xml:space="preserve">
+          <source>Failed to initialize</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="FrameSavedNotificationTitle" translate="yes" xml:space="preserve">
           <source>Frame saved</source>
           <target state="translated">帧已保存</target>
@@ -139,6 +143,18 @@
           <source>Enter the URL for a file or stream</source>
           <target state="translated">输入文件或流的 URL</target>
         </trans-unit>
+        <trans-unit id="PendingChanges" translate="yes" xml:space="preserve">
+          <source>Pending changes</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="RelaunchForChangesMessage" translate="yes" xml:space="preserve">
+          <source>Relaunch the app for changes to take effect</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="RemoveFolder" translate="yes" xml:space="preserve">
+          <source>Remove folder</source>
+          <target state="new"></target>
+        </trans-unit>
         <trans-unit id="SaveCurrentFrame" translate="yes" xml:space="preserve">
           <source>Save current frame</source>
           <target state="translated">保存当前帧</target>
@@ -150,6 +166,55 @@
         <trans-unit id="PlaybackSpeed" translate="yes" xml:space="preserve">
           <source>Playback speed</source>
           <target state="translated">播放速度</target>
+        </trans-unit>
+        <trans-unit id="Set" translate="yes" xml:space="preserve">
+          <source>Set</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetAndPlay" translate="yes" xml:space="preserve">
+          <source>Set and Play</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetPlaybackOptions" translate="yes" xml:space="preserve">
+          <source>Set playback options</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetPlaybackOptionsHelpTextLine1" translate="yes" xml:space="preserve">
+          <source>Set VLC options that apply to a stream.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SetPlaybackOptionsHelpTextLine2" translate="yes" xml:space="preserve">
+          <source>Some options may only be set globally.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SettingsAdvancedModeDescription" translate="yes" xml:space="preserve">
+          <source>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SettingsAdvancedModeHeader" translate="yes" xml:space="preserve">
+          <source>Advanced mode</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SettingsCategoryAdvanced" translate="yes" xml:space="preserve">
+          <source>Advanced</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SettingsGlobalArgumentsDescription" translate="yes" xml:space="preserve">
+          <source>Command line arguments that apply to all media playback.</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="SettingsGlobalArgumentsHeader" translate="yes" xml:space="preserve">
+          <source>Global arguments</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="VlcCommandLineHelpLink" translate="yes" xml:space="preserve">
+          <source>VLC command-line help</source>
+          <target state="new"></target>
+        </trans-unit>
+        <trans-unit id="VlcCommandLineHelpText" translate="yes" xml:space="preserve">
+          <source>See {0} for the full list of available options.</source>
+          <target state="new"></target>
+          <note from="MultilingualBuild" priority="2">{0} = VLC command-line help</note>
         </trans-unit>
         <trans-unit id="VolumeChangeStatusMessage" translate="yes" xml:space="preserve">
           <source>Volume {0:F0}%</source>

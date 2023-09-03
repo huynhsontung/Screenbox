@@ -1,10 +1,10 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
+using LibVLCSharp.Shared;
 using System;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using LibVLCSharp.Shared;
-using CommunityToolkit.Diagnostics;
 
 namespace Screenbox.Core.Services
 {
@@ -20,42 +20,42 @@ namespace Screenbox.Core.Services
             StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
-        public Media CreateMedia(object source)
+        public Media CreateMedia(object source, params string[] options)
         {
             return source switch
             {
-                IStorageFile file => CreateMedia(file),
-                string str => CreateMedia(str),
-                Uri uri => CreateMedia(uri),
+                IStorageFile file => CreateMedia(file, options),
+                string str => CreateMedia(str, options),
+                Uri uri => CreateMedia(uri, options),
                 _ => throw new ArgumentOutOfRangeException(nameof(source))
             };
         }
 
-        public Media CreateMedia(string str)
+        public Media CreateMedia(string str, params string[] options)
         {
             if (Uri.TryCreate(str, UriKind.Absolute, out Uri uri))
             {
-                return CreateMedia(uri);
+                return CreateMedia(uri, options);
             }
 
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
-            return new Media(libVlc, str);
+            return new Media(libVlc, str, FromType.FromPath, options);
         }
 
-        public Media CreateMedia(IStorageFile file)
+        public Media CreateMedia(IStorageFile file, params string[] options)
         {
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
-            return new Media(libVlc, mrl, FromType.FromLocation);
+            return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
 
-        public Media CreateMedia(Uri uri)
+        public Media CreateMedia(Uri uri, params string[] options)
         {
             Guard.IsNotNull(_libVlcService.LibVlc, nameof(_libVlcService.LibVlc));
             LibVLC libVlc = _libVlcService.LibVlc;
-            return new Media(libVlc, uri);
+            return new Media(libVlc, uri, options);
         }
 
         public void DisposeMedia(Media media)
