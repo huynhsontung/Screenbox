@@ -3,9 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
-    xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:commands="using:Screenbox.Commands"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -42,10 +40,20 @@
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind Common.ShowPropertiesCommand}"
+                    Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
                     Icon="{ui:FontIcon Glyph=&#xe946;}"
                     Text="{strings:Resources Key=Properties}" />
+                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
+                <MenuFlyoutItem
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Setting}"
+                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
+                    <MenuFlyoutItem.Command>
+                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="viewModels:StorageItemViewModel">

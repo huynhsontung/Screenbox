@@ -23,6 +23,9 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _showRecent;
+        [ObservableProperty] private bool _advancedMode;
+        [ObservableProperty] private string _globalArguments;
+        [ObservableProperty] private bool _isRelaunchRequired;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -31,6 +34,9 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _argumentsChangedTimer;
+        private static string? _originalGlobalArguments;
+        private static bool? _originalAdvancedMode;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -39,10 +45,29 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _argumentsChangedTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
 
-            LoadValues();
+            // Load values
+            _playerAutoResize = (int)_settingsService.PlayerAutoResize;
+            _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            _playerSeekGesture = _settingsService.PlayerSeekGesture;
+            _playerTapGesture = _settingsService.PlayerTapGesture;
+            _showRecent = _settingsService.ShowRecent;
+            _advancedMode = _settingsService.AdvancedMode;
+            _globalArguments = _settingsService.GlobalArguments;
+            _originalAdvancedMode ??= _advancedMode;
+            _originalGlobalArguments ??= _globalArguments;
+            _isRelaunchRequired = CheckForRelaunch();
+            int maxVolume = _settingsService.MaxVolume;
+            _volumeBoost = maxVolume switch
+            {
+                >= 200 => 3,
+                >= 150 => 2,
+                >= 125 => 1,
+                _ => 0
+            };
 
             IsActive = true;
         }
@@ -50,31 +75,31 @@ namespace Screenbox.Core.ViewModels
         partial void OnPlayerAutoResizeChanged(int value)
         {
             _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerAutoResize)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize)));
         }
 
         partial void OnPlayerVolumeGestureChanged(bool value)
         {
             _settingsService.PlayerVolumeGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerVolumeGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture)));
         }
 
         partial void OnPlayerSeekGestureChanged(bool value)
         {
             _settingsService.PlayerSeekGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerSeekGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture)));
         }
 
         partial void OnPlayerTapGestureChanged(bool value)
         {
             _settingsService.PlayerTapGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.PlayerTapGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
         }
 
         partial void OnShowRecentChanged(bool value)
         {
             _settingsService.ShowRecent = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.ShowRecent)));
+            Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
         }
 
         partial void OnVolumeBoostChanged(int value)
@@ -86,7 +111,21 @@ namespace Screenbox.Core.ViewModels
                 1 => 125,
                 _ => 100
             };
-            Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.VolumeBoost)));
+            Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost)));
+        }
+
+        partial void OnAdvancedModeChanged(bool value)
+        {
+            _settingsService.AdvancedMode = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode)));
+            IsRelaunchRequired = CheckForRelaunch();
+        }
+
+        partial void OnGlobalArgumentsChanged(string value)
+        {
+            // No need to broadcast SettingsChangedMessage for this option
+            _settingsService.GlobalArguments = value;
+            IsRelaunchRequired = CheckForRelaunch();
         }
 
         [RelayCommand]
@@ -137,23 +176,6 @@ namespace Screenbox.Core.ViewModels
         private void ClearRecentHistory()
         {
             StorageApplicationPermissions.MostRecentlyUsedList.Clear();
-        }
-
-        private void LoadValues()
-        {
-            PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
-            PlayerVolumeGesture = _settingsService.PlayerVolumeGesture;
-            PlayerSeekGesture = _settingsService.PlayerSeekGesture;
-            PlayerTapGesture = _settingsService.PlayerTapGesture;
-            ShowRecent = _settingsService.ShowRecent;
-            int maxVolume = _settingsService.MaxVolume;
-            VolumeBoost = maxVolume switch
-            {
-                >= 200 => 3,
-                >= 150 => 2,
-                >= 125 => 1,
-                _ => 0
-            };
         }
 
         public async Task LoadLibraryLocations()
@@ -228,6 +250,30 @@ namespace Screenbox.Core.ViewModels
                     MusicLocations.Add(folder);
                 }
             }
+        }
+
+        private bool CheckForRelaunch()
+        {
+            // Check if global arguments have been changed
+            bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
+
+            // Check if advanced mode has been changed
+            bool modeChanged = _originalAdvancedMode != AdvancedMode;
+
+            // Check if there are any global arguments set
+            bool hasArgs = _settingsService.GlobalArguments.Length > 0;
+
+            // Check if advanced mode is on, and if global arguments are set
+            bool whenOn = modeChanged && AdvancedMode && hasArgs;
+
+            // Check if advanced mode is off, and if global arguments are set or have been removed
+            bool whenOff = modeChanged && !AdvancedMode && (!hasArgs && argsChanged || hasArgs);
+
+            // Require relaunch when advanced mode is on and global arguments have been changed
+            bool whenOnAndChanged = AdvancedMode && argsChanged;
+
+            // Combine everything
+            return whenOn || whenOff || whenOnAndChanged;
         }
     }
 }

@@ -61,8 +61,10 @@ namespace Screenbox.Core.ViewModels
             await UpdateContentAsync();
         }
 
-        public void OpenUrl(Uri url)
+        [RelayCommand]
+        private void OpenUrl(Uri? url)
         {
+            if (url == null) return;
             Messenger.Send(new PlayMediaMessage(url));
         }
 

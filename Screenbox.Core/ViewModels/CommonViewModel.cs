@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Toolkit.Uwp.UI;
-using Screenbox.Core.Common;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -24,6 +23,8 @@ namespace Screenbox.Core.ViewModels
     {
         public Dictionary<Type, string> NavigationStates { get; }
 
+        public bool IsAdvancedModeEnabled => _settingsService.AdvancedMode;
+
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private Thickness _scrollBarMargin;
         [ObservableProperty] private Thickness _footerBottomPaddingMargin;
@@ -32,17 +33,19 @@ namespace Screenbox.Core.ViewModels
         private readonly INavigationService _navigationService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
-        private readonly Func<IPropertiesDialog> _propertiesDialogFactory;
+        private readonly ISettingsService _settingsService;
         private readonly Dictionary<string, double> _scrollingStates;
 
-        public CommonViewModel(INavigationService navigationService, IFilesService filesService, IResourceService resourceService,
-            Func<IPropertiesDialog> propertiesDialogFactory)
+        public CommonViewModel(INavigationService navigationService,
+            IFilesService filesService,
+            IResourceService resourceService,
+            ISettingsService settingsService)
         {
             _navigationService = navigationService;
             _filesService = filesService;
             _resourceService = resourceService;
+            _settingsService = settingsService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
-            _propertiesDialogFactory = propertiesDialogFactory;
             NavigationStates = new Dictionary<Type, string>();
             _scrollingStates = new Dictionary<string, double>();
 
@@ -88,8 +91,6 @@ namespace Screenbox.Core.ViewModels
             return false;
         }
 
-        private bool HasMedia(MediaViewModel? media) => media != null;
-
         [RelayCommand]
         private void OpenAlbum(AlbumViewModel? album)
         {
@@ -104,15 +105,6 @@ namespace Screenbox.Core.ViewModels
             if (artist == null) return;
             _navigationService.Navigate(typeof(ArtistDetailsPageViewModel),
                 new NavigationMetadata(typeof(MusicPageViewModel), artist));
-        }
-
-        [RelayCommand(CanExecute = nameof(HasMedia))]
-        private async Task ShowPropertiesAsync(MediaViewModel? media)
-        {
-            if (media == null) return;
-            IPropertiesDialog dialog = _propertiesDialogFactory();
-            dialog.Media = media;
-            await dialog.ShowAsync();
         }
 
         [RelayCommand]

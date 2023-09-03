@@ -3,7 +3,6 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -30,15 +29,6 @@ namespace Screenbox.Pages
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)
         {
             await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
-        }
-
-        private async void AddUrlMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            Uri? uri = await OpenUrlDialog.GetUrlAsync();
-            if (uri != null)
-            {
-                ViewModel.AddUrl(uri);
-            }
         }
     }
 }

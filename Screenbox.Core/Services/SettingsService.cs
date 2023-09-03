@@ -2,6 +2,8 @@
 
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
+using System;
+using System.Linq;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
@@ -17,6 +19,8 @@ namespace Screenbox.Core.Services
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
         private const string GeneralShowRecent = "General/ShowRecent";
+        private const string AdvancedModeKey = "Advanced/IsEnabled";
+        private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
@@ -69,6 +73,18 @@ namespace Screenbox.Core.Services
             set => SetValue(PersistentRepeatModeKey, (int)value);
         }
 
+        public string GlobalArguments
+        {
+            get => GetValue<string>(GlobalArgumentsKey) ?? string.Empty;
+            set => SetValue(GlobalArgumentsKey, SanitizeArguments(value));
+        }
+
+        public bool AdvancedMode
+        {
+            get => GetValue<bool>(AdvancedModeKey);
+            set => SetValue(AdvancedModeKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
@@ -79,6 +95,8 @@ namespace Screenbox.Core.Services
             SetDefault(MaxVolumeKey, 100);
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
+            SetDefault(AdvancedModeKey, false);
+            SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides
             if (SystemInformationExtensions.IsXbox)
@@ -109,6 +127,13 @@ namespace Screenbox.Core.Services
         {
             if (_settingsStorage.ContainsKey(key) && _settingsStorage[key] is T) return;
             _settingsStorage[key] = value;
+        }
+
+        private static string SanitizeArguments(string raw)
+        {
+            string[] args = raw.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => s.StartsWith('-') && s != "--").ToArray();
+            return string.Join(' ', args);
         }
     }
 }

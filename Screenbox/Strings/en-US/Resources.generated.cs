@@ -2104,6 +2104,214 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SetPlaybackOptions
+        /// <summary>
+        ///   Looks up a localized string similar to: Set playback options
+        /// </summary>
+        public static string SetPlaybackOptions
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptions");
+            }
+        }
+        #endregion
+
+        #region Set
+        /// <summary>
+        ///   Looks up a localized string similar to: Set
+        /// </summary>
+        public static string Set
+        {
+            get
+            {
+                return _resourceLoader.GetString("Set");
+            }
+        }
+        #endregion
+
+        #region SetAndPlay
+        /// <summary>
+        ///   Looks up a localized string similar to: Set and Play
+        /// </summary>
+        public static string SetAndPlay
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetAndPlay");
+            }
+        }
+        #endregion
+
+        #region SetPlaybackOptionsHelpTextLine1
+        /// <summary>
+        ///   Looks up a localized string similar to: Set VLC options that apply to a stream.
+        /// </summary>
+        public static string SetPlaybackOptionsHelpTextLine1
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptionsHelpTextLine1");
+            }
+        }
+        #endregion
+
+        #region SetPlaybackOptionsHelpTextLine2
+        /// <summary>
+        ///   Looks up a localized string similar to: Some options may only be set globally.
+        /// </summary>
+        public static string SetPlaybackOptionsHelpTextLine2
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetPlaybackOptionsHelpTextLine2");
+            }
+        }
+        #endregion
+
+        #region VlcCommandLineHelpLink
+        /// <summary>
+        ///   Looks up a localized string similar to: VLC command-line help
+        /// </summary>
+        public static string VlcCommandLineHelpLink
+        {
+            get
+            {
+                return _resourceLoader.GetString("VlcCommandLineHelpLink");
+            }
+        }
+        #endregion
+
+        #region VlcCommandLineHelpText
+        /// <summary>
+        ///   Looks up a localized string similar to: See {0} for the full list of available options.
+        /// </summary>
+        public static string VlcCommandLineHelpText
+        {
+            get
+            {
+                return _resourceLoader.GetString("VlcCommandLineHelpText");
+            }
+        }
+        #endregion
+
+        #region SettingsCategoryAdvanced
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced
+        /// </summary>
+        public static string SettingsCategoryAdvanced
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsCategoryAdvanced");
+            }
+        }
+        #endregion
+
+        #region SettingsAdvancedModeHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced mode
+        /// </summary>
+        public static string SettingsAdvancedModeHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAdvancedModeHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsAdvancedModeDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments.
+        /// </summary>
+        public static string SettingsAdvancedModeDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAdvancedModeDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsGlobalArgumentsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Global arguments
+        /// </summary>
+        public static string SettingsGlobalArgumentsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGlobalArgumentsHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsGlobalArgumentsDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback.
+        /// </summary>
+        public static string SettingsGlobalArgumentsDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsGlobalArgumentsDescription");
+            }
+        }
+        #endregion
+
+        #region RemoveFolder
+        /// <summary>
+        ///   Looks up a localized string similar to: Remove folder
+        /// </summary>
+        public static string RemoveFolder
+        {
+            get
+            {
+                return _resourceLoader.GetString("RemoveFolder");
+            }
+        }
+        #endregion
+
+        #region PendingChanges
+        /// <summary>
+        ///   Looks up a localized string similar to: Pending changes
+        /// </summary>
+        public static string PendingChanges
+        {
+            get
+            {
+                return _resourceLoader.GetString("PendingChanges");
+            }
+        }
+        #endregion
+
+        #region RelaunchForChangesMessage
+        /// <summary>
+        ///   Looks up a localized string similar to: Relaunch the app for changes to take effect
+        /// </summary>
+        public static string RelaunchForChangesMessage
+        {
+            get
+            {
+                return _resourceLoader.GetString("RelaunchForChangesMessage");
+            }
+        }
+        #endregion
+
+        #region FailedToInitializeNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Failed to initialize
+        /// </summary>
+        public static string FailedToInitializeNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToInitializeNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2275,6 +2483,22 @@ namespace Screenbox.Strings{
             FailedToOpenFilesNotificationTitle,
             OpenUrlPlaceholder,
             OpenConnectedDevicesSettingsButtonText,
+            SetPlaybackOptions,
+            Set,
+            SetAndPlay,
+            SetPlaybackOptionsHelpTextLine1,
+            SetPlaybackOptionsHelpTextLine2,
+            VlcCommandLineHelpLink,
+            VlcCommandLineHelpText,
+            SettingsCategoryAdvanced,
+            SettingsAdvancedModeHeader,
+            SettingsAdvancedModeDescription,
+            SettingsGlobalArgumentsHeader,
+            SettingsGlobalArgumentsDescription,
+            RemoveFolder,
+            PendingChanges,
+            RelaunchForChangesMessage,
+            FailedToInitializeNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;

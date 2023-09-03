@@ -3,15 +3,14 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
-    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:controls1="using:Screenbox.Controls"
+    xmlns:commands="using:Screenbox.Commands"
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -48,7 +47,7 @@
 
             <XamlUICommand
                 x:Key="PropertiesCommand"
-                Command="{x:Bind Common.ShowPropertiesCommand}"
+                Command="{StaticResource ShowPropertiesCommand}"
                 IconSource="{ui:FontIconSource Glyph=&#xe946;}"
                 Label="{strings:Resources Key=Properties}" />
 
@@ -58,6 +57,16 @@
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
                 <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding Media}" />
+                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
+                <MenuFlyoutItem
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Setting}"
+                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
+                    <MenuFlyoutItem.Command>
+                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
@@ -70,10 +79,11 @@
                     Icon="{ui:FontIcon Glyph=&#xe8da;}"
                     Text="{strings:Resources Key=OpenFolder}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
-                <MenuFlyoutItem
-                    Click="OpenUrlMenuItem_OnClick"
-                    Icon="{ui:SymbolIcon Symbol=Globe}"
-                    Text="{strings:Resources Key=OpenUrl}" />
+                <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=OpenUrl}">
+                    <MenuFlyoutItem.Command>
+                        <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
@@ -153,7 +163,7 @@
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Home}" />
 
-            <controls:SplitButton
+            <muxc:SplitButton
                 x:Name="HeaderOpenButton"
                 Height="32"
                 HorizontalAlignment="Right"
@@ -168,7 +178,7 @@
                         Margin="8,0,0,0"
                         Text="{x:Bind strings:Resources.OpenFiles}" />
                 </StackPanel>
-            </controls:SplitButton>
+            </muxc:SplitButton>
         </Grid>
 
         <!--  Recent-is-empty content  -->
@@ -214,7 +224,7 @@
                     Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
                     TextWrapping="Wrap" />
 
-                <controls:SplitButton
+                <muxc:SplitButton
                     x:Name="OpenButton"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
@@ -223,7 +233,7 @@
                         <FontIcon Glyph="&#xe838;" />
                         <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
                     </StackPanel>
-                </controls:SplitButton>
+                </muxc:SplitButton>
             </StackPanel>
         </Grid>
 
@@ -273,7 +283,7 @@
                     <VisualState.StateTriggers>
                         <triggers:IsEqualStateTrigger Value="{x:Bind Common.NavigationViewDisplayMode, Mode=OneWay}">
                             <triggers:IsEqualStateTrigger.To>
-                                <controls:NavigationViewDisplayMode>Minimal</controls:NavigationViewDisplayMode>
+                                <muxc:NavigationViewDisplayMode>Minimal</muxc:NavigationViewDisplayMode>
                             </triggers:IsEqualStateTrigger.To>
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
