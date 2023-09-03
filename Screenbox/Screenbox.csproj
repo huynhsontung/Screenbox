@@ -790,13 +790,21 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="packages.lock.json" />
     <None Include="Secrets.cs.template" />
-    <PRIResource Include="Strings\zh-Hans\Resources.resw" />
-    <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
+    <PRIResource Include="Strings\es-ES\Resources.resw" />
+    <PRIResource Include="Strings\es-ES\ManifestResources.resw" />
+    <PRIResource Include="Strings\ru-RU\Resources.resw" />
+    <PRIResource Include="Strings\ru-RU\ManifestResources.resw" />
+    <PRIResource Include="Strings\ro-RO\Resources.resw" />
+    <PRIResource Include="Strings\ro-RO\ManifestResources.resw" />
+    <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
+    <PRIResource Include="Strings\ar-SA\Resources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <Generator>ReswPlusAdvancedGenerator</Generator>
       <LastGenOutput>Resources.generated.cs</LastGenOutput>
     </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
+    <PRIResource Include="Strings\zh-Hans\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1022,9 +1030,6 @@
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <XliffResource Include="MultilingualResources\Screenbox.zh-Hans.xlf" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
