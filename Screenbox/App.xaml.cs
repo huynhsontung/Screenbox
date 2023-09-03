@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
-using Screenbox.Core.Common;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -90,7 +89,6 @@ namespace Screenbox
             services.AddSingleton<ArtistViewModelFactory>();
             services.AddSingleton<AlbumViewModelFactory>();
             services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
-            services.AddSingleton<Func<IPropertiesDialog>>(_ => () => new PropertiesDialog());
 
             // Services
             services.AddSingleton<LibVlcService>();

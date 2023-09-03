@@ -40,7 +40,7 @@
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    Command="{x:Bind Common.ShowPropertiesCommand}"
+                    Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
                     Icon="{ui:FontIcon Glyph=&#xe946;}"
                     Text="{strings:Resources Key=Properties}" />

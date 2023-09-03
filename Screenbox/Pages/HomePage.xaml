@@ -47,7 +47,7 @@
 
             <XamlUICommand
                 x:Key="PropertiesCommand"
-                Command="{x:Bind Common.ShowPropertiesCommand}"
+                Command="{StaticResource ShowPropertiesCommand}"
                 IconSource="{ui:FontIconSource Glyph=&#xe946;}"
                 Label="{strings:Resources Key=Properties}" />
 
@@ -79,10 +79,11 @@
                     Icon="{ui:FontIcon Glyph=&#xe8da;}"
                     Text="{strings:Resources Key=OpenFolder}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
-                <MenuFlyoutItem
-                    Click="OpenUrlMenuItem_OnClick"
-                    Icon="{ui:SymbolIcon Symbol=Globe}"
-                    Text="{strings:Resources Key=OpenUrl}" />
+                <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=OpenUrl}">
+                    <MenuFlyoutItem.Command>
+                        <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
             </MenuFlyout>
 
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">

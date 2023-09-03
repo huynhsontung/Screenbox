@@ -56,8 +56,6 @@ namespace Screenbox.Controls
 
         internal CommonViewModel Common { get; }
 
-        private Flyout? _castFlyout;
-
         public PlayerControls()
         {
             this.InitializeComponent();
@@ -69,12 +67,6 @@ namespace Screenbox.Controls
         public void FocusFirstButton(FocusState value = FocusState.Programmatic)
         {
             PlayPauseButton.Focus(value);
-        }
-
-        private void CastMenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            _castFlyout ??= CastControl.GetFlyout();
-            _castFlyout.ShowAt(MoreButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.TopEdgeAlignedRight });
         }
 
         private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -89,12 +81,6 @@ namespace Screenbox.Controls
             {
                 SelectAlternatePlaybackSpeedItem(ViewModel.PlaybackSpeed);
             }
-        }
-
-        private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
-            customAspectFlyout.ShowAt(MoreButton);
         }
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -129,16 +115,6 @@ namespace Screenbox.Controls
             {
                 CustomPlaybackSpeedMenuItem.IsChecked = true;
             }
-        }
-
-        private bool IsCastButtonEnabled(bool hasActiveItem)
-        {
-            if (_castFlyout?.Content is CastControl control)
-            {
-                return control.ViewModel.IsCasting || hasActiveItem;
-            }
-
-            return hasActiveItem;
         }
 
         private void AspectRatioTextBox_OnTextChanged(object sender, TextChangedEventArgs e)

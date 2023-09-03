@@ -29,8 +29,10 @@ namespace Screenbox.Core.ViewModels
             _resourceService = resourceService;
         }
 
-        public void AddUrl(Uri uri)
+        [RelayCommand]
+        private void AddUrl(Uri? uri)
         {
+            if (uri == null) return;
             MediaViewModel media = _mediaFactory.GetTransient(uri);
             Messenger.Send(new QueuePlaylistMessage(new[] { media }));
         }
