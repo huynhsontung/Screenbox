@@ -134,10 +134,10 @@
       },
       "CommunityToolkit.Mvvm": {
         "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "Jiu2g5WUdXRwzhJkHB+B4JBKP5A5+fp8xKiW/ZQo5PI+DruI7MbPEcK9K/Aw0YzTiWRuG6CBluzYIWN5Eo7BkQ==",
+        "resolved": "8.2.1",
+        "contentHash": "I24ofWVEdplxYjUez9/bljv/qb8r8Ccj6cvYXHexNBegLaD3iDy3QrzAAOYVMmfGWIXxlU1ZtECQNfU07+6hXQ==",
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "Microsoft.Bcl.AsyncInterfaces": "7.0.0",
           "System.ComponentModel.Annotations": "5.0.0",
           "System.Memory": "4.5.5",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
@@ -458,7 +458,7 @@
         "type": "Project",
         "dependencies": {
           "CommunityToolkit.Diagnostics": "[8.2.1, )",
-          "CommunityToolkit.Mvvm": "[8.0.0, )",
+          "CommunityToolkit.Mvvm": "[8.2.1, )",
           "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.2, )",
           "Microsoft.AppCenter.Crashes": "[5.0.2, )",
