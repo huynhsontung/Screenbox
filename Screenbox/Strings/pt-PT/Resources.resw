@@ -640,7 +640,7 @@
     <value>Nunca</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Ao iniciar</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Versão {0}</value>
@@ -650,7 +650,7 @@
     <value>Legenda adicionada</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Erro crítico</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
@@ -665,32 +665,32 @@
     <value>Abrir definições de dispositivos conectados</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Definir opções de reprodução</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Definir</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Definir e reproduzir</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Set VLC options that apply to a stream.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
     <value>VLC command-line help</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Consulte {0} para a lista completa das opções disponíveis.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Avançado</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
@@ -702,7 +702,7 @@
     <value>Command line arguments that apply to all media playback.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Remover pasta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
     <value>Pending changes</value>
