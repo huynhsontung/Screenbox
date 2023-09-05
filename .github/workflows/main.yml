@@ -114,15 +114,15 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: Screenbox-sideload
-        path: download/
+        path: C:\Download\
     - name: Rename test folder
-      run: Get-ChildItem -Directory -Path download/Screenbox_*_Test | Rename-Item -NewName Screenbox
+      run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
     - name: Rename test package
-      run: Get-ChildItem -Path download/Screenbox/*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
+      run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
     - uses: ChristopheLav/wack-certification@v1
       with:
         name: 'WACK (x64)'
-        package-path: 'download/Screenbox/Screenbox.msixbundle'
+        package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
         report-name: 'Screenbox.Certification.xml'
 
   release:
