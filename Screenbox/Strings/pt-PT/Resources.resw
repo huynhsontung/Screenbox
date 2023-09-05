@@ -118,26 +118,26 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>Fotograma guardado</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Minileitor</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Guardar fotograma atual</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>Velocidade de reprodução</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
     <value>Volume {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>Erro ao guardar fotograma</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
@@ -147,7 +147,7 @@
     <value>Failed to load subtitle</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Anterior</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
     <value>Sem som</value>
@@ -168,7 +168,7 @@
     <value>Volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Buscar</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Sair do minileitor</value>
@@ -260,7 +260,7 @@
     <value>Casting to</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>Transmitir para um dispositivo</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>Disable</value>
@@ -287,7 +287,7 @@
     <value>Limpar</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Início</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
     <value>Selecionar vários</value>
@@ -547,7 +547,7 @@
     <value>Custom playback speed</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Nenhum</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
     <value>Scale: {0}</value>
@@ -558,7 +558,7 @@
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Faixa {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
@@ -592,34 +592,34 @@
     <value>Legendas</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Mostrar ficheiros multimédia reproduzidos recentemente na página inicial</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Limpar histórico de multimédia recente</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Redimensionar automaticamente</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Redimensionar a janela da aplicação para ajustar melhor com a resolução nativa do vídeo em reprodução</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Amplificar volume</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Permitir que o volume máximo exceda 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Deslizar horizontalmente para buscar</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Deslizar verticalmente para ajustar o volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Toque em qualquer lugar para reproduzir ou pausar</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>
@@ -640,7 +640,7 @@
     <value>Nunca</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Ao iniciar</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Versão {0}</value>
@@ -650,7 +650,7 @@
     <value>Legenda adicionada</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Erro crítico</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
@@ -665,32 +665,32 @@
     <value>Abrir definições de dispositivos conectados</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Definir opções de reprodução</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Definir</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Definir e reproduzir</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Set VLC options that apply to a stream.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
     <value>VLC command-line help</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Consulte {0} para a lista completa das opções disponíveis.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Avançado</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
@@ -702,13 +702,13 @@
     <value>Command line arguments that apply to all media playback.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Remover pasta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
     <value>Pending changes</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Verá as suas alterações quando voltar a iniciar a aplicação</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
     <value>Failed to initialize</value>
