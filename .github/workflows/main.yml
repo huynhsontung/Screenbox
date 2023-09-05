@@ -101,7 +101,6 @@ jobs:
 
     - name: Create sideload artifact
       uses: actions/upload-artifact@v3
-      if: github.ref_type == 'tag'
       with:
         name: Screenbox-sideload
         path: |
