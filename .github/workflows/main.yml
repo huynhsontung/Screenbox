@@ -107,6 +107,25 @@ jobs:
         path: |
           C:\DeployOutput\*_Test
 
+  wack:
+    needs: build
+    runs-on: windows-latest
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: Screenbox-sideload
+        path: download/
+    - name: Rename test folder
+      run: Get-ChildItem -Directory -Path download/Screenbox_*_Test | Rename-Item -NewName Screenbox
+    - name: Rename test package
+      run: Get-ChildItem -Path download/Screenbox/*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
+    - uses: ChristopheLav/wack-certification@v1
+      with:
+        name: 'WACK (x64)'
+        package-path: 'download/Screenbox/Screenbox.msixbundle'
+        report-name: 'Screenbox.Certification.xml'
+
   release:
     needs: build
     if: github.ref_type == 'tag'
