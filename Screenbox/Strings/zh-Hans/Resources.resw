@@ -665,13 +665,13 @@
     <value>打开已连接的设备设置</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>设置播放选项</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>设置</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>设置并播放</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Set VLC options that apply to a stream.</value>
@@ -711,6 +711,6 @@
     <value>Relaunch the app for changes to take effect</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>初始化失败</value>
   </data>
 </root>
