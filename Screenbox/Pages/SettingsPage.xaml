@@ -25,6 +25,16 @@
             <x:Double x:Key="ToggleSwitchPreContentMargin">4</x:Double>
             <x:Double x:Key="ToggleSwitchPostContentMargin">4</x:Double>
             <x:Double x:Key="SettingsCardWrapThreshold">400</x:Double>
+            <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+
+            <!--  SettingsExpander bottom corners radius temporary (hopefully) fix  -->
+            <CornerRadius x:Key="SettingsCardBottomCornerRadius">0,0,3,3</CornerRadius>
+
+            <!--  Section Header text style  -->
+            <Style x:Key="SettingsSectionHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+                <Setter Property="Margin" Value="1,28,0,4" />
+            </Style>
+
             <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
             <muxc:StackLayout
                 x:Name="VerticalStackLayout"
@@ -35,16 +45,14 @@
                 x:Key="RemoveMusicFolderCommand"
                 Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
                 Description="{strings:Resources Key=RemoveFolder}"
-                IconSource="{ui:FontIconSource FontSize=16,
-                                               Glyph=&#xe894;}"
+                IconSource="{ui:FontIconSource Glyph=&#xe894;}"
                 Label="{strings:Resources Key=Remove}" />
 
             <XamlUICommand
                 x:Key="RemoveVideosFolderCommand"
                 Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
                 Description="{strings:Resources Key=RemoveFolder}"
-                IconSource="{ui:FontIconSource FontSize=16,
-                                               Glyph=&#xe894;}"
+                IconSource="{ui:FontIconSource Glyph=&#xe894;}"
                 Label="{strings:Resources Key=Remove}" />
 
             <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
@@ -56,7 +64,7 @@
                         BorderThickness="0"
                         Command="{StaticResource RemoveVideosFolderCommand}"
                         CommandParameter="{x:Bind}">
-                        <FontIcon FontSize="16" Glyph="&#xe894;" />
+                        <FontIcon Glyph="&#xe894;" />
                     </Button>
                 </labs:SettingsCard>
             </DataTemplate>
@@ -70,7 +78,7 @@
                         BorderThickness="0"
                         Command="{StaticResource RemoveMusicFolderCommand}"
                         CommandParameter="{x:Bind}">
-                        <FontIcon FontSize="16" Glyph="&#xe894;" />
+                        <FontIcon Glyph="&#xe894;" />
                     </Button>
                 </labs:SettingsCard>
             </DataTemplate>
@@ -120,7 +128,7 @@
                 Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
                 Padding="{StaticResource ContentPageRightMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
-                Spacing="4">
+                Spacing="{StaticResource SettingsCardSpacing}">
                 <StackPanel.Transitions>
                     <EntranceThemeTransition />
                 </StackPanel.Transitions>
@@ -130,8 +138,10 @@
                 <interactivity:Interaction.Behaviors>
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </interactivity:Interaction.Behaviors>
+
+                <!--  Libraries section  -->
                 <TextBlock
-                    Margin="0,8,0,4"
+                    Margin="1,8,0,4"
                     FontWeight="SemiBold"
                     Text="{strings:Resources Key=SettingsCategoryLibraries}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
@@ -164,26 +174,22 @@
                     </Button>
                 </labs:SettingsExpander>
 
-                <TextBlock
-                    Margin="0,24,0,4"
-                    FontWeight="SemiBold"
-                    Text="{strings:Resources Key=SettingsCategoryGeneral}" />
+                <!--  General section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
                 <labs:SettingsExpander
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                        <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 
-                <TextBlock
-                    Margin="0,24,0,4"
-                    FontWeight="SemiBold"
-                    Text="{strings:Resources Key=SettingsCategoryPlayer}" />
+                <!--  Player section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
                 <labs:SettingsCard
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
@@ -228,16 +234,14 @@
                         <labs:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
-                        <labs:SettingsCard ContentAlignment="Left">
+                        <labs:SettingsCard ContentAlignment="Left" CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 
-                <TextBlock
-                    Margin="0,24,0,4"
-                    FontWeight="SemiBold"
-                    Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
+                <!--  Advanced section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
                 <labs:SettingsExpander
                     Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
                     Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
@@ -265,36 +269,59 @@
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 
-                <TextBlock
-                    Margin="0,24,0,4"
-                    FontWeight="SemiBold"
-                    Text="{strings:Resources Key=SettingsCategoryAbout}" />
-                <labs:SettingsCard
+                <!--  About section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAbout}" />
+                <labs:SettingsExpander
                     Margin="0,0,0,24"
-                    HorizontalContentAlignment="Left"
-                    ContentAlignment="Vertical"
+                    Description="Made with ❤️ by Tung Huynh"
                     Header="{strings:Resources Key=AppFriendlyName}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe946;}">
-                    <labs:SettingsCard.Description>
-                        <TextBlock><Run Text="{x:Bind strings:Resources.VersionText}" />
-                            <LineBreak />
-                            Made with ❤️ by Tung Huynh</TextBlock>
-                    </labs:SettingsCard.Description>
-                    <StackPanel Margin="0,8,0,0" Orientation="Vertical">
-                        <HyperlinkButton
-                            Margin="-12,0,0,0"
-                            Content="{strings:Resources Key=HyperlinkSourceCode}"
-                            NavigateUri="https://github.com/huynhsontung/Screenbox" />
-                        <HyperlinkButton
-                            Margin="-12,0,0,0"
-                            Content="{strings:Resources Key=HyperlinkDiscord}"
-                            NavigateUri="https://discord.gg/HZPZXjANxz" />
-                        <HyperlinkButton
-                            Margin="-12,0,0,0"
-                            Content="{strings:Resources Key=HyperlinkSponsor}"
-                            NavigateUri="https://github.com/sponsors/huynhsontung" />
-                    </StackPanel>
-                </labs:SettingsCard>
+                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}">
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind strings:Resources.VersionText}" />
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                            <StackPanel Margin="{StaticResource HyperlinkButtonInlineMargin}" Orientation="Vertical">
+                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkSourceCode}" NavigateUri="https://github.com/huynhsontung/Screenbox" />
+                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
+                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
+                                <HyperlinkButton Content="Help translate" NavigateUri="https://crowdin.com/project/screenbox" />
+                            </StackPanel>
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            HorizontalContentAlignment="Left"
+                            ContentAlignment="Vertical"
+                            Description="Huge thanks to the contributors of the following libraries:"
+                            Header="Open source libraries">
+                            <VariableSizedWrapGrid
+                                Margin="{StaticResource HyperlinkButtonInlineMargin}"
+                                ItemWidth="272"
+                                Orientation="Horizontal">
+                                <HyperlinkButton Content="LibVLCSharp" NavigateUri="https://github.com/videolan/libvlcsharp" />
+                                <HyperlinkButton Content="protobuf-net" NavigateUri="https://github.com/protobuf-net/protobuf-net" />
+                                <HyperlinkButton Content="ReswPlus" NavigateUri="https://github.com/DotNetPlus/ReswPlus" />
+                                <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                                <HyperlinkButton Content="Windows Community Toolkit Labs" NavigateUri="https://github.com/CommunityToolkit/Labs-Windows" />
+                                <HyperlinkButton Content="WinUI" NavigateUri="https://github.com/microsoft/microsoft-ui-xaml" />
+                            </VariableSizedWrapGrid>
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            Background="{ThemeResource ControlFillColorTertiaryBrush}"
+                            ContentAlignment="Left"
+                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                            <StackPanel Margin="-40,0,0,0" Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,8,8,8"
+                                    FontWeight="SemiBold"
+                                    Text="Related links" />
+                                <HyperlinkButton Content="Privacy policy" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
+                                <HyperlinkButton Content="License" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
+                            </StackPanel>
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
+                </labs:SettingsExpander>
+
             </StackPanel>
         </ScrollViewer>
 
