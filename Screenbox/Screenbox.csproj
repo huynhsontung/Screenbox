@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Commands\OpenUrlCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
+    <Compile Include="Commands\ShowFlyoutCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
