@@ -227,7 +227,7 @@
     <value>Mover para baixo</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>A reproduzir</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -248,7 +248,7 @@
     <value>Empty</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Restaurar visualização do vídeo</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Transmitir</value>
@@ -263,7 +263,7 @@
     <value>Transmitir para um dispositivo</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
     <value>Música</value>
@@ -452,7 +452,7 @@
     <value>Abrir URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Nenhuma</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
     <value>{0} música</value>
@@ -562,7 +562,7 @@
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Adicionar legenda</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Áudio</value>
@@ -705,7 +705,7 @@
     <value>Remover pasta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Alterações pendentes</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>Verá as suas alterações quando voltar a iniciar a aplicação</value>
