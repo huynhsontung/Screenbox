@@ -124,6 +124,7 @@ jobs:
         name: 'WACK (x64)'
         package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
         report-name: 'Screenbox.Certification.xml'
+        rules: 21,31,33,38,45,46,47,52,61,62,63,66,77,81,83,90,91
 
   release:
     needs: build
