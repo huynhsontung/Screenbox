@@ -2,16 +2,16 @@
 <!-- Feel free to adapt or modify key points if necessary. -->
 ## Screenbox Media Player
 
-**Your modern media player**
+**Player-ul tău media modern**
 
-### Description
+### Descriere
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a beautiful and intuitive user interface while being fast, lightweight, and powerful. Designed and built in the open, Screenbox will always be free to use.
+Screenbox este un player media modern care se străduiește să aducă o nouă imagine asupra aplicației clasice. Screenbox oferă o interfață frumoasă și intuitivă în timp ce este rapid, ușor și puternic. Proiectat și construit în deschis, Screenbox va fi întotdeauna gratuit.
 
-### Features
+### Caracteristici
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
+- O interfață modernă a utilizatorului cu suport pentru gesturi, optimizată pentru toate tipurile de dispozitive Windows.
+- Suport pentru multe formate audio și video.
+- Navigați și gestionați-vă biblioteca muzicală și video pe calculator sau în rețea.
 - Cast your media to a wide range of devices with Chromecast.
 - Work and enjoy your media at the same time using picture-in-picture mode.
