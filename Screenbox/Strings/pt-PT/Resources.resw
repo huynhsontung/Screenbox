@@ -544,7 +544,7 @@
     <value>Proporção personalizada</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Velocidade de reprodução personalizada</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>Nenhum</value>
