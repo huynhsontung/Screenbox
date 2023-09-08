@@ -6,7 +6,7 @@
 
 ### Descrição
 
-Screenbox é um leitor de multimédia moderno que esforçasse para trazer uma nova visão da aplicação clássica. O Screenbox oferece uma experiência de utilizador bela e intuitiva mantendo a rapidez, ligeireza e poder. Desenhada e programada abertamente, o Screenbox será sempre de uso livre.
+Screenbox é um leitor de multimédia moderno que se esforça para trazer uma nova visão à aplicação clássica. O Screenbox oferece uma experiência de utilizador bela e intuitiva mantendo a rapidez, ligeireza e poder. Desenhado e programado abertamente, o Screenbox será sempre de uso livre.
 
 ### Funcionalidades
 
