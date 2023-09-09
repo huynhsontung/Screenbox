@@ -124,7 +124,7 @@ jobs:
       run: |
         "path=$(Get-ChildItem -Path C:\Download\Screenbox_*_Test\*.msixbundle | Select-Object -First 1)" >> $env:GITHUB_OUTPUT
     - name: Install package
-      run: . "${{ steps.extract-dir.outputs.path }}\Install.ps1" -SkipLoggingTelemetry
+      run: . "${{ steps.extract-dir.outputs.path }}\Install.ps1" -SkipLoggingTelemetry -Force
     - uses: huynhsontung/wack-certification@main
       with:
         name: 'WACK (x64)'
