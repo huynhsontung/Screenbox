@@ -124,14 +124,18 @@ jobs:
       run: |
         "path=$(Get-ChildItem -Path C:\Download\Screenbox_*_Test\*.msixbundle | Select-Object -First 1)" >> $env:GITHUB_OUTPUT
     - name: Install package
+      id: install-package
       shell: powershell
       run: |
         Import-Module Appx
         . "${{ steps.extract-dir.outputs.path }}\Install.ps1" -SkipLoggingTelemetry -Force
+        $FullName = $(Get-AppxPackage -all *Screenbox* | Select-Object -First 1).PackageFullName
+        Write-Output "PackageFullName: $FullName"
+        Write-Output "fullname=$FullName" >> $env:GITHUB_OUTPUT
     - uses: huynhsontung/wack-certification@main
       with:
         name: 'WACK (x64)'
-        package-path: ${{ steps.extract-msix.outputs.path }}
+        package-full-name: ${{ steps.install-package.outputs.fullname }}
         report-name: 'Screenbox.Certification.xml'
         rules: 21,31,33,38,45,46,47,52,61,62,63,66,77,81,83,90,91
 
