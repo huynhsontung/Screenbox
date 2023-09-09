@@ -115,14 +115,20 @@ jobs:
       with:
         name: Screenbox-sideload
         path: C:\Download\
-    - name: Rename test folder
-      run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
-    - name: Rename test package
-      run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
+    - name: Extract directory name
+      id: extract-dir
+      run: |
+        "path=$(Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Select-Object -First 1)" >> $env:GITHUB_OUTPUT
+    - name: Extract MSIX name
+      id: extract-msix
+      run: |
+        "path=$(Get-ChildItem -Path C:\Download\Screenbox_*_Test\*.msixbundle | Select-Object -First 1)" >> $env:GITHUB_OUTPUT
+    - name: Install package
+      run: .${{ steps.extract-dir.outputs.path }}\Install.ps1 -SkipLoggingTelemetry
     - uses: huynhsontung/wack-certification@main
       with:
         name: 'WACK (x64)'
-        package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
+        package-path: ${{ steps.extract-msix.outputs.path }}
         report-name: 'Screenbox.Certification.xml'
         rules: 21,31,33,38,45,46,47,52,61,62,63,66,77,81,83,90,91
 
