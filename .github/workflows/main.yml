@@ -124,6 +124,7 @@ jobs:
       run: |
         "path=$(Get-ChildItem -Path C:\Download\Screenbox_*_Test\*.msixbundle | Select-Object -First 1)" >> $env:GITHUB_OUTPUT
     - name: Install package
+      shell: powershell
       run: |
         Import-Module Appx
         . "${{ steps.extract-dir.outputs.path }}\Install.ps1" -SkipLoggingTelemetry -Force
