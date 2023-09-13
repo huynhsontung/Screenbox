@@ -38,6 +38,7 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style>
 
+            <ThemeShadow x:Key="SharedShadow" />
             <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
             <muxc:StackLayout
                 x:Name="VerticalStackLayout"
@@ -101,25 +102,11 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="HeaderText"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
                 MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Settings}" />
-            <muxc:InfoBar
-                x:Name="PendingChangesInfoBar"
-                Title="{strings:Resources Key=PendingChanges}"
-                Grid.Column="1"
-                IsClosable="False"
-                IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
-                Message="{strings:Resources Key=RelaunchForChangesMessage}"
-                Severity="Warning" />
         </Grid>
 
         <ScrollViewer
@@ -309,6 +296,24 @@
             </StackPanel>
         </ScrollViewer>
 
+        <muxc:InfoBar
+            x:Name="PendingChangesInfoBar"
+            Title="{strings:Resources Key=PendingChanges}"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Margin="{StaticResource ContentPageHeaderMargin}"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            IsClosable="False"
+            IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
+            Message="{strings:Resources Key=RelaunchForChangesMessage}"
+            Severity="Warning"
+            Shadow="{StaticResource SharedShadow}">
+            <muxc:InfoBar.Transitions>
+                <RepositionThemeTransition />
+            </muxc:InfoBar.Transitions>
+        </muxc:InfoBar>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
@@ -324,6 +329,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
                     </VisualState.Setters>
                 </VisualState>

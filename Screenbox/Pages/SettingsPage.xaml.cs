@@ -3,6 +3,7 @@ using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,6 +29,8 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<SettingsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+            PendingChangesInfoBar.Translation = new Vector3(0, 0, 8);
+
             VlcCommandLineHelpTextParts = new string[2];
             string[] parts = Strings.Resources.VlcCommandLineHelpText
                 .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
