@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
@@ -249,13 +250,16 @@
                                     <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
                                 </TextBlock>
                             </labs:SettingsCard.Description>
-                            <TextBox
-                                Width="180"
-                                AcceptsReturn="False"
-                                MaxLength="1024"
-                                PlaceholderText="--option=value"
-                                Text="{x:Bind ViewModel.GlobalArguments, Mode=TwoWay}" />
+                            <Button CommandParameter="{x:Bind ViewModel}" Content="Set arguments">
+                                <Button.Command>
+                                    <commands:SetPlaybackOptionsCommand />
+                                </Button.Command>
+                            </Button>
                         </labs:SettingsCard>
+                        <labs:SettingsCard
+                            Description="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}"
+                            Header="Active arguments"
+                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}" />
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
 

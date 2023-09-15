@@ -28,7 +28,7 @@
             x:Name="OptionsTextBox"
             AcceptsReturn="False"
             IsSpellCheckEnabled="False"
-            PlaceholderText=":option=value"
+            PlaceholderText="{x:Bind OptionTextBoxPlaceholder}"
             Text="{x:Bind Options, Mode=TwoWay}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:AutoFocusBehavior />
