@@ -31,7 +31,10 @@
             <CornerRadius x:Key="SettingsCardBottomCornerRadius">0,0,3,3</CornerRadius>
 
             <!--  Section Header text style  -->
-            <Style x:Key="SettingsSectionHeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource BodyStrongTextBlockStyle}">
+            <Style
+                x:Key="SettingsSectionHeaderTextBlockStyle"
+                BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+                TargetType="TextBlock">
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style>
 
@@ -249,7 +252,10 @@
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                        <labs:SettingsCard
+                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
+                            Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}"
+                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <labs:SettingsCard.Description>
                                 <TextBlock>
                                     <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
