@@ -24,9 +24,9 @@ public sealed partial class SetOptionsDialog : ContentDialog
     public SetOptionsDialog(string existingOptions, bool global = false)
     {
         this.InitializeComponent();
+        OptionTextBoxPlaceholder = global ? "--option=value" : ":option=value";
         Options = existingOptions;
         OptionsTextBox.Text = Options;
-        OptionTextBoxPlaceholder = global ? "--option=value" : ":option=value";
         VlcCommandLineHelpTextParts = new string[2];
         string[] parts = Strings.Resources.VlcCommandLineHelpText
             .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
@@ -36,6 +36,10 @@ public sealed partial class SetOptionsDialog : ContentDialog
         if (global)
         {
             SecondaryButtonText = string.Empty;
+
+            // Remove the first two inlines
+            HelpText.Inlines.RemoveAt(0);
+            HelpText.Inlines.RemoveAt(0);
         }
     }
 }

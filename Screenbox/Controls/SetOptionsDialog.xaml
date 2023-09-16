@@ -16,13 +16,12 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" Spacing="12">
-        <TextBlock MaxWidth="420" TextWrapping="Wrap">
+        <TextBlock x:Name="HelpText" TextWrapping="Wrap">
             <Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine1}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
             <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
                 <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
             </Hyperlink>
-            <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
-            <Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine2}" />
+            <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" /><LineBreak /><Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine2}" />
         </TextBlock>
         <TextBox
             x:Name="OptionsTextBox"
@@ -34,5 +33,16 @@
                 <behaviors:AutoFocusBehavior />
             </interactivity:Interaction.Behaviors>
         </TextBox>
+        <StackPanel Orientation="Vertical" Visibility="Collapsed">
+            <TextBlock
+                Margin="0,0,0,6"
+                FontWeight="SemiBold"
+                Text="Active arguments" />
+            <TextBlock
+                IsTextSelectionEnabled="True"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Options}"
+                TextWrapping="Wrap" />
+        </StackPanel>
     </StackPanel>
 </ContentDialog>
