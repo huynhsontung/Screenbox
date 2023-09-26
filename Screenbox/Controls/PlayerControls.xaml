@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.PlayerControls"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -316,6 +317,15 @@
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.VideoSettings}">
                 </MenuFlyoutSubItem>-->
+
+                <MenuFlyoutItem
+                    IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
+                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Visibility="{x:Bind ViewModel.IsAdvancedModeActive, Mode=OneWay}">
+                    <MenuFlyoutItem.Command>
+                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.ResetMediaPlaybackCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
 
                 <MenuFlyoutSeparator x:Name="ExtraOptionsSeparator" Visibility="Collapsed" />
                 <MenuFlyoutItem
