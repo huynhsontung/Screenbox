@@ -386,7 +386,7 @@
     <value>Nenhum dispositivo de rede disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Não consegue encontrar o seu conteúdo multimédia? Certifique-se de que o seu dispositivo de rede está emparelhado nas Definições do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recentes</value>
@@ -711,6 +711,6 @@
     <value>Verá as suas alterações quando voltar a iniciar a aplicação</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Falha ao inicializar</value>
   </data>
 </root>
