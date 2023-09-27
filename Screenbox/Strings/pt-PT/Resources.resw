@@ -144,7 +144,7 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Falha ao carregar a legenda</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Anterior</value>
@@ -245,7 +245,7 @@
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Vazio</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restaurar visualização do vídeo</value>
@@ -257,7 +257,7 @@
     <value>Parar transmissão</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>A transmitir para</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
     <value>Transmitir para um dispositivo</value>
@@ -353,7 +353,7 @@
     <value>Duração</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Produtores</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
     <value>Resolução</value>
@@ -371,7 +371,7 @@
     <value>Faixa</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Argumentistas</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
     <value>Ano</value>
@@ -550,7 +550,7 @@
     <value>Nenhum</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Escala: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
@@ -653,7 +653,7 @@
     <value>Erro crítico</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Não está disponível nenhuma composição compatível. Certifique-se de que o Direct3D 11 está disponível no seu dispositivo.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Não foi possível abrir o ficheiro(s)</value>
@@ -674,13 +674,13 @@
     <value>Definir e reproduzir</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Definir as opções do VLC que se aplicam a um fluxo.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
     <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Ajuda da linha de comandos VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
     <value>Consulte {0} para a lista completa das opções disponíveis.</value>
@@ -693,13 +693,13 @@
     <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>O modo avançado permite personalizar o comportamento do LibVLC utilizando argumentos da linha de comandos.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Argumentos universais</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remover pasta</value>
