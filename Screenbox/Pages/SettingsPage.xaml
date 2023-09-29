@@ -285,43 +285,23 @@
                         IsTextSelectionEnabled="True"
                         Text="{x:Bind strings:Resources.VersionText}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
-                            <StackPanel Margin="{StaticResource HyperlinkButtonInlineMargin}" Orientation="Vertical">
+                        <labs:SettingsCard
+                            HorizontalContentAlignment="Left"
+                            ContentAlignment="Vertical"
+                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
+                            Header="{strings:Resources Key=RelatedLinks}">
+                            <VariableSizedWrapGrid
+                                Margin="{StaticResource HyperlinkButtonInlineMargin}"
+                                ItemWidth="242"
+                                Orientation="Horizontal">
+                                <!--  TODO: Add third-party license notice  -->
+                                <HyperlinkButton Content="{strings:Resources Key=PrivacyPolicy}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
+                                <HyperlinkButton Content="{strings:Resources Key=License}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSourceCode}" NavigateUri="https://github.com/huynhsontung/Screenbox" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
-                            </StackPanel>
-                        </labs:SettingsCard>
-                        <labs:SettingsCard
-                            HorizontalContentAlignment="Left"
-                            ContentAlignment="Vertical"
-                            Description="Huge thanks to the contributors of the following libraries"
-                            Header="Open source libraries">
-                            <VariableSizedWrapGrid
-                                Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                                ItemWidth="272"
-                                Orientation="Horizontal">
-                                <HyperlinkButton Content="LibVLCSharp" NavigateUri="https://github.com/videolan/libvlcsharp" />
-                                <HyperlinkButton Content="protobuf-net" NavigateUri="https://github.com/protobuf-net/protobuf-net" />
-                                <HyperlinkButton Content="ReswPlus" NavigateUri="https://github.com/DotNetPlus/ReswPlus" />
-                                <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
-                                <HyperlinkButton Content="Windows Community Toolkit Labs" NavigateUri="https://github.com/CommunityToolkit/Labs-Windows" />
-                                <HyperlinkButton Content="WinUI" NavigateUri="https://github.com/microsoft/microsoft-ui-xaml" />
                             </VariableSizedWrapGrid>
-                        </labs:SettingsCard>
-                        <labs:SettingsCard
-                            Background="{ThemeResource ControlFillColorTertiaryBrush}"
-                            ContentAlignment="Left"
-                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
-                            <StackPanel Margin="-40,0,0,0" Orientation="Horizontal">
-                                <TextBlock
-                                    Margin="0,8,8,8"
-                                    FontWeight="SemiBold"
-                                    Text="{strings:Resources Key=RelatedLinks}" />
-                                <HyperlinkButton Content="{strings:Resources Key=PrivacyPolicy}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
-                                <HyperlinkButton Content="{strings:Resources Key=License}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
-                            </StackPanel>
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
