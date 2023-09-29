@@ -281,7 +281,8 @@
                     Margin="0,0,0,24"
                     Description="Made with ❤️ by Tung Huynh"
                     Header="{strings:Resources Key=AppFriendlyName}"
-                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}">
+                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}"
+                    IsExpanded="True">
                     <TextBlock
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
@@ -298,7 +299,7 @@
                         <labs:SettingsCard
                             HorizontalContentAlignment="Left"
                             ContentAlignment="Vertical"
-                            Description="Huge thanks to the contributors of the following libraries:"
+                            Description="Huge thanks to the contributors of the following libraries"
                             Header="Open source libraries">
                             <VariableSizedWrapGrid
                                 Margin="{StaticResource HyperlinkButtonInlineMargin}"
