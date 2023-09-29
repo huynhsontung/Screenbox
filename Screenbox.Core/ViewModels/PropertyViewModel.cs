@@ -68,6 +68,7 @@ namespace Screenbox.Core.ViewModels
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyContributingArtists)] = media.MusicProperties.Artist;
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbum)] = media.MusicProperties.Album;
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbumArtist)] = media.MusicProperties.AlbumArtist;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyWriters)] = string.Join("; ", media.MusicProperties.Composers);
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyGenre)] = string.Join("; ", media.MusicProperties.Genre);
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyTrack)] = media.MusicProperties.TrackNumber.ToString();
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyYear)] = media.MusicProperties.Year > 0
