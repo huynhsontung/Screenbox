@@ -1,6 +1,6 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Pemain Media Screenbox
 
 **Your modern media player**
 
