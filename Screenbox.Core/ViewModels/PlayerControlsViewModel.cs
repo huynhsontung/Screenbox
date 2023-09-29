@@ -86,6 +86,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
+            _isAdvancedModeActive = settingsService.AdvancedMode;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
@@ -254,10 +255,14 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             TimeSpan pos = _mediaPlayer.Position;
-            PlaybackItem? item = _mediaPlayer.PlaybackItem;
-            _mediaPlayer.Source = null;
-            _mediaPlayer.Source = item;
-            _mediaPlayer.Position = pos;
+            MediaViewModel? item = Playlist.CurrentItem;
+            Playlist.CurrentItem = null;
+            Playlist.CurrentItem = item;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                _mediaPlayer.Play();
+                _mediaPlayer.Position = pos;
+            });
         }
 
         [RelayCommand]

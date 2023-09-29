@@ -319,6 +319,8 @@
                 </MenuFlyoutSubItem>-->
 
                 <MenuFlyoutItem
+                    CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
+                    Icon="{ui:SymbolIcon Symbol=Setting}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
                     Text="{strings:Resources Key=SetPlaybackOptions}"
                     Visibility="{x:Bind ViewModel.IsAdvancedModeActive, Mode=OneWay}">
