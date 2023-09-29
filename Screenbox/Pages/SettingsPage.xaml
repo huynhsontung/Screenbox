@@ -290,7 +290,7 @@
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSourceCode}" NavigateUri="https://github.com/huynhsontung/Screenbox" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
-                                <HyperlinkButton Content="Help translate" NavigateUri="https://crowdin.com/project/screenbox" />
+                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
                             </StackPanel>
                         </labs:SettingsCard>
                         <labs:SettingsCard
@@ -318,9 +318,9 @@
                                 <TextBlock
                                     Margin="0,8,8,8"
                                     FontWeight="SemiBold"
-                                    Text="Related links" />
-                                <HyperlinkButton Content="Privacy policy" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
-                                <HyperlinkButton Content="License" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
+                                    Text="{strings:Resources Key=RelatedLinks}" />
+                                <HyperlinkButton Content="{strings:Resources Key=PrivacyPolicy}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
+                                <HyperlinkButton Content="{strings:Resources Key=License}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
                             </StackPanel>
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
