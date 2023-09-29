@@ -22,22 +22,22 @@
     <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>Fail Multimedia 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>Fail Multimedia 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>Audio AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>Video AVI</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>Audio FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Video Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
     <value>Matroska Audio</value>
@@ -88,7 +88,7 @@
     <value>Windows Media Video</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>Senarai Main M3U8</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
     <value>MPEG Transport Stream</value>
