@@ -132,9 +132,6 @@
                 Padding="{StaticResource ContentPageRightMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
                 Spacing="{StaticResource SettingsCardSpacing}">
-                <StackPanel.Transitions>
-                    <EntranceThemeTransition />
-                </StackPanel.Transitions>
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
