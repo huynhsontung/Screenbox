@@ -2312,6 +2312,58 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region RelatedLinks
+        /// <summary>
+        ///   Looks up a localized string similar to: Related links
+        /// </summary>
+        public static string RelatedLinks
+        {
+            get
+            {
+                return _resourceLoader.GetString("RelatedLinks");
+            }
+        }
+        #endregion
+
+        #region PrivacyPolicy
+        /// <summary>
+        ///   Looks up a localized string similar to: Privacy policy
+        /// </summary>
+        public static string PrivacyPolicy
+        {
+            get
+            {
+                return _resourceLoader.GetString("PrivacyPolicy");
+            }
+        }
+        #endregion
+
+        #region License
+        /// <summary>
+        ///   Looks up a localized string similar to: License
+        /// </summary>
+        public static string License
+        {
+            get
+            {
+                return _resourceLoader.GetString("License");
+            }
+        }
+        #endregion
+
+        #region HyperlinkTranslate
+        /// <summary>
+        ///   Looks up a localized string similar to: Help translate
+        /// </summary>
+        public static string HyperlinkTranslate
+        {
+            get
+            {
+                return _resourceLoader.GetString("HyperlinkTranslate");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2499,6 +2551,10 @@ namespace Screenbox.Strings{
             PendingChanges,
             RelaunchForChangesMessage,
             FailedToInitializeNotificationTitle,
+            RelatedLinks,
+            PrivacyPolicy,
+            License,
+            HyperlinkTranslate,
         }
 
         private static ResourceLoader _resourceLoader;
