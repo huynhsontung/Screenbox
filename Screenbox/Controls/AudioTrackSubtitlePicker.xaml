@@ -37,7 +37,7 @@
             <ListView.Footer>
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
-                    Height="{ThemeResource ListViewItemMinHeight}"
+                    Height="36"
                     Margin="3,2"
                     Padding="13,0,13,0"
                     HorizontalAlignment="Stretch"
