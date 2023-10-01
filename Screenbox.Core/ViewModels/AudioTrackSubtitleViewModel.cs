@@ -83,7 +83,7 @@ namespace Screenbox.Core.ViewModels
         {
             UpdateSubtitleTrackList();
             UpdateAudioTrackList();
-            SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? -1;
+            SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? 0;
             AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
         }
 
@@ -105,9 +105,9 @@ namespace Screenbox.Core.ViewModels
         {
             if (ItemSubtitleTrackList == null) return;
             SubtitleTracks.Clear();
+            SubtitleTracks.Add(_resourceService.GetString(ResourceName.Disable));
             if (ItemSubtitleTrackList.Count <= 0) return;
 
-            SubtitleTracks.Add(_resourceService.GetString(ResourceName.Disable));
             for (int index = 0; index < ItemSubtitleTrackList.Count; index++)
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
