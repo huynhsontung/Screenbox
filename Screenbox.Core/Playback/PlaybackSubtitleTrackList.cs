@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Shared;
+using System.Threading.Tasks;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
+        internal string PendingTrackLabel { get; set; }
+
         private readonly Media _media;
 
         public PlaybackSubtitleTrackList(Media media)
@@ -18,6 +20,8 @@ namespace Screenbox.Core.Playback
             {
                 _media.ParsedChanged += Media_ParsedChanged;
             }
+
+            PendingTrackLabel = string.Empty;
         }
 
         internal async void NotifyTrackAdded(int trackId)
@@ -29,7 +33,10 @@ namespace Screenbox.Core.Playback
                 {
                     if (track.TrackType == TrackType.Text && track.Id == trackId)
                     {
-                        TrackList.Add(new SubtitleTrack(track));
+                        SubtitleTrack sub = new(track);
+                        sub.Label ??= PendingTrackLabel;
+                        PendingTrackLabel = string.Empty;
+                        TrackList.Add(sub);
                         SelectedIndex = Count - 1;
                         return;
                     }
