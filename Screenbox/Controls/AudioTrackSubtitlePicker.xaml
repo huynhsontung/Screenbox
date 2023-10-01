@@ -35,11 +35,19 @@
                 <TextBlock FontWeight="SemiBold" Text="{strings:Resources Key=Subtitles}" />
             </ListView.Header>
             <ListView.Footer>
+                <!--  Imitate the look of ListViewItem  -->
                 <Button
-                    Margin="0,4,0,0"
-                    HorizontalAlignment="Right"
+                    Height="{ThemeResource ListViewItemMinHeight}"
+                    Margin="3,2"
+                    Padding="13,0,13,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    Background="{ThemeResource ListViewItemBackground}"
+                    BorderBrush="{x:Null}"
+                    BorderThickness="0"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="{strings:Resources Key=AddSubtitle}" />
+                    Content="{strings:Resources Key=AddSubtitle}"
+                    Foreground="{ThemeResource ListViewItemForeground}" />
             </ListView.Footer>
         </ListView>
     </StackPanel>
