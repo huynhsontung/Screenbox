@@ -51,7 +51,7 @@
                     <HyperlinkButton
                         Grid.Column="1"
                         Command="{x:Bind ShowSubtitleOptionsCommand}"
-                        Content="Options" />
+                        Content="{strings:Resources Key=Options}" />
                 </Grid>
             </ListView.Header>
             <ListView.Footer>

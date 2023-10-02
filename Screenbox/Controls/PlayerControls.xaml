@@ -144,7 +144,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="TimingOffsetSlider"
-                        Header="Timing offset"
+                        Header="{strings:Resources Key=TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
