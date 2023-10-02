@@ -23,7 +23,8 @@
                     <TextBlock
                         Margin="15,0,0,0"
                         VerticalAlignment="Center"
-                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{strings:Resources Key=Audio}" />
                 </Border>
             </ListView.Header>
@@ -46,7 +47,8 @@
                     <TextBlock
                         Margin="15,0,0,0"
                         VerticalAlignment="Center"
-                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{strings:Resources Key=Subtitles}" />
                     <HyperlinkButton
                         Grid.Column="1"
