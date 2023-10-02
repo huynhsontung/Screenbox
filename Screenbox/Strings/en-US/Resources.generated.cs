@@ -2390,6 +2390,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region PropertyComposers
+        /// <summary>
+        ///   Looks up a localized string similar to: Composers
+        /// </summary>
+        public static string PropertyComposers
+        {
+            get
+            {
+                return _resourceLoader.GetString("PropertyComposers");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2583,6 +2596,7 @@ namespace Screenbox.Strings{
             HyperlinkTranslate,
             Options,
             TimingOffset,
+            PropertyComposers,
         }
 
         private static ResourceLoader _resourceLoader;

@@ -7,6 +7,7 @@
         PropertyYear,
         PropertyProducers,
         PropertyWriters,
+        PropertyComposers,
         PropertyLength,
         PropertyResolution,
         PropertyBitRate,
