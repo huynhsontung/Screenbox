@@ -734,25 +734,4 @@
   <data name="PropertyComposers" xml:space="preserve">
     <value>Composers</value>
   </data>
-  <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
-  </data>
-  <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
-  </data>
-  <data name="License" xml:space="preserve">
-    <value>License</value>
-  </data>
-  <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
-  </data>
-  <data name="Options" xml:space="preserve">
-    <value>Options</value>
-  </data>
-  <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
-  </data>
-  <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
-  </data>
 </root>
