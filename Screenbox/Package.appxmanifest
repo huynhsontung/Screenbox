@@ -203,6 +203,7 @@
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/ogg">.ogg</uap:FileType>
               <uap:FileType ContentType="audio/ogg">.oga</uap:FileType>
+              <uap:FileType ContentType="audio/opus">.opus</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
