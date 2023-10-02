@@ -26,22 +26,21 @@ namespace Screenbox.Core.Playback
 
         internal async void NotifyTrackAdded(int trackId)
         {
-            // Run in new thread due to VLC thread safety
-            await Task.Run(() =>
+            // Delay to wait for _media.Tracks to populate
+            // Run in new thread to ensure VLC thread safety
+            await Task.Delay(50).ConfigureAwait(false);
+            foreach (MediaTrack track in _media.Tracks)
             {
-                foreach (MediaTrack track in _media.Tracks)
+                if (track.TrackType == TrackType.Text && track.Id == trackId)
                 {
-                    if (track.TrackType == TrackType.Text && track.Id == trackId)
-                    {
-                        SubtitleTrack sub = new(track);
-                        sub.Label ??= PendingTrackLabel;
-                        PendingTrackLabel = string.Empty;
-                        TrackList.Add(sub);
-                        SelectedIndex = Count - 1;
-                        return;
-                    }
+                    SubtitleTrack sub = new(track);
+                    sub.Label ??= PendingTrackLabel;
+                    PendingTrackLabel = string.Empty;
+                    TrackList.Add(sub);
+                    SelectedIndex = Count - 1;
+                    return;
                 }
-            });
+            }
         }
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
