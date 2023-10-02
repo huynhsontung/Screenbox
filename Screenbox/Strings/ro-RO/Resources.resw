@@ -731,4 +731,7 @@
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
   </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Composers</value>
+  </data>
 </root>
