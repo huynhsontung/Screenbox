@@ -665,53 +665,74 @@
     <value>Abrir la configuración de dispositivos conectados</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Establecer opciones de reproducción</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Establecer</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Establecer y reproducir</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Establecer las opciones de VLC que se aplican a un stream.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Algunas opciones sólo pueden establecerse globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Ayuda de línea de comandos de VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Ver {0} para la lista completa de opciones disponibles.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Avanzado</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Modo avanzado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>El modo avanzado permite personalizar el comportamiento de LibVLC usando argumentos de línea de comandos.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Argumentos globales</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Argumentos de la línea de comando que se aplican a toda la reproducción multimedia.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Eliminar carpeta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Cambios Pendientes</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Reiniciar la aplicación para que los cambios surtan efecto</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Error al inicializar</value>
+  </data>
+  <data name="RelatedLinks" xml:space="preserve">
+    <value>Related links</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="HyperlinkTranslate" xml:space="preserve">
+    <value>Help translate</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Timing offset</value>
+  </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Composers</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
     <value>Related links</value>

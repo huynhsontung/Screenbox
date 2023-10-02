@@ -693,7 +693,7 @@
     <value>高级模式</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>高级模式允许您使用命令行参数自定义 LibVLC的行为。</value>
+    <value>高级模式允许您使用命令行参数自定义 LibVLC 的行为。</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>全局参数</value>

@@ -783,6 +783,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="packages.lock.json" />
     <None Include="Secrets.cs.template" />
+    <PRIResource Include="Strings\pt-PT\Resources.resw" />
+    <PRIResource Include="Strings\pt-PT\ManifestResources.resw" />
     <PRIResource Include="Strings\es-ES\Resources.resw" />
     <PRIResource Include="Strings\es-ES\ManifestResources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />

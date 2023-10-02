@@ -144,7 +144,7 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Falha ao carregar a legenda</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Anterior</value>
@@ -227,7 +227,7 @@
     <value>Mover para baixo</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>A reproduzir</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -245,10 +245,10 @@
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Vazio</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Restaurar visualização do vídeo</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Transmitir</value>
@@ -257,13 +257,13 @@
     <value>Parar transmissão</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>A transmitir para</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
     <value>Transmitir para um dispositivo</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
     <value>Música</value>
@@ -353,7 +353,7 @@
     <value>Duração</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Produtores</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
     <value>Resolução</value>
@@ -371,7 +371,7 @@
     <value>Faixa</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Argumentistas</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
     <value>Ano</value>
@@ -386,7 +386,7 @@
     <value>Nenhum dispositivo de rede disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Não consegue encontrar o seu conteúdo multimédia? Certifique-se de que o seu dispositivo de rede está emparelhado nas Definições do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recentes</value>
@@ -452,7 +452,7 @@
     <value>Abrir URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Nenhuma</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
     <value>{0} música</value>
@@ -544,13 +544,13 @@
     <value>Proporção personalizada</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Velocidade de reprodução personalizada</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>Nenhum</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Escala: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
@@ -562,7 +562,7 @@
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Adicionar legenda</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Áudio</value>
@@ -653,7 +653,7 @@
     <value>Erro crítico</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Não está disponível nenhuma composição compatível. Certifique-se de que o Direct3D 11 está disponível no seu dispositivo.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Não foi possível abrir o ficheiro(s)</value>
@@ -674,13 +674,13 @@
     <value>Definir e reproduzir</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Definir as opções do VLC que se aplicam a um fluxo.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
     <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Ajuda da linha de comandos VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
     <value>Consulte {0} para a lista completa das opções disponíveis.</value>
@@ -693,24 +693,45 @@
     <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>O modo avançado permite personalizar o comportamento do LibVLC utilizando argumentos da linha de comandos.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Argumentos universais</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Argumentos da linha de comandos que se aplicam a todas as reproduções de multimédia.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remover pasta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Alterações pendentes</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>Verá as suas alterações quando voltar a iniciar a aplicação</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Falha ao inicializar</value>
+  </data>
+  <data name="RelatedLinks" xml:space="preserve">
+    <value>Ligações relacionadas</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Política de privacidade</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Licença</value>
+  </data>
+  <data name="HyperlinkTranslate" xml:space="preserve">
+    <value>Ajudar a traduzir</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Timing offset</value>
+  </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Composers</value>
   </data>
 </root>

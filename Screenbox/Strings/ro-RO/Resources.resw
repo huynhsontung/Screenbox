@@ -665,53 +665,74 @@
     <value>Deschidere setările Dispozitive Conectate</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Setați opțiunile de redare</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Setați</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Setați și redați</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Setați opțiunile VLC care se aplică unei transmisiuni live.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Unele opțiuni pot fi stabilite numai la nivel global.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Ajutor linie de comandă VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Vezi {0} pentru lista completă a opțiunilor disponibile.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Avansat</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Mod avansat</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Modul avansat vă permite să personalizați comportamentul LibVLC folosind argumentele liniei de comandă.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Argumente globale</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Argumentele liniei de comandă care se aplică tuturor redărilor media.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Elimină folder</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Modificări în așteptare</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Reporniți aplicația pentru ca modificările să aibă efect</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Inițializare eșuată</value>
+  </data>
+  <data name="RelatedLinks" xml:space="preserve">
+    <value>Related links</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="HyperlinkTranslate" xml:space="preserve">
+    <value>Help translate</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Timing offset</value>
+  </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Composers</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
     <value>Related links</value>
