@@ -17,6 +17,9 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
@@ -470,7 +473,11 @@
                         Modifiers="Control,Shift" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
-                    <Flyout Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}" ShouldConstrainToRootBounds="False">
+                    <Flyout
+                        x:Name="AudioSubtitlePickerFlyout"
+                        FlyoutPresenterStyle="{StaticResource TightFlyoutPresenterStyle}"
+                        Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}"
+                        ShouldConstrainToRootBounds="False">
                         <local:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" />
                     </Flyout>
                 </Button.Flyout>
