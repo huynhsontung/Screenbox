@@ -725,4 +725,10 @@
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ajudar a traduzir</value>
   </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Timing offset</value>
+  </data>
 </root>
