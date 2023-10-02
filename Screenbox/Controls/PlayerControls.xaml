@@ -17,6 +17,9 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
@@ -131,6 +134,24 @@
                         Header="{strings:Resources Key=CustomAspectRatio}"
                         PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
+                </StackPanel>
+            </Flyout>
+
+            <Flyout x:Key="SubtitleOptionsFlyout">
+                <StackPanel
+                    Width="180"
+                    Orientation="Vertical"
+                    Spacing="8">
+                    <Slider
+                        x:Name="TimingOffsetSlider"
+                        Header="{strings:Resources Key=TimingOffset}"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="3000"
+                        Minimum="-3000"
+                        StepFrequency="100"
+                        ValueChanged="TimingOffsetSlider_OnValueChanged"
+                        Value="0" />
+                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                 </StackPanel>
             </Flyout>
 
@@ -470,7 +491,11 @@
                         Modifiers="Control,Shift" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
-                    <Flyout Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}" ShouldConstrainToRootBounds="False">
+                    <Flyout
+                        x:Name="AudioSubtitlePickerFlyout"
+                        FlyoutPresenterStyle="{StaticResource TightFlyoutPresenterStyle}"
+                        Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}"
+                        ShouldConstrainToRootBounds="False">
                         <local:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" />
                     </Flyout>
                 </Button.Flyout>

@@ -28,6 +28,19 @@ namespace Screenbox.Core.ViewModels
 
         public bool ShouldBeAdaptive => !IsCompact && SystemInformationExtensions.IsDesktop;
 
+        public long SubtitleTimingOffset
+        {
+            // Special access. Consider promote to proper IMediaPlayer property
+            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay ?? 0;
+            set
+            {
+                if (_mediaPlayer is VlcMediaPlayer player)
+                {
+                    player.VlcPlayer.SetSpuDelay(value);
+                }
+            }
+        }
+
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isFullscreen;
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
@@ -175,6 +188,7 @@ namespace Screenbox.Core.ViewModels
             {
                 case nameof(MediaListViewModel.CurrentItem):
                     HasActiveItem = Playlist.CurrentItem != null;
+                    SubtitleTimingOffset = 0;
                     break;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 
@@ -8,6 +9,8 @@ namespace Screenbox.Controls
 {
     public sealed partial class AudioTrackSubtitlePicker : UserControl
     {
+        public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
+
         internal AudioTrackSubtitleViewModel ViewModel => (AudioTrackSubtitleViewModel)DataContext;
 
         public AudioTrackSubtitlePicker()

@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using LibVLCSharp.Shared;
+﻿using LibVLCSharp.Shared;
+using System.Threading.Tasks;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
+        internal string PendingTrackLabel { get; set; }
+
         private readonly Media _media;
 
         public PlaybackSubtitleTrackList(Media media)
@@ -18,23 +20,27 @@ namespace Screenbox.Core.Playback
             {
                 _media.ParsedChanged += Media_ParsedChanged;
             }
+
+            PendingTrackLabel = string.Empty;
         }
 
         internal async void NotifyTrackAdded(int trackId)
         {
-            // Run in new thread due to VLC thread safety
-            await Task.Run(() =>
+            // Delay to wait for _media.Tracks to populate
+            // Run in new thread to ensure VLC thread safety
+            await Task.Delay(50).ConfigureAwait(false);
+            foreach (MediaTrack track in _media.Tracks)
             {
-                foreach (MediaTrack track in _media.Tracks)
+                if (track.TrackType == TrackType.Text && track.Id == trackId)
                 {
-                    if (track.TrackType == TrackType.Text && track.Id == trackId)
-                    {
-                        TrackList.Add(new SubtitleTrack(track));
-                        SelectedIndex = Count - 1;
-                        return;
-                    }
+                    SubtitleTrack sub = new(track);
+                    sub.Label ??= PendingTrackLabel;
+                    PendingTrackLabel = string.Empty;
+                    TrackList.Add(sub);
+                    SelectedIndex = Count - 1;
+                    return;
                 }
-            });
+            }
         }
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)

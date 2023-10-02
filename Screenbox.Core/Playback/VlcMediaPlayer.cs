@@ -408,6 +408,7 @@ namespace Screenbox.Core.Playback
         {
             if (PlaybackItem == null) return;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
+            PlaybackItem.SubtitleTracks.PendingTrackLabel = file.Name;
             VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, true);
         }
 

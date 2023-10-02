@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using System;
@@ -64,6 +65,15 @@ namespace Screenbox.Controls
             DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             PlayerContextMenu = NormalPlayerContextMenu;
+            AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
+        }
+
+        private void ShowSubtitleOptions()
+        {
+            AudioSubtitlePickerFlyout.Hide();
+            Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];
+            flyout.ShowAt(AudioAndCaptionButton);
+            TimingOffsetSlider.Value = ViewModel.SubtitleTimingOffset;
         }
 
         public void FocusFirstButton(FocusState value = FocusState.Programmatic)
@@ -156,6 +166,11 @@ namespace Screenbox.Controls
                 CustomAspectRatioMenuItem.IsChecked = true;
                 ViewModel.SetAspectRatioCommand.Execute(aspectRatio);
             }
+        }
+
+        private void TimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            ViewModel.SubtitleTimingOffset = (long)e.NewValue;
         }
 
         private static bool IsValueEqualTag(double value, object? tag)

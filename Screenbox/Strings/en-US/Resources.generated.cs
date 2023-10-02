@@ -2364,6 +2364,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Options
+        /// <summary>
+        ///   Looks up a localized string similar to: Options
+        /// </summary>
+        public static string Options
+        {
+            get
+            {
+                return _resourceLoader.GetString("Options");
+            }
+        }
+        #endregion
+
+        #region TimingOffset
+        /// <summary>
+        ///   Looks up a localized string similar to: Timing offset
+        /// </summary>
+        public static string TimingOffset
+        {
+            get
+            {
+                return _resourceLoader.GetString("TimingOffset");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2555,6 +2581,8 @@ namespace Screenbox.Strings{
             PrivacyPolicy,
             License,
             HyperlinkTranslate,
+            Options,
+            TimingOffset,
         }
 
         private static ResourceLoader _resourceLoader;

@@ -19,10 +19,16 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <TextBlock FontWeight="SemiBold" Text="{strings:Resources Key=Audio}" />
+                <Border Height="40">
+                    <TextBlock
+                        Margin="15,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"
+                        Text="{strings:Resources Key=Audio}" />
+                </Border>
             </ListView.Header>
         </ListView>
-        <MenuFlyoutSeparator Margin="-11,4,-11,8" IsTabStop="False" />
+        <MenuFlyoutSeparator Margin="-4,4,-4,2" IsTabStop="False" />
         <ListView
             Width="220"
             ItemContainerTransitions="{x:Null}"
@@ -32,14 +38,36 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <TextBlock FontWeight="SemiBold" Text="{strings:Resources Key=Subtitles}" />
+                <Grid Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Margin="15,0,0,0"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"
+                        Text="{strings:Resources Key=Subtitles}" />
+                    <HyperlinkButton
+                        Grid.Column="1"
+                        Command="{x:Bind ShowSubtitleOptionsCommand}"
+                        Content="{strings:Resources Key=Options}" />
+                </Grid>
             </ListView.Header>
             <ListView.Footer>
+                <!--  Imitate the look of ListViewItem  -->
                 <Button
-                    Margin="0,4,0,0"
-                    HorizontalAlignment="Right"
+                    Height="36"
+                    Margin="3,2"
+                    Padding="13,0,13,0"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    Background="{ThemeResource ListViewItemBackground}"
+                    BorderBrush="{x:Null}"
+                    BorderThickness="0"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="{strings:Resources Key=AddSubtitle}" />
+                    Content="{strings:Resources Key=AddSubtitle}"
+                    Foreground="{ThemeResource ListViewItemForeground}" />
             </ListView.Footer>
         </ListView>
     </StackPanel>
