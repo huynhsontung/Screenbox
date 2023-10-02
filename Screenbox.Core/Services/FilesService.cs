@@ -32,7 +32,7 @@ namespace Screenbox.Core.Services
             SupportedVideoFormats = ImmutableArray.Create(
                 ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
             SupportedAudioFormats = ImmutableArray.Create(
-                ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".weba", ".flac", ".m4a");
+                ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".opus", ".weba", ".flac", ".m4a");
             SupportedPlaylistFormats = ImmutableArray.Create(".m3u8", ".m3u", ".ts");
             SupportedFormats = SupportedVideoFormats.AddRange(SupportedAudioFormats).AddRange(SupportedPlaylistFormats);
         }
