@@ -21,7 +21,7 @@
             <ListView.Header>
                 <Border Height="40">
                     <TextBlock
-                        Margin="15,0,0,0"
+                        Margin="16,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
-                        Margin="15,0,0,0"
+                        Margin="16,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
