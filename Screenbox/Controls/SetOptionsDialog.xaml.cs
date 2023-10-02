@@ -17,11 +17,14 @@ public sealed partial class SetOptionsDialog : ContentDialog
         set { SetValue(OptionsProperty, value); }
     }
 
+    private string OptionTextBoxPlaceholder { get; }
+
     private string[] VlcCommandLineHelpTextParts { get; }
 
-    public SetOptionsDialog(string existingOptions)
+    public SetOptionsDialog(string existingOptions, bool global = false)
     {
         this.InitializeComponent();
+        OptionTextBoxPlaceholder = global ? "--option=value" : ":option=value";
         Options = existingOptions;
         OptionsTextBox.Text = Options;
         VlcCommandLineHelpTextParts = new string[2];
@@ -29,5 +32,14 @@ public sealed partial class SetOptionsDialog : ContentDialog
             .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
             .Select(s => s.Trim()).ToArray();
         Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
+
+        if (global)
+        {
+            SecondaryButtonText = string.Empty;
+
+            // Remove the first two inlines
+            HelpText.Inlines.RemoveAt(0);
+            HelpText.Inlines.RemoveAt(0);
+        }
     }
 }

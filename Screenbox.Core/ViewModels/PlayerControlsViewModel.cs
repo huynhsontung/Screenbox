@@ -22,6 +22,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         IRecipient<MediaPlayerChangedMessage>,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<TogglePlayPauseMessage>
     {
         public MediaListViewModel Playlist { get; }
@@ -46,6 +47,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private double _playbackSpeed;
+        [ObservableProperty] private bool _isAdvancedModeActive;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
@@ -61,16 +63,19 @@ namespace Screenbox.Core.ViewModels
         [NotifyCanExecuteChangedFor(nameof(ToggleFullscreenCommand))]
         private bool _hasActiveItem;
 
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
+        private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
         private Size _aspectRatio;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
             IFilesService filesService,
+            ISettingsService settingsService,
             IWindowService windowService,
             IResourceService resourceService)
         {
@@ -78,12 +83,20 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _windowService = windowService;
             _resourceService = resourceService;
+            _settingsService = settingsService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
+            _isAdvancedModeActive = settingsService.AdvancedMode;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
             IsActive = true;
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            if (message.SettingsName != nameof(SettingsPageViewModel.AdvancedMode)) return;
+            IsAdvancedModeActive = _settingsService.AdvancedMode;
         }
 
         public void Receive(MediaPlayerChangedMessage message)
@@ -235,6 +248,21 @@ namespace Screenbox.Core.ViewModels
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        [RelayCommand]
+        private void ResetMediaPlayback()
+        {
+            if (_mediaPlayer == null) return;
+            TimeSpan pos = _mediaPlayer.Position;
+            MediaViewModel? item = Playlist.CurrentItem;
+            Playlist.CurrentItem = null;
+            Playlist.CurrentItem = item;
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                _mediaPlayer.Play();
+                _mediaPlayer.Position = pos;
+            });
         }
 
         [RelayCommand]

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
@@ -38,6 +39,7 @@
                 <Setter Property="Margin" Value="1,28,0,4" />
             </Style>
 
+            <ThemeShadow x:Key="SharedShadow" />
             <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
             <muxc:StackLayout
                 x:Name="VerticalStackLayout"
@@ -101,25 +103,11 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource ContentPageHeaderMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="HeaderText"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
                 MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind strings:Resources.Settings}" />
-            <muxc:InfoBar
-                x:Name="PendingChangesInfoBar"
-                Title="{strings:Resources Key=PendingChanges}"
-                Grid.Column="1"
-                IsClosable="False"
-                IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
-                Message="{strings:Resources Key=RelaunchForChangesMessage}"
-                Severity="Warning" />
         </Grid>
 
         <ScrollViewer
@@ -249,10 +237,7 @@
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard
-                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
-                            Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}"
-                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                        <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <labs:SettingsCard.Description>
                                 <TextBlock>
                                     <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
@@ -262,12 +247,20 @@
                                     <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
                                 </TextBlock>
                             </labs:SettingsCard.Description>
-                            <TextBox
-                                Width="180"
-                                AcceptsReturn="False"
-                                MaxLength="1024"
-                                PlaceholderText="--option=value"
-                                Text="{x:Bind ViewModel.GlobalArguments, Mode=TwoWay}" />
+                            <Button CommandParameter="{x:Bind ViewModel}" Content="Set arguments">
+                                <Button.Command>
+                                    <commands:SetPlaybackOptionsCommand />
+                                </Button.Command>
+                            </Button>
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
+                            Header="Active arguments"
+                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
+                            Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
+                            <labs:SettingsCard.Description>
+                                <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
+                            </labs:SettingsCard.Description>
                         </labs:SettingsCard>
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
@@ -309,6 +302,24 @@
             </StackPanel>
         </ScrollViewer>
 
+        <muxc:InfoBar
+            x:Name="PendingChangesInfoBar"
+            Title="{strings:Resources Key=PendingChanges}"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Margin="{StaticResource ContentPageHeaderMargin}"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            IsClosable="False"
+            IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
+            Message="{strings:Resources Key=RelaunchForChangesMessage}"
+            Severity="Warning"
+            Shadow="{StaticResource SharedShadow}">
+            <muxc:InfoBar.Transitions>
+                <RepositionThemeTransition />
+            </muxc:InfoBar.Transitions>
+        </muxc:InfoBar>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />
@@ -324,6 +335,7 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
                     </VisualState.Setters>
                 </VisualState>

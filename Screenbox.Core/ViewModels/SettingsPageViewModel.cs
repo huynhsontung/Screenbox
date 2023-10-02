@@ -124,7 +124,12 @@ namespace Screenbox.Core.ViewModels
         partial void OnGlobalArgumentsChanged(string value)
         {
             // No need to broadcast SettingsChangedMessage for this option
-            _settingsService.GlobalArguments = value;
+            if (value != _settingsService.GlobalArguments)
+            {
+                _settingsService.GlobalArguments = value;
+            }
+
+            GlobalArguments = _settingsService.GlobalArguments;
             IsRelaunchRequired = CheckForRelaunch();
         }
 

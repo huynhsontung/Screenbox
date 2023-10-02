@@ -21,14 +21,24 @@ internal class SetPlaybackOptionsCommand : IRelayCommand
 
     public async void Execute(object parameter)
     {
-        if (TryGetMedia(parameter) is not { } media) return;
-        SetOptionsDialog dialog = new(string.Join(' ', media.Options));
-        ContentDialogResult result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.None) return;
-        media.SetOptions(dialog.Options);
-        if (result == ContentDialogResult.Secondary)
+        if (parameter is SettingsPageViewModel settings)
         {
-            PlayCommand?.Execute(parameter);
+            SetOptionsDialog dialog = new(settings.GlobalArguments, true);
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.None) return;
+            settings.GlobalArguments = dialog.Options;
+        }
+        else
+        {
+            if (TryGetMedia(parameter) is not { } media) return;
+            SetOptionsDialog dialog = new(string.Join(' ', media.Options));
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.None) return;
+            media.SetOptions(dialog.Options);
+            if (result == ContentDialogResult.Secondary)
+            {
+                PlayCommand?.Execute(parameter);
+            }
         }
     }
 
