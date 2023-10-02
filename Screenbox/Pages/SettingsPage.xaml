@@ -237,10 +237,7 @@
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard
-                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
-                            Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}"
-                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                        <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <labs:SettingsCard.Description>
                                 <TextBlock>
                                     <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
@@ -257,6 +254,7 @@
                             </Button>
                         </labs:SettingsCard>
                         <labs:SettingsCard
+                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
                             Header="Active arguments"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
