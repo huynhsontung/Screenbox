@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -33,6 +34,15 @@ namespace Screenbox
     /// </summary>
     sealed partial class App : Application
     {
+        public static bool IsRightToLeftLanguage
+        {
+            get
+            {
+                string flowDirectionSetting = ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                return flowDirectionSetting == "RTL";
+            }
+        }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -221,6 +231,12 @@ namespace Screenbox
                 {
                     Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
                         .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
+                }
+
+                // Check for RTL flow direction
+                if (IsRightToLeftLanguage)
+                {
+                    rootFrame.FlowDirection = FlowDirection.RightToLeft;
                 }
             }
 
