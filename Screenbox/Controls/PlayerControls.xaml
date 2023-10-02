@@ -137,6 +137,24 @@
                 </StackPanel>
             </Flyout>
 
+            <Flyout x:Key="SubtitleOptionsFlyout">
+                <StackPanel
+                    Width="180"
+                    Orientation="Vertical"
+                    Spacing="8">
+                    <Slider
+                        x:Name="TimingOffsetSlider"
+                        Header="Timing offset"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="3000"
+                        Minimum="-3000"
+                        StepFrequency="100"
+                        ValueChanged="TimingOffsetSlider_OnValueChanged"
+                        Value="0" />
+                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                </StackPanel>
+            </Flyout>
+
             <MenuFlyout x:Name="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenFilesCommand}"
