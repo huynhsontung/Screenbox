@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -665,73 +665,73 @@
     <value>Открыть настройки подключенных устройств</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Задать параметры воспроизведения</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Задать</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Задать и начать проигрывание</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Задать параметры VLC, применимые к потоку.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Некоторые опции могут быть заданы только глобально.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Справка командной строки VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>См. {0} для полного списка доступных опций.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Расширенные</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Расширенный режим</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Расширенный режим позволяет настроить поведение LibVLC с помощью аргументов командной строки.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Глобальные аргументы</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Аргументы командной строки, применимые ко всем воспроизводимым медиа.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Удалить папку</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Ожидаемые изменения</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Перезапустить приложение, чтобы изменения вступили в силу</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Ошибка инициализации</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Полезные ссылки</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Политика конфиденциальности</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Лицензия</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Помочь с переводом</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Параметры</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Смещение времени</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Композиторы</value>
   </data>
 </root>
