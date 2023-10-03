@@ -729,9 +729,9 @@
     <value>选项</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>时间偏移量</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>作曲家</value>
   </data>
 </root>
