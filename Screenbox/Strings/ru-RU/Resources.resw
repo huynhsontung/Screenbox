@@ -734,4 +734,7 @@
   <data name="PropertyComposers" xml:space="preserve">
     <value>Композиторы</value>
   </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>Couldn't add folder</value>
+  </data>
 </root>
