@@ -268,7 +268,8 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void SetPlaybackSpeed(string speedText)
         {
-            PlaybackSpeed = double.Parse(speedText);
+            if (!double.TryParse(speedText, out double speed)) return;
+            PlaybackSpeed = speed;
         }
 
         [RelayCommand]
