@@ -2403,6 +2403,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToAddFolderNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Couldn't add folder
+        /// </summary>
+        public static string FailedToAddFolderNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToAddFolderNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2597,6 +2610,7 @@ namespace Screenbox.Strings{
             Options,
             TimingOffset,
             PropertyComposers,
+            FailedToAddFolderNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;

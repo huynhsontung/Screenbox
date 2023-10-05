@@ -2,6 +2,9 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -10,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Navigation;
+using IResourceService = Screenbox.Core.Services.IResourceService;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -24,11 +28,13 @@ namespace Screenbox.Core.ViewModels
         private bool HasLibrary => _libraryService.VideosLibrary != null;
 
         private readonly ILibraryService _libraryService;
+        private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public VideosPageViewModel(ILibraryService libraryService)
+        public VideosPageViewModel(ILibraryService libraryService, IResourceService resourceService)
         {
             _libraryService = libraryService;
+            _resourceService = resourceService;
             _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
             Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
@@ -72,7 +78,15 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand(CanExecute = nameof(HasLibrary))]
         private async Task AddFolder()
         {
-            await _libraryService.VideosLibrary?.RequestAddFolderAsync();
+            try
+            {
+                await _libraryService.VideosLibrary?.RequestAddFolderAsync();
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(
+                    _resourceService.GetString(ResourceName.FailedToAddFolderNotificationTitle), e.Message));
+            }
         }
     }
 }
