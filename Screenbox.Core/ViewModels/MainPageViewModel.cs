@@ -139,27 +139,23 @@ namespace Screenbox.Core.ViewModels
             {
                 SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
                 _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
-                SearchQuery = string.Empty;
-                if (this.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
-                {
-                    IsPaneOpen = false;
-                }
             }
-        }
-
-        public void AutoSuggestBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            switch (args.SelectedItem)
+            else
             {
-                case MediaViewModel media:
-                    Messenger.Send(new PlayMediaMessage(media));
-                    break;
-                case AlbumViewModel album:
-                    _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
-                    break;
-                case ArtistViewModel artist:
-                    _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
-                    break;
+                switch (args.ChosenSuggestion)
+                {
+                    case MediaViewModel media:
+                        Messenger.Send(new PlayMediaMessage(media));
+                        break;
+                    case AlbumViewModel album:
+                        _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
+                        break;
+                    case ArtistViewModel artist:
+                        _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+                        break;
+                    default:
+                        return;
+                }
             }
 
             SearchQuery = string.Empty;
