@@ -144,8 +144,8 @@
         <Grid
             x:Name="TitleBarArea"
             Grid.Row="0"
+            Grid.RowSpan="3"
             Grid.Column="0"
-            VerticalAlignment="Top"
             Canvas.ZIndex="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
@@ -154,8 +154,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Border
                 x:Name="TitleBarElement"
+                Grid.Row="0"
+                Grid.RowSpan="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="5"
                 HorizontalAlignment="Stretch"
@@ -164,6 +170,7 @@
 
             <Button
                 x:Name="BackButton"
+                Grid.Row="0"
                 Grid.Column="1"
                 Width="46"
                 Height="46"
@@ -184,6 +191,7 @@
 
             <Button
                 x:Name="PlayQueueButton"
+                Grid.Row="0"
                 Grid.Column="2"
                 Width="46"
                 Height="46"
@@ -215,6 +223,7 @@
 
             <StackPanel
                 x:Name="TitleTextPanel"
+                Grid.Row="0"
                 Grid.Column="3"
                 Margin="36,0,0,0"
                 VerticalAlignment="Center"
@@ -470,13 +479,15 @@
             Grid.Column="0"
             Margin="12,0,12,-12"
             HorizontalAlignment="Center"
-            VerticalAlignment="Bottom" />
+            VerticalAlignment="Bottom"
+            Canvas.ZIndex="99" />
 
         <controls:PlayerControls
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
             Padding="6,20,6,12"
+            Canvas.ZIndex="98"
             IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
@@ -738,6 +749,14 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="TitleBarExpansionGroup">
+                <VisualState x:Name="TitleBarExpanded">
+                    <VisualState.Setters>
+                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
