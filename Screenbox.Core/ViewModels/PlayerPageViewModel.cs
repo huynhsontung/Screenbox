@@ -35,7 +35,6 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlayerVisibilityRequestMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
-        [ObservableProperty] private bool? _audioOnly;
         [ObservableProperty] private bool _controlsHidden;
         [ObservableProperty] private string? _statusMessage;
         [ObservableProperty] private bool _isPlaying;
@@ -47,6 +46,10 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private MediaViewModel? _media;
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(AudioOnly))]
+        private MediaPlaybackType _mediaType;
+
+        [ObservableProperty]
         [NotifyPropertyChangedRecipients]
         private PlayerVisibilityState _playerVisibility;
 
@@ -56,7 +59,7 @@ namespace Screenbox.Core.ViewModels
 
         public bool SeekBarPointerInteracting { get; set; }
 
-        private bool AudioOnlyInternal => AudioOnly ?? false;
+        public bool AudioOnly => MediaType == MediaPlaybackType.Music;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _openingTimer;
@@ -440,7 +443,7 @@ namespace Screenbox.Core.ViewModels
         public bool TryHideControls(bool skipFocusCheck = false)
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
-                SeekBarPointerInteracting || AudioOnlyInternal || ControlsHidden) return false;
+                SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
             if (!skipFocusCheck)
             {
@@ -466,7 +469,7 @@ namespace Screenbox.Core.ViewModels
 
         private void DelayHideControls(int delayInSeconds = 3)
         {
-            if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnlyInternal) return;
+            if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
             _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));
         }
 
@@ -490,10 +493,10 @@ namespace Screenbox.Core.ViewModels
             {
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
-                AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                MediaType = current.MediaType;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
-                    PlayerVisibility = AudioOnlyInternal ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Visible;
+                    PlayerVisibility = AudioOnly ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Visible;
                 }
             }
             else if (PlayerVisibility == PlayerVisibilityState.Minimal)
