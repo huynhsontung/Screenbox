@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Helpers;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -44,7 +45,7 @@ namespace Screenbox.Core.Services
             {
                 if (item.Source is StorageFile file)
                 {
-                    if (file.ContentType.StartsWith("audio"))
+                    if (file.IsSupportedAudio())
                     {
                         bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);
                         if (success && string.IsNullOrEmpty(displayUpdater.MusicProperties.Title))
@@ -52,7 +53,7 @@ namespace Screenbox.Core.Services
                             displayUpdater.MusicProperties.Title = item.Name;
                         }
                     }
-                    else if (file.ContentType.StartsWith("video"))
+                    else if (file.IsSupportedVideo())
                     {
                         bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Video, file);
                         if (success && string.IsNullOrEmpty(displayUpdater.VideoProperties.Title))
