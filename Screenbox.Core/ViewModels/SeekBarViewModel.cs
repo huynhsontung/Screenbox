@@ -85,7 +85,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
-            _mediaPlayer.SourceChanged += OnSourceChanged;
+            _mediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
         }
 
         public void Receive(TimeChangeOverrideMessage message)
@@ -155,7 +155,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void OnSourceChanged(IMediaPlayer sender, object? args)
+        private void OnPlaybackItemChanged(IMediaPlayer sender, object? args)
         {
             _seekTimer.Stop();
             if (sender.PlaybackItem == null)
