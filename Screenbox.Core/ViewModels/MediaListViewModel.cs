@@ -97,6 +97,7 @@ namespace Screenbox.Core.ViewModels
         {
             _mediaPlayer = message.Value;
             _mediaPlayer.MediaEnded += OnEndReached;
+            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
 
             if (_delayPlay != null)
             {
@@ -105,6 +106,17 @@ namespace Screenbox.Core.ViewModels
                     Play(_delayPlay);
                 });
             }
+        }
+
+        private void OnPlaybackStateChanged(IMediaPlayer sender, object args)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                if (CurrentItem != null)
+                {
+                    CurrentItem.IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                }
+            });
         }
 
         public async void Receive(PlayFilesWithNeighborsMessage message)
@@ -176,7 +188,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer != null)
             {
-                _mediaPlayer.Source = value?.Item;
+                _mediaPlayer.PlaybackItem = value?.Item;
             }
 
             if (CurrentItem != null)

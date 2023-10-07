@@ -289,7 +289,7 @@ namespace Screenbox.Core.ViewModels
                     _mediaPlayer.Play();
                     break;
                 case SystemMediaTransportControlsButton.Stop:
-                    _mediaPlayer.Source = null;
+                    _mediaPlayer.PlaybackItem = null;
                     break;
                 case SystemMediaTransportControlsButton.FastForward:
                     _mediaPlayer.Position += TimeSpan.FromSeconds(10);

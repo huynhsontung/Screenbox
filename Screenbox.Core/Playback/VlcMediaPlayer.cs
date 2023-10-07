@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Screenbox.Core.Events;
 using System;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
@@ -15,32 +16,21 @@ namespace Screenbox.Core.Playback
 {
     public sealed class VlcMediaPlayer : IMediaPlayer
     {
-        public event TypedEventHandler<IMediaPlayer, object?>? MediaEnded;
-        public event TypedEventHandler<IMediaPlayer, object?>? MediaFailed;
-        public event TypedEventHandler<IMediaPlayer, object?>? MediaOpened;
-        public event TypedEventHandler<IMediaPlayer, object?>? IsMutedChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? VolumeChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? SourceChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? BufferingProgressChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? BufferingStarted;
-        public event TypedEventHandler<IMediaPlayer, object?>? BufferingEnded;
-        public event TypedEventHandler<IMediaPlayer, object?>? NaturalDurationChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? NaturalVideoSizeChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? PositionChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? ChapterChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? PlaybackStateChanged;
-        public event TypedEventHandler<IMediaPlayer, object?>? PlaybackRateChanged;
-
-        public object? Source
-        {
-            get => _source;
-            set
-            {
-                _source = value;
-                ProcessSource(value);
-                SourceChanged?.Invoke(this, null);
-            }
-        }
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaEnded;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaFailed;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
 
         public ChapterCue? Chapter
         {
@@ -48,8 +38,9 @@ namespace Screenbox.Core.Playback
             set
             {
                 if (value == _chapter) return;
+                ChapterCue? oldValue = _chapter;
                 _chapter = value;
-                ChapterChanged?.Invoke(this, null);
+                ChapterChanged?.Invoke(this, new ValueChangedEventArgs<ChapterCue?>(value, oldValue));
             }
         }
 
@@ -60,8 +51,9 @@ namespace Screenbox.Core.Playback
             {
                 // Length can fluctuate during playback. Check for tolerance here.
                 if (Math.Abs((_naturalDuration - value).TotalMilliseconds) <= 50) return;
+                TimeSpan oldValue = _naturalDuration;
                 _naturalDuration = value;
-                NaturalDurationChanged?.Invoke(this, null);
+                NaturalDurationChanged?.Invoke(this, new ValueChangedEventArgs<TimeSpan>(value, oldValue));
             }
         }
 
@@ -84,6 +76,7 @@ namespace Screenbox.Core.Playback
                     Replay();
                 }
 
+                TimeSpan oldValue = _position;
                 _position = value;
                 long ms = (long)value.TotalMilliseconds;
                 VlcPlayer.Time = ms;
@@ -91,14 +84,14 @@ namespace Screenbox.Core.Playback
                 // TODO: Check for more problematic states
                 if (PlaybackState is MediaPlaybackState.Paused)
                 {
-                    PositionChanged?.Invoke(this, null);
+                    PositionChanged?.Invoke(this, new ValueChangedEventArgs<TimeSpan>(value, oldValue));
                 }
             }
         }
 
         public bool IsMuted
         {
-            get => VlcPlayer?.Mute ?? false;
+            get => VlcPlayer.Mute;
             set
             {
                 if (VlcPlayer.Mute != value)
@@ -126,10 +119,11 @@ namespace Screenbox.Core.Playback
             get => VlcPlayer.Rate;
             set
             {
-                if (VlcPlayer.Rate != value)
+                if (Math.Abs(VlcPlayer.Rate - value) > 0.0001)
                 {
+                    double oldValue = VlcPlayer.Rate;
                     VlcPlayer.SetRate((float)value);
-                    PlaybackRateChanged?.Invoke(this, null);
+                    PlaybackRateChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
                 }
             }
         }
@@ -197,8 +191,34 @@ namespace Screenbox.Core.Playback
             private set
             {
                 if (value == _playbackState) return;
+                MediaPlaybackState oldValue = _playbackState;
                 _playbackState = value;
-                PlaybackStateChanged?.Invoke(this, null);
+                PlaybackStateChanged?.Invoke(this, new ValueChangedEventArgs<MediaPlaybackState>(value, oldValue));
+            }
+        }
+
+        public PlaybackItem? PlaybackItem
+        {
+            get => _playbackItem;
+            set
+            {
+                if (_playbackItem == value) return;
+                PlaybackItem? oldValue = _playbackItem;
+                if (value == null)
+                {
+                    VlcPlayer.Stop();
+                    if (_playbackItem != null) RemoveItemHandlers(_playbackItem);
+                    _playbackItem = null;
+                }
+                else
+                {
+                    _playbackItem = value;
+                    RegisterItemHandlers(_playbackItem);
+                    _readyToPlay = true;
+                    _updateMediaProperties = true;
+                }
+
+                PlaybackItemChanged?.Invoke(this, new ValueChangedEventArgs<PlaybackItem?>(value, oldValue));
             }
         }
 
@@ -214,12 +234,9 @@ namespace Screenbox.Core.Playback
 
         public bool CanPause => VlcPlayer.CanPause;
 
-        public PlaybackItem? PlaybackItem { get; private set; }
-
         internal MediaPlayer VlcPlayer { get; }
 
         private readonly Rect _defaultSourceRect;
-        private object? _source;
         private ChapterCue? _chapter;
         private Rect _normalizedSourceRect;
         private bool _readyToPlay;
@@ -227,6 +244,7 @@ namespace Screenbox.Core.Playback
         private TimeSpan _naturalDuration;
         private TimeSpan _position;
         private MediaPlaybackState _playbackState;
+        private PlaybackItem? _playbackItem;
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
@@ -235,9 +253,9 @@ namespace Screenbox.Core.Playback
             _normalizedSourceRect = _defaultSourceRect;
 
             VlcPlayer.TimeChanged += VlcPlayer_TimeChanged;
-            VlcPlayer.Muted += (s, e) => IsMutedChanged?.Invoke(this, null);
-            VlcPlayer.Unmuted += (s, e) => IsMutedChanged?.Invoke(this, null);
-            VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, null);
+            VlcPlayer.Muted += (s, e) => IsMutedChanged?.Invoke(this, EventArgs.Empty);
+            VlcPlayer.Unmuted += (s, e) => IsMutedChanged?.Invoke(this, EventArgs.Empty);
+            VlcPlayer.VolumeChanged += (s, e) => VolumeChanged?.Invoke(this, EventArgs.Empty);
             VlcPlayer.Paused += (s, e) => PlaybackState = MediaPlaybackState.Paused;
             VlcPlayer.Stopped += (s, e) => PlaybackState = MediaPlaybackState.None;
             VlcPlayer.EncounteredError += VlcPlayer_EncounteredError;
@@ -259,14 +277,15 @@ namespace Screenbox.Core.Playback
             TimeSpan newValue = TimeSpan.FromMilliseconds(e.Time);
             if (newValue != _position)
             {
+                TimeSpan oldValue = _position;
                 _position = newValue;
-                PositionChanged?.Invoke(this, null);
+                PositionChanged?.Invoke(this, new ValueChangedEventArgs<TimeSpan>(newValue, oldValue));
             }
         }
 
         private void VlcPlayer_EncounteredError(object sender, EventArgs e)
         {
-            MediaFailed?.Invoke(this, null);
+            MediaFailed?.Invoke(this, EventArgs.Empty);
             PlaybackState = MediaPlaybackState.None;
         }
 
@@ -326,13 +345,13 @@ namespace Screenbox.Core.Playback
             {
                 NaturalVideoWidth = px;
                 NaturalVideoHeight = py;
-                NaturalVideoSizeChanged?.Invoke(this, null);
+                NaturalVideoSizeChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
         private void VlcPlayer_EndReached(object sender, EventArgs e)
         {
-            MediaEnded?.Invoke(this, null);
+            MediaEnded?.Invoke(this, EventArgs.Empty);
             PlaybackState = MediaPlaybackState.None;
             if (IsLoopingEnabled)
                 Replay();
@@ -340,7 +359,7 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_Opening(object sender, EventArgs e)
         {
-            MediaOpened?.Invoke(this, null);
+            MediaOpened?.Invoke(this, EventArgs.Empty);
             PlaybackState = MediaPlaybackState.Opening;
         }
 
@@ -348,34 +367,17 @@ namespace Screenbox.Core.Playback
         {
             if (BufferingProgress == 0)
             {
-                BufferingStarted?.Invoke(this, null);
+                BufferingStarted?.Invoke(this, EventArgs.Empty);
                 //PlaybackStateChanged?.Invoke(this, null);
             }
 
             BufferingProgress = e.Cache / 100d;
-            BufferingProgressChanged?.Invoke(this, null);
+            BufferingProgressChanged?.Invoke(this, EventArgs.Empty);
             if (BufferingProgress == 1.0)
             {
-                BufferingEnded?.Invoke(this, null);
+                BufferingEnded?.Invoke(this, EventArgs.Empty);
                 //PlaybackStateChanged?.Invoke(this, null);
                 BufferingProgress = 0;
-            }
-        }
-
-        private void ProcessSource(object? source)
-        {
-            if (source == null)
-            {
-                VlcPlayer.Stop();
-                if (PlaybackItem != null) RemoveItemHandlers(PlaybackItem);
-                PlaybackItem = null;
-            }
-            else
-            {
-                PlaybackItem = (PlaybackItem)source;
-                RegisterItemHandlers(PlaybackItem);
-                _readyToPlay = true;
-                _updateMediaProperties = true;
             }
         }
 

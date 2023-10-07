@@ -63,7 +63,7 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private async Task AddSubtitle()
         {
-            if (_mediaPlayer?.Source == null) return;
+            if (_mediaPlayer?.PlaybackItem == null) return;
             try
             {
                 StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
