@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -311,9 +312,10 @@ namespace Screenbox.Core.ViewModels
 
         private static MediaPlaybackType GetMediaTypeForFile(IStorageFile file)
         {
-            if (file.ContentType.StartsWith("video")) return MediaPlaybackType.Video;
-            if (file.ContentType.StartsWith("audio")) return MediaPlaybackType.Music;
+            if (file.IsSupportedVideo()) return MediaPlaybackType.Video;
+            if (file.IsSupportedAudio()) return MediaPlaybackType.Music;
             if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
+            // TODO: Support playlist type
             return MediaPlaybackType.Unknown;
         }
     }

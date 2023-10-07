@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Screenbox.Core.Helpers;
+using System;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
 
@@ -12,11 +13,11 @@ namespace Screenbox.Converters
             if (item is IStorageFile file)
             {
                 glyph = "\ue8a5";
-                if (file.ContentType.StartsWith("video"))
+                if (file.IsSupportedVideo())
                 {
                     glyph = "\ue8b2";
                 }
-                else if (file.ContentType.StartsWith("audio"))
+                else if (file.IsSupportedAudio())
                 {
                     glyph = "\ue8d6";
                 }
