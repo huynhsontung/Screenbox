@@ -141,12 +141,22 @@
             </Border.Background>
         </Border>
 
-        <Grid
-            x:Name="TitleBarArea"
+        <Border
+            x:Name="TitleBarElement"
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Canvas.ZIndex="3">
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            Canvas.ZIndex="3" />
+
+        <Grid
+            x:Name="TitleBarArea"
+            Grid.Row="0"
+            Grid.Column="0"
+            Canvas.ZIndex="98">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
                 <ColumnDefinition Width="Auto" />
@@ -154,23 +164,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Border
-                x:Name="TitleBarElement"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="Transparent" />
 
             <Button
                 x:Name="BackButton"
-                Grid.Row="0"
                 Grid.Column="1"
                 Width="46"
                 Height="46"
@@ -191,7 +187,6 @@
 
             <Button
                 x:Name="PlayQueueButton"
-                Grid.Row="0"
                 Grid.Column="2"
                 Width="46"
                 Height="46"
@@ -223,7 +218,6 @@
 
             <StackPanel
                 x:Name="TitleTextPanel"
-                Grid.Row="0"
                 Grid.Column="3"
                 Margin="36,0,0,0"
                 VerticalAlignment="Center"
@@ -621,8 +615,7 @@
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarElement.Height" Value="32" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleBarArea.Height" Value="32" />
                         <Setter Target="TitleText.FontSize" Value="12" />
                         <Setter Target="TitleText.FontWeight" Value="Normal" />
                         <Setter Target="SubtitleText.FontSize" Value="12" />
@@ -650,10 +643,10 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarElement.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="14" />
                         <Setter Target="TitleText.FontWeight" Value="SemiBold" />
                         <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
@@ -690,10 +683,10 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
+                        <Setter Target="TitleBarElement.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="TitleText.FontSize" Value="14" />
                         <Setter Target="TitleText.FontWeight" Value="SemiBold" />
                         <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
@@ -756,7 +749,7 @@
             <VisualStateGroup x:Name="TitleBarExpansionGroup">
                 <VisualState x:Name="TitleBarExpanded">
                     <VisualState.Setters>
-                        <Setter Target="TitleBarArea.(Grid.RowSpan)" Value="2" />
+                        <Setter Target="TitleBarElement.(Grid.RowSpan)" Value="2" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
