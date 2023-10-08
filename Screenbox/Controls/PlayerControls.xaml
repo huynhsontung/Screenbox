@@ -4,18 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -51,12 +52,12 @@
 
             <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
-            <converters1:BoolToObjectConverter
+            <toolkitConverters:BoolToObjectConverter
                 x:Key="BoolToPlayPauseTextConverter"
                 FalseValue="{strings:Resources Key=Play}"
                 TrueValue="{strings:Resources Key=Pause}" />
 
-            <converters1:BoolToObjectConverter
+            <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
                 FalseValue="E"
                 TrueValue="F" />
@@ -109,50 +110,76 @@
                 <local:VolumeControl Width="200" />
             </Flyout>
 
-            <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
-                <StackPanel
-                    Width="180"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <Slider
-                        x:Name="SpeedSlider"
-                        Header="{strings:Resources Key=CustomPlaybackSpeed}"
-                        IsThumbToolTipEnabled="False"
-                        Maximum="2"
-                        Minimum="0.05"
-                        StepFrequency="0.05"
-                        ValueChanged="SpeedSlider_OnValueChanged"
-                        Value="1.0" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
-                </StackPanel>
-            </Flyout>
-
-            <Flyout x:Key="CustomAspectRatioFlyout" ShouldConstrainToRootBounds="True">
-                <StackPanel Width="180" Orientation="Vertical">
-                    <TextBox
-                        x:Name="AspectRatioTextBox"
-                        AutomationProperties.Name="Custom aspect ratio TextBox"
-                        Header="{strings:Resources Key=CustomAspectRatio}"
-                        PlaceholderText="16:9"
-                        TextChanged="AspectRatioTextBox_OnTextChanged" />
-                </StackPanel>
-            </Flyout>
-
-            <Flyout x:Key="SubtitleOptionsFlyout">
-                <StackPanel
-                    Width="180"
-                    Orientation="Vertical"
-                    Spacing="8">
-                    <Slider
-                        x:Name="TimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
-                        IsThumbToolTipEnabled="False"
-                        Maximum="3000"
-                        Minimum="-3000"
-                        StepFrequency="100"
-                        ValueChanged="TimingOffsetSlider_OnValueChanged"
-                        Value="0" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+            <!--  Playback Options Flyout  -->
+            <Flyout x:Key="PlaybackOptionsFlyout" ShouldConstrainToRootBounds="True">
+                <StackPanel Width="340" Orientation="Vertical">
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="Playback options" />
+                    <StackPanel x:Name="CustomAspectRatioSection" x:Load="{x:Bind ViewModel.HasVideo, Mode=OneWay}">
+                        <TextBlock Text="{strings:Resources Key=AspectRatio}" />
+                        <TextBox
+                            x:Name="AspectRatioTextBox"
+                            Margin="0,4,0,8"
+                            HorizontalAlignment="Left"
+                            AutomationProperties.Name="Custom aspect ratio TextBox"
+                            PlaceholderText="16:9"
+                            TextChanged="AspectRatioTextBox_OnTextChanged" />
+                    </StackPanel>
+                    <StackPanel x:Name="CustomPlaybackSpeedSection">
+                        <StackPanel
+                            Margin="0,0,0,4"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                            <TextBlock Text="{strings:Resources Key=PlaybackSpeed}" />
+                            <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
+                        </StackPanel>
+                        <Slider
+                            x:Name="SpeedSlider"
+                            IsThumbToolTipEnabled="False"
+                            LargeChange="0.1"
+                            Maximum="2"
+                            Minimum="0.05"
+                            SmallChange="0.01"
+                            StepFrequency="0.05"
+                            ValueChanged="SpeedSlider_OnValueChanged"
+                            Value="1.0" />
+                    </StackPanel>
+                    <!--  TODO: Add ViewModel to toggle visibility  -->
+                    <StackPanel x:Name="SubtitleTimingOffsetSection" x:Load="True">
+                        <StackPanel
+                            Margin="0,0,0,4"
+                            Orientation="Horizontal"
+                            Spacing="8">
+                            <TextBlock Text="{strings:Resources Key=TimingOffset}" />
+                            <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Slider
+                                x:Name="TimingOffsetSlider"
+                                Width="228"
+                                VerticalAlignment="Center"
+                                IsThumbToolTipEnabled="False"
+                                Maximum="3000"
+                                Minimum="-3000"
+                                StepFrequency="100"
+                                ValueChanged="TimingOffsetSlider_OnValueChanged"
+                                Value="0" />
+                            <muxc:NumberBox
+                                Width="100"
+                                Height="32"
+                                HorizontalAlignment="Left"
+                                LargeChange="1000"
+                                Maximum="3000"
+                                Minimum="-3000"
+                                SmallChange="100"
+                                SpinButtonPlacementMode="Compact"
+                                Value="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <!--  TODO: Add a Command to reset values  -->
+                    <Button Margin="0,8,0,0" Content="Reset" />
                 </StackPanel>
             </Flyout>
 

@@ -71,8 +71,8 @@ namespace Screenbox.Controls
         private void ShowSubtitleOptions()
         {
             AudioSubtitlePickerFlyout.Hide();
-            Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];
-            flyout.ShowAt(AudioAndCaptionButton);
+            Flyout customPlayOptionsflyout = (Flyout)Resources["PlaybackOptionsFlyout"];
+            customPlayOptionsflyout.ShowAt(AudioAndCaptionButton);
             TimingOffsetSlider.Value = ViewModel.SubtitleTimingOffset;
         }
 
@@ -89,8 +89,8 @@ namespace Screenbox.Controls
 
         private void CustomSpeedMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Flyout customSpeedFlyout = (Flyout)Resources["CustomPlaybackSpeedFlyout"];
-            customSpeedFlyout.ShowAt(MoreButton);
+            Flyout customPlayOptionsflyout = (Flyout)Resources["PlaybackOptionsFlyout"];
+            customPlayOptionsflyout.ShowAt(MoreButton);
             if (SpeedSlider.Value != ViewModel.PlaybackSpeed)
             {
                 SpeedSlider.Value = ViewModel.PlaybackSpeed;
@@ -103,8 +103,8 @@ namespace Screenbox.Controls
 
         private void CustomAspectRatioMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Flyout customAspectFlyout = (Flyout)Resources["CustomAspectRatioFlyout"];
-            customAspectFlyout.ShowAt(MoreButton);
+            Flyout customPlayOptionsflyout = (Flyout)Resources["PlaybackOptionsFlyout"];
+            customPlayOptionsflyout.ShowAt(MoreButton);
         }
 
         private void SpeedSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
