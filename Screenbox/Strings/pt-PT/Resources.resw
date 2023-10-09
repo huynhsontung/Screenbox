@@ -296,7 +296,7 @@
     <value>Não conseguimos encontrar qualquer música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>A sua biblioteca de música não contém qualquer conteúdo de musical.</value>
+    <value>A sua biblioteca de música não contém qualquer conteúdo musical.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Abrir ficheiro(s)</value>
@@ -726,15 +726,15 @@
     <value>Ajudar a traduzir</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Opções</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Compositores</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Não foi possível adicionar a pasta</value>
   </data>
 </root>
