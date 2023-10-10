@@ -96,9 +96,9 @@
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe8f4;" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                        <TextBlock Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -146,12 +146,9 @@
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe8f4;" />
-                        <TextBlock
-                            x:Name="HeaderAddFolderButtonText"
-                            Margin="8,0,0,0"
-                            Text="{x:Bind strings:Resources.AddFolder}" />
+                        <TextBlock x:Name="HeaderAddFolderButtonText" Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>

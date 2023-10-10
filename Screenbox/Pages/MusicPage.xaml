@@ -87,9 +87,9 @@
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe8f4;" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                        <TextBlock Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -140,12 +140,9 @@
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe8f4;" />
-                        <TextBlock
-                            x:Name="AddFolderButtonText"
-                            Margin="8,0,0,0"
-                            Text="{x:Bind strings:Resources.AddFolder}" />
+                        <TextBlock x:Name="AddFolderButtonText" Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>
@@ -165,9 +162,9 @@
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     XYFocusDown="{x:Bind ContentFrame}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe8b1;" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                        <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                     </StackPanel>
                 </Button>
 

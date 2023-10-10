@@ -191,9 +191,9 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button Command="{x:Bind ViewModel.PlayCommand}" Style="{StaticResource AccentButtonStyle}">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xe768;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
+                            <TextBlock Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:AutoFocusBehavior />
@@ -201,9 +201,9 @@
                     </Button>
 
                     <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xe8b1;" />
-                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                            <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
