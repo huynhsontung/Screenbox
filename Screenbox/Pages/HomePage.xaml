@@ -144,7 +144,7 @@
     <interactivity:Interaction.Behaviors>
         <behaviors:FocusBehavior>
             <behaviors:FocusTarget Control="{x:Bind RecentFilesGridView}" />
-            <behaviors:FocusTarget Control="{x:Bind OpenButton}" />
+            <behaviors:FocusTarget Control="{x:Bind WelcomePanelOpenButton}" />
             <behaviors:FocusTarget Control="{x:Bind HeaderOpenButton}" />
         </behaviors:FocusBehavior>
     </interactivity:Interaction.Behaviors>
@@ -157,24 +157,23 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
+            Margin="{StaticResource PageHeaderMargin}">
             <TextBlock
                 x:Name="HeaderText"
-                MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{x:Bind strings:Resources.Home}" />
+                Text="{strings:Resources Key=Home}" />
 
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                Height="32"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <FontIcon Glyph="&#xe838;" />
-                    <TextBlock x:Name="HeaderOpenFilesText" Text="{x:Bind strings:Resources.OpenFiles}" />
+                    <TextBlock x:Name="HeaderOpenButtonText" Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
             </muxc:SplitButton>
         </Grid>
@@ -184,7 +183,7 @@
             x:Name="WelcomePanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="16"
@@ -208,28 +207,29 @@
 
             <StackPanel
                 Grid.Column="1"
-                MaxWidth="416"
+                MaxWidth="420"
                 VerticalAlignment="Center"
                 Orientation="Vertical">
                 <TextBlock
                     Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.WelcomePanelHeader}" />
+                    Text="{strings:Resources Key=WelcomePanelHeader}" />
 
                 <TextBlock
-                    Margin="0,0,0,12"
+                    Margin="{StaticResource SubtitleTextMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{x:Bind strings:Resources.WelcomePanelSubtext}"
+                    Text="{strings:Resources Key=WelcomePanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <muxc:SplitButton
-                    x:Name="OpenButton"
+                    x:Name="WelcomePanelOpenButton"
+                    AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
                     ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon Glyph="&#xe838;" />
-                        <TextBlock Text="{x:Bind strings:Resources.OpenFiles}" />
+                        <TextBlock Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                 </muxc:SplitButton>
             </StackPanel>
@@ -239,7 +239,6 @@
             x:Name="RecentFilesPanel"
             Grid.Row="1"
             HorizontalAlignment="Stretch"
-            RelativePanel.Below="HeaderText"
             Visibility="Collapsed">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -249,14 +248,15 @@
             <TextBlock
                 x:Name="GridViewHeaderText"
                 Grid.Row="0"
-                Margin="{StaticResource ContentPageRightMargin}"
+                Margin="{StaticResource PageContentMargin}"
+                AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
-                Text="{x:Bind strings:Resources.Recent}" />
+                Text="{strings:Resources Key=Recent}" />
             <GridView
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
                 Margin="0,16,0,0"
-                Padding="{StaticResource ContentPageThumbnailRightMargin}"
+                Padding="{StaticResource PageThumbnailMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
@@ -286,14 +286,14 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderOpenFilesText.Visibility" Value="Collapsed" />
-                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
                         <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

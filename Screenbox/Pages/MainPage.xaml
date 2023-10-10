@@ -26,11 +26,8 @@
             <Thickness x:Key="AppTitleMarginMinimal">98,0,0,0</Thickness>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        Margin="0,0,8,0"
-                        FontSize="16"
-                        Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <FontIcon Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
                     <TextBlock Text="{Binding Name}" />
                 </StackPanel>
             </DataTemplate>
@@ -111,32 +108,32 @@
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    Content="{x:Bind strings:Resources.Home}"
+                    Content="{strings:Resources Key=Home}"
                     Icon="Home"
                     Tag="home" />
-                <muxc:NavigationViewItem Content="{x:Bind strings:Resources.Videos}" Tag="videos">
+                <muxc:NavigationViewItem Content="{strings:Resources Key=Videos}" Tag="videos">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xe8b2;" />
                     </muxc:NavigationViewItem.Icon>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    Content="{x:Bind strings:Resources.Music}"
+                    Content="{strings:Resources Key=Music}"
                     Icon="Audio"
                     Tag="music" />
                 <muxc:NavigationViewItem
-                    Content="{x:Bind strings:Resources.Network}"
+                    Content="{strings:Resources Key=Network}"
                     Icon="MapDrive"
                     Tag="network" />
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
-                    Content="{x:Bind strings:Resources.PlayQueue}"
+                    Content="{strings:Resources Key=PlayQueue}"
                     Icon="MusicInfo"
                     Tag="queue" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
-                    PlaceholderText="{x:Bind strings:Resources.SearchBoxPlaceholderText}"
+                    PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
@@ -152,7 +149,6 @@
             <Grid x:Name="ContentGrid">
                 <Frame
                     x:Name="ContentFrame"
-                    Padding="56,0,0,0"
                     Navigated="ContentFrame_Navigated"
                     NavigationFailed="ContentFrame_NavigationFailed" />
 
@@ -220,16 +216,15 @@
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
-                        <Setter Target="ContentFrame.Padding" Value="16,0,0,0" />
                         <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">
                     <VisualState.Setters>
-                        <Setter Target="OverlayGrid.Margin" Value="0" />
                         <Setter Target="AppTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="NavView.ContentVisibility" Value="Collapsed" />
                         <Setter Target="NavView.OverlayZIndex" Value="2" />
+                        <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 

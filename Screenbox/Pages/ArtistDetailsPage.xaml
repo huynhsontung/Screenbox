@@ -63,9 +63,8 @@
                             VerticalAlignment="Center"
                             Orientation="Vertical">
                             <TextBlock
-                                FontWeight="SemiBold"
                                 MaxLines="2"
-                                Style="{StaticResource BodyTextBlockStyle}"
+                                Style="{StaticResource BodyStrongTextBlockStyle}"
                                 Text="{Binding Key.Name}" />
                             <TextBlock
                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
@@ -110,7 +109,7 @@
             x:Name="BackgroundHost"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="-56,-100,0,0"
+            Margin="0,-100,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />-->
 
         <Grid
@@ -118,7 +117,7 @@
             Grid.Row="0"
             Height="200"
             Margin="0,44,0,-108"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             Canvas.ZIndex="1">
 
             <Border
@@ -203,7 +202,7 @@
                     <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <FontIcon Glyph="&#xe8b1;" />
-                            <TextBlock Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                            <TextBlock Text="{strings:Resources Key=ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -213,7 +212,7 @@
         <ListView
             x:Name="ItemList"
             Grid.Row="1"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
@@ -266,18 +265,18 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <!--<Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />-->
+                        <Setter Target="Header.Height" Value="160" />
+                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
+                        <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ProfilePicture.Width" Value="140" />
                         <Setter Target="ProfilePicture.Height" Value="140" />
-                        <Setter Target="ListHeaderPadding.Height" Value="100" />
-                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
-                        <Setter Target="Header.Height" Value="160" />
-                        <!--<Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />-->
-                        <Setter Target="ButtonPanel.Margin" Value="0" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
                         <Setter Target="Subtext.Style" Value="{StaticResource BodyTextBlockStyle}" />
+                        <Setter Target="ButtonPanel.Margin" Value="0" />
+                        <Setter Target="ItemList.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <!-- <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" /> -->
+                        <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

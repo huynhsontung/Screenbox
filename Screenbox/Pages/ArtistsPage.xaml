@@ -43,7 +43,7 @@
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="ArtistGridView"
-                    Padding="{StaticResource ContentPageThumbnailRightMargin}"
+                    Padding="{StaticResource PageThumbnailMargin}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
@@ -70,12 +70,13 @@
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedInView>
+
             <SemanticZoom.ZoomedOutView>
                 <GridView
                     x:Name="GroupOverview"
                     MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -102,7 +103,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

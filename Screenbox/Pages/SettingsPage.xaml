@@ -38,6 +38,7 @@
                 BasedOn="{StaticResource BodyStrongTextBlockStyle}"
                 TargetType="TextBlock">
                 <Setter Property="Margin" Value="1,28,0,4" />
+                <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
             </Style>
 
             <ThemeShadow x:Key="SharedShadow" />
@@ -103,12 +104,11 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
+            Margin="{StaticResource PageHeaderMargin}">
             <TextBlock
                 x:Name="HeaderText"
-                MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{x:Bind strings:Resources.Settings}" />
+                Text="{strings:Resources Key=Settings}" />
         </Grid>
 
         <ScrollViewer
@@ -118,7 +118,7 @@
             <StackPanel
                 x:Name="ContentRoot"
                 Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                Padding="{StaticResource ContentPageRightMargin}"
+                Padding="{StaticResource PageContentMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
                 Spacing="{StaticResource SettingsCardSpacing}">
                 <StackPanel.ChildrenTransitions>
@@ -131,7 +131,7 @@
                 <!--  Libraries section  -->
                 <TextBlock
                     Margin="1,8,0,4"
-                    FontWeight="SemiBold"
+                    Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                     Text="{strings:Resources Key=SettingsCategoryLibraries}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
                 <labs:SettingsExpander
@@ -308,7 +308,7 @@
             Title="{strings:Resources Key=PendingChanges}"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="{StaticResource ContentPageHeaderMargin}"
+            Margin="{StaticResource PageHeaderMargin}"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             IsClosable="False"
@@ -334,10 +334,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="ContentRoot.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

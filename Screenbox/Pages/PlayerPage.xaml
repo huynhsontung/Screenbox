@@ -171,7 +171,7 @@
                 Background="Transparent"
                 BorderThickness="0"
                 Command="{x:Bind ViewModel.GoBackCommand}"
-                ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
+                ToolTipService.ToolTip="{strings:Resources Key=Back}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
                         <animatedvisuals:AnimatedBackVisualSource />
@@ -194,7 +194,7 @@
                 BorderThickness="0"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
-                ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
+                ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <SymbolIcon Symbol="MusicInfo" />
                 <Button.Flyout>
                     <Flyout
@@ -376,7 +376,7 @@
                 </muxc:AnimatedIcon.FallbackIconSource>
             </muxc:AnimatedIcon>
             <ToolTipService.ToolTip>
-                <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
+                <ToolTip Content="{strings:Resources Key=RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
         </Button>
 
