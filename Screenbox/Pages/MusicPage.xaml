@@ -12,6 +12,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
+
     <interactivity:Interaction.Behaviors>
         <behaviors:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>

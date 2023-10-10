@@ -16,6 +16,7 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     Loaded="{x:Bind ViewModel.OnLoaded}"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

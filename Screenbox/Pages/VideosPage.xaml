@@ -13,6 +13,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <DataTemplate x:Key="BreadcrumbItemTemplate" x:DataType="storage:StorageFolder">
