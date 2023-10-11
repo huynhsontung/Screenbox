@@ -64,7 +64,7 @@
     <value>MPEG Video</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbis Ses</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
     <value>Ogg Video</value>
