@@ -14,6 +14,9 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    AllowDrop="True"
+    DragOver="HomePage_OnDragOver"
+    Drop="HomePage_OnDrop"
     Loaded="{x:Bind ViewModel.OnLoaded}"
     mc:Ignorable="d">
     <Page.Resources>
