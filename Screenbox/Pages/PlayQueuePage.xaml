@@ -56,9 +56,12 @@
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
-                    <TextBlock x:Name="HeaderAddButtonText" Text="{strings:Resources Key=AddFiles}" />
+                    <TextBlock
+                        x:Name="HeaderAddButtonText"
+                        Margin="8,0,0,0"
+                        Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <behaviors:AutoFocusBehavior />

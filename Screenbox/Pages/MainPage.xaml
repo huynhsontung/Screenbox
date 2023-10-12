@@ -26,9 +26,9 @@
             <Thickness x:Key="AppTitleMarginMinimal">98,0,0,0</Thickness>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <FontIcon Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
-                    <TextBlock Text="{Binding Name}" />
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontSize="16" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
+                    <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
                 </StackPanel>
             </DataTemplate>
 

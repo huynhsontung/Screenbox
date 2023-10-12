@@ -171,9 +171,12 @@
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
+                <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
-                    <TextBlock x:Name="HeaderOpenButtonText" Text="{strings:Resources Key=OpenFiles}" />
+                    <TextBlock
+                        x:Name="HeaderOpenButtonText"
+                        Margin="8,0,0,0"
+                        Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
             </muxc:SplitButton>
         </Grid>

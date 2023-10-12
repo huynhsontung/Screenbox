@@ -60,8 +60,7 @@
     <Grid>
         <muxc:ProgressBar
             x:Name="LoadingIndicator"
-            Margin="0,8,0,0"
-            Padding="{StaticResource PageContentMargin}"
+            Margin="56,8,56,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             IsIndeterminate="True"
@@ -98,7 +97,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Margin" Value="16,8,16,0" />
                         <Setter Target="VideosGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>

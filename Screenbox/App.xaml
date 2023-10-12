@@ -12,8 +12,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
-                <!--  Overwrite WinUI resources  -->
                 <ResourceDictionary>
+                    <!--  Override  -->
                     <!--  NavigationView content background to enable Mica  -->
                     <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
                     <!--  NavigationView content border thickness  -->
@@ -22,11 +22,6 @@
                     <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
                     <!--  Top NavigationView height to match PageHeader line height  -->
                     <x:Double x:Key="NavigationViewTopPaneHeight">44</x:Double>
-
-                    <!--  SplitButton height to match Button  -->
-                    <Style TargetType="muxc:SplitButton">
-                        <Setter Property="Height" Value="32" />
-                    </Style>
 
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
@@ -113,6 +108,11 @@
                 <Setter Property="FontSize" Value="34" />
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="LineHeight" Value="44" />
+            </Style>
+
+            <!--  SplitButton height to match Button  -->
+            <Style TargetType="muxc:SplitButton">
+                <Setter Property="Height" Value="32" />
             </Style>
 
             <!--  Semantic zoom group-level style  -->

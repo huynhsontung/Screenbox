@@ -132,22 +132,23 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button
+                        AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
                         Style="{StaticResource AccentButtonStyle}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
-                            <TextBlock Text="{strings:Resources Key=Play}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
                             <behaviors:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </Button>
 
-                    <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}" Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                        <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
-                            <TextBlock Text="{strings:Resources Key=ShuffleAndPlay}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
                 </StackPanel>

@@ -141,10 +141,13 @@
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                        Command="{x:Bind ViewModel.AddMusicFolderCommand}"
+                        ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
+                        <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
-                            <TextBlock Text="{strings:Resources Key=AddFolder}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
                 </labs:SettingsExpander>
@@ -155,10 +158,13 @@
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                        Command="{x:Bind ViewModel.AddVideosFolderCommand}"
+                        ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
+                        <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
-                            <TextBlock Text="{strings:Resources Key=AddFolder}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
                 </labs:SettingsExpander>
