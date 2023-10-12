@@ -109,6 +109,8 @@ jobs:
   wack:
     needs: build
     runs-on: windows-latest
+    permissions:
+      checks: write
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
