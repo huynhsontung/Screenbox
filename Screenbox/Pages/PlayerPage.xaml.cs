@@ -408,5 +408,11 @@ namespace Screenbox.Pages
                 PlayerControls.FocusFirstButton();
             }
         }
+
+        private void OnDragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Open;
+        }
     }
 }

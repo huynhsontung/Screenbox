@@ -11,14 +11,11 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
-using Windows.Storage;
 using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -155,45 +152,6 @@ namespace Screenbox.Core.ViewModels
             }
 
             _clickTimer.Debounce(() => Messenger.Send(new TogglePlayPauseMessage(true)), TimeSpan.FromMilliseconds(200));
-        }
-
-        public async void OnDrop(object sender, DragEventArgs e)
-        {
-            if (_mediaPlayer == null) return;
-            try
-            {
-                if (e.DataView.Contains(StandardDataFormats.StorageItems))
-                {
-                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
-                    if (items.Count > 0)
-                    {
-                        if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
-                        {
-                            _mediaPlayer.AddSubtitle(file);
-                            Messenger.Send(new SubtitleAddedNotificationMessage(file));
-                        }
-                        else
-                        {
-                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
-                        }
-
-                        return;
-                    }
-                }
-
-                if (e.DataView.Contains(StandardDataFormats.WebLink))
-                {
-                    Uri? uri = await e.DataView.GetWebLinkAsync();
-                    if (uri.IsFile)
-                    {
-                        Messenger.Send(new PlayMediaMessage(uri));
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
-            }
         }
 
         public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
