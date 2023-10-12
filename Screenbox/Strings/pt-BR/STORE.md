@@ -8,10 +8,10 @@
 
 Screenbox é um reprodutor de mídia moderno que se esforça para trazer uma nova visão do aplicativo clássico. Screenbox oferece uma interface de usuário bonita e intuitiva, ao mesmo tempo que é rápido, leve e poderoso. Projetado e construído abertamente, o Screenbox sempre será de uso gratuito.
 
-### Features
+### Funcionalidades
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Uma experiência de usuário moderna com suporte a gestos, otimizada para todos os tipos de dispositivos Windows.
+- Suporte para muitos formatos de áudio e vídeo.
+- Navegue e gerencie sua biblioteca de músicas e vídeos em sua máquina ou pela rede.
+- Transmita sua mídia para uma ampla variedade de dispositivos com o Chromecast.
+- Trabalhe e aproveite seu conteúdo multimídia ao mesmo tempo usando o modo picture-in-picture.
