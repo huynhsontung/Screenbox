@@ -1,12 +1,12 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Reprodutor de mídia Screenbox
 
-**Your modern media player**
+**Seu reprodutor de mídia moderno**
 
-### Description
+### Descrição
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a beautiful and intuitive user interface while being fast, lightweight, and powerful. Designed and built in the open, Screenbox will always be free to use.
+Screenbox é um reprodutor de mídia moderno que se esforça para trazer uma nova visão do aplicativo clássico. Screenbox oferece uma interface de usuário bonita e intuitiva, ao mesmo tempo que é rápido, leve e poderoso. Projetado e construído abertamente, o Screenbox sempre será de uso gratuito.
 
 ### Features
 
