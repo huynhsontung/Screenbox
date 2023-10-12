@@ -19,46 +19,46 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Um reprodutor de vídeo moderno com foco no desempenho e na facilidade de uso em uma ampla variedade de dispositivos Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>Arquivo multimídia 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>Arquivo multimídia 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>Áudio AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>Vídeo AVI</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>Áudio FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Vídeo Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Áudio Matroska</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Vídeo Matroska</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>Dados musicais MIDI</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>Áudio MP3</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>Vídeo MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>Áudio MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value>Vídeo iTunes</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
     <value>MPEG Video</value>
