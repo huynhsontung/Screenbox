@@ -35,8 +35,10 @@
             <Border Background="Transparent" />
         </UserControl>
 
+        <!--  Use -1 bottom margin to avoid white line artifact  -->
         <local:VideoView
             x:Name="VlcVideoView"
+            Margin="0,0,0,-1"
             Canvas.ZIndex="0"
             Initialized="VlcVideoView_OnInitialized"
             IsHitTestVisible="False"
