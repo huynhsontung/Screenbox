@@ -21,6 +21,9 @@
     ui:TitleBarExtensions.ButtonBackgroundColor="Transparent"
     ui:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
     ui:TitleBarExtensions.InactiveBackgroundColor="Transparent"
+    AllowDrop="True"
+    DragOver="OnDragOver"
+    Drop="{x:Bind ViewModel.OnDrop}"
     Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">

@@ -20,11 +20,8 @@
             Margin="{x:Bind ButtonMargin, Mode=OneWay}"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            AllowDrop="True"
             AllowFocusOnInteraction="False"
             DoubleTapped="VideoViewButton_OnDoubleTapped"
-            DragOver="VideoViewButton_OnDragOver"
-            Drop="{x:Bind ViewModel.OnDrop}"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
             ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"
             ManipulationDelta="{x:Bind ViewModel.VideoView_ManipulationDelta}"
@@ -35,8 +32,10 @@
             <Border Background="Transparent" />
         </UserControl>
 
+        <!--  Use -1 bottom margin to avoid white line artifact  -->
         <local:VideoView
             x:Name="VlcVideoView"
+            Margin="0,0,0,-1"
             Canvas.ZIndex="0"
             Initialized="VlcVideoView_OnInitialized"
             IsHitTestVisible="False"
