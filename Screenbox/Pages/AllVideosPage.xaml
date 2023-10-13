@@ -13,6 +13,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -59,16 +60,15 @@
     <Grid>
         <muxc:ProgressBar
             x:Name="LoadingIndicator"
-            Margin="0,8,0,0"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Margin="56,8,56,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="VideosGridView"
-            Margin="0,16,0,0"
-            Padding="{StaticResource ContentPageThumbnailRightMargin}"
+            Margin="0,24,0,0"
+            Padding="{StaticResource PageThumbnailMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
@@ -97,8 +97,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="VideosGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Margin" Value="16,8,16,0" />
+                        <Setter Target="VideosGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

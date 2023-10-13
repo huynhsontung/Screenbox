@@ -12,6 +12,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,7 +30,7 @@
         <TextBlock
             x:Name="HeaderText"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}"
+            Margin="{StaticResource PageHeaderMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultSongHeader(ViewModel.SearchQuery), FallbackValue={}}" />
@@ -37,7 +38,8 @@
         <ListView
             x:Name="SongListView"
             Grid.Row="1"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Margin="0,12,0,0"
+            Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -73,8 +75,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderText.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -5,7 +5,6 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,18 +14,20 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI"
-    toolkit:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
-    toolkit:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
-    toolkit:TitleBarExtensions.ButtonBackgroundColor="Transparent"
-    toolkit:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
-    toolkit:TitleBarExtensions.InactiveBackgroundColor="Transparent"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    ui:ApplicationViewExtensions.ExtendViewIntoTitleBar="True"
+    ui:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
+    ui:TitleBarExtensions.ButtonBackgroundColor="Transparent"
+    ui:TitleBarExtensions.ButtonInactiveBackgroundColor="Transparent"
+    ui:TitleBarExtensions.InactiveBackgroundColor="Transparent"
     AllowDrop="True"
     DragOver="OnDragOver"
     Drop="{x:Bind ViewModel.OnDrop}"
     Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
@@ -173,7 +174,7 @@
                 Background="Transparent"
                 BorderThickness="0"
                 Command="{x:Bind ViewModel.GoBackCommand}"
-                ToolTipService.ToolTip="{x:Bind strings:Resources.Back}">
+                ToolTipService.ToolTip="{strings:Resources Key=Back}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
                         <animatedvisuals:AnimatedBackVisualSource />
@@ -196,7 +197,7 @@
                 BorderThickness="0"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
-                ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
+                ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <SymbolIcon Symbol="MusicInfo" />
                 <Button.Flyout>
                     <Flyout
@@ -318,7 +319,7 @@
             Style="{x:Null}"
             Visibility="Collapsed" />
 
-        <controls1:ConstrainedBox
+        <toolkit:ConstrainedBox
             x:Name="AlbumArtPanel"
             Grid.Row="1"
             Grid.Column="0"
@@ -352,7 +353,7 @@
                         Stretch="UniformToFill" />
                 </Border>
             </Grid>
-        </controls1:ConstrainedBox>
+        </toolkit:ConstrainedBox>
 
         <Button
             x:Name="RestorePlayerButton"
@@ -378,7 +379,7 @@
                 </muxc:AnimatedIcon.FallbackIconSource>
             </muxc:AnimatedIcon>
             <ToolTipService.ToolTip>
-                <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
+                <ToolTip Content="{strings:Resources Key=RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
         </Button>
 
@@ -419,7 +420,7 @@
             Height="70"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            toolkit:VisualExtensions.NormalizedCenterPoint="0.5"
+            ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}"
             CornerRadius="16"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">

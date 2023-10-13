@@ -13,8 +13,9 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
-    xmlns:viewModels1="using:Screenbox.Core.ViewModels"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
+
     <Page.Resources>
         <MenuFlyout x:Name="ItemFlyout">
             <MenuFlyoutItem
@@ -46,7 +47,7 @@
             </MenuFlyoutItem>
         </MenuFlyout>
 
-        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels1:StorageItemViewModel">
+        <DataTemplate x:Key="StorageItemListViewItemTemplate" x:DataType="viewModels:StorageItemViewModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32" />
@@ -78,13 +79,13 @@
     <Grid>
         <muxc:ProgressBar
             x:Name="LoadingProgressBar"
-            Margin="{StaticResource ContentPageRightMargin}"
+            Margin="{StaticResource PageContentMargin}"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <ListView
             x:Name="ListView"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
@@ -108,13 +109,12 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
         </ListView>
-
         <TextBlock
             x:Name="NoContentText"
-            Margin="{StaticResource ContentPageRightMargin}"
+            Margin="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{x:Bind strings:Resources.EmptyFolder}"
+            Text="{strings:Resources Key=EmptyFolder}"
             Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
@@ -130,9 +130,9 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="ListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

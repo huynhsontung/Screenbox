@@ -11,6 +11,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -42,7 +43,7 @@
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
-                    Padding="{StaticResource ContentPageThumbnailRightMargin}"
+                    Padding="{StaticResource PageThumbnailMargin}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
@@ -69,12 +70,13 @@
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedInView>
+
             <SemanticZoom.ZoomedOutView>
                 <GridView
                     x:Name="GroupOverview"
                     MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -101,7 +103,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

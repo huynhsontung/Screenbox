@@ -14,6 +14,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -77,7 +78,7 @@
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     extensions:ListViewExtensions.ItemCornerRadius="8"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -114,7 +115,7 @@
                     x:Name="GroupOverview"
                     MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -141,8 +142,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
