@@ -127,7 +127,7 @@
     <value>Guardar fotograma atual</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>Repetição</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
     <value>Velocidade de reprodução</value>
@@ -377,7 +377,7 @@
     <value>Ano</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Personalizado</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Rede</value>
