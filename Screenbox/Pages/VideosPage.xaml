@@ -107,6 +107,15 @@
             IsSettingsVisible="False"
             PaneDisplayMode="Top"
             SelectionChanged="LibraryNavView_OnSelectionChanged">
+            <muxc:NavigationView.Resources>
+                <!--  Override  -->
+                <!--  NavigationView content background to enable Mica  -->
+                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+                <!--  NavigationView content border thickness  -->
+                <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+                <!--  Top NavigationView side margins  -->
+                <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
+            </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
                     x:Name="HeaderNavView"
@@ -159,7 +168,7 @@
                 <muxc:BreadcrumbBar
                     x:Name="BreadcrumbBar"
                     Grid.Row="0"
-                    Margin="56,10,56,12"
+                    Margin="56,12"
                     ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
                     XYFocusDown="{x:Bind ContentFrame}"
@@ -216,7 +225,7 @@
                         <Setter Target="HeaderNavView.Margin" Value="16,0" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="16,0" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="16,12" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

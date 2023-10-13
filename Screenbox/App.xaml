@@ -8,21 +8,11 @@
     xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters">
 
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-
+        <muxc:XamlControlsResources>
+            <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
-                    <!--  Override  -->
-                    <!--  NavigationView content background to enable Mica  -->
-                    <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
-                    <!--  NavigationView content border thickness  -->
-                    <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
-                    <!--  Top NavigationView side margins  -->
-                    <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
-                    <!--  Top NavigationView height to match PageHeader line height  -->
-                    <x:Double x:Key="NavigationViewTopPaneHeight">44</x:Double>
 
+                    <!--  Media content background and foreground  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
@@ -37,98 +27,98 @@
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
+
+                    <!--  Commands  -->
+                    <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
+
+                    <!--  Converters  -->
+                    <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
+                    <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
+
+                    <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
+                    <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                    <toolkitConverters:BoolToObjectConverter
+                        x:Key="InverseBoolToVisibilityConverter"
+                        FalseValue="Visible"
+                        TrueValue="Collapsed" />
+                    <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+                    <toolkitConverters:EmptyObjectToObjectConverter
+                        x:Key="InverseEmptyObjectToVisibilityConverter"
+                        EmptyValue="Visible"
+                        NotEmptyValue="Collapsed" />
+                    <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+                    <toolkitConverters:DoubleToObjectConverter
+                        x:Key="DoubleToBoolConverter"
+                        FalseValue="False"
+                        GreaterThan="0"
+                        NullValue="False"
+                        TrueValue="True" />
+
+                    <!--  Header margin  -->
+                    <Thickness x:Key="PageHeaderMargin">56,44,56,12</Thickness>
+                    <Thickness x:Key="PageHeaderMarginMinimal">16,44,16,12</Thickness>
+
+                    <!--  Content margin  -->
+                    <Thickness x:Key="PageContentMargin">56,0</Thickness>
+                    <Thickness x:Key="PageContentMarginMinimal">16,0</Thickness>
+
+                    <!--  Content thumbnail margin  -->
+                    <Thickness x:Key="PageThumbnailMargin">52,0</Thickness>
+                    <Thickness x:Key="PageThumbnailMarginMinimal">14,0</Thickness>
+
+                    <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
+                    <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
+                    <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
+
+                    <!--  Inline HyperlinkButton margin  -->
+                    <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
+
+                    <!--  Subtitle margin  -->
+                    <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
+
+                    <!--  Font  -->
+                    <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
+                    <x:Double x:Key="DefaultIconFontSize">16</x:Double>
+                    <x:Double x:Key="PanelIconFontSize">126</x:Double>
+                    <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
+
+                    <Style TargetType="FontIcon">
+                        <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+                        <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />
+                    </Style>
+
+                    <!--  Header style  -->
+                    <Style
+                        x:Key="PageHeaderTextBlockStyle"
+                        BasedOn="{StaticResource TitleTextBlockStyle}"
+                        TargetType="TextBlock">
+                        <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
+                        <Setter Property="FontSize" Value="34" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="LineHeight" Value="48" />
+                    </Style>
+
+                    <!--  SplitButton height to match Button  -->
+                    <Style TargetType="muxc:SplitButton">
+                        <Setter Property="Height" Value="32" />
+                    </Style>
+
+                    <!--  Semantic zoom group-level style  -->
+                    <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
+                        <Button
+                            Width="46"
+                            Height="46"
+                            HorizontalAlignment="Stretch"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            ClickMode="Hover"
+                            IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
+                        </Button>
+                    </DataTemplate>
+
                 </ResourceDictionary>
-            </ResourceDictionary.MergedDictionaries>
-
-            <!--  Commands  -->
-            <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
-
-            <!--  Converters  -->
-            <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
-            <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
-
-            <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
-            <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <toolkitConverters:BoolToObjectConverter
-                x:Key="InverseBoolToVisibilityConverter"
-                FalseValue="Visible"
-                TrueValue="Collapsed" />
-            <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-            <toolkitConverters:EmptyObjectToObjectConverter
-                x:Key="InverseEmptyObjectToVisibilityConverter"
-                EmptyValue="Visible"
-                NotEmptyValue="Collapsed" />
-            <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-            <toolkitConverters:DoubleToObjectConverter
-                x:Key="DoubleToBoolConverter"
-                FalseValue="False"
-                GreaterThan="0"
-                NullValue="False"
-                TrueValue="True" />
-
-            <!--  Header margin  -->
-            <Thickness x:Key="PageHeaderMargin">56,44,56,12</Thickness>
-            <Thickness x:Key="PageHeaderMarginMinimal">16,44,16,12</Thickness>
-
-            <!--  Content margin  -->
-            <Thickness x:Key="PageContentMargin">56,0</Thickness>
-            <Thickness x:Key="PageContentMarginMinimal">16,0</Thickness>
-
-            <!--  Content thumbnail margin  -->
-            <Thickness x:Key="PageThumbnailMargin">52,0</Thickness>
-            <Thickness x:Key="PageThumbnailMarginMinimal">14,0</Thickness>
-
-            <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
-            <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
-            <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
-
-            <!--  Inline HyperlinkButton margin  -->
-            <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
-
-            <!--  Subtitle margin  -->
-            <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
-
-            <!--  Font  -->
-            <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
-            <x:Double x:Key="DefaultIconFontSize">16</x:Double>
-            <x:Double x:Key="PanelIconFontSize">126</x:Double>
-            <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
-
-            <Style TargetType="FontIcon">
-                <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
-                <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />
-            </Style>
-
-            <!--  Header style  -->
-            <Style
-                x:Key="PageHeaderTextBlockStyle"
-                BasedOn="{StaticResource TitleTextBlockStyle}"
-                TargetType="TextBlock">
-                <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
-                <Setter Property="FontSize" Value="34" />
-                <Setter Property="FontWeight" Value="SemiBold" />
-                <Setter Property="LineHeight" Value="44" />
-            </Style>
-
-            <!--  SplitButton height to match Button  -->
-            <Style TargetType="muxc:SplitButton">
-                <Setter Property="Height" Value="32" />
-            </Style>
-
-            <!--  Semantic zoom group-level style  -->
-            <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
-                <Button
-                    Width="46"
-                    Height="46"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    ClickMode="Hover"
-                    IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
-                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
-                </Button>
-            </DataTemplate>
-
-        </ResourceDictionary>
+            </muxc:XamlControlsResources.MergedDictionaries>
+        </muxc:XamlControlsResources>
     </Application.Resources>
 </Application>

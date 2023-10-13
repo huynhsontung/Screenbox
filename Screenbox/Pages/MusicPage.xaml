@@ -99,6 +99,15 @@
             IsSettingsVisible="False"
             PaneDisplayMode="Top"
             SelectionChanged="LibraryNavView_OnSelectionChanged">
+            <muxc:NavigationView.Resources>
+                <!--  Override  -->
+                <!--  NavigationView content background to enable Mica  -->
+                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+                <!--  NavigationView content border thickness  -->
+                <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+                <!--  Top NavigationView side margins  -->
+                <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
+            </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
                     x:Name="HeaderNavView"
