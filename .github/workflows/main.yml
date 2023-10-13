@@ -109,8 +109,6 @@ jobs:
   wack:
     needs: build
     runs-on: windows-latest
-    permissions:
-      checks: write
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
@@ -121,7 +119,7 @@ jobs:
       run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
     - name: Rename test package
       run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
-    - uses: ChristopheLav/wack-certification@v1
+    - uses: huynhsontung/wack-certification@main
       with:
         name: 'WACK (x64)'
         package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
