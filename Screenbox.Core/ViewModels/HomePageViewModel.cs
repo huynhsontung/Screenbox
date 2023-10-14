@@ -238,7 +238,7 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                Messenger.Send(new PlayMediaMessage(media, false));
+                Messenger.Send(new PlayMediaMessage(media.Media, false));
             }
         }
 
