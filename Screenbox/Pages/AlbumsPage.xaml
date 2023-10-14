@@ -57,6 +57,7 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                             </ResourceDictionary.MergedDictionaries>
+                            <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayAlbumCommand}" />
                         </ResourceDictionary>
                     </GridView.Resources>
                     <GridView.GroupStyle>
