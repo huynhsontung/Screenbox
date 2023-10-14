@@ -62,7 +62,7 @@
                         Padding="0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        CommandParameter="{Binding}"
+                        Command="{Binding PlayAlbumCommand}"
                         CornerRadius="99"
                         Opacity="0"
                         Style="{StaticResource AccentButtonStyle}">

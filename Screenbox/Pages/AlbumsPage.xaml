@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -44,6 +45,7 @@
                 <GridView
                     x:Name="AlbumGridView"
                     Padding="{StaticResource PageThumbnailMargin}"
+                    extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
@@ -57,7 +59,6 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                             </ResourceDictionary.MergedDictionaries>
-                            <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayAlbumCommand}" />
                         </ResourceDictionary>
                     </GridView.Resources>
                     <GridView.GroupStyle>

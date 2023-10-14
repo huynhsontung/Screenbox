@@ -96,6 +96,7 @@
                     <GridView
                         x:Name="AlbumGridView"
                         Padding="{StaticResource PageThumbnailMargin}"
+                        extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"

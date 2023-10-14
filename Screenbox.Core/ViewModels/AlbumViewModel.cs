@@ -1,6 +1,12 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,7 +16,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class AlbumViewModel : ObservableObject
+    public sealed partial class AlbumViewModel : ObservableRecipient
     {
         public string Name { get; }
 
@@ -84,6 +90,26 @@ namespace Screenbox.Core.ViewModels
             if (e.PropertyName == nameof(MediaViewModel.IsPlaying) && sender is MediaViewModel media)
             {
                 IsPlaying = media.IsPlaying ?? false;
+            }
+        }
+
+        [RelayCommand]
+        private void PlayAlbum()
+        {
+            if (RelatedSongs.Count == 0) return;
+            MediaViewModel? inQueue = RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
+            if (inQueue != null)
+            {
+                Messenger.Send(new TogglePlayPauseMessage(false));
+            }
+            else
+            {
+                List<MediaViewModel> songs = RelatedSongs
+                .OrderBy(m => m.TrackNumber)
+                    .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+                    .ToList();
+
+                Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
             }
         }
     }

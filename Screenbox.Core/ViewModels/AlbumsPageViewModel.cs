@@ -1,12 +1,8 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -16,7 +12,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class AlbumsPageViewModel : ObservableRecipient
+    public sealed class AlbumsPageViewModel
     {
         public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
 
@@ -75,26 +71,6 @@ namespace Screenbox.Core.ViewModels
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
             _dispatcherQueue.TryEnqueue(FetchAlbums);
-        }
-
-        [RelayCommand]
-        private void PlayAlbum(AlbumViewModel album)
-        {
-            if (album.RelatedSongs.Count == 0) return;
-            MediaViewModel? inQueue = album.RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
-            if (inQueue != null)
-            {
-                Messenger.Send(new TogglePlayPauseMessage(false));
-            }
-            else
-            {
-                List<MediaViewModel> songs = album.RelatedSongs
-                    .OrderBy(m => m.TrackNumber)
-                    .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                    .ToList();
-
-                Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
-            }
         }
     }
 }
