@@ -110,76 +110,101 @@
                 <local:VolumeControl Width="200" />
             </Flyout>
 
-            <!--  Playback Options Flyout  -->
-            <Flyout x:Key="PlaybackOptionsFlyout" ShouldConstrainToRootBounds="True">
-                <StackPanel Width="340" Orientation="Vertical">
-                    <TextBlock
-                        Margin="0,0,0,12"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="Playback options" />
-                    <StackPanel x:Name="CustomAspectRatioSection" x:Load="{x:Bind ViewModel.HasVideo, Mode=OneWay}">
+            <!--  Playback options Flyout  -->
+            <Flyout x:Key="PlaybackOptionsFlyout">
+                <StackPanel MinWidth="360" Orientation="Vertical">
+                    <!--  TODO: Localize strings  -->
+                    <Grid Margin="0,0,0,12" ColumnSpacing="4">
+                        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Playback options" />
+                        <!--<CheckBox
+                            HorizontalAlignment="Right"
+                            Content="Input numbers"
+                            Visibility="Collapsed" />-->
+                    </Grid>
+                    <!--  TODO: ComboBox, IsEnabled ViewModel  -->
+                    <StackPanel x:Name="AspectRatioSection" Spacing="4">
                         <TextBlock Text="{strings:Resources Key=AspectRatio}" />
+                        <!--<ComboBox
+                            MinWidth="128"
+                            Margin="0,0,0,8"
+                            IsEditable="True"
+                            SelectedItem="{Binding AspectRatio, Mode=TwoWay}"
+                            SelectionChanged="AspectRatioComboBox_SelectionChanged">
+                            <x:String>Fit</x:String>
+                            <x:String>Fill</x:String>
+                            <x:String>16:9</x:String>
+                            <x:String>1.85:1</x:String>
+                            <x:String>21:9</x:String>
+                            <x:String>4:3</x:String>
+                            <x:String>1:1</x:String>
+                            <x:String>Custom</x:String>
+                        </ComboBox>-->
                         <TextBox
                             x:Name="AspectRatioTextBox"
-                            Margin="0,4,0,8"
+                            Margin="0,0,0,8"
                             HorizontalAlignment="Left"
                             AutomationProperties.Name="Custom aspect ratio TextBox"
                             PlaceholderText="16:9"
                             TextChanged="AspectRatioTextBox_OnTextChanged" />
                     </StackPanel>
-                    <StackPanel x:Name="CustomPlaybackSpeedSection">
-                        <StackPanel
-                            Margin="0,0,0,4"
-                            Orientation="Horizontal"
-                            Spacing="8">
+                    <!--  TODO: Minimum to 0.05  -->
+                    <StackPanel x:Name="PlaybackSpeedSection" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{strings:Resources Key=PlaybackSpeed}" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
                         </StackPanel>
                         <Slider
                             x:Name="SpeedSlider"
+                            AutomationProperties.Name="{strings:Resources Key=PlaybackSpeed}"
                             IsThumbToolTipEnabled="False"
-                            LargeChange="0.1"
+                            LargeChange="0.5"
                             Maximum="2"
-                            Minimum="0.05"
+                            Minimum="0.0"
                             SmallChange="0.01"
                             StepFrequency="0.05"
                             ValueChanged="SpeedSlider_OnValueChanged"
                             Value="1.0" />
                     </StackPanel>
-                    <!--  TODO: Add ViewModel to toggle visibility  -->
-                    <StackPanel x:Name="SubtitleTimingOffsetSection" x:Load="True">
-                        <StackPanel
-                            Margin="0,0,0,4"
-                            Orientation="Horizontal"
-                            Spacing="8">
+                    <!--  TODO: Adjust AudioOffset, IsEnabled ViewModel and TextBlock string  -->
+                    <!--<StackPanel x:Name="AudioTimingOffsetSection" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Audio offset" />
+                            <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                        </StackPanel>
+                        <Slider
+                            x:Name="AudioTimingOffsetSlider"
+                            AutomationProperties.Name="{strings:Resources Key=AudioTimingOffset}"
+                            IsEnabled="True"
+                            IsThumbToolTipEnabled="False"
+                            Maximum="3000"
+                            Minimum="-3000"
+                            StepFrequency="100"
+                            ValueChanged="AudioTimingOffsetSlider_OnValueChanged"
+                            Value="0" />
+                    </StackPanel>-->
+                    <!--  TODO: IsEnabled ViewModel and update TimingOffset string  -->
+                    <StackPanel x:Name="SubtitleTimingOffsetSection" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{strings:Resources Key=TimingOffset}" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Slider
-                                x:Name="TimingOffsetSlider"
-                                Width="228"
-                                VerticalAlignment="Center"
-                                IsThumbToolTipEnabled="False"
-                                Maximum="3000"
-                                Minimum="-3000"
-                                StepFrequency="100"
-                                ValueChanged="TimingOffsetSlider_OnValueChanged"
-                                Value="0" />
-                            <muxc:NumberBox
-                                Width="100"
-                                Height="32"
-                                HorizontalAlignment="Left"
-                                LargeChange="1000"
-                                Maximum="3000"
-                                Minimum="-3000"
-                                SmallChange="100"
-                                SpinButtonPlacementMode="Compact"
-                                Value="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" />
-                        </StackPanel>
+                        <Slider
+                            x:Name="TimingOffsetSlider"
+                            AutomationProperties.Name="{strings:Resources Key=TimingOffset}"
+                            IsEnabled="True"
+                            IsThumbToolTipEnabled="False"
+                            Maximum="3000"
+                            Minimum="-3000"
+                            StepFrequency="100"
+                            ValueChanged="TimingOffsetSlider_OnValueChanged"
+                            Value="0" />
                     </StackPanel>
-                    <!--  TODO: Add a Command to reset values  -->
-                    <Button Margin="0,8,0,0" Content="Reset" />
+                    <!--  TODO: Add Command, IsEnabled ViewModel and Content string  -->
+                    <Button
+                        x:Name="PlaybackOptionsResetButton"
+                        Margin="0,8,0,0"
+                        Content="Reset"
+                        IsEnabled="True" />
                 </StackPanel>
             </Flyout>
 
