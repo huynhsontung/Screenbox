@@ -132,10 +132,12 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button
+                        x:Name="ButtonPanelPlayButton"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Style="{StaticResource AccentButtonStyle}"
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
@@ -145,7 +147,11 @@
                         </interactivity:Interaction.Behaviors>
                     </Button>
 
-                    <Button AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}" Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                        XYFocusDown="{x:Bind ItemList}"
+                        XYFocusLeft="{x:Bind ButtonPanelPlayButton}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
@@ -165,7 +171,8 @@
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
-            SelectionMode="None">
+            SelectionMode="None"
+            XYFocusUp="{x:Bind ButtonPanelPlayButton}">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>

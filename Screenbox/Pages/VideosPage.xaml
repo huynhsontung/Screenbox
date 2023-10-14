@@ -145,7 +145,8 @@
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}"
+                    XYFocusDown="{x:Bind ContentFrame}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
                         <TextBlock

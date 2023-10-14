@@ -126,7 +126,8 @@
                 x:Name="MultiSelectToggle"
                 VerticalAlignment="Center"
                 IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
-                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
+                XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe762;" />
                     <TextBlock

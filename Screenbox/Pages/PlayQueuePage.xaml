@@ -50,12 +50,14 @@
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
+                x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
+                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                XYFocusDown="{x:Bind PlaylistView}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
                     <TextBlock
@@ -72,7 +74,8 @@
         <controls:PlaylistView
             x:Name="PlaylistView"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}" />
+            Padding="{StaticResource PageContentMargin}"
+            XYFocusUp="{x:Bind HeaderAddButton}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
