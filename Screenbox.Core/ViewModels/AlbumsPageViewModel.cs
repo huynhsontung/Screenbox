@@ -3,8 +3,10 @@
 using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -82,7 +84,7 @@ namespace Screenbox.Core.ViewModels
             MediaViewModel? inQueue = album.RelatedSongs.FirstOrDefault(m => m.IsMediaActive);
             if (inQueue != null)
             {
-                Messenger.SendPlay(inQueue, true);
+                Messenger.Send(new TogglePlayPauseMessage(false));
             }
             else
             {

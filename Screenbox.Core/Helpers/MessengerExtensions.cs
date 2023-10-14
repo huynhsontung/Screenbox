@@ -30,18 +30,6 @@ namespace Screenbox.Core.Helpers
             messenger.Send(new PlayMediaMessage(media, true));
         }
 
-        public static void SendPlay(this IMessenger messenger, MediaViewModel media, bool pauseIfExists = true)
-        {
-            PlaylistInfo playlist = messenger.Send(new PlaylistRequestMessage());
-            if (playlist.ActiveItem == media && (media.IsPlaying ?? false) && pauseIfExists)
-            {
-                messenger.Send(new TogglePlayPauseMessage(false));
-                return;
-            }
-
-            messenger.Send(new PlayMediaMessage(media, false));
-        }
-
         public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
         {
             // Clone to prevent queuing duplications
