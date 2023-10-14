@@ -164,6 +164,7 @@
                     <GridView
                         x:Name="VideosGridView"
                         Padding="{StaticResource PageThumbnailMargin}"
+                        extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
                         ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
