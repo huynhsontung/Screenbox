@@ -506,6 +506,7 @@
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                         <Setter Target="HiddenButton.Visibility" Value="Visible" />
+                        <Setter Target="TitleBarElement.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
