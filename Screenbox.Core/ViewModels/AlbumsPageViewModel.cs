@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.Collections;
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -11,7 +12,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed class AlbumsPageViewModel : ObservableRecipient
+    public sealed class AlbumsPageViewModel
     {
         public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
 

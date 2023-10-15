@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -43,6 +44,7 @@
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource VideoGridViewItemStyle}"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Videos, FallbackValue={x:Null}}"
             SelectionMode="None">
