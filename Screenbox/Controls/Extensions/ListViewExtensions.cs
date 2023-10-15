@@ -19,22 +19,6 @@ namespace Screenbox.Controls.Extensions
             typeof(ListViewExtensions),
             new PropertyMetadata(default(Thickness), OnItemMarginChanged));
 
-        public static readonly DependencyProperty IsItemFocusEngagementEnabledProperty = DependencyProperty.RegisterAttached(
-            "IsItemFocusEngagementEnabled",
-            typeof(bool),
-            typeof(ListViewExtensions),
-            new PropertyMetadata(false, OnItemFocusEngagementEnabledChanged));
-
-        public static void SetIsItemFocusEngagementEnabled(DependencyObject element, bool value)
-        {
-            element.SetValue(IsItemFocusEngagementEnabledProperty, value);
-        }
-
-        public static bool GetIsItemFocusEngagementEnabled(DependencyObject element)
-        {
-            return (bool)element.GetValue(IsItemFocusEngagementEnabledProperty);
-        }
-
         public static void SetItemMargin(DependencyObject element, Thickness value)
         {
             element.SetValue(ItemMarginProperty, value);
@@ -69,13 +53,6 @@ namespace Screenbox.Controls.Extensions
             listView.ContainerContentChanging += ChangeItemMargin;
         }
 
-        private static void OnItemFocusEngagementEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is not ListViewBase listView) return;
-            listView.ContainerContentChanging -= ChangeItemFocusEngagementEnabled;
-            listView.ContainerContentChanging += ChangeItemFocusEngagementEnabled;
-        }
-
         private static void ChangeItemCornerRadius(ListViewBase sender, ContainerContentChangingEventArgs args)
         {
             if (args.Phase > 0 || args.InRecycleQueue) return;
@@ -94,12 +71,6 @@ namespace Screenbox.Controls.Extensions
             {
                 border.Margin = margin;
             }
-        }
-
-        private static void ChangeItemFocusEngagementEnabled(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase > 0 || args.InRecycleQueue) return;
-            args.ItemContainer.IsFocusEngagementEnabled = GetIsItemFocusEngagementEnabled(sender);
         }
     }
 }

@@ -45,11 +45,11 @@
                 <GridView
                     x:Name="AlbumGridView"
                     Padding="{StaticResource PageThumbnailMargin}"
-                    extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
+                    ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                     ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View}"
                     Loaded="AlbumGridView_OnLoaded"

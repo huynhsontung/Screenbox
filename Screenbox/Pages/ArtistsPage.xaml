@@ -45,11 +45,11 @@
                 <GridView
                     x:Name="ArtistGridView"
                     Padding="{StaticResource PageThumbnailMargin}"
-                    extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
+                    ItemContainerStyle="{StaticResource ArtistGridViewItemStyle}"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"

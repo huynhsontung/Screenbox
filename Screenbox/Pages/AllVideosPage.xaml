@@ -70,9 +70,9 @@
             x:Name="VideosGridView"
             Margin="0,24,0,0"
             Padding="{StaticResource PageThumbnailMargin}"
-            extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource VideoGridViewItemStyle}"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Videos}"
             SelectionMode="None">

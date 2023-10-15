@@ -91,6 +91,13 @@
                 </MenuFlyoutItem>
             </MenuFlyout>
 
+            <Style
+                x:Key="StorageItemGridViewItemStyle"
+                BasedOn="{StaticResource DefaultGridViewItemStyle}"
+                TargetType="GridViewItem">
+                <Setter Property="IsFocusEngagementEnabled" Value="True" />
+            </Style>
+
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
                 <UserControl>
                     <Grid
@@ -309,10 +316,10 @@
                 Grid.Row="1"
                 Margin="0,16,0,0"
                 Padding="{StaticResource PageThumbnailMargin}"
-                extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
+                ItemContainerStyle="{StaticResource StorageItemGridViewItemStyle}"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None">

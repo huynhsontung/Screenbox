@@ -41,10 +41,10 @@
             Grid.Row="1"
             Margin="0,12,0,0"
             Padding="{StaticResource PageThumbnailMargin}"
-            extensions:ListViewExtensions.IsItemFocusEngagementEnabled="True"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource VideoGridViewItemStyle}"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Videos, FallbackValue={x:Null}}"
             SelectionMode="None">

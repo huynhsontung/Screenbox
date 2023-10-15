@@ -8,6 +8,13 @@
     <x:Double x:Key="AlbumGridViewItemHeight">226</x:Double>
     <x:Double x:Key="AlbumGridViewItemThumbnailHeight">160</x:Double>
 
+    <Style
+        x:Key="AlbumGridViewItemStyle"
+        BasedOn="{StaticResource DefaultGridViewItemStyle}"
+        TargetType="GridViewItem">
+        <Setter Property="IsFocusEngagementEnabled" Value="True" />
+    </Style>
+
     <DataTemplate x:Key="AlbumGridViewItemTemplate">
         <UserControl>
             <Grid
