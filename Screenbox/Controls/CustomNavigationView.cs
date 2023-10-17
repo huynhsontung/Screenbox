@@ -31,6 +31,18 @@ namespace Screenbox.Controls
             typeof(CustomNavigationView),
             new PropertyMetadata(Visibility.Visible, OnContentVisibilityChanged));
 
+        public static readonly DependencyProperty SplitViewStyleProperty = DependencyProperty.Register(
+            nameof(SplitViewStyle),
+            typeof(Style),
+            typeof(CustomNavigationView),
+            new PropertyMetadata(null));
+
+        public Style? SplitViewStyle
+        {
+            get => (Style?)GetValue(SplitViewStyleProperty);
+            set => SetValue(SplitViewStyleProperty, value);
+        }
+
         /// <summary>
         /// Visibility of everything except the overlay element.
         /// </summary>
@@ -81,6 +93,11 @@ namespace Screenbox.Controls
             _paneContentGrid = (Grid?)GetTemplateChild("PaneContentGrid");
 
             SetContentVisibility(ContentVisibility);
+
+            if (_splitView != null && SplitViewStyle != null)
+            {
+                _splitView.Style = SplitViewStyle;
+            }
 
             // Set implicit animations to play when ContentVisibility changes
             _paneToggleButtonGrid?.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
