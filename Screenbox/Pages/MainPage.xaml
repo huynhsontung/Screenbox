@@ -101,27 +101,6 @@
             </animations:Implicit.HideAnimations>
         </Grid>
 
-        <Border
-            x:Name="NavViewContentBackground"
-            Margin="{x:Bind GetBackgroundMargin(NavView.DisplayMode, NavView.IsPaneOpen), Mode=OneWay}"
-            Background="{ThemeResource LayerFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            BorderThickness="1,0,0,0"
-            Canvas.ZIndex="-1">
-            <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation
-                    From="1"
-                    To="0"
-                    Duration="0:0:0.3" />
-            </animations:Implicit.HideAnimations>
-            <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation
-                    From="0"
-                    To="1"
-                    Duration="0:0:0.3" />
-            </animations:Implicit.ShowAnimations>
-        </Border>
-
         <controls:CustomNavigationView
             x:Name="NavView"
             BackRequested="NavView_BackRequested"
@@ -245,7 +224,6 @@
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
-                        <Setter Target="NavViewContentBackground.BorderThickness" Value="0" />
                         <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
@@ -253,7 +231,6 @@
                     <VisualState.Setters>
                         <Setter Target="AppTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="NavView.ContentVisibility" Value="Collapsed" />
-                        <Setter Target="NavViewContentBackground.Visibility" Value="Collapsed" />
                         <Setter Target="NavView.OverlayZIndex" Value="2" />
                         <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
@@ -265,7 +242,6 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="NavViewContentBackground" />
                             <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="OverlayGrid" />
                             <RepositionThemeAnimation FromHorizontalOffset="16" TargetName="AppTitle" />
                         </Storyboard>
@@ -279,7 +255,6 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="NavViewContentBackground" />
                             <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="OverlayGrid" />
                             <RepositionThemeAnimation FromHorizontalOffset="-16" TargetName="AppTitle" />
                         </Storyboard>
@@ -287,9 +262,6 @@
 
                     <VisualTransition From="Compact" To="Minimal">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NavViewContentBackground" Storyboard.TargetProperty="BorderThickness">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginMinimal}" />
                             </ObjectAnimationUsingKeyFrames>
@@ -299,9 +271,6 @@
 
                     <VisualTransition From="Minimal" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NavViewContentBackground" Storyboard.TargetProperty="BorderThickness">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="1,0,0,0" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>

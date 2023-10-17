@@ -59,6 +59,11 @@
                             <Grid.RenderTransform>
                                 <CompositeTransform x:Name="ContentTransform" />
                             </Grid.RenderTransform>
+                            <Border
+                                x:Name="ContentBackground"
+                                Margin="0,0,-272,0"
+                                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
                             <Border Child="{TemplateBinding Content}" />
                             <Rectangle
                                 x:Name="LightDismissLayer"
@@ -317,6 +322,9 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HCPaneBorder" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBackground" Storyboard.TargetProperty="BorderThickness">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1,0,0,0" />
+                                            </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PaneClipRectangleTransform" Storyboard.TargetProperty="TranslateX">
                                                 <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="0" />
                                                 <SplineDoubleKeyFrame
@@ -480,6 +488,9 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="(Grid.ColumnSpan)">
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1" />
                                             </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBackground" Storyboard.TargetProperty="BorderThickness">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1,0,0,0" />
+                                            </ObjectAnimationUsingKeyFrames>
                                             <!--<DoubleAnimationUsingKeyFrames
                                                 FillBehavior="Stop"
                                                 Storyboard.TargetName="ContentTransform"
@@ -514,6 +525,9 @@
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PaneRoot" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBackground" Storyboard.TargetProperty="BorderThickness">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="1,0,0,0" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <!--<DoubleAnimationUsingKeyFrames
                                                 FillBehavior="Stop"
@@ -704,6 +718,7 @@
                                         <Setter Target="ContentRoot.Grid.Column" Value="1" />
                                         <Setter Target="ContentRoot.Grid.ColumnSpan" Value="1" />
                                         <Setter Target="PaneRoot.Visibility" Value="Visible" />
+                                        <Setter Target="ContentBackground.BorderThickness" Value="1,0,0,0" />
                                         <Setter Target="PaneClipRectangleTransform.TranslateX" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.NegativeOpenPaneLengthMinusCompactLength}" />
                                     </VisualState.Setters>
                                 </VisualState>
@@ -761,6 +776,7 @@
                                         <Setter Target="PaneRoot.Grid.ColumnSpan" Value="1" />
                                         <Setter Target="PaneTransform.TranslateX" Value="0" />
                                         <Setter Target="ContentTransform.TranslateX" Value="0" />
+                                        <Setter Target="ContentBackground.BorderThickness" Value="1,0,0,0" />
                                         <Setter Target="PaneClipRectangleTransform.TranslateX" Value="0" />
                                     </VisualState.Setters>
                                 </VisualState>
