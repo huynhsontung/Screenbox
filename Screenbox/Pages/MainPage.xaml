@@ -20,8 +20,10 @@
                 <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--<Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>-->
+            <Thickness x:Key="NavigationViewContentMargin">0,46,0,0</Thickness>
+            <Thickness x:Key="NavigationViewMinimalContentMargin">0,46,0,0</Thickness>
             <Thickness x:Key="NavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+            <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />

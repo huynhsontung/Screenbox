@@ -55,8 +55,8 @@
                         TrueValue="True" />
 
                     <!--  Header margin  -->
-                    <Thickness x:Key="PageHeaderMargin">56,44,56,12</Thickness>
-                    <Thickness x:Key="PageHeaderMarginMinimal">16,44,16,12</Thickness>
+                    <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
+                    <Thickness x:Key="PageHeaderMarginMinimal">16,0,16,12</Thickness>
 
                     <!--  Content margin  -->
                     <Thickness x:Key="PageContentMargin">56,0</Thickness>

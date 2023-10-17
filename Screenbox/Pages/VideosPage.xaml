@@ -101,7 +101,6 @@
             x:Name="LibraryNavView"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="0,44,0,0"
             Background="Transparent"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
