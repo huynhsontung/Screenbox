@@ -214,14 +214,19 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             Margin="{StaticResource PageHeaderMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="HeaderText"
+                Grid.Column="0"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
 
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                HorizontalAlignment="Right"
+                Grid.Column="1"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
