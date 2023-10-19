@@ -4,6 +4,10 @@
     xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <!--  Why does the margin change in Compact mode?  -->
     <StaticResource x:Key="NavigationViewCompactItemContentPresenterMargin" ResourceKey="NavigationViewItemContentPresenterMargin" />
 
@@ -281,7 +285,8 @@
                                 IsPaneOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsPaneOpen, Mode=TwoWay}"
                                 IsTabStop="False"
                                 OpenPaneLength="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.OpenPaneLength}"
-                                PaneBackground="{ThemeResource NavigationViewDefaultPaneBackground}">
+                                PaneBackground="{ThemeResource NavigationViewDefaultPaneBackground}"
+                                Style="{StaticResource CustomSplitViewStyle}">
 
                                 <SplitView.Pane>
                                     <Grid

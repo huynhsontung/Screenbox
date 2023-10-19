@@ -74,6 +74,12 @@
 
                         </Grid>
 
+                        <!--  Overlay Area  -->
+                        <Border
+                            x:Name="OverlayRoot"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2" />
+
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="DisplayModeStates">
 

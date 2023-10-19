@@ -18,7 +18,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/CustomNavigationView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -119,7 +118,6 @@
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
             SelectionChanged="NavView_SelectionChanged"
-            SplitViewStyle="{StaticResource CustomSplitViewStyle}"
             Style="{StaticResource CustomNavigationViewStyle}">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Icon="Home" Tag="home">
