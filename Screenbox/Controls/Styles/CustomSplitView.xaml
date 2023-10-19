@@ -2,6 +2,8 @@
 
     <x:String x:Key="SplitViewPaneAnimationOpenDuration">00:00:00.28</x:String>
 
+    <!--  Custom SplitView style that contains dedicated background element and better transition animations.  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/release/2.8/dev/SplitView/SplitView_themeresources.xaml  -->
     <Style x:Key="CustomSplitViewStyle" TargetType="SplitView">
         <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource SplitViewLeftBorderThemeThickness}" />
