@@ -683,7 +683,7 @@
     <value>Ayuda de línea de comandos de VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Ver {0} para la lista completa de opciones disponibles.</value>
+    <value>Accede a la {0} para ver la lista completa de opciones disponibles.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
