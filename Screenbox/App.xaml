@@ -95,7 +95,6 @@
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
                         <Setter Property="FontSize" Value="34" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="LineHeight" Value="48" />
                     </Style>
 
                     <!--  SplitButton height to match Button  -->
