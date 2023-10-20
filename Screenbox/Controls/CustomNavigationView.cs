@@ -32,6 +32,18 @@ namespace Screenbox.Controls
             typeof(CustomNavigationView),
             new PropertyMetadata(Visibility.Visible, OnContentVisibilityChanged));
 
+        public static readonly DependencyProperty SplitViewStyleProperty = DependencyProperty.Register(
+            nameof(SplitViewStyle),
+            typeof(Style),
+            typeof(CustomNavigationView),
+            new PropertyMetadata(null));
+
+        public Style? SplitViewStyle
+        {
+            get => (Style?)GetValue(SplitViewStyleProperty);
+            set => SetValue(SplitViewStyleProperty, value);
+        }
+
         /// <summary>
         /// Visibility of everything except the overlay element.
         /// </summary>
@@ -81,6 +93,11 @@ namespace Screenbox.Controls
             if (shadowCaster != null)
             {
                 shadowCaster.Translation = new Vector3(0, 0, 32);
+            }
+
+            if (_splitView != null)
+            {
+                _splitView.Style = SplitViewStyle;
             }
 
             SetContentVisibility(ContentVisibility);

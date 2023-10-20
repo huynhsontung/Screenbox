@@ -18,7 +18,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomNavigationView.xaml" />
+                <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
@@ -33,7 +33,6 @@
             <Thickness x:Key="AppTitleMarginCompact">74,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginMinimal">98,0,0,0</Thickness>
 
-            <x:String x:Key="NavItemTextHideDuration">0:0:0.1</x:String>
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
@@ -118,7 +117,7 @@
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
             SelectionChanged="NavView_SelectionChanged"
-            Style="{StaticResource CustomNavigationViewStyle}">
+            SplitViewStyle="{StaticResource CustomSplitViewStyle}">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Icon="Home" Tag="home">
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
@@ -309,42 +308,6 @@
                             </ObjectAnimationUsingKeyFrames>
                             <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="OverlayGrid" />
                             <RepositionThemeAnimation FromHorizontalOffset="-16" TargetName="AppTitle" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="HomeNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="MusicNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="VideosNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="NetworkNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="PlayQueueNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
-                            <DoubleAnimation
-                                Storyboard.TargetName="SettingsNavItemText"
-                                Storyboard.TargetProperty="Opacity"
-                                From="1"
-                                To="0"
-                                Duration="{StaticResource NavItemTextHideDuration}" />
                         </Storyboard>
                     </VisualTransition>
 
