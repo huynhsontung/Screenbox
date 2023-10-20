@@ -72,6 +72,7 @@ namespace Screenbox.Controls
         }
 
         private Border? _overlayRoot;
+        private Border? _contentBackground;
         private SplitView? _splitView;
         private Grid? _paneToggleButtonGrid;
         private Grid? _contentGrid;
@@ -123,11 +124,19 @@ namespace Screenbox.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_splitView?.FindDescendant<Border>(border => border.Name == "OverlayRoot") is { } overlayRoot)
+            if (_splitView?.FindDescendant<Border>(b => b.Name == "OverlayRoot") is { } overlayRoot)
             {
                 _overlayRoot = overlayRoot;
                 overlayRoot.Tapped += OverlayRootOnTapped;
                 overlayRoot.Child = OverlayContent;
+                Canvas.SetZIndex(overlayRoot, OverlayZIndex);
+            }
+
+            if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
+            {
+                _contentBackground = contentBackground;
+                contentBackground.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
+                contentBackground.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
             }
         }
 
@@ -155,6 +164,11 @@ namespace Screenbox.Controls
             {
                 _paneContentGrid.Visibility = visibility;
             }
+
+            if (_contentBackground != null)
+            {
+                _contentBackground.Visibility = visibility;
+            }
         }
 
         private static void OnContentVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -175,7 +189,10 @@ namespace Screenbox.Controls
         private static void OnOverlayZIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CustomNavigationView view = (CustomNavigationView)d;
-            Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
+            if (view._overlayRoot != null)
+            {
+                Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
+            }
         }
 
         private static ImplicitAnimationSet GetShowAnimations()
