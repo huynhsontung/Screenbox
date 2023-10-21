@@ -1,4 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+            <StaticResource x:Key="SplitViewContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="SplitViewContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="SplitViewContentBackground" Color="{ThemeResource SystemColorWindowColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
 
     <x:String x:Key="SplitViewPaneAnimationOpenDuration">00:00:00.28</x:String>
 
@@ -64,7 +75,7 @@
                             <Border
                                 x:Name="ContentBackground"
                                 Margin="0,0,-272,0"
-                                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                Background="{ThemeResource SplitViewContentBackground}"
                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
                             <Border Child="{TemplateBinding Content}" />
                             <Rectangle
