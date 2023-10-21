@@ -735,6 +735,6 @@
     <value>作曲家</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>无法添加文件夹</value>
   </data>
 </root>
