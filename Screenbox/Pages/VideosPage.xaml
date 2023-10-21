@@ -36,6 +36,7 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource PageHeaderMargin}"
             Visibility="Collapsed">
             <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Videos}" />

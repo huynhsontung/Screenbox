@@ -213,6 +213,7 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource PageHeaderMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

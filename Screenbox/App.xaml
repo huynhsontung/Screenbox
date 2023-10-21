@@ -54,6 +54,9 @@
                         NullValue="False"
                         TrueValue="True" />
 
+                    <!--  Standardize header height with or without top nav  -->
+                    <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
+
                     <!--  Header margin  -->
                     <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
                     <Thickness x:Key="PageHeaderMarginMinimal">16,0,16,12</Thickness>
