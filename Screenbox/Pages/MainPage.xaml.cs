@@ -301,5 +301,19 @@ namespace Screenbox.Pages
         {
             return new Thickness(value, 0, 0, 0);
         }
+
+        private Thickness GetBackgroundMargin(muxc.NavigationViewDisplayMode mode, bool isPaneOpen)
+        {
+            return mode switch
+            {
+                muxc.NavigationViewDisplayMode.Minimal => new Thickness(0),
+                muxc.NavigationViewDisplayMode.Expanded when !isPaneOpen => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
+                muxc.NavigationViewDisplayMode.Expanded =>
+                    // Right margin to account for Expanded to Compact state transition
+                    new Thickness(NavView.OpenPaneLength, 0, -NavView.OpenPaneLength, 0),
+                muxc.NavigationViewDisplayMode.Compact => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
+                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+            };
+        }
     }
 }

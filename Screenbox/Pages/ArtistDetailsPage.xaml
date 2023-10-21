@@ -116,7 +116,7 @@
             x:Name="Header"
             Grid.Row="0"
             Height="200"
-            Margin="0,44,0,-108"
+            Margin="0,0,0,-108"
             Padding="{StaticResource PageContentMargin}"
             Canvas.ZIndex="1">
 
@@ -270,7 +270,7 @@
                     <VisualState.Setters>
                         <!--<Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />-->
                         <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
+                        <Setter Target="Header.Margin" Value="0,0,0,-68" />
                         <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ProfilePicture.Width" Value="140" />
                         <Setter Target="ProfilePicture.Height" Value="140" />

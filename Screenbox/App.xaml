@@ -54,9 +54,12 @@
                         NullValue="False"
                         TrueValue="True" />
 
+                    <!--  Standardize header height with or without top nav  -->
+                    <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
+
                     <!--  Header margin  -->
-                    <Thickness x:Key="PageHeaderMargin">56,44,56,12</Thickness>
-                    <Thickness x:Key="PageHeaderMarginMinimal">16,44,16,12</Thickness>
+                    <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
+                    <Thickness x:Key="PageHeaderMarginMinimal">16,0,16,12</Thickness>
 
                     <!--  Content margin  -->
                     <Thickness x:Key="PageContentMargin">56,0</Thickness>
@@ -95,7 +98,6 @@
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
                         <Setter Property="FontSize" Value="34" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="LineHeight" Value="48" />
                     </Style>
 
                     <!--  SplitButton height to match Button  -->

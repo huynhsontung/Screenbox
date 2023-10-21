@@ -36,6 +36,7 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource PageHeaderMargin}"
             Visibility="Collapsed">
             <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Videos}" />
@@ -101,7 +102,6 @@
             x:Name="LibraryNavView"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="0,44,0,0"
             Background="Transparent"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
