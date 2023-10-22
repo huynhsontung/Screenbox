@@ -148,9 +148,8 @@
                     Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
 
                 <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="PlayingState">
-                        <VisualState x:Name="NotPlaying" />
-                        <VisualState x:Name="IsPlaying">
+                    <VisualStateGroup x:Name="ActivityStates">
+                        <VisualState x:Name="ItemActive">
                             <VisualState.StateTriggers>
                                 <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
@@ -254,11 +253,8 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MediaListViewItemWithoutMediaIconTemplate">
-        <UserControl>
-            <Grid
-                Height="46"
-                d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
-                XYFocusKeyboardNavigation="Disabled">
+        <UserControl x:Name="ItemRoot" d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}">
+            <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
                     <ColumnDefinition Width="32" />
@@ -367,9 +363,8 @@
                     Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
 
                 <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="PlayingState">
-                        <VisualState x:Name="NotPlaying" />
-                        <VisualState x:Name="IsPlaying">
+                    <VisualStateGroup x:Name="ActivityStates">
+                        <VisualState x:Name="ItemActive">
                             <VisualState.StateTriggers>
                                 <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>
@@ -382,6 +377,40 @@
                                 <Setter Target="IsPlayingIcon.Visibility" Value="Visible" />
                             </VisualState.Setters>
                         </VisualState>
+                    </VisualStateGroup>
+
+                    <VisualStateGroup x:Name="IsPlayingStates">
+                        <VisualState x:Name="IsPlaying">
+                            <VisualState.Setters>
+                                <Setter Target="IsPlayingIcon.PlaybackRate" Value="1" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="IsNotPlaying">
+                            <VisualState.Setters>
+                                <Setter Target="IsPlayingIcon.PlaybackRate" Value="0" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualStateGroup.Transitions>
+                            <VisualTransition From="IsNotPlaying" To="IsPlaying">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IsPlayingIcon" Storyboard.TargetProperty="PlaybackRate">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0.2" />
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="0.6" />
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="1" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualTransition>
+                            <VisualTransition From="IsPlaying" To="IsNotPlaying">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IsPlayingIcon" Storyboard.TargetProperty="PlaybackRate">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="0.8" />
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="0.4" />
+                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="0" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualTransition>
+                        </VisualStateGroup.Transitions>
                     </VisualStateGroup>
 
                     <VisualStateGroup x:Name="MultiSelectStates">
@@ -461,6 +490,7 @@
             <interactivity:Interaction.Behaviors>
                 <interactions:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="400,620,800" />
                 <interactions:MediaListViewItemBehavior />
+                <interactions:PlayingStateBehavior IsActive="{Binding IsMediaActive}" IsPlaying="{Binding IsPlaying}" />
             </interactivity:Interaction.Behaviors>
         </UserControl>
     </DataTemplate>
@@ -575,9 +605,8 @@
                     Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
 
                 <VisualStateManager.VisualStateGroups>
-                    <VisualStateGroup x:Name="PlayingState">
-                        <VisualState x:Name="NotPlaying" />
-                        <VisualState x:Name="IsPlaying">
+                    <VisualStateGroup x:Name="ActivityStates">
+                        <VisualState x:Name="ItemActive">
                             <VisualState.StateTriggers>
                                 <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                             </VisualState.StateTriggers>

@@ -164,6 +164,7 @@
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
     <Compile Include="Controls\Interactions\NavViewXYFocusBehavior.cs" />
+    <Compile Include="Controls\Interactions\PlayingStateBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
