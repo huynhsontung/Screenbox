@@ -124,12 +124,6 @@
         "resolved": "3.3.2",
         "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
       },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
-      },
       "CommunityToolkit.Diagnostics": {
         "type": "Transitive",
         "resolved": "8.2.1",
@@ -488,12 +482,6 @@
           "runtime.win10-arm.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
-      },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
         "resolved": "1.0.1264.42",
@@ -544,12 +532,6 @@
           "NETStandard.Library": "2.0.3",
           "runtime.win10-arm-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
-      },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -602,12 +584,6 @@
           "runtime.win10-arm64-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
-      },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
         "resolved": "1.0.1264.42",
@@ -658,12 +634,6 @@
           "NETStandard.Library": "2.0.3",
           "runtime.win10-x64.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
-      },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -716,12 +686,6 @@
           "runtime.win10-x64-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
-      },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
         "resolved": "1.0.1264.42",
@@ -773,12 +737,6 @@
           "runtime.win10-x86.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
-      },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
         "resolved": "1.0.1264.42",
@@ -829,12 +787,6 @@
           "NETStandard.Library": "2.0.3",
           "runtime.win10-x86-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
-      },
-      "Win2D.uwp": {
-        "type": "Direct",
-        "requested": "[1.27.0, )",
-        "resolved": "1.27.0",
-        "contentHash": "Tzg5HHGg62ZLxYIAOFyMnQxjDjvU9myPHFowE196bsqA5Dr5tezFjFpc8+YPOmRDwXLqn+ODVdm5CskIezOfDg=="
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",

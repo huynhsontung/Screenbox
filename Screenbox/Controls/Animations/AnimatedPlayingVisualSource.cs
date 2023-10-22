@@ -9,7 +9,7 @@
 //           LottieGen -GenerateColorBindings -GenerateDependencyObject -Language CSharp -MinimumUapVersion 8 -Namespace Screenbox.Controls.Animations -Public -WinUIVersion 2.8 -InputFile AnimatedPlayingVisualSource.json
 //       
 //       Input file:
-//           AnimatedPlayingVisualSource.json (5459 bytes created 23:35-07:00 Oct 15 2023)
+//           AnimatedPlayingVisualSource.json (6718 bytes created 23:35-07:00 Oct 15 2023)
 //       
 //       LottieGen source:
 //           http://aka.ms/Lottie
@@ -21,50 +21,48 @@
 // ___________________________________________________________
 // |       Object stats       | UAP v15 count | UAP v7 count |
 // |__________________________|_______________|______________|
-// | All CompositionObjects   |            35 |           39 |
+// | All CompositionObjects   |            63 |           71 |
 // |--------------------------+---------------+--------------|
-// | Expression animators     |             2 |            4 |
-// | KeyFrame animators       |             3 |            3 |
-// | Reference parameters     |             2 |            4 |
-// | Expression operations    |             4 |            4 |
+// | Expression animators     |            12 |           16 |
+// | KeyFrame animators       |             5 |            5 |
+// | Reference parameters     |            12 |           16 |
+// | Expression operations    |            24 |           24 |
 // |--------------------------+---------------+--------------|
 // | Animated brushes         |             1 |            1 |
 // | Animated gradient stops  |             - |            - |
-// | ExpressionAnimations     |             2 |            2 |
+// | ExpressionAnimations     |            12 |           12 |
 // | PathKeyFrameAnimations   |             - |            - |
 // |--------------------------+---------------+--------------|
 // | ContainerVisuals         |             1 |            1 |
 // | ShapeVisuals             |             1 |            1 |
 // |--------------------------+---------------+--------------|
 // | ContainerShapes          |             - |            - |
-// | CompositionSpriteShapes  |             3 |            3 |
+// | CompositionSpriteShapes  |             5 |            5 |
 // |--------------------------+---------------+--------------|
 // | Brushes                  |             1 |            1 |
 // | Gradient stops           |             - |            - |
 // | CompositionVisualSurface |             - |            - |
 // -----------------------------------------------------------
-using Microsoft.Graphics.Canvas.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Windows.Graphics;
 using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 
 namespace Screenbox.Controls.Animations
 {
-    // Name:        Artboard 10
+    // Name:        mini
     // Frame rate:  60 fps
-    // Frame count: 120
-    // Duration:    2000.0 mS
+    // Frame count: 41
+    // Duration:    683.3 mS
     sealed class AnimatedPlayingVisualSource
         : DependencyObject
         , Microsoft.UI.Xaml.Controls.IAnimatedVisualSource
         , Microsoft.UI.Xaml.Controls.IAnimatedVisualSource2
     {
-        // Animation duration: 2.000 seconds.
-        internal const long c_durationTicks = 20000000;
+        // Animation duration: 0.683 seconds.
+        internal const long c_durationTicks = 6833333;
 
         // Theme property: Color_FFFFFF.
         internal static readonly Color c_themeColor_FFFFFF = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF);
@@ -141,7 +139,7 @@ namespace Screenbox.Controls.Animations
         /// <summary>
         /// Gets the number of frames in the animation.
         /// </summary>
-        public double FrameCount => 120d;
+        public double FrameCount => 41d;
 
         /// <summary>
         /// Gets the frame rate of the animation.
@@ -151,7 +149,7 @@ namespace Screenbox.Controls.Animations
         /// <summary>
         /// Gets the duration of the animation.
         /// </summary>
-        public TimeSpan Duration => TimeSpan.FromTicks(20000000);
+        public TimeSpan Duration => TimeSpan.FromTicks(6833333);
 
         /// <summary>
         /// Converts a zero-based frame number to the corresponding progress value denoting the
@@ -159,7 +157,7 @@ namespace Screenbox.Controls.Animations
         /// </summary>
         public double FrameToProgress(double frameNumber)
         {
-            return frameNumber / 120d;
+            return frameNumber / 41d;
         }
 
         /// <summary>
@@ -201,19 +199,22 @@ namespace Screenbox.Controls.Animations
 
         sealed class AnimatedPlayingVisualSource_AnimatedVisual_UAPv15 : Microsoft.UI.Xaml.Controls.IAnimatedVisual2
         {
-            const long c_durationTicks = 20000000;
+            const long c_durationTicks = 6833333;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             readonly CompositionPropertySet _themeProperties;
             AnimationController _animationController_0;
             CompositionColorBrush _themeColor_Color_FFFFFF;
-            CompositionPath _path;
-            CompositionPathGeometry _pathGeometry_0;
-            CompositionPathGeometry _pathGeometry_1;
-            CompositionPathGeometry _pathGeometry_2;
+            CompositionRoundedRectangleGeometry _roundedRectangle_0;
+            CompositionRoundedRectangleGeometry _roundedRectangle_1;
+            CompositionRoundedRectangleGeometry _roundedRectangle_2;
+            CompositionRoundedRectangleGeometry _roundedRectangle_3;
+            CompositionRoundedRectangleGeometry _roundedRectangle_4;
             ContainerVisual _root;
             CubicBezierEasingFunction _cubicBezierEasingFunction_0;
             StepEasingFunction _holdThenStepEasingFunction;
+            Vector2KeyFrameAnimation _sizeVector2Animation_0;
+            Vector2KeyFrameAnimation _sizeVector2Animation_1;
 
             void BindProperty(
                 CompositionObject target,
@@ -228,18 +229,19 @@ namespace Screenbox.Controls.Animations
                 target.StartAnimation(animatedPropertyName, _reusableExpressionAnimation);
             }
 
-            ScalarKeyFrameAnimation CreateScalarKeyFrameAnimation(float initialProgress, float initialValue, CompositionEasingFunction initialEasingFunction)
+            Vector2KeyFrameAnimation CreateVector2KeyFrameAnimation(float initialProgress, Vector2 initialValue, CompositionEasingFunction initialEasingFunction)
             {
-                var result = _c.CreateScalarKeyFrameAnimation();
+                var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(initialProgress, initialValue, initialEasingFunction);
                 return result;
             }
 
-            CompositionSpriteShape CreateSpriteShape(CompositionGeometry geometry, Matrix3x2 transformMatrix)
+            CompositionSpriteShape CreateSpriteShape(CompositionGeometry geometry, Matrix3x2 transformMatrix, CompositionBrush fillBrush)
             {
                 var result = _c.CreateSpriteShape(geometry);
                 result.TransformMatrix = transformMatrix;
+                result.FillBrush = fillBrush;
                 return result;
             }
 
@@ -252,19 +254,6 @@ namespace Screenbox.Controls.Animations
                 return result;
             }
 
-            CanvasGeometry Geometry()
-            {
-                CanvasGeometry result;
-                using (var builder = new CanvasPathBuilder(null))
-                {
-                    builder.BeginFigure(new Vector2(0F, -12F));
-                    builder.AddLine(new Vector2(0F, 12.5F));
-                    builder.EndFigure(CanvasFigureLoop.Open);
-                    result = CanvasGeometry.CreatePath(builder);
-                }
-                return result;
-            }
-
             // Color bound to theme property value: Color_FFFFFF
             CompositionColorBrush ThemeColor_Color_FFFFFF()
             {
@@ -274,85 +263,113 @@ namespace Screenbox.Controls.Animations
                 return result;
             }
 
-            CompositionPath Path()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_0()
             {
-                if (_path != null) { return _path; }
-                var result = _path = new CompositionPath(Geometry());
+                if (_roundedRectangle_0 != null) { return _roundedRectangle_0; }
+                var result = _roundedRectangle_0 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -3F);
+                BindProperty(_roundedRectangle_0, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_0);
+                BindProperty(_roundedRectangle_0, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_0);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<35, 23.5>
-            CompositionPathGeometry PathGeometry_0()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_1()
             {
-                if (_pathGeometry_0 != null) { return _pathGeometry_0; }
-                var result = _pathGeometry_0 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_1 != null) { return _roundedRectangle_1; }
+                var result = _roundedRectangle_1 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -5F);
+                BindProperty(_roundedRectangle_1, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_1);
+                BindProperty(_roundedRectangle_1, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_1);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<24, 23.5>
-            CompositionPathGeometry PathGeometry_1()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_2()
             {
-                if (_pathGeometry_1 != null) { return _pathGeometry_1; }
-                var result = _pathGeometry_1 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_2 != null) { return _roundedRectangle_2; }
+                var result = _roundedRectangle_2 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -7F);
+                BindProperty(_roundedRectangle_2, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_2);
+                BindProperty(_roundedRectangle_2, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_2);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<13, 23.5>
-            CompositionPathGeometry PathGeometry_2()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_3()
             {
-                if (_pathGeometry_2 != null) { return _pathGeometry_2; }
-                var result = _pathGeometry_2 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_3 != null) { return _roundedRectangle_3; }
+                var result = _roundedRectangle_3 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -5F);
+                BindProperty(_roundedRectangle_3, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_3);
+                BindProperty(_roundedRectangle_3, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_3);
+                return result;
+            }
+
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_4()
+            {
+                if (_roundedRectangle_4 != null) { return _roundedRectangle_4; }
+                var result = _roundedRectangle_4 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -3F);
+                BindProperty(_roundedRectangle_4, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_4);
+                BindProperty(_roundedRectangle_4, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_4);
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_0()
             {
-                // Offset:<35, 23.5>
-                var result = CreateSpriteShape(PathGeometry_0(), new Matrix3x2(1F, 0F, 0F, 1F, 35F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<57, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_0();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 57F, 32.875F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_1()
             {
-                // Offset:<24, 23.5>
-                var result = CreateSpriteShape(PathGeometry_1(), new Matrix3x2(1F, 0F, 0F, 1F, 24F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<45, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_1();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 45F, 32.875F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_2()
             {
-                // Offset:<13, 23.5>
-                var result = CreateSpriteShape(PathGeometry_2(), new Matrix3x2(1F, 0F, 0F, 1F, 13F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<32.875, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_2();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 32.875F, 32.875F), ThemeColor_Color_FFFFFF()); ;
+                return result;
+            }
+
+            // Layer aggregator
+            // 矩形路径 1
+            CompositionSpriteShape SpriteShape_3()
+            {
+                // Offset:<21, 33>, Scale:<3, 3>
+                var geometry = RoundedRectangle_3();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 21F, 33F), ThemeColor_Color_FFFFFF()); ;
+                return result;
+            }
+
+            // Layer aggregator
+            // 矩形路径 1
+            CompositionSpriteShape SpriteShape_4()
+            {
+                // Offset:<9, 33>, Scale:<3, 3>
+                var geometry = RoundedRectangle_4();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 9F, 33F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
@@ -375,94 +392,22 @@ namespace Screenbox.Controls.Animations
                     : _cubicBezierEasingFunction_0;
             }
 
-            // - - Layer aggregator
-            // -  Offset:<24, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p95_to_0p95_0()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.949999988F, HoldThenStepEasingFunction());
-                // Frame 21.
-                result.InsertKeyFrame(0.174999997F, 0F, CubicBezierEasingFunction_0());
-                // Frame 46.
-                result.InsertKeyFrame(0.383333325F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 71.
-                result.InsertKeyFrame(0.591666639F, 0F, CubicBezierEasingFunction_0());
-                // Frame 90.
-                result.InsertKeyFrame(0.75F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 105.
-                result.InsertKeyFrame(0.875F, 0.5F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
-            // - - Layer aggregator
-            // -  Offset:<13, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p95_to_0p95_1()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.949999988F, HoldThenStepEasingFunction());
-                // Frame 14.
-                result.InsertKeyFrame(0.116666667F, 0.300000012F, CubicBezierEasingFunction_0());
-                // Frame 35.
-                result.InsertKeyFrame(0.291666657F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 56.
-                result.InsertKeyFrame(0.466666669F, 0F, CubicBezierEasingFunction_0());
-                // Frame 79.
-                result.InsertKeyFrame(0.658333361F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 100.
-                result.InsertKeyFrame(0.833333313F, 0.400000006F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
-            // - - Layer aggregator
-            // -  Offset:<35, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p96_to_0p95()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.959999979F, HoldThenStepEasingFunction());
-                // Frame 15.
-                result.InsertKeyFrame(0.125F, 0.600000024F, CubicBezierEasingFunction_0());
-                // Frame 30.
-                result.InsertKeyFrame(0.25F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 35.
-                result.InsertKeyFrame(0.291666657F, 0.980000019F, CubicBezierEasingFunction_0());
-                // Frame 50.
-                result.InsertKeyFrame(0.416666657F, 0.200000003F, CubicBezierEasingFunction_0());
-                // Frame 55.
-                result.InsertKeyFrame(0.458333343F, 0F, CubicBezierEasingFunction_0());
-                // Frame 70.
-                result.InsertKeyFrame(0.583333313F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 75.
-                result.InsertKeyFrame(0.625F, 0.939999998F, CubicBezierEasingFunction_0());
-                // Frame 90.
-                result.InsertKeyFrame(0.75F, 0.200000003F, CubicBezierEasingFunction_0());
-                // Frame 94.
-                result.InsertKeyFrame(0.783333361F, 0F, CubicBezierEasingFunction_0());
-                // Frame 115.
-                result.InsertKeyFrame(0.958333313F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
             // Layer aggregator
             ShapeVisual ShapeVisual_0()
             {
                 var result = _c.CreateShapeVisual();
-                result.Size = new Vector2(48F, 48F);
+                result.Size = new Vector2(66F, 66F);
                 var shapes = result.Shapes;
-                // Offset:<35, 23.5>
+                // Offset:<57, 32.875>
                 shapes.Add(SpriteShape_0());
-                // Offset:<24, 23.5>
+                // Offset:<45, 32.875>
                 shapes.Add(SpriteShape_1());
-                // Offset:<13, 23.5>
+                // Offset:<32.875, 32.875>
                 shapes.Add(SpriteShape_2());
+                // Offset:<21, 33>
+                shapes.Add(SpriteShape_3());
+                // Offset:<9, 33>
+                shapes.Add(SpriteShape_4());
                 return result;
             }
 
@@ -471,6 +416,57 @@ namespace Screenbox.Controls.Animations
                 if (_holdThenStepEasingFunction != null) { return _holdThenStepEasingFunction; }
                 var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
                 result.IsFinalStepSingleFrame = true;
+                return result;
+            }
+
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_0()
+            {
+                // Frame 0.
+                if (_sizeVector2Animation_0 != null) { return _sizeVector2Animation_0; }
+                var result = _sizeVector2Animation_0 = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 6F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 14F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                return result;
+            }
+
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_1()
+            {
+                // Frame 0.
+                if (_sizeVector2Animation_1 != null) { return _sizeVector2Animation_1; }
+                var result = _sizeVector2Animation_1 = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 10F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 8F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                return result;
+            }
+
+            // 矩形路径 1.RectangleGeometry
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_2()
+            {
+                // Frame 0.
+                var result = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 14F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 12F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 14F), CubicBezierEasingFunction_0());
                 return result;
             }
 
@@ -487,21 +483,25 @@ namespace Screenbox.Controls.Animations
 
             public Visual RootVisual => _root;
             public TimeSpan Duration => TimeSpan.FromTicks(c_durationTicks);
-            public Vector2 Size => new Vector2(48F, 48F);
+            public Vector2 Size => new Vector2(66F, 66F);
             void IDisposable.Dispose() => _root?.Dispose();
 
             public void CreateAnimations()
             {
-                _pathGeometry_0.StartAnimation("TrimStart", TrimStartScalarAnimation_0p96_to_0p95(), AnimationController_0());
-                _pathGeometry_1.StartAnimation("TrimStart", TrimStartScalarAnimation_0p95_to_0p95_0(), AnimationController_0());
-                _pathGeometry_2.StartAnimation("TrimStart", TrimStartScalarAnimation_0p95_to_0p95_1(), AnimationController_0());
+                _roundedRectangle_0.StartAnimation("Size", SizeVector2Animation_0(), AnimationController_0());
+                _roundedRectangle_1.StartAnimation("Size", SizeVector2Animation_1(), AnimationController_0());
+                _roundedRectangle_2.StartAnimation("Size", SizeVector2Animation_2(), AnimationController_0());
+                _roundedRectangle_3.StartAnimation("Size", SizeVector2Animation_1(), AnimationController_0());
+                _roundedRectangle_4.StartAnimation("Size", SizeVector2Animation_0(), AnimationController_0());
             }
 
             public void DestroyAnimations()
             {
-                _pathGeometry_0.StopAnimation("TrimStart");
-                _pathGeometry_1.StopAnimation("TrimStart");
-                _pathGeometry_2.StopAnimation("TrimStart");
+                _roundedRectangle_0.StopAnimation("Size");
+                _roundedRectangle_1.StopAnimation("Size");
+                _roundedRectangle_2.StopAnimation("Size");
+                _roundedRectangle_3.StopAnimation("Size");
+                _roundedRectangle_4.StopAnimation("Size");
             }
 
             internal static bool IsRuntimeCompatible()
@@ -512,19 +512,22 @@ namespace Screenbox.Controls.Animations
 
         sealed class AnimatedPlayingVisualSource_AnimatedVisual_UAPv7 : Microsoft.UI.Xaml.Controls.IAnimatedVisual2
         {
-            const long c_durationTicks = 20000000;
+            const long c_durationTicks = 6833333;
             readonly Compositor _c;
             readonly ExpressionAnimation _reusableExpressionAnimation;
             readonly CompositionPropertySet _themeProperties;
             CompositionColorBrush _themeColor_Color_FFFFFF;
-            CompositionPath _path;
-            CompositionPathGeometry _pathGeometry_0;
-            CompositionPathGeometry _pathGeometry_1;
-            CompositionPathGeometry _pathGeometry_2;
+            CompositionRoundedRectangleGeometry _roundedRectangle_0;
+            CompositionRoundedRectangleGeometry _roundedRectangle_1;
+            CompositionRoundedRectangleGeometry _roundedRectangle_2;
+            CompositionRoundedRectangleGeometry _roundedRectangle_3;
+            CompositionRoundedRectangleGeometry _roundedRectangle_4;
             ContainerVisual _root;
             CubicBezierEasingFunction _cubicBezierEasingFunction_0;
             ExpressionAnimation _rootProgress;
             StepEasingFunction _holdThenStepEasingFunction;
+            Vector2KeyFrameAnimation _sizeVector2Animation_0;
+            Vector2KeyFrameAnimation _sizeVector2Animation_1;
 
             static void StartProgressBoundAnimation(
                 CompositionObject target,
@@ -551,31 +554,19 @@ namespace Screenbox.Controls.Animations
                 target.StartAnimation(animatedPropertyName, _reusableExpressionAnimation);
             }
 
-            ScalarKeyFrameAnimation CreateScalarKeyFrameAnimation(float initialProgress, float initialValue, CompositionEasingFunction initialEasingFunction)
+            Vector2KeyFrameAnimation CreateVector2KeyFrameAnimation(float initialProgress, Vector2 initialValue, CompositionEasingFunction initialEasingFunction)
             {
-                var result = _c.CreateScalarKeyFrameAnimation();
+                var result = _c.CreateVector2KeyFrameAnimation();
                 result.Duration = TimeSpan.FromTicks(c_durationTicks);
                 result.InsertKeyFrame(initialProgress, initialValue, initialEasingFunction);
                 return result;
             }
 
-            CompositionSpriteShape CreateSpriteShape(CompositionGeometry geometry, Matrix3x2 transformMatrix)
+            CompositionSpriteShape CreateSpriteShape(CompositionGeometry geometry, Matrix3x2 transformMatrix, CompositionBrush fillBrush)
             {
                 var result = _c.CreateSpriteShape(geometry);
                 result.TransformMatrix = transformMatrix;
-                return result;
-            }
-
-            CanvasGeometry Geometry()
-            {
-                CanvasGeometry result;
-                using (var builder = new CanvasPathBuilder(null))
-                {
-                    builder.BeginFigure(new Vector2(0F, -12F));
-                    builder.AddLine(new Vector2(0F, 12.5F));
-                    builder.EndFigure(CanvasFigureLoop.Open);
-                    result = CanvasGeometry.CreatePath(builder);
-                }
+                result.FillBrush = fillBrush;
                 return result;
             }
 
@@ -588,85 +579,113 @@ namespace Screenbox.Controls.Animations
                 return result;
             }
 
-            CompositionPath Path()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_0()
             {
-                if (_path != null) { return _path; }
-                var result = _path = new CompositionPath(Geometry());
+                if (_roundedRectangle_0 != null) { return _roundedRectangle_0; }
+                var result = _roundedRectangle_0 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -3F);
+                BindProperty(_roundedRectangle_0, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_0);
+                BindProperty(_roundedRectangle_0, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_0);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<35, 23.5>
-            CompositionPathGeometry PathGeometry_0()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_1()
             {
-                if (_pathGeometry_0 != null) { return _pathGeometry_0; }
-                var result = _pathGeometry_0 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_1 != null) { return _roundedRectangle_1; }
+                var result = _roundedRectangle_1 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -5F);
+                BindProperty(_roundedRectangle_1, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_1);
+                BindProperty(_roundedRectangle_1, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_1);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<24, 23.5>
-            CompositionPathGeometry PathGeometry_1()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_2()
             {
-                if (_pathGeometry_1 != null) { return _pathGeometry_1; }
-                var result = _pathGeometry_1 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_2 != null) { return _roundedRectangle_2; }
+                var result = _roundedRectangle_2 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -7F);
+                BindProperty(_roundedRectangle_2, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_2);
+                BindProperty(_roundedRectangle_2, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_2);
                 return result;
             }
 
-            // - Layer aggregator
-            // Offset:<13, 23.5>
-            CompositionPathGeometry PathGeometry_2()
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_3()
             {
-                if (_pathGeometry_2 != null) { return _pathGeometry_2; }
-                var result = _pathGeometry_2 = _c.CreatePathGeometry(Path());
+                if (_roundedRectangle_3 != null) { return _roundedRectangle_3; }
+                var result = _roundedRectangle_3 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -5F);
+                BindProperty(_roundedRectangle_3, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_3);
+                BindProperty(_roundedRectangle_3, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_3);
+                return result;
+            }
+
+            // 矩形路径 1.RectangleGeometry
+            CompositionRoundedRectangleGeometry RoundedRectangle_4()
+            {
+                if (_roundedRectangle_4 != null) { return _roundedRectangle_4; }
+                var result = _roundedRectangle_4 = _c.CreateRoundedRectangleGeometry();
+                result.CornerRadius = new Vector2(0F, 0F);
+                result.Offset = new Vector2(-1F, -3F);
+                BindProperty(_roundedRectangle_4, "CornerRadius", "Vector2(Min(1,(Min(my.Size.X,my.Size.Y)/2)),Min(1,(Min(my.Size.X,my.Size.Y)/2)))", "my", _roundedRectangle_4);
+                BindProperty(_roundedRectangle_4, "Offset", "Vector2(0,0)-(my.Size/Vector2(2,2))", "my", _roundedRectangle_4);
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_0()
             {
-                // Offset:<35, 23.5>
-                var result = CreateSpriteShape(PathGeometry_0(), new Matrix3x2(1F, 0F, 0F, 1F, 35F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<57, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_0();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 57F, 32.875F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_1()
             {
-                // Offset:<24, 23.5>
-                var result = CreateSpriteShape(PathGeometry_1(), new Matrix3x2(1F, 0F, 0F, 1F, 24F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<45, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_1();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 45F, 32.875F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
             // Layer aggregator
-            // 路径 1
+            // 矩形路径 1
             CompositionSpriteShape SpriteShape_2()
             {
-                // Offset:<13, 23.5>
-                var result = CreateSpriteShape(PathGeometry_2(), new Matrix3x2(1F, 0F, 0F, 1F, 13F, 23.5F)); ;
-                result.StrokeBrush = ThemeColor_Color_FFFFFF();
-                result.StrokeDashCap = CompositionStrokeCap.Round;
-                result.StrokeStartCap = CompositionStrokeCap.Round;
-                result.StrokeEndCap = CompositionStrokeCap.Round;
-                result.StrokeLineJoin = CompositionStrokeLineJoin.Round;
-                result.StrokeMiterLimit = 2F;
-                result.StrokeThickness = 2F;
+                // Offset:<32.875, 32.875>, Scale:<3, 3>
+                var geometry = RoundedRectangle_2();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 32.875F, 32.875F), ThemeColor_Color_FFFFFF()); ;
+                return result;
+            }
+
+            // Layer aggregator
+            // 矩形路径 1
+            CompositionSpriteShape SpriteShape_3()
+            {
+                // Offset:<21, 33>, Scale:<3, 3>
+                var geometry = RoundedRectangle_3();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 21F, 33F), ThemeColor_Color_FFFFFF()); ;
+                return result;
+            }
+
+            // Layer aggregator
+            // 矩形路径 1
+            CompositionSpriteShape SpriteShape_4()
+            {
+                // Offset:<9, 33>, Scale:<3, 3>
+                var geometry = RoundedRectangle_4();
+                var result = CreateSpriteShape(geometry, new Matrix3x2(3F, 0F, 0F, 3F, 9F, 33F), ThemeColor_Color_FFFFFF()); ;
                 return result;
             }
 
@@ -697,94 +716,22 @@ namespace Screenbox.Controls.Animations
                 return result;
             }
 
-            // - - Layer aggregator
-            // -  Offset:<24, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p95_to_0p95_0()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.949999988F, HoldThenStepEasingFunction());
-                // Frame 21.
-                result.InsertKeyFrame(0.174999997F, 0F, CubicBezierEasingFunction_0());
-                // Frame 46.
-                result.InsertKeyFrame(0.383333325F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 71.
-                result.InsertKeyFrame(0.591666639F, 0F, CubicBezierEasingFunction_0());
-                // Frame 90.
-                result.InsertKeyFrame(0.75F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 105.
-                result.InsertKeyFrame(0.875F, 0.5F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
-            // - - Layer aggregator
-            // -  Offset:<13, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p95_to_0p95_1()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.949999988F, HoldThenStepEasingFunction());
-                // Frame 14.
-                result.InsertKeyFrame(0.116666667F, 0.300000012F, CubicBezierEasingFunction_0());
-                // Frame 35.
-                result.InsertKeyFrame(0.291666657F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 56.
-                result.InsertKeyFrame(0.466666669F, 0F, CubicBezierEasingFunction_0());
-                // Frame 79.
-                result.InsertKeyFrame(0.658333361F, 0.949999988F, CubicBezierEasingFunction_0());
-                // Frame 100.
-                result.InsertKeyFrame(0.833333313F, 0.400000006F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
-            // - - Layer aggregator
-            // -  Offset:<35, 23.5>
-            // TrimStart
-            ScalarKeyFrameAnimation TrimStartScalarAnimation_0p96_to_0p95()
-            {
-                // Frame 0.
-                var result = CreateScalarKeyFrameAnimation(0F, 0.959999979F, HoldThenStepEasingFunction());
-                // Frame 15.
-                result.InsertKeyFrame(0.125F, 0.600000024F, CubicBezierEasingFunction_0());
-                // Frame 30.
-                result.InsertKeyFrame(0.25F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 35.
-                result.InsertKeyFrame(0.291666657F, 0.980000019F, CubicBezierEasingFunction_0());
-                // Frame 50.
-                result.InsertKeyFrame(0.416666657F, 0.200000003F, CubicBezierEasingFunction_0());
-                // Frame 55.
-                result.InsertKeyFrame(0.458333343F, 0F, CubicBezierEasingFunction_0());
-                // Frame 70.
-                result.InsertKeyFrame(0.583333313F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 75.
-                result.InsertKeyFrame(0.625F, 0.939999998F, CubicBezierEasingFunction_0());
-                // Frame 90.
-                result.InsertKeyFrame(0.75F, 0.200000003F, CubicBezierEasingFunction_0());
-                // Frame 94.
-                result.InsertKeyFrame(0.783333361F, 0F, CubicBezierEasingFunction_0());
-                // Frame 115.
-                result.InsertKeyFrame(0.958333313F, 0.800000012F, CubicBezierEasingFunction_0());
-                // Frame 119.
-                result.InsertKeyFrame(0.991666675F, 0.949999988F, CubicBezierEasingFunction_0());
-                return result;
-            }
-
             // Layer aggregator
             ShapeVisual ShapeVisual_0()
             {
                 var result = _c.CreateShapeVisual();
-                result.Size = new Vector2(48F, 48F);
+                result.Size = new Vector2(66F, 66F);
                 var shapes = result.Shapes;
-                // Offset:<35, 23.5>
+                // Offset:<57, 32.875>
                 shapes.Add(SpriteShape_0());
-                // Offset:<24, 23.5>
+                // Offset:<45, 32.875>
                 shapes.Add(SpriteShape_1());
-                // Offset:<13, 23.5>
+                // Offset:<32.875, 32.875>
                 shapes.Add(SpriteShape_2());
+                // Offset:<21, 33>
+                shapes.Add(SpriteShape_3());
+                // Offset:<9, 33>
+                shapes.Add(SpriteShape_4());
                 return result;
             }
 
@@ -793,6 +740,57 @@ namespace Screenbox.Controls.Animations
                 if (_holdThenStepEasingFunction != null) { return _holdThenStepEasingFunction; }
                 var result = _holdThenStepEasingFunction = _c.CreateStepEasingFunction();
                 result.IsFinalStepSingleFrame = true;
+                return result;
+            }
+
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_0()
+            {
+                // Frame 0.
+                if (_sizeVector2Animation_0 != null) { return _sizeVector2Animation_0; }
+                var result = _sizeVector2Animation_0 = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 6F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 14F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                return result;
+            }
+
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_1()
+            {
+                // Frame 0.
+                if (_sizeVector2Animation_1 != null) { return _sizeVector2Animation_1; }
+                var result = _sizeVector2Animation_1 = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 10F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 8F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                return result;
+            }
+
+            // 矩形路径 1.RectangleGeometry
+            // Size
+            Vector2KeyFrameAnimation SizeVector2Animation_2()
+            {
+                // Frame 0.
+                var result = CreateVector2KeyFrameAnimation(0F, new Vector2(2F, 14F), HoldThenStepEasingFunction());
+                // Frame 10.
+                result.InsertKeyFrame(0.243902445F, new Vector2(2F, 12F), CubicBezierEasingFunction_0());
+                // Frame 20.
+                result.InsertKeyFrame(0.48780489F, new Vector2(2F, 6F), CubicBezierEasingFunction_0());
+                // Frame 30.
+                result.InsertKeyFrame(0.731707335F, new Vector2(2F, 10F), CubicBezierEasingFunction_0());
+                // Frame 40.
+                result.InsertKeyFrame(0.975609779F, new Vector2(2F, 14F), CubicBezierEasingFunction_0());
                 return result;
             }
 
@@ -809,21 +807,25 @@ namespace Screenbox.Controls.Animations
 
             public Visual RootVisual => _root;
             public TimeSpan Duration => TimeSpan.FromTicks(c_durationTicks);
-            public Vector2 Size => new Vector2(48F, 48F);
+            public Vector2 Size => new Vector2(66F, 66F);
             void IDisposable.Dispose() => _root?.Dispose();
 
             public void CreateAnimations()
             {
-                StartProgressBoundAnimation(_pathGeometry_0, "TrimStart", TrimStartScalarAnimation_0p96_to_0p95(), RootProgress());
-                StartProgressBoundAnimation(_pathGeometry_1, "TrimStart", TrimStartScalarAnimation_0p95_to_0p95_0(), RootProgress());
-                StartProgressBoundAnimation(_pathGeometry_2, "TrimStart", TrimStartScalarAnimation_0p95_to_0p95_1(), RootProgress());
+                StartProgressBoundAnimation(_roundedRectangle_0, "Size", SizeVector2Animation_0(), RootProgress());
+                StartProgressBoundAnimation(_roundedRectangle_1, "Size", SizeVector2Animation_1(), RootProgress());
+                StartProgressBoundAnimation(_roundedRectangle_2, "Size", SizeVector2Animation_2(), RootProgress());
+                StartProgressBoundAnimation(_roundedRectangle_3, "Size", SizeVector2Animation_1(), RootProgress());
+                StartProgressBoundAnimation(_roundedRectangle_4, "Size", SizeVector2Animation_0(), RootProgress());
             }
 
             public void DestroyAnimations()
             {
-                _pathGeometry_0.StopAnimation("TrimStart");
-                _pathGeometry_1.StopAnimation("TrimStart");
-                _pathGeometry_2.StopAnimation("TrimStart");
+                _roundedRectangle_0.StopAnimation("Size");
+                _roundedRectangle_1.StopAnimation("Size");
+                _roundedRectangle_2.StopAnimation("Size");
+                _roundedRectangle_3.StopAnimation("Size");
+                _roundedRectangle_4.StopAnimation("Size");
             }
 
             internal static bool IsRuntimeCompatible()

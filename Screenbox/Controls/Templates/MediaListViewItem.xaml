@@ -21,6 +21,8 @@
         FalseValue="{strings:Resources Key=Play}"
         TrueValue="{strings:Resources Key=Pause}" />
 
+    <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource SystemAccentColorLight2}" />
+
     <DataTemplate x:Key="MediaListViewItemTemplate">
         <UserControl>
             <Grid
@@ -43,13 +45,14 @@
                 <muxc:AnimatedVisualPlayer
                     x:Name="IsPlayingIcon"
                     Grid.Column="0"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsHitTestVisible="False"
+                    Source="{StaticResource AnimatedPlayingVisualSource}"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
-                    Visibility="Collapsed">
-                    <animations:AnimatedPlayingVisualSource Color_FFFFFF="{ThemeResource SystemAccentColorLight2}" />
-                </muxc:AnimatedVisualPlayer>
+                    Visibility="Collapsed" />
 
                 <FontIcon
                     x:Name="ItemIcon"
@@ -272,13 +275,14 @@
                 <muxc:AnimatedVisualPlayer
                     x:Name="IsPlayingIcon"
                     Grid.Column="0"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsHitTestVisible="False"
+                    Source="{StaticResource AnimatedPlayingVisualSource}"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
-                    Visibility="Collapsed">
-                    <animations:AnimatedPlayingVisualSource Color_FFFFFF="{ThemeResource SystemAccentColorLight2}" />
-                </muxc:AnimatedVisualPlayer>
+                    Visibility="Collapsed" />
 
                 <Button
                     x:Name="PlayButton"
@@ -482,13 +486,14 @@
                 <muxc:AnimatedVisualPlayer
                     x:Name="IsPlayingIcon"
                     Grid.Column="0"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsHitTestVisible="False"
+                    Source="{StaticResource AnimatedPlayingVisualSource}"
                     ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
-                    Visibility="Collapsed">
-                    <animations:AnimatedPlayingVisualSource Color_FFFFFF="{ThemeResource SystemAccentColorLight2}" />
-                </muxc:AnimatedVisualPlayer>
+                    Visibility="Collapsed" />
 
                 <TextBlock
                     x:Name="TrackNumberText"
