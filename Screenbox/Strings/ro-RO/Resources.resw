@@ -735,6 +735,6 @@
     <value>Compozitori</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Nu s-a putut adăuga folderul</value>
   </data>
 </root>
