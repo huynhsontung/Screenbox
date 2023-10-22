@@ -17,14 +17,17 @@
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="White" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemColorWindowColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 

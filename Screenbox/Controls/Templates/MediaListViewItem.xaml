@@ -21,7 +21,7 @@
         FalseValue="{strings:Resources Key=Play}"
         TrueValue="{strings:Resources Key=Pause}" />
 
-    <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource SystemAccentColorLight2}" />
+    <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorDefault}" />
 
     <DataTemplate x:Key="MediaListViewItemTemplate">
         <UserControl>
