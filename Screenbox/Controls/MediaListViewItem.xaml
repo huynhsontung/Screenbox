@@ -1,0 +1,314 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.MediaListViewItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:Screenbox.Controls.Animations"
+    xmlns:converters="using:Screenbox.Converters"
+    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
+    d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    DataContextChanged="OnDataContextChanged"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
+        <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
+        <converters1:BoolToObjectConverter
+            x:Key="BoolToPlayPauseTextConverter"
+            FalseValue="{strings:Resources Key=Play}"
+            TrueValue="{strings:Resources Key=Pause}" />
+
+        <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorDefault}" />
+    </UserControl.Resources>
+
+    <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
+            <ColumnDefinition Width="32" />
+            <ColumnDefinition Width="1.6*" />
+            <ColumnDefinition x:Name="ArtistColumn" Width="0" />
+            <ColumnDefinition x:Name="AlbumColumn" Width="0" />
+            <ColumnDefinition x:Name="GenreColumn" Width="0" />
+            <ColumnDefinition Width="Auto" MinWidth="54" />
+        </Grid.ColumnDefinitions>
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="RootGridTranslateTransform" />
+        </Grid.RenderTransform>
+
+        <muxc:AnimatedVisualPlayer
+            x:Name="PlayingIndicator"
+            Grid.Column="0"
+            Width="16"
+            Height="16"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            AutoPlay="False"
+            IsHitTestVisible="False"
+            Source="{StaticResource AnimatedPlayingVisualSource}"
+            ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
+            Visibility="Collapsed" />
+
+        <TextBlock
+            x:Name="TrackNumberText"
+            Grid.Column="1"
+            Margin="8"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            IsHitTestVisible="False"
+            MaxLines="1"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{Binding TrackNumberText, FallbackValue=''}"
+            Visibility="{x:Bind IsTrackNumberVisible, Mode=OneWay}" />
+
+        <FontIcon
+            x:Name="ItemIcon"
+            Grid.Column="1"
+            Margin="8"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
+            FontSize="{StaticResource DefaultIconFontSize}"
+            Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
+            IsHitTestVisible="False"
+            Visibility="{x:Bind IsIconVisible}" />
+
+        <Button
+            x:Name="PlayButton"
+            Grid.Column="1"
+            Width="32"
+            Height="32"
+            Padding="6"
+            VerticalAlignment="Center"
+            Background="Transparent"
+            BorderThickness="0"
+            CommandParameter="{Binding}"
+            ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
+            Visibility="Collapsed">
+            <FontIcon
+                FontSize="{StaticResource DefaultIconFontSize}"
+                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+        </Button>
+
+        <TextBlock
+            x:Name="TitleText"
+            Grid.Column="2"
+            Margin="8,0,8,0"
+            VerticalAlignment="Center"
+            MaxLines="1"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{Binding Name}"
+            TextTrimming="CharacterEllipsis" />
+
+        <HyperlinkButton
+            x:Name="ArtistButton"
+            Grid.Column="3"
+            Margin="4,0"
+            VerticalAlignment="Center"
+            CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
+            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+            Visibility="Collapsed">
+            <TextBlock
+                x:Name="ArtistText"
+                MaxLines="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{Binding MainArtist.Name, FallbackValue=''}"
+                TextTrimming="CharacterEllipsis" />
+        </HyperlinkButton>
+
+        <HyperlinkButton
+            x:Name="AlbumButton"
+            Grid.Column="4"
+            Margin="4,0"
+            VerticalAlignment="Center"
+            CommandParameter="{Binding Album}"
+            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+            Visibility="Collapsed">
+            <TextBlock
+                x:Name="AlbumText"
+                MaxLines="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{Binding Album.Name, FallbackValue=''}"
+                TextTrimming="CharacterEllipsis" />
+        </HyperlinkButton>
+
+        <TextBlock
+            x:Name="GenreText"
+            Grid.Column="5"
+            Margin="4,0"
+            VerticalAlignment="Center"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            MaxLines="1"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{Binding Genre, Converter={StaticResource GenreTextConverter}}"
+            Visibility="Collapsed" />
+
+        <TextBlock
+            x:Name="DurationText"
+            Grid.Column="6"
+            Margin="8,0,16,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            MaxLines="1"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="ActivityStates">
+                <VisualState x:Name="ItemActive">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
+                        <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="PlayingStates">
+                <VisualState x:Name="Playing">
+                    <VisualState.Setters>
+                        <Setter Target="PlayingIndicator.PlaybackRate" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NotPlaying">
+                    <VisualState.Setters>
+                        <Setter Target="PlayingIndicator.PlaybackRate" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="NotPlaying" To="Playing">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayingIndicator" Storyboard.TargetProperty="PlaybackRate">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0.2" />
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.2" Value="0.6" />
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="1" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="Playing" To="NotPlaying">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlayingIndicator" Storyboard.TargetProperty="PlaybackRate">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="0.8" />
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="0.4" />
+                                <DiscreteObjectKeyFrame KeyTime="0:0:0.6" Value="0" />
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="MultiSelectStates">
+                <VisualState x:Name="MultiSelectDisabled">
+                    <VisualState.Setters>
+                        <Setter Target="PlayingIndicator.Opacity" Value="1" />
+                        <Setter Target="ItemIcon.Opacity" Value="1" />
+                        <Setter Target="RootGridTranslateTransform.X" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="MultiSelectEnabled">
+                    <VisualState.Setters>
+                        <Setter Target="PlayingIndicator.Opacity" Value="0" />
+                        <Setter Target="ItemIcon.Opacity" Value="0" />
+                        <Setter Target="RootGridTranslateTransform.X" Value="-32" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.333"
+                        From="MultiSelectDisabled"
+                        To="MultiSelectEnabled">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseOut" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+
+                    <VisualTransition
+                        GeneratedDuration="0:0:0.333"
+                        From="MultiSelectedEnabled"
+                        To="MultiSelectDisabled">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseIn" />
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="DetailsLevels">
+                <VisualState x:Name="Level0" />
+                <VisualState x:Name="Level1">
+                    <VisualState.Setters>
+                        <Setter Target="ArtistColumn.Width" Value="*" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Level2">
+                    <VisualState.Setters>
+                        <Setter Target="ArtistColumn.Width" Value="*" />
+                        <Setter Target="AlbumColumn.Width" Value="{x:Bind BoolToGridLength(IsAlbumColumnVisible)}" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
+                        <Setter Target="AlbumButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Level3">
+                    <VisualState.Setters>
+                        <Setter Target="ArtistColumn.Width" Value="*" />
+                        <Setter Target="AlbumColumn.Width" Value="{x:Bind BoolToGridLength(IsAlbumColumnVisible)}" />
+                        <Setter Target="GenreColumn.Width" Value="*" />
+                        <Setter Target="ArtistButton.Visibility" Value="Visible" />
+                        <Setter Target="AlbumButton.Visibility" Value="Visible" />
+                        <Setter Target="GenreText.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                        <Setter Target="PlayButton.Visibility" Value="Visible" />
+                        <Setter Target="TrackNumberText.Visibility" Value="Collapsed" />
+                        <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+
+    <interactivity:Interaction.Behaviors>
+        <interactions:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="390,580,740" />
+        <interactions:MediaListViewItemBehavior />
+        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="True">
+            <core:GoToStateAction
+                StateName="Playing"
+                TargetObject="{x:Bind}"
+                UseTransitions="True" />
+        </core:DataTriggerBehavior>
+        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="False">
+            <core:GoToStateAction
+                StateName="NotPlaying"
+                TargetObject="{x:Bind}"
+                UseTransitions="True" />
+        </core:DataTriggerBehavior>
+    </interactivity:Interaction.Behaviors>
+</UserControl>
