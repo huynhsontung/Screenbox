@@ -12,7 +12,6 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
 {
     public double Delay { get; set; }
 
-    private DateTimeOffset _deferredStart;
     private bool _focused;
     private bool _eventTriggered;
     private readonly DispatcherQueueTimer _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
@@ -25,7 +24,6 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
         if (AssociatedObject is ListViewBase { Items: { Count: 0 } items })
         {
             items.VectorChanged += ItemsOnVectorChanged;
-            _deferredStart = DateTimeOffset.Now;
         }
     }
 
@@ -43,16 +41,9 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
         if (sender.Count == 0 || _eventTriggered) return;
         sender.VectorChanged -= ItemsOnVectorChanged;
         _eventTriggered = true;
-        TimeSpan delta = DateTimeOffset.Now - _deferredStart;
-        if (!_focused && delta < TimeSpan.FromSeconds(1))
+        if (!_focused)
         {
-            _timer.Debounce(() =>
-            {
-                if (AssociatedObject != null)
-                {
-                    _focused = AssociatedObject.Focus(FocusState.Programmatic);
-                }
-            }, TimeSpan.FromMilliseconds(Delay));
+            DelayFocus(Delay);
         }
     }
 
@@ -60,18 +51,23 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
     {
         if (Delay > 0)
         {
-            object focused = FocusManager.GetFocusedElement();
-            _timer.Debounce(() =>
-            {
-                if (focused == FocusManager.GetFocusedElement() && AssociatedObject != null)
-                {
-                    _focused = AssociatedObject.Focus(FocusState.Programmatic);
-                }
-            }, TimeSpan.FromMilliseconds(Delay));
+            DelayFocus(Delay);
         }
         else
         {
             _focused = AssociatedObject.Focus(FocusState.Programmatic);
         }
+    }
+
+    private void DelayFocus(double delay)
+    {
+        object focused = FocusManager.GetFocusedElement();
+        _timer.Debounce(() =>
+        {
+            if (focused == FocusManager.GetFocusedElement() && AssociatedObject != null)
+            {
+                _focused = AssociatedObject.Focus(FocusState.Programmatic);
+            }
+        }, TimeSpan.FromMilliseconds(delay));
     }
 }
