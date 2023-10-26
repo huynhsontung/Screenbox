@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -163,12 +164,19 @@
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
             SelectionMode="None">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:MediaListViewItem
+                        IsAlbumColumnVisible="False"
+                        IsIconVisible="False"
+                        IsTrackNumberVisible="True" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </ListView.Header>
