@@ -187,9 +187,11 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button
+                        x:Name="PlayButton"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Style="{StaticResource AccentButtonStyle}"
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
@@ -199,7 +201,10 @@
                         </interactivity:Interaction.Behaviors>
                     </Button>
 
-                    <Button AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}" Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
@@ -218,7 +223,8 @@
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind AlbumSource.View}"
-            SelectionMode="None">
+            SelectionMode="None"
+            XYFocusUp="{x:Bind PlayButton}">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>
