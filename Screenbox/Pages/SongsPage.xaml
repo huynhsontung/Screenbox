@@ -70,6 +70,10 @@
         </ResourceDictionary>
     </Page.Resources>
 
+    <interactivity:Interaction.Behaviors>
+        <interactions:AutoFocusBehavior Delay="{StaticResource DefaultAutoFocusDelay}" />
+    </interactivity:Interaction.Behaviors>
+
     <Grid>
         <SemanticZoom Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
@@ -93,7 +97,6 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:AutoFocusBehavior />
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"

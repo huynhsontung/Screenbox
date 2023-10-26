@@ -7,6 +7,7 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -65,7 +66,7 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:AutoFocusBehavior />
+                    <interactions:AutoFocusBehavior Delay="{StaticResource DefaultAutoFocusDelay}" />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
