@@ -16,13 +16,6 @@
     d:DesignWidth="400"
     Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <Grid.Resources>

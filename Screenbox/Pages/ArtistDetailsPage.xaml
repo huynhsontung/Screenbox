@@ -19,10 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
 
             <ThemeShadow x:Key="SharedShadow" />

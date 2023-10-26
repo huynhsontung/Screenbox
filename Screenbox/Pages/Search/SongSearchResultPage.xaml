@@ -14,14 +14,6 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

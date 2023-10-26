@@ -18,10 +18,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <CollectionViewSource
                 x:Name="SongsSource"
                 IsSourceGrouped="True"

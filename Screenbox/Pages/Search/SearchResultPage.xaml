@@ -17,7 +17,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/ArtistGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/AlbumGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/VideoGridViewItem.xaml" />
