@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
+﻿#nullable enable
+
+using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Behaviors;
 using System;
 using Windows.Foundation.Collections;
@@ -13,6 +15,7 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
 {
     private bool _focused;
     private bool _eventTriggered;
+    private FrameworkElement? _deferredElement;
     private readonly DispatcherQueue _dispatcherQueue;
     private readonly DispatcherQueueTimer _timer;
 
@@ -36,6 +39,7 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
     protected override void OnDetaching()
     {
         base.OnDetaching();
+        ResetDeferredElement();
         if (AssociatedObject is ListViewBase { Items: { } items })
         {
             items.VectorChanged -= ItemsOnVectorChanged;
@@ -72,8 +76,10 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
         // If yes than wait until key up then focus
         if (triggered && FocusManager.GetFocusedElement() is FrameworkElement element)
         {
+            ResetDeferredElement();
             element.PreviewKeyUp -= ElementOnPreviewKeyUp;
             element.PreviewKeyUp += ElementOnPreviewKeyUp;
+            _deferredElement = element;
         }
         else
         {
@@ -92,5 +98,12 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
                 _focused = AssociatedObject.Focus(FocusState.Programmatic);
             });
         }
+    }
+
+    private void ResetDeferredElement()
+    {
+        if (_deferredElement == null) return;
+        _deferredElement.PreviewKeyUp -= ElementOnPreviewKeyUp;
+        _deferredElement = null;
     }
 }
