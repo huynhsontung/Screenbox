@@ -2,11 +2,9 @@
     x:Class="Screenbox.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -197,14 +195,6 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <interactivity:Interaction.Behaviors>
-        <behaviors:FocusBehavior>
-            <behaviors:FocusTarget Control="{x:Bind RecentFilesGridView}" />
-            <behaviors:FocusTarget Control="{x:Bind WelcomePanelOpenButton}" />
-            <behaviors:FocusTarget Control="{x:Bind HeaderOpenButton}" />
-        </behaviors:FocusBehavior>
-    </interactivity:Interaction.Behaviors>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -240,6 +230,9 @@
                         Margin="8,0,0,0"
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
+                <interactivity:Interaction.Behaviors>
+                    <interactions:AutoFocusBehavior />
+                </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
 

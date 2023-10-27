@@ -161,6 +161,7 @@
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
     <Compile Include="Controls\Interactions\NavViewXYFocusBehavior.cs" />

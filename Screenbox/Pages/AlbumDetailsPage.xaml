@@ -140,7 +140,7 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
-                            <behaviors:AutoFocusBehavior />
+                            <interactions:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </Button>
 

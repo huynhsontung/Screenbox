@@ -14,7 +14,7 @@
     mc:Ignorable="d">
 
     <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
+        <interactions:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
