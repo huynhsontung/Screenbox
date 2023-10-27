@@ -3,6 +3,7 @@ using Microsoft.Toolkit.Uwp.UI.Behaviors;
 using System;
 using Windows.Foundation.Collections;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -10,11 +11,16 @@ using Windows.UI.Xaml.Input;
 namespace Screenbox.Controls.Interactions;
 internal class AutoFocusBehavior : BehaviorBase<Control>
 {
-    public double Delay { get; set; }
-
     private bool _focused;
     private bool _eventTriggered;
-    private readonly DispatcherQueueTimer _timer = DispatcherQueue.GetForCurrentThread().CreateTimer();
+    private readonly DispatcherQueue _dispatcherQueue;
+    private readonly DispatcherQueueTimer _timer;
+
+    public AutoFocusBehavior()
+    {
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+        _timer = _dispatcherQueue.CreateTimer();
+    }
 
     protected override void OnAttached()
     {
@@ -40,18 +46,34 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
     {
         if (sender.Count == 0 || _eventTriggered) return;
         sender.VectorChanged -= ItemsOnVectorChanged;
+        // Event may fire multiple times synchronously.
+        // Handler is called multiple times even after unregister
         _eventTriggered = true;
         if (!_focused)
         {
-            DelayFocus(Delay);
+            _timer.Debounce(() =>
+            {
+                if (AssociatedObject != null)
+                {
+                    _focused = AssociatedObject.Focus(FocusState.Programmatic);
+                }
+            }, TimeSpan.FromMilliseconds(80));
         }
     }
 
     protected override void OnAssociatedObjectLoaded()
     {
-        if (Delay > 0)
+        // Check if Space key is still down
+        bool spaceDown = Window.Current.CoreWindow.GetKeyState(VirtualKey.Space).HasFlag(CoreVirtualKeyStates.Down);
+        bool enterDown = Window.Current.CoreWindow.GetKeyState(VirtualKey.Enter).HasFlag(CoreVirtualKeyStates.Down);
+        bool gamepadADown = Window.Current.CoreWindow.GetKeyState(VirtualKey.GamepadA).HasFlag(CoreVirtualKeyStates.Down);
+        bool triggered = spaceDown || enterDown || gamepadADown;
+
+        // If yes than wait until key up then focus
+        if (triggered && FocusManager.GetFocusedElement() is FrameworkElement element)
         {
-            DelayFocus(Delay);
+            element.PreviewKeyUp -= ElementOnPreviewKeyUp;
+            element.PreviewKeyUp += ElementOnPreviewKeyUp;
         }
         else
         {
@@ -59,15 +81,16 @@ internal class AutoFocusBehavior : BehaviorBase<Control>
         }
     }
 
-    private void DelayFocus(double delay)
+    private void ElementOnPreviewKeyUp(object sender, KeyRoutedEventArgs e)
     {
-        object focused = FocusManager.GetFocusedElement();
-        _timer.Debounce(() =>
+        FrameworkElement element = (FrameworkElement)sender;
+        element.PreviewKeyUp -= ElementOnPreviewKeyUp;
+        if (e.Key is VirtualKey.Space or VirtualKey.Enter or VirtualKey.GamepadA && AssociatedObject != null)
         {
-            if (focused == FocusManager.GetFocusedElement() && AssociatedObject != null)
+            _dispatcherQueue.TryEnqueue(() =>
             {
                 _focused = AssociatedObject.Focus(FocusState.Programmatic);
-            }
-        }, TimeSpan.FromMilliseconds(delay));
+            });
+        }
     }
 }

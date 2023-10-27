@@ -66,7 +66,7 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:AutoFocusBehavior Delay="{StaticResource DefaultAutoFocusDelay}" />
+                    <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>

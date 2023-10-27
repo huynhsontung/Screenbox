@@ -122,9 +122,6 @@
                         </Button>
                     </DataTemplate>
 
-                    <!--  Default auto focus delay, without a delay, double trigger may occur on gamepad  -->
-                    <x:Double x:Key="DefaultAutoFocusDelay">100</x:Double>
-
                 </ResourceDictionary>
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>

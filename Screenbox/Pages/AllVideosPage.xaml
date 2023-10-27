@@ -55,7 +55,7 @@
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <interactions:AutoFocusBehavior Delay="{StaticResource DefaultAutoFocusDelay}" />
+        <interactions:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
