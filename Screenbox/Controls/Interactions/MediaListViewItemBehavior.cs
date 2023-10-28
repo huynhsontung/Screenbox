@@ -13,8 +13,6 @@ namespace Screenbox.Controls.Interactions
 {
     internal class MediaListViewItemBehavior : Behavior<Control>
     {
-        public bool IsFocusedStateEnabled { get; set; } = true;
-
         private readonly CommonViewModel _common = Ioc.Default.GetRequiredService<CommonViewModel>();
         private SelectorItem? _selector;
         private ListViewBase? _listView;
@@ -122,7 +120,6 @@ namespace Screenbox.Controls.Interactions
 
         private void SelectorOnGettingFocus(UIElement sender, GettingFocusEventArgs args)
         {
-            if (!IsFocusedStateEnabled) return;
             VisualStateManager.GoToState(AssociatedObject, "PointerOver", false);
         }
 

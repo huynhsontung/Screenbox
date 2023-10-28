@@ -97,7 +97,7 @@
             </Grid>
 
             <interactivity:Interaction.Behaviors>
-                <interactions:MediaListViewItemBehavior IsFocusedStateEnabled="False" />
+                <interactions:MediaListViewItemBehavior />
             </interactivity:Interaction.Behaviors>
         </UserControl>
     </DataTemplate>
