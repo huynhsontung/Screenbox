@@ -32,6 +32,20 @@
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
+
+            <MenuFlyout x:Key="ArtistFlyout">
+                <MenuFlyoutItem Command="{Binding PlayArtistCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenArtistCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xe77b;}"
+                    Text="Open artist" />
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -49,7 +63,6 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
-                    ItemContainerStyle="{StaticResource ArtistGridViewItemStyle}"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"
@@ -68,6 +81,7 @@
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </GridView.Footer>
                     <interactivity:Interaction.Behaviors>
+                        <interactions:ListViewContextTriggerBehavior Flyout="{StaticResource ArtistFlyout}" />
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>

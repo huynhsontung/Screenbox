@@ -43,7 +43,6 @@
             ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource ArtistGridViewItemStyle}"
             ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Artists, FallbackValue={x:Null}}"
             SelectionMode="None">
