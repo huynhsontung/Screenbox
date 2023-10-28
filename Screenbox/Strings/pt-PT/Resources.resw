@@ -738,9 +738,9 @@
     <value>Não foi possível adicionar a pasta</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Abrir álbum</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Abrir artista</value>
   </data>
 </root>
