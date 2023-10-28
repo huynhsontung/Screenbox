@@ -100,7 +100,6 @@
                         Padding="{StaticResource PageThumbnailMargin}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
-                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">

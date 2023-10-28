@@ -13,16 +13,13 @@ namespace Screenbox.Controls.Interactions
 {
     internal class MediaListViewItemBehavior : Behavior<Control>
     {
-        private readonly CommonViewModel _common;
+        public bool IsFocusedStateEnabled { get; set; } = true;
+
+        private readonly CommonViewModel _common = Ioc.Default.GetRequiredService<CommonViewModel>();
         private SelectorItem? _selector;
         private ListViewBase? _listView;
         private ButtonBase? _playButton;
         private long _selectionModePropertyToken;
-
-        public MediaListViewItemBehavior()
-        {
-            _common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        }
 
         protected override void OnAttached()
         {
@@ -125,6 +122,7 @@ namespace Screenbox.Controls.Interactions
 
         private void SelectorOnGettingFocus(UIElement sender, GettingFocusEventArgs args)
         {
+            if (!IsFocusedStateEnabled) return;
             VisualStateManager.GoToState(AssociatedObject, "PointerOver", false);
         }
 

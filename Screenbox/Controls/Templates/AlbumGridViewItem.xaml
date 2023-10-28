@@ -8,13 +8,6 @@
     <x:Double x:Key="AlbumGridViewItemHeight">226</x:Double>
     <x:Double x:Key="AlbumGridViewItemThumbnailHeight">160</x:Double>
 
-    <Style
-        x:Key="AlbumGridViewItemStyle"
-        BasedOn="{StaticResource DefaultGridViewItemStyle}"
-        TargetType="GridViewItem">
-        <Setter Property="IsFocusEngagementEnabled" Value="True" />
-    </Style>
-
     <DataTemplate x:Key="AlbumGridViewItemTemplate">
         <UserControl>
             <Grid
@@ -72,7 +65,8 @@
                         Command="{Binding PlayAlbumCommand}"
                         CornerRadius="99"
                         Opacity="0"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Style="{StaticResource AccentButtonStyle}"
+                        ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
                         <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
                     </Button>
                 </Grid>
@@ -107,7 +101,7 @@
             </Grid>
 
             <interactivity:Interaction.Behaviors>
-                <interactions:MediaListViewItemBehavior />
+                <interactions:MediaListViewItemBehavior IsFocusedStateEnabled="False" />
             </interactivity:Interaction.Behaviors>
         </UserControl>
     </DataTemplate>
