@@ -5,6 +5,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters">
 
     <Application.Resources>
@@ -56,6 +57,10 @@
                         GreaterThan="0"
                         NullValue="False"
                         TrueValue="True" />
+                    <toolkitConverters:BoolToObjectConverter
+                        x:Key="BoolToPlayPauseTextConverter"
+                        FalseValue="{strings:Resources Key=Play}"
+                        TrueValue="{strings:Resources Key=Pause}" />
 
                     <!--  Standardize header height with or without top nav  -->
                     <x:Double x:Key="PageHeaderMinHeight">48</x:Double>

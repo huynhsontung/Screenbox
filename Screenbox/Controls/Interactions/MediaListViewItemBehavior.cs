@@ -13,16 +13,11 @@ namespace Screenbox.Controls.Interactions
 {
     internal class MediaListViewItemBehavior : Behavior<Control>
     {
-        private readonly CommonViewModel _common;
+        private readonly CommonViewModel _common = Ioc.Default.GetRequiredService<CommonViewModel>();
         private SelectorItem? _selector;
         private ListViewBase? _listView;
         private ButtonBase? _playButton;
         private long _selectionModePropertyToken;
-
-        public MediaListViewItemBehavior()
-        {
-            _common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        }
 
         protected override void OnAttached()
         {

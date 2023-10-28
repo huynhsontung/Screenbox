@@ -2,13 +2,12 @@
     x:Class="Screenbox.Pages.ArtistsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
@@ -32,6 +31,20 @@
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
+
+            <MenuFlyout x:Key="ArtistFlyout">
+                <MenuFlyoutItem Command="{Binding PlayArtistCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenArtistCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xe77b;}"
+                    Text="{strings:Resources Key=OpenArtist}" />
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -49,7 +62,6 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
-                    ItemContainerStyle="{StaticResource ArtistGridViewItemStyle}"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"
@@ -68,6 +80,7 @@
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </GridView.Footer>
                     <interactivity:Interaction.Behaviors>
+                        <interactions:ListViewContextTriggerBehavior Flyout="{StaticResource ArtistFlyout}" />
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>

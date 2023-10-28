@@ -73,7 +73,6 @@
                         Padding="{StaticResource PageThumbnailMargin}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                         IsItemClickEnabled="True"
-                        ItemContainerStyle="{StaticResource ArtistGridViewItemStyle}"
                         ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Artists}"
                         SelectionMode="None" />
@@ -100,7 +99,6 @@
                         Padding="{StaticResource PageThumbnailMargin}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
-                        ItemContainerStyle="{StaticResource AlbumGridViewItemStyle}"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">
