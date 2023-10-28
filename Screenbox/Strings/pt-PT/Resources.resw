@@ -737,4 +737,10 @@
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>Não foi possível adicionar a pasta</value>
   </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Open album</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Open artist</value>
+  </data>
 </root>
