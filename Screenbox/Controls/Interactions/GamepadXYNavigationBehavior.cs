@@ -8,7 +8,7 @@ using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 using NavigationViewPaneDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewPaneDisplayMode;
 
 namespace Screenbox.Controls.Interactions;
-internal class GamepadXYNavigationBehavior : Behavior<Control>
+internal class GamepadXYNavigationBehavior : Behavior<FrameworkElement>
 {
     protected override void OnAttached()
     {

@@ -222,8 +222,7 @@
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}"
-                XYFocusDown="{x:Bind RecentFilesGridView}">
+                ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
                     <TextBlock
@@ -322,8 +321,7 @@
                 ItemContainerStyle="{StaticResource StorageItemGridViewItemStyle}"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
-                SelectionMode="None"
-                XYFocusUp="{x:Bind HeaderOpenButton}">
+                SelectionMode="None">
                 <GridView.Footer>
                     <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </GridView.Footer>
@@ -336,6 +334,10 @@
                 </interactivity:Interaction.Behaviors>
             </GridView>
         </Grid>
+
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
