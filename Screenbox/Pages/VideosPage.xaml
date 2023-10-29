@@ -141,7 +141,7 @@
                 <Button
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource PageContentMargin}"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Top"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
