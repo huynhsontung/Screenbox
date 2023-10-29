@@ -124,6 +124,7 @@
         <TextBlock
             x:Name="TitleText"
             Grid.Row="0"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource PageHeaderMargin}"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind ViewModel.TitleText}" />
@@ -157,7 +158,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
-                <behaviors:AutoFocusBehavior />
+                <interactions:AutoFocusBehavior />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:ThumbnailGridViewBehavior />

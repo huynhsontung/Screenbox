@@ -96,7 +96,7 @@
             ItemsSource="{x:Bind ViewModel.Items}"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
-                <behaviors:AutoFocusBehavior />
+                <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"

@@ -68,7 +68,7 @@ namespace Screenbox.Core.ViewModels
         private void Play(MediaViewModel media)
         {
             if (Videos.Count == 0) return;
-            Messenger.SendQueueAndPlay(media, Videos, false);
+            Messenger.SendQueueAndPlay(media, Videos, true);
         }
 
         [RelayCommand]

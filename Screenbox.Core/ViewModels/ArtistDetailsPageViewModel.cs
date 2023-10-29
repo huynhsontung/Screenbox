@@ -50,7 +50,8 @@ namespace Screenbox.Core.ViewModels
         async partial void OnSourceChanged(ArtistViewModel value)
         {
             Albums = value.RelatedSongs
-                .OrderBy(m => m.MusicProperties?.TrackNumber ?? 0)
+                .OrderBy(m => m.TrackNumber)
+                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
 

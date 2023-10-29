@@ -15,13 +15,13 @@ namespace Screenbox.Core.Helpers
             IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
         {
             PlaylistInfo playlist = messenger.Send(new PlaylistRequestMessage());
-            if (playlist.ActiveItem == media && (media.IsPlaying ?? false) && pauseIfExists)
+            if (media.IsMediaActive && pauseIfExists)
             {
                 messenger.Send(new TogglePlayPauseMessage(false));
                 return;
             }
 
-            if (playlist.Playlist.Count != queue.Count || playlist.LastUpdate != queue)
+            if (playlist.Playlist.Count != queue.Count || !ReferenceEquals(playlist.LastUpdate, queue))
             {
                 messenger.Send(new ClearPlaylistMessage());
                 messenger.Send(new QueuePlaylistMessage(queue, false));

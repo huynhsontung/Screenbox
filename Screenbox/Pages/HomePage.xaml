@@ -2,7 +2,6 @@
     x:Class="Screenbox.Pages.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -90,67 +89,111 @@
                 </MenuFlyoutItem>
             </MenuFlyout>
 
+            <Style
+                x:Key="StorageItemGridViewItemStyle"
+                BasedOn="{StaticResource DefaultGridViewItemStyle}"
+                TargetType="GridViewItem">
+                <Setter Property="IsFocusEngagementEnabled" Value="True" />
+            </Style>
+
             <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
-                <Grid
-                    Width="{StaticResource StorageItemGridViewItemWidth}"
-                    Height="{StaticResource StorageItemGridViewItemHeight}"
-                    Padding="4">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
+                <UserControl>
                     <Grid
-                        Grid.Row="0"
-                        Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="4">
-                        <FontIcon
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontSize="52"
-                            Foreground="{ThemeResource ThumbnailMediaIconForeground}"
-                            Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
-                            Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
-                        <Border CornerRadius="4">
-                            <Image
+                        Width="{StaticResource StorageItemGridViewItemWidth}"
+                        Height="{StaticResource StorageItemGridViewItemHeight}"
+                        Padding="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.Row="0"
+                            Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
+                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <FontIcon
                                 HorizontalAlignment="Center"
-                                x:Phase="1"
-                                Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
-                                Stretch="UniformToFill" />
-                        </Border>
+                                VerticalAlignment="Center"
+                                FontSize="52"
+                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
+                                Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
+                            <Border CornerRadius="4">
+                                <Image
+                                    HorizontalAlignment="Center"
+                                    x:Phase="1"
+                                    Source="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                                    Stretch="UniformToFill" />
+                            </Border>
+                            <Grid
+                                x:Name="IsPlayingIcon"
+                                Margin="8"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Visibility="{x:Bind Media.IsPlaying, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <Ellipse
+                                    Width="40"
+                                    Height="40"
+                                    Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                    Stroke="{ThemeResource ControlElevationBorderBrush}"
+                                    StrokeThickness="0.8" />
+                                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
+                            </Grid>
+                            <Button
+                                x:Name="PlayButton"
+                                Width="40"
+                                Height="40"
+                                Margin="8"
+                                Padding="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                CommandParameter="{x:Bind}"
+                                CornerRadius="99"
+                                Opacity="0"
+                                Style="{StaticResource AccentButtonStyle}">
+                                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding Media.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                            </Button>
+                        </Grid>
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Margin="0,4,0,0"
+                            Padding="4,0"
+                            MaxLines="2"
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="{x:Bind Media.Name, Mode=OneWay}"
+                            TextWrapping="Wrap" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Padding="4,0"
+                            x:Phase="2"
+                            Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind Media.Caption, Mode=OneWay}" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="PlayButton.Opacity" Value="1" />
+                                        <Setter Target="IsPlayingIcon.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
-
-                    <TextBlock
-                        Grid.Row="1"
-                        Margin="0,4,0,0"
-                        Padding="4,0"
-                        MaxLines="2"
-                        Style="{StaticResource BodyStrongTextBlockStyle}"
-                        Text="{x:Bind Media.Name, Mode=OneWay}"
-                        TextWrapping="Wrap" />
-
-                    <TextBlock
-                        Grid.Row="2"
-                        Padding="4,0"
-                        x:Phase="2"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{x:Bind Media.Caption, Mode=OneWay}" />
-                </Grid>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:MediaListViewItemBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </UserControl>
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
-
-    <interactivity:Interaction.Behaviors>
-        <behaviors:FocusBehavior>
-            <behaviors:FocusTarget Control="{x:Bind RecentFilesGridView}" />
-            <behaviors:FocusTarget Control="{x:Bind WelcomePanelOpenButton}" />
-            <behaviors:FocusTarget Control="{x:Bind HeaderOpenButton}" />
-        </behaviors:FocusBehavior>
-    </interactivity:Interaction.Behaviors>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -160,15 +203,21 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource PageHeaderMargin}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="HeaderText"
+                Grid.Column="0"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
 
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                HorizontalAlignment="Right"
+                Grid.Column="1"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
@@ -182,6 +231,9 @@
                         Margin="8,0,0,0"
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
+                <interactivity:Interaction.Behaviors>
+                    <interactions:AutoFocusBehavior />
+                </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
 
@@ -267,6 +319,7 @@
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
+                ItemContainerStyle="{StaticResource StorageItemGridViewItemStyle}"
                 ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None"
@@ -274,6 +327,9 @@
                 <GridView.Footer>
                     <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 </GridView.Footer>
+                <GridView.Resources>
+                    <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
+                </GridView.Resources>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

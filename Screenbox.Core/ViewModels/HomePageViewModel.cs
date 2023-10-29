@@ -232,7 +232,14 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void Play(MediaViewModelWithMruToken media)
         {
-            Messenger.Send(new PlayMediaMessage(media.Media));
+            if (media.Media.IsMediaActive)
+            {
+                Messenger.Send(new TogglePlayPauseMessage(false));
+            }
+            else
+            {
+                Messenger.Send(new PlayMediaMessage(media.Media, false));
+            }
         }
 
         [RelayCommand]

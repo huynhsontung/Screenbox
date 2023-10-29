@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -18,10 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <ThemeShadow x:Key="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
@@ -43,7 +40,7 @@
             x:Name="Header"
             Grid.Row="0"
             Height="200"
-            Margin="0,44,0,-108"
+            Margin="0,0,0,-108"
             Padding="{StaticResource PageContentMargin}"
             Canvas.ZIndex="1">
 
@@ -132,7 +129,7 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button
-                        x:Name="ButtonPanelPlayButton"
+                        x:Name="PlayButton"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
@@ -143,15 +140,14 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
-                            <behaviors:AutoFocusBehavior />
+                            <interactions:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </Button>
 
                     <Button
                         AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                         Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                        XYFocusDown="{x:Bind ItemList}"
-                        XYFocusLeft="{x:Bind ButtonPanelPlayButton}">
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
@@ -169,13 +165,20 @@
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
             SelectionMode="None"
-            XYFocusUp="{x:Bind ButtonPanelPlayButton}">
+            XYFocusUp="{x:Bind PlayButton}">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:MediaListViewItem
+                        IsAlbumColumnVisible="False"
+                        IsIconVisible="False"
+                        IsTrackNumberVisible="True" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </ListView.Header>
@@ -207,7 +210,7 @@
                     <VisualState.Setters>
                         <Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />
                         <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
+                        <Setter Target="Header.Margin" Value="0,0,0,-68" />
                         <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="AlbumArt.Width" Value="140" />
                         <Setter Target="AlbumArt.Height" Value="140" />

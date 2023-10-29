@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -15,13 +16,6 @@
     d:DesignWidth="400"
     Loaded="PlaylistView_OnLoaded"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <Grid.Resources>
@@ -234,13 +228,17 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource MediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}" />
             </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:MediaListViewItem IsIconVisible="True" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"

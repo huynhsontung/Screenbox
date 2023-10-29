@@ -5,6 +5,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkitConverters="using:Microsoft.Toolkit.Uwp.UI.Converters">
 
     <Application.Resources>
@@ -17,14 +18,17 @@
                         <ResourceDictionary x:Key="Dark">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="White" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
+                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemColorWindowColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 
@@ -34,7 +38,7 @@
                     <!--  Converters  -->
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
-
+                    <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
                     <toolkitConverters:BoolToObjectConverter
@@ -53,10 +57,17 @@
                         GreaterThan="0"
                         NullValue="False"
                         TrueValue="True" />
+                    <toolkitConverters:BoolToObjectConverter
+                        x:Key="BoolToPlayPauseTextConverter"
+                        FalseValue="{strings:Resources Key=Play}"
+                        TrueValue="{strings:Resources Key=Pause}" />
+
+                    <!--  Standardize header height with or without top nav  -->
+                    <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
 
                     <!--  Header margin  -->
-                    <Thickness x:Key="PageHeaderMargin">56,44,56,12</Thickness>
-                    <Thickness x:Key="PageHeaderMarginMinimal">16,44,16,12</Thickness>
+                    <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
+                    <Thickness x:Key="PageHeaderMarginMinimal">16,0,16,12</Thickness>
 
                     <!--  Content margin  -->
                     <Thickness x:Key="PageContentMargin">56,0</Thickness>
@@ -95,7 +106,6 @@
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
                         <Setter Property="FontSize" Value="34" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                        <Setter Property="LineHeight" Value="48" />
                     </Style>
 
                     <!--  SplitButton height to match Button  -->
