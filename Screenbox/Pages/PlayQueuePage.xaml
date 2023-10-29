@@ -58,8 +58,7 @@
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                XYFocusDown="{x:Bind PlaylistView}">
+                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
                     <TextBlock
@@ -76,8 +75,11 @@
         <controls:PlaylistView
             x:Name="PlaylistView"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}"
-            XYFocusUp="{x:Bind HeaderAddButton}" />
+            Padding="{StaticResource PageContentMargin}" />
+
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">

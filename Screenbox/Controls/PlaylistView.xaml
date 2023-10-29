@@ -80,7 +80,6 @@
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -88,7 +87,7 @@
             x:Name="ActionButtonRow"
             Grid.Row="0"
             Height="50"
-            Margin="{x:Bind Padding, Mode=OneWay}"
+            Padding="{x:Bind Padding, Mode=OneWay}"
             Orientation="Horizontal">
             <Button
                 x:Name="AddFilesButton"
@@ -134,7 +133,7 @@
 
         <Border
             x:Name="SelectionCommandRow"
-            Grid.Row="1"
+            Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CommandBarBorderBrushOpen}"
@@ -215,7 +214,7 @@
 
         <ListView
             x:Name="PlaylistListView"
-            Grid.Row="2"
+            Grid.Row="1"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
