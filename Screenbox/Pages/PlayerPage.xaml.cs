@@ -138,7 +138,7 @@ namespace Screenbox.Pages
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
             {
                 // Focus can fail if player is file activated
-                // At this point, controls are disabled by default
+                // Controls are disabled by default until playback is ready
                 PlayerControls.FocusFirstButton();
             }
         }
@@ -256,7 +256,7 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
-                case nameof(PlayerPageViewModel.IsPlaying) when _startup:
+                case nameof(PlayerPageViewModel.IsPlaying) when _startup && ViewModel.IsPlaying:
                     // Only when the app is file activated
                     // Wait till playback starts then focus the player controls
                     _startup = false;
