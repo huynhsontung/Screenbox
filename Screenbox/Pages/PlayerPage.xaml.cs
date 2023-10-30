@@ -42,6 +42,7 @@ namespace Screenbox.Pages
 
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
         private CancellationTokenSource? _animationCancellationTokenSource;
+        private bool _startup;
 
         public PlayerPage()
         {
@@ -72,6 +73,7 @@ namespace Screenbox.Pages
             {
                 LayoutRoot.Transitions.Clear();
                 ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
+                _startup = true;
             }
         }
 
@@ -135,6 +137,8 @@ namespace Screenbox.Pages
 
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
             {
+                // Focus can fail if player is file activated
+                // At this point, controls are disabled by default
                 PlayerControls.FocusFirstButton();
             }
         }
@@ -251,6 +255,12 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
+                    break;
+                case nameof(PlayerPageViewModel.IsPlaying) when _startup:
+                    // Only when the app is file activated
+                    // Wait till playback starts then focus the player controls
+                    _startup = false;
+                    PlayerControls.FocusFirstButton();
                     break;
             }
         }
