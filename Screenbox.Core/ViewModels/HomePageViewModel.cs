@@ -12,8 +12,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -59,6 +61,35 @@ namespace Screenbox.Core.ViewModels
             if (_isLoaded) return;
             _isLoaded = true;
             await UpdateContentAsync();
+        }
+
+        public async Task OnDrop(DragEventArgs e)
+        {
+            try
+            {
+                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    if (items.Count > 0)
+                    {
+                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        return;
+                    }
+                }
+
+                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                {
+                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    if (uri.IsFile)
+                    {
+                        Messenger.Send(new PlayMediaMessage(uri));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
+            }
         }
 
         [RelayCommand]
@@ -201,7 +232,14 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void Play(MediaViewModelWithMruToken media)
         {
-            Messenger.Send(new PlayMediaMessage(media.Media));
+            if (media.Media.IsMediaActive)
+            {
+                Messenger.Send(new TogglePlayPauseMessage(false));
+            }
+            else
+            {
+                Messenger.Send(new PlayMediaMessage(media.Media, false));
+            }
         }
 
         [RelayCommand]

@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,31 +19,13 @@ namespace Screenbox.Core.Services
 {
     public sealed class FilesService : IFilesService
     {
-        private ImmutableArray<string> SupportedAudioFormats { get; }
-
-        private ImmutableArray<string> SupportedVideoFormats { get; }
-
-        private ImmutableArray<string> SupportedPlaylistFormats { get; }
-
-        private ImmutableArray<string> SupportedFormats { get; }
-
-        public FilesService()
-        {
-            SupportedVideoFormats = ImmutableArray.Create(
-                ".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
-            SupportedAudioFormats = ImmutableArray.Create(
-                ".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".opus", ".weba", ".flac", ".m4a");
-            SupportedPlaylistFormats = ImmutableArray.Create(".m3u8", ".m3u", ".ts");
-            SupportedFormats = SupportedVideoFormats.AddRange(SupportedAudioFormats).AddRange(SupportedPlaylistFormats);
-        }
-
-        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
+        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
         {
             try
             {
                 StorageFolder? parent = await file.GetParentAsync();
-                StorageFileQueryResult? queryResult =
-                    parent?.CreateFileQueryWithOptions(new QueryOptions(CommonFileQuery.DefaultQuery, SupportedFormats));
+                options ??= new QueryOptions(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
+                StorageFileQueryResult? queryResult = parent?.CreateFileQueryWithOptions(options);
                 return queryResult;
             }
             catch (Exception)
@@ -63,7 +45,7 @@ namespace Screenbox.Core.Services
             // It does not fetch all the files in the directory at once.
             // No need for manual paging!
             IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(startIndex, uint.MaxValue);
-            return files.FirstOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
+            return files.FirstOrDefault(x => x.IsSupported());
         }
 
         public async Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile, StorageFileQueryResult neighboringFilesQuery)
@@ -76,7 +58,7 @@ namespace Screenbox.Core.Services
             // It does not fetch all the files in the directory at once.
             // No need for manual paging!
             IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, startIndex);
-            return files.LastOrDefault(x => SupportedFormats.Contains(x.FileType.ToLowerInvariant()));
+            return files.LastOrDefault(x => x.IsSupported());
         }
 
         public async Task<StorageItemThumbnail?> GetThumbnailAsync(StorageFile file, bool allowIcon = false)
@@ -105,13 +87,13 @@ namespace Screenbox.Core.Services
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder)
         {
             // Don't use indexer when querying. Potential incomplete result.
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
+            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
             return folder.CreateItemQueryWithOptions(queryOptions);
         }
 
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder)
         {
-            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, SupportedFormats);
+            QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
             return folder.CreateItemQueryWithOptions(queryOptions).GetItemCountAsync();
         }
 
@@ -124,7 +106,7 @@ namespace Screenbox.Core.Services
                 SystemProperties.Media.Duration
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, SupportedAudioFormats)
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
             {
                 IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
@@ -142,7 +124,7 @@ namespace Screenbox.Core.Services
                 SystemProperties.Media.Duration
             };
 
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, SupportedVideoFormats)
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
             {
                 IndexerOption = IndexerOption.UseIndexerWhenAvailable
             };
@@ -171,7 +153,7 @@ namespace Screenbox.Core.Services
                 SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
 
-            foreach (string supportedFormat in SupportedFormats)
+            foreach (string supportedFormat in FilesHelpers.SupportedFormats)
             {
                 picker.FileTypeFilter.Add(supportedFormat);
             }
@@ -250,7 +232,7 @@ namespace Screenbox.Core.Services
                 SuggestedStartLocation = PickerLocationId.VideosLibrary
             };
 
-            IEnumerable<string> fileTypes = formats.Count == 0 ? SupportedFormats : formats;
+            IEnumerable<string> fileTypes = formats.Count == 0 ? FilesHelpers.SupportedFormats : formats;
             foreach (string? fileType in fileTypes)
             {
                 picker.FileTypeFilter.Add(fileType);

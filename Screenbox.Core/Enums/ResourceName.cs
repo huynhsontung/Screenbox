@@ -32,6 +32,7 @@
         FailedToSaveFrameNotificationTitle,
         FailedToOpenFilesNotificationTitle,
         FailedToInitializeNotificationTitle,
+        FailedToAddFolderNotificationTitle,
         FrameSavedNotificationTitle,
         ResumePositionNotificationTitle,
         FailedToLoadMediaNotificationTitle,

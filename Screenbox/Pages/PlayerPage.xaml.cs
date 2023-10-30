@@ -42,6 +42,7 @@ namespace Screenbox.Pages
 
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
         private CancellationTokenSource? _animationCancellationTokenSource;
+        private bool _startup;
 
         public PlayerPage()
         {
@@ -65,10 +66,14 @@ namespace Screenbox.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            // Default content state
+            VisualStateManager.GoToState(this, "Video", false);
+
             if (e.Parameter is true)
             {
                 LayoutRoot.Transitions.Clear();
                 ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
+                _startup = true;
             }
         }
 
@@ -132,6 +137,8 @@ namespace Screenbox.Pages
 
             if (ViewModel.PlayerVisibility == PlayerVisibilityState.Visible)
             {
+                // Focus can fail if player is file activated
+                // Controls are disabled by default until playback is ready
                 PlayerControls.FocusFirstButton();
             }
         }
@@ -221,7 +228,7 @@ namespace Screenbox.Pages
 
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
-                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ?? false ? "AudioOnly" : "Video", true);
+                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
@@ -248,6 +255,12 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
+                    break;
+                case nameof(PlayerPageViewModel.IsPlaying) when _startup && ViewModel.IsPlaying:
+                    // Only when the app is file activated
+                    // Wait till playback starts then focus the player controls
+                    _startup = false;
+                    PlayerControls.FocusFirstButton();
                     break;
             }
         }
@@ -293,7 +306,7 @@ namespace Screenbox.Pages
         {
             if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
             {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ?? false ? null : Colors.White;
+                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
             }
         }
 
@@ -305,7 +318,7 @@ namespace Screenbox.Pages
             }
             else
             {
-                VisualStateManager.GoToState(this, ViewModel.AudioOnly ?? false ? "AudioPreview" : "VideoPreview", true);
+                VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioPreview" : "VideoPreview", true);
             }
         }
 
@@ -404,6 +417,12 @@ namespace Screenbox.Pages
             {
                 PlayerControls.FocusFirstButton();
             }
+        }
+
+        private void OnDragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Open;
         }
     }
 }

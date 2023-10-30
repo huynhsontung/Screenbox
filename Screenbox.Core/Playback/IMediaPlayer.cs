@@ -1,10 +1,7 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
@@ -15,23 +12,22 @@ namespace Screenbox.Core.Playback
 {
     public interface IMediaPlayer
     {
-        event TypedEventHandler<IMediaPlayer, object?>? MediaEnded;
-        event TypedEventHandler<IMediaPlayer, object?>? MediaFailed;
-        event TypedEventHandler<IMediaPlayer, object?>? MediaOpened;
-        event TypedEventHandler<IMediaPlayer, object?>? IsMutedChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? VolumeChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? SourceChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? BufferingProgressChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? BufferingStarted;
-        event TypedEventHandler<IMediaPlayer, object?>? BufferingEnded;
-        event TypedEventHandler<IMediaPlayer, object?>? NaturalDurationChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? NaturalVideoSizeChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? PositionChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? ChapterChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? PlaybackStateChanged;
-        event TypedEventHandler<IMediaPlayer, object?>? PlaybackRateChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? MediaEnded;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? MediaFailed;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
 
-        object? Source { get; set; }
         bool CanPause { get; }
         bool CanSeek { get; }
         bool IsMuted { get; set; }
@@ -47,13 +43,13 @@ namespace Screenbox.Core.Playback
         double PlaybackRate { get; set; }
         Rect NormalizedSourceRect { get; set; }
         double Volume { get; set; }
-        public PlaybackItem? PlaybackItem { get; }
+        public PlaybackItem? PlaybackItem { get; set; }
 
         void Close();
         void Play();
         void Pause();
         void StepForwardOneFrame();
         void StepBackwardOneFrame();
-        void AddSubtitle(IStorageFile file);
+        void AddSubtitle(IStorageFile file, bool select = true);
     }
 }

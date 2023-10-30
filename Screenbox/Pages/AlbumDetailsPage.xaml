@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -15,12 +16,9 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     Loaded="AlbumDetailsPage_OnLoaded"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <ThemeShadow x:Key="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
@@ -35,15 +33,15 @@
             x:Name="BackgroundHost"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="-56,-100,0,0"
+            Margin="0,-100,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />
 
         <Grid
             x:Name="Header"
             Grid.Row="0"
             Height="200"
-            Margin="0,44,0,-108"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Margin="0,0,0,-108"
+            Padding="{StaticResource PageContentMargin}"
             Canvas.ZIndex="1">
 
             <Border
@@ -131,22 +129,28 @@
                     Orientation="Horizontal"
                     Spacing="16">
                     <Button
+                        x:Name="PlayButton"
+                        AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
-                        Style="{StaticResource AccentButtonStyle}">
+                        Style="{StaticResource AccentButtonStyle}"
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
-                            <behaviors:AutoFocusBehavior />
+                            <interactions:AutoFocusBehavior />
                         </interactivity:Interaction.Behaviors>
                     </Button>
 
-                    <Button Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                        XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
-                            <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -156,17 +160,25 @@
         <ListView
             x:Name="ItemList"
             Grid.Row="1"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemTemplate="{StaticResource AlbumMediaListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
-            SelectionMode="None">
+            SelectionMode="None"
+            XYFocusUp="{x:Bind PlayButton}">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
             </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:MediaListViewItem
+                        IsAlbumColumnVisible="False"
+                        IsIconVisible="False"
+                        IsTrackNumberVisible="True" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.Header>
                 <Border x:Name="ListHeaderPadding" Height="140" />
             </ListView.Header>
@@ -196,16 +208,16 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />
+                        <Setter Target="Header.Height" Value="160" />
+                        <Setter Target="Header.Margin" Value="0,0,0,-68" />
+                        <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="AlbumArt.Width" Value="140" />
                         <Setter Target="AlbumArt.Height" Value="140" />
-                        <Setter Target="ListHeaderPadding.Height" Value="100" />
-                        <Setter Target="Header.Margin" Value="0,44,0,-68" />
-                        <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="BackgroundHost.Margin" Value="-16,-100,0,0" />
-                        <Setter Target="ButtonPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtIcon.FontSize" Value="52" />
+                        <Setter Target="ButtonPanel.Margin" Value="0" />
+                        <Setter Target="ItemList.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

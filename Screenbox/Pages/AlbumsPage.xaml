@@ -2,15 +2,16 @@
     x:Class="Screenbox.Pages.AlbumsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -30,11 +31,25 @@
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
+
+            <MenuFlyout x:Key="AlbumFlyout">
+                <MenuFlyoutItem Command="{Binding PlayAlbumCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
+                    <MenuFlyoutItem.Icon>
+                        <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                    </MenuFlyoutItem.Icon>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenAlbumCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xe93c;}"
+                    Text="{strings:Resources Key=OpenAlbum}" />
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
+        <interactions:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -42,7 +57,7 @@
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
-                    Padding="{StaticResource ContentPageThumbnailRightMargin}"
+                    Padding="{StaticResource PageThumbnailMargin}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
@@ -65,16 +80,18 @@
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </GridView.Footer>
                     <interactivity:Interaction.Behaviors>
+                        <interactions:ListViewContextTriggerBehavior Flyout="{StaticResource AlbumFlyout}" />
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedInView>
+
             <SemanticZoom.ZoomedOutView>
                 <GridView
                     x:Name="GroupOverview"
                     MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -101,7 +118,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

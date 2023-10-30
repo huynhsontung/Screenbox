@@ -34,7 +34,7 @@ namespace Screenbox.Core.ViewModels
 
         private class TrackNumberComparer : IComparer
         {
-            public int Compare(object x, object y)
+            public int Compare(object? x, object? y)
             {
                 MusicProperties? m1 = x as MusicProperties;
                 MusicProperties? m2 = y as MusicProperties;
@@ -49,6 +49,8 @@ namespace Screenbox.Core.ViewModels
             SortedItems = new AdvancedCollectionView();
             SortedItems.SortDescriptions.Add(new SortDescription(nameof(MediaViewModel.MusicProperties),
                 SortDirection.Ascending, new TrackNumberComparer()));
+            SortedItems.SortDescriptions.Add(new SortDescription(nameof(MediaViewModel.Name),
+                SortDirection.Ascending, StringComparer.CurrentCulture));
         }
 
         public void OnNavigatedTo(object? parameter)

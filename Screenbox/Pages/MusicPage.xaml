@@ -12,8 +12,9 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
+
     <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
+        <interactions:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -22,28 +23,21 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!--  Library-is-empty content  -->
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}"
             Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Grid.Column="0"
-                MaxLines="2"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{strings:Resources Key=Music}" />
+            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Music}" />
         </Grid>
 
-        <!--  Library-is-empty content  -->
         <Grid
             x:Name="NoMusicPanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="32"
@@ -67,65 +61,73 @@
 
             <StackPanel
                 Grid.Column="1"
-                MaxWidth="416"
+                MaxWidth="420"
                 VerticalAlignment="Center"
                 Orientation="Vertical">
                 <TextBlock
                     Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.NoMusicPanelHeader}" />
+                    Text="{strings:Resources Key=NoMusicPanelHeader}" />
 
                 <TextBlock
-                    Margin="0,0,0,12"
+                    Margin="{StaticResource SubtitleTextMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{x:Bind strings:Resources.NoMusicPanelSubtext}"
+                    Text="{strings:Resources Key=NoMusicPanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <Button
+                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
+                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>
 
+        <!--  Library content  -->
         <muxc:NavigationView
             x:Name="LibraryNavView"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="0,44,0,0"
             Background="Transparent"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             PaneDisplayMode="Top"
             SelectionChanged="LibraryNavView_OnSelectionChanged">
             <muxc:NavigationView.Resources>
+                <!--  Override  -->
+                <!--  NavigationView content background to enable Mica  -->
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+                <!--  NavigationView content border thickness  -->
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+                <!--  Top NavigationView side margins  -->
                 <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
             </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
-                    Margin="0,0,16,0"
-                    MaxLines="2"
+                    x:Name="HeaderNavView"
+                    Margin="56,0,16,0"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.Music}" />
+                    Text="{strings:Resources Key=Music}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
+                    AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
                     FontSize="18"
                     Tag="songs" />
                 <muxc:NavigationViewItem
+                    AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
                     FontSize="18"
                     Tag="albums" />
                 <muxc:NavigationViewItem
+                    AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
                     FontSize="18"
                     Tag="artists" />
@@ -133,26 +135,26 @@
             <muxc:NavigationView.PaneFooter>
                 <Button
                     x:Name="HeaderAddFolderButton"
-                    Grid.Column="1"
-                    Margin="{StaticResource ContentPageRightMargin}"
+                    Margin="{StaticResource PageContentMargin}"
                     VerticalAlignment="Top"
+                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8f4;" />
                         <TextBlock
-                            x:Name="AddFolderButtonText"
+                            x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
-                            Text="{x:Bind strings:Resources.AddFolder}" />
+                            Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>
             <interactivity:Interaction.Behaviors>
-                <interactions:NavViewXYFocusBehavior />
+                <interactions:GamepadXYNavigationBehavior />
             </interactivity:Interaction.Behaviors>
 
-            <Grid>
+            <Grid Padding="0,16,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -160,21 +162,20 @@
                 <Button
                     x:Name="ShufflePlayButton"
                     Grid.Row="0"
-                    Margin="0,16,0,0"
+                    Margin="{StaticResource PageContentMargin}"
+                    AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    XYFocusDown="{x:Bind ContentFrame}">
+                    Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8b1;" />
-                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
+                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                     </StackPanel>
                 </Button>
 
                 <muxc:ProgressBar
                     x:Name="LoadingIndicator"
                     Grid.Row="1"
-                    Margin="0,16,0,0"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Margin="56,16,56,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     IsIndeterminate="True"
@@ -183,8 +184,7 @@
                 <Frame
                     x:Name="ContentFrame"
                     Grid.Row="1"
-                    Navigated="ContentFrame_OnNavigated"
-                    XYFocusUp="{x:Bind ShufflePlayButton}" />
+                    Navigated="ContentFrame_OnNavigated" />
             </Grid>
         </muxc:NavigationView>
 
@@ -215,12 +215,15 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="LoadingIndicator.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoMusicPanel.ColumnSpacing" Value="16" />
                         <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
-                        <Setter Target="AddFolderButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="HeaderNavView.Margin" Value="16,0" />
+                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="LoadingIndicator.Margin" Value="16,16,16,0" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

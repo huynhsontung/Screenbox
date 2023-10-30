@@ -17,6 +17,7 @@
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,6 +38,7 @@
                 BasedOn="{StaticResource BodyStrongTextBlockStyle}"
                 TargetType="TextBlock">
                 <Setter Property="Margin" Value="1,28,0,4" />
+                <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
             </Style>
 
             <ThemeShadow x:Key="SharedShadow" />
@@ -102,12 +104,12 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}">
             <TextBlock
                 x:Name="HeaderText"
-                MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{x:Bind strings:Resources.Settings}" />
+                Text="{strings:Resources Key=Settings}" />
         </Grid>
 
         <ScrollViewer
@@ -117,7 +119,7 @@
             <StackPanel
                 x:Name="ContentRoot"
                 Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                Padding="{StaticResource ContentPageRightMargin}"
+                Padding="{StaticResource PageContentMargin}"
                 SizeChanged="ContentRoot_OnSizeChanged"
                 Spacing="{StaticResource SettingsCardSpacing}">
                 <StackPanel.ChildrenTransitions>
@@ -130,7 +132,7 @@
                 <!--  Libraries section  -->
                 <TextBlock
                     Margin="1,8,0,4"
-                    FontWeight="SemiBold"
+                    Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                     Text="{strings:Resources Key=SettingsCategoryLibraries}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
                 <labs:SettingsExpander
@@ -140,7 +142,10 @@
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <Button Command="{x:Bind ViewModel.AddMusicFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                        Command="{x:Bind ViewModel.AddMusicFolderCommand}"
+                        ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
@@ -154,7 +159,10 @@
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
-                    <Button Command="{x:Bind ViewModel.AddVideosFolderCommand}" ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
+                    <Button
+                        AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                        Command="{x:Bind ViewModel.AddVideosFolderCommand}"
+                        ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8f4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
@@ -307,7 +315,7 @@
             Title="{strings:Resources Key=PendingChanges}"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="{StaticResource ContentPageHeaderMargin}"
+            Margin="{StaticResource PageHeaderMargin}"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             IsClosable="False"
@@ -333,10 +341,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="ContentRoot.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

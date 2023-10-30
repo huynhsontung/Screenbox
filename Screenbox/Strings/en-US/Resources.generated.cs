@@ -2403,6 +2403,45 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToAddFolderNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Couldn't add folder
+        /// </summary>
+        public static string FailedToAddFolderNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToAddFolderNotificationTitle");
+            }
+        }
+        #endregion
+
+        #region OpenAlbum
+        /// <summary>
+        ///   Looks up a localized string similar to: Open album
+        /// </summary>
+        public static string OpenAlbum
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenAlbum");
+            }
+        }
+        #endregion
+
+        #region OpenArtist
+        /// <summary>
+        ///   Looks up a localized string similar to: Open artist
+        /// </summary>
+        public static string OpenArtist
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenArtist");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2597,6 +2636,9 @@ namespace Screenbox.Strings{
             Options,
             TimingOffset,
             PropertyComposers,
+            FailedToAddFolderNotificationTitle,
+            OpenAlbum,
+            OpenArtist,
         }
 
         private static ResourceLoader _resourceLoader;

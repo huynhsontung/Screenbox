@@ -9,6 +9,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
     mc:Ignorable="d">
+
     <Page.Resources>
         <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{strings:Resources Key=Network}" />
     </Page.Resources>
@@ -22,7 +23,8 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -31,16 +33,17 @@
 
             <TextBlock
                 Grid.Column="0"
-                MaxLines="2"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{x:Bind ViewModel.TitleText, Converter={StaticResource DefaultTitleTextConverter}, Mode=OneWay}" />
         </Grid>
 
         <muxc:BreadcrumbBar
+            x:Name="BreadcrumbBar"
             Grid.Row="1"
-            VerticalAlignment="Top"
+            Margin="{StaticResource PageContentMargin}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+
         <Frame
             x:Name="FolderViewFrame"
             Grid.Row="2"
@@ -52,7 +55,7 @@
             Grid.Row="1"
             Grid.RowSpan="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="32"
@@ -76,23 +79,22 @@
 
             <StackPanel
                 Grid.Column="1"
-                MaxWidth="416"
+                MaxWidth="420"
                 VerticalAlignment="Center"
                 Orientation="Vertical">
-
                 <TextBlock
                     Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}" />
+                    Text="{strings:Resources Key=NoNetworkDrivePanelHeader}" />
 
                 <TextBlock
                     Margin="0,0,0,8"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}"
+                    Text="{strings:Resources Key=NoNetworkDrivePanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <HyperlinkButton
-                    Margin="-12,0,0,0"
+                    Margin="{StaticResource HyperlinkButtonInlineMargin}"
                     Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}"
                     NavigateUri="ms-settings:connecteddevices" />
             </StackPanel>
@@ -111,8 +113,9 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoNetworkDrivePanel.ColumnSpacing" Value="16" />
                         <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
                     </VisualState.Setters>

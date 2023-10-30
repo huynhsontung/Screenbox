@@ -217,10 +217,6 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
-                if (Playlist.CurrentItem != null)
-                {
-                    Playlist.CurrentItem.IsPlaying = IsPlaying;
-                }
             });
         }
 
@@ -268,7 +264,8 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void SetPlaybackSpeed(string speedText)
         {
-            PlaybackSpeed = double.Parse(speedText);
+            if (!double.TryParse(speedText, out double speed)) return;
+            PlaybackSpeed = speed;
         }
 
         [RelayCommand]
