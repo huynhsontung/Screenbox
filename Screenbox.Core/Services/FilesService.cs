@@ -19,13 +19,13 @@ namespace Screenbox.Core.Services
 {
     public sealed class FilesService : IFilesService
     {
-        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
+        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
         {
             try
             {
                 StorageFolder? parent = await file.GetParentAsync();
-                StorageFileQueryResult? queryResult =
-                    parent?.CreateFileQueryWithOptions(new QueryOptions(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats));
+                options ??= new QueryOptions(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
+                StorageFileQueryResult? queryResult = parent?.CreateFileQueryWithOptions(options);
                 return queryResult;
             }
             catch (Exception)
