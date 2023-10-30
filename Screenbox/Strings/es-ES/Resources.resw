@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -683,7 +683,7 @@
     <value>Ayuda de línea de comandos de VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Ver {0} para la lista completa de opciones disponibles.</value>
+    <value>Accede a la {0} para ver la lista completa de opciones disponibles.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -714,24 +714,33 @@
     <value>Error al inicializar</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Enlaces relacionados</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Política de Privacidad</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Licencia</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Ayuda a traducir</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Opciones</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Desfase de tiempo</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Compositores</value>
+  </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>No se pudo agregar la carpeta</value>
+  </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Open album</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Open artist</value>
   </data>
 </root>
