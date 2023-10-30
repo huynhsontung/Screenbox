@@ -231,6 +231,7 @@
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
+                    <interactions:SplitButtonXYNavigationBehavior />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
@@ -289,6 +290,9 @@
                         <FontIcon Glyph="&#xe838;" />
                         <TextBlock Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SplitButtonXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
                 </muxc:SplitButton>
             </StackPanel>
         </Grid>
@@ -334,6 +338,10 @@
                 </interactivity:Interaction.Behaviors>
             </GridView>
         </Grid>
+
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">

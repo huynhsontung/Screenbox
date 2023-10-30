@@ -151,10 +151,10 @@
                 </Button>
             </muxc:NavigationView.PaneFooter>
             <interactivity:Interaction.Behaviors>
-                <interactions:NavViewXYFocusBehavior />
+                <interactions:GamepadXYNavigationBehavior />
             </interactivity:Interaction.Behaviors>
 
-            <Grid Margin="0,16,0,0">
+            <Grid Padding="0,16,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -165,8 +165,7 @@
                     Margin="{StaticResource PageContentMargin}"
                     AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    XYFocusDown="{x:Bind ContentFrame}">
+                    Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xe8b1;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
@@ -185,8 +184,7 @@
                 <Frame
                     x:Name="ContentFrame"
                     Grid.Row="1"
-                    Navigated="ContentFrame_OnNavigated"
-                    XYFocusUp="{x:Bind ShufflePlayButton}" />
+                    Navigated="ContentFrame_OnNavigated" />
             </Grid>
         </muxc:NavigationView>
 

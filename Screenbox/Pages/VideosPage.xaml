@@ -156,7 +156,7 @@
                 </Button>
             </muxc:NavigationView.PaneFooter>
             <interactivity:Interaction.Behaviors>
-                <interactions:NavViewXYFocusBehavior />
+                <interactions:GamepadXYNavigationBehavior />
             </interactivity:Interaction.Behaviors>
 
             <Grid>
@@ -170,15 +170,12 @@
                     Grid.Row="0"
                     Margin="56,12"
                     ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
-                    ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
-                    XYFocusDown="{x:Bind ContentFrame}"
-                    XYFocusUp="{x:Bind FoldersMenuItem}" />
+                    ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
                 <Frame
                     x:Name="ContentFrame"
                     Grid.Row="1"
-                    Navigated="ContentFrame_OnNavigated"
-                    XYFocusUp="{x:Bind BreadcrumbBar}" />
+                    Navigated="ContentFrame_OnNavigated" />
             </Grid>
         </muxc:NavigationView>
 
