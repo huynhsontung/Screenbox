@@ -67,6 +67,7 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
+                    <interactions:SplitButtonXYNavigationBehavior />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
