@@ -1,18 +1,18 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Playback;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
-using Windows.Storage.Search;
-using Screenbox.Core.Playback;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services
 {
     public interface IFilesService
     {
-        public Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file);
+        public Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null);
         public Task<StorageFile?> GetNextFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
         public Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile,

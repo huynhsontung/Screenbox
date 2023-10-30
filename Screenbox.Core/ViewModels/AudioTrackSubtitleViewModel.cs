@@ -8,15 +8,20 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Search;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient, IRecipient<MediaPlayerChangedMessage>
+    public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient,
+        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<string> SubtitleTracks { get; }
 
@@ -46,6 +51,27 @@ namespace Screenbox.Core.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
+        }
+
+        /// <summary>
+        /// Try load a subtitle in the same directory with the same name
+        /// </summary>
+        public async void Receive(PlaylistActiveItemChangedMessage message)
+        {
+            if (_mediaPlayer == null) return;
+            if (message.Value?.Source is not StorageFile file) return;
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, new[] { ".srt", ".ass" })
+            {
+                ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(file.Name)}\""
+            };
+
+            StorageFileQueryResult? query = await _filesService.GetNeighboringFilesQueryAsync(file, options);
+            if (query == null) return;
+            IReadOnlyList<StorageFile> subtitles = await query.GetFilesAsync(0, 1);
+            if (subtitles.Count <= 0) return;
+            StorageFile subtitle = subtitles[0];
+            _mediaPlayer.AddSubtitle(subtitle);
+            // Messenger.Send(new SubtitleAddedNotificationMessage(subtitle));
         }
 
         partial void OnSubtitleTrackIndexChanged(int value)
