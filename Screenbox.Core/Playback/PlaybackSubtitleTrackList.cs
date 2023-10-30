@@ -5,6 +5,8 @@ namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
+        // This only allows to add one external subtitle at a time
+        // TODO: Find a better solution for pending subtitle track label
         internal string PendingTrackLabel { get; set; }
 
         private readonly Media _media;
@@ -24,7 +26,7 @@ namespace Screenbox.Core.Playback
             PendingTrackLabel = string.Empty;
         }
 
-        internal async void NotifyTrackAdded(int trackId)
+        internal async void NotifyTrackAdded(int trackId, MediaPlayer mediaPlayer)
         {
             // Delay to wait for _media.Tracks to populate
             // Run in new thread to ensure VLC thread safety
@@ -37,7 +39,10 @@ namespace Screenbox.Core.Playback
                     sub.Label ??= PendingTrackLabel;
                     PendingTrackLabel = string.Empty;
                     TrackList.Add(sub);
-                    SelectedIndex = Count - 1;
+                    if (trackId == mediaPlayer.Spu)
+                    {
+                        SelectedIndex = Count - 1;
+                    }
                     return;
                 }
             }

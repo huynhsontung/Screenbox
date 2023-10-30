@@ -70,8 +70,8 @@ namespace Screenbox.Core.ViewModels
             IReadOnlyList<StorageFile> subtitles = await query.GetFilesAsync(0, 1);
             if (subtitles.Count <= 0) return;
             StorageFile subtitle = subtitles[0];
-            _mediaPlayer.AddSubtitle(subtitle);
-            // Messenger.Send(new SubtitleAddedNotificationMessage(subtitle));
+            // Preload subtitle but don't select it
+            _mediaPlayer.AddSubtitle(subtitle, false);
         }
 
         partial void OnSubtitleTrackIndexChanged(int value)
@@ -138,7 +138,7 @@ namespace Screenbox.Core.ViewModels
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                SubtitleTracks.Add(subtitleTrack.Label ?? defaultTrackLabel);
+                SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label!);
             }
         }
     }
