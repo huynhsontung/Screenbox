@@ -72,7 +72,6 @@
             Padding="{StaticResource PageThumbnailMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource VideoGridViewItemStyle}"
             ItemTemplate="{StaticResource VideoGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Videos}"
             SelectionMode="None">
