@@ -26,8 +26,7 @@
 
             <x:Double x:Key="ToggleSwitchPreContentMargin">4</x:Double>
             <x:Double x:Key="ToggleSwitchPostContentMargin">4</x:Double>
-            <x:Double x:Key="SettingsCardWrapThreshold">400</x:Double>
-            <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+            <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
             <!--  SettingsExpander bottom corners radius temporary (hopefully) fix  -->
             <CornerRadius x:Key="SettingsCardBottomCornerRadius">0,0,3,3</CornerRadius>
@@ -37,16 +36,12 @@
                 x:Key="SettingsSectionHeaderTextBlockStyle"
                 BasedOn="{StaticResource BodyStrongTextBlockStyle}"
                 TargetType="TextBlock">
-                <Setter Property="Margin" Value="1,28,0,4" />
+                <Setter Property="Margin" Value="1,28,0,8" />
                 <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
             </Style>
 
             <ThemeShadow x:Key="SharedShadow" />
             <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-            <muxc:StackLayout
-                x:Name="VerticalStackLayout"
-                Orientation="Vertical"
-                Spacing="12" />
 
             <XamlUICommand
                 x:Key="RemoveMusicFolderCommand"
@@ -119,9 +114,7 @@
             <StackPanel
                 x:Name="ContentRoot"
                 Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                Padding="{StaticResource PageContentMargin}"
-                SizeChanged="ContentRoot_OnSizeChanged"
-                Spacing="{StaticResource SettingsCardSpacing}">
+                Padding="{StaticResource PageContentMargin}">
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
@@ -131,18 +124,23 @@
 
                 <!--  Libraries section  -->
                 <TextBlock
-                    Margin="1,8,0,4"
+                    Margin="1,8,0,8"
                     Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                     Text="{strings:Resources Key=SettingsCategoryLibraries}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
                 <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddMusicFolderButton}" />
+                    </interactivity:Interaction.Behaviors>
                     <Button
+                        x:Name="AddMusicFolderButton"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddMusicFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
@@ -153,13 +151,18 @@
                     </Button>
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddVideoFolderButton}" />
+                    </interactivity:Interaction.Behaviors>
                     <Button
+                        x:Name="AddVideoFolderButton"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddVideosFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
@@ -173,10 +176,14 @@
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
                 <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
@@ -187,6 +194,7 @@
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
                 <labs:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
@@ -203,6 +211,7 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <labs:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
@@ -219,6 +228,7 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
                     IsExpanded="True"
@@ -239,10 +249,14 @@
                 <!--  Advanced section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
                 <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
                     Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AdvancedModeToggleSwitch}" />
+                    </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">

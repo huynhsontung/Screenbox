@@ -165,6 +165,7 @@
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
     <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
+    <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
