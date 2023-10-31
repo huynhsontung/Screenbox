@@ -1,12 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -42,18 +39,6 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             await ViewModel.LoadLibraryLocations();
-        }
-
-        private void ContentRoot_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            StackPanel panel = (StackPanel)sender;
-            ButtonBase? settingsCard = panel.Children.OfType<ButtonBase>().FirstOrDefault();
-            if (settingsCard == null) return;
-            IEnumerable<TextBlock> sectionHeaders = panel.Children.OfType<TextBlock>();
-            foreach (TextBlock sectionHeader in sectionHeaders)
-            {
-                sectionHeader.Width = settingsCard.ActualWidth;
-            }
         }
     }
 }
