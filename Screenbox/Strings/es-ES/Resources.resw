@@ -738,9 +738,9 @@
     <value>No se pudo agregar la carpeta</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Mostrar álbum</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Mostrar artista</value>
   </data>
 </root>
