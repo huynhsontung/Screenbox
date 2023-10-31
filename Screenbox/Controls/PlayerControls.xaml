@@ -120,6 +120,7 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0.05"
+                        SmallChange="0.05"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
                         Value="1.0" />
@@ -149,6 +150,7 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
+                        SmallChange="50"
                         StepFrequency="100"
                         ValueChanged="TimingOffsetSlider_OnValueChanged"
                         Value="0" />
