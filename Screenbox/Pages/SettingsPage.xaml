@@ -26,7 +26,6 @@
 
             <x:Double x:Key="ToggleSwitchPreContentMargin">4</x:Double>
             <x:Double x:Key="ToggleSwitchPostContentMargin">4</x:Double>
-            <x:Double x:Key="SettingsCardWrapThreshold">400</x:Double>
             <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
             <!--  SettingsExpander bottom corners radius temporary (hopefully) fix  -->
@@ -137,7 +136,11 @@
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddMusicFolderButton}" />
+                    </interactivity:Interaction.Behaviors>
                     <Button
+                        x:Name="AddMusicFolderButton"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddMusicFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
@@ -155,7 +158,11 @@
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddVideoFolderButton}" />
+                    </interactivity:Interaction.Behaviors>
                     <Button
+                        x:Name="AddVideoFolderButton"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddVideosFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
@@ -173,7 +180,10 @@
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
@@ -244,6 +254,9 @@
                     Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AdvancedModeToggleSwitch}" />
+                    </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <labs:SettingsExpander.Items>
                         <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
