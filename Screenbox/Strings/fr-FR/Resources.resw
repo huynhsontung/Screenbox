@@ -738,9 +738,9 @@
     <value>Impossible d'ajouter le dossier</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Ouvrir un album</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Ouvrir un artiste</value>
   </data>
 </root>
