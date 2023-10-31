@@ -254,162 +254,162 @@
     <value>Besetzung</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Stop casting</value>
+    <value>Casting beenden</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>Casting auf</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>Auf ein Gerät übertragen</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Deaktivieren</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Musik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>Shuffle und spielen</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Unbekannter Künstler</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Unbekanntes Album</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Unbekanntes Genre</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>Ordner hinzufügen</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Leeren</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Start</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>Mehrfachauswahl</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>Wir konnten keine Musik finden</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>Deine Musikbibliothek enthält keine Musikinhalte.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>Datei(en) öffnen</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Suche</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Einstellungen</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>Willkommen bei Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>Lass uns mit dem Abspielen einiger deiner Medieninhalte beginnen.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>Eigenschaften</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Schließen</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>Dateipfad öffnen</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Künstler</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>Bitrate</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Inhaltstyp</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Mitwirkende Künstler</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>Speicherort</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>Dateityp</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
     <value>Genre</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>Zuletzt geändert</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>Länge</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Produzenten</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Auflösung</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>Größe</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Untertitel</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Titel</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>Song</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Autoren</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>Jahr</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Benutzerdefiniert</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Netzwerk</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Kein Netzwerkgerät verfügbar</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Sie können Ihre Medien nicht finden? Stellen Sie sicher, dass Ihr Netzwerkgerät in den Windows-Einstellungen verbunden ist.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>Zuletzt</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>Videoeinstellungen</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Öffnen</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} Standort angegeben</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} Standorte angegeben</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Shuffle: Off</value>
+    <value>Shuffle: Aus</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Shuffle: On</value>
+    <value>Shuffle: An</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
     <value>Resume where you left off</value>
@@ -571,162 +571,162 @@
     <value>About</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Allgemein</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>Bibliotheken</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>Abspieler</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>Speicherorte der Musikbibliotheken</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Zuletzt verwendete Medien anzeigen</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>Speicherorte der Videobibliotheken</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>Untertitel</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Zuletzt gespielte Medien auf der Startseite anzeigen</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Aktuellen Medienverlauf löschen</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Automatische Anpassung</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Die Größe des App-Fensters anpassen, um die native Auflösung eines Videos bei der Wiedergabe am besten zu erreichen</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Lautstärkenverstärker</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Erlaube die maximale Lautstärke über 100% zu gehen</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Gesten</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Zum Suchen horizontal ziehen</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Zum Anpassen der Lautstärke vertikal ziehen</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Irgendwo tippen, um abzuspielen oder anzuhalten</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Screenbox Media-Player</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Quellcode</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Unterstütze die Entwicklung ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Immer</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Nie</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Beim Programmstart</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Version {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Untertitel wurden hinzugefügt</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Kritischer Fehler</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Kein kompatibler Renderer verfügbar. Bitte stelle sicher, dass Direct3D 11 auf deinem Gerät verfügbar ist.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>Fehler beim Öffnen der Datei(en)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>URL für eine Datei oder einen Stream eingeben</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>Verbindungseinstellungen öffnen</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Wiedergabeoptionen festlegen</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Setzen</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Setze und spiele</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Setze VLC-Optionen, die auf einen Stream angewendet werden.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Einige Optionen können nur global gesetzt werden.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>VLC Befehlszeilenhilfe</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Siehe {0} für die vollständige Liste der verfügbaren Optionen.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Erweitert</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Erweiterter Modus</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Der erweiterte Modus erlaubt es Ihnen, das Verhalten von LibVLC mithilfe von Befehlszeilenargumenten anzupassen.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Globale Argumente</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Befehlszeilenargumente, die für alle Medienwiedergabe gelten.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Ordner entfernen</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Ausstehende Änderungen</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Starte die App neu, damit die Änderungen wirksam werden</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Initialisierung fehlgeschlagen</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Verwandte Links</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Datenschutzerklärung</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Lizenz</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Hilf beim Übersetzen</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Optionen</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
@@ -735,12 +735,12 @@
     <value>Composers</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Ordner konnte nicht hinzugefügt werden</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Album öffnen</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Künstler öffnen</value>
   </data>
 </root>
