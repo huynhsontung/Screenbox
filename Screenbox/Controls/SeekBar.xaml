@@ -50,7 +50,7 @@
             Minimum="0"
             PointerExited="SeekBarSlider_OnPointerExited"
             SizeChanged="SeekBarSlider_OnSizeChanged"
-            SmallChange="1000"
+            SmallChange="5000"
             Style="{StaticResource DefaultSliderStyle}"
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
