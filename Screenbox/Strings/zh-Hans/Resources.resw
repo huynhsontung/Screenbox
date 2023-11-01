@@ -738,9 +738,9 @@
     <value>无法添加文件夹</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>打开专辑</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>打开艺术家</value>
   </data>
 </root>
