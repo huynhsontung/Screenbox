@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.AppCenter.Analytics;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
@@ -54,6 +55,7 @@ namespace Screenbox.Pages
 
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ContentFrame.Navigated += ContentFrameOnNavigated;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -122,6 +124,14 @@ namespace Screenbox.Pages
 
                 UpdateNavigationViewState(NavView.DisplayMode, NavView.IsPaneOpen);
             }
+        }
+
+        private void ContentFrameOnNavigated(object sender, NavigationEventArgs e)
+        {
+            Analytics.TrackEvent(e.SourcePageType.Name, new Dictionary<string, string>()
+            {
+                {"NavigationMode", e.NavigationMode.ToString()}
+            });
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)

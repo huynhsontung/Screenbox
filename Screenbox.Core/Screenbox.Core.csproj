@@ -164,7 +164,7 @@
     <Compile Include="Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayerVisibilityRequestMessage.cs" />
     <Compile Include="Messages\PlayFilesWithNeighborsMessage.cs" />
-    <Compile Include="Messages\PlaylistActiveItemChangedMessage.cs" />
+    <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
     <Compile Include="Messages\QueuePlaylistMessage.cs" />

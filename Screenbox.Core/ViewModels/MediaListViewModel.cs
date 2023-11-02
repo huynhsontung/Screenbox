@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
@@ -217,10 +218,16 @@ namespace Screenbox.Core.ViewModels
                 _filesService.AddToRecent(item);
             }
 
-            Messenger.Send(new PlaylistActiveItemChangedMessage(value));
+            Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
             await Task.WhenAll(
                 _transportControlsService.UpdateTransportControlsDisplayAsync(value),
                 UpdateMediaBufferAsync());
+            Analytics.TrackEvent("PlaylistCurrentItemChanged", value != null
+                ? new Dictionary<string, string>
+                {
+                    { "MediaType", value.MediaType.ToString() }
+                }
+                : null);
         }
 
         partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
