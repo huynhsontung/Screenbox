@@ -168,7 +168,7 @@
     <value>Âm lượng</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Tua</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Thoát ảnh trong ảnh</value>
@@ -248,7 +248,7 @@
     <value>Trống</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Khôi phục chế độ xem video</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Truyền</value>
@@ -398,11 +398,11 @@
     <value>Mở</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} vị trí được chỉ định</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} vị trí được chỉ định</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
@@ -471,7 +471,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} thời gian chạy</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -613,7 +613,7 @@
     <value>Cử chỉ</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Kéo theo chiều ngang để tua</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Kéo theo chiều dọc để điều chỉnh âm lượng</value>
@@ -729,18 +729,18 @@
     <value>Tùy chọn</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Bù thời gian</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Nhà soạn nhạc</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>Không thể thêm thư mục</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Mở album</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Mở nghệ sĩ</value>
   </data>
 </root>
