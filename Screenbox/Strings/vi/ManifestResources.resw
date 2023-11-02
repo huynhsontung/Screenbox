@@ -19,43 +19,43 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Trình phát video hiện đại tập trung vào hiệu suất và tính dễ sử dụng trên nhiều loại thiết bị Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>Tệp Đa Phương Tiện 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>Tệp Đa Phương Tiện 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>Âm thanh AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
     <value>AVI Video</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>Âm thanh FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
     <value>Flash Video</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Âm thanh Matroska</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
     <value>Matroska Video</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>Dữ liệu Nhạc MIDI</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>Âm thanh MP3</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
     <value>MPEG-4 Video</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>Âm thanh MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
     <value>iTunes Video</value>
@@ -64,7 +64,7 @@
     <value>MPEG Video</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Âm thanh Ogg Vorbis</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
     <value>Ogg Video</value>
@@ -88,9 +88,9 @@
     <value>Windows Media Video</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>Danh Sách Phát M3U8</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>Luồng Truyền tải MPEG</value>
   </data>
 </root>
