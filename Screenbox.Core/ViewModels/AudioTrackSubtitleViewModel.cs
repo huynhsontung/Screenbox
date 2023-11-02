@@ -20,7 +20,7 @@ using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient,
-        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
         public ObservableCollection<string> SubtitleTracks { get; }
@@ -56,7 +56,7 @@ namespace Screenbox.Core.ViewModels
         /// <summary>
         /// Try load a subtitle in the same directory with the same name
         /// </summary>
-        public async void Receive(PlaylistActiveItemChangedMessage message)
+        public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (_mediaPlayer == null) return;
             if (message.Value?.Source is not StorageFile file) return;

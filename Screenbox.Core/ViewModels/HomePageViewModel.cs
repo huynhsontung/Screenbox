@@ -20,7 +20,7 @@ using Windows.UI.Xaml;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class HomePageViewModel : ObservableRecipient,
-        IRecipient<PlaylistActiveItemChangedMessage>
+        IRecipient<PlaylistCurrentItemChangedMessage>
     {
         public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
 
@@ -47,7 +47,7 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        public async void Receive(PlaylistActiveItemChangedMessage message)
+        public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (message.Value is { Source: IStorageItem } && _settingsService.ShowRecent)
             {

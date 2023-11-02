@@ -32,7 +32,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<TogglePlayerVisibilityMessage>,
         IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
-        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
         IRecipient<PlayerVisibilityRequestMessage>,
@@ -163,7 +163,7 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public void Receive(PlaylistActiveItemChangedMessage message)
+        public void Receive(PlaylistCurrentItemChangedMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
             if (message.Value != null)
