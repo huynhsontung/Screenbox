@@ -1,17 +1,17 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Trình Phát Phương Tiện Screenbox
 
-**Your modern media player**
+**Trình phát phương tiện hiện đại của bạn**
 
-### Description
+### Mô tả
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a beautiful and intuitive user interface while being fast, lightweight, and powerful. Designed and built in the open, Screenbox will always be free to use.
+Screenbox là một trình phát phương tiện hiện đại với mục tiêu mang đến một trải nghiệm mới mẻ cho ứng dụng cổ điển. Screenbox cung cấp giao diện người dùng đẹp và trực quan đồng thời nhanh, nhẹ và mạnh mẽ. Được thiết kế và xây dựng dưới dạng mở, Screenbox sẽ luôn được sử dụng miễn phí.
 
-### Features
+### Tính năng
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Trải nghiệm người dùng hiện đại với hỗ trợ cử chỉ, được tối ưu hóa cho tất cả các loại thiết bị Windows.
+- Hỗ trợ nhiều định dạng âm thanh và video.
+- Duyệt và quản lý thư viện nhạc và video trên máy của bạn hoặc qua mạng.
+- Truyền phương tiện của bạn tới nhiều loại thiết bị bằng Chromecast.
+- Làm việc và thưởng thức phương tiện của bạn cùng lúc bằng chế độ ảnh trong ảnh.
