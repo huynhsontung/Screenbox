@@ -70,19 +70,19 @@
     <value>Ogg Video</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>Phim QuickTime</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>Âm thanh WAVE</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>Âm thanh WebM</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
     <value>WebM Video</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Âm thanh Windows Media</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
     <value>Windows Media Video</value>
