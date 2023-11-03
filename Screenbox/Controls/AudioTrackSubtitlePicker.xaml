@@ -19,14 +19,22 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <Border Height="40">
+                <Grid Height="40" Margin="16,0,4,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
                     <TextBlock
-                        Margin="16,0,0,0"
                         VerticalAlignment="Center"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{strings:Resources Key=Audio}" />
-                </Border>
+                    <HyperlinkButton
+                        Grid.Column="1"
+                        Command="{x:Bind ShowAudioOptionsCommand}"
+                        Content="{strings:Resources Key=Options}"
+                        FontSize="12" />
+                </Grid>
             </ListView.Header>
         </ListView>
         <MenuFlyoutSeparator Margin="-4,4,-4,2" IsTabStop="False" />
@@ -39,29 +47,29 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <Grid Height="40">
+                <Grid Height="40" Margin="16,0,4,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
-                        Margin="16,0,0,0"
                         VerticalAlignment="Center"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{strings:Resources Key=Subtitles}" />
                     <HyperlinkButton
                         Grid.Column="1"
                         Command="{x:Bind ShowSubtitleOptionsCommand}"
-                        Content="{strings:Resources Key=Options}" />
+                        Content="{strings:Resources Key=Options}"
+                        FontSize="12" />
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
                     Height="36"
-                    Margin="3,2"
-                    Padding="13,0,13,0"
+                    Margin="4,2"
+                    Padding="12,0,12,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     Background="{ThemeResource ListViewItemBackground}"

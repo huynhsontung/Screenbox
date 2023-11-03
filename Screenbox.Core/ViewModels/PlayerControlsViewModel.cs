@@ -37,7 +37,22 @@ namespace Screenbox.Core.ViewModels
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
                 {
-                    player.VlcPlayer.SetSpuDelay(value);
+                    // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
+                    player.VlcPlayer.SetSpuDelay(value * 1000);
+                }
+            }
+        }
+
+        public long AudioTimingOffset
+        {
+            // Special access. Consider promote to proper IMediaPlayer property
+            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay ?? 0;
+            set
+            {
+                if (_mediaPlayer is VlcMediaPlayer player)
+                {
+                    // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
+                    player.VlcPlayer.SetAudioDelay(value * 1000);
                 }
             }
         }
@@ -202,6 +217,7 @@ namespace Screenbox.Core.ViewModels
                 case nameof(MediaListViewModel.CurrentItem):
                     HasActiveItem = Playlist.CurrentItem != null;
                     SubtitleTimingOffset = 0;
+                    AudioTimingOffset = 0;
                     break;
             }
         }

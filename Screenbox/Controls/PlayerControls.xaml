@@ -129,7 +129,8 @@
                             Margin="0,0,0,8"
                             IsEditable="True"
                             SelectedItem="{Binding AspectRatio, Mode=TwoWay}"
-                            SelectionChanged="AspectRatioComboBox_SelectionChanged">
+                            SelectionChanged="AspectRatioComboBox_OnSelectionChanged"
+                            TextSubmitted="AspectRatioComboBox_OnTextSubmitted">
                             <x:String>Fit</x:String>
                             <x:String>Fill</x:String>
                             <x:String>16:9</x:String>
@@ -137,7 +138,6 @@
                             <x:String>21:9</x:String>
                             <x:String>4:3</x:String>
                             <x:String>1:1</x:String>
-                            <x:String>Custom</x:String>
                         </ComboBox>-->
                         <TextBox
                             x:Name="AspectRatioTextBox"
@@ -162,18 +162,20 @@
                             Minimum="0.0"
                             SmallChange="0.01"
                             StepFrequency="0.05"
+                            TickFrequency="0.5"
+                            TickPlacement="Inline"
                             ValueChanged="SpeedSlider_OnValueChanged"
                             Value="1.0" />
                     </StackPanel>
-                    <!--  TODO: Adjust AudioOffset, IsEnabled ViewModel and TextBlock string  -->
-                    <!--<StackPanel x:Name="AudioTimingOffsetSection" Spacing="4">
+                    <!--  TODO: IsEnabled ViewModel and localize string  -->
+                    <StackPanel x:Name="AudioTimingOffsetSection" Spacing="4">
                         <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Audio offset" />
+                            <TextBlock Text="Audio timing offset" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                         </StackPanel>
                         <Slider
                             x:Name="AudioTimingOffsetSlider"
-                            AutomationProperties.Name="{strings:Resources Key=AudioTimingOffset}"
+                            AutomationProperties.Name="Audio timing offset"
                             IsEnabled="True"
                             IsThumbToolTipEnabled="False"
                             Maximum="3000"
@@ -181,22 +183,22 @@
                             StepFrequency="100"
                             ValueChanged="AudioTimingOffsetSlider_OnValueChanged"
                             Value="0" />
-                    </StackPanel>-->
+                    </StackPanel>
                     <!--  TODO: IsEnabled ViewModel and update TimingOffset string  -->
                     <StackPanel x:Name="SubtitleTimingOffsetSection" Spacing="4">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="{strings:Resources Key=TimingOffset}" />
-                            <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                            <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=SubtitleTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                         </StackPanel>
                         <Slider
-                            x:Name="TimingOffsetSlider"
+                            x:Name="SubtitleTimingOffsetSlider"
                             AutomationProperties.Name="{strings:Resources Key=TimingOffset}"
                             IsEnabled="True"
                             IsThumbToolTipEnabled="False"
                             Maximum="3000"
                             Minimum="-3000"
                             StepFrequency="100"
-                            ValueChanged="TimingOffsetSlider_OnValueChanged"
+                            ValueChanged="SubtitleTimingOffsetSlider_OnValueChanged"
                             Value="0" />
                     </StackPanel>
                     <!--  TODO: Add Command, IsEnabled ViewModel and Content string  -->

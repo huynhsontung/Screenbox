@@ -65,7 +65,16 @@ namespace Screenbox.Controls
             DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             PlayerContextMenu = NormalPlayerContextMenu;
+            AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
             AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
+        }
+
+        private void ShowAudioOptions()
+        {
+            AudioSubtitlePickerFlyout.Hide();
+            Flyout customPlayOptionsflyout = (Flyout)Resources["PlaybackOptionsFlyout"];
+            customPlayOptionsflyout.ShowAt(AudioAndCaptionButton);
+            AudioTimingOffsetSlider.Value = ViewModel.AudioTimingOffset;
         }
 
         private void ShowSubtitleOptions()
@@ -73,7 +82,7 @@ namespace Screenbox.Controls
             AudioSubtitlePickerFlyout.Hide();
             Flyout customPlayOptionsflyout = (Flyout)Resources["PlaybackOptionsFlyout"];
             customPlayOptionsflyout.ShowAt(AudioAndCaptionButton);
-            TimingOffsetSlider.Value = ViewModel.SubtitleTimingOffset;
+            SubtitleTimingOffsetSlider.Value = ViewModel.SubtitleTimingOffset;
         }
 
         public void FocusFirstButton(FocusState value = FocusState.Programmatic)
@@ -168,7 +177,12 @@ namespace Screenbox.Controls
             }
         }
 
-        private void TimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        private void AudioTimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            ViewModel.AudioTimingOffset = (long)e.NewValue;
+        }
+
+        private void SubtitleTimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             ViewModel.SubtitleTimingOffset = (long)e.NewValue;
         }
