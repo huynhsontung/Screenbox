@@ -98,40 +98,62 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, IStorageFile file)
+        private MediaViewModel(object source, IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
             _filesService = filesService;
             _mediaService = mediaService;
-            Source = file;
             _artistFactory = artistFactory;
             _albumFactory = albumFactory;
-            _name = file.Name;
-            _loadTask = Task.CompletedTask;
-            _loadThumbnailTask = Task.CompletedTask;
-            _mediaType = GetMediaTypeForFile(file);
-            _artists = Array.Empty<ArtistViewModel>();
-            _options = new List<string>();
-            Options = new ReadOnlyCollection<string>(_options);
-            Location = file.Path;
-        }
+            Source = source;
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri)
-        {
-            _filesService = filesService;
-            _mediaService = mediaService;
-            Source = uri;
-            _artistFactory = artistFactory;
-            _albumFactory = albumFactory;
-            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
+            Location = string.Empty;
+            _name = string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
             _loadTask = Task.CompletedTask;
             _loadThumbnailTask = Task.CompletedTask;
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
+        }
+
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, IStorageFile file) :
+            this(file, filesService, mediaService, albumFactory, artistFactory)
+        {
+            _name = file.Name;
+            _mediaType = GetMediaTypeForFile(file);
+            Location = file.Path;
+        }
+
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri) :
+            this(uri, filesService, mediaService, albumFactory, artistFactory)
+        {
+            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
             Location = uri.ToString();
+        }
+
+        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
+            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Media media) :
+            this(media, filesService, mediaService, albumFactory, artistFactory)
+        {
+            _name = media.Meta(MetadataType.Title) ?? string.Empty;
+            Location = media.Mrl;
+
+            // Media is already loaded, create PlaybackItem
+            _loaded = true;
+            if (Uri.TryCreate(Location, UriKind.Absolute, out Uri uri))
+            {
+                // Prefer URI source for easier clean up
+                Source = uri;
+                _item = new PlaybackItem(uri, media);
+            }
+            else
+            {
+                // PlaybackItem will not be clean up in this case
+                _item = new PlaybackItem(media, media);
+            }
         }
 
         public MediaViewModel Clone()
@@ -183,6 +205,8 @@ namespace Screenbox.Core.ViewModels
 
         public void Clean()
         {
+            // If source is Media then there is no way to recreate. Don't clean up.
+            if (Source is Media) return;
             _loaded = false;
             PlaybackItem? item = _item;
             _item = null;

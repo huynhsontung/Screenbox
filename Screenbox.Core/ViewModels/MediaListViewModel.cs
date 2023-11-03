@@ -3,8 +3,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using LibVLCSharp.Shared;
 using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -12,7 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -58,6 +62,8 @@ namespace Screenbox.Core.ViewModels
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private object? _lastUpdated;
+        private bool _isExternalPlaylist;
+        private CancellationTokenSource? _cts;
 
         private const int MediaBufferCapacity = 5;
 
@@ -135,7 +141,7 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                Play(files);
+                EnqueueAndPlay(files);
             }
         }
 
@@ -412,12 +418,14 @@ namespace Screenbox.Core.ViewModels
 
                 if (item is StorageFile storageFile)
                 {
+                    // Don't include enqueue playlist files
+                    if (storageFile.IsSupportedPlaylist()) continue;
                     Items.Add(_mediaFactory.GetSingleton(storageFile));
                 }
             }
         }
 
-        private void Play(IReadOnlyList<IStorageItem> files)
+        private void EnqueueAndPlay(IReadOnlyList<IStorageItem> files)
         {
             ClearPlaylist();
 
@@ -426,29 +434,48 @@ namespace Screenbox.Core.ViewModels
             MediaViewModel? media = Items.FirstOrDefault();
             if (media != null)
             {
-                PlaySingle(media);
+                Play(media);
             }
         }
 
-        private void Play(object value)
+        private async void Play(object value)
         {
-            MediaViewModel vm;
-            switch (value)
+            MediaViewModel? vm;
+            try
             {
-                case StorageFile file:
-                    vm = _mediaFactory.GetTransient(file);
-                    break;
-                case MediaViewModel vmValue:
-                    vm = vmValue;
-                    break;
-                case Uri uri:
-                    vm = _mediaFactory.GetTransient(uri);
-                    break;
-                case IReadOnlyList<IStorageItem> files:
-                    Play(files);
-                    return;
-                default:
-                    throw new ArgumentException("Unsupported media type", nameof(value));
+                switch (value)
+                {
+                    case StorageFile file:
+                        vm = _mediaFactory.GetTransient(file);
+                        if (IsPlaylist(file) && await LoadPlaylistAsync(vm) && Items.Count > 0)
+                        {
+                            vm = Items[0];
+                        }
+                        break;
+
+                    case MediaViewModel vmValue:
+                        vm = vmValue;
+                        break;
+
+                    case Uri uri:
+                        vm = _mediaFactory.GetTransient(uri);
+                        if (IsPlaylist(uri) && await LoadPlaylistAsync(vm) && Items.Count > 0)
+                        {
+                            vm = Items[0];
+                        }
+                        break;
+
+                    case IReadOnlyList<IStorageItem> files:
+                        EnqueueAndPlay(files);
+                        return;
+
+                    default:
+                        throw new ArgumentException("Unsupported media type", nameof(value));
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return;
             }
 
             if (Items.Count == 0)
@@ -476,6 +503,7 @@ namespace Screenbox.Core.ViewModels
 
         private void ClearPlaylist()
         {
+            _isExternalPlaylist = false;
             _shuffleBackup = null;
             Items.Clear();
             ShuffleMode = false;
@@ -583,10 +611,36 @@ namespace Screenbox.Core.ViewModels
                         sender.Position = TimeSpan.Zero;
                         break;
                     default:
-                        if (Items.Count > 1) _ = NextAsync();
+                        if (Items.Count > 1 && !_isExternalPlaylist) _ = NextAsync();
                         break;
                 }
             });
+        }
+
+        private async Task<bool> LoadPlaylistAsync(MediaViewModel source)
+        {
+            if (source.Item == null) return false;
+
+            // Load playlist is atomic
+            _cts?.Cancel();
+            using CancellationTokenSource cts = new();
+            _cts = cts;
+
+            Media media = source.Item.Media;
+            MediaParsedStatus parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, cancellationToken: cts.Token);
+
+            // Only playlist with more than 1 sub items should replace current playlist
+            if (parsedStatus != MediaParsedStatus.Done || media.SubItems.Count <= 1) return false;
+            IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
+            ClearPlaylist();
+            foreach (MediaViewModel item in playlist)
+            {
+                Items.Add(item);
+            }
+
+            _isExternalPlaylist = true;
+            _cts = null;
+            return true;
         }
 
         private static void Shuffle<T>(IList<T> list, Random rng)
@@ -598,6 +652,14 @@ namespace Screenbox.Core.ViewModels
                 int k = rng.Next(n + 1);
                 (list[k], list[n]) = (list[n], list[k]);
             }
+        }
+
+        private static bool IsPlaylist(StorageFile file) => file.IsSupportedPlaylist();
+
+        private static bool IsPlaylist(Uri uri)
+        {
+            string extension = Path.GetExtension(uri.AbsolutePath).ToLowerInvariant();
+            return FilesHelpers.SupportedPlaylistFormats.Contains(extension);
         }
     }
 }
