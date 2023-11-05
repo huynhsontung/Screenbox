@@ -22,6 +22,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private int _volumeBoost;
+        [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private string _globalArguments;
@@ -34,7 +35,6 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
-        private readonly DispatcherQueueTimer _argumentsChangedTimer;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
         private StorageLibrary? _videosLibrary;
@@ -45,7 +45,6 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _argumentsChangedTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
 
@@ -54,6 +53,7 @@ namespace Screenbox.Core.ViewModels
             _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
+            _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _advancedMode = _settingsService.AdvancedMode;
             _globalArguments = _settingsService.GlobalArguments;
@@ -96,6 +96,12 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
         }
 
+        partial void OnUseIndexerChanged(bool value)
+        {
+            _settingsService.UseIndexer = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer)));
+        }
+
         partial void OnShowRecentChanged(bool value)
         {
             _settingsService.ShowRecent = value;
@@ -131,6 +137,12 @@ namespace Screenbox.Core.ViewModels
 
             GlobalArguments = _settingsService.GlobalArguments;
             IsRelaunchRequired = CheckForRelaunch();
+        }
+
+        [RelayCommand]
+        private async Task RefreshLibrariesAsync()
+        {
+            await Task.WhenAll(_libraryService.FetchMusicAsync(), _libraryService.FetchVideosAsync());
         }
 
         [RelayCommand]

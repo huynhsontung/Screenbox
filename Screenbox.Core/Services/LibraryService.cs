@@ -2,6 +2,7 @@
 
 using Microsoft.Toolkit.Uwp.UI;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using System;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 using Windows.System;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
@@ -26,8 +28,9 @@ namespace Screenbox.Core.Services
         public StorageLibrary? VideosLibrary { get; private set; }
         public bool IsLoadingVideos { get; private set; }
         public bool IsLoadingMusic { get; private set; }
+        private bool UseIndexer => _settingsService.UseIndexer;
 
-        private readonly IFilesService _filesService;
+        private readonly ISettingsService _settingsService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
@@ -41,10 +44,10 @@ namespace Screenbox.Core.Services
         private CancellationTokenSource? _musicFetchCts;
         private CancellationTokenSource? _videosFetchCts;
 
-        public LibraryService(IFilesService filesService, MediaViewModelFactory mediaFactory,
+        public LibraryService(ISettingsService settingsService, MediaViewModelFactory mediaFactory,
             AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
-            _filesService = filesService;
+            _settingsService = settingsService;
             _mediaFactory = mediaFactory;
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
@@ -135,17 +138,12 @@ namespace Screenbox.Core.Services
             IsLoadingMusic = true;
             try
             {
-                if (_musicLibraryQueryResult == null)
-                {
-                    _musicLibraryQueryResult = _filesService.GetSongsFromLibrary();
-                    _musicLibraryQueryResult.ContentsChanged += OnMusicLibraryContentChanged;
-                }
-
+                StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
                 await InitializeMusicLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> songs = new();
                 _songs = songs;
-                await BatchFetchMediaAsync(_musicLibraryQueryResult, songs, cancellationToken);
+                await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
             }
             catch (Exception e)
             {
@@ -175,17 +173,12 @@ namespace Screenbox.Core.Services
             IsLoadingVideos = true;
             try
             {
-                if (_videosLibraryQueryResult == null)
-                {
-                    _videosLibraryQueryResult = _filesService.GetVideosFromLibrary();
-                    _videosLibraryQueryResult.ContentsChanged += OnVideosLibraryContentChanged;
-                }
-
+                StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
                 await InitializeVideosLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> videos = new();
                 _videos = videos;
-                await BatchFetchMediaAsync(_videosLibraryQueryResult, videos, cancellationToken);
+                await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
             }
             catch (Exception e)
             {
@@ -229,6 +222,46 @@ namespace Screenbox.Core.Services
             }
         }
 
+        private StorageFileQueryResult GetMusicLibraryQuery()
+        {
+            StorageFileQueryResult? libraryQuery = _musicLibraryQueryResult;
+
+            if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
+            {
+                libraryQuery.ContentsChanged -= OnMusicLibraryContentChanged;
+                libraryQuery = null;
+            }
+
+            if (libraryQuery == null)
+            {
+                libraryQuery = CreateMusicLibraryQuery(UseIndexer);
+                libraryQuery.ContentsChanged += OnMusicLibraryContentChanged;
+            }
+
+            _musicLibraryQueryResult = libraryQuery;
+            return libraryQuery;
+        }
+
+        private StorageFileQueryResult GetVideosLibraryQuery()
+        {
+            StorageFileQueryResult? libraryQuery = _videosLibraryQueryResult;
+
+            if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
+            {
+                libraryQuery.ContentsChanged -= OnVideosLibraryContentChanged;
+                libraryQuery = null;
+            }
+
+            if (libraryQuery == null)
+            {
+                libraryQuery = CreateVideosLibraryQuery(UseIndexer);
+                libraryQuery.ContentsChanged += OnVideosLibraryContentChanged;
+            }
+
+            _videosLibraryQueryResult = libraryQuery;
+            return libraryQuery;
+        }
+
         private async Task<List<MediaViewModel>> FetchMediaFromStorage(StorageFileQueryResult queryResult, uint fetchIndex, uint batchSize = 50)
         {
             IReadOnlyList<StorageFile> files;
@@ -260,6 +293,52 @@ namespace Screenbox.Core.Services
             async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+        }
+
+        private static bool ShouldUpdateQuery(IStorageQueryResultBase query, bool useIndexer)
+        {
+            QueryOptions options = query.GetCurrentQueryOptions();
+            bool agree1 = !useIndexer && options.IndexerOption == IndexerOption.DoNotUseIndexer;
+            bool agree2 = useIndexer && options.IndexerOption != IndexerOption.DoNotUseIndexer;
+            return !agree1 && !agree2;
+        }
+
+        private static StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
+        {
+            string[] customPropertyKeys =
+            {
+                SystemProperties.Title,
+                SystemProperties.Music.Artist,
+                SystemProperties.Media.Duration
+            };
+
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
+            {
+                IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
+            };
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
+                customPropertyKeys);
+
+            return KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
+        }
+
+        private static StorageFileQueryResult CreateVideosLibraryQuery(bool useIndexer)
+        {
+            string[] customPropertyKeys =
+            {
+                SystemProperties.Title,
+                SystemProperties.Media.Duration
+            };
+
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
+            {
+                IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
+            };
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
+                customPropertyKeys);
+            return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
         }
     }
 }

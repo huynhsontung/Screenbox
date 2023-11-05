@@ -18,12 +18,19 @@ namespace Screenbox.Core.Services
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
+        private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
+
+        public bool UseIndexer
+        {
+            get => GetValue<bool>(LibrariesUseIndexerKey);
+            set => SetValue(LibrariesUseIndexerKey, value);
+        }
 
         public PlayerAutoResizeOption PlayerAutoResize
         {
@@ -93,6 +100,7 @@ namespace Screenbox.Core.Services
             SetDefault(PlayerTapGestureKey, true);
             SetDefault(PersistentVolumeKey, 100);
             SetDefault(MaxVolumeKey, 100);
+            SetDefault(LibrariesUseIndexerKey, true);
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
