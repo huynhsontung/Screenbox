@@ -174,7 +174,7 @@
                 </labs:SettingsExpander>
                 <labs:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Header="Refresh libraries"
+                    Header="{strings:Resources Key=RefreshLibraries}"
                     HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
                     Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
@@ -182,18 +182,18 @@
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="RefreshLibrariesButton"
-                        AutomationProperties.Name="Refresh"
+                        AutomationProperties.Name="{strings:Resources Key=Refresh}"
                         Command="{x:Bind ViewModel.RefreshLibrariesCommand}"
-                        Content="Refresh" />
+                        Content="{strings:Resources Key=Refresh}" />
                     <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Description="Turn this off if you are not seeing all the media from your library locations." Header="Use the indexer to speed up scanning">
+                        <labs:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
                         </labs:SettingsCard>
                         <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
                             <labs:SettingsCard.Header>
                                 <HyperlinkButton
                                     Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                                    Content="Manage system indexing settings"
+                                    Content="{strings:Resources Key=ManageSystemIndexingLink}"
                                     NavigateUri="ms-settings:search" />
                             </labs:SettingsCard.Header>
                         </labs:SettingsCard>

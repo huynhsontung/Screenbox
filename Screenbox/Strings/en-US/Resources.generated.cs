@@ -2442,6 +2442,71 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region RefreshLibraries
+        /// <summary>
+        ///   Looks up a localized string similar to: Refresh libraries
+        /// </summary>
+        public static string RefreshLibraries
+        {
+            get
+            {
+                return _resourceLoader.GetString("RefreshLibraries");
+            }
+        }
+        #endregion
+
+        #region Refresh
+        /// <summary>
+        ///   Looks up a localized string similar to: Refresh
+        /// </summary>
+        public static string Refresh
+        {
+            get
+            {
+                return _resourceLoader.GetString("Refresh");
+            }
+        }
+        #endregion
+
+        #region SettingsUseIndexerHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Use indexer for scanning
+        /// </summary>
+        public static string SettingsUseIndexerHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsUseIndexerHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsUseIndexerDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.
+        /// </summary>
+        public static string SettingsUseIndexerDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsUseIndexerDescription");
+            }
+        }
+        #endregion
+
+        #region ManageSystemIndexingLink
+        /// <summary>
+        ///   Looks up a localized string similar to: Manage system indexing settings
+        /// </summary>
+        public static string ManageSystemIndexingLink
+        {
+            get
+            {
+                return _resourceLoader.GetString("ManageSystemIndexingLink");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2639,6 +2704,11 @@ namespace Screenbox.Strings{
             FailedToAddFolderNotificationTitle,
             OpenAlbum,
             OpenArtist,
+            RefreshLibraries,
+            Refresh,
+            SettingsUseIndexerHeader,
+            SettingsUseIndexerDescription,
+            ManageSystemIndexingLink,
         }
 
         private static ResourceLoader _resourceLoader;
