@@ -97,43 +97,6 @@ namespace Screenbox.Core.Services
             return folder.CreateItemQueryWithOptions(queryOptions).GetItemCountAsync();
         }
 
-        public StorageFileQueryResult GetSongsFromLibrary()
-        {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Music.Artist,
-                SystemProperties.Media.Duration
-            };
-
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
-            {
-                IndexerOption = IndexerOption.UseIndexerWhenAvailable
-            };
-            queryOptions.SetPropertyPrefetch(
-                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
-                customPropertyKeys);
-            return KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
-        }
-
-        public StorageFileQueryResult GetVideosFromLibrary()
-        {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Media.Duration
-            };
-
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
-            {
-                IndexerOption = IndexerOption.UseIndexerWhenAvailable
-            };
-            queryOptions.SetPropertyPrefetch(
-                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
-                customPropertyKeys);
-            return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
-        }
-
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)
         {
             FileOpenPicker picker = GetFilePickerForFormats(formats);
