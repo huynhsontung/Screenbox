@@ -226,13 +226,18 @@ namespace Screenbox.Core.Services
         {
             StorageFileQueryResult? libraryQuery = _musicLibraryQueryResult;
 
-            if (libraryQuery != null)
+            if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
             {
                 libraryQuery.ContentsChanged -= OnMusicLibraryContentChanged;
+                libraryQuery = null;
             }
 
-            libraryQuery = CreateMusicLibraryQuery(UseIndexer);
-            libraryQuery.ContentsChanged += OnMusicLibraryContentChanged;
+            if (libraryQuery == null)
+            {
+                libraryQuery = CreateMusicLibraryQuery(UseIndexer);
+                libraryQuery.ContentsChanged += OnMusicLibraryContentChanged;
+            }
+
             _musicLibraryQueryResult = libraryQuery;
             return libraryQuery;
         }
@@ -241,13 +246,18 @@ namespace Screenbox.Core.Services
         {
             StorageFileQueryResult? libraryQuery = _videosLibraryQueryResult;
 
-            if (libraryQuery != null)
+            if (libraryQuery != null && ShouldUpdateQuery(libraryQuery, UseIndexer))
             {
                 libraryQuery.ContentsChanged -= OnVideosLibraryContentChanged;
+                libraryQuery = null;
             }
 
-            libraryQuery = CreateVideosLibraryQuery(UseIndexer);
-            libraryQuery.ContentsChanged += OnVideosLibraryContentChanged;
+            if (libraryQuery == null)
+            {
+                libraryQuery = CreateVideosLibraryQuery(UseIndexer);
+                libraryQuery.ContentsChanged += OnVideosLibraryContentChanged;
+            }
+
             _videosLibraryQueryResult = libraryQuery;
             return libraryQuery;
         }
@@ -283,6 +293,14 @@ namespace Screenbox.Core.Services
             async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+        }
+
+        private static bool ShouldUpdateQuery(IStorageQueryResultBase query, bool useIndexer)
+        {
+            QueryOptions options = query.GetCurrentQueryOptions();
+            bool agree1 = !useIndexer && options.IndexerOption == IndexerOption.DoNotUseIndexer;
+            bool agree2 = useIndexer && options.IndexerOption != IndexerOption.DoNotUseIndexer;
+            return !agree1 && !agree2;
         }
 
         private static StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
