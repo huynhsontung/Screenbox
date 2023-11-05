@@ -172,6 +172,33 @@
                         </StackPanel>
                     </Button>
                 </labs:SettingsExpander>
+                <labs:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Header="Refresh libraries"
+                    HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
+                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind RefreshLibrariesButton}" />
+                    </interactivity:Interaction.Behaviors>
+                    <Button
+                        x:Name="RefreshLibrariesButton"
+                        AutomationProperties.Name="Refresh"
+                        Command="{x:Bind ViewModel.RefreshLibrariesCommand}"
+                        Content="Refresh" />
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard Description="Turn this off if you are not seeing all the media from your library locations." Header="Use the indexer to speed up scanning">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                        </labs:SettingsCard>
+                        <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                            <labs:SettingsCard.Header>
+                                <HyperlinkButton
+                                    Margin="{StaticResource HyperlinkButtonInlineMargin}"
+                                    Content="Manage system indexing settings"
+                                    NavigateUri="ms-settings:search" />
+                            </labs:SettingsCard.Header>
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
+                </labs:SettingsExpander>
 
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
