@@ -743,4 +743,19 @@
   <data name="OpenArtist" xml:space="preserve">
     <value>打开艺术家</value>
   </data>
+  <data name="RefreshLibraries" xml:space="preserve">
+    <value>Refresh libraries</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="SettingsUseIndexerHeader" xml:space="preserve">
+    <value>Use indexer for scanning</value>
+  </data>
+  <data name="SettingsUseIndexerDescription" xml:space="preserve">
+    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+  </data>
+  <data name="ManageSystemIndexingLink" xml:space="preserve">
+    <value>Manage system indexing settings</value>
+  </data>
 </root>
