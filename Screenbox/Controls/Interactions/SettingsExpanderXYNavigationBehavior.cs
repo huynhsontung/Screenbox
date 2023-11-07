@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Labs.WinUI;
+﻿using CommunityToolkit.WinUI.Controls;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Behaviors;
 using Windows.UI.Xaml.Controls;
