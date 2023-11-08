@@ -24,7 +24,7 @@ namespace Screenbox.Controls
         {
             element.SetValue(ToolTipProperty, value);
             KeyboardAccelerator? accelerator = element.KeyboardAccelerators.FirstOrDefault(x => x.IsEnabled);
-            bool shouldShowShortcut = SystemInformationExtensions.IsDesktop;
+            bool shouldShowShortcut = SystemInformation.IsDesktop;
             if (accelerator != null && shouldShowShortcut)
             {
                 string shortcut = ToShortcut(accelerator);

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Numerics;
 using Windows.ApplicationModel.Core;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -40,6 +41,7 @@ namespace Screenbox.Pages
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
+            coreTitleBar.ExtendViewIntoTitleBar = true;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             NotificationView.Translation = new Vector3(0, 0, 8);
 
@@ -106,6 +108,13 @@ namespace Screenbox.Pages
             {
                 SetTitleBar();
                 NavView.SelectedItem = NavView.MenuItems[0];
+            }
+
+            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                titleBar.InactiveBackgroundColor = Colors.Transparent;
             }
         }
 

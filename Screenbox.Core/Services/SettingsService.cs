@@ -107,7 +107,7 @@ namespace Screenbox.Core.Services
             SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides
-            if (SystemInformationExtensions.IsXbox)
+            if (SystemInformation.IsXbox)
             {
                 SetValue(PlayerTapGestureKey, false);
                 SetValue(PlayerSeekGestureKey, false);

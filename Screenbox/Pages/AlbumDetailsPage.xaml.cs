@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Animations.Expressions;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Animations.Expressions;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using EF = Microsoft.Toolkit.Uwp.UI.Animations.Expressions.ExpressionFunctions;
+using EF = CommunityToolkit.WinUI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238

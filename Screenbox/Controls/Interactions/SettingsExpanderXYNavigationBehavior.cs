@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.WinUI.Controls;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Behaviors;
+﻿using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Behaviors;
+using CommunityToolkit.WinUI.Controls;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 

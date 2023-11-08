@@ -1,11 +1,10 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Screenbox.Core;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Events;
 
 namespace Screenbox.Core.Services
 {

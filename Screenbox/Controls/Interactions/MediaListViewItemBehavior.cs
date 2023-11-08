@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;

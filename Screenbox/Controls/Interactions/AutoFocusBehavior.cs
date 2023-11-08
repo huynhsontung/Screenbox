@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Behaviors;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Behaviors;
 using System;
 using Windows.Foundation.Collections;
 using Windows.System;

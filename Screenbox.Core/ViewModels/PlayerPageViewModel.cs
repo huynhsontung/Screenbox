@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -389,7 +389,7 @@ namespace Screenbox.Core.ViewModels
         public void HiddenButtonOnClick()
         {
             ControlsHidden = false;
-            if (SystemInformationExtensions.IsDesktop)
+            if (SystemInformation.IsDesktop)
             {
                 // On Desktop, user expect Space to pause without needing to see the controls
                 Messenger.Send(new TogglePlayPauseMessage(true));

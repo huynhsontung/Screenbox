@@ -233,7 +233,7 @@ namespace Screenbox
 
                 // Turn off overscan on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/turn-off-overscan
-                if (SystemInformationExtensions.IsXbox)
+                if (SystemInformation.IsXbox)
                 {
                     Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
                         .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
