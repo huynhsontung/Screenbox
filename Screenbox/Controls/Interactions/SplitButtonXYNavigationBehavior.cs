@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Behaviors;
+﻿using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Behaviors;
 using Windows.UI.Xaml.Controls;
 using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
 

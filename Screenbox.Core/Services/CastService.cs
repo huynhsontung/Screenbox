@@ -1,19 +1,17 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
+using LibVLCSharp.Shared;
+using Screenbox.Core.Events;
 using System;
 using System.Collections.Generic;
-using LibVLCSharp.Shared;
-using CommunityToolkit.Diagnostics;
-using Screenbox.Core;
-using Screenbox.Core.Events;
-using Screenbox.Core.Services;
 
 namespace Screenbox.Core.Services
 {
     public sealed class CastService : ICastService
     {
         public event EventHandler<RendererFoundEventArgs>? RendererFound;
-        public event EventHandler<RendererLostEventArgs>? RendererLost; 
+        public event EventHandler<RendererLostEventArgs>? RendererLost;
 
         private readonly LibVlcService _libVlcService;
         private readonly List<Renderer> _renderers;

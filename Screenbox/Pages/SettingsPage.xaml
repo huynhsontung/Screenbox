@@ -2,28 +2,24 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CommunityToolkit.Labs.WinUI.SettingsControls/SettingsExpander/SettingsExpander.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <x:Double x:Key="ToggleSwitchPreContentMargin">4</x:Double>
             <x:Double x:Key="ToggleSwitchPostContentMargin">4</x:Double>
             <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
@@ -58,7 +54,7 @@
                 Label="{strings:Resources Key=Remove}" />
 
             <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-                <labs:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
+                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                     <Button
                         Height="32"
                         VerticalAlignment="Center"
@@ -68,11 +64,11 @@
                         CommandParameter="{x:Bind}">
                         <FontIcon Glyph="&#xe894;" />
                     </Button>
-                </labs:SettingsCard>
+                </ctc:SettingsCard>
             </DataTemplate>
 
             <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-                <labs:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
+                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                     <Button
                         Height="32"
                         VerticalAlignment="Center"
@@ -82,13 +78,13 @@
                         CommandParameter="{x:Bind}">
                         <FontIcon Glyph="&#xe894;" />
                     </Button>
-                </labs:SettingsCard>
+                </ctc:SettingsCard>
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <behaviors:AutoFocusBehavior />
+        <interactions:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -127,15 +123,15 @@
                     Margin="1,8,0,8"
                     Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                     Text="{strings:Resources Key=SettingsCategoryLibraries}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
-                <labs:SettingsExpander
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddMusicFolderButton}" />
                     </interactivity:Interaction.Behaviors>
@@ -149,15 +145,15 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
-                </labs:SettingsExpander>
-                <labs:SettingsExpander
+                </ctc:SettingsExpander>
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddVideoFolderButton}" />
                     </interactivity:Interaction.Behaviors>
@@ -171,12 +167,12 @@
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
-                </labs:SettingsExpander>
-                <labs:SettingsExpander
+                </ctc:SettingsExpander>
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=RefreshLibraries}"
                     HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind RefreshLibrariesButton}" />
                     </interactivity:Interaction.Behaviors>
@@ -185,24 +181,24 @@
                         AutomationProperties.Name="{strings:Resources Key=Refresh}"
                         Command="{x:Bind ViewModel.RefreshLibrariesCommand}"
                         Content="{strings:Resources Key=Refresh}" />
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
-                        </labs:SettingsCard>
-                        <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
-                            <labs:SettingsCard.Header>
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                            <ctc:SettingsCard.Header>
                                 <HyperlinkButton
                                     Margin="{StaticResource HyperlinkButtonInlineMargin}"
                                     Content="{strings:Resources Key=ManageSystemIndexingLink}"
                                     NavigateUri="ms-settings:search" />
-                            </labs:SettingsCard.Header>
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                            </ctc:SettingsCard.Header>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
-                <labs:SettingsExpander
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
@@ -211,21 +207,21 @@
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
-                <labs:SettingsCard
+                <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -236,8 +232,8 @@
                         <x:String>OnLaunch</x:String>
                         <x:String>Never</x:String>
                     </ComboBox>
-                </labs:SettingsCard>
-                <labs:SettingsCard
+                </ctc:SettingsCard>
+                <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
@@ -253,29 +249,29 @@
                         <x:String>#150%</x:String>
                         <x:String>#200%</x:String>
                     </ComboBox>
-                </labs:SettingsCard>
-                <labs:SettingsExpander
+                </ctc:SettingsCard>
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
                     IsExpanded="True"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard ContentAlignment="Left">
+                    Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
-                        </labs:SettingsCard>
-                        <labs:SettingsCard ContentAlignment="Left">
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
-                        </labs:SettingsCard>
-                        <labs:SettingsCard ContentAlignment="Left" CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard ContentAlignment="Left" CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  Advanced section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
-                <labs:SettingsExpander
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
                     Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
@@ -285,9 +281,9 @@
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AdvancedModeToggleSwitch}" />
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
-                            <labs:SettingsCard.Description>
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
+                            <ctc:SettingsCard.Description>
                                 <TextBlock>
                                     <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
                                     <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
@@ -295,28 +291,28 @@
                                     </Hyperlink>
                                     <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
                                 </TextBlock>
-                            </labs:SettingsCard.Description>
+                            </ctc:SettingsCard.Description>
                             <Button CommandParameter="{x:Bind ViewModel}" Content="Set arguments">
                                 <Button.Command>
                                     <commands:SetPlaybackOptionsCommand />
                                 </Button.Command>
                             </Button>
-                        </labs:SettingsCard>
-                        <labs:SettingsCard
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard
                             CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
                             Header="Active arguments"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
-                            <labs:SettingsCard.Description>
+                            <ctc:SettingsCard.Description>
                                 <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
-                            </labs:SettingsCard.Description>
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                            </ctc:SettingsCard.Description>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  About section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAbout}" />
-                <labs:SettingsExpander
+                <ctc:SettingsExpander
                     Margin="0,0,0,24"
                     Description="Made with ❤️ by Tung Huynh"
                     Header="{strings:Resources Key=AppFriendlyName}"
@@ -326,8 +322,8 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         Text="{x:Bind strings:Resources.VersionText}" />
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
                             HorizontalContentAlignment="Left"
                             ContentAlignment="Vertical"
                             CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
@@ -344,9 +340,9 @@
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
                             </VariableSizedWrapGrid>
-                        </labs:SettingsCard>
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
             </StackPanel>
         </ScrollViewer>

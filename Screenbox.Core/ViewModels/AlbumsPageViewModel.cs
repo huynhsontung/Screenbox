@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Collections;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;

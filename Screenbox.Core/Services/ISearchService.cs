@@ -1,6 +1,4 @@
-﻿using Screenbox.Core;
-
-namespace Screenbox.Core.Services
+﻿namespace Screenbox.Core.Services
 {
     public interface ISearchService
     {

@@ -1,8 +1,7 @@
 ﻿#nullable enable
 
-using System;
-using Screenbox.Core;
 using Screenbox.Core.Events;
+using System;
 
 namespace Screenbox.Core.Services
 {

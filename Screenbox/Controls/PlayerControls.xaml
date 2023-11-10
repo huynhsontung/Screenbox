@@ -4,15 +4,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:converters1="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:converters1="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -250,7 +249,7 @@
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon Glyph=&#xEE71;}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
-                    Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
                     Click="CastMenuFlyoutItem_OnClick"
                     Icon="{ui:FontIcon Glyph=&#xEC15;}"
@@ -520,7 +519,7 @@
                 local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" Modifiers="Control" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
@@ -534,7 +533,7 @@
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}">
+                Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
@@ -557,7 +556,7 @@
             <VisualStateGroup x:Name="AdaptiveControlStates">
                 <VisualState x:Name="AdaptiveHidden">
                     <VisualState.StateTriggers>
-                        <triggers:ControlSizeTrigger
+                        <ui:ControlSizeTrigger
                             x:Name="AdaptiveHiddenControlSizeTrigger"
                             MaxWidth="720"
                             CanTrigger="{x:Bind ViewModel.ShouldBeAdaptive, Mode=OneWay}"

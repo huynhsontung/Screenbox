@@ -2,7 +2,7 @@
 
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;

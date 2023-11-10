@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Animations;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Animations;
 using System;
 using System.Numerics;
 using Windows.UI.Xaml;

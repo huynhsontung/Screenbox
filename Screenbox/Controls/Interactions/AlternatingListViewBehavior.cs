@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml.Controls;
+using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
-using Windows.UI.Xaml.Controls.Primitives;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
-using Microsoft.Toolkit.Uwp.UI;
 
 namespace Screenbox.Controls.Interactions
 {
