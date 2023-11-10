@@ -37,12 +37,14 @@ namespace Screenbox.Core.ViewModels
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
                 {
-                    // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetSpuDelay(value * 1000);
+                    player.VlcPlayer.SetSpuDelay(value * 1000); // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
                 }
             }
         }
 
+        /// <summary>
+        /// This 64-bit signed integer changes the current audio delay.
+        /// </summary>
         public long AudioTimingOffset
         {
             // Special access. Consider promote to proper IMediaPlayer property
@@ -50,9 +52,8 @@ namespace Screenbox.Core.ViewModels
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
-                {
-                    // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetAudioDelay(value * 1000);
+                {                    
+                    player.VlcPlayer.SetAudioDelay(value * 1000); // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
                 }
             }
         }

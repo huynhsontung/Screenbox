@@ -114,43 +114,44 @@
             <Flyout x:Key="PlaybackOptionsFlyout">
                 <StackPanel MinWidth="360" Orientation="Vertical">
                     <!--  TODO: Localize strings  -->
-                    <Grid Margin="0,0,0,12" ColumnSpacing="4">
+                    <Grid Margin="0,0,0,12">
                         <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Playback options" />
                         <!--<CheckBox
                             HorizontalAlignment="Right"
                             Content="Input numbers"
                             Visibility="Collapsed" />-->
                     </Grid>
-                    <!--  TODO: ComboBox, IsEnabled ViewModel  -->
-                    <StackPanel x:Name="AspectRatioSection" Spacing="4">
-                        <TextBlock Text="{strings:Resources Key=AspectRatio}" />
-                        <!--<ComboBox
-                            MinWidth="128"
-                            Margin="0,0,0,8"
-                            IsEditable="True"
-                            SelectedItem="{Binding AspectRatio, Mode=TwoWay}"
-                            SelectionChanged="AspectRatioComboBox_OnSelectionChanged"
-                            TextSubmitted="AspectRatioComboBox_OnTextSubmitted">
-                            <x:String>Fit</x:String>
-                            <x:String>Fill</x:String>
-                            <x:String>16:9</x:String>
-                            <x:String>1.85:1</x:String>
-                            <x:String>21:9</x:String>
-                            <x:String>4:3</x:String>
-                            <x:String>1:1</x:String>
-                        </ComboBox>-->
-                        <TextBox
-                            x:Name="AspectRatioTextBox"
-                            Margin="0,0,0,8"
-                            HorizontalAlignment="Left"
-                            AutomationProperties.Name="Custom aspect ratio TextBox"
-                            PlaceholderText="16:9"
-                            TextChanged="AspectRatioTextBox_OnTextChanged" />
-                    </StackPanel>
+                    <!--  TODO: Replace TextBox with ComboBox, IsEnabled ViewModel  -->
+                    <!--<ComboBox
+                        x:Name="AspectRatioComboBox"
+                        MinWidth="128"
+                        Margin="0,0,0,8"
+                        Header="{strings:Resources Key=AspectRatio}"
+                        IsEditable="True"
+                        IsEnabled="True"
+                        SelectedItem="{Binding AspectRatio, Mode=TwoWay}"
+                        SelectionChanged="AspectRatioComboBox_OnSelectionChanged"
+                        TextSubmitted="AspectRatioComboBox_OnTextSubmitted">
+                        <x:String>Fit</x:String>
+                        <x:String>Fill</x:String>
+                        <x:String>16:9</x:String>
+                        <x:String>1.85:1</x:String>
+                        <x:String>21:9</x:String>
+                        <x:String>4:3</x:String>
+                        <x:String>1:1</x:String>
+                    </ComboBox>-->
+                    <TextBox
+                        x:Name="AspectRatioTextBox"
+                        Margin="0,0,0,8"
+                        HorizontalAlignment="Left"
+                        AutomationProperties.Name="Custom aspect ratio TextBox"
+                        Header="{strings:Resources Key=AspectRatio}"
+                        PlaceholderText="16:9"
+                        TextChanged="AspectRatioTextBox_OnTextChanged" />
                     <!--  TODO: Minimum to 0.05  -->
-                    <StackPanel x:Name="PlaybackSpeedSection" Spacing="4">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{strings:Resources Key=PlaybackSpeed}" />
+                    <StackPanel x:Name="PlaybackSpeedSection">
+                        <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                            <TextBlock Margin="0,0,8,0" Text="{strings:Resources Key=PlaybackSpeed}" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=SpeedSlider, Path=Value, FallbackValue=1}" /> <Run Text="×" /></TextBlock>
                         </StackPanel>
                         <Slider
@@ -168,9 +169,9 @@
                             Value="1.0" />
                     </StackPanel>
                     <!--  TODO: IsEnabled ViewModel and localize string  -->
-                    <StackPanel x:Name="AudioTimingOffsetSection" Spacing="4">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="Audio timing offset" />
+                    <StackPanel x:Name="AudioTimingOffsetSection">
+                        <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                            <TextBlock Margin="0,0,8,0" Text="Audio timing offset" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                         </StackPanel>
                         <Slider
@@ -185,9 +186,9 @@
                             Value="0" />
                     </StackPanel>
                     <!--  TODO: IsEnabled ViewModel and update TimingOffset string  -->
-                    <StackPanel x:Name="SubtitleTimingOffsetSection" Spacing="4">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <TextBlock Text="{strings:Resources Key=TimingOffset}" />
+                    <StackPanel x:Name="SubtitleTimingOffsetSection">
+                        <StackPanel Margin="0,0,0,4" Orientation="Horizontal">
+                            <TextBlock Margin="0,0,8,0" Text="{strings:Resources Key=TimingOffset}" />
                             <TextBlock Foreground="{ThemeResource TextFillColorTertiaryBrush}"><Run Text="{Binding ElementName=SubtitleTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                         </StackPanel>
                         <Slider
