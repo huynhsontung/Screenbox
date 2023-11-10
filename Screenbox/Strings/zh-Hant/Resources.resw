@@ -118,155 +118,155 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>已儲存此影格</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>子母畫面</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>儲存此影格</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>重複播放</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>播放速度</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>音量：{0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>無法儲存影格</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>第 {0} 章節</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>無法載入字幕</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>返回</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>靜音</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>取消靜音</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>全螢幕</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>音訊與字幕</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>退出全螢幕</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>音量</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>跳轉</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>關閉子母畫面</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>下一項</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>前一項</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>播放</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>暫停</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>其他</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>播放佇列</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>重複播放：關閉</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>重複播放：全部</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>重複播放：此媒體</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>已選取 {0} 個項目</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>已選取 {0} 個項目</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>已新增至佇列</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>取消選取</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>移除</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>播放下一項</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>向上移動</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>向下移動</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>正在播放</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>視訊</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>這個資料夾是空的</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} 個項目</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} 個項目</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>無內容</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>回到視訊</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>Cast</value>
+    <value>投放</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Stop casting</value>
+    <value>停止投放</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>投放至</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>投放至其他裝置</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>停用</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>音樂</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Shuffle and play</value>
