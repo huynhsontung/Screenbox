@@ -2,7 +2,7 @@
 <!-- Feel free to adapt or modify key points if necessary. -->
 ## Screenbox 媒體播放器
 
-**你的下一個媒體播放器**
+**您的下一個媒體播放器**
 
 ### 介紹
 
@@ -11,7 +11,7 @@ Screenbox 將經典播放器昇華至全新境界，向您呈現嶄新、現代�
 ### 功能
 
 - 現代化介面，支援手勢和各種型態的 Windows 裝置。
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- 支援大量音訊和視訊格式。
+- 瀏覽、管理本機或網路上的音樂和影片庫。
+- 支援使用 Chromecast 投放至更多裝置。
+- 使用子母畫面，在工作之餘同時觀看您喜愛的媒體，
