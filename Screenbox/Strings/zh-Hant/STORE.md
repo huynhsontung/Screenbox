@@ -1,16 +1,16 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox 媒體播放器
 
-**Your modern media player**
+**你的下一個媒體播放器**
 
-### Description
+### 介紹
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a beautiful and intuitive user interface while being fast, lightweight, and powerful. Designed and built in the open, Screenbox will always be free to use.
+Screenbox 將經典播放器昇華至全新境界，向您呈現嶄新、現代化的媒體播放體驗。 Screenbox 的介面不僅美觀、直覺，更在極致輕便的同時，保持卓越速度和強大功能。 以開源基礎設計和打造，Screenbox 永遠免費。
 
-### Features
+### 功能
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
+- 現代化介面，支援手勢和各種型態的 Windows 裝置。
 - Support many audio and video formats.
 - Browse and manage your music and video library on your machine or over the network.
 - Cast your media to a wide range of devices with Chromecast.
