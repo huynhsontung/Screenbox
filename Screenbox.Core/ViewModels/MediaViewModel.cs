@@ -34,7 +34,7 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<string> Options { get; }
 
-        public bool ShouldDisplayTrackNumber => TrackNumber > 0;    // Helper for binding
+        public string TrackNumberText => TrackNumber > 0 ? TrackNumber.ToString() : string.Empty;    // Helper for binding
 
         private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
@@ -65,7 +65,7 @@ namespace Screenbox.Core.ViewModels
         private ArtistViewModel[] _artists;
 
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(ShouldDisplayTrackNumber))]
+        [NotifyPropertyChangedFor(nameof(TrackNumberText))]
         private uint _trackNumber;
 
         [ObservableProperty]

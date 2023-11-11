@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -13,9 +13,12 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Media;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -29,7 +32,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<TogglePlayerVisibilityMessage>,
         IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
-        IRecipient<PlaylistActiveItemChangedMessage>,
+        IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
         IRecipient<PlayerVisibilityRequestMessage>,
@@ -160,7 +163,7 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public void Receive(PlaylistActiveItemChangedMessage message)
+        public void Receive(PlaylistCurrentItemChangedMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
             if (message.Value != null)
@@ -179,6 +182,45 @@ namespace Screenbox.Core.ViewModels
         public void Receive(OverrideControlsHideDelayMessage message)
         {
             OverrideControlsDelayHide(message.Delay);
+        }
+
+        public async void OnDrop(object sender, DragEventArgs e)
+        {
+            if (_mediaPlayer == null) return;
+            try
+            {
+                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                {
+                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    if (items.Count > 0)
+                    {
+                        if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                        {
+                            _mediaPlayer.AddSubtitle(file);
+                            Messenger.Send(new SubtitleAddedNotificationMessage(file));
+                        }
+                        else
+                        {
+                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        }
+
+                        return;
+                    }
+                }
+
+                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                {
+                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    if (uri.IsFile)
+                    {
+                        Messenger.Send(new PlayMediaMessage(uri));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
+            }
         }
 
         public bool OnPlayerClick()
@@ -347,7 +389,7 @@ namespace Screenbox.Core.ViewModels
         public void HiddenButtonOnClick()
         {
             ControlsHidden = false;
-            if (SystemInformationExtensions.IsDesktop)
+            if (SystemInformation.IsDesktop)
             {
                 // On Desktop, user expect Space to pause without needing to see the controls
                 Messenger.Send(new TogglePlayPauseMessage(true));

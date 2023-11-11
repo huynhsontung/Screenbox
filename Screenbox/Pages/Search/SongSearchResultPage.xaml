@@ -2,6 +2,7 @@
     x:Class="Screenbox.Pages.SongSearchResultPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -9,16 +10,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -29,7 +23,8 @@
         <TextBlock
             x:Name="HeaderText"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultSongHeader(ViewModel.SearchQuery), FallbackValue={}}" />
@@ -37,17 +32,22 @@
         <ListView
             x:Name="SongListView"
             Grid.Row="1"
-            Padding="{StaticResource ContentPageRightMargin}"
+            Margin="0,12,0,0"
+            Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-            ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
             <ListView.Resources>
                 <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand, FallbackValue={x:Null}}" />
             </ListView.Resources>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <controls:MediaListViewItem IsIconVisible="False" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.Footer>
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
@@ -73,8 +73,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderText.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

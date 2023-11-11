@@ -12,7 +12,7 @@
     <LangVersion>10.0</LangVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -147,6 +147,7 @@
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
+    <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
       <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
     </Compile>
@@ -158,16 +159,23 @@
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
+    <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
-    <Compile Include="Controls\Interactions\NavViewXYFocusBehavior.cs" />
+    <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
+    <Compile Include="Controls\MediaListViewItem.xaml.cs">
+      <DependentUpon>MediaListViewItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>
@@ -203,7 +211,6 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DefaultStringConverter.cs" />
-    <Compile Include="Converters\MediaTypeAdaptiveLayoutOverrideConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
@@ -728,6 +735,7 @@
     <Content Include="Assets\Icons\Video\FileAssociationWMV.targetsize-80.png" />
     <Content Include="Assets\Icons\Video\FileAssociationWMV.targetsize-96.png" />
     <Content Include="Assets\Screenbox-Custom-Icons.ttf" />
+    <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
@@ -783,8 +791,12 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="packages.lock.json" />
     <None Include="Secrets.cs.template" />
+    <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\fr-FR\ManifestResources.resw" />
     <PRIResource Include="Strings\pt-PT\Resources.resw" />
     <PRIResource Include="Strings\pt-PT\ManifestResources.resw" />
+    <PRIResource Include="Strings\pt-BR\Resources.resw" />
+    <PRIResource Include="Strings\pt-BR\ManifestResources.resw" />
     <PRIResource Include="Strings\es-ES\Resources.resw" />
     <PRIResource Include="Strings\es-ES\ManifestResources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
@@ -818,6 +830,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MediaListViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PropertiesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -830,6 +846,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Styles\CustomSplitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Templates\AlbumGridViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -839,10 +859,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Styles\CustomGridViewItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Templates\MediaListViewItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -980,14 +996,29 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Labs.Uwp.SettingsControls">
-      <Version>0.0.18</Version>
+    <PackageReference Include="CommunityToolkit.Uwp.Animations">
+      <Version>8.0.230907</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
+      <Version>8.0.230907</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
+      <Version>8.0.230907</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
+      <Version>8.0.230907</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Converters">
+      <Version>8.0.230907</Version>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions">
+      <Version>8.0.230907</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.2</Version>
+      <Version>5.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.2</Version>
+      <Version>5.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>7.0.0</Version>
@@ -995,20 +1026,8 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>7.1.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Animations">
-      <Version>7.1.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Behaviors">
-      <Version>7.1.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.Primitives">
-      <Version>7.1.3</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.5</Version>
+      <Version>2.8.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>

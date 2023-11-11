@@ -2,19 +2,21 @@
     x:Class="Screenbox.Pages.PlayQueuePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     Loaded="PlayQueuePage_OnLoaded"
     mc:Ignorable="d">
+
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
@@ -25,7 +27,7 @@
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon Glyph=&#xe8da;}"
                 Text="{strings:Resources Key=AddFolder}"
-                Visibility="{x:Bind helpers:SystemInformationExtensions.IsDesktop}" />
+                Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
             <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}">
                 <MenuFlyoutItem.Command>
                     <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.AddUrlCommand}" />
@@ -43,27 +45,30 @@
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}">
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}">
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
-                Height="32"
+                x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xe838;" />
                     <TextBlock
-                        x:Name="HeaderAddFileButtonText"
+                        x:Name="HeaderAddButtonText"
                         Margin="8,0,0,0"
-                        Text="{x:Bind strings:Resources.AddFiles}" />
+                        Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <behaviors:AutoFocusBehavior />
+                    <interactions:SplitButtonXYNavigationBehavior />
+                    <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
@@ -71,7 +76,11 @@
         <controls:PlaylistView
             x:Name="PlaylistView"
             Grid.Row="1"
-            Padding="{StaticResource ContentPageRightMargin}" />
+            Padding="{StaticResource PageContentMargin}" />
+
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
@@ -86,9 +95,9 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderAddFileButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
-                        <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
+                        <Setter Target="PlaylistView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -323,7 +323,7 @@ namespace Screenbox.Core.Playback
             if (PlaybackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
             if (e.Type == TrackType.Text)
             {
-                PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id);
+                PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id, VlcPlayer);
             }
         }
 
@@ -406,12 +406,12 @@ namespace Screenbox.Core.Playback
             VlcPlayer.SetSpu(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcSpu);
         }
 
-        public void AddSubtitle(IStorageFile file)
+        public void AddSubtitle(IStorageFile file, bool select = true)
         {
             if (PlaybackItem == null) return;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
             PlaybackItem.SubtitleTracks.PendingTrackLabel = file.Name;
-            VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, true);
+            VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, select);
         }
 
         public void Close()

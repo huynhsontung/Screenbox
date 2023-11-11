@@ -19,13 +19,13 @@ namespace Screenbox.Core.Services
 {
     public sealed class FilesService : IFilesService
     {
-        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file)
+        public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
         {
             try
             {
                 StorageFolder? parent = await file.GetParentAsync();
-                StorageFileQueryResult? queryResult =
-                    parent?.CreateFileQueryWithOptions(new QueryOptions(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats));
+                options ??= new QueryOptions(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
+                StorageFileQueryResult? queryResult = parent?.CreateFileQueryWithOptions(options);
                 return queryResult;
             }
             catch (Exception)
@@ -95,43 +95,6 @@ namespace Screenbox.Core.Services
         {
             QueryOptions queryOptions = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedFormats);
             return folder.CreateItemQueryWithOptions(queryOptions).GetItemCountAsync();
-        }
-
-        public StorageFileQueryResult GetSongsFromLibrary()
-        {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Music.Artist,
-                SystemProperties.Media.Duration
-            };
-
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
-            {
-                IndexerOption = IndexerOption.UseIndexerWhenAvailable
-            };
-            queryOptions.SetPropertyPrefetch(
-                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
-                customPropertyKeys);
-            return KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
-        }
-
-        public StorageFileQueryResult GetVideosFromLibrary()
-        {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Media.Duration
-            };
-
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
-            {
-                IndexerOption = IndexerOption.UseIndexerWhenAvailable
-            };
-            queryOptions.SetPropertyPrefetch(
-                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
-                customPropertyKeys);
-            return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
         }
 
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats)

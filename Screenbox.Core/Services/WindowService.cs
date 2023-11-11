@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -8,9 +10,6 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
-using Screenbox.Core;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Events;
 
 namespace Screenbox.Core.Services
 {

@@ -50,6 +50,6 @@ namespace Screenbox.Core.Playback
         void Pause();
         void StepForwardOneFrame();
         void StepBackwardOneFrame();
-        void AddSubtitle(IStorageFile file);
+        void AddSubtitle(IStorageFile file, bool select = true);
     }
 }

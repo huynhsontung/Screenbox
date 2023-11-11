@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
@@ -161,6 +162,10 @@ namespace Screenbox
 
             Window.Current.Activate();
             WeakReferenceMessenger.Default.Send(new PlayFilesWithNeighborsMessage(args.Files, args.NeighboringFilesQuery));
+            Analytics.TrackEvent("FileActivated", new Dictionary<string, string>
+            {
+                { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
+            });
         }
 
         /// <summary>
@@ -206,6 +211,7 @@ namespace Screenbox
         {
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
+            Analytics.TrackEvent("Suspending");
             await Task.WhenAll(tasks);
             deferral.Complete();
         }
@@ -227,7 +233,7 @@ namespace Screenbox
 
                 // Turn off overscan on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/turn-off-overscan
-                if (SystemInformationExtensions.IsXbox)
+                if (SystemInformation.IsXbox)
                 {
                     Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
                         .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);

@@ -118,107 +118,107 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>Kare kaydedildi</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>Resim içinde resim</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Şu anki kareyi kaydet</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>Tekrarla</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>Oynatma hızı</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>Ses %{0:F0}</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>Kare kaydedilemedi</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>Bölüm {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Altyazı yüklenemedi</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Geri</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>Sessiz</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>Sesi aç</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>Tam ekran</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>Ses &amp; altyazılar</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>Tam ekrandan çık</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Ses</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>Resim içinde resim modundan çık</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>Sonraki</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>Önceki</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>Oynat</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Duraklat</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>Daha Fazla</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>Oynatma sırası</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>Tekrarlama Kapalı</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>Tümünü Tekrarla</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>Birini Tekrarla</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} öğe seçildi</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} öğe seçildi</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>Sıraya ekle</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Seçimi Temizle</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Kaldır</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>Sonrakini oynat</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Move up</value>
@@ -227,28 +227,28 @@
     <value>Move down</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>Oynatılıyor</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videolar</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>Bu klasör boş</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} öğe</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} öğe</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Boş</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Video görünümünü geri yükle</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cast</value>
@@ -263,16 +263,16 @@
     <value>Cast to a device</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Devre Dışı Bırak</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Müzik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>Karıştır ve oynat</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Bilinmeyen sanatçı</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
     <value>Unknown album</value>
@@ -415,23 +415,23 @@
     <value>Resume where you left off</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>{0} konumuna git</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Albümler</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>Sanatçılar</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>Şarkılar</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Browse for files to play</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>Dosya(ları) ekle</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Browse for file(s) to add to the play queue</value>
@@ -733,5 +733,14 @@
   </data>
   <data name="PropertyComposers" xml:space="preserve">
     <value>Composers</value>
+  </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>Couldn't add folder</value>
+  </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Open album</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Open artist</value>
   </data>
 </root>

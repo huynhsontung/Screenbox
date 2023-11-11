@@ -1,6 +1,6 @@
 #nullable enable
 
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

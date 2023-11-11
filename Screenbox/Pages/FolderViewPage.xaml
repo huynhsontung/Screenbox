@@ -2,7 +2,7 @@
     x:Class="Screenbox.Pages.FolderViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -12,10 +12,11 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:storage="using:Windows.Storage"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -119,18 +120,19 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <TextBlock
             x:Name="TitleText"
             Grid.Row="0"
-            Margin="{StaticResource ContentPageHeaderMargin}"
-            MaxLines="2"
+            MinHeight="{StaticResource PageHeaderMinHeight}"
+            Margin="{StaticResource PageHeaderMargin}"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind ViewModel.TitleText}" />
 
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
-            Margin="0,0,0,12"
+            Margin="56,0,56,12"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
@@ -138,14 +140,14 @@
         <muxc:ProgressBar
             x:Name="LoadingProgressBar"
             Grid.Row="2"
-            Margin="{StaticResource ContentPageRightMargin}"
+            Margin="{StaticResource PageContentMargin}"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="FolderView"
             Grid.Row="2"
-            Padding="{StaticResource ContentPageThumbnailRightMargin}"
+            Padding="{StaticResource PageThumbnailMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
@@ -156,7 +158,7 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
-                <behaviors:AutoFocusBehavior />
+                <interactions:AutoFocusBehavior />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:ThumbnailGridViewBehavior />
@@ -165,10 +167,10 @@
         <TextBlock
             x:Name="NoContentText"
             Grid.Row="2"
-            Margin="{StaticResource ContentPageRightMargin}"
+            Margin="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{x:Bind strings:Resources.EmptyFolder}"
+            Text="{strings:Resources Key=EmptyFolder}"
             Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
@@ -184,10 +186,11 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="FolderView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="TitleText.Margin" Value="{StaticResource ContentPageHeaderMarginMinimal}" />
+                        <Setter Target="TitleText.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="16,0,16,12" />
+                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

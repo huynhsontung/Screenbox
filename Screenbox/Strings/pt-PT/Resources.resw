@@ -127,7 +127,7 @@
     <value>Guardar fotograma atual</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>Repetição</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
     <value>Velocidade de reprodução</value>
@@ -296,7 +296,7 @@
     <value>Não conseguimos encontrar qualquer música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>A sua biblioteca de música não contém qualquer conteúdo de musical.</value>
+    <value>A sua biblioteca de música não contém qualquer conteúdo musical.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Abrir ficheiro(s)</value>
@@ -377,7 +377,7 @@
     <value>Ano</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Personalizado</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Rede</value>
@@ -726,12 +726,21 @@
     <value>Ajudar a traduzir</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Opções</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Desvio da temporização</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Compositores</value>
+  </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>Não foi possível adicionar a pasta</value>
+  </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Abrir álbum</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Abrir artista</value>
   </data>
 </root>

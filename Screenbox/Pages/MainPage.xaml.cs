@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.AppCenter.Analytics;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Numerics;
 using Windows.ApplicationModel.Core;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -39,6 +41,7 @@ namespace Screenbox.Pages
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
+            coreTitleBar.ExtendViewIntoTitleBar = true;
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
             NotificationView.Translation = new Vector3(0, 0, 8);
 
@@ -54,6 +57,7 @@ namespace Screenbox.Pages
 
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ContentFrame.Navigated += ContentFrameOnNavigated;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -105,6 +109,13 @@ namespace Screenbox.Pages
                 SetTitleBar();
                 NavView.SelectedItem = NavView.MenuItems[0];
             }
+
+            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            {
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                titleBar.InactiveBackgroundColor = Colors.Transparent;
+            }
         }
 
         private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -122,6 +133,14 @@ namespace Screenbox.Pages
 
                 UpdateNavigationViewState(NavView.DisplayMode, NavView.IsPaneOpen);
             }
+        }
+
+        private void ContentFrameOnNavigated(object sender, NavigationEventArgs e)
+        {
+            Analytics.TrackEvent(e.SourcePageType.Name, new Dictionary<string, string>()
+            {
+                {"NavigationMode", e.NavigationMode.ToString()}
+            });
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -300,6 +319,20 @@ namespace Screenbox.Pages
         private Thickness ToLeftOnlyMargin(double value)
         {
             return new Thickness(value, 0, 0, 0);
+        }
+
+        private Thickness GetBackgroundMargin(muxc.NavigationViewDisplayMode mode, bool isPaneOpen)
+        {
+            return mode switch
+            {
+                muxc.NavigationViewDisplayMode.Minimal => new Thickness(0),
+                muxc.NavigationViewDisplayMode.Expanded when !isPaneOpen => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
+                muxc.NavigationViewDisplayMode.Expanded =>
+                    // Right margin to account for Expanded to Compact state transition
+                    new Thickness(NavView.OpenPaneLength, 0, -NavView.OpenPaneLength, 0),
+                muxc.NavigationViewDisplayMode.Compact => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
+                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+            };
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using System.Collections.Generic;
 using Windows.Foundation;
@@ -84,7 +84,7 @@ namespace Screenbox.Controls.Interactions
             e.Handled = true;
         }
 
-        private void SetMenuFlyoutDataContext(IList<MenuFlyoutItemBase> items, object? dataContext)
+        private static void SetMenuFlyoutDataContext(IList<MenuFlyoutItemBase> items, object? dataContext)
         {
             List<MenuFlyoutItemBase> menuFlyoutItems = new(items);
             for (int i = 0; i < menuFlyoutItems.Count; i++)

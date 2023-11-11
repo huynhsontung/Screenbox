@@ -2,8 +2,9 @@
     x:Class="Screenbox.Pages.SongsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Behaviors"
+    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -11,15 +12,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:triggers="using:Microsoft.Toolkit.Uwp.UI.Triggers"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:triggers="using:CommunityToolkit.WinUI"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
+
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Templates/MediaListViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <CollectionViewSource
                 x:Name="SongsSource"
                 IsSourceGrouped="True"
@@ -72,26 +70,33 @@
         </ResourceDictionary>
     </Page.Resources>
 
+    <interactivity:Interaction.Behaviors>
+        <interactions:AutoFocusBehavior />
+    </interactivity:Interaction.Behaviors>
+
     <Grid>
         <SemanticZoom Margin="0,24,0,0">
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     extensions:ListViewExtensions.ItemCornerRadius="8"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     IsItemClickEnabled="True"
-                    ItemTemplate="{StaticResource MediaListViewItemWithoutMediaIconTemplate}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     Loaded="SongListView_OnLoaded"
                     SelectionMode="None">
                     <ListView.Resources>
                         <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
                     </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <controls:MediaListViewItem IsIconVisible="False" />
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
-                        <behaviors:AutoFocusBehavior />
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -114,7 +119,7 @@
                     x:Name="GroupOverview"
                     MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource ContentPageRightMargin}"
+                    Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -141,8 +146,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageRightMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

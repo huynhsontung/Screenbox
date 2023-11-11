@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
-using Microsoft.Toolkit.Uwp.UI;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using CommunityToolkit.Mvvm.DependencyInjection;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 

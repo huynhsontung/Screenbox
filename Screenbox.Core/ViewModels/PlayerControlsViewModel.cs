@@ -27,7 +27,7 @@ namespace Screenbox.Core.ViewModels
     {
         public MediaListViewModel Playlist { get; }
 
-        public bool ShouldBeAdaptive => !IsCompact && SystemInformationExtensions.IsDesktop;
+        public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
         public long SubtitleTimingOffset
         {
