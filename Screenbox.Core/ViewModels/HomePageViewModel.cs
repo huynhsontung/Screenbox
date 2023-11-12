@@ -173,6 +173,9 @@ namespace Screenbox.Core.ViewModels
                     continue;
                 }
 
+                // TODO: Add support for playing playlist file from home page
+                if (file.IsSupportedPlaylist()) continue;
+
                 if (i >= Recent.Count)
                 {
                     Recent.Add(new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));

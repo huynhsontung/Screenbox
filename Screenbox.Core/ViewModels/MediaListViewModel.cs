@@ -141,7 +141,7 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                EnqueueAndPlay(files);
+                await EnqueueAndPlayAsync(files);
             }
         }
 
@@ -406,7 +406,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void Enqueue(IReadOnlyList<IStorageItem> files)
+        public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
         {
             foreach (IStorageItem item in files)
             {
@@ -418,18 +418,27 @@ namespace Screenbox.Core.ViewModels
 
                 if (item is StorageFile storageFile)
                 {
-                    // Don't include enqueue playlist files
-                    if (storageFile.IsSupportedPlaylist()) continue;
-                    Items.Add(_mediaFactory.GetSingleton(storageFile));
+                    MediaViewModel vm = _mediaFactory.GetSingleton(storageFile);
+                    if (storageFile.IsSupportedPlaylist() && await LoadPlaylistAsync(vm) is { Count: > 0 } playlist)
+                    {
+                        foreach (MediaViewModel playlistItem in playlist)
+                        {
+                            Items.Add(playlistItem);
+                        }
+                    }
+                    else
+                    {
+                        Items.Add(vm);
+                    }
                 }
             }
         }
 
-        private void EnqueueAndPlay(IReadOnlyList<IStorageItem> files)
+        private async Task EnqueueAndPlayAsync(IReadOnlyList<IStorageItem> files)
         {
             ClearPlaylist();
 
-            Enqueue(files);
+            await EnqueueAsync(files);
 
             MediaViewModel? media = Items.FirstOrDefault();
             if (media != null)
@@ -441,15 +450,26 @@ namespace Screenbox.Core.ViewModels
         private async void Play(object value)
         {
             MediaViewModel? vm;
+            IList<MediaViewModel>? playlist = null;
             try
             {
                 switch (value)
                 {
                     case StorageFile file:
                         vm = _mediaFactory.GetTransient(file);
-                        if (IsPlaylist(file) && await LoadPlaylistAsync(vm) && Items.Count > 0)
+                        if (IsPlaylist(file) && await LoadPlaylistAsync(vm) is { Count: > 0 } filePlaylist)
                         {
-                            vm = Items[0];
+                            vm = filePlaylist[0];
+                            playlist = filePlaylist;
+                        }
+                        break;
+
+                    case Uri uri:
+                        vm = _mediaFactory.GetTransient(uri);
+                        if (IsPlaylist(uri) && await LoadPlaylistAsync(vm) is { Count: > 0 } uriPlaylist)
+                        {
+                            vm = uriPlaylist[0];
+                            playlist = uriPlaylist;
                         }
                         break;
 
@@ -457,16 +477,8 @@ namespace Screenbox.Core.ViewModels
                         vm = vmValue;
                         break;
 
-                    case Uri uri:
-                        vm = _mediaFactory.GetTransient(uri);
-                        if (IsPlaylist(uri) && await LoadPlaylistAsync(vm) && Items.Count > 0)
-                        {
-                            vm = Items[0];
-                        }
-                        break;
-
                     case IReadOnlyList<IStorageItem> files:
-                        EnqueueAndPlay(files);
+                        await EnqueueAndPlayAsync(files);
                         return;
 
                     default:
@@ -476,6 +488,14 @@ namespace Screenbox.Core.ViewModels
             catch (OperationCanceledException)
             {
                 return;
+            }
+
+            if (playlist?.Count > 0)
+            {
+                foreach (MediaViewModel item in playlist)
+                {
+                    Items.Add(item);
+                }
             }
 
             if (Items.Count == 0)
@@ -505,6 +525,12 @@ namespace Screenbox.Core.ViewModels
         {
             _isExternalPlaylist = false;
             _shuffleBackup = null;
+
+            foreach (MediaViewModel item in Items)
+            {
+                item.Clean();
+            }
+
             Items.Clear();
             ShuffleMode = false;
         }
@@ -617,30 +643,31 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        private async Task<bool> LoadPlaylistAsync(MediaViewModel source)
+        private async Task<IList<MediaViewModel>> LoadPlaylistAsync(MediaViewModel source)
         {
-            if (source.Item == null) return false;
+            if (source.Item == null) return Array.Empty<MediaViewModel>();
 
             // Load playlist is atomic
             _cts?.Cancel();
             using CancellationTokenSource cts = new();
-            _cts = cts;
 
-            Media media = source.Item.Media;
-            MediaParsedStatus parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, cancellationToken: cts.Token);
-
-            // Only playlist with more than 1 sub items should replace current playlist
-            if (parsedStatus != MediaParsedStatus.Done || media.SubItems.Count <= 1) return false;
-            IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
-            ClearPlaylist();
-            foreach (MediaViewModel item in playlist)
+            try
             {
-                Items.Add(item);
-            }
+                _cts = cts;
+                Media media = source.Item.Media;
+                MediaParsedStatus parsedStatus = await media.Parse(
+                    MediaParseOptions.ParseNetwork | MediaParseOptions.FetchNetwork | MediaParseOptions.DoInteract,
+                    5000, cts.Token);
 
-            _isExternalPlaylist = true;
-            _cts = null;
-            return true;
+                // Only playlist with more than 1 sub items should be insert into the current playlist
+                if (parsedStatus != MediaParsedStatus.Done || media.SubItems.Count <= 1) return Array.Empty<MediaViewModel>();
+                IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
+                return playlist.ToList();
+            }
+            finally
+            {
+                _cts = null;
+            }
         }
 
         private static void Shuffle<T>(IList<T> list, Random rng)

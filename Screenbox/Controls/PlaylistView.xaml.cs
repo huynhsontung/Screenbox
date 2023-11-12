@@ -77,7 +77,7 @@ namespace Screenbox.Controls
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                ViewModel.Playlist.Enqueue(items);
+                await ViewModel.EnqueuePlaylistAsync(items);
             }
         }
 
