@@ -141,15 +141,13 @@ namespace Screenbox.Core.Services
                     throw new Exception("VLC failed to save snapshot");
 
                 StorageFile file = (await tempFolder.GetFilesAsync()).First();
-                await file.RenameAsync($"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
-                    NameCollisionOption.GenerateUniqueName);
-
                 StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
                 StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
                 StorageFolder destFolder =
                     await defaultSaveFolder.CreateFolderAsync("Screenbox",
                         CreationCollisionOption.OpenIfExists);
-                return await file.CopyAsync(destFolder);
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                    NameCollisionOption.GenerateUniqueName);
             }
             finally
             {
