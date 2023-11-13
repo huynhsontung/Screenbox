@@ -62,7 +62,6 @@ namespace Screenbox.Core.ViewModels
         private object? _delayPlay;
         private StorageFileQueryResult? _neighboringFilesQuery;
         private object? _lastUpdated;
-        private bool _isExternalPlaylist;
         private CancellationTokenSource? _cts;
 
         private const int MediaBufferCapacity = 5;
@@ -523,7 +522,6 @@ namespace Screenbox.Core.ViewModels
 
         private void ClearPlaylist()
         {
-            _isExternalPlaylist = false;
             _shuffleBackup = null;
 
             foreach (MediaViewModel item in Items)
@@ -637,7 +635,7 @@ namespace Screenbox.Core.ViewModels
                         sender.Position = TimeSpan.Zero;
                         break;
                     default:
-                        if (Items.Count > 1 && !_isExternalPlaylist) _ = NextAsync();
+                        if (Items.Count > 1) _ = NextAsync();
                         break;
                 }
             });
