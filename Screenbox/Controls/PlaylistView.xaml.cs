@@ -70,18 +70,18 @@ namespace Screenbox.Controls
             ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
         }
 
-        private async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
+        internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
         {
             if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
             e.Handled = true;
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                ViewModel.EnqueuePlaylist(items);
+                ViewModel.Playlist.Enqueue(items);
             }
         }
 
-        private void PlaylistListView_OnDragOver(object sender, DragEventArgs e)
+        internal void PlaylistListView_OnDragOver(object sender, DragEventArgs e)
         {
             e.Handled = true;
             e.AcceptedOperation = e.DataView.Contains(StandardDataFormats.StorageItems)

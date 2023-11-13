@@ -42,11 +42,6 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
 
-        public void EnqueuePlaylist(IReadOnlyList<IStorageItem> items)
-        {
-            Playlist.Enqueue(items);
-        }
-
         private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasItems = Playlist.Items.Count > 0;
