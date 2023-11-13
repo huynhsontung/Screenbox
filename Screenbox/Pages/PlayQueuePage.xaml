@@ -36,7 +36,11 @@
         </MenuFlyout>
     </Page.Resources>
 
-    <Grid>
+    <Grid
+        AllowDrop="True"
+        Background="Transparent"
+        DragOver="{x:Bind PlaylistView.PlaylistListView_OnDragOver}"
+        Drop="{x:Bind PlaylistView.PlaylistListView_OnDrop}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
