@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -16,7 +17,7 @@ using Windows.UI.Xaml.Input;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MainPageViewModel : ObservableRecipient,
-        IRecipient<PlayerVisibilityChangedMessage>,
+        IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
         IRecipient<NavigationViewDisplayModeRequestMessage>,
         IRecipient<CriticalErrorMessage>
     {
@@ -49,10 +50,10 @@ namespace Screenbox.Core.ViewModels
             CriticalErrorMessage = message.Message;
         }
 
-        public void Receive(PlayerVisibilityChangedMessage message)
+        public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
         {
-            PlayerVisible = message.Value == PlayerVisibilityState.Visible;
-            ShouldUseMargin = message.Value != PlayerVisibilityState.Hidden;
+            PlayerVisible = message.NewValue == PlayerVisibilityState.Visible;
+            ShouldUseMargin = message.NewValue != PlayerVisibilityState.Hidden;
         }
 
         public void Receive(NavigationViewDisplayModeRequestMessage message)

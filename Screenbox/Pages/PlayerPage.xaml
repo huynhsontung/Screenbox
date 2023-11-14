@@ -298,7 +298,7 @@
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
             Click="VideoView_OnClick"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="DoubleTapped">
@@ -476,8 +476,7 @@
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
-            Padding="6,20,6,12"
-            IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}" />
+            Padding="6,20,6,12" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">

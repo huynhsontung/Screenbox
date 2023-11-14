@@ -35,7 +35,6 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
-        IRecipient<PlayerVisibilityRequestMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool _controlsHidden;
@@ -97,11 +96,6 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
-        }
-
-        public void Receive(PlayerVisibilityRequestMessage message)
-        {
-            message.Reply(PlayerVisibility);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
@@ -444,7 +438,6 @@ namespace Screenbox.Core.ViewModels
         partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
         {
             if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
-            Messenger.Send(new PlayerVisibilityChangedMessage(value));
         }
 
         [RelayCommand]

@@ -157,7 +157,7 @@
                 </StackPanel>
             </Flyout>
 
-            <MenuFlyout x:Name="NormalPlayerContextMenu">
+            <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon Glyph=&#xe838;}"
@@ -338,7 +338,11 @@
                     Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="M" Modifiers="Control" />
+                        <KeyboardAccelerator
+                            Key="M"
+                            x:Name="CompactOverlayMenuItemKeyboardAccelerator"
+                            IsEnabled="False"
+                            Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
@@ -348,7 +352,11 @@
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="F" IsEnabled="{x:Bind IsMinimal, Mode=OneWay}" />
+                        <KeyboardAccelerator
+                            Key="F"
+                            x:Name="FullscreenMenuItemKeyboardAccelerator"
+                            IsEnabled="False" />
+                        <KeyboardAccelerator Key="F11" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
             </MenuFlyout>
@@ -544,7 +552,7 @@
             <Button
                 x:Name="MoreButton"
                 Margin="2,0,0,0"
-                Flyout="{x:Bind NormalPlayerContextMenu}"
+                Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
@@ -570,7 +578,9 @@
                         <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
                         <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
                         <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="FullscreenMenuItemKeyboardAccelerator.IsEnabled" Value="True" />
                         <Setter Target="CompactOverlayMenuItem.Visibility" Value="Visible" />
+                        <Setter Target="CompactOverlayMenuItemKeyboardAccelerator.IsEnabled" Value="True" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromHorizontalOffset="-100" TargetName="ShuffleButton" />
@@ -623,7 +633,7 @@
                 </VisualState>
                 <VisualState x:Name="Mini">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind IsMinimal, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsMinimal, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />

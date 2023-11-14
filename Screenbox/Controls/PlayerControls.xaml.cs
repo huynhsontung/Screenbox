@@ -17,18 +17,6 @@ namespace Screenbox.Controls
 {
     public sealed partial class PlayerControls : UserControl
     {
-        public static readonly DependencyProperty IsMinimalProperty = DependencyProperty.Register(
-            nameof(IsMinimal),
-            typeof(bool),
-            typeof(PlayerControls),
-            new PropertyMetadata(false));
-
-        public static readonly DependencyProperty PlayerContextMenuProperty = DependencyProperty.Register(
-            nameof(PlayerContextMenu),
-            typeof(MenuFlyout),
-            typeof(PlayerControls),
-            new PropertyMetadata(default(MenuFlyout)));
-
         public static readonly DependencyProperty BackgroundTransitionProperty = DependencyProperty.Register(
             nameof(BackgroundTransition),
             typeof(BrushTransition),
@@ -41,17 +29,7 @@ namespace Screenbox.Controls
             set => SetValue(BackgroundTransitionProperty, value);
         }
 
-        public MenuFlyout PlayerContextMenu
-        {
-            get => (MenuFlyout)GetValue(PlayerContextMenuProperty);
-            private set => SetValue(PlayerContextMenuProperty, value);
-        }
-
-        public bool IsMinimal
-        {
-            get => (bool)GetValue(IsMinimalProperty);
-            set => SetValue(IsMinimalProperty, value);
-        }
+        public MenuFlyout? PlayerContextMenu => (MenuFlyout?)MoreButton.Flyout;
 
         internal PlayerControlsViewModel ViewModel => (PlayerControlsViewModel)DataContext;
 
@@ -64,7 +42,6 @@ namespace Screenbox.Controls
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            PlayerContextMenu = NormalPlayerContextMenu;
             AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
         }
 

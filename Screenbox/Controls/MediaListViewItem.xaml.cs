@@ -11,32 +11,11 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Controls;
 public sealed partial class MediaListViewItem : UserControl
 {
-    public static readonly DependencyProperty IsIconVisibleProperty = DependencyProperty.Register(
-        nameof(IsIconVisible), typeof(bool), typeof(MediaListViewItem), new PropertyMetadata(true));
+    public bool IsTrackNumberVisible { get; set; }
 
-    public static readonly DependencyProperty IsAlbumColumnVisibleProperty = DependencyProperty.Register(
-        nameof(IsAlbumColumnVisible), typeof(bool), typeof(MediaListViewItem), new PropertyMetadata(true));
+    public bool IsAlbumColumnVisible { get; set; } = true;
 
-    public static readonly DependencyProperty IsTrackNumberVisibleProperty = DependencyProperty.Register(
-        nameof(IsTrackNumberVisible), typeof(bool), typeof(MediaListViewItem), new PropertyMetadata(false));
-
-    public bool IsTrackNumberVisible
-    {
-        get => (bool)GetValue(IsTrackNumberVisibleProperty);
-        set => SetValue(IsTrackNumberVisibleProperty, value);
-    }
-
-    public bool IsAlbumColumnVisible
-    {
-        get => (bool)GetValue(IsAlbumColumnVisibleProperty);
-        set => SetValue(IsAlbumColumnVisibleProperty, value);
-    }
-
-    public bool IsIconVisible
-    {
-        get => (bool)GetValue(IsIconVisibleProperty);
-        set => SetValue(IsIconVisibleProperty, value);
-    }
+    public bool IsIconVisible { get; set; }
 
     private bool _firstPlay = true;
 
