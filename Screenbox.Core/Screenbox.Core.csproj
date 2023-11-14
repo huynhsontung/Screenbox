@@ -161,7 +161,6 @@
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
-    <Compile Include="Messages\PlayerVisibilityChangedMessage.cs" />
     <Compile Include="Messages\PlayerVisibilityRequestMessage.cs" />
     <Compile Include="Messages\PlayFilesWithNeighborsMessage.cs" />
     <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />

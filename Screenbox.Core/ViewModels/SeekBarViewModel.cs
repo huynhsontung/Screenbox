@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
@@ -21,7 +22,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<TimeChangeOverrideMessage>,
         IRecipient<ChangeTimeRequestMessage>,
         IRecipient<PlayerControlsVisibilityChangedMessage>,
-        IRecipient<PlayerVisibilityChangedMessage>,
+        IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
         IRecipient<MediaPlayerChangedMessage>
     {
         [ObservableProperty] private double _length;
@@ -64,9 +65,9 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        public void Receive(PlayerVisibilityChangedMessage message)
+        public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
         {
-            ShouldHandleKeyDown = message.Value != PlayerVisibilityState.Visible;
+            ShouldHandleKeyDown = message.NewValue != PlayerVisibilityState.Visible;
         }
 
         public void Receive(PlayerControlsVisibilityChangedMessage message)

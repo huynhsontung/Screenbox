@@ -444,7 +444,6 @@ namespace Screenbox.Core.ViewModels
         partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
         {
             if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
-            Messenger.Send(new PlayerVisibilityChangedMessage(value));
         }
 
         [RelayCommand]
