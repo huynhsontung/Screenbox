@@ -131,24 +131,23 @@ namespace Screenbox.Core.Services
                 throw new NotImplementedException("Not supported on non VLC players");
             }
 
-            StorageFolder? tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
+            StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
                     $"snapshot_{DateTimeOffset.Now.Ticks}",
                     CreationCollisionOption.FailIfExists);
 
             try
             {
-                if (player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
-                {
-                    StorageFile? file = (await tempFolder.GetFilesAsync()).First();
-                    StorageLibrary? pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-                    StorageFolder? defaultSaveFolder = pictureLibrary.SaveFolder;
-                    StorageFolder? destFolder =
-                        await defaultSaveFolder.CreateFolderAsync("Screenbox",
-                            CreationCollisionOption.OpenIfExists);
-                    return await file.CopyAsync(destFolder);
-                }
+                if (!player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
+                    throw new Exception("VLC failed to save snapshot");
 
-                throw new Exception("VLC failed to save snapshot");
+                StorageFile file = (await tempFolder.GetFilesAsync()).First();
+                StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+                StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
+                StorageFolder destFolder =
+                    await defaultSaveFolder.CreateFolderAsync("Screenbox",
+                        CreationCollisionOption.OpenIfExists);
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                    NameCollisionOption.GenerateUniqueName);
             }
             finally
             {
