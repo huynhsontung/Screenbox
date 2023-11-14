@@ -276,7 +276,12 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 if (ResizeWindow(1)) return;
-                ResizeWindow();
+
+                // Resize to fill the screen only when video size is bigger than max window size
+                Size maxWindowSize = _windowService.GetMaxWindowSize();
+                if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
+                    sender.NaturalVideoHeight >= maxWindowSize.Height)
+                    ResizeWindow();
             });
         }
 

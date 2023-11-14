@@ -16,6 +16,7 @@ namespace Screenbox.Core.Services
         public void ExitFullScreen();
         public Task<bool> TryExitCompactLayoutAsync();
         public Task<bool> TryEnterCompactLayoutAsync(Size viewSize);
+        Size GetMaxWindowSize();
         double ResizeWindow(Size videoDimension, double scalar = 0);
         void HideCursor();
         void ShowCursor();

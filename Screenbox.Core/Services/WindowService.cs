@@ -20,7 +20,7 @@ namespace Screenbox.Core.Services
         public WindowViewMode ViewMode
         {
             get => _viewMode;
-            set
+            private set
             {
                 WindowViewMode oldValue = _viewMode;
                 if (oldValue != value)
@@ -98,11 +98,10 @@ namespace Screenbox.Core.Services
             return false;
         }
 
-        public double ResizeWindow(Size videoDimension, double scalar = 0)
+        public Size GetMaxWindowSize()
         {
-            if (scalar < 0 || videoDimension.IsEmpty) return -1;
-            DisplayInformation? displayInformation = DisplayInformation.GetForCurrentView();
-            ApplicationView? view = ApplicationView.GetForCurrentView();
+            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+            ApplicationView view = ApplicationView.GetForCurrentView();
             double maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
             double maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
@@ -114,6 +113,15 @@ namespace Screenbox.Core.Services
 
             maxHeight -= 16;
             maxWidth -= 16;
+            return new Size(maxWidth, maxHeight);
+        }
+
+        public double ResizeWindow(Size videoDimension, double scalar = 0)
+        {
+            if (scalar < 0 || videoDimension.IsEmpty) return -1;
+            Size maxWindowSize = GetMaxWindowSize();
+            double maxWidth = maxWindowSize.Width;
+            double maxHeight = maxWindowSize.Height;
 
             if (scalar == 0)
             {
