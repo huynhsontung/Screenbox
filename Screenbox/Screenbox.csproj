@@ -810,8 +810,12 @@
       <Generator>ReswPlusAdvancedGenerator</Generator>
       <LastGenOutput>Resources.generated.cs</LastGenOutput>
     </PRIResource>
+    <PRIResource Include="Strings\vi\ManifestResources.resw" />
+    <PRIResource Include="Strings\vi\Resources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
+    <PRIResource Include="Strings\zh-Hant\ManifestResources.resw" />
+    <PRIResource Include="Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
