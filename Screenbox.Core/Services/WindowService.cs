@@ -106,11 +106,12 @@ namespace Screenbox.Core.Services
             double maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
             {
-                DisplayRegion? displayRegion = view.GetDisplayRegions()[0];
+                DisplayRegion? displayRegion = view.GetDisplayRegions()[0]; // Active display region
                 maxWidth = displayRegion.WorkAreaSize.Width / displayInformation.RawPixelsPerViewPixel;
                 maxHeight = displayRegion.WorkAreaSize.Height / displayInformation.RawPixelsPerViewPixel;
             }
 
+            // Cannot use the full work area size. Subtract some padding.
             maxHeight -= 16;
             maxWidth -= 16;
             return new Size(maxWidth, maxHeight);
@@ -135,6 +136,7 @@ namespace Screenbox.Core.Services
             if (newWidth > maxWidth) newWidth = maxWidth;
             double newHeight = newWidth / aspectRatio;
             scalar = newWidth / videoDimension.Width;
+            ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.TryResizeView(new Size(newWidth, newHeight)))
             {
                 return scalar;
