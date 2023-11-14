@@ -633,7 +633,7 @@
                 </VisualState>
                 <VisualState x:Name="Mini">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind IsMinimal, Mode=OneWay}" />
+                        <StateTrigger IsActive="{x:Bind ViewModel.IsMinimal, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />

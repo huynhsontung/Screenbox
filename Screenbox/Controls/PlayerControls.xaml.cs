@@ -17,12 +17,6 @@ namespace Screenbox.Controls
 {
     public sealed partial class PlayerControls : UserControl
     {
-        public static readonly DependencyProperty IsMinimalProperty = DependencyProperty.Register(
-            nameof(IsMinimal),
-            typeof(bool),
-            typeof(PlayerControls),
-            new PropertyMetadata(false));
-
         public static readonly DependencyProperty BackgroundTransitionProperty = DependencyProperty.Register(
             nameof(BackgroundTransition),
             typeof(BrushTransition),
@@ -33,12 +27,6 @@ namespace Screenbox.Controls
         {
             get => (BrushTransition)GetValue(BackgroundTransitionProperty);
             set => SetValue(BackgroundTransitionProperty, value);
-        }
-
-        public bool IsMinimal
-        {
-            get => (bool)GetValue(IsMinimalProperty);
-            set => SetValue(IsMinimalProperty, value);
         }
 
         public MenuFlyout? PlayerContextMenu => (MenuFlyout?)MoreButton.Flyout;

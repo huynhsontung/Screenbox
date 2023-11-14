@@ -105,9 +105,6 @@ namespace Screenbox.Pages
             e.Handled = handled;
         }
 
-        private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
-            visibility != PlayerVisibilityState.Visible;
-
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
