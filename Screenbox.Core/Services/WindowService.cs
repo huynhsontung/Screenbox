@@ -102,6 +102,11 @@ namespace Screenbox.Core.Services
         {
             DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
             ApplicationView view = ApplicationView.GetForCurrentView();
+            return GetMaxWindowSize(view, displayInformation);
+        }
+
+        private static Size GetMaxWindowSize(ApplicationView view, DisplayInformation displayInformation)
+        {
             double maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
             double maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
@@ -120,7 +125,9 @@ namespace Screenbox.Core.Services
         public double ResizeWindow(Size videoDimension, double scalar = 0)
         {
             if (scalar < 0 || videoDimension.IsEmpty) return -1;
-            Size maxWindowSize = GetMaxWindowSize();
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+            Size maxWindowSize = GetMaxWindowSize(view, displayInformation);
             double maxWidth = maxWindowSize.Width;
             double maxHeight = maxWindowSize.Height;
 
@@ -136,7 +143,6 @@ namespace Screenbox.Core.Services
             if (newWidth > maxWidth) newWidth = maxWidth;
             double newHeight = newWidth / aspectRatio;
             scalar = newWidth / videoDimension.Width;
-            ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.TryResizeView(new Size(newWidth, newHeight)))
             {
                 return scalar;
