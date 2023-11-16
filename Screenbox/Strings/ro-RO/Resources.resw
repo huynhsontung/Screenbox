@@ -738,24 +738,24 @@
     <value>Nu s-a putut adăuga folderul</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Deschidere album</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Deschidere artist</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Reîmprospătează bibliotecile</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Reîmprospătare</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Utilizează indexul de sistem pentru scanare</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Accelerează scanarea bibliotecii folosind indexul de sistem atunci când este disponibil. Dezactivați această opțiune dacă nu vedeți toate fișierele media din locațiile bibliotecii dvs.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Gestionați setările de indexare ale sistemului</value>
   </data>
 </root>
