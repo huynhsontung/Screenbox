@@ -45,7 +45,7 @@ namespace Screenbox.Core.Playback
         {
             IEnumerable<ChapterCue> chapterCues = vlcChapters.Select(c => new ChapterCue
             {
-                Title = c.Name,
+                Title = c.Name ?? string.Empty,
                 Duration = TimeSpan.FromMilliseconds(c.Duration),
                 StartTime = TimeSpan.FromMilliseconds(c.TimeOffset)
             });
