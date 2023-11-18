@@ -67,6 +67,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _titleName; // TODO: Handle VLC title name
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private double _playbackSpeed;
+        [ObservableProperty] private string _playbackSpeedGlyph;
         [ObservableProperty] private bool _isAdvancedModeActive;
         [ObservableProperty] private bool _isMinimal;
 
@@ -107,6 +108,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
+            _playbackSpeedGlyph = GetPlaybackSpeedGlyph();
             _isAdvancedModeActive = settingsService.AdvancedMode;
             _isMinimal = true;
             Playlist = playlist;
@@ -218,6 +220,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             _mediaPlayer.PlaybackRate = value;
+            PlaybackSpeedGlyph = GetPlaybackSpeedGlyph();
         }
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -390,6 +393,17 @@ namespace Screenbox.Core.ViewModels
             if (!HasActiveItem) return;
             Messenger.Send(new ShowPlayPauseBadgeMessage(!IsPlaying));
             PlayPause();
+        }
+
+        /// <summary>
+        /// Get the Playback Speed glyph for a particular speed.
+        /// </summary>
+        /// <returns>Speed Medium glyph if PlaybackSpeed is 1 x, Speed High glyph if is faster, Speed Off glyph if is slower</returns>
+        private string GetPlaybackSpeedGlyph()
+        {
+            if (PlaybackSpeed > 1.01) return "\uec4a";
+            if (PlaybackSpeed < 0.99) return "\uec48";
+            return "\uec49";
         }
     }
 }

@@ -177,10 +177,10 @@
                         <KeyboardAccelerator Key="I" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
-                <MenuFlyoutSubItem
-                    x:Name="PlaybackSpeedSubMenu"
-                    Icon="{ui:FontIcon Glyph=&#xEC57;}"
-                    Text="{x:Bind strings:Resources.PlaybackSpeed}">
+                <MenuFlyoutSubItem x:Name="PlaybackSpeedSubMenu" Text="{x:Bind strings:Resources.PlaybackSpeed}">
+                    <MenuFlyoutSubItem.Icon>
+                        <FontIcon Glyph="{x:Bind ViewModel.PlaybackSpeedGlyph, Mode=OneWay}" />
+                    </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
