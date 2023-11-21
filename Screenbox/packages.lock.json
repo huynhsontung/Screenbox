@@ -132,9 +132,9 @@
       },
       "VideoLAN.LibVLC.UWP": {
         "type": "Direct",
-        "requested": "[3.3.2, )",
-        "resolved": "3.3.2",
-        "contentHash": "VOdfDFXIuaF1lPzB3K5BkQ7QKVSOQ8qIU79r/N3amWhDsVnLFROJUSgoZ9eHj5G80gjEshCV3zr/Mv0jgjJ/KA=="
+        "requested": "[3.3.1, )",
+        "resolved": "3.3.1",
+        "contentHash": "JdvRcXpskkSKobjaDPO2bw+/tVDDkdRIIKylt+zs0MTuzCl1DcPc/AQqVX8rhNONBTqOV20PizqnkG0//dsmFA=="
       },
       "CommunityToolkit.Common": {
         "type": "Transitive",
@@ -180,8 +180,8 @@
       },
       "LibVLCSharp": {
         "type": "Transitive",
-        "resolved": "3.8.2",
-        "contentHash": "P61Pkc+2GgX9PGJmm0MTVYKh0zPbak25rkyb5MU8Vq7x/VgFV/0h3L2bP7H4Oz5sfmm03H8T010cqEKQVA4Jew==",
+        "resolved": "3.7.0",
+        "contentHash": "N9NV+BamKr+1YiRktX9JroE4m9C+pEszUNW4qa3A5mychhCWBvvoDolZKWk2yxhZvHewgaXXahBcw5ivCXjKYA==",
         "dependencies": {
           "SharpDX.Direct3D11": "4.2.0",
           "System.Memory": "4.5.4",
@@ -482,7 +482,7 @@
           "CommunityToolkit.Diagnostics": "[8.2.2, )",
           "CommunityToolkit.Mvvm": "[8.2.2, )",
           "CommunityToolkit.Uwp.Extensions": "[8.0.230907, )",
-          "LibVLCSharp": "[3.8.2, )",
+          "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.3, )",
           "Microsoft.AppCenter.Crashes": "[5.0.3, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
