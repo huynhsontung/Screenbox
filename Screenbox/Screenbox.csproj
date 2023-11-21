@@ -1037,7 +1037,7 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.2</Version>
+      <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>
