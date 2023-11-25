@@ -65,19 +65,19 @@ namespace Screenbox.Pages
             // Get references to our property sets for use with ExpressionNodes
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
 
-            CreateHeaderAnimation(scrollingProperties.Translation.Y);
+            CreateHeaderAnimation(_props, scrollingProperties.Translation.Y);
         }
 
-        private void CreateHeaderAnimation(ScalarNode scrollVerticalOffset)
+        private void CreateHeaderAnimation(CompositionPropertySet propSet, ScalarNode scrollVerticalOffset)
         {
-            PropertySetReferenceNode props = _props.GetReference();
+            PropertySetReferenceNode props = propSet.GetReference();
             ScalarNode progressNode = props.GetScalarProperty("progress");
             ScalarNode clampSizeNode = props.GetScalarProperty("clampSize");
             ScalarNode bottomMarginNode = props.GetScalarProperty("bottomMargin");
 
             // Create and start an ExpressionAnimation to track scroll progress over the desired distance
             ExpressionNode progressAnimation = EF.Clamp(-scrollVerticalOffset / clampSizeNode, 0, 1);
-            _props.StartAnimation("progress", progressAnimation);
+            propSet.StartAnimation("progress", progressAnimation);
 
             // Get the backing visual for the photo in the header so that its properties can be animated
             Visual photoVisual = ElementCompositionPreview.GetElementVisual(BackgroundAcrylic);
