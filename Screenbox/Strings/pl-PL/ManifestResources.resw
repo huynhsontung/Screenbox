@@ -19,78 +19,78 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Nowoczesny odtwarzacz wideo koncentrujący się na wydajności i łatwości użytkowania na wielu urządzeniach Windows.</value>
+    <value>Nowoczesny odtwarzacz wideo skupiający się na wydajności i łatwości użytkowania na wielu urządzeniach Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>Plik multimedialny 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>Plik multimedialny 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>Dźwięk AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>Wideo w formacie AVI</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>Dźwięk FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Wideo w formacie Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Dźwięk Matroska</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Matroska wideo</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>Dane muzyczne MIDI</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>Dźwięk MP3</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>Wideo MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>Audio MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value>Wideo iTunes</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>Wideo MPEG</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Dźwięk Ogg Vorbis</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg Video</value>
+    <value>Wideo Ogg</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>Film QuickTime</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>Dźwięk WAVE</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>Dźwięk WebM</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM Video</value>
+    <value>Wideo WebM</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Dźwięk Windows Media</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Wideo Windows Media</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>Playlista M3U8</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>Strumień transportowy MPEG</value>
   </data>
 </root>

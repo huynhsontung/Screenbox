@@ -805,6 +805,10 @@
     <PRIResource Include="Strings\ro-RO\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
+    <PRIResource Include="Strings\nl-NL\ManifestResources.resw" />
+    <PRIResource Include="Strings\nl-NL\Resources.resw" />
+    <PRIResource Include="Strings\pl-PL\ManifestResources.resw" />
+    <PRIResource Include="Strings\pl-PL\Resources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <Generator>ReswPlusAdvancedGenerator</Generator>

@@ -1,17 +1,17 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox Media Speler
 
-**Your modern media player**
+**Jouw moderne mediaspeler**
 
-### Description
+### Omschrijving
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a beautiful and intuitive user interface while being fast, lightweight, and powerful. Designed and built in the open, Screenbox will always be free to use.
+Screenbox is een moderne mediaspeler die streeft naar een frisse kijk op de klassieke toepassing. Screenbox biedt een mooie en intuïtieve gebruikersinterface aan die bovendien snel, lichtgewicht en krachtig is. Ontworpen en gemaakt in het open, Screenbox zal altijd gratis te gebruiken zijn.
 
-### Features
+### Functies
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Een moderne gebruikerservaring met gebarenondersteuning, geoptimaliseerd voor alle types Windows-apparaten.
+- Ondersteunt vele audio- en videoformaten.
+- Blader door en beheer uw muziek- en videobibliotheek lokaal of via het netwerk.
+- Speel je media op diverse apparaten met Chromecast.
+- Werk en geniet van je media op hetzelfde moment met de picture-in-picture mode.
