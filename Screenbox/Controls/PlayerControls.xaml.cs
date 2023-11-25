@@ -118,6 +118,20 @@ namespace Screenbox.Controls
             }
         }
 
+        /// <summary>
+        /// Get the Playback Speed glyph for a particular speed.
+        /// </summary>
+        /// <returns>Speed Medium glyph if PlaybackSpeed is 1 x, Speed High glyph if is faster, Speed Off glyph if is slower</returns>
+        private string GetPlaybackSpeedGlyph(double playbackSpeed)
+        {
+            return playbackSpeed switch
+            {
+                > 1.01 => "\uec4a",
+                < 0.99 => "\uec48",
+                _ => "\uec49"
+            };
+        }
+
         private bool IsCastButtonEnabled(bool hasActiveItem)
         {
             if (_castFlyout?.Content is CastControl control)
