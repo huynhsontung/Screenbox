@@ -11,7 +11,7 @@ public static class FilesHelpers
         ImmutableArray.Create(".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
 
     public static ImmutableArray<string> SupportedPlaylistFormats { get; } =
-        ImmutableArray.Create(".m3u8", ".m3u", ".ts");
+        ImmutableArray.Create(".m3u8", ".m3u", ".ts", ".mts", ".m2ts", ".m2t");
 
     public static ImmutableArray<string> SupportedFormats { get; } =
         SupportedVideoFormats.AddRange(SupportedAudioFormats).AddRange(SupportedPlaylistFormats);
