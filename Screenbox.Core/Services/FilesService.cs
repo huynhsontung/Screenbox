@@ -194,7 +194,13 @@ namespace Screenbox.Core.Services
                 SuggestedStartLocation = PickerLocationId.VideosLibrary
             };
 
-            IEnumerable<string> fileTypes = formats.Count == 0 ? FilesHelpers.SupportedFormats : formats;
+            IEnumerable<string> fileTypes = formats;
+            if (formats.Count == 0)
+            {
+                fileTypes = FilesHelpers.SupportedFormats;
+                picker.FileTypeFilter.Add("*");
+            }
+
             foreach (string? fileType in fileTypes)
             {
                 picker.FileTypeFilter.Add(fileType);
