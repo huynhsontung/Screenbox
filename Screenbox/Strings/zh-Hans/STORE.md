@@ -8,6 +8,18 @@
 
 Screenbox 是一个现代的媒体播放器，它力求为经典应用程序带来崭新的收获。 Screenbox 提供了一个美丽且直观的用户界面，同时是快速、轻量且功能强大。 Screenbox 是在开源项目的基础上设计和构建的，永远免费使用
 
+Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+
+Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+
+List of all currently supported file formats:
+
+• Audio:  <!-- List of supported audio formats. -->
+• Video:  <!-- List of supported video formats. -->
+• Playlist: <!-- List of supported playlist formats. -->
+
+Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+
 ### 特点
 
 - 具备现代用户体验，支持手势操作，针对所有类型的 Windows 设备优化
