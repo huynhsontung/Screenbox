@@ -747,13 +747,13 @@
     <value>Refresh libraries</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>刷新</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
     <value>Use indexer for scanning</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>在可用的情况下，通过使用系统索引加速库扫描。 如果您没有从库位置看到所有媒体，请关闭此功能。</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Manage system indexing settings</value>
