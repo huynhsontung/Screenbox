@@ -753,9 +753,9 @@
     <value>Utilizar o indexador para pesquisar</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Utilizar a indexação do sistema para acelerar a pesquisa das bibliotecas. Se não estiver a ver todos os ficheiros multimédia das localizações da sua biblioteca, pode desativar esta opção.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Gerir as definições de indexação do sistema</value>
   </data>
 </root>
