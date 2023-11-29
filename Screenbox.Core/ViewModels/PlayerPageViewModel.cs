@@ -405,7 +405,8 @@ namespace Screenbox.Core.ViewModels
 
         public void OnFileLaunched()
         {
-            _resizeNext = true;
+            if (_settingsService.PlayerAutoResize == PlayerAutoResizeOption.OnLaunch)
+                _resizeNext = true;
         }
 
         // Hidden button acts as a focus sink when controls are hidden
