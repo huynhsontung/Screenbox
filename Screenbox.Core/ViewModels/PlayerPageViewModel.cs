@@ -559,9 +559,10 @@ namespace Screenbox.Core.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 MediaType = current.MediaType;
+                bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
-                    PlayerVisibility = AudioOnly ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Visible;
+                    PlayerVisibility = shouldBeVisible ? PlayerVisibilityState.Visible : PlayerVisibilityState.Minimal;
                 }
             }
             else if (PlayerVisibility == PlayerVisibilityState.Minimal)
