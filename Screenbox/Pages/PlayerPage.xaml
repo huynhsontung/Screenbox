@@ -226,7 +226,8 @@
                 <TextBlock
                     x:Name="TitleText"
                     FontSize="20"
-                    FontWeight="SemiBold"
+                    MaxLines="1"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextTrimming="CharacterEllipsis" />
 
@@ -239,6 +240,7 @@
 
                 <TextBlock
                     x:Name="SubtitleText"
+                    OpticalMarginAlignment="TrimSideBearings"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
                     TextTrimming="CharacterEllipsis"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
