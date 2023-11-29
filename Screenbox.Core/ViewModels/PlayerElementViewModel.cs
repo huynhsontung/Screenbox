@@ -32,7 +32,6 @@ namespace Screenbox.Core.ViewModels
         public MediaPlayer? VlcPlayer { get; private set; }
 
         private readonly LibVlcService _libVlcService;
-        private readonly IWindowService _windowService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
@@ -41,7 +40,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
-        private bool _forceResize;
         private VlcMediaPlayer? _mediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
@@ -50,13 +48,11 @@ namespace Screenbox.Core.ViewModels
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
-            IWindowService windowService,
             ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService,
             IResourceService resourceService)
         {
             _libVlcService = libVlcService;
-            _windowService = windowService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _resourceService = resourceService;
@@ -111,35 +107,11 @@ namespace Screenbox.Core.ViewModels
                 _mediaPlayer = _libVlcService.MediaPlayer;
                 Guard.IsNotNull(_mediaPlayer, nameof(_mediaPlayer));
                 VlcPlayer = _mediaPlayer.VlcPlayer;
-                _mediaPlayer.NaturalVideoSizeChanged += OnVideoSizeChanged;
                 _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
                 _mediaPlayer.PositionChanged += OnPositionChanged;
                 _mediaPlayer.MediaFailed += OnMediaFailed;
                 Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
-                if (_settingsService.PlayerAutoResize == PlayerAutoResizeOption.OnLaunch)
-                    _forceResize = true;
             });
-        }
-
-        public void OnResizeAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            if (sender.Modifiers != VirtualKeyModifiers.None) return;
-            args.Handled = true;
-            switch (sender.Key)
-            {
-                case VirtualKey.Number1:
-                    ResizeWindow(0.5);
-                    break;
-                case VirtualKey.Number2:
-                    ResizeWindow(1);
-                    break;
-                case VirtualKey.Number3:
-                    ResizeWindow(2);
-                    break;
-                case VirtualKey.Number4:
-                    ResizeWindow(0);
-                    break;
-            }
         }
 
         public void OnClick()
@@ -266,38 +238,6 @@ namespace Screenbox.Core.ViewModels
             });
 
             _transportControlsService.UpdatePlaybackStatus(sender.PlaybackState);
-        }
-
-        private void OnVideoSizeChanged(IMediaPlayer sender, object? args)
-        {
-            if (!_forceResize && _settingsService.PlayerAutoResize != PlayerAutoResizeOption.Always) return;
-            _forceResize = false;
-
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                if (ResizeWindow(1)) return;
-
-                // Resize to fill the screen only when video size is bigger than max window size
-                Size maxWindowSize = _windowService.GetMaxWindowSize();
-                if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
-                    sender.NaturalVideoHeight >= maxWindowSize.Height)
-                    ResizeWindow();
-            });
-        }
-
-        private bool ResizeWindow(double scalar = 0)
-        {
-            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
-            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
-            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
-            if (actualScalar > 0)
-            {
-                string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
-                Messenger.Send(new UpdateStatusMessage(status));
-                return true;
-            }
-
-            return false;
         }
 
         private void SetCropGeometry(Size size)

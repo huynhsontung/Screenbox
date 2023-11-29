@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -74,6 +75,7 @@ namespace Screenbox.Core.ViewModels
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
+        private bool _resizeNext;
         private DateTimeOffset _lastUpdated;
 
         public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService)
@@ -134,6 +136,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
             _mediaPlayer.PositionChanged += OnPositionChanged;
+            _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
 
             await _lastPositionTracker.LoadFromDiskAsync();
         }
@@ -379,6 +382,32 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        public void OnResizeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (sender.Modifiers != VirtualKeyModifiers.None) return;
+            args.Handled = true;
+            switch (sender.Key)
+            {
+                case VirtualKey.Number1:
+                    ResizeWindow(0.5);
+                    break;
+                case VirtualKey.Number2:
+                    ResizeWindow(1);
+                    break;
+                case VirtualKey.Number3:
+                    ResizeWindow(2);
+                    break;
+                case VirtualKey.Number4:
+                    ResizeWindow(0);
+                    break;
+            }
+        }
+
+        public void OnFileLaunched()
+        {
+            _resizeNext = true;
+        }
+
         // Hidden button acts as a focus sink when controls are hidden
         public void HiddenButtonOnClick()
         {
@@ -586,6 +615,38 @@ namespace Screenbox.Core.ViewModels
                 _lastUpdated = DateTimeOffset.Now;
                 _lastPositionTracker.RemovePosition(Media.Location);
             }
+        }
+
+        private void OnNaturalVideoSizeChanged(IMediaPlayer sender, EventArgs args)
+        {
+            if (!_resizeNext && _settingsService.PlayerAutoResize != PlayerAutoResizeOption.Always) return;
+            _resizeNext = false;
+
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                if (ResizeWindow(1)) return;
+
+                // Resize to fill the screen only when video size is bigger than max window size
+                Size maxWindowSize = _windowService.GetMaxWindowSize();
+                if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
+                    sender.NaturalVideoHeight >= maxWindowSize.Height)
+                    ResizeWindow();
+            });
+        }
+
+        private bool ResizeWindow(double scalar = 0)
+        {
+            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
+            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
+            if (actualScalar > 0)
+            {
+                string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
+                Messenger.Send(new UpdateStatusMessage(status));
+                return true;
+            }
+
+            return false;
         }
     }
 }

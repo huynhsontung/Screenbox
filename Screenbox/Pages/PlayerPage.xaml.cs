@@ -73,6 +73,7 @@ namespace Screenbox.Pages
             {
                 LayoutRoot.Transitions.Clear();
                 ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
+                ViewModel.OnFileLaunched();
                 _startup = true;
             }
         }
