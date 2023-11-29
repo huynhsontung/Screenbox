@@ -564,6 +564,12 @@ namespace Screenbox.Core.ViewModels
                 {
                     PlayerVisibility = shouldBeVisible ? PlayerVisibilityState.Visible : PlayerVisibilityState.Minimal;
                 }
+
+                if (AudioOnly)
+                {
+                    // If it's audio only, don't resize on next video playback
+                    _resizeNext = false;
+                }
             }
             else if (PlayerVisibility == PlayerVisibilityState.Minimal)
             {
