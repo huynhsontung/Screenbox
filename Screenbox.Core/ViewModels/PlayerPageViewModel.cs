@@ -310,8 +310,18 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null || PlayerVisibility != PlayerVisibilityState.Visible) return;
             VirtualKey key = sender.Key;
+            PositionChangedResult result;
+            string extra = string.Empty;
             switch (key)
             {
+                case VirtualKey.Home:
+                    result = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.Zero));
+                    break;
+
+                case VirtualKey.End:
+                    result = Messenger.Send(new ChangeTimeRequestMessage(_mediaPlayer.NaturalDuration));
+                    break;
+
                 case VirtualKey.NumberPad0:
                 case VirtualKey.NumberPad1:
                 case VirtualKey.NumberPad2:
@@ -324,14 +334,15 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.NumberPad9:
                     int percent = (key - VirtualKey.NumberPad0) * 10;
                     TimeSpan newPosition = _mediaPlayer.NaturalDuration * (0.01 * percent);
-                    PositionChangedResult result = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
-                    newPosition = result.NewPosition;
-                    Messenger.SendPositionStatus(newPosition, result.NaturalDuration, $"{percent}%");
+                    result = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
+                    extra = $"{percent}%";
                     break;
+
                 default:
                     return;
             }
 
+            Messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
             args.Handled = true;
         }
 

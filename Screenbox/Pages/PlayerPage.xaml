@@ -121,6 +121,8 @@
             <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Home" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="End" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <!-- <KeyboardAccelerator Key="Escape" Invoked="{x:Bind ViewModel.OnManualHideControlsKeyboardAcceleratorInvoked}" /> -->
         </Grid.KeyboardAccelerators>
 
