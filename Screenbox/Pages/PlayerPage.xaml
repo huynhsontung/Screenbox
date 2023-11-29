@@ -111,6 +111,10 @@
                 Modifiers="Shift" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
@@ -300,12 +304,6 @@
             Click="VideoView_OnClick"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
-            <controls:PlayerElement.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
-            </controls:PlayerElement.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="DoubleTapped">
                     <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
