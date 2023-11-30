@@ -89,7 +89,6 @@
             <SemanticZoom.ZoomedOutView>
                 <GridView
                     x:Name="GroupOverview"
-                    MaxWidth="400"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
                     Padding="{StaticResource PageContentMargin}"
                     HorizontalAlignment="Center"
@@ -101,6 +100,11 @@
                         <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
                         <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
                     </GridView.Resources>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
