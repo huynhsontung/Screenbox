@@ -114,6 +114,7 @@
             x:Name="ArtistButton"
             Grid.Column="3"
             Margin="4,0"
+            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
@@ -122,14 +123,14 @@
                 x:Name="ArtistText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding MainArtist.Name, FallbackValue=''}"
-                TextTrimming="CharacterEllipsis" />
+                Text="{Binding MainArtist.Name, FallbackValue=''}" />
         </HyperlinkButton>
 
         <HyperlinkButton
             x:Name="AlbumButton"
             Grid.Column="4"
             Margin="4,0"
+            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
             CommandParameter="{Binding Album}"
             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
@@ -138,8 +139,7 @@
                 x:Name="AlbumText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, FallbackValue=''}"
-                TextTrimming="CharacterEllipsis" />
+                Text="{Binding Album.Name, FallbackValue=''}" />
         </HyperlinkButton>
 
         <TextBlock

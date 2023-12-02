@@ -83,6 +83,8 @@
 
                     <!--  Inline HyperlinkButton margin  -->
                     <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
+                    <!--  HyperlinkButton with caption text style padding to maintain the same height  -->
+                    <Thickness x:Key="HyperlinkButtonCaptionPadding">11,7,11,7</Thickness>
 
                     <!--  Subtitle margin  -->
                     <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
