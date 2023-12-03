@@ -2,23 +2,23 @@
 <!-- Feel free to adapt or modify key points if necessary. -->
 ## Reprodutor de mídia Screenbox
 
-**Seu reprodutor de mídia moderno**
+**O Screenbox é um reprodutor de mídia moderno para todos os seus dispositivos, com suporte a uma ampla variedade de formatos de arquivo.**
 
 ### Descrição
 
 Screenbox é um reprodutor de mídia moderno que se esforça para trazer uma nova visão do aplicativo clássico. Screenbox oferece uma interface de usuário bonita e intuitiva, ao mesmo tempo que é rápido, leve e poderoso. Projetado e construído abertamente, o Screenbox sempre será de uso gratuito.
 
-Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+Screenbox suporta muitos formatos de arquivo e codecs comuns, garantindo que você possa reproduzir praticamente qualquer mídia sem a necessidade de complementos adicionais. Seja transmitindo conteúdo online ou reproduzindo arquivos armazenados localmente, o Screenbox tem você coberto.
 
-Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+Impulsionado pelo LibVLC, o Screenbox combina o melhor do reprodutor de mídia VLC com as capacidades modernas de aplicativos no sistema Windows. O Screenbox ainda permite que você habilite opções avançadas de reprodução usando argumentos de linha de comando do VLC, como a reprodução de várias faixas de áudio ao mesmo tempo.
 
-List of all currently supported file formats:
+Lista de todos os formatos de arquivo atualmente suportados:
 
 • Audio:  <!-- List of supported audio formats. -->
 • Video:  <!-- List of supported video formats. -->
 • Playlist: <!-- List of supported playlist formats. -->
 
-Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+Não encontrou o formato que precisa? Sinta-se à vontade para entrar em contato e nos informar. O Screenbox é projetado e construído de forma transparente. Ajude-nos a construir um reprodutor de mídia melhor para todos!
 
 ### Funcionalidades
 
