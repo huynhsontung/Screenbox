@@ -8,17 +8,17 @@
 
 Screenbox jest nowoczesnym odtwarzaczem multimedialnym, który stara się wprowadzić nowe podejście do klasycznej aplikacji. Screenbox oferuje piękny i intuicyjny interfejs użytkownika, będąc szybki, lekkim i potężnym. Zaprojektowany i zbudowany w otwarciu. Screenbox zawsze będzie darmowy do użytkowania.
 
-Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+Screenbox obsługuje wiele powszechnie używanych formatów plików i kodeków, co gwarantuje, że możesz odtwarzać prawie każdy rodzaj plików bez potrzeby dodatkowych dodatków. Bez względu na to, czy przesyłasz strumieniowo treści online czy odtwarzasz pliki przechowywane lokalnie, Screenbox to obsługuje.
 
-Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+Zbudowany dzięki LibVLC, Screenbox łączy wszystkie najlepsze odtwarzacze multimediów VLC z nowoczesnymi funkcjami aplikacji Windows. Screenbox umożliwia włączenie zaawansowanych opcji odtwarzania poprzez użycie argumentów wiersza poleceń VLC, takich jak odtwarzanie wielu strumieni audio jednocześnie.
 
-List of all currently supported file formats:
+Lista wszystkich obecnie obsługiwanych formatów plików:
 
 • Audio:  <!-- List of supported audio formats. -->
-• Video:  <!-- List of supported video formats. -->
-• Playlist: <!-- List of supported playlist formats. -->
+• Wideo:  <!-- List of supported video formats. -->
+• List odtwarzania: <!-- List of supported playlist formats. -->
 
-Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+Nie widzisz formatu, którego potrzebujesz? Daj nam znać. Screenbox został zaprojektowany i zbudowany w sposób otwarty. Pomóż nam zbudować lepszy odtwarzacz multimediów dla wszystkich!
 
 ### Cechy
 
