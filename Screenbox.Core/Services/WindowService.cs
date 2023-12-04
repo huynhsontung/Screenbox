@@ -20,7 +20,7 @@ namespace Screenbox.Core.Services
         public WindowViewMode ViewMode
         {
             get => _viewMode;
-            set
+            private set
             {
                 WindowViewMode oldValue = _viewMode;
                 if (oldValue != value)
@@ -98,22 +98,38 @@ namespace Screenbox.Core.Services
             return false;
         }
 
-        public double ResizeWindow(Size videoDimension, double scalar = 0)
+        public Size GetMaxWindowSize()
         {
-            if (scalar < 0 || videoDimension.IsEmpty) return -1;
-            DisplayInformation? displayInformation = DisplayInformation.GetForCurrentView();
-            ApplicationView? view = ApplicationView.GetForCurrentView();
+            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            return GetMaxWindowSize(view, displayInformation);
+        }
+
+        private static Size GetMaxWindowSize(ApplicationView view, DisplayInformation displayInformation)
+        {
             double maxWidth = displayInformation.ScreenWidthInRawPixels / displayInformation.RawPixelsPerViewPixel;
             double maxHeight = displayInformation.ScreenHeightInRawPixels / displayInformation.RawPixelsPerViewPixel - 48;
             if (Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 8))
             {
-                DisplayRegion? displayRegion = view.GetDisplayRegions()[0];
+                DisplayRegion? displayRegion = view.GetDisplayRegions()[0]; // Active display region
                 maxWidth = displayRegion.WorkAreaSize.Width / displayInformation.RawPixelsPerViewPixel;
                 maxHeight = displayRegion.WorkAreaSize.Height / displayInformation.RawPixelsPerViewPixel;
             }
 
+            // Cannot use the full work area size. Subtract some padding.
             maxHeight -= 16;
             maxWidth -= 16;
+            return new Size(maxWidth, maxHeight);
+        }
+
+        public double ResizeWindow(Size videoDimension, double scalar = 0)
+        {
+            if (scalar < 0 || videoDimension.IsEmpty) return -1;
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
+            Size maxWindowSize = GetMaxWindowSize(view, displayInformation);
+            double maxWidth = maxWindowSize.Width;
+            double maxHeight = maxWindowSize.Height;
 
             if (scalar == 0)
             {

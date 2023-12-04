@@ -42,13 +42,6 @@
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}">
-            <local:VideoView.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-                <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeAcceleratorInvoked}" />
-            </local:VideoView.KeyboardAccelerators>
-        </local:VideoView>
+            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />
     </Grid>
 </UserControl>
