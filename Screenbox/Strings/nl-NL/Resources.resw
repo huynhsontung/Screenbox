@@ -118,123 +118,123 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>Frame opgeslagen</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Picture in picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Huidige frame opslaan</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>Herhalen</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>Afspeelsnelheid</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
     <value>Volume {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>Kan frame niet opslaan</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>Hoofdstuk {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Ondertitels laden mislukt</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Terug</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>Dempen</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>Dempen opheffen</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>Volledig scherm</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>Audio &amp; ondertitels</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>Volledig scherm sluiten</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Zoeken</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>Picture in picture sluiten</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>Volgende</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>Vorige</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>Afspelen</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Pauzeren</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>Meer</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>Afspeelwachtrij</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>Herhalen: uit</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>Herhalen: alle</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>Herhalen: één</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} geselecteerd item</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} geselecteerde items</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>Toevoegen aan wachtrij</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Selectie wissen</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Verwijder</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>Volgende afspelen</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>Naar boven</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>Naar beneden</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>Wordt afgespeeld</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video's</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>Deze map is leeg</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} item</value>
@@ -245,221 +245,221 @@
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Leeg</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Videoweergave herstellen</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cast</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Stop casting</value>
+    <value>Casten stoppen</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>Casten naar</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>Casten naar een apparaat</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Uitschakelen</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Muziek</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>Shuffle en afspelen</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Onbekende artiest</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Onbekend album</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Onbekend genre</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>Map toevoegen</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Wissen</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Startpagina</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>Selecteer meerdere</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>We konden geen muziek vinden</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>Uw muziekbibliotheek bevat geen muziekinhoud.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>Open bestand(en)</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Zoeken</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Instellingen</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>Welkom bij Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>Laten we wat van jouw media afspelen om op gang te komen.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>Eigenschappen</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Sluiten</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>Bestandslocatie openen</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Album artiest</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Bit rate</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Inhoudstype</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Bijdragende artiesten</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>Bestandslocatie</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>Bestandstype</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
     <value>Genre</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>Laatst gewijzigd</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>Lengte</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Producenten</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Resolutie</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>Grootte</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Ondertitels</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Titel</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
     <value>Track</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Schrijvers</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>Jaar</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Aangepast</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Netwerk</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Geen netwerkapparaten beschikbaar</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Geen media? Zorg ervoor dat uw netwerkapparaat gekoppeld is in de Windows-instellingen.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recent</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>Video instellingen</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Openen</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} locatie opgegeven</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} locaties opgegeven</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Shuffle: Off</value>
+    <value>Shuffle: Uit</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Shuffle: On</value>
+    <value>Shuffle: Aan</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>Hervat waar u gebleven was</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>Ga naar {0}</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
     <value>Albums</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>Artiesten</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>Nummers</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>Blader naar bestanden om te afspelen</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>Bestand(en) toevoegen</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Browse for file(s) to add to the play queue</value>
+    <value>Blader naar bestand(en) om toe te voegen aan de afspeelwachtrij</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>Map toevoegen aan uw muziekbibliotheek</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>Media toevoegen via URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>Map toevoegen aan uw videobibliotheek</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>Map openen</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
     <value>Open URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Leeg</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} nummer</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} nummers</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
@@ -471,90 +471,90 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} looptijd</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>All videos</value>
+    <value>Alle video's</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Video folders</value>
+    <value>Videomappen</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>Zoekresultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>Alles weergeven</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>Artiest resultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>Album resultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Nummer resultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Video resultaten voor "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>Geen album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>Toegang geweigerd. Controleer uw privacy-instellingen om ervoor te zorgen dat Screenbox voldoende rechten heeft.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>Geen toegang tot muziekbibliotheek</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Geen toegang tot fotobibliotheek</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>Geen toegang tot videobibliotheek</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>We konden geen video's vinden</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>Uw videobibliotheek bevat geen videoinhoud.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>Privacy-instellingen openen</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Kan media niet laden</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Beeldverhouding</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>Passend</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Vullen</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Aangepaste beeldverhouding</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Aangepaste afspeelsnelheid</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Geen</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Schaal: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>Ondertitels: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
@@ -562,185 +562,200 @@
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Ondertitels toevoegen</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Audio</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>Over</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Algemeen</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>Bibliotheken</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>Speler</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>Locaties muziekbibliotheek</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Toon recent</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>Locaties videobibliotheek</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>Ondertitels</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Recent afgespeelde media weergeven op de startpagina</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Recente mediageschiedenis wissen</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Grote automatisch aanpassen</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Pas het formaat van het appvenster automatisch aan om zo goed mogelijk overeen te komen met de oorspronkelijke resolutie van een video tijdens het afspelen</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Volume boost</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Toestaan dat het maximale volume hoger kan dan 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Gebaren</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Sleep horizontaal om te zoeken in video</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Verticaal slepen om volume aan te passen</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Tik ergens om te spelen of te pauzeren</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Screenbox Media Speler</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Broncode</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Steun de ontwikkeling ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Altijd</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Nooit</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Bij opstarten</value>
   </data>
   <data name="VersionText" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>Versie: {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Ondertitels toegevoegd</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Kritieke fout</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Geen compatibele renderer beschikbaar. Zorg ervoor dat Direct3D 11 beschikbaar is op uw apparaat.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>Kan bestand(en) niet openen</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>Voer de URL in van een bestand of stream</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>Open Aangesloten Apparaten instellingen</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Afspeelopties instellen</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Instellen</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Instellen en afspelen</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>VLC opties instellen die van toepassing zijn op een stream.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Sommige opties kunnen enkel globaal ingesteld worden.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>VLC command-line hulp</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Zie {0} voor de volledige lijst met beschikbare opties.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Geavanceerd</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Geavanceerde modus</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Geavanceerde modus staat toe het gedrag van LibVLC aan te passen met commandolijn argumenten.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Globale argumenten</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Commandolijn argumenten die van toepassing zijn op het afspelen van alle media.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Map verwijderen</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Wijzigingen in behandeling</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Herstart de app om wijzigingen toe te passen</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Initialiseren mislukt</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Gerelateerde links</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Privacybeleid</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Licentie</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Help met vertalen</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Opties</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Componisten</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Kon map niet toevoegen</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Album openen</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Open artiest</value>
+  </data>
+  <data name="RefreshLibraries" xml:space="preserve">
+    <value>Bibliotheken herladen</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Herladen</value>
+  </data>
+  <data name="SettingsUseIndexerHeader" xml:space="preserve">
+    <value>Indexeren gebruiken om te scannen</value>
+  </data>
+  <data name="SettingsUseIndexerDescription" xml:space="preserve">
+    <value>Versnel de bibliotheek scannen door gebruik te maken van de systeemindex indien beschikbaar. Schakel dit uit als er media uit je bibliotheeklocaties ontbreekt.</value>
+  </data>
+  <data name="ManageSystemIndexingLink" xml:space="preserve">
+    <value>Beheer systeem indexeringsinstellingen</value>
   </data>
 </root>

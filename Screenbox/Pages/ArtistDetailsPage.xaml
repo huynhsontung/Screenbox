@@ -230,10 +230,7 @@
             </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem
-                        IsAlbumColumnVisible="False"
-                        IsIconVisible="False"
-                        IsTrackNumberVisible="True" />
+                    <controls:MediaListViewItem IsAlbumColumnVisible="False" IsTrackNumberVisible="True" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>

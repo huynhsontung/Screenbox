@@ -294,6 +294,9 @@
           <uap:FileTypeAssociation Name="mpeg-ts">
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/mp2t">.ts</uap:FileType>
+              <uap:FileType ContentType="video/mp2t">.m2t</uap:FileType>
+              <uap:FileType ContentType="video/mp2t">.m2ts</uap:FileType>
+              <uap:FileType ContentType="video/mp2t">.mts</uap:FileType>
             </uap:SupportedFileTypes>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMPEGTS</uap:DisplayName>

@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
@@ -23,7 +24,8 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class PlayerControlsViewModel : ObservableRecipient,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<SettingsChangedMessage>,
-        IRecipient<TogglePlayPauseMessage>
+        IRecipient<TogglePlayPauseMessage>,
+        IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
     {
         public MediaListViewModel Playlist { get; }
 
@@ -37,7 +39,8 @@ namespace Screenbox.Core.ViewModels
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
                 {
-                    player.VlcPlayer.SetSpuDelay(value * 1000); // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
+                    // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
+                    player.VlcPlayer.SetSpuDelay(value * 1000);
                 }
             }
         }
@@ -52,8 +55,9 @@ namespace Screenbox.Core.ViewModels
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
-                {                    
-                    player.VlcPlayer.SetAudioDelay(value * 1000); // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
+                {
+                    // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
+                    player.VlcPlayer.SetAudioDelay(value * 1000);
                 }
             }
         }
@@ -64,6 +68,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string? _chapterName;
         [ObservableProperty] private double _playbackSpeed;
         [ObservableProperty] private bool _isAdvancedModeActive;
+        [ObservableProperty] private bool _isMinimal;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
@@ -103,6 +108,7 @@ namespace Screenbox.Core.ViewModels
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
             _playbackSpeed = 1.0;
             _isAdvancedModeActive = settingsService.AdvancedMode;
+            _isMinimal = true;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
@@ -137,11 +143,14 @@ namespace Screenbox.Core.ViewModels
 
         }
 
+        public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
+        {
+            IsMinimal = message.NewValue != PlayerVisibilityState.Visible;
+        }
+
         public void PlayPauseKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            PlayerVisibilityState playerVisibility = Messenger.Send(new PlayerVisibilityRequestMessage());
-            if (args.KeyboardAccelerator.Key == VirtualKey.Space &&
-                playerVisibility != PlayerVisibilityState.Visible) return;
+            if (args.KeyboardAccelerator.Key == VirtualKey.Space && IsMinimal) return;
 
             // Override default keyboard accelerator to show badge
             args.Handled = true;

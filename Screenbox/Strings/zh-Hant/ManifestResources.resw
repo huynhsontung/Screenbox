@@ -19,78 +19,78 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>絕佳性能、極致易用的現代 Windows 媒體播放器。</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>3GPP 多媒體檔案</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>3GPP2 多媒體檔案</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>AAC 音訊</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>AVI 視訊</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>FLAC 音訊</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Flash 視訊</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Matroska 音訊</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Matroska 視訊</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>MIDI 音訊資料</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>MP3 音訊</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>MPEG-4 視訊</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>MPEG-4 音訊</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value>iTunes 視訊</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>MPEG 視訊</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbis 音訊</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg Video</value>
+    <value>Ogg 視訊</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>QuickTime 視訊</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>WAVE 音訊</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>WebM 音訊</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM Video</value>
+    <value>WebM 視訊</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Windows 媒體音訊</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Windows 媒體視訊</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>M3U8 播放清單</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>MPEG 傳輸串流</value>
   </data>
 </root>

@@ -805,13 +805,21 @@
     <PRIResource Include="Strings\ro-RO\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
+    <PRIResource Include="Strings\nl-NL\ManifestResources.resw" />
+    <PRIResource Include="Strings\nl-NL\Resources.resw" />
+    <PRIResource Include="Strings\pl-PL\ManifestResources.resw" />
+    <PRIResource Include="Strings\pl-PL\Resources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <Generator>ReswPlusAdvancedGenerator</Generator>
       <LastGenOutput>Resources.generated.cs</LastGenOutput>
     </PRIResource>
+    <PRIResource Include="Strings\vi\ManifestResources.resw" />
+    <PRIResource Include="Strings\vi\Resources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
+    <PRIResource Include="Strings\zh-Hant\ManifestResources.resw" />
+    <PRIResource Include="Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1033,7 +1041,7 @@
       <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.2</Version>
+      <Version>3.3.1</Version>
     </PackageReference>
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>

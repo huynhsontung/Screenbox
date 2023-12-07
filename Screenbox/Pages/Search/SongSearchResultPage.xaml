@@ -45,7 +45,7 @@
             </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem IsIconVisible="False" />
+                    <controls:MediaListViewItem />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Footer>

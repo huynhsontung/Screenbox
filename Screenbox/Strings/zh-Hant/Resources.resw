@@ -118,629 +118,644 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>已儲存此影格</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>子母畫面</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>儲存此影格</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>重複播放</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>播放速度</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>音量：{0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>無法儲存影格</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>第 {0} 章節</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>無法載入字幕</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>返回</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>靜音</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>取消靜音</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>全螢幕</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>音訊與字幕</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>退出全螢幕</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>音量</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>跳轉</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>關閉子母畫面</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>下一項</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>前一項</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>播放</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>暫停</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>其他</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>播放佇列</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>重複播放：關閉</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>重複播放：全部</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>重複播放：此媒體</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>已選取 {0} 個項目</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>已選取 {0} 個項目</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>已新增至佇列</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>取消選取</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>移除</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>播放下一項</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>向上移動</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>向下移動</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>正在播放</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>影片庫</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>這個資料夾是空的</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} 個項目</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} 個項目</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>無內容</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>回到影片</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>Cast</value>
+    <value>投放</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Stop casting</value>
+    <value>停止投放</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>投放至</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>投放至其他裝置</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>停用</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>音樂</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>隨機播放</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>未知的演出者</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>未知的專輯</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>未知的內容類型</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>新增資料夾</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>清除</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>首頁</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>選取多項</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>找不到任何音樂</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>您的音樂庫未包含任何音樂內容。</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>開啟檔案</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>搜尋</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>設定</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>歡迎使用 Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>立即開始播放您喜愛的媒體內容。</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>屬性</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>關閉</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>開啟檔案位置</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
-    <value>Album</value>
+    <value>專輯</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>專輯演出者</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>位元速率</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>資料類型</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>參與演出者</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>檔案位置</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>檔案類型</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
-    <value>Genre</value>
+    <value>內容類型</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>修改日期</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>長度</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>製作人</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>解析度</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>大小</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>字幕</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>標題</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>音軌</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>作詞</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>年份</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>自訂</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>網路</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>找不到網路裝置</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>找不到媒體檔案？請至 Windows 設定確認網路裝置已正常配對。</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>最近的媒體</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>影片設定</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>開啟</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} 個位置</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} 個位置</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Shuffle: Off</value>
+    <value>隨機播放：關閉</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Shuffle: On</value>
+    <value>隨機播放：開啟</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>還原上次播放進度</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>跳轉至 {0}</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>專輯</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>演出者</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>歌曲</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>瀏覽媒體檔案</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>新增檔案</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Browse for file(s) to add to the play queue</value>
+    <value>瀏覽要新增至播放佇列的檔案</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>將檔案夾新增至您的音樂庫</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>從 URL 新增媒體</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>將檔案夾新增至您的影片庫</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>開啟資料夾</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
-    <value>Open URL</value>
+    <value>開啟 URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>無</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} 首歌曲</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} 首歌曲</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
-    <value>{0} album</value>
+    <value>{0} 張專輯</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} 張專輯</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} 播放時長</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>All videos</value>
+    <value>所有影片</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Video folders</value>
+    <value>影片資料夾</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>「{0}」的搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>查看全部</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>「{0}」的演出者搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>「{0}」的專輯搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>「{0}」的歌曲搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>「{0}」的影片搜尋結果</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>無專輯</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>拒絕存取。請至確認已授予 Screenbox 相關權限。</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>無法存取音樂庫</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>無法存取相片庫</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>無法存取影片庫</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>找不到任何影片</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>您的影片庫未包含任何音樂內容。</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>開啟隱私設定</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>無法載入媒體</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>長寬比</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>縮放至適當比例</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>縮放以填滿</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>自訂長寬比</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>自訂播放速度</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>無</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>縮放：{0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>字幕：{0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>音軌 {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>新增字幕</value>
   </data>
   <data name="Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>音訊</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>關於</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>一般</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>媒體櫃</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>播放器</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>音樂媒體櫃位置</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>顯示最近的媒體</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>影片媒體櫃位置</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>字幕</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>在首頁顯示最近的媒體</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>清除最近的媒體紀錄</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>自動調整視窗</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>自動調整視窗大小以符合影片解析度</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>音量增強</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>允許最大音量超過 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>手勢</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>左右拖曳以跳轉</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>上下拖曳以調整音量</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>點選畫面以播放或暫停</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Screenbox 媒體播放器</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>原始碼</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>協助開發 ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>一律調整</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>永不調整</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>啟動時</value>
   </data>
   <data name="VersionText" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>版本 {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>已新增字幕</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>發生嚴重錯誤</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>無相容轉譯器。請確認已在此裝置上安裝 Direct3D 11。</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>無法開啟檔案</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>輸入媒體檔案或串流 URL</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>開啟連線裝置設定</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>播放設定</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>設定</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>設定並播放</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>設定適用於串流的 VLC 選項。</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>部分選項僅能套用至所有播放模式。</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>VLC 命令列說明</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>請參閱 {0} 查看所有可用選項。</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>進階</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>進階模式</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>進階模式允許您使用命令列引數自訂 LibVLC 行為。</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>全域引數</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>套用至所有播放模式的命令列引數</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>移除資料夾</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>擱置的變更</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>重新啟動以套用變更</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>初始化失敗</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>相關連結</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>隱私權政策</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>授權條款</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>協助翻譯</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>選項</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>時間偏移</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>作曲家</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>無法新增資料夾</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>開啟專輯</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>開啟演出者</value>
+  </data>
+  <data name="RefreshLibraries" xml:space="preserve">
+    <value>重新整理媒體櫃</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="SettingsUseIndexerHeader" xml:space="preserve">
+    <value>使用索引器掃描</value>
+  </data>
+  <data name="SettingsUseIndexerDescription" xml:space="preserve">
+    <value>使用系統索引以加快媒體櫃載入速度。若無法完整載入所有媒體，請關閉此選項。</value>
+  </data>
+  <data name="ManageSystemIndexingLink" xml:space="preserve">
+    <value>管理系統索引設定</value>
   </data>
 </root>

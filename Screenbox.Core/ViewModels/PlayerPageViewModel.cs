@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -35,7 +36,6 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
-        IRecipient<PlayerVisibilityRequestMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool _controlsHidden;
@@ -75,6 +75,7 @@ namespace Screenbox.Core.ViewModels
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
+        private bool _resizeNext;
         private DateTimeOffset _lastUpdated;
 
         public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService)
@@ -97,11 +98,6 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
-        }
-
-        public void Receive(PlayerVisibilityRequestMessage message)
-        {
-            message.Reply(PlayerVisibility);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
@@ -140,6 +136,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
             _mediaPlayer.PositionChanged += OnPositionChanged;
+            _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
 
             await _lastPositionTracker.LoadFromDiskAsync();
         }
@@ -316,8 +313,18 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null || PlayerVisibility != PlayerVisibilityState.Visible) return;
             VirtualKey key = sender.Key;
+            PositionChangedResult result;
+            string extra = string.Empty;
             switch (key)
             {
+                case VirtualKey.Home:
+                    result = Messenger.Send(new ChangeTimeRequestMessage(TimeSpan.Zero));
+                    break;
+
+                case VirtualKey.End:
+                    result = Messenger.Send(new ChangeTimeRequestMessage(_mediaPlayer.NaturalDuration));
+                    break;
+
                 case VirtualKey.NumberPad0:
                 case VirtualKey.NumberPad1:
                 case VirtualKey.NumberPad2:
@@ -330,14 +337,15 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.NumberPad9:
                     int percent = (key - VirtualKey.NumberPad0) * 10;
                     TimeSpan newPosition = _mediaPlayer.NaturalDuration * (0.01 * percent);
-                    PositionChangedResult result = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
-                    newPosition = result.NewPosition;
-                    Messenger.SendPositionStatus(newPosition, result.NaturalDuration, $"{percent}%");
+                    result = Messenger.Send(new ChangeTimeRequestMessage(newPosition));
+                    extra = $"{percent}%";
                     break;
+
                 default:
                     return;
             }
 
+            Messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
             args.Handled = true;
         }
 
@@ -383,6 +391,33 @@ namespace Screenbox.Core.ViewModels
             {
                 args.Handled = true;
             }
+        }
+
+        public void OnResizeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (sender.Modifiers != VirtualKeyModifiers.None) return;
+            args.Handled = true;
+            switch (sender.Key)
+            {
+                case VirtualKey.Number1:
+                    ResizeWindow(0.5);
+                    break;
+                case VirtualKey.Number2:
+                    ResizeWindow(1);
+                    break;
+                case VirtualKey.Number3:
+                    ResizeWindow(2);
+                    break;
+                case VirtualKey.Number4:
+                    ResizeWindow(0);
+                    break;
+            }
+        }
+
+        public void OnFileLaunched()
+        {
+            if (_settingsService.PlayerAutoResize == PlayerAutoResizeOption.OnLaunch)
+                _resizeNext = true;
         }
 
         // Hidden button acts as a focus sink when controls are hidden
@@ -444,7 +479,6 @@ namespace Screenbox.Core.ViewModels
         partial void OnPlayerVisibilityChanged(PlayerVisibilityState value)
         {
             if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
-            Messenger.Send(new PlayerVisibilityChangedMessage(value));
         }
 
         [RelayCommand]
@@ -536,9 +570,16 @@ namespace Screenbox.Core.ViewModels
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
                 MediaType = current.MediaType;
+                bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
-                    PlayerVisibility = AudioOnly ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Visible;
+                    PlayerVisibility = shouldBeVisible ? PlayerVisibilityState.Visible : PlayerVisibilityState.Minimal;
+                }
+
+                if (AudioOnly)
+                {
+                    // If it's audio only, don't resize on next video playback
+                    _resizeNext = false;
                 }
             }
             else if (PlayerVisibility == PlayerVisibilityState.Minimal)
@@ -593,6 +634,38 @@ namespace Screenbox.Core.ViewModels
                 _lastUpdated = DateTimeOffset.Now;
                 _lastPositionTracker.RemovePosition(Media.Location);
             }
+        }
+
+        private void OnNaturalVideoSizeChanged(IMediaPlayer sender, EventArgs args)
+        {
+            if (!_resizeNext && _settingsService.PlayerAutoResize != PlayerAutoResizeOption.Always) return;
+            _resizeNext = false;
+
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                if (ResizeWindow(1)) return;
+
+                // Resize to fill the screen only when video size is bigger than max window size
+                Size maxWindowSize = _windowService.GetMaxWindowSize();
+                if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
+                    sender.NaturalVideoHeight >= maxWindowSize.Height)
+                    ResizeWindow();
+            });
+        }
+
+        private bool ResizeWindow(double scalar = 0)
+        {
+            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
+            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
+            if (actualScalar > 0)
+            {
+                string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
+                Messenger.Send(new UpdateStatusMessage(status));
+                return true;
+            }
+
+            return false;
         }
     }
 }

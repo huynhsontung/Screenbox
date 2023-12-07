@@ -73,6 +73,7 @@ namespace Screenbox.Pages
             {
                 LayoutRoot.Transitions.Clear();
                 ViewModel.PlayerVisibility = PlayerVisibilityState.Visible;
+                ViewModel.OnFileLaunched();
                 _startup = true;
             }
         }
@@ -104,9 +105,6 @@ namespace Screenbox.Pages
 
             e.Handled = handled;
         }
-
-        private bool GetControlsIsMinimal(PlayerVisibilityState visibility) =>
-            visibility != PlayerVisibilityState.Visible;
 
         private void SetTitleBar()
         {

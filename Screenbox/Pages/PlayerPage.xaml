@@ -111,6 +111,10 @@
                 Modifiers="Shift" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Number4" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad0" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad1" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad2" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
@@ -121,6 +125,8 @@
             <KeyboardAccelerator Key="NumberPad7" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad8" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="NumberPad9" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Home" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="End" Invoked="{x:Bind ViewModel.OnPercentJumpKeyboardAcceleratorInvoked}" />
             <!-- <KeyboardAccelerator Key="Escape" Invoked="{x:Bind ViewModel.OnManualHideControlsKeyboardAcceleratorInvoked}" /> -->
         </Grid.KeyboardAccelerators>
 
@@ -298,7 +304,7 @@
             VerticalAlignment="Stretch"
             ButtonMargin="0,52,0,84"
             Click="VideoView_OnClick"
-            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu, Mode=OneWay}"
+            ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="DoubleTapped">
@@ -476,8 +482,7 @@
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
-            Padding="6,20,6,12"
-            IsMinimal="{x:Bind GetControlsIsMinimal(ViewModel.PlayerVisibility), Mode=OneWay}" />
+            Padding="6,20,6,12" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">

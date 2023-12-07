@@ -68,7 +68,7 @@
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding TrackNumberText, FallbackValue=''}"
-            Visibility="{x:Bind IsTrackNumberVisible, Mode=OneWay}" />
+            Visibility="{x:Bind IsTrackNumberVisible}" />
 
         <FontIcon
             x:Name="ItemIcon"
