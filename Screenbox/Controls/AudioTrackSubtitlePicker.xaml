@@ -9,6 +9,14 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <!--  Imitate the look of ListViewItem  -->
+        <StaticResource x:Key="ButtonBackground" ResourceKey="ListViewItemBackground" />
+        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ListViewItemBackgroundPointerOver" />
+        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ListViewItemBackgroundPressed" />
+        <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="ListViewItemForegroundPressed" />
+    </UserControl.Resources>
+
     <StackPanel Orientation="Vertical">
         <ListView
             Width="220"
@@ -52,24 +60,25 @@
                         Text="{strings:Resources Key=Subtitles}" />
                     <HyperlinkButton
                         Grid.Column="1"
-                        Command="{x:Bind ShowSubtitleOptionsCommand}"
-                        Content="{strings:Resources Key=Options}" />
+                        Margin="0,0,4,0"
+                        Padding="{StaticResource HyperlinkButtonCaptionPadding}"
+                        Command="{x:Bind ShowSubtitleOptionsCommand}">
+                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{strings:Resources Key=Options}" />
+                    </HyperlinkButton>
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
                     Height="36"
-                    Margin="3,2"
-                    Padding="13,0,13,0"
+                    Margin="4,2"
+                    Padding="12,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    Background="{ThemeResource ListViewItemBackground}"
                     BorderBrush="{x:Null}"
                     BorderThickness="0"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="{strings:Resources Key=AddSubtitle}"
-                    Foreground="{ThemeResource ListViewItemForeground}" />
+                    Content="{strings:Resources Key=AddSubtitle}" />
             </ListView.Footer>
         </ListView>
     </StackPanel>
