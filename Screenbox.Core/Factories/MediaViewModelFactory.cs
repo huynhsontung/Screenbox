@@ -1,4 +1,5 @@
-﻿using Screenbox.Core.Services;
+﻿using LibVLCSharp.Shared;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,11 @@ namespace Screenbox.Core.Factories
         public MediaViewModel GetTransient(Uri uri)
         {
             return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
+        }
+
+        public MediaViewModel GetTransient(Media media)
+        {
+            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, media);
         }
 
         public MediaViewModel GetSingleton(IStorageFile file)

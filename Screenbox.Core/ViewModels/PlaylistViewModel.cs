@@ -42,6 +42,11 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
 
+        public async Task EnqueuePlaylistAsync(IReadOnlyList<IStorageItem> items)
+        {
+            await Playlist.EnqueueAsync(items);
+        }
+
         private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             HasItems = Playlist.Items.Count > 0;
@@ -165,7 +170,7 @@ namespace Screenbox.Core.ViewModels
             {
                 IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
                 if (files == null || files.Count == 0) return;
-                Playlist.Enqueue(files);
+                await Playlist.EnqueueAsync(files);
             }
             catch (Exception e)
             {
