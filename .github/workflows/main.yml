@@ -46,6 +46,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
+    - name: Update NuGet source
+      run: dotnet nuget update source github --username huynhsontung --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --configfile nuget.config
+
     - name: Fetch Gomplate
       uses: dsaltares/fetch-gh-release-asset@1.1.0
       with:
