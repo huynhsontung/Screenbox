@@ -1048,10 +1048,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Background\Background.csproj">
-      <Project>{fd1e61b7-c73a-4aab-886d-4d0da27b143e}</Project>
-      <Name>Background</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Screenbox.Core\Screenbox.Core.csproj">
       <Project>{46d79c78-f483-4319-a3d1-9d837a135bef}</Project>
       <Name>Screenbox.Core</Name>

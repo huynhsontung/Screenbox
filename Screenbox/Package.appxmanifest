@@ -278,7 +278,6 @@
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
-        <Extension Category="windows.updateTask" EntryPoint="Background.UpdateTask"/>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="m3u8">
             <uap:SupportedFileTypes>
