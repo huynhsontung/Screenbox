@@ -77,8 +77,7 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
                     Icon="{ui:FontIcon Glyph=&#xe8da;}"
-                    Text="{strings:Resources Key=OpenFolder}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
+                    Text="{strings:Resources Key=OpenFolder}" />
                 <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=OpenUrl}">
                     <MenuFlyoutItem.Command>
                         <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
