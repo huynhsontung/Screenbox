@@ -758,4 +758,7 @@
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Gestionați setările de indexare ale sistemului</value>
   </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
+  </data>
 </root>
