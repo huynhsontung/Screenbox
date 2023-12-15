@@ -15,13 +15,13 @@
 
                     <!--  Media content background and foreground  -->
                     <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Dark">
-                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="#08FFFFFF" />
+                        <ResourceDictionary x:Key="Default">
+                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
                             <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="White" />
+                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
                             <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumBrush" />
                             <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
