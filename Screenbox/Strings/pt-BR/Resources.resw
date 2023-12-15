@@ -386,7 +386,7 @@
     <value>Nenhum dispositivo de rede disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas configurações do Windows.</value>
+    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas Configurações do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recente</value>
@@ -607,16 +607,16 @@
     <value>Amplificar volume</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Permitir que o volume máximo vá acima de 100%</value>
+    <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Arraste horizontalmente para procurar</value>
+    <value>Deslize horizontalmente para buscar</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Arraste verticalmente para ajustar o volume</value>
+    <value>Deslize verticalmente para ajustar o volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
