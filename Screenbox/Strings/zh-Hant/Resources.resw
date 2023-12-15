@@ -758,4 +758,7 @@
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>管理系統索引設定</value>
   </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
+  </data>
 </root>
