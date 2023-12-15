@@ -613,7 +613,7 @@
     <value>Gestos</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Deslize horizontalmente para buscar</value>
+    <value>Deslize horizontalmente para procurar</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Deslize verticalmente para ajustar o volume</value>
@@ -759,6 +759,6 @@
     <value>Gerenciar configurações de indexação do sistema</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Definir argumentos</value>
   </data>
 </root>
