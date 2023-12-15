@@ -292,7 +292,7 @@
                                     <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
                                 </TextBlock>
                             </ctc:SettingsCard.Description>
-                            <Button CommandParameter="{x:Bind ViewModel}" Content="Set arguments">
+                            <Button CommandParameter="{x:Bind ViewModel}" Content="{strings:Resources Key=SetArguments}">
                                 <Button.Command>
                                     <commands:SetPlaybackOptionsCommand />
                                 </Button.Command>
