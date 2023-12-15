@@ -2507,6 +2507,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SetArguments
+        /// <summary>
+        ///   Looks up a localized string similar to: Set arguments
+        /// </summary>
+        public static string SetArguments
+        {
+            get
+            {
+                return _resourceLoader.GetString("SetArguments");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2709,6 +2722,7 @@ namespace Screenbox.Strings{
             SettingsUseIndexerHeader,
             SettingsUseIndexerDescription,
             ManageSystemIndexingLink,
+            SetArguments,
         }
 
         private static ResourceLoader _resourceLoader;
