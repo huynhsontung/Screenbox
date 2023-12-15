@@ -680,10 +680,10 @@
     <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>Ajuda da linha de comando VLC</value>
+    <value>ajuda da linha de comando do VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Veja {0} para a lista completa das opções disponíveis.</value>
+    <value>Consulte a {0} para obter a lista completa de opções disponíveis.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -757,5 +757,8 @@
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Gerenciar configurações de indexação do sistema</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
   </data>
 </root>
