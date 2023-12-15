@@ -311,7 +311,7 @@
     <value>Bem-vindo(a) ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Vamos começar a reproduzir parte do seu conteúdo de mídia para dar andamento às coisas.</value>
+    <value>Vamos começar reproduzindo algum do seu conteúdo de mídia para começar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
