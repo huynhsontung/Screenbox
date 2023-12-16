@@ -8,17 +8,17 @@
 
 Screenbox este un player media modern care se străduiește să aducă o nouă imagine asupra aplicației clasice. Screenbox oferă o interfață frumoasă și intuitivă în timp ce este rapid, ușor și puternic. Proiectat și construit în sursă deschisă, Screenbox va fi întotdeauna gratuit.
 
-Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+Screenbox suportă multe formate de fișiere comune și codecuri, ceea ce asigură posibilitatea de a reda aproape orice fișier media fără a mai fi nevoie de extensii suplimentare. Fie că faci streaming online sau redai fișiere stocate local, Screenbox te are asigurat.
 
-Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+Susținut de LibVLC, Screenbox combină toate cele mai bune de la VLC Media Player cu capabilități moderne ale aplicațiilor Windows. Screenbox chiar vă permite să activați opțiunile avansate de redare folosind argumente de comandă VLC, cum ar fi redarea simultană a mai multor fluxuri audio.
 
-List of all currently supported file formats:
+Lista tuturor formatelor de fișiere acceptate în prezent:
 
 • Audio:  <!-- List of supported audio formats. -->
 • Video:  <!-- List of supported video formats. -->
 • Playlist: <!-- List of supported playlist formats. -->
 
-Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+Nu vedeți formatul de care aveți nevoie? Nu ezitați să ne contactați și să ne spuneți. Screenbox este proiectat și construit în deschis. Ajută-ne să construim un cititor media mai bun pentru toată lumea!
 
 ### Caracteristici
 
