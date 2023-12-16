@@ -237,6 +237,14 @@ namespace Screenbox.Core.ViewModels
             DelayHideControls();
         }
 
+        public void OnPreviewSpaceKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            // Only trigger with keyboard Space key
+            if (e.OriginalKey != VirtualKey.Space) return;
+            Messenger.Send(new TogglePlayPauseMessage(true));
+            e.Handled = true;
+        }
+
         public void OnVolumeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (_mediaPlayer == null || sender.Modifiers != VirtualKeyModifiers.None) return;
