@@ -266,7 +266,7 @@
     <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Música</value>
+    <value>Músicas</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Reproduzir aleatoriamente</value>
@@ -296,7 +296,7 @@
     <value>Não encontramos nenhuma música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Sua biblioteca de música não contém nenhum conteúdo musical.</value>
+    <value>Sua biblioteca de músicas não contém nenhum conteúdo musical.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Abrir arquivo(s)</value>
@@ -437,7 +437,7 @@
     <value>Procure arquivo(s) para adicionar à lista de reprodução</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Adicionar pasta a sua biblioteca de música</value>
+    <value>Adicionar pasta a sua biblioteca de músicas</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Adicionar conteúdo de URL</value>
@@ -511,7 +511,7 @@
     <value>Acesso negado. Verifique suas configurações de privacidade para garantir que o Screenbox tenha permissões suficientes.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Não é possível acessar a biblioteca de música</value>
+    <value>Não é possível acessar a biblioteca de músicas</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
     <value>Não é possível acessar a biblioteca de imagens</value>
@@ -580,7 +580,7 @@
     <value>Reprodutor</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de música</value>
+    <value>Localização da biblioteca de músicas</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Mostrar recentes</value>
