@@ -191,7 +191,7 @@ namespace Screenbox.Core.ViewModels
                     IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
-                        if (items.Count == 1 && items[0] is StorageFile { FileType: ".srt" or ".ass" } file)
+                        if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle())
                         {
                             _mediaPlayer.AddSubtitle(file);
                             Messenger.Send(new SubtitleAddedNotificationMessage(file));

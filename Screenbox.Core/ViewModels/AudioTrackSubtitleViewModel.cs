@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -60,7 +62,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             if (message.Value?.Source is not StorageFile file) return;
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, new[] { ".srt", ".ass" })
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
             {
                 ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(file.Name)}\""
             };
@@ -92,7 +94,7 @@ namespace Screenbox.Core.ViewModels
             if (_mediaPlayer?.PlaybackItem == null) return;
             try
             {
-                StorageFile? file = await _filesService.PickFileAsync(".srt", ".ass");
+                StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
                 if (file == null) return;
 
                 _mediaPlayer.AddSubtitle(file);
