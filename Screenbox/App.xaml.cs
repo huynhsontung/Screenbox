@@ -24,7 +24,6 @@ using Windows.UI.Xaml.Navigation;
 
 #if !DEBUG
 using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 #endif
 
