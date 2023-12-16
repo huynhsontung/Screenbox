@@ -443,7 +443,7 @@
     <value>Adicionar conteúdo de URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Adicione uma pasta à sua biblioteca de vídeo</value>
+    <value>Adicione uma pasta à sua biblioteca de vídeos</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Abrir pasta</value>
@@ -523,7 +523,7 @@
     <value>Não encontramos nenhum vídeo</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Sua biblioteca de vídeo não contém nenhum conteúdo de vídeo.</value>
+    <value>Sua biblioteca de vídeos não contém nenhum conteúdo de vídeo.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Abrir configurações de privacidade</value>
@@ -586,7 +586,7 @@
     <value>Mostrar recentes</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de vídeo</value>
+    <value>Localização da biblioteca de vídeos</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Legendas</value>
