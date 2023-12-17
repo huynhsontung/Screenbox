@@ -4,13 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:converters1="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -50,12 +50,12 @@
 
             <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
-            <converters1:BoolToObjectConverter
+            <toolkitConverters:BoolToObjectConverter
                 x:Key="BoolToPlayPauseTextConverter"
                 FalseValue="{strings:Resources Key=Play}"
                 TrueValue="{strings:Resources Key=Pause}" />
 
-            <converters1:BoolToObjectConverter
+            <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
                 FalseValue="E"
                 TrueValue="F" />

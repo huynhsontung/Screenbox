@@ -5,7 +5,6 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -16,6 +15,7 @@
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
     extensions:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     AllowDrop="True"
@@ -47,7 +47,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
-            <converters:BoolToObjectConverter
+            <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
                 FalseValue="D"
                 TrueValue="C" />

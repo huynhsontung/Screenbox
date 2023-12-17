@@ -11,7 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:tollkitConverters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
     d:DesignHeight="300"
@@ -22,7 +22,7 @@
     <UserControl.Resources>
         <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
         <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
-        <tollkitConverters:BoolToObjectConverter
+        <toolkitConverters:BoolToObjectConverter
             x:Key="BoolToPlayPauseTextConverter"
             FalseValue="{strings:Resources Key=Play}"
             TrueValue="{strings:Resources Key=Pause}" />
