@@ -83,7 +83,7 @@
                 <TextBlock
                     Grid.Row="2"
                     Padding="4,0"
-                    Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{Binding Artist}" />
 

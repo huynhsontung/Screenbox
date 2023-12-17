@@ -160,7 +160,7 @@
                             Grid.Row="2"
                             Padding="4,0"
                             x:Phase="2"
-                            Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Text="{x:Bind Media.Caption, Mode=OneWay}" />
 

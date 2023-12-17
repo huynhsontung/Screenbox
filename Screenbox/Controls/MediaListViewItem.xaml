@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animations="using:Screenbox.Controls.Animations"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:converters1="using:CommunityToolkit.WinUI.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -12,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
     d:DesignHeight="300"
@@ -22,7 +22,7 @@
     <UserControl.Resources>
         <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
         <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
-        <converters1:BoolToObjectConverter
+        <toolkitConverters:BoolToObjectConverter
             x:Key="BoolToPlayPauseTextConverter"
             FalseValue="{strings:Resources Key=Play}"
             TrueValue="{strings:Resources Key=Pause}" />
@@ -114,32 +114,32 @@
             x:Name="ArtistButton"
             Grid.Column="3"
             Margin="4,0"
+            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
-            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
                 x:Name="ArtistText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding MainArtist.Name, FallbackValue=''}"
-                TextTrimming="CharacterEllipsis" />
+                Text="{Binding MainArtist.Name, FallbackValue=''}" />
         </HyperlinkButton>
 
         <HyperlinkButton
             x:Name="AlbumButton"
             Grid.Column="4"
             Margin="4,0"
+            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
             CommandParameter="{Binding Album}"
-            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
             <TextBlock
                 x:Name="AlbumText"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, FallbackValue=''}"
-                TextTrimming="CharacterEllipsis" />
+                Text="{Binding Album.Name, FallbackValue=''}" />
         </HyperlinkButton>
 
         <TextBlock

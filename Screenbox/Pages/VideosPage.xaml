@@ -115,6 +115,8 @@
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
                 <!--  Top NavigationView side margins  -->
                 <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
+                <!--  Minimum space between Top NavigationView items and footer pane  -->
+                <x:Double x:Key="TopNavigationViewPaneCustomContentMinWidth">0</x:Double>
             </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>
                 <TextBlock
