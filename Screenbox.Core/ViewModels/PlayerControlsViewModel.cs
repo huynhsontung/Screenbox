@@ -34,7 +34,7 @@ namespace Screenbox.Core.ViewModels
         public long SubtitleTimingOffset
         {
             // Special access. Consider promote to proper IMediaPlayer property
-            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay ?? 0;
+            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay / 1000 ?? 0;
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
@@ -51,7 +51,7 @@ namespace Screenbox.Core.ViewModels
         public long AudioTimingOffset
         {
             // Special access. Consider promote to proper IMediaPlayer property
-            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay ?? 0;
+            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay / 1000 ?? 0;
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
