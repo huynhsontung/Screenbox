@@ -21,6 +21,7 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -239,10 +240,14 @@ namespace Screenbox.Core.ViewModels
 
         public void OnPreviewSpaceKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            // Only trigger with keyboard Space key
-            if (e.OriginalKey != VirtualKey.Space) return;
-            Messenger.Send(new TogglePlayPauseMessage(true));
+            bool ctrlDown = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+            bool shiftDown = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
+            // Only trigger with keyboard Space key and with no modifier
+            if (e.OriginalKey != VirtualKey.Space || ctrlDown || shiftDown || e.KeyStatus.IsMenuKeyDown) return;
             e.Handled = true;
+            // Only trigger once when Space is held down
+            if (e.KeyStatus.WasKeyDown) return;
+            Messenger.Send(new TogglePlayPauseMessage(true));
         }
 
         public void OnVolumeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
