@@ -758,4 +758,7 @@
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Beheer systeem indexeringsinstellingen</value>
   </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
+  </data>
 </root>

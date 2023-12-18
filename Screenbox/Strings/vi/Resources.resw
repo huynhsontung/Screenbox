@@ -758,4 +758,7 @@
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Quản lý cài đặt lập chỉ mục hệ thống</value>
   </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
+  </data>
 </root>

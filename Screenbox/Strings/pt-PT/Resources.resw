@@ -744,18 +744,21 @@
     <value>Abrir artista</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Atualizar bibliotecas</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Atualizar</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Utilizar o indexador para pesquisar</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Utilizar a indexação do sistema para acelerar a pesquisa das bibliotecas. Se não estiver a ver todos os ficheiros multimédia das localizações da sua biblioteca, pode desativar esta opção.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Gerir as definições de indexação do sistema</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Set arguments</value>
   </data>
 </root>

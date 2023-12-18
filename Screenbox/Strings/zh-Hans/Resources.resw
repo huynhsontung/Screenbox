@@ -744,18 +744,21 @@
     <value>打开艺术家</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>刷新库</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>刷新</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>使用索引器进行扫描</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>在可用的情况下，通过使用系统索引加速库扫描。 如果您没有从库位置看到所有媒体，请关闭此功能。</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>管理系统索引设置</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>设置参数</value>
   </data>
 </root>

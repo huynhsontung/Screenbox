@@ -266,7 +266,7 @@
     <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Música</value>
+    <value>Músicas</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Reproduzir aleatoriamente</value>
@@ -296,7 +296,7 @@
     <value>Não encontramos nenhuma música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Sua biblioteca de música não contém nenhum conteúdo musical.</value>
+    <value>Sua biblioteca de músicas não contém nenhum conteúdo musical.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Abrir arquivo(s)</value>
@@ -311,7 +311,7 @@
     <value>Bem-vindo(a) ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Vamos começar a reproduzir parte do seu conteúdo de mídia para dar andamento às coisas.</value>
+    <value>Vamos começar reproduzindo algum do seu conteúdo de mídia para começar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
@@ -386,7 +386,7 @@
     <value>Nenhum dispositivo de rede disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas configurações do Windows.</value>
+    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas Configurações do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Recente</value>
@@ -437,13 +437,13 @@
     <value>Procure arquivo(s) para adicionar à lista de reprodução</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Adicionar pasta a sua biblioteca de música</value>
+    <value>Adicionar pasta a sua biblioteca de músicas</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Adicionar conteúdo de URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Adicione uma pasta à sua biblioteca de vídeo</value>
+    <value>Adicione uma pasta à sua biblioteca de vídeos</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Abrir pasta</value>
@@ -511,7 +511,7 @@
     <value>Acesso negado. Verifique suas configurações de privacidade para garantir que o Screenbox tenha permissões suficientes.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Não é possível acessar a biblioteca de música</value>
+    <value>Não é possível acessar a biblioteca de músicas</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
     <value>Não é possível acessar a biblioteca de imagens</value>
@@ -523,7 +523,7 @@
     <value>Não encontramos nenhum vídeo</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Sua biblioteca de vídeo não contém nenhum conteúdo de vídeo.</value>
+    <value>Sua biblioteca de vídeos não contém nenhum conteúdo de vídeo.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Abrir configurações de privacidade</value>
@@ -580,13 +580,13 @@
     <value>Reprodutor</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de música</value>
+    <value>Localização da biblioteca de músicas</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Mostrar recentes</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de vídeo</value>
+    <value>Localização da biblioteca de vídeos</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Legendas</value>
@@ -607,16 +607,16 @@
     <value>Amplificar volume</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Permitir que o volume máximo vá acima de 100%</value>
+    <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Arraste horizontalmente para procurar</value>
+    <value>Deslize horizontalmente para procurar</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Arraste verticalmente para ajustar o volume</value>
+    <value>Deslize verticalmente para ajustar o volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
@@ -680,10 +680,10 @@
     <value>Algumas opções só podem ser definidas globalmente.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>Ajuda da linha de comando VLC</value>
+    <value>ajuda da linha de comando do VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Veja {0} para a lista completa das opções disponíveis.</value>
+    <value>Consulte a {0} para obter a lista completa de opções disponíveis.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -744,18 +744,21 @@
     <value>Abrir artista</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Atualizar bibliotecas</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Atualizar</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Utilize o indexador para escanear</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Acelere a varredura da biblioteca utilizando o índice do sistema quando disponível. Desative esta opção se você não estiver visualizando todo o conteúdo de mídia nas suas localizações de biblioteca.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Gerenciar configurações de indexação do sistema</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Definir argumentos</value>
   </data>
 </root>
