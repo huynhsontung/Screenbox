@@ -654,7 +654,7 @@ namespace Screenbox.Core.ViewModels
                 _cts = cts;
                 Media media = source.Item.Media;
                 MediaParsedStatus parsedStatus = await media.Parse(
-                    MediaParseOptions.ParseNetwork | MediaParseOptions.FetchNetwork | MediaParseOptions.DoInteract,
+                    MediaParseOptions.ParseNetwork | MediaParseOptions.DoInteract,
                     5000, cts.Token);
 
                 // Only playlist with more than 1 sub items should be insert into the current playlist
