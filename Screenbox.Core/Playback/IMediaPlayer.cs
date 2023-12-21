@@ -23,6 +23,7 @@ namespace Screenbox.Core.Playback
         event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
