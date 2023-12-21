@@ -115,9 +115,16 @@ namespace Screenbox.Controls
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            foreach (ChapterViewModel item in ProgressItems)
+            if (ProgressItems.Count == 1)
             {
-                item.Width = GetItemWidth(item);
+                ProgressItems[0].Width = ActualWidth;
+            }
+            else
+            {
+                foreach (ChapterViewModel item in ProgressItems)
+                {
+                    item.Width = GetItemWidth(item);
+                }
             }
         }
 
