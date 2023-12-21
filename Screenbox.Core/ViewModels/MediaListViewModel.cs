@@ -451,6 +451,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (media.Item == null
                 || media.Item.Media is { IsParsed: true, SubItems.Count: 0 }
+                || (media.Source is IStorageFile file && !file.IsSupportedPlaylist())
                 || await ParsePlaylistAsync(media) is not { Count: > 0 } playlist)
             {
                 Items.Add(media);
