@@ -40,7 +40,7 @@
                             Width="160"
                             Height="160"
                             Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource ControlCornerRadius}">
                             <FontIcon
