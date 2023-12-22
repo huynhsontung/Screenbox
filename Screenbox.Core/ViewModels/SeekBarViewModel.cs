@@ -87,6 +87,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.BufferingStarted += OnBufferingStarted;
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
             _mediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
+            _mediaPlayer.CanSeekChanged += OnCanSeekChanged;
         }
 
         public void Receive(TimeChangeOverrideMessage message)
@@ -156,6 +157,14 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        private void OnCanSeekChanged(IMediaPlayer sender, EventArgs args)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                IsSeekable = sender.CanSeek;
+            });
+        }
+
         private void OnPlaybackItemChanged(IMediaPlayer sender, object? args)
         {
             _seekTimer.Stop();
@@ -200,10 +209,6 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 Time = sender.Position.TotalMilliseconds;
-                if (!IsSeekable)
-                {
-                    IsSeekable = sender.CanSeek;
-                }
             });
         }
 
