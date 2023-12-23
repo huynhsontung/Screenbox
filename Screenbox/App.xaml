@@ -13,22 +13,19 @@
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
 
-                    <!--  Media content background and foreground  -->
+                    <!--  Brushes  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorLight2" />
+                            <StaticResource x:Key="AlternateListViewItemFillColorBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorDark1" />
+                            <StaticResource x:Key="AlternateListViewItemFillColorBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
-                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemColorWindowColor" />
+                            <SolidColorBrush x:Key="AlternateListViewItemFillColorBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemColorHighlightColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 

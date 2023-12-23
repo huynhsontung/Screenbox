@@ -30,7 +30,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="52"
-                        Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xe77b;" />
                     <!--<Border CornerRadius="4">
                             <Image

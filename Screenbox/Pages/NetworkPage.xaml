@@ -74,7 +74,7 @@
                 x:Name="NoNetworkDrivePanelIcon"
                 Grid.Column="0"
                 FontSize="{StaticResource PanelIconFontSize}"
-                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xe8cd;" />
 
             <StackPanel

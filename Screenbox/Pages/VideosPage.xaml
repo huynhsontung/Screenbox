@@ -65,7 +65,7 @@
                 x:Name="NoVideosPanelIcon"
                 Grid.Column="0"
                 FontSize="{StaticResource PanelIconFontSize}"
-                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xe8b2;" />
 
             <StackPanel

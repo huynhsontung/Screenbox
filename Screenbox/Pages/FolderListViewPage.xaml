@@ -98,7 +98,7 @@
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />
@@ -109,6 +109,8 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
         </ListView>
+
+        <!--  Empty content  -->
         <TextBlock
             x:Name="NoContentText"
             Margin="{StaticResource PageContentMargin}"

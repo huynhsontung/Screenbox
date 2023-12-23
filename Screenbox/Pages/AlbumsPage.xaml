@@ -27,7 +27,7 @@
 
             <DataTemplate x:Key="GroupHeaderTemplate">
                 <TextBlock
-                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>

@@ -85,7 +85,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="64"
-                        Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xe93c;"
                         Visibility="{x:Bind ViewModel.Source.RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                     <Border CornerRadius="8">
@@ -184,7 +184,7 @@
             </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

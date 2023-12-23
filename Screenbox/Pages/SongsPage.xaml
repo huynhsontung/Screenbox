@@ -27,7 +27,7 @@
 
             <DataTemplate x:Key="GroupHeaderTemplate">
                 <TextBlock
-                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
@@ -98,7 +98,7 @@
                     </ListView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
                         <interactions:AlternatingListViewBehavior
-                            AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                            AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             AlternateBorderThickness="1" />
                         <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />

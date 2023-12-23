@@ -30,7 +30,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="52"
-                        Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xe93c;"
                         Visibility="{Binding RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                     <Border CornerRadius="4">

@@ -107,7 +107,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="52"
-                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="{x:Bind Media.Source, Converter={StaticResource MediaGlyphConverter}}"
                                 Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                             <Border CornerRadius="4">

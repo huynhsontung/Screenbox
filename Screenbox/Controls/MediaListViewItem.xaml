@@ -27,7 +27,7 @@
             FalseValue="{strings:Resources Key=Play}"
             TrueValue="{strings:Resources Key=Pause}" />
 
-        <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorDefault}" />
+        <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
     <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
@@ -96,7 +96,7 @@
             Visibility="Collapsed">
             <FontIcon
                 FontSize="{StaticResource DefaultIconFontSize}"
-                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
         </Button>
 
@@ -171,14 +171,14 @@
                         <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
+                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -47,7 +47,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="42"
-                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="&#xe93c;"
                                 Visibility="{Binding Key.RelatedSongs[0].Thumbnail, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                             <Image Source="{Binding Key.RelatedSongs[0].Thumbnail, FallbackValue={x:Null}}" />
@@ -156,7 +156,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="64"
-                        Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xe77b;" />
                 </Grid>
 
@@ -254,7 +254,7 @@
             </ListView.GroupStyle>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
