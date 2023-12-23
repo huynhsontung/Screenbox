@@ -2,8 +2,8 @@
     x:Class="Screenbox.Controls.VolumeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
@@ -21,7 +21,7 @@
             Grid.Column="0"
             Margin="0,0,4,0"
             VerticalAlignment="Stretch"
-            local:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
+            controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             Background="Transparent"
             BorderThickness="0"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
@@ -33,14 +33,13 @@
         <Border
             x:Name="BoostIndicator"
             Grid.Column="1"
-            Height="4"
+            Height="{ThemeResource SliderTrackThemeHeight}"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Background="Maroon"
+            Background="{ThemeResource SystemFillColorCriticalBrush}"
             CornerRadius="2" />
         <Slider
             x:Name="VolumeSlider"
-            x:Uid="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
@@ -50,7 +49,7 @@
         <TextBlock
             Grid.Column="2"
             Width="28"
-            Margin="12,0,0,0"
+            Margin="12,0,0,2"
             VerticalAlignment="Center"
             Text="{x:Bind VolumeSlider.Value, Mode=OneWay}"
             Visibility="{x:Bind ShowValueText, Mode=OneWay}" />

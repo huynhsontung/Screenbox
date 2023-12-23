@@ -102,20 +102,18 @@
             x:Name="LibraryNavView"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Background="Transparent"
             IsBackButtonVisible="Collapsed"
             IsSettingsVisible="False"
             PaneDisplayMode="Top"
             SelectionChanged="LibraryNavView_OnSelectionChanged">
             <muxc:NavigationView.Resources>
-                <!--  Override  -->
-                <!--  NavigationView content background to enable Mica  -->
-                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-                <!--  NavigationView content border thickness  -->
+                <!--  Override NavigationView content background to enable Mica  -->
+                <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
+                <!--  Remove NavigationView content border  -->
                 <Thickness x:Key="TopNavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
-                <!--  Top NavigationView side margins  -->
+                <!--  Remove TopNavGrid side margins  -->
                 <Thickness x:Key="TopNavigationViewTopNavGridMargin">0,0</Thickness>
-                <!--  Minimum space between Top NavigationView items and footer pane  -->
+                <!--  Decrease the minimum space between TopNavGrid items and footer pane  -->
                 <x:Double x:Key="TopNavigationViewPaneCustomContentMinWidth">0</x:Double>
             </muxc:NavigationView.Resources>
             <muxc:NavigationView.PaneHeader>

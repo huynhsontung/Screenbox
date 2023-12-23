@@ -23,7 +23,7 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
-            <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
+            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
                 <TextBlock
@@ -125,8 +125,8 @@
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
                     SelectionMode="None">
                     <GridView.Resources>
-                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
-                        <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+                        <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
                     </GridView.Resources>
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>

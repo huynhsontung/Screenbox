@@ -23,7 +23,7 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
-            <SolidColorBrush x:Key="GridViewHeaderItemDividerStroke" Color="Transparent" />
+            <StaticResource x:Key="GridViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
                 <TextBlock
@@ -97,8 +97,8 @@
                     ItemsSource="{x:Bind AlbumsSource.View.CollectionGroups}"
                     SelectionMode="None">
                     <GridView.Resources>
-                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
-                        <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+                        <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
                     </GridView.Resources>
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
