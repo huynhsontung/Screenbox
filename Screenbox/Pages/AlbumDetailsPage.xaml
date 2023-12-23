@@ -73,7 +73,7 @@
                     Height="180"
                     Margin="0,0,20,0"
                     VerticalAlignment="Top"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="8"

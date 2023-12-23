@@ -22,7 +22,7 @@
                 <Grid
                     Grid.Row="0"
                     Height="{StaticResource ArtistGridViewItemThumbnailHeight}"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="99">
