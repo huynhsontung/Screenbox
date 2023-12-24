@@ -302,6 +302,17 @@
             <uap:Logo>Assets\Icons\Playlist\FileAssociationPlaylist.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="wavpack">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="audio/x-wavpack">.wv</uap:FileType>
+              <uap:FileType ContentType="audio/x-wavpack-correction">.wvc</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameWavPack</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\Icons\Video\FileAssociationWV.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
        </Extensions>
     </Application>
   </Applications>
