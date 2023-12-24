@@ -12,8 +12,8 @@ namespace Screenbox.Core
 
         public static string ToDuration(TimeSpan duration)
         {
-            int hours = (int)duration.TotalHours;
-            return (duration < TimeSpan.Zero ? "-" : string.Empty) + (hours > 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
+            long hours = Math.Abs((long)duration.TotalHours);
+            return (duration < TimeSpan.Zero ? "-" : string.Empty) + (hours != 0 ? $"{hours}:{duration:mm}:{duration:ss}" : duration.ToString(@"%m\:ss"));
         }
     }
 }
