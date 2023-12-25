@@ -121,7 +121,7 @@
     <value>Frame saved</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>Picutre-in-picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Save current frame</value>
@@ -171,7 +171,7 @@
     <value>Seek</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>Interrompi picture-in-picture</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Successivo</value>
@@ -383,7 +383,7 @@
     <value>Rete</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Nessun dispositivo di rete disponibile</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
@@ -485,7 +485,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>Mostra tutto</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
     <value>Artist results for "{0}"</value>
@@ -647,7 +647,7 @@
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Sottitotioli aggiunti</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Errore critico</value>
