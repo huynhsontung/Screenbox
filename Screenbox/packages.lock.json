@@ -132,9 +132,9 @@
       },
       "VideoLAN.LibVLC.UWP": {
         "type": "Direct",
-        "requested": "[3.3.3-20231219, )",
-        "resolved": "3.3.3-20231219",
-        "contentHash": "kXH/UY6Eqn6L8ZKDua37374Fymw6jTcZgFMOxehUSlVCR0A9g35TMj/ZDkYeflgPv+yWDhMQXZqcbnEIHkzGwQ=="
+        "requested": "[3.3.3-20231224, )",
+        "resolved": "3.3.3-20231224",
+        "contentHash": "1pwJ6JETCvs/FB5ecJsDyFm7wGffQrVKPPSZmRswwab/W48A1mooydcabesdYEhEuBJgA7nxMvMKnD/mW8B7ag=="
       },
       "CommunityToolkit.Common": {
         "type": "Transitive",

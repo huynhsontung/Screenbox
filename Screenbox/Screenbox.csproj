@@ -1044,7 +1044,7 @@
       <Version>2.0.0</Version>
     </PackageReference>
     <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.3-20231219</Version>
+      <Version>3.3.3-20231224</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
