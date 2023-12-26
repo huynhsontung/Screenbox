@@ -1043,8 +1043,8 @@
     <PackageReference Include="ReswPlusLib">
       <Version>2.0.0</Version>
     </PackageReference>
-    <PackageReference Include="VideoLAN.LibVLC.UWP">
-      <Version>3.3.3-20231224</Version>
+    <PackageReference Include="LibVLC.UWP">
+      <Version>3.0.20-2312260030</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
