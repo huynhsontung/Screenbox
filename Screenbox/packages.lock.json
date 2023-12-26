@@ -64,6 +64,12 @@
           "Microsoft.UI.Xaml": "2.7.0"
         }
       },
+      "LibVLC.UWP": {
+        "type": "Direct",
+        "requested": "[3.0.20-2312260030, )",
+        "resolved": "3.0.20-2312260030",
+        "contentHash": "f/PWalooJ3LlJdeLmPZ3huIKcxDVJJzcogKlEsFp7MYSMnDaSfWsfNc9wrAymjCBfMbDtBVULq84Gqt3WiG4Jg=="
+      },
       "Microsoft.AppCenter.Analytics": {
         "type": "Direct",
         "requested": "[5.0.3, )",
@@ -129,12 +135,6 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
         }
-      },
-      "VideoLAN.LibVLC.UWP": {
-        "type": "Direct",
-        "requested": "[3.3.3-20231224, )",
-        "resolved": "3.3.3-20231224",
-        "contentHash": "1pwJ6JETCvs/FB5ecJsDyFm7wGffQrVKPPSZmRswwab/W48A1mooydcabesdYEhEuBJgA7nxMvMKnD/mW8B7ag=="
       },
       "CommunityToolkit.Common": {
         "type": "Transitive",
