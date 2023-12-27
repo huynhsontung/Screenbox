@@ -3,8 +3,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
@@ -14,15 +12,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Media;
-using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class MediaViewModel : ObservableRecipient
+    public partial class MediaViewModel : ObservableRecipient
     {
-        public string Location { get; }
+        public string Location { get; protected set; }
 
         public object Source { get; }
 
@@ -30,20 +27,19 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public PlaybackItem? Item => _item ?? GetPlaybackItem();
+        public PlaybackItem? Item
+        {
+            get => _item ?? GetPlaybackItem();
+            internal set => _loaded = (_item = value) != null;
+        }
 
         public IReadOnlyList<string> Options { get; }
 
         public string TrackNumberText => TrackNumber > 0 ? TrackNumber.ToString() : string.Empty;    // Helper for binding
 
-        private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
-        private readonly AlbumViewModelFactory _albumFactory;
-        private readonly ArtistViewModelFactory _artistFactory;
         private readonly List<string> _options;
         private PlaybackItem? _item;
-        private Task _loadTask;
-        private Task _loadThumbnailTask;
         private bool _loaded;
 
         [ObservableProperty] private string _name;
@@ -71,16 +67,11 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         private bool? _isPlaying;
 
-        private MediaViewModel(MediaViewModel source)
+        protected MediaViewModel(MediaViewModel source)
         {
-            _filesService = source._filesService;
             _mediaService = source._mediaService;
-            _albumFactory = source._albumFactory;
-            _artistFactory = source._artistFactory;
             _item = source._item;
             _name = source._name;
-            _loadTask = source._loadTask;
-            _loadThumbnailTask = source._loadThumbnailTask;
             _duration = source._duration;
             _thumbnail = source._thumbnail;
             _mediaType = source._mediaType;
@@ -98,65 +89,31 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        private MediaViewModel(object source, IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
+        protected MediaViewModel(object source, IMediaService mediaService)
         {
-            _filesService = filesService;
             _mediaService = mediaService;
-            _artistFactory = artistFactory;
-            _albumFactory = albumFactory;
             Source = source;
 
             Location = string.Empty;
             _name = string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
-            _loadTask = Task.CompletedTask;
-            _loadThumbnailTask = Task.CompletedTask;
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
         }
 
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, IStorageFile file) :
-            this(file, filesService, mediaService, albumFactory, artistFactory)
-        {
-            _name = file.Name;
-            _mediaType = GetMediaTypeForFile(file);
-            Location = file.Path;
-        }
-
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri) :
-            this(uri, filesService, mediaService, albumFactory, artistFactory)
-        {
-            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
-            Location = uri.ToString();
-        }
-
-        public MediaViewModel(IFilesService filesService, IMediaService mediaService,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Media media) :
-            this(media, filesService, mediaService, albumFactory, artistFactory)
+        public MediaViewModel(IMediaService mediaService, Media media)
+            : this(media, mediaService)
         {
             _name = media.Meta(MetadataType.Title) ?? string.Empty;
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
             _loaded = true;
-            if (Uri.TryCreate(Location, UriKind.Absolute, out Uri uri))
-            {
-                // Prefer URI source for easier clean up
-                Source = uri;
-                _item = new PlaybackItem(uri, media);
-            }
-            else
-            {
-                // PlaybackItem will not be clean up in this case
-                _item = new PlaybackItem(media, media);
-            }
+            _item = new PlaybackItem(media, media);
         }
 
-        public MediaViewModel Clone()
+        public virtual MediaViewModel Clone()
         {
             return new MediaViewModel(this);
         }
@@ -181,6 +138,14 @@ namespace Screenbox.Core.ViewModels
             }
 
             return _item;
+        }
+
+        public void UpdateMediaType()
+        {
+            // Update media type when it was previously set Unknown. Usually when source is an URI.
+            // We don't want to init PlaybackItem just for this.
+            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
+                MediaType = MediaPlaybackType.Music;
         }
 
         public void SetOptions(string options)
@@ -220,132 +185,14 @@ namespace Screenbox.Core.ViewModels
             await LoadThumbnailAsync();
         }
 
-        public async Task LoadTitleAsync()
+        public virtual Task LoadDetailsAsync()
         {
-            if (Source is not StorageFile file) return;
-            string[] propertyKeys = { SystemProperties.Title };
-            IDictionary<string, object> properties = await file.Properties.RetrievePropertiesAsync(propertyKeys);
-            if (properties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
-            {
-                Name = name;
-            }
+            return Task.CompletedTask;
         }
 
-        public Task LoadDetailsAsync()
+        public virtual Task LoadThumbnailAsync()
         {
-            if (!_loadTask.IsCompleted) return _loadTask;
-            _loadTask = LoadDetailsInternalAsync();
-            return _loadTask;
-        }
-
-        private async Task LoadDetailsInternalAsync()
-        {
-            // Update media type when it was previously set Unknown. Usually when source is an URI.
-            // We don't want to init PlaybackItem just for this.
-            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
-                MediaType = MediaPlaybackType.Music;
-
-            if (Source is not StorageFile { IsAvailable: true } file) return;
-            string[] additionalPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Music.Artist,
-                SystemProperties.Media.Duration
-            };
-
-            try
-            {
-                IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
-                if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
-                {
-                    Name = name;
-                    if (MediaType == MediaPlaybackType.Video && name != file.Name)
-                    {
-                        AltCaption = file.Name;
-                    }
-                }
-
-                if (additionalProperties[SystemProperties.Media.Duration] is ulong ticks and > 0)
-                {
-                    TimeSpan duration = TimeSpan.FromTicks((long)ticks);
-                    Duration = duration;
-                    Caption = Humanizer.ToDuration(duration);
-                }
-
-                BasicProperties ??= await file.GetBasicPropertiesAsync();
-
-                switch (MediaType)
-                {
-                    case MediaPlaybackType.Video:
-                        VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
-                        break;
-                    case MediaPlaybackType.Music:
-                        MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
-                        if (MusicProperties != null)
-                        {
-                            TrackNumber = MusicProperties.TrackNumber;
-                            Year = MusicProperties.Year;
-                            Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : null;
-                            Album ??= _albumFactory.AddSongToAlbum(this, MusicProperties.Album, MusicProperties.AlbumArtist, Year);
-
-                            if (Artists.Length == 0)
-                            {
-                                string[] contributingArtists =
-                                    additionalProperties[SystemProperties.Music.Artist] as string[] ??
-                                    Array.Empty<string>();
-                                Artists = _artistFactory.ParseArtists(contributingArtists, this);
-                            }
-
-                            if (string.IsNullOrEmpty(MusicProperties.Artist))
-                            {
-                                AltCaption = MusicProperties.Album;
-                            }
-                            else
-                            {
-                                Caption = MusicProperties.Artist;
-                                AltCaption = string.IsNullOrEmpty(MusicProperties.Album)
-                                    ? MusicProperties.Artist
-                                    : $"{MusicProperties.Artist} – {MusicProperties.Album}";
-                            }
-                        }
-
-                        break;
-                }
-            }
-            catch (Exception e)
-            {
-                // System.Exception: The RPC server is unavailable.
-                if (e.HResult != unchecked((int)0x800706BA))
-                    LogService.Log(e);
-            }
-        }
-
-        public Task LoadThumbnailAsync()
-        {
-            if (!_loadThumbnailTask.IsCompleted) return _loadThumbnailTask;
-            _loadThumbnailTask = LoadThumbnailInternalAsync();
-            return _loadThumbnailTask;
-        }
-
-        private async Task LoadThumbnailInternalAsync()
-        {
-            if (Thumbnail == null && Source is StorageFile file)
-            {
-                StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
-                if (source == null) return;
-                BitmapImage image = new();
-                await image.SetSourceAsync(ThumbnailSource);
-                Thumbnail = image;
-            }
-        }
-
-        private static MediaPlaybackType GetMediaTypeForFile(IStorageFile file)
-        {
-            if (file.IsSupportedVideo()) return MediaPlaybackType.Video;
-            if (file.IsSupportedAudio()) return MediaPlaybackType.Music;
-            if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
-            // TODO: Support playlist type
-            return MediaPlaybackType.Unknown;
+            return Task.CompletedTask;
         }
     }
 }

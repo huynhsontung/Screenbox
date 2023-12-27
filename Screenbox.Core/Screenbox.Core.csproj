@@ -237,6 +237,7 @@
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="ViewModels\CommonViewModel.cs" />
+    <Compile Include="ViewModels\FileMediaViewModel.cs" />
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SongsPageViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
+    <Compile Include="ViewModels\UriMediaViewModel.cs" />
     <Compile Include="ViewModels\VideoSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />

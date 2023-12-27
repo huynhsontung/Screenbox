@@ -582,6 +582,7 @@ namespace Screenbox.Core.ViewModels
             {
                 await current.LoadDetailsAsync();
                 await current.LoadThumbnailAsync();
+                current.UpdateMediaType();
                 MediaType = current.MediaType;
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)

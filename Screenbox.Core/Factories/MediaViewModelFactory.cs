@@ -1,5 +1,7 @@
 ﻿using LibVLCSharp.Shared;
+using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,28 +28,40 @@ namespace Screenbox.Core.Factories
             _albumFactory = albumFactory;
         }
 
-        public MediaViewModel GetTransient(IStorageFile file)
+        public MediaViewModel GetTransient(StorageFile file)
         {
-            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
+            return new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
         }
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, uri);
+            return new UriMediaViewModel(_mediaService, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
         {
-            return new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, media);
+            if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
+                return new MediaViewModel(_mediaService, media);
+
+            // Prefer URI source for easier clean up
+            UriMediaViewModel vm = new(_mediaService, uri)
+            {
+                Item = new PlaybackItem(media, media)
+            };
+
+            if (media.Meta(MetadataType.Title) is { } name)
+                vm.Name = name;
+
+            return vm;
         }
 
-        public MediaViewModel GetSingleton(IStorageFile file)
+        public MediaViewModel GetSingleton(StorageFile file)
         {
             string path = file.Path;
             if (!_references.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||
                 !reference.TryGetTarget(out MediaViewModel instance))
             {
-                instance = new MediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
+                instance = new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
                 if (!string.IsNullOrEmpty(path))
                 {
                     _references[path] = new WeakReference<MediaViewModel>(instance);

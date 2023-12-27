@@ -462,7 +462,7 @@ namespace Screenbox.Core.ViewModels
             return playlist[0];
         }
 
-        private async Task<MediaViewModel> EnqueueAsync(IStorageFile file)
+        private async Task<MediaViewModel> EnqueueAsync(StorageFile file)
         {
             MediaViewModel media = _mediaFactory.GetSingleton(file);
             if (file.IsSupportedPlaylist() && await RecursiveParsePlaylistAsync(media) is { Count: > 0 } playlist)
@@ -496,7 +496,7 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<MediaViewModel?> DispatchEnqueueAsync(object value) => value switch
         {
-            IStorageFile file => await EnqueueAsync(file),
+            StorageFile file => await EnqueueAsync(file),
             Uri uri => await EnqueueAsync(uri),
             IReadOnlyList<IStorageItem> files => await EnqueueAsync(files),
             MediaViewModel media => await EnqueueAsync(media),
