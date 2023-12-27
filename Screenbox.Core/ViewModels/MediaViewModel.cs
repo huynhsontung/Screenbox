@@ -105,7 +105,6 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(IMediaService mediaService, Media media)
             : this(media, mediaService)
         {
-            _name = media.Meta(MetadataType.Title) ?? string.Empty;
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
@@ -138,14 +137,6 @@ namespace Screenbox.Core.ViewModels
             }
 
             return _item;
-        }
-
-        public void UpdateMediaType()
-        {
-            // Update media type when it was previously set Unknown. Usually when source is an URI.
-            // We don't want to init PlaybackItem just for this.
-            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
-                MediaType = MediaPlaybackType.Music;
         }
 
         public void SetOptions(string options)
@@ -187,11 +178,25 @@ namespace Screenbox.Core.ViewModels
 
         public virtual Task LoadDetailsAsync()
         {
+            // Update media type when it was previously set Unknown. Usually when source is an URI.
+            // We don't want to init PlaybackItem just for this.
+            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
+                MediaType = MediaPlaybackType.Music;
+
+            if (_item?.Media.Meta(MetadataType.Title) is { } title)
+                Name = title;
+
             return Task.CompletedTask;
         }
 
         public virtual Task LoadThumbnailAsync()
         {
+            if (Thumbnail == null && _item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+                Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri uri))
+            {
+                Thumbnail = new BitmapImage(uri);
+            }
+
             return Task.CompletedTask;
         }
     }
