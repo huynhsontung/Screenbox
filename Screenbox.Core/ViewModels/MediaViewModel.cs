@@ -240,6 +240,11 @@ namespace Screenbox.Core.ViewModels
 
         private async Task LoadDetailsInternalAsync()
         {
+            // Update media type when it was previously set Unknown. Usually when source is an URI.
+            // We don't want to init PlaybackItem just for this.
+            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
+                MediaType = MediaPlaybackType.Music;
+
             if (Source is not StorageFile { IsAvailable: true } file) return;
             string[] additionalPropertyKeys =
             {
