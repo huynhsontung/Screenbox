@@ -25,7 +25,7 @@ namespace Screenbox.Controls
 
         private bool CanOpen(string url)
         {
-            return Uri.IsWellFormedUriString(url, UriKind.Absolute);
+            return Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri _);
         }
     }
 }
