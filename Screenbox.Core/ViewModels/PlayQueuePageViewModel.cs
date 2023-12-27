@@ -45,7 +45,7 @@ namespace Screenbox.Core.ViewModels
                 StorageFolder? folder = await _filesService.PickFolderAsync();
                 if (folder == null) return;
                 IReadOnlyList<IStorageItem> items = await _filesService.GetSupportedItems(folder).GetItemsAsync();
-                MediaViewModel[] files = items.OfType<IStorageFile>().Select(f => _mediaFactory.GetSingleton(f)).ToArray();
+                MediaViewModel[] files = items.OfType<StorageFile>().Select(f => _mediaFactory.GetSingleton(f)).ToArray();
                 if (files.Length == 0) return;
                 Messenger.Send(new QueuePlaylistMessage(files));
             }

@@ -224,7 +224,7 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnCurrentItemChanged(MediaViewModel? value)
         {
-            if (value is { Source: IStorageItem item })
+            if (value is FileMediaViewModel { File: { } item })
             {
                 _filesService.AddToRecent(item);
             }
@@ -451,7 +451,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (media.Item == null
                 || media.Item.Media is { IsParsed: true, SubItems.Count: 0 }
-                || (media.Source is IStorageFile file && !file.IsSupportedPlaylist())
+                || (media is FileMediaViewModel { File: { } file } && !file.IsSupportedPlaylist())
                 || await RecursiveParsePlaylistAsync(media) is not { Count: > 0 } playlist)
             {
                 Items.Add(media);
@@ -462,7 +462,7 @@ namespace Screenbox.Core.ViewModels
             return playlist[0];
         }
 
-        private async Task<MediaViewModel> EnqueueAsync(IStorageFile file)
+        private async Task<MediaViewModel> EnqueueAsync(StorageFile file)
         {
             MediaViewModel media = _mediaFactory.GetSingleton(file);
             if (file.IsSupportedPlaylist() && await RecursiveParsePlaylistAsync(media) is { Count: > 0 } playlist)
@@ -496,7 +496,7 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<MediaViewModel?> DispatchEnqueueAsync(object value) => value switch
         {
-            IStorageFile file => await EnqueueAsync(file),
+            StorageFile file => await EnqueueAsync(file),
             Uri uri => await EnqueueAsync(uri),
             IReadOnlyList<IStorageItem> files => await EnqueueAsync(files),
             MediaViewModel media => await EnqueueAsync(media),
@@ -565,7 +565,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (Items.Count == 0 || CurrentItem == null) return;
             int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is IStorageFile file)
+            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem is FileMediaViewModel { File: { } file })
             {
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
@@ -603,7 +603,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is IStorageFile file)
+            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem is FileMediaViewModel { File: { } file })
             {
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)
