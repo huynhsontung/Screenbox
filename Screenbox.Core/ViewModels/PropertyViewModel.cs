@@ -80,7 +80,7 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            if (media.Source is StorageFile file)
+            if (media is FileMediaViewModel { File: { } file })
             {
                 CanNavigateToFile = true;
                 _mediaFile = file;

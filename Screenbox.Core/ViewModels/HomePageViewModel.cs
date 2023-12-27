@@ -49,7 +49,7 @@ namespace Screenbox.Core.ViewModels
 
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
-            if (message.Value is { Source: IStorageItem } && _settingsService.ShowRecent)
+            if (message.Value is FileMediaViewModel && _settingsService.ShowRecent)
             {
                 await UpdateRecentMediaListAsync().ConfigureAwait(false);
             }
@@ -180,7 +180,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     Recent.Add(new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
                 }
-                else if (Recent[i].Media.Source is IStorageItem existing)
+                else if (Recent[i].Media is FileMediaViewModel { File: { } existing })
                 {
                     try
                     {
@@ -213,7 +213,7 @@ namespace Screenbox.Core.ViewModels
             int existingIndex = -1;
             for (int j = desiredIndex + 1; j < Recent.Count; j++)
             {
-                if (file.IsEqual(Recent[j].Media.Source as IStorageItem))
+                if (Recent[j].Media is FileMediaViewModel { File: { } existingFile } && file.IsEqual(existingFile))
                 {
                     existingIndex = j;
                     break;

@@ -72,7 +72,7 @@ public sealed class FileMediaViewModel : MediaViewModel
 
     private async Task LoadDetailsInternalAsync()
     {
-        if (Source is not StorageFile { IsAvailable: true } file) return;
+        if (!File.IsAvailable) return;
         string[] additionalPropertyKeys =
         {
                 SystemProperties.Title,
@@ -82,13 +82,13 @@ public sealed class FileMediaViewModel : MediaViewModel
 
         try
         {
-            IDictionary<string, object> additionalProperties = await file.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
+            IDictionary<string, object> additionalProperties = await File.Properties.RetrievePropertiesAsync(additionalPropertyKeys);
             if (additionalProperties[SystemProperties.Title] is string name && !string.IsNullOrEmpty(name))
             {
                 Name = name;
-                if (MediaType == MediaPlaybackType.Video && name != file.Name)
+                if (MediaType == MediaPlaybackType.Video && name != File.Name)
                 {
-                    AltCaption = file.Name;
+                    AltCaption = File.Name;
                 }
             }
 
@@ -99,15 +99,15 @@ public sealed class FileMediaViewModel : MediaViewModel
                 Caption = Humanizer.ToDuration(duration);
             }
 
-            BasicProperties ??= await file.GetBasicPropertiesAsync();
+            BasicProperties ??= await File.GetBasicPropertiesAsync();
 
             switch (MediaType)
             {
                 case MediaPlaybackType.Video:
-                    VideoProperties ??= await file.Properties.GetVideoPropertiesAsync();
+                    VideoProperties ??= await File.Properties.GetVideoPropertiesAsync();
                     break;
                 case MediaPlaybackType.Music:
-                    MusicProperties ??= await file.Properties.GetMusicPropertiesAsync();
+                    MusicProperties ??= await File.Properties.GetMusicPropertiesAsync();
                     if (MusicProperties != null)
                     {
                         TrackNumber = MusicProperties.TrackNumber;
@@ -156,9 +156,9 @@ public sealed class FileMediaViewModel : MediaViewModel
 
     private async Task LoadThumbnailInternalAsync()
     {
-        if (Thumbnail == null && Source is StorageFile file)
+        if (Thumbnail == null)
         {
-            StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(file);
+            StorageItemThumbnail? source = ThumbnailSource = await _filesService.GetThumbnailAsync(File);
             if (source == null) return;
             BitmapImage image = new();
             await image.SetSourceAsync(ThumbnailSource);
