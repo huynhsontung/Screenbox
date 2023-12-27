@@ -30,7 +30,7 @@ namespace Screenbox.Core.ViewModels
         public PlaybackItem? Item
         {
             get => _item ?? GetPlaybackItem();
-            internal set => _loaded = (_item = value) != null;
+            internal set => _loaded = (_item = value) != null;  // Only set on init. Don't need to worry about clean up in this case.
         }
 
         public IReadOnlyList<string> Options { get; }
