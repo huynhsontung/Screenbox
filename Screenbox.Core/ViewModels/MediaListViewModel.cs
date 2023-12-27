@@ -687,11 +687,9 @@ namespace Screenbox.Core.ViewModels
                 MediaParsedStatus parsedStatus = media.ParsedStatus;
                 if (!media.IsParsed)
                 {
-                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork | MediaParseOptions.DoInteract,
-                        5000, cts.Token);
+                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 5000, cts.Token);
                 }
 
-                // Only playlist with more than 1 sub items should be insert into the current playlist
                 if (parsedStatus != MediaParsedStatus.Done) return Array.Empty<MediaViewModel>();
                 IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
                 return playlist.ToList();
