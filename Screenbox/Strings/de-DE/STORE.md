@@ -1,29 +1,29 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox Media-Player
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox ist ein moderner Mediaplayer für alle Ihre Geräte, mit Unterstützung für eine Vielzahl von Dateiformaten.**
 
-### Description
+### Beschreibung
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox ist ein moderner Mediaplayer, der danach strebt, die klassische Anwendung neu zu gestalten. Screenbox bietet eine schlanke und intuitive Benutzeroberfläche, die sich an die Leistungsfähigkeit Ihres Systems anpassen kann. Entworfen für eine nahtlose Erfahrung auf verschiedenen Windows-Geräten und Xbox-Konsolen, ist Screenbox schnell, leicht und leistungsstark.
 
-Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+Screenbox unterstützt viele gängige Dateiformate und Codecs, was sicherstellt, dass Sie fast alle Medien ohne zusätzliche Add-ons abspielen können. Egal, ob Sie Inhalte online streamen oder lokal gespeicherte Dateien abspielen, Screenbox kann's.
 
-Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+Unterstützt von LibVLC, Screenbox kombiniert das Beste des VLC Media Players mit modernen Windows-App-Funktionen. Mit Screenbox können Sie sogar erweiterte Wiedergabeoptionen aktivieren, indem Sie VLC-Kommandozeilenargumente verwenden, wie zum Beispiel die Wiedergabe mehrerer Audiostreams auf einmal.
 
-List of all currently supported file formats:
+Liste aller derzeit unterstützten Dateiformate:
 
 • Audio:  <!-- List of supported audio formats. -->
 • Video:  <!-- List of supported video formats. -->
-• Playlist: <!-- List of supported playlist formats. -->
+• Playlisten: <!-- List of supported playlist formats. -->
 
-Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+Sehen Sie nicht das Format das Sie brauchen? Zögern Sie nicht, uns zu kontaktieren und es wissen zu lassen. Screenbox wird öffentlich entworfen und gebaut. Helfen Sie uns, einen besseren Mediaplayer für alle zu erstellen!
 
-### Features
+### Funktionen
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Ein modernes Benutzererlebnis mit Gestenunterstützung, optimiert für alle Arten von Windows-Geräten.
+- Unterstützung vieler Audio- und Videoformate.
+- Durchsuchen und verwalten Sie Ihre Musik- und Videobibliothek auf Ihrem Rechner oder im Netzwerk.
+- Übertragen Sie Ihre Medien mit Chromecast auf eine Vielzahl von Geräten.
+- Arbeiten und genießen Sie gleichzeitig Ihre Medien im Bild-in-Bild-Modus.
