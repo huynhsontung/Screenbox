@@ -412,7 +412,7 @@
     <value>Shuffle: An</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>Weitermachen, wo Sie aufgehört haben</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
     <value>Zu {0} gehen</value>
@@ -541,20 +541,20 @@
     <value>Ausfüllen</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Benutzerdefiniertes Seitenverhältnis</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Benutzerdefinierte Wiedergabegeschwindigkeit</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Aus</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Skalierung: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>Untertitel: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
@@ -562,13 +562,13 @@
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Untertitel hinzufügen</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Audio</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>Über</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
     <value>Allgemein</value>
@@ -729,10 +729,10 @@
     <value>Optionen</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Zeitversetzung</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Komponisten</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>Ordner konnte nicht hinzugefügt werden</value>
@@ -744,21 +744,21 @@
     <value>Künstler öffnen</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Bibliotheken aktualisieren</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Aktualisieren</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Indexer für das Scannen verwenden</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Beschleunigen Sie das Scannen der Bibliothek, indem Sie den Systemindex verwenden, wenn er verfügbar ist. Deaktivieren Sie dies, wenn Sie nicht alle Medien in Ihrer Bibliothek sehen.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Systemindizierungseinstellungen verwalten</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Argumente festlegen</value>
   </data>
 </root>
