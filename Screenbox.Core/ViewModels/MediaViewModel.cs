@@ -24,6 +24,8 @@ namespace Screenbox.Core.ViewModels
 
         public object Source { get; }
 
+        public string Id { get; protected set; }
+
         public StorageItemThumbnail? ThumbnailSource { get; set; }
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
@@ -81,13 +83,14 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            Id = source.Id;
         }
 
         protected MediaViewModel(object source, IMediaService mediaService)
         {
             _mediaService = mediaService;
             Source = source;
-
+            Id = string.Empty;
             Location = string.Empty;
             _name = string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
@@ -101,6 +104,7 @@ namespace Screenbox.Core.ViewModels
             : this(media, mediaService)
         {
             Location = media.Mrl;
+            Id = Location;
 
             // Media is already loaded, create PlaybackItem
             _loaded = true;

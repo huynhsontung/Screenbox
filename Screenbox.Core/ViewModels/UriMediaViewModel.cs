@@ -14,6 +14,7 @@ public sealed class UriMediaViewModel : MediaViewModel
     {
         Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         Location = uri.ToString();
+        Id = Location;
         Uri = uri;
     }
 

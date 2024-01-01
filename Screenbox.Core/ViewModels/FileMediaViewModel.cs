@@ -36,6 +36,7 @@ public sealed class FileMediaViewModel : MediaViewModel
         Name = file.Name;
         MediaType = GetMediaTypeForFile(file);
         Location = file.Path;
+        Id = file.FolderRelativeId;
         File = file;
     }
 
