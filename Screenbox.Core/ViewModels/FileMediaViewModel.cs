@@ -2,6 +2,7 @@
 
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -75,10 +76,10 @@ public sealed class FileMediaViewModel : MediaViewModel
         if (!File.IsAvailable) return;
         string[] additionalPropertyKeys =
         {
-                SystemProperties.Title,
-                SystemProperties.Music.Artist,
-                SystemProperties.Media.Duration
-            };
+            SystemProperties.Title,
+            SystemProperties.Music.Artist,
+            SystemProperties.Media.Duration
+        };
 
         try
         {
@@ -99,41 +100,42 @@ public sealed class FileMediaViewModel : MediaViewModel
                 Caption = Humanizer.ToDuration(duration);
             }
 
-            BasicProperties ??= await File.GetBasicPropertiesAsync();
+            BasicProperties basicProperties = await File.GetBasicPropertiesAsync();
 
             switch (MediaType)
             {
                 case MediaPlaybackType.Video:
-                    VideoProperties ??= await File.Properties.GetVideoPropertiesAsync();
+                    VideoProperties videoProperties = await File.Properties.GetVideoPropertiesAsync();
+                    MediaInfo = new MediaInfo(basicProperties, videoProperties);
                     break;
                 case MediaPlaybackType.Music:
-                    MusicProperties ??= await File.Properties.GetMusicPropertiesAsync();
-                    if (MusicProperties != null)
+                    MusicProperties musicProperties = await File.Properties.GetMusicPropertiesAsync();
+                    MediaInfo = new MediaInfo(basicProperties, musicProperties);
+
+                    // Update observable 
+                    TrackNumber = musicProperties.TrackNumber;
+                    Year = musicProperties.Year;
+                    Genre ??= musicProperties.Genre.Count > 0 ? musicProperties.Genre[0] : null;
+                    Album ??= _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, Year);
+
+                    if (Artists.Length == 0)
                     {
-                        TrackNumber = MusicProperties.TrackNumber;
-                        Year = MusicProperties.Year;
-                        Genre ??= MusicProperties.Genre.Count > 0 ? MusicProperties.Genre[0] : null;
-                        Album ??= _albumFactory.AddSongToAlbum(this, MusicProperties.Album, MusicProperties.AlbumArtist, Year);
+                        string[] contributingArtists =
+                            additionalProperties[SystemProperties.Music.Artist] as string[] ??
+                            Array.Empty<string>();
+                        Artists = _artistFactory.ParseArtists(contributingArtists, this);
+                    }
 
-                        if (Artists.Length == 0)
-                        {
-                            string[] contributingArtists =
-                                additionalProperties[SystemProperties.Music.Artist] as string[] ??
-                                Array.Empty<string>();
-                            Artists = _artistFactory.ParseArtists(contributingArtists, this);
-                        }
-
-                        if (string.IsNullOrEmpty(MusicProperties.Artist))
-                        {
-                            AltCaption = MusicProperties.Album;
-                        }
-                        else
-                        {
-                            Caption = MusicProperties.Artist;
-                            AltCaption = string.IsNullOrEmpty(MusicProperties.Album)
-                                ? MusicProperties.Artist
-                                : $"{MusicProperties.Artist} – {MusicProperties.Album}";
-                        }
+                    if (string.IsNullOrEmpty(musicProperties.Artist))
+                    {
+                        AltCaption = musicProperties.Album;
+                    }
+                    else
+                    {
+                        Caption = musicProperties.Artist;
+                        AltCaption = string.IsNullOrEmpty(musicProperties.Album)
+                            ? musicProperties.Artist
+                            : $"{musicProperties.Artist} – {musicProperties.Album}";
                     }
 
                     break;

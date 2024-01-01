@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
@@ -46,9 +47,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isMediaActive;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
-        [ObservableProperty] private BasicProperties? _basicProperties;
-        [ObservableProperty] private VideoProperties? _videoProperties;
-        [ObservableProperty] private MusicProperties? _musicProperties;
+        [ObservableProperty] private MediaInfo _mediaInfo;
         [ObservableProperty] private string? _genre;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
@@ -75,9 +74,7 @@ namespace Screenbox.Core.ViewModels
             _duration = source._duration;
             _thumbnail = source._thumbnail;
             _mediaType = source._mediaType;
-            _basicProperties = source._basicProperties;
-            _videoProperties = source._videoProperties;
-            _musicProperties = source._musicProperties;
+            _mediaInfo = source._mediaInfo;
             _genre = source._genre;
             _artists = source._artists;
             _album = source._album;
@@ -97,6 +94,7 @@ namespace Screenbox.Core.ViewModels
             Location = string.Empty;
             _name = string.Empty;
             _mediaType = MediaPlaybackType.Unknown;
+            _mediaInfo = new MediaInfo();
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
