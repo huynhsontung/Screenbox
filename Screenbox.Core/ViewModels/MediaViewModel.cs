@@ -178,8 +178,18 @@ namespace Screenbox.Core.ViewModels
             if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
                 MediaType = MediaPlaybackType.Music;
 
-            if (_item?.Media.Meta(MetadataType.Title) is { } title)
-                Name = title;
+            if (_item?.Media is { IsParsed: true } media)
+            {
+                if (media.Meta(MetadataType.Title) is { } title)
+                {
+                    Name = title;
+                }
+
+                VideoInfo videoProperties = MediaInfo.VideoProperties;
+                videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
+                videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
+                videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
+            }
 
             return Task.CompletedTask;
         }

@@ -83,7 +83,11 @@ public sealed record VideoInfo
     public uint Width { get; set; }
     public uint Height { get; set; }
     public uint Bitrate { get; set; }
+
+    /** VLC metadata **/
     public string ShowName { get; set; } = string.Empty;
+    public string Season { get; set; } = string.Empty;
+    public string Episode { get; set; } = string.Empty;
 
     public VideoInfo() { }
 

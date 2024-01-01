@@ -67,6 +67,7 @@ public sealed class FileMediaViewModel : MediaViewModel
     public override Task LoadDetailsAsync()
     {
         if (!_loadTask.IsCompleted) return _loadTask;
+        base.LoadDetailsAsync();
         _loadTask = LoadDetailsInternalAsync();
         return _loadTask;
     }
