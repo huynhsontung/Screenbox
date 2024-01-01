@@ -199,6 +199,6 @@
     <value>MPEG 傳輸串流</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPack 音訊</value>
   </data>
 </root>
