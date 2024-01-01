@@ -39,15 +39,8 @@ namespace Screenbox.Core.Factories
             return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : UnknownAlbum;
         }
 
-        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string? albumName = null, string? artistName = null, uint year = 0)
+        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
         {
-            albumName ??= song.MusicProperties?.Album ?? string.Empty;
-            artistName ??= song.MusicProperties?.AlbumArtist ?? string.Empty;
-            if (year == 0 && song.MusicProperties != null)
-            {
-                year = song.MusicProperties.Year;
-            }
-
             if (string.IsNullOrEmpty(albumName))
             {
                 UnknownAlbum.RelatedSongs.Add(song);

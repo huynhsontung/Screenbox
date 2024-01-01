@@ -32,7 +32,7 @@ namespace Screenbox.Core.Factories
         {
             if (artists.Length == 0)
             {
-                AddSongToArtist(song);
+                AddSongToArtist(song, string.Empty);
                 return new[] { UnknownArtist };
             }
 
@@ -61,9 +61,8 @@ namespace Screenbox.Core.Factories
             return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : UnknownArtist;
         }
 
-        public ArtistViewModel AddSongToArtist(MediaViewModel song, string? artistName = null)
+        public ArtistViewModel AddSongToArtist(MediaViewModel song, string artistName)
         {
-            artistName ??= song.MusicProperties?.Artist ?? string.Empty;
             if (string.IsNullOrEmpty(artistName))
             {
                 UnknownArtist.RelatedSongs.Add(song);

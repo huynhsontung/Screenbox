@@ -21,7 +21,7 @@ namespace Screenbox.Core.ViewModels
         public Dictionary<string, string> FileProperties { get; }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PropertyViewModel.OpenFileLocationCommand))]
+        [NotifyCanExecuteChangedFor(nameof(OpenFileLocationCommand))]
         private bool _canNavigateToFile;
 
         private readonly IFilesService _filesService;
@@ -42,41 +42,38 @@ namespace Screenbox.Core.ViewModels
         {
             switch (media.MediaType)
             {
-                case MediaPlaybackType.Video when media.VideoProperties != null:
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTitle)] = string.IsNullOrEmpty(media.VideoProperties.Title)
+                case MediaPlaybackType.Video:
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTitle)] = string.IsNullOrEmpty(media.MediaInfo.VideoProperties.Title)
                         ? media.Name
-                        : media.VideoProperties.Title;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertySubtitle)] = media.VideoProperties.Subtitle;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyYear)] = media.VideoProperties.Year > 0
-                        ? media.VideoProperties.Year.ToString()
+                        : media.MediaInfo.VideoProperties.Title;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertySubtitle)] = media.MediaInfo.VideoProperties.Subtitle;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyYear)] = media.MediaInfo.VideoProperties.Year > 0
+                        ? media.MediaInfo.VideoProperties.Year.ToString()
                         : string.Empty;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyProducers)] = string.Join("; ", media.VideoProperties.Producers);
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyWriters)] = string.Join("; ", media.VideoProperties.Writers);
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyLength)] = Humanizer.ToDuration(media.VideoProperties.Duration);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyProducers)] = string.Join("; ", media.MediaInfo.VideoProperties.Producers);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyWriters)] = string.Join("; ", media.MediaInfo.VideoProperties.Writers);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyLength)] = Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration);
 
-                    VideoProperties[_resourceService.GetString(ResourceName.PropertyResolution)] = $"{media.VideoProperties.Width}x{media.VideoProperties.Height}";
-                    VideoProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.VideoProperties.Bitrate / 1000} kbps";
+                    VideoProperties[_resourceService.GetString(ResourceName.PropertyResolution)] = $"{media.MediaInfo.VideoProperties.Width}x{media.MediaInfo.VideoProperties.Height}";
+                    VideoProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps";
 
-                    if (media.MusicProperties != null)
-                    {
-                        AudioProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MusicProperties.Bitrate / 1000} kbps";
-                    }
+                    AudioProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
                     break;
 
-                case MediaPlaybackType.Music when media.MusicProperties != null:
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTitle)] = media.MusicProperties.Title;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyContributingArtists)] = media.MusicProperties.Artist;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbum)] = media.MusicProperties.Album;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbumArtist)] = media.MusicProperties.AlbumArtist;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyComposers)] = string.Join("; ", media.MusicProperties.Composers);
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyGenre)] = string.Join("; ", media.MusicProperties.Genre);
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTrack)] = media.MusicProperties.TrackNumber.ToString();
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyYear)] = media.MusicProperties.Year > 0
-                        ? media.MusicProperties.Year.ToString()
+                case MediaPlaybackType.Music:
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTitle)] = media.MediaInfo.MusicProperties.Title;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyContributingArtists)] = media.MediaInfo.MusicProperties.Artist;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbum)] = media.MediaInfo.MusicProperties.Album;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyAlbumArtist)] = media.MediaInfo.MusicProperties.AlbumArtist;
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyComposers)] = string.Join("; ", media.MediaInfo.MusicProperties.Composers);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyGenre)] = string.Join("; ", media.MediaInfo.MusicProperties.Genre);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyTrack)] = media.MediaInfo.MusicProperties.TrackNumber.ToString();
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyYear)] = media.MediaInfo.MusicProperties.Year > 0
+                        ? media.MediaInfo.MusicProperties.Year.ToString()
                         : string.Empty;
-                    MediaProperties[_resourceService.GetString(ResourceName.PropertyLength)] = Humanizer.ToDuration(media.MusicProperties.Duration);
+                    MediaProperties[_resourceService.GetString(ResourceName.PropertyLength)] = Humanizer.ToDuration(media.MediaInfo.MusicProperties.Duration);
 
-                    AudioProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MusicProperties.Bitrate / 1000} kbps";
+                    AudioProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
                     break;
             }
 
@@ -87,15 +84,12 @@ namespace Screenbox.Core.ViewModels
 
                 FileProperties[_resourceService.GetString(ResourceName.PropertyFileType)] = file.FileType;
                 FileProperties[_resourceService.GetString(ResourceName.PropertyContentType)] = file.ContentType;
-                if (media.BasicProperties != null)
-                {
-                    FileProperties[_resourceService.GetString(ResourceName.PropertySize)] = BytesToHumanReadable((long)media.BasicProperties.Size);
-                    FileProperties[_resourceService.GetString(ResourceName.PropertyLastModified)] = media.BasicProperties.DateModified.ToString();
-                }
+                FileProperties[_resourceService.GetString(ResourceName.PropertySize)] = BytesToHumanReadable((long)media.MediaInfo.Size);
+                FileProperties[_resourceService.GetString(ResourceName.PropertyLastModified)] = media.MediaInfo.DateModified.ToString();
             }
         }
 
-        [RelayCommand(CanExecute = nameof(PropertyViewModel.CanNavigateToFile))]
+        [RelayCommand(CanExecute = nameof(CanNavigateToFile))]
         private void OpenFileLocation()
         {
             if (_mediaFile == null) return;

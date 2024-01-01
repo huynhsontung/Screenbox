@@ -150,7 +150,7 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Genre, Converter={StaticResource GenreTextConverter}}"
+            Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}}"
             Visibility="Collapsed" />
 
         <TextBlock
