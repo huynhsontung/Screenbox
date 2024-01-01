@@ -111,12 +111,7 @@ public sealed class FileMediaViewModel : MediaViewModel
                 case MediaPlaybackType.Music:
                     MusicProperties musicProperties = await File.Properties.GetMusicPropertiesAsync();
                     MediaInfo = new MediaInfo(basicProperties, musicProperties);
-
-                    // Update observable 
-                    TrackNumber = musicProperties.TrackNumber;
-                    Year = musicProperties.Year;
-                    Genre ??= musicProperties.Genre.Count > 0 ? musicProperties.Genre[0] : null;
-                    Album ??= _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, Year);
+                    Album ??= _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
 
                     if (Artists.Length == 0)
                     {

@@ -36,7 +36,8 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<string> Options { get; }
 
-        public string TrackNumberText => TrackNumber > 0 ? TrackNumber.ToString() : string.Empty;    // Helper for binding
+        public string TrackNumberText =>
+            MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
         private readonly IMediaService _mediaService;
         private readonly List<string> _options;
@@ -47,21 +48,18 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isMediaActive;
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
-        [ObservableProperty] private MediaInfo _mediaInfo;
-        [ObservableProperty] private string? _genre;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
-        [ObservableProperty] private uint _year;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TrackNumberText))]
+        private MediaInfo _mediaInfo;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(MainArtist))]
         private ArtistViewModel[] _artists;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(TrackNumberText))]
-        private uint _trackNumber;
 
         [ObservableProperty]
         private bool? _isPlaying;
@@ -75,7 +73,6 @@ namespace Screenbox.Core.ViewModels
             _thumbnail = source._thumbnail;
             _mediaType = source._mediaType;
             _mediaInfo = source._mediaInfo;
-            _genre = source._genre;
             _artists = source._artists;
             _album = source._album;
             _caption = source._caption;
