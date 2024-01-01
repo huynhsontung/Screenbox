@@ -292,7 +292,7 @@
       <Version>2.8.6</Version>
     </PackageReference>
     <PackageReference Include="protobuf-net">
-      <Version>3.1.33</Version>
+      <Version>3.2.30</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
