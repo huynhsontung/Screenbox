@@ -51,7 +51,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (message.Value is FileMediaViewModel && _settingsService.ShowRecent)
             {
-                await UpdateRecentMediaListAsync().ConfigureAwait(false);
+                await UpdateRecentMediaListAsync(false).ConfigureAwait(false);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Screenbox.Core.ViewModels
             // Update recent media
             if (_settingsService.ShowRecent)
             {
-                tasks.Add(UpdateRecentMediaListAsync());
+                tasks.Add(UpdateRecentMediaListAsync(true));
             }
             else
             {
@@ -142,7 +142,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private async Task UpdateRecentMediaListAsync()
+        private async Task UpdateRecentMediaListAsync(bool loadMediaDetails)
         {
             string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries
                 .OrderByDescending(x => x.Metadata)
@@ -202,6 +202,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             // Load media details for the remaining items
+            if (!loadMediaDetails) return;
             IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media.LoadDetailsAndThumbnailAsync());
             await Task.WhenAll(loadingTasks);
         }
