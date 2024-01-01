@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
-using ProtoBuf;
 using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,12 +16,14 @@ namespace Screenbox.Core.Helpers
         private const int Capacity = 64;
         private const string SaveFileName = "last_positions.bin";
 
+        private readonly IFilesService _filesService;
         private List<MediaLastPosition> _lastPositions;
         private MediaLastPosition? _updateCache;
         private string? _removeCache;
 
-        public LastPositionTracker()
+        public LastPositionTracker(IFilesService filesService)
         {
+            _filesService = filesService;
             _lastPositions = new List<MediaLastPosition>(Capacity + 1);
         }
 
@@ -77,35 +79,25 @@ namespace Screenbox.Core.Helpers
 
         public async Task SaveToDiskAsync()
         {
-            StorageFile file =
-                await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SaveFileName,
-                    CreationCollisionOption.OpenIfExists);
-            using Stream stream = await file.OpenStreamForWriteAsync();
-            Serializer.Serialize(stream, _lastPositions);
-            stream.SetLength(stream.Position);
+            await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
         }
 
         public async Task LoadFromDiskAsync()
         {
-            StorageFolder tempFolder = ApplicationData.Current.TemporaryFolder;
-            IStorageItem? item = await tempFolder.TryGetItemAsync(SaveFileName);
-            if (item is StorageFile file)
+            try
             {
-                try
-                {
-                    using Stream readStream = await file.OpenStreamForReadAsync();
-
-                    List<MediaLastPosition>? lastPositions = Serializer.Deserialize<List<MediaLastPosition>>(readStream);
-                    if (lastPositions != null)
-                    {
-                        lastPositions.Capacity = Capacity;
-                        _lastPositions = lastPositions;
-                    }
-                }
-                catch (Exception)
-                {
-                    // pass
-                }
+                List<MediaLastPosition> lastPositions =
+                    await _filesService.LoadFromDiskAsync<List<MediaLastPosition>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
+                lastPositions.Capacity = Capacity;
+                _lastPositions = lastPositions;
+            }
+            catch (FileNotFoundException)
+            {
+                // pass
+            }
+            catch (Exception)
+            {
+                // pass
             }
         }
     }
