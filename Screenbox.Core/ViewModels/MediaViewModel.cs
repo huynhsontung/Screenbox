@@ -180,11 +180,6 @@ namespace Screenbox.Core.ViewModels
 
             if (_item?.Media is { IsParsed: true } media)
             {
-                if (media.Meta(MetadataType.Title) is { } title)
-                {
-                    Name = title;
-                }
-
                 VideoInfo videoProperties = MediaInfo.VideoProperties;
                 videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
                 videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
