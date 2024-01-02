@@ -199,6 +199,6 @@
     <value>MPEG транспортный поток</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPack аудио</value>
   </data>
 </root>
