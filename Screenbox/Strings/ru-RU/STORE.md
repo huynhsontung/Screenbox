@@ -8,22 +8,22 @@
 
 Screenbox — это современный медиа плеер, который стремится создать свежий и новый вид классического приложения. Screenbox предоставляет элегантный и интуитивно понятный пользовательский интерфейс, который может адаптироваться под возможности вашей системы. Screenbox предназначен для бесшовного использования широкого спектра устройств Windows и консолей Xbox, является быстрым, легким и мощным.
 
-Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
+Screenbox поддерживает большинство распространённых форматов и кодеков, что обеспечивает возможность воспроизведения практически любого медиафайла без необходимости сторонних дополнений. Не важно, транслируете ли вы онлайн контент или проигрываете локальные файлы, Screenbox поможет справиться с вашими задачами.
 
-Powered by LibVLC, Screenbox combines all the best of VLC media player with modern Windows app capabilities. Screenbox even allows you to enable advanced playback options by using VLC command-line arguments, such as playing many audio streams at once.
+Работая на LibVLC, Screenbox сочетает в себе все лучшее из медиа плеера VLC с современными возможностями приложения Windows. Screenbox даже позволяет включить дополнительные параметры воспроизведения, используя аргументы командной строки VLC, такие как воспроизведение многих аудио потоков одновременно.
 
-List of all currently supported file formats:
+Список всех поддерживаемых форматов:
 
-• Audio:  <!-- List of supported audio formats. -->
-• Video:  <!-- List of supported video formats. -->
-• Playlist: <!-- List of supported playlist formats. -->
+• Аудио:  <!-- List of supported audio formats. -->
+• Видео:  <!-- List of supported video formats. -->
+• Плейлист: <!-- List of supported playlist formats. -->
 
-Don't see the format you need? Feel free to reach out and let us know. Screenbox is designed and built in the open. Help us build a better media player for everyone!
+Не нашли нужный вам формат? Не стесняйтесь поделиться с нами вашими предложениями. Screenbox спроектирован и построен с нуля. Помогите нам создать лучший медиа плеер для всех!
 
-### Features
+### Возможности
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Современный пользовательский интерфейс с поддержкой жестов, оптимизирован для всех типов устройств под управлением Windows.
+- Поддержка многих форматов аудио и видео.
+- Просмотр и управление музыкой и видео библиотекой на вашем устройстве или в сети.
+- Трансляция медиафайлов на широкий спектр устройств при помощи Chromecast.
+- Работайте и наслаждайтесь мультимедиа одновременно с помощью режима "картинка-в-картинке".
