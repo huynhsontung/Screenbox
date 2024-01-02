@@ -1,12 +1,12 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Мультимедийный плеер Screenbox
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox — это современный мультимедийный проигрыватель для всех ваших устройств с поддержкой широкого диапазона форматов файлов.**
 
-### Description
+### Описание
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. Screenbox offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox — это современный медиа плеер, который стремится создать свежий и новый вид классического приложения. Screenbox предоставляет элегантный и интуитивно понятный пользовательский интерфейс, который может адаптироваться под возможности вашей системы. Screenbox предназначен для бесшовного использования широкого спектра устройств Windows и консолей Xbox, является быстрым, легким и мощным.
 
 Screenbox supports many common file formats and codecs, which ensures that you can play almost any media without the need for additional add-ons. Whether you're streaming content online or playing locally stored files, Screenbox got you covered.
 
