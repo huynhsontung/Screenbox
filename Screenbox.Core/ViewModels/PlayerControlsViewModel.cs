@@ -369,7 +369,7 @@ namespace Screenbox.Core.ViewModels
             {
                 try
                 {
-                    StorageFile file = await _filesService.SaveSnapshotAsync(_mediaPlayer);
+                    StorageFile file = await SaveSnapshotInternalAsync(_mediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
                 catch (UnauthorizedAccessException)
@@ -382,6 +382,37 @@ namespace Screenbox.Core.ViewModels
                         _resourceService.GetString(ResourceName.FailedToSaveFrameNotificationTitle), e.ToString()));
                     // TODO: track error
                 }
+            }
+        }
+
+        private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
+        {
+            if (mediaPlayer is not VlcMediaPlayer player)
+            {
+                throw new NotImplementedException("Not supported on non VLC players");
+            }
+
+            StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
+                $"snapshot_{DateTimeOffset.Now.Ticks}",
+                CreationCollisionOption.FailIfExists);
+
+            try
+            {
+                if (!player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
+                    throw new Exception("VLC failed to save snapshot");
+
+                StorageFile file = (await tempFolder.GetFilesAsync())[0];
+                StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
+                StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
+                StorageFolder destFolder =
+                    await defaultSaveFolder.CreateFolderAsync("Screenbox",
+                        CreationCollisionOption.OpenIfExists);
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                    NameCollisionOption.GenerateUniqueName);
+            }
+            finally
+            {
+                await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
         }
 
