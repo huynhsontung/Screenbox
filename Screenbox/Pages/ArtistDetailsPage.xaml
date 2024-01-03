@@ -213,7 +213,8 @@
                     <Button
                         AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                         Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                        XYFocusDown="{x:Bind ItemList}">
+                        XYFocusDown="{x:Bind ItemList}"
+                        XYFocusLeft="{x:Bind PlayButton}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xe8b1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
@@ -229,6 +230,7 @@
             Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,0,0,4"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemsSource="{x:Bind AlbumSource.View}"
@@ -269,7 +271,7 @@
                             <Setter Property="HorizontalContentAlignment" Value="Left" />
                             <Setter Property="VerticalContentAlignment" Value="Top" />
                             <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}" />
-                            <!--  Remove Header from navigation  -->
+                            <!--  Remove Header from XYNavigation  -->
                             <Setter Property="IsTabStop" Value="False" />
                             <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
                             <Setter Property="Template">
