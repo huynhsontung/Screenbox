@@ -369,7 +369,7 @@ namespace Screenbox.Core.ViewModels
             {
                 try
                 {
-                    StorageFile file = await SaveSnapshotAsync(_mediaPlayer);
+                    StorageFile file = await SaveSnapshotInternalAsync(_mediaPlayer);
                     Messenger.Send(new RaiseFrameSavedNotificationMessage(file));
                 }
                 catch (UnauthorizedAccessException)
@@ -385,7 +385,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private static async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer)
+        private static async Task<StorageFile> SaveSnapshotInternalAsync(IMediaPlayer mediaPlayer)
         {
             if (mediaPlayer is not VlcMediaPlayer player)
             {
