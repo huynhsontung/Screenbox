@@ -38,6 +38,8 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<string> Options { get; }
 
+        public MediaPlaybackType MediaType => MediaInfo.MediaType;
+
         public string TrackNumberText =>
             MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
@@ -51,7 +53,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private AlbumViewModel? _album;
-        [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
 
@@ -73,7 +74,6 @@ namespace Screenbox.Core.ViewModels
             _name = source._name;
             _duration = source._duration;
             _thumbnail = source._thumbnail;
-            _mediaType = source._mediaType;
             _mediaInfo = source._mediaInfo;
             _artists = source._artists;
             _album = source._album;
@@ -93,7 +93,6 @@ namespace Screenbox.Core.ViewModels
             Id = string.Empty;
             Location = string.Empty;
             _name = string.Empty;
-            _mediaType = MediaPlaybackType.Unknown;
             _mediaInfo = new MediaInfo();
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
@@ -179,8 +178,8 @@ namespace Screenbox.Core.ViewModels
         {
             // Update media type when it was previously set Unknown. Usually when source is an URI.
             // We don't want to init PlaybackItem just for this.
-            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
-                MediaType = MediaPlaybackType.Music;
+            if (MediaInfo.MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
+                MediaInfo.MediaType = MediaPlaybackType.Music;
 
             if (_item?.Media is { IsParsed: true } media)
             {

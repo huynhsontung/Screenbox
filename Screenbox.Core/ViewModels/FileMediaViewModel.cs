@@ -34,7 +34,7 @@ public sealed class FileMediaViewModel : MediaViewModel
         _loadThumbnailTask = Task.CompletedTask;
 
         Name = file.Name;
-        MediaType = GetMediaTypeForFile(file);
+        MediaInfo.MediaType = GetMediaTypeForFile(file);
         Location = file.Path;
         Id = file.FolderRelativeId;
         File = file;
