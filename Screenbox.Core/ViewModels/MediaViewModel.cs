@@ -180,6 +180,22 @@ namespace Screenbox.Core.ViewModels
 
             if (_item?.Media is { IsParsed: true } media)
             {
+                if (media.Meta(MetadataType.Title) is { } title && !title.StartsWith('{'))
+                {
+                    Name = title;
+                }
+
+                string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
+                if (!string.IsNullOrEmpty(artist))
+                {
+                    Caption = artist;
+                }
+
+                if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
+                {
+                    AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
+                }
+
                 VideoInfo videoProperties = MediaInfo.VideoProperties;
                 videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
                 videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
