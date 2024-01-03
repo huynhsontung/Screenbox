@@ -72,6 +72,22 @@ namespace Screenbox.Core.Factories
             return instance;
         }
 
+        public MediaViewModel GetSingleton(string id, Uri uri)
+        {
+            if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+                reference.TryGetTarget(out MediaViewModel instance)) return instance;
+
+            // No existing reference, create new instance
+            instance = new UriMediaViewModel(_mediaService, uri);
+            if (!string.IsNullOrEmpty(id))
+            {
+                _references[id] = new WeakReference<MediaViewModel>(instance);
+                CleanUpStaleReferences();
+            }
+
+            return instance;
+        }
+
         private void CleanUpStaleReferences()
         {
             if (_references.Count < _referencesCleanUpThreshold) return;
