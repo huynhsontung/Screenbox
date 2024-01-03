@@ -85,6 +85,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     IsItemClickEnabled="True"
+                    ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     Loaded="SongListView_OnLoaded"
                     SelectionMode="None">

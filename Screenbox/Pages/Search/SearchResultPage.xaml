@@ -130,6 +130,7 @@
                         extensions:ListViewExtensions.ItemCornerRadius="8"
                         extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                        ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         SelectionMode="None">
                         <ListView.Resources>
