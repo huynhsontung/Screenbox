@@ -313,6 +313,17 @@
             <uap:Logo>Assets\Icons\Video\FileAssociationWV.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="aiff">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="audio/aiff">.aiff</uap:FileType>
+              <uap:FileType ContentType="audio/aiff">.aif</uap:FileType>
+              <uap:FileType ContentType="audio/aiff">.aifc</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAIFF</uap:DisplayName>
+            <uap:EditFlags OpenIsSafe="true"/>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
        </Extensions>
     </Application>
   </Applications>
