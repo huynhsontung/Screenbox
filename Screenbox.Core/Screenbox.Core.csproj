@@ -184,11 +184,14 @@
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />
+    <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
+    <Compile Include="Models\PersistentSongRecord.cs" />
+    <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
