@@ -19,7 +19,7 @@ namespace Screenbox.Core.Factories
 
         private readonly Dictionary<string, ArtistViewModel> _allArtists;
 
-        private static readonly string[] ArtistNameSeparators = { " & ", ", ", "; " };
+        private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
 
         public ArtistViewModelFactory(IResourceService resourceService)
         {
@@ -53,7 +53,7 @@ namespace Screenbox.Core.Factories
             }
 
             return artistNames
-                .Select(artist => AddSongToArtist(song, artist))
+                .Select(artist => AddSongToArtist(song, artist.Trim()))
                 .ToArray();
         }
 
