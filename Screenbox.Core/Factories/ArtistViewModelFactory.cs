@@ -19,13 +19,18 @@ namespace Screenbox.Core.Factories
 
         private readonly Dictionary<string, ArtistViewModel> _allArtists;
 
-        private static readonly string[] ArtistNameSeparators = { " & ", ", " };
+        private static readonly string[] ArtistNameSeparators = { " & ", ", ", "; " };
 
         public ArtistViewModelFactory(IResourceService resourceService)
         {
             _allArtists = new Dictionary<string, ArtistViewModel>();
             AllArtists = _allArtists.Values;
             UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
+        }
+
+        public ArtistViewModel[] ParseArtists(string artist, MediaViewModel song)
+        {
+            return ParseArtists(artist.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries), song);
         }
 
         public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)

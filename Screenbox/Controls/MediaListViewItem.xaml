@@ -162,7 +162,7 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
+            Text="{Binding DurationText}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ActivityStates">

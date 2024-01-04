@@ -217,6 +217,7 @@ namespace Screenbox.Core.Services
             foreach (MediaViewModel media in target)
             {
                 // Expect UI thread
+                media.IsFromLibrary = true;
                 await media.LoadDetailsAsync();
                 cancellationToken.ThrowIfCancellationRequested();
             }

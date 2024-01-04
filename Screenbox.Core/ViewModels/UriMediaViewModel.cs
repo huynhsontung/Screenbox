@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Factories;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
@@ -9,8 +10,8 @@ public sealed class UriMediaViewModel : MediaViewModel
 {
     public Uri Uri { get; }
 
-    public UriMediaViewModel(IMediaService mediaService, Uri uri)
-        : base(uri, mediaService)
+    public UriMediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Uri uri)
+        : base(uri, mediaService, albumFactory, artistFactory)
     {
         Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         Location = uri.ToString();

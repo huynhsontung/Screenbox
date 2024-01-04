@@ -88,7 +88,7 @@ namespace Screenbox.Core.ViewModels
             TimeSpan duration = TimeSpan.Zero;
             foreach (MediaViewModel item in items)
             {
-                duration += item.Duration ?? TimeSpan.Zero;
+                duration += item.Duration;
             }
 
             return duration;
