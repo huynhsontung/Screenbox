@@ -6,6 +6,7 @@
     xmlns:core="using:Screenbox.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     Width="280"
@@ -41,7 +42,7 @@
             ItemsSource="{x:Bind ViewModel.Renderers}"
             SelectedItem="{x:Bind ViewModel.SelectedRenderer, Mode=TwoWay}">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="core:Renderer">
+                <DataTemplate x:DataType="models:Renderer">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
                             Margin="0,0,8,0"

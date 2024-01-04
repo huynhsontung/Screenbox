@@ -1,10 +1,9 @@
 ﻿#nullable enable
 
 using System.Collections.Generic;
-
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
-namespace Screenbox.Core
+namespace Screenbox.Core.Models
 {
     public sealed record PlaylistInfo(IReadOnlyCollection<MediaViewModel> Playlist, MediaViewModel? ActiveItem, int ActiveIndex, object? LastUpdate)
     {

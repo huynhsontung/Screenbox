@@ -13,6 +13,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     Loaded="{x:Bind ViewModel.OnLoaded}"
     mc:Ignorable="d">
 
@@ -85,7 +86,7 @@
                 </MenuFlyoutItem>
             </MenuFlyout>
 
-            <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="core:MediaViewModelWithMruToken">
+            <DataTemplate x:Key="StorageItemGridViewTemplate" x:DataType="viewModels:MediaViewModelWithMruToken">
                 <UserControl>
                     <Grid
                         Width="{StaticResource StorageItemGridViewItemWidth}"

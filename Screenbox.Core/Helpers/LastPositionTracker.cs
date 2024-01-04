@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
+using ProtoBuf;
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
 using System.IO;
 using System.Linq;
-using ProtoBuf;
-using Screenbox.Core.Database;
+using System.Threading.Tasks;
+using Windows.Storage;
 
-namespace Screenbox.Core
+namespace Screenbox.Core.Helpers
 {
     internal class LastPositionTracker
     {

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Screenbox.Core.ViewModels;
-
+﻿using Screenbox.Core.ViewModels;
+using System.Collections.Generic;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
-namespace Screenbox.Core
+namespace Screenbox.Core.Models
 {
     public class SearchResult
     {
