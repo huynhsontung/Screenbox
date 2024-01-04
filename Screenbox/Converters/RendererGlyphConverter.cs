@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Models;
 using System;
 using Windows.UI.Xaml.Data;
-using Screenbox.Core;
 
 namespace Screenbox.Converters
 {

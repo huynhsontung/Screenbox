@@ -3,6 +3,7 @@
 using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
+using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 

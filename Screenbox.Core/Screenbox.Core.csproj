@@ -145,6 +145,7 @@
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
+    <Compile Include="Helpers\LastPositionTracker.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
@@ -180,7 +181,6 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
-    <Compile Include="Models\LastPositionTracker.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />

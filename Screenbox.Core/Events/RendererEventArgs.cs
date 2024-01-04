@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Screenbox.Core.Models;
+using System;
 
 namespace Screenbox.Core.Events
 {

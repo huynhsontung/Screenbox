@@ -16,6 +16,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
+using Screenbox.Core.Models;
 
 namespace Screenbox.Core.ViewModels
 {
