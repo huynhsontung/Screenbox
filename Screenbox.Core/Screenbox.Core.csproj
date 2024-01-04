@@ -183,7 +183,7 @@
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
-    <Compile Include="ViewModels\MediaViewModelWithMruToken.cs" />
+    <Compile Include="Models\MediaViewModelWithMruToken.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />

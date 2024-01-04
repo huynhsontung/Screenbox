@@ -1,5 +1,7 @@
 ﻿
-namespace Screenbox.Core.ViewModels
+using Screenbox.Core.ViewModels;
+
+namespace Screenbox.Core.Models
 {
     public record MediaViewModelWithMruToken(string Token, MediaViewModel Media)
     {
