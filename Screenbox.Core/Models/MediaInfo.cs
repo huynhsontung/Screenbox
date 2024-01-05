@@ -23,6 +23,20 @@ public sealed record MediaInfo
         MusicProperties = new MusicInfo();
     }
 
+    public MediaInfo(MusicInfo musicProperties)
+    {
+        MediaType = MediaPlaybackType.Music;
+        MusicProperties = musicProperties;
+        VideoProperties = new VideoInfo();
+    }
+
+    public MediaInfo(VideoInfo videoProperties)
+    {
+        MediaType = MediaPlaybackType.Video;
+        MusicProperties = new MusicInfo();
+        VideoProperties = videoProperties;
+    }
+
     public MediaInfo(BasicProperties basicProperties, MusicProperties musicProperties)
     {
         Size = basicProperties.Size;

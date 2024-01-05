@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
-using Screenbox.Core.Models;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -123,7 +123,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchMusicAsync();
+                await _libraryService.FetchMusicAsync(true);
             }
             catch (UnauthorizedAccessException)
             {

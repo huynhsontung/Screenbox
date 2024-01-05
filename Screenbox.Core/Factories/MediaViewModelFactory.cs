@@ -78,7 +78,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new UriMediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
+            instance = new UriMediaViewModel(_mediaService, _albumFactory, _artistFactory, uri, id);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);

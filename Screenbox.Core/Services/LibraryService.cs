@@ -31,6 +31,7 @@ namespace Screenbox.Core.Services
         private bool UseIndexer => _settingsService.UseIndexer;
 
         private readonly ISettingsService _settingsService;
+        private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
@@ -44,10 +45,13 @@ namespace Screenbox.Core.Services
         private CancellationTokenSource? _musicFetchCts;
         private CancellationTokenSource? _videosFetchCts;
 
-        public LibraryService(ISettingsService settingsService, MediaViewModelFactory mediaFactory,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
+        private const string SongsCacheFileName = "songs.bin";
+
+        public LibraryService(ISettingsService settingsService, IFilesService filesService,
+            MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
             _settingsService = settingsService;
+            _filesService = filesService;
             _mediaFactory = mediaFactory;
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
@@ -81,13 +85,24 @@ namespace Screenbox.Core.Services
             return _videos.AsReadOnly();
         }
 
-        public async Task FetchMusicAsync()
+        public async Task FetchMusicAsync(bool useCache)
         {
             _musicFetchCts?.Cancel();
             using CancellationTokenSource cts = new();
             _musicFetchCts = cts;
             try
             {
+                if (useCache)
+                {
+                    List<MediaViewModel> songs = await LoadSongsCacheAsync(cts.Token);
+                    if (songs.Count > 0)
+                    {
+                        _songs = songs;
+                        MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+                        return;
+                    }
+                }
+
                 await FetchMusicCancelableAsync(cts.Token);
             }
             catch (OperationCanceledException)
@@ -133,6 +148,40 @@ namespace Screenbox.Core.Services
             _videos.Remove(media);
         }
 
+        private async Task CacheSongsAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentSongRecord> records = _songs.Select(song =>
+                new PersistentSongRecord(song.Id, song.Name, song.Location, song.MediaInfo.MusicProperties)).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+            await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, SongsCacheFileName, records);
+        }
+
+        private async Task<List<MediaViewModel>> LoadSongsCacheAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentSongRecord> records;
+            try
+            {
+                records = await _filesService.LoadFromDiskAsync<List<PersistentSongRecord>>(ApplicationData.Current.LocalFolder, SongsCacheFileName);
+            }
+            catch (Exception)
+            {
+                // FileNotFoundException
+                // UnauthorizedAccessException
+                return new List<MediaViewModel>();
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            List<MediaViewModel> songs = records.Select(record =>
+            {
+                MediaViewModel media = _mediaFactory.GetSingleton(record.Id, new Uri(record.Path));
+                media.IsFromLibrary = true;
+                media.Name = record.Title;
+                media.MediaInfo = new MediaInfo(record.Properties);
+                return media;
+            }).ToList();
+            return songs;
+        }
+
         private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
         {
             IsLoadingMusic = true;
@@ -166,6 +215,7 @@ namespace Screenbox.Core.Services
             }
 
             MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+            await CacheSongsAsync(cancellationToken);
         }
 
         private async Task FetchVideosCancelableAsync(CancellationToken cancellationToken)
@@ -291,7 +341,7 @@ namespace Screenbox.Core.Services
 
         private void OnMusicLibraryContentChanged(object sender, object args)
         {
-            async void FetchAction() => await FetchMusicAsync();
+            async void FetchAction() => await FetchMusicAsync(false);
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
         }

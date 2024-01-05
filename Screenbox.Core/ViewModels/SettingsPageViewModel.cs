@@ -142,7 +142,7 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private async Task RefreshLibrariesAsync()
         {
-            await Task.WhenAll(_libraryService.FetchMusicAsync(), _libraryService.FetchVideosAsync());
+            await Task.WhenAll(_libraryService.FetchMusicAsync(false), _libraryService.FetchVideosAsync());
         }
 
         [RelayCommand]
