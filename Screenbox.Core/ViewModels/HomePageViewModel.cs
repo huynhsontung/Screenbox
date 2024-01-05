@@ -123,7 +123,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchMusicAsync(true);
+                await _libraryService.FetchMusicAsync();
             }
             catch (UnauthorizedAccessException)
             {

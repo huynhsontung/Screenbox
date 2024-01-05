@@ -85,24 +85,13 @@ namespace Screenbox.Core.Services
             return _videos.AsReadOnly();
         }
 
-        public async Task FetchMusicAsync(bool useCache)
+        public async Task FetchMusicAsync()
         {
             _musicFetchCts?.Cancel();
             using CancellationTokenSource cts = new();
             _musicFetchCts = cts;
             try
             {
-                if (useCache)
-                {
-                    List<MediaViewModel> songs = await LoadSongsCacheAsync(cts.Token);
-                    if (songs.Count > 0)
-                    {
-                        _songs = songs;
-                        MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
-                        return;
-                    }
-                }
-
                 await FetchMusicCancelableAsync(cts.Token);
             }
             catch (OperationCanceledException)
@@ -190,9 +179,10 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
                 await InitializeMusicLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
+                _songs = await LoadSongsCacheAsync(cancellationToken);
                 List<MediaViewModel> songs = new();
-                _songs = songs;
                 await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                _songs = songs;
             }
             catch (Exception e)
             {
@@ -341,7 +331,7 @@ namespace Screenbox.Core.Services
 
         private void OnMusicLibraryContentChanged(object sender, object args)
         {
-            async void FetchAction() => await FetchMusicAsync(false);
+            async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
         }
