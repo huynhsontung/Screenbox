@@ -57,7 +57,7 @@ namespace Screenbox.Core.Factories
 
         public MediaViewModel GetSingleton(StorageFile file)
         {
-            string id = file.FolderRelativeId;
+            string id = file.Path;
             if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
@@ -72,13 +72,14 @@ namespace Screenbox.Core.Factories
             return instance;
         }
 
-        public MediaViewModel GetSingleton(string id, Uri uri)
+        public MediaViewModel GetSingleton(Uri uri)
         {
+            string id = uri.OriginalString;
             if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri, id);
+            instance = new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);

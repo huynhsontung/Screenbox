@@ -173,7 +173,7 @@ namespace Screenbox.Core.Services
             cancellationToken.ThrowIfCancellationRequested();
             List<MediaViewModel> songs = records.Select(record =>
             {
-                MediaViewModel media = _mediaFactory.GetSingleton(record.Id, new Uri(record.Path));
+                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
                 media.IsFromLibrary = true;
                 media.Name = record.Title;
                 media.MediaInfo = new MediaInfo(record.Properties);
