@@ -78,7 +78,7 @@
             VerticalAlignment="Center"
             FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="{StaticResource DefaultIconFontSize}"
-            Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
+            Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
 

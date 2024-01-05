@@ -1,5 +1,7 @@
 ﻿using Screenbox.Core.Helpers;
+using Screenbox.Core.ViewModels;
 using System;
+using Windows.Media;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
 
@@ -26,14 +28,27 @@ namespace Screenbox.Converters
             return glyph;
         }
 
+        public static string Convert(MediaPlaybackType type)
+        {
+            return type switch
+            {
+                MediaPlaybackType.Music => "\ue8d6",
+                MediaPlaybackType.Video => "\ue8b2",
+                MediaPlaybackType.Image => "\ue91b",
+                _ => "\ue8a5"
+            };
+        }
+
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (value is IStorageItem item)
+            return value switch
             {
-                return Convert(item);
-            }
-
-            return "\ue774"; // Globe icon
+                IStorageItem item => Convert(item),
+                FileMediaViewModel { File: var file } => Convert(file),
+                // UriMediaViewModel { Uri.IsFile: true, MediaType: var mediaType } => Convert(mediaType),
+                MediaViewModel { IsFromLibrary: true, MediaType: var mediaType } => Convert(mediaType),
+                _ => "\ue774"
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
