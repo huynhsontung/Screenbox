@@ -35,7 +35,7 @@ namespace Screenbox.Core.Factories
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new UriMediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
+            return new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
@@ -44,7 +44,7 @@ namespace Screenbox.Core.Factories
                 return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, media);
 
             // Prefer URI source for easier clean up
-            UriMediaViewModel vm = new(_mediaService, _albumFactory, _artistFactory, uri)
+            UriMediaViewModel vm = new(_mediaService, _filesService, _albumFactory, _artistFactory, uri)
             {
                 Item = new PlaybackItem(media, media)
             };
@@ -78,7 +78,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new UriMediaViewModel(_mediaService, _albumFactory, _artistFactory, uri, id);
+            instance = new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri, id);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);
