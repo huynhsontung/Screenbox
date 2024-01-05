@@ -1,10 +1,12 @@
 ﻿#nullable enable
 
 using Screenbox.Core.Factories;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
@@ -39,6 +41,38 @@ public sealed class UriMediaViewModel : MediaViewModel
     public override MediaViewModel Clone()
     {
         return new UriMediaViewModel(this);
+    }
+
+    public override async Task LoadDetailsAsync()
+    {
+        if (!Uri.IsFile)
+        {
+            await base.LoadDetailsAsync();
+            return;
+        }
+
+        try
+        {
+            StorageFile file = await GetFileAsync();
+            BasicProperties basicProperties = await file.GetBasicPropertiesAsync();
+            switch (MediaType)
+            {
+                case MediaPlaybackType.Video:
+                    VideoProperties videoProperties = await file.Properties.GetVideoPropertiesAsync();
+                    MediaInfo = new MediaInfo(basicProperties, videoProperties);
+                    break;
+                case MediaPlaybackType.Music:
+                    MusicProperties musicProperties = await file.Properties.GetMusicPropertiesAsync();
+                    MediaInfo = new MediaInfo(basicProperties, musicProperties);
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            // System.Exception: The RPC server is unavailable.
+            if (e.HResult != unchecked((int)0x800706BA))
+                LogService.Log(e);
+        }
     }
 
     public override async Task LoadThumbnailAsync()
