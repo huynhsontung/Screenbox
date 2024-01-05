@@ -201,4 +201,7 @@
   <data name="FileDisplayNameWavPack" xml:space="preserve">
     <value>WavPack аудио</value>
   </data>
+  <data name="FileDisplayNameAIFF" xml:space="preserve">
+    <value>AIFF Audio</value>
+  </data>
 </root>
