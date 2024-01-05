@@ -322,6 +322,7 @@
             </uap:SupportedFileTypes>
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAIFF</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
+            <uap:Logo>Assets\Icons\Audio\FileAssociationAIFF.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
        </Extensions>
