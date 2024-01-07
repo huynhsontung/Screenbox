@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml;
-using Screenbox.Core.Models;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -50,7 +50,7 @@ namespace Screenbox.Core.ViewModels
 
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
-            if (message.Value is FileMediaViewModel && _settingsService.ShowRecent)
+            if (_settingsService.ShowRecent)
             {
                 await UpdateRecentMediaListAsync(false).ConfigureAwait(false);
             }
@@ -181,7 +181,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     Recent.Add(new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
                 }
-                else if (Recent[i].Media is FileMediaViewModel { File: { } existing })
+                else if (GetFile(Recent[i].Media) is { } existing)
                 {
                     try
                     {
@@ -269,6 +269,16 @@ namespace Screenbox.Core.ViewModels
             IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
             if (files.Length == 0) return;
             Messenger.Send(new PlayMediaMessage(files));
+        }
+
+        private static StorageFile? GetFile(MediaViewModel media)
+        {
+            return media switch
+            {
+                FileMediaViewModel { File: { } file } => file,
+                UriMediaViewModel { File: { } file } => file,
+                _ => null
+            };
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)

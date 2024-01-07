@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using ProtoBuf;
 using Screenbox.Core.Helpers;
 using System;
 using System.Collections.Generic;
@@ -121,6 +122,33 @@ namespace Screenbox.Core.Services
             }
 
             return picker.PickSingleFolderAsync();
+        }
+
+        public async Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source)
+        {
+            StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+            await SaveToDiskAsync(file, source);
+            return file;
+        }
+
+        public async Task SaveToDiskAsync<T>(StorageFile file, T source)
+        {
+            using Stream stream = await file.OpenStreamForWriteAsync();
+            Serializer.Serialize(stream, source);
+            stream.SetLength(stream.Position);  // A weird quirk of protobuf-net
+            await stream.FlushAsync();
+        }
+
+        public async Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName)
+        {
+            StorageFile file = await folder.GetFileAsync(fileName);
+            return await LoadFromDiskAsync<T>(file);
+        }
+
+        public async Task<T> LoadFromDiskAsync<T>(StorageFile file)
+        {
+            using Stream readStream = await file.OpenStreamForReadAsync();
+            return Serializer.Deserialize<T>(readStream);
         }
 
         public async Task OpenFileLocationAsync(StorageFile file)

@@ -79,7 +79,7 @@ namespace Screenbox.Core.ViewModels
         private bool _resizeNext;
         private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService)
+        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService, IFilesService filesService)
         {
             _windowService = windowService;
             _resourceService = resourceService;
@@ -91,7 +91,7 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityState.Hidden;
-            _lastPositionTracker = new LastPositionTracker();
+            _lastPositionTracker = new LastPositionTracker(filesService);
             _lastUpdated = DateTimeOffset.MinValue;
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;

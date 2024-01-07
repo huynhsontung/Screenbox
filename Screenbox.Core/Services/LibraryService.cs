@@ -31,6 +31,7 @@ namespace Screenbox.Core.Services
         private bool UseIndexer => _settingsService.UseIndexer;
 
         private readonly ISettingsService _settingsService;
+        private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
@@ -44,10 +45,14 @@ namespace Screenbox.Core.Services
         private CancellationTokenSource? _musicFetchCts;
         private CancellationTokenSource? _videosFetchCts;
 
-        public LibraryService(ISettingsService settingsService, MediaViewModelFactory mediaFactory,
-            AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
+        private const string SongsCacheFileName = "songs.bin";
+        private const string VideoCacheFileName = "videos.bin";
+
+        public LibraryService(ISettingsService settingsService, IFilesService filesService,
+            MediaViewModelFactory mediaFactory, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
             _settingsService = settingsService;
+            _filesService = filesService;
             _mediaFactory = mediaFactory;
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
@@ -133,6 +138,90 @@ namespace Screenbox.Core.Services
             _videos.Remove(media);
         }
 
+        private async Task CacheSongsAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentSongRecord> records = _songs.Select(song =>
+                new PersistentSongRecord(song.Name, song.Location, song.MediaInfo.MusicProperties)).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, SongsCacheFileName, records);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        private async Task CacheVideosAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentVideoRecord> records = _videos.Select(video =>
+                           new PersistentVideoRecord(video.Name, video.Location, video.MediaInfo.VideoProperties)).ToList();
+            cancellationToken.ThrowIfCancellationRequested();
+            try
+            {
+                await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, VideoCacheFileName, records);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        private async Task<List<MediaViewModel>> LoadSongsCacheAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentSongRecord> records;
+            try
+            {
+                records = await _filesService.LoadFromDiskAsync<List<PersistentSongRecord>>(ApplicationData.Current.LocalFolder, SongsCacheFileName);
+            }
+            catch (Exception)
+            {
+                // FileNotFoundException
+                // UnauthorizedAccessException
+                // and other Protobuf exceptions
+                return new List<MediaViewModel>();
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            List<MediaViewModel> songs = records.Select(record =>
+            {
+                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+                media.IsFromLibrary = true;
+                media.Name = record.Title;
+                media.MediaInfo = new MediaInfo(record.Properties);
+                return media;
+            }).ToList();
+            return songs;
+        }
+
+        private async Task<List<MediaViewModel>> LoadVideosCacheAsync(CancellationToken cancellationToken)
+        {
+            List<PersistentVideoRecord> records;
+            try
+            {
+                records = await _filesService.LoadFromDiskAsync<List<PersistentVideoRecord>>(ApplicationData.Current.LocalFolder, VideoCacheFileName);
+            }
+            catch (Exception)
+            {
+                // FileNotFoundException
+                // UnauthorizedAccessException
+                // and other Protobuf exceptions
+                return new List<MediaViewModel>();
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            List<MediaViewModel> videos = records.Select(record =>
+            {
+                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+                media.IsFromLibrary = true;
+                media.Name = record.Title;
+                media.MediaInfo = new MediaInfo(record.Properties);
+                return media;
+            }).ToList();
+            return videos;
+        }
+
         private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
         {
             IsLoadingMusic = true;
@@ -141,9 +230,12 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
                 await InitializeMusicLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
-                List<MediaViewModel> songs = new();
-                _songs = songs;
+                List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
+                // If cache is empty, fetch from storage using the same songs instance
+                // If not empty then create a new list to avoid overwriting the cache
+                if (songs.Count > 0) songs = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                _songs = songs;
             }
             catch (Exception e)
             {
@@ -166,6 +258,7 @@ namespace Screenbox.Core.Services
             }
 
             MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+            await CacheSongsAsync(cancellationToken);
         }
 
         private async Task FetchVideosCancelableAsync(CancellationToken cancellationToken)
@@ -176,8 +269,10 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
                 await InitializeVideosLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
-                List<MediaViewModel> videos = new();
-                _videos = videos;
+                List<MediaViewModel> videos = _videos = await LoadVideosCacheAsync(cancellationToken);
+                // If cache is empty, fetch from storage using the same videos instance
+                // If not empty then create a new list to avoid overwriting the cache
+                if (videos.Count > 0) videos = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
             }
             catch (Exception e)
@@ -201,6 +296,7 @@ namespace Screenbox.Core.Services
             }
 
             VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+            await CacheVideosAsync(cancellationToken);
         }
 
         private async Task BatchFetchMediaAsync(StorageFileQueryResult queryResult, List<MediaViewModel> target, CancellationToken cancellationToken)
@@ -217,6 +313,7 @@ namespace Screenbox.Core.Services
             foreach (MediaViewModel media in target)
             {
                 // Expect UI thread
+                media.IsFromLibrary = true;
                 await media.LoadDetailsAsync();
                 cancellationToken.ThrowIfCancellationRequested();
             }

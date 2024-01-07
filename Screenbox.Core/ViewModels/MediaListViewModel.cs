@@ -225,9 +225,23 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnCurrentItemChanged(MediaViewModel? value)
         {
-            if (value is FileMediaViewModel { File: { } item })
+            switch (value)
             {
-                _filesService.AddToRecent(item);
+                case FileMediaViewModel { File: { } item }:
+                    _filesService.AddToRecent(item);
+                    break;
+                case UriMediaViewModel { Uri.IsFile: true } uriMedia:
+                    try
+                    {
+                        StorageFile file = await uriMedia.GetFileAsync();
+                        _filesService.AddToRecent(file);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+
+                    break;
             }
 
             Messenger.Send(new PlaylistCurrentItemChangedMessage(value));

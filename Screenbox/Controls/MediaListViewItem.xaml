@@ -78,7 +78,7 @@
             VerticalAlignment="Center"
             FontFamily="{StaticResource SymbolThemeFontFamily}"
             FontSize="{StaticResource DefaultIconFontSize}"
-            Glyph="{Binding Source, Converter={StaticResource MediaGlyphConverter}}"
+            Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
 
@@ -162,7 +162,7 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding Duration, Converter={StaticResource HumanizedDurationConverter}}" />
+            Text="{Binding DurationText}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ActivityStates">

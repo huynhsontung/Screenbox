@@ -35,16 +35,16 @@ namespace Screenbox.Core.Factories
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new UriMediaViewModel(_mediaService, uri);
+            return new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
         {
             if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
-                return new MediaViewModel(_mediaService, media);
+                return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, media);
 
             // Prefer URI source for easier clean up
-            UriMediaViewModel vm = new(_mediaService, uri)
+            UriMediaViewModel vm = new(_mediaService, _filesService, _albumFactory, _artistFactory, uri)
             {
                 Item = new PlaybackItem(media, media)
             };
@@ -57,16 +57,33 @@ namespace Screenbox.Core.Factories
 
         public MediaViewModel GetSingleton(StorageFile file)
         {
-            string path = file.Path;
-            if (!_references.TryGetValue(path, out WeakReference<MediaViewModel> reference) ||
-                !reference.TryGetTarget(out MediaViewModel instance))
+            string id = file.Path;
+            if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+                reference.TryGetTarget(out MediaViewModel instance)) return instance;
+
+            // No existing reference, create new instance
+            instance = new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
+            if (!string.IsNullOrEmpty(id))
             {
-                instance = new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
-                if (!string.IsNullOrEmpty(path))
-                {
-                    _references[path] = new WeakReference<MediaViewModel>(instance);
-                    CleanUpStaleReferences();
-                }
+                _references[id] = new WeakReference<MediaViewModel>(instance);
+                CleanUpStaleReferences();
+            }
+
+            return instance;
+        }
+
+        public MediaViewModel GetSingleton(Uri uri)
+        {
+            string id = uri.OriginalString;
+            if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
+                reference.TryGetTarget(out MediaViewModel instance)) return instance;
+
+            // No existing reference, create new instance
+            instance = new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
+            if (!string.IsNullOrEmpty(id))
+            {
+                _references[id] = new WeakReference<MediaViewModel>(instance);
+                CleanUpStaleReferences();
             }
 
             return instance;

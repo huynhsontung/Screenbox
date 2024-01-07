@@ -184,11 +184,15 @@
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />
+    <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
+    <Compile Include="Models\PersistentVideoRecord.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
+    <Compile Include="Models\PersistentSongRecord.cs" />
+    <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
@@ -292,7 +296,7 @@
       <Version>2.8.6</Version>
     </PackageReference>
     <PackageReference Include="protobuf-net">
-      <Version>3.1.33</Version>
+      <Version>3.2.30</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

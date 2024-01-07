@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -24,6 +25,10 @@ namespace Screenbox.Core.ViewModels
 
         public object Source { get; }
 
+        public string Id { get; protected set; }
+
+        public bool IsFromLibrary { get; set; }
+
         public StorageItemThumbnail? ThumbnailSource { get; set; }
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
@@ -36,24 +41,33 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<string> Options { get; }
 
+        public MediaPlaybackType MediaType => MediaInfo.MediaType;
+
+        public TimeSpan Duration => MediaInfo.MusicProperties.Duration > TimeSpan.Zero
+            ? MediaInfo.MusicProperties.Duration
+            : MediaInfo.VideoProperties.Duration;
+
+        public string DurationText => Duration > TimeSpan.Zero ? Humanizer.ToDuration(Duration) : string.Empty;     // Helper for binding
+
         public string TrackNumberText =>
             MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
         private readonly IMediaService _mediaService;
         private readonly List<string> _options;
+        private readonly AlbumViewModelFactory _albumFactory;
+        private readonly ArtistViewModelFactory _artistFactory;
         private PlaybackItem? _item;
         private bool _loaded;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
-        [ObservableProperty] private TimeSpan? _duration;
         [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private AlbumViewModel? _album;
-        [ObservableProperty] private MediaPlaybackType _mediaType;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(DurationText))]
         [NotifyPropertyChangedFor(nameof(TrackNumberText))]
         private MediaInfo _mediaInfo;
 
@@ -67,11 +81,11 @@ namespace Screenbox.Core.ViewModels
         protected MediaViewModel(MediaViewModel source)
         {
             _mediaService = source._mediaService;
+            _albumFactory = source._albumFactory;
+            _artistFactory = source._artistFactory;
             _item = source._item;
             _name = source._name;
-            _duration = source._duration;
             _thumbnail = source._thumbnail;
-            _mediaType = source._mediaType;
             _mediaInfo = source._mediaInfo;
             _artists = source._artists;
             _album = source._album;
@@ -81,26 +95,29 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            Id = source.Id;
         }
 
-        protected MediaViewModel(object source, IMediaService mediaService)
+        protected MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
             _mediaService = mediaService;
+            _albumFactory = albumFactory;
+            _artistFactory = artistFactory;
             Source = source;
-
+            Id = string.Empty;
             Location = string.Empty;
             _name = string.Empty;
-            _mediaType = MediaPlaybackType.Unknown;
             _mediaInfo = new MediaInfo();
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
         }
 
-        public MediaViewModel(IMediaService mediaService, Media media)
-            : this(media, mediaService)
+        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Media media)
+            : this(media, mediaService, albumFactory, artistFactory)
         {
             Location = media.Mrl;
+            Id = Location;
 
             // Media is already loaded, create PlaybackItem
             _loaded = true;
@@ -110,6 +127,13 @@ namespace Screenbox.Core.ViewModels
         public virtual MediaViewModel Clone()
         {
             return new MediaViewModel(this);
+        }
+
+        partial void OnMediaInfoChanged(MediaInfo value)
+        {
+            UpdateCaptions();
+            UpdateArtists();
+            UpdateAlbum();
         }
 
         private PlaybackItem? GetPlaybackItem()
@@ -175,8 +199,8 @@ namespace Screenbox.Core.ViewModels
         {
             // Update media type when it was previously set Unknown. Usually when source is an URI.
             // We don't want to init PlaybackItem just for this.
-            if (MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
-                MediaType = MediaPlaybackType.Music;
+            if (MediaInfo.MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
+                MediaInfo.MediaType = MediaPlaybackType.Music;
 
             if (_item?.Media is { IsParsed: true } media)
             {
@@ -214,6 +238,41 @@ namespace Screenbox.Core.ViewModels
             }
 
             return Task.CompletedTask;
+        }
+
+        private void UpdateAlbum()
+        {
+            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Album != null) return;
+            MusicInfo musicProperties = MediaInfo.MusicProperties;
+            Album = _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
+        }
+
+        private void UpdateArtists()
+        {
+            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Artists.Length != 0) return;
+            Artists = _artistFactory.ParseArtists(MediaInfo.MusicProperties.Artist, this);
+        }
+
+        private void UpdateCaptions()
+        {
+            if (!string.IsNullOrEmpty(Caption) || !string.IsNullOrEmpty(AltCaption)) return;
+            if (Duration > TimeSpan.Zero)
+            {
+                Caption = Humanizer.ToDuration(Duration);
+            }
+
+            MusicInfo musicProperties = MediaInfo.MusicProperties;
+            if (!string.IsNullOrEmpty(musicProperties.Artist))
+            {
+                Caption = musicProperties.Artist;
+                AltCaption = string.IsNullOrEmpty(musicProperties.Album)
+                    ? musicProperties.Artist
+                    : $"{musicProperties.Artist} – {musicProperties.Album}";
+            }
+            else if (!string.IsNullOrEmpty(musicProperties.Album))
+            {
+                AltCaption = musicProperties.Album;
+            }
         }
     }
 }
