@@ -186,6 +186,7 @@
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
+    <Compile Include="Models\PersistentVideoRecord.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />

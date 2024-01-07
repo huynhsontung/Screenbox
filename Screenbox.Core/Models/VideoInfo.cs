@@ -1,18 +1,20 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 using Windows.Storage.FileProperties;
 
 namespace Screenbox.Core.Models;
+[ProtoContract]
 public sealed record VideoInfo
 {
-    public string Title { get; set; } = string.Empty;
-    public string Subtitle { get; set; } = string.Empty;
-    public string Producers { get; set; } = string.Empty;
-    public string Writers { get; set; } = string.Empty;
-    public TimeSpan Duration { get; set; }
-    public uint Year { get; set; }
-    public uint Width { get; set; }
-    public uint Height { get; set; }
-    public uint Bitrate { get; set; }
+    [ProtoMember(1)] public string Title { get; set; } = string.Empty;
+    [ProtoMember(2)] public string Subtitle { get; set; } = string.Empty;
+    [ProtoMember(3)] public string Producers { get; set; } = string.Empty;
+    [ProtoMember(4)] public string Writers { get; set; } = string.Empty;
+    [ProtoMember(5)] public TimeSpan Duration { get; set; }
+    [ProtoMember(6)] public uint Year { get; set; }
+    [ProtoMember(7)] public uint Width { get; set; }
+    [ProtoMember(8)] public uint Height { get; set; }
+    [ProtoMember(9)] public uint Bitrate { get; set; }
 
     /** VLC metadata **/
     public string ShowName { get; set; } = string.Empty;
