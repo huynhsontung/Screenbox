@@ -179,8 +179,10 @@ namespace Screenbox.Core.Services
                 StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
                 await InitializeMusicLibraryAsync();
                 cancellationToken.ThrowIfCancellationRequested();
-                _songs = await LoadSongsCacheAsync(cancellationToken);
-                List<MediaViewModel> songs = new();
+                List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
+                // If cache is empty, fetch from storage using the same songs instance
+                // If not empty then create a new list to avoid overwriting the cache
+                if (songs.Count > 0) songs = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
                 _songs = songs;
             }
