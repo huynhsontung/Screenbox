@@ -27,13 +27,14 @@
             <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
-            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
-            <Thickness x:Key="AppTitleMarginExpanded">58,0,0,0</Thickness>
-            <Thickness x:Key="AppTitleMarginCompact">74,0,0,0</Thickness>
-            <Thickness x:Key="AppTitleMarginMinimal">98,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
+            <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
+
+            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
@@ -65,9 +66,9 @@
 
             <Border
                 x:Name="TitleBarElement"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Margin="44,0,0,0"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Margin="48,0,0,0"
                 Background="Transparent" />
 
             <StackPanel
@@ -78,14 +79,16 @@
                 IsHitTestVisible="False"
                 Orientation="Horizontal">
                 <Image
-                    Width="18"
-                    Height="18"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Source="ms-appx:///Assets/StoreLogo.png" />
+                    Source="ms-appx:///Assets/Square44x44Logo.png" />
                 <TextBlock
-                    Margin="12,0,0,0"
+                    x:Name="AppTitleText"
+                    Margin="12,0,12,2"
                     VerticalAlignment="Center"
+                    OpticalMarginAlignment="TrimSideBearings"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="{x:Bind appModel:Package.Current.DisplayName}" />
             </StackPanel>

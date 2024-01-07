@@ -17,6 +17,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
@@ -38,11 +39,21 @@ namespace Screenbox.Pages
         public MainPage()
         {
             InitializeComponent();
+
+            // Hide default title bar.
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
-            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            // Register a handler for when the size of the overlaid caption control changes.
+            // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+
+            //Register a handler for when the window changes focus
+            Window.Current.CoreWindow.Activated += CoreWindow_Activated;
+
             NotificationView.Translation = new Vector3(0, 0, 8);
 
             _pages = new Dictionary<string, Type>
@@ -58,6 +69,29 @@ namespace Screenbox.Pages
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ContentFrame.Navigated += ContentFrameOnNavigated;
+        }
+
+        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            // Get the size of the caption controls and set padding.
+            LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
+        }
+
+        // Update the TitleBar based on the inactive/active state of the app
+        private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
+        {
+            SolidColorBrush defaultForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
+            SolidColorBrush inactiveForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorDisabledBrush"];
+
+            if (args.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                AppTitleText.Foreground = inactiveForegroundBrush;
+            }
+            else
+            {
+                AppTitleText.Foreground = defaultForegroundBrush;
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -141,13 +175,6 @@ namespace Screenbox.Pages
             {
                 {"NavigationMode", e.NavigationMode.ToString()}
             });
-        }
-
-        private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
-        {
-            // Get the size of the caption controls and set padding.
-            LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
         }
 
         private void ContentFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
