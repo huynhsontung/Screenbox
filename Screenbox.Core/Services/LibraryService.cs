@@ -140,7 +140,7 @@ namespace Screenbox.Core.Services
         private async Task CacheSongsAsync(CancellationToken cancellationToken)
         {
             List<PersistentSongRecord> records = _songs.Select(song =>
-                new PersistentSongRecord(song.Id, song.Name, song.Location, song.MediaInfo.MusicProperties)).ToList();
+                new PersistentSongRecord(song.Name, song.Location, song.MediaInfo.MusicProperties)).ToList();
             cancellationToken.ThrowIfCancellationRequested();
             await _filesService.SaveToDiskAsync(ApplicationData.Current.LocalFolder, SongsCacheFileName, records);
         }
