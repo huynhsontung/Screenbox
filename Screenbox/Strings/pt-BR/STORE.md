@@ -8,17 +8,7 @@
 
 Screenbox é um reprodutor de mídia moderno que se esforça para trazer uma nova visão do aplicativo clássico. Screenbox oferece uma interface de usuário bonita e intuitiva, ao mesmo tempo que é rápido, leve e poderoso. Projetado e construído abertamente, o Screenbox sempre será de uso gratuito.
 
-Screenbox suporta muitos formatos de arquivo e codecs comuns, garantindo que você possa reproduzir praticamente qualquer mídia sem a necessidade de complementos adicionais. Seja transmitindo conteúdo online ou reproduzindo arquivos armazenados localmente, o Screenbox tem você coberto.
-
-Impulsionado pelo LibVLC, o Screenbox combina o melhor do reprodutor de mídia VLC com as capacidades modernas de aplicativos no sistema Windows. O Screenbox ainda permite que você habilite opções avançadas de reprodução usando argumentos de linha de comando do VLC, como a reprodução de várias faixas de áudio ao mesmo tempo.
-
-Lista de todos os formatos de arquivo atualmente suportados:
-
-• Audio:  <!-- List of supported audio formats. -->
-• Video:  <!-- List of supported video formats. -->
-• Playlist: <!-- List of supported playlist formats. -->
-
-Não encontrou o formato que precisa? Sinta-se à vontade para entrar em contato e nos informar. O Screenbox é projetado e construído de forma transparente. Ajude-nos a construir um reprodutor de mídia melhor para todos!
+Screenbox suporta muitos formatos de arquivo e codecs comuns, garantindo que você possa reproduzir praticamente qualquer mídia sem a necessidade de complementos adicionais. Seja transmitindo conteúdo online ou reproduzindo arquivos armazenados localmente, o Screenbox tem você coberto. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
 ### Funcionalidades
 
