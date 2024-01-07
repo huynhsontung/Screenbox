@@ -113,6 +113,7 @@
                 Padding="{StaticResource PageContentMargin}">
                 <StackPanel.ChildrenTransitions>
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    <EntranceThemeTransition IsStaggeringEnabled="True" />
                 </StackPanel.ChildrenTransitions>
                 <interactivity:Interaction.Behaviors>
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
