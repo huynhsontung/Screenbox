@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
-using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,13 +12,13 @@ namespace Screenbox.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumsPage : Page, IScrollable
+    public sealed partial class AlbumsPage : Page
     {
-        public double ContentVerticalOffset { get; set; }
-
         internal AlbumsPageViewModel ViewModel => (AlbumsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
+
+        private double _contentVerticalOffset;
 
         public AlbumsPage()
         {
@@ -32,6 +31,11 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchAlbums();
+            if (e.NavigationMode == NavigationMode.Back &&
+                Common.TryGetScrollingState(nameof(AlbumsPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -45,15 +49,15 @@ namespace Screenbox.Pages
             ScrollViewer? scrollViewer = AlbumGridView.FindDescendant<ScrollViewer>();
             if (scrollViewer == null) return;
             scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
-            if (ContentVerticalOffset > 0)
+            if (_contentVerticalOffset > 0)
             {
-                scrollViewer.ChangeView(null, ContentVerticalOffset, null, true);
+                scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
             }
         }
 
         private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            ContentVerticalOffset = e.NextView.VerticalOffset;
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(AlbumsPage), Frame.BackStackDepth);
         }
 
         private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

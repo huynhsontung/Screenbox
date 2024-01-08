@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
-using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -13,13 +12,13 @@ namespace Screenbox.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SongsPage : Page, IScrollable
+    public sealed partial class SongsPage : Page
     {
-        public double ContentVerticalOffset { get; set; }
-
         internal SongsPageViewModel ViewModel => (SongsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
+
+        private double _contentVerticalOffset;
 
         public SongsPage()
         {
@@ -32,6 +31,11 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchSongs();
+            if (e.NavigationMode == NavigationMode.Back &&
+                Common.TryGetScrollingState(nameof(SongsPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -45,15 +49,15 @@ namespace Screenbox.Pages
             ScrollViewer? scrollViewer = SongListView.FindDescendant<ScrollViewer>();
             if (scrollViewer == null) return;
             scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
-            if (ContentVerticalOffset > 0)
+            if (_contentVerticalOffset > 0)
             {
-                scrollViewer.ChangeView(null, ContentVerticalOffset, null, true);
+                scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
             }
         }
 
         private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            ContentVerticalOffset = e.NextView.VerticalOffset;
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(SongsPage), Frame.BackStackDepth);
         }
     }
 }
