@@ -37,6 +37,7 @@
 
     <Grid
         AllowDrop="True"
+        Background="Transparent"
         DragOver="{x:Bind PlaylistView.PlaylistListView_OnDragOver}"
         Drop="{x:Bind PlaylistView.PlaylistListView_OnDrop}">
         <Grid.RowDefinitions>

@@ -20,11 +20,9 @@
         <ToggleButton
             Grid.Column="0"
             Margin="0,0,4,0"
-            VerticalAlignment="Stretch"
             controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
-            Background="Transparent"
-            BorderThickness="0"
-            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
+            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
+            Style="{x:Bind ToggleButtonStyle, Mode=OneWay}">
             <FontIcon Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
@@ -37,7 +35,7 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Background="{ThemeResource SystemFillColorCriticalBrush}"
-            CornerRadius="2" />
+            CornerRadius="{StaticResource SliderTrackCornerRadius}" />
         <Slider
             x:Name="VolumeSlider"
             Grid.Column="1"

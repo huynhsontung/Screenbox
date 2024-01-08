@@ -125,8 +125,8 @@
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
                     SelectionMode="None">
                     <GridView.Resources>
-                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
-                        <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="SubtleFillColorTransparentBrush" />
+                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                        <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush" />
                     </GridView.Resources>
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>

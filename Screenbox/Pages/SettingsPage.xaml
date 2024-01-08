@@ -58,10 +58,9 @@
                     <Button
                         Height="32"
                         VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
                         Command="{StaticResource RemoveVideosFolderCommand}"
-                        CommandParameter="{x:Bind}">
+                        CommandParameter="{x:Bind}"
+                        Style="{StaticResource SubtleButtonStyle}">
                         <FontIcon Glyph="&#xe894;" />
                     </Button>
                 </ctc:SettingsCard>
@@ -72,10 +71,9 @@
                     <Button
                         Height="32"
                         VerticalAlignment="Center"
-                        Background="Transparent"
-                        BorderThickness="0"
                         Command="{StaticResource RemoveMusicFolderCommand}"
-                        CommandParameter="{x:Bind}">
+                        CommandParameter="{x:Bind}"
+                        Style="{StaticResource SubtleButtonStyle}">
                         <FontIcon Glyph="&#xe894;" />
                     </Button>
                 </ctc:SettingsCard>

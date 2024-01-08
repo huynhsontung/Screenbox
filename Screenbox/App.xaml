@@ -115,8 +115,8 @@
                     <!--  Semantic zoom group-level style  -->
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
                         <Button
-                            Width="46"
-                            Height="46"
+                            Width="{StaticResource GridViewHeaderItemMinHeight}"
+                            Height="{StaticResource GridViewHeaderItemMinHeight}"
                             HorizontalAlignment="Stretch"
                             Background="Transparent"
                             BorderBrush="Transparent"
@@ -127,6 +127,9 @@
                     </DataTemplate>
 
                 </ResourceDictionary>
+
+                <ResourceDictionary Source="ms-appx:///Controls/Styles/Subtle_themeresources.xaml" />
+
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>
     </Application.Resources>

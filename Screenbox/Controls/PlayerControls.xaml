@@ -3,10 +3,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
-    xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
@@ -15,38 +15,12 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundChecked" ResourceKey="TextFillColorPrimaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedPressed" ResourceKey="TextFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ToggleButtonForegroundCheckedDisabled" ResourceKey="TextFillColorDisabledBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePressed" ResourceKey="SubtleFillColorTertiaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedDisabled" ResourceKey="ControlFillColorDisabledBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundCheckedPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundIndeterminatePointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
-                    <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast" />
-            </ResourceDictionary.ThemeDictionaries>
 
             <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
@@ -60,52 +34,8 @@
                 FalseValue="E"
                 TrueValue="F" />
 
-            <SolidColorBrush x:Key="ToggleButtonBackgroundChecked" Color="Transparent" />
-            <SolidColorBrush x:Key="ToggleButtonBackgroundIndeterminate" Color="Transparent" />
-            <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
-
-            <Style
-                x:Key="PlayerButtonStyle"
-                BasedOn="{StaticResource DefaultButtonStyle}"
-                TargetType="Button">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Width" Value="42" />
-                <Setter Property="Margin" Value="2,0" />
-            </Style>
-
-            <Style
-                x:Key="SmallPlayerButtonStyle"
-                BasedOn="{StaticResource PlayerButtonStyle}"
-                TargetType="Button">
-                <Setter Property="Height" Value="36" />
-                <Setter Property="Width" Value="36" />
-                <Setter Property="Padding" Value="10,5" />
-            </Style>
-
-            <Style
-                x:Key="PlayerToggleButtonStyle"
-                BasedOn="{StaticResource DefaultToggleButtonStyle}"
-                TargetType="ToggleButton">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Height" Value="40" />
-                <Setter Property="Width" Value="42" />
-                <Setter Property="Margin" Value="2,0" />
-            </Style>
-
-            <Style
-                x:Key="SmallPlayerToggleButtonStyle"
-                BasedOn="{StaticResource PlayerToggleButtonStyle}"
-                TargetType="ToggleButton">
-                <Setter Property="Height" Value="36" />
-                <Setter Property="Width" Value="36" />
-                <Setter Property="Padding" Value="10,5" />
-            </Style>
-
             <Flyout x:Key="VolumeControlFlyout">
-                <local:VolumeControl Width="200" />
+                <controls:VolumeControl Width="200" ToggleButtonStyle="{StaticResource SmallPlayerToggleButtonStyle}" />
             </Flyout>
 
             <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
@@ -376,7 +306,8 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <local:SeekBar
+        <!--  Seek  -->
+        <controls:SeekBar
             x:Name="SeekBar"
             Grid.Row="0"
             Grid.Column="0"
@@ -386,15 +317,16 @@
             VerticalAlignment="Center"
             Background="Transparent"
             Foreground="Transparent" />
-
+        <!--  Primary Panel  -->
         <StackPanel
             Grid.Row="1"
             Grid.Column="0"
             Orientation="Horizontal">
+            <!--  Play/Pause  -->
             <Button
                 x:Name="PlayPauseButton"
-                Margin="0,0,2,0"
-                local:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
                 AccessKey="P"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -405,11 +337,10 @@
                 </Button.KeyboardAccelerators>
                 <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
             </Button>
-
+            <!--  Previous/Next  -->
             <Button
                 x:Name="PreviousButton"
-                Margin="2,0,0,0"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                 Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                 CornerRadius="4,0,0,4"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -420,8 +351,7 @@
             </Button>
             <Button
                 x:Name="NextButton"
-                Margin="0,0,2,0"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                 Command="{x:Bind ViewModel.Playlist.NextCommand}"
                 CornerRadius="0,4,4,0"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -430,11 +360,11 @@
                     <KeyboardAccelerator Key="PageDown" />
                 </Button.KeyboardAccelerators>
             </Button>
-
-            <local:TimeDisplay
+            <!--  Time & Chapter  -->
+            <controls:TimeDisplay
                 x:Name="TimeDisplay"
                 MinWidth="0"
-                Margin="6,0,0,0"
+                Margin="8,0,0,2"
                 VerticalAlignment="Center"
                 ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
                 FontSize="14"
@@ -442,15 +372,17 @@
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
                 TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
         </StackPanel>
-
+        <!--  Secondary Panel  -->
         <StackPanel
             Grid.Row="1"
             Grid.Column="1"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
+            <!--  Volume  -->
             <Button
                 x:Name="VolumeButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -460,16 +392,17 @@
                 </Button.KeyboardAccelerators>
                 <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" />
             </Button>
-
-            <local:VolumeControl
+            <controls:VolumeControl
                 x:Name="VolumeControl"
                 Width="140"
-                Margin="2,0,8,0"
-                ShowValueText="False" />
-
+                Margin="0,0,8,0"
+                ShowValueText="False"
+                ToggleButtonStyle="{StaticResource PlayerToggleButtonStyle}" />
+            <!--  Shuffle  -->
             <ToggleButton
                 x:Name="ShuffleButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
@@ -478,10 +411,11 @@
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
             </ToggleButton>
-
+            <!--  Repeat  -->
             <ToggleButton
                 x:Name="RepeatButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
@@ -491,11 +425,11 @@
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
             </ToggleButton>
-
+            <!--  Audio & Captions  -->
             <Button
                 x:Name="AudioAndCaptionButton"
-                VerticalAlignment="Stretch"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
                 AccessKey="C"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -517,14 +451,15 @@
                         FlyoutPresenterStyle="{StaticResource TightFlyoutPresenterStyle}"
                         Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}"
                         ShouldConstrainToRootBounds="False">
-                        <local:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" />
+                        <controls:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" />
                     </Flyout>
                 </Button.Flyout>
             </Button>
-
+            <!--  Compact overlay  -->
             <Button
                 x:Name="CompactOverlayButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -534,10 +469,11 @@
                 </Button.KeyboardAccelerators>
                 <FontIcon x:Name="CompactOverlayButtonIcon" Glyph="&#xEE49;" />
             </Button>
-
+            <!--  Fullscreen  -->
             <Button
                 x:Name="FullscreenButton"
-                local:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
+                Margin="0,0,4,0"
+                controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="F"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -548,10 +484,9 @@
                 </Button.KeyboardAccelerators>
                 <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE740;" />
             </Button>
-
+            <!--  More  -->
             <Button
                 x:Name="MoreButton"
-                Margin="2,0,0,0"
                 Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -574,8 +509,8 @@
                         <Setter Target="VolumeButton.Visibility" Value="Visible" />
                         <Setter Target="VolumeControl.Visibility" Value="Collapsed" />
                         <Setter Target="AudioAndCaptionButton.Visibility" Value="Collapsed" />
-                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButton.Visibility" Value="Collapsed" />
+                        <Setter Target="FullscreenButton.Visibility" Value="Collapsed" />
                         <Setter Target="ExtraOptionsSeparator.Visibility" Value="Visible" />
                         <Setter Target="FullscreenMenuItem.Visibility" Value="Visible" />
                         <Setter Target="FullscreenMenuItemKeyboardAccelerator.IsEnabled" Value="True" />
@@ -616,19 +551,20 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MoreButton.Visibility" Value="Collapsed" />
-                        <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
-                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
-                        <Setter Target="CompactOverlayButtonIcon.Glyph" Value="&#xEE47;" />
-                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="PlayPauseButton.Margin" Value="4,0,0,0" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="PlayPauseButton.Margin" Value="2,0,2,0" />
-                        <Setter Target="SeekBar.(Grid.Row)" Value="2" />
-                        <Setter Target="SeekBar.ProgressOnly" Value="True" />
-                        <Setter Target="SeekBar.Margin" Value="0" />
+                        <Setter Target="TimeDisplay.Margin" Value="4,0,0,0" />
                         <Setter Target="TimeDisplay.FontSize" Value="13" />
+                        <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
+                        <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
+                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="CompactOverlayButtonIcon.Glyph" Value="&#xEE47;" />
+                        <Setter Target="MoreButton.Visibility" Value="Collapsed" />
+                        <Setter Target="SeekBar.(Grid.Row)" Value="2" />
+                        <Setter Target="SeekBar.Margin" Value="0" />
+                        <Setter Target="SeekBar.ProgressOnly" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Mini">
@@ -636,17 +572,18 @@
                         <StateTrigger IsActive="{x:Bind ViewModel.IsMinimal, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="FullscreenButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="AdaptiveHiddenControlSizeTrigger.MaxWidth" Value="640" />
                         <Setter Target="PlayPauseButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
+                        <Setter Target="VolumeControl.ToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
-                        <Setter Target="AdaptiveHiddenControlSizeTrigger.MaxWidth" Value="640" />
+                        <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
+                        <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="FullscreenButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
+                        <Setter Target="MoreButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
