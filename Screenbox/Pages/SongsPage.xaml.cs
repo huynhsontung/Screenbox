@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
+using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,13 +13,13 @@ namespace Screenbox.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SongsPage : Page
+    public sealed partial class SongsPage : Page, IScrollable
     {
+        public double ContentVerticalOffset { get; set; }
+
         internal SongsPageViewModel ViewModel => (SongsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
-
-        private bool _navigatedBack;
 
         public SongsPage()
         {
@@ -30,7 +32,6 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchSongs();
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -39,18 +40,20 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(SongListView, this);
-        }
-
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack)
+            ScrollViewer? scrollViewer = SongListView.FindDescendant<ScrollViewer>();
+            if (scrollViewer == null) return;
+            scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+            if (ContentVerticalOffset > 0)
             {
-                Common.TryRestoreScrollingStateOnce(SongListView, this);
+                scrollViewer.ChangeView(null, ContentVerticalOffset, null, true);
             }
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            ContentVerticalOffset = e.NextView.VerticalOffset;
         }
     }
 }

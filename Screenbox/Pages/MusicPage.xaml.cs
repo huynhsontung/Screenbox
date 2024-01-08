@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Controls;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using System;
@@ -21,7 +22,7 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class MusicPage : Page, IContentFrame
     {
-        public object? FrameContent => ContentFrame;
+        public object? FrameContent => ContentFrame.Content;
         public Type ContentSourcePageType => ContentFrame.SourcePageType;
         public bool CanGoBack => ContentFrame.CanGoBack;
 
@@ -52,6 +53,10 @@ namespace Screenbox.Pages
             {
                 ContentFrame.SetNavigationState(navigationState);
                 UpdateSelectedNavItem(ContentSourcePageType);
+                if (e.NavigationMode == NavigationMode.Back)
+                {
+                    RestoreContentScrollingState();
+                }
             }
             else
             {
@@ -65,6 +70,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             Common.NavigationStates[typeof(MusicPage)] = ContentFrame.GetNavigationState();
+            SaveContentScrollingState();
         }
 
         public void GoBack()
@@ -105,6 +111,32 @@ namespace Screenbox.Pages
             if (e.SourcePageType != null)
             {
                 UpdateSelectedNavItem(e.SourcePageType);
+                if (e is { NavigationMode: NavigationMode.Back, Content: IScrollable })
+                {
+                    RestoreContentScrollingState();
+                }
+            }
+        }
+
+        private void ContentFrame_OnNavigating(object sender, NavigatingCancelEventArgs e)
+        {
+            SaveContentScrollingState();
+        }
+
+        private void RestoreContentScrollingState()
+        {
+            if (FrameContent is IScrollable scrollable &&
+                Common.TryGetScrollingState(ContentSourcePageType.Name, ContentFrame.BackStackDepth, out double verticalOffset))
+            {
+                scrollable.ContentVerticalOffset = verticalOffset;
+            }
+        }
+
+        private void SaveContentScrollingState()
+        {
+            if (FrameContent is IScrollable scrollable)
+            {
+                Common.SaveScrollingState(scrollable.ContentVerticalOffset, ContentSourcePageType.Name, ContentFrame.BackStackDepth);
             }
         }
 

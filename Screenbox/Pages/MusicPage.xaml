@@ -186,7 +186,8 @@
                 <Frame
                     x:Name="ContentFrame"
                     Grid.Row="1"
-                    Navigated="ContentFrame_OnNavigated" />
+                    Navigated="ContentFrame_OnNavigated"
+                    Navigating="ContentFrame_OnNavigating" />
             </Grid>
         </muxc:NavigationView>
 

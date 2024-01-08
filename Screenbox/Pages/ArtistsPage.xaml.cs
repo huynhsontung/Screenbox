@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
+using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,13 +13,13 @@ namespace Screenbox.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArtistsPage : Page
+    public sealed partial class ArtistsPage : Page, IScrollable
     {
+        public double ContentVerticalOffset { get; set; }
+
         internal ArtistsPageViewModel ViewModel => (ArtistsPageViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
-
-        private bool _navigatedBack;
 
         public ArtistsPage()
         {
@@ -30,7 +32,6 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchArtists();
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -39,18 +40,20 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(ArtistGridView, this);
-        }
-
         private void ArtistGridView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack)
+            ScrollViewer? scrollViewer = ArtistGridView.FindDescendant<ScrollViewer>();
+            if (scrollViewer == null) return;
+            scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+            if (ContentVerticalOffset > 0)
             {
-                Common.TryRestoreScrollingStateOnce(ArtistGridView, this);
+                scrollViewer.ChangeView(null, ContentVerticalOffset, null, true);
             }
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            ContentVerticalOffset = e.NextView.VerticalOffset;
         }
 
         private void ArtistGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

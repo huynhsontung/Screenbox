@@ -79,6 +79,11 @@ namespace Screenbox.Core.ViewModels
                 _scrollingStates[page.GetType().Name + page.Frame.BackStackDepth] = scrollViewer.VerticalOffset;
         }
 
+        public void SaveScrollingState(double verticalOffset, string pageTypeName, int backStackDepth)
+        {
+            _scrollingStates[pageTypeName + backStackDepth] = verticalOffset;
+        }
+
         public bool TryRestoreScrollingStateOnce(ListViewBase element, Page page)
         {
             string key = page.GetType().Name + page.Frame.BackStackDepth;
@@ -89,6 +94,11 @@ namespace Screenbox.Core.ViewModels
             }
 
             return false;
+        }
+
+        public bool TryGetScrollingState(string pageTypeName, int backStackDepth, out double verticalOffset)
+        {
+            return _scrollingStates.TryGetValue(pageTypeName + backStackDepth, out verticalOffset);
         }
 
         [RelayCommand]
