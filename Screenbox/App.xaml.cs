@@ -52,6 +52,7 @@ namespace Screenbox
             ConfigureAppCenter();
             InitializeComponent();
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
+            HighContrastAdjustment = ApplicationHighContrastAdjustment.None; // Disable automatic High Contrast adjustments
             Suspending += OnSuspending;
 
             IServiceProvider services = ConfigureServices();
