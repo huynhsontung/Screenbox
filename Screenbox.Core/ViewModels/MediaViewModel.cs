@@ -25,8 +25,6 @@ namespace Screenbox.Core.ViewModels
 
         public object Source { get; }
 
-        public string Id { get; protected set; }
-
         public bool IsFromLibrary { get; set; }
 
         public StorageItemThumbnail? ThumbnailSource { get; set; }
@@ -95,7 +93,6 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
-            Id = source.Id;
         }
 
         protected MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
@@ -104,7 +101,6 @@ namespace Screenbox.Core.ViewModels
             _albumFactory = albumFactory;
             _artistFactory = artistFactory;
             Source = source;
-            Id = string.Empty;
             Location = string.Empty;
             _name = string.Empty;
             _mediaInfo = new MediaInfo();
@@ -117,7 +113,6 @@ namespace Screenbox.Core.ViewModels
             : this(media, mediaService, albumFactory, artistFactory)
         {
             Location = media.Mrl;
-            Id = Location;
 
             // Media is already loaded, create PlaybackItem
             _loaded = true;

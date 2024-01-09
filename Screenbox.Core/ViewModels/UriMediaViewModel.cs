@@ -26,8 +26,7 @@ public sealed class UriMediaViewModel : MediaViewModel
     {
         _filesService = fileService;
         Name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
-        Location = uri.ToString();
-        Id = uri.OriginalString;
+        Location = uri.OriginalString;  // Important. Must be the original string to be consistent with StorageFile.Path
         Uri = uri;
     }
 
