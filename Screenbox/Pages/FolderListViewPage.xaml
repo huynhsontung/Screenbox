@@ -94,6 +94,7 @@
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemListViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
+            Loaded="ListView_OnLoaded"
             SelectionMode="None">
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />

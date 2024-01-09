@@ -1,8 +1,10 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Controls.Interactions;
 using Screenbox.Core.ViewModels;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -22,54 +24,55 @@ namespace Screenbox.Pages
 
         public Visibility HeaderVisibility { get; private set; }
 
-        private readonly DispatcherQueue _dispatcherQueue;
-        private bool _navigatedBack;
+        private double _contentVerticalOffset;
+        private ScrollViewer? _scrollViewer;
 
         public FolderViewPage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<FolderViewPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             FolderView.ChoosingItemContainer += FolderViewOnChoosingItemContainer;
         }
 
         private void FolderViewOnChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
         {
             FolderView.ChoosingItemContainer -= FolderViewOnChoosingItemContainer;
-            if (_navigatedBack)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    Common.TryRestoreScrollingStateOnce(FolderView, this);
-                });
-            }
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
             HeaderVisibility = e.Parameter is "VideosLibrary" ? Visibility.Collapsed : Visibility.Visible;
             TitleText.Visibility = HeaderVisibility;
             BreadcrumbBar.Visibility = HeaderVisibility;
-            await ViewModel.OnNavigatedTo(e.Parameter);
-        }
+            if (e.NavigationMode == NavigationMode.Back
+                && Common.TryGetScrollingState(nameof(FolderViewPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(FolderView, this);
+            await ViewModel.OnNavigatedTo(e.Parameter);
+            RestoreScrollVerticalOffset();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ViewModel.Clean();
+            ViewModel.OnNavigatedFrom();
         }
 
         private static string GetCaptionText(bool isFile, string fileInfo, uint itemCount) =>
             isFile ? fileInfo : Strings.Resources.ItemsCount(itemCount);
+
+        private void RestoreScrollVerticalOffset()
+        {
+            if (_scrollViewer == null) return;
+            if (_contentVerticalOffset > 0 && _scrollViewer.VerticalOffset == 0)
+            {
+                _scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
+            }
+        }
 
         private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
         {
@@ -82,6 +85,18 @@ namespace Screenbox.Pages
         private void BreadcrumbBar_OnItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
         {
             ViewModel.OnBreadcrumbBarItemClicked(args.Index);
+        }
+
+        private void FolderView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _scrollViewer = FolderView.FindDescendant<ScrollViewer>();
+            if (_scrollViewer == null) return;
+            _scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(FolderViewPage), Frame.BackStackDepth);
         }
     }
 }

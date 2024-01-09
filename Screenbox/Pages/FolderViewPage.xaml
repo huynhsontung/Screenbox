@@ -153,6 +153,7 @@
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource StorageItemGridViewTemplate}"
             ItemsSource="{x:Bind ViewModel.Items}"
+            Loaded="FolderView_OnLoaded"
             SelectionMode="None">
             <GridView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

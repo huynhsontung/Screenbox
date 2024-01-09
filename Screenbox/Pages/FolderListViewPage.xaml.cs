@@ -1,7 +1,10 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Screenbox.Controls.Interactions;
 using Screenbox.Core.ViewModels;
-using Windows.System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -18,47 +21,48 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
-        private readonly DispatcherQueue _dispatcherQueue;
-        private bool _navigatedBack;
+        private double _contentVerticalOffset;
+        private ScrollViewer? _scrollViewer;
 
         public FolderListViewPage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<FolderListViewPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             ListView.ChoosingItemContainer += FolderViewOnChoosingItemContainer;
         }
 
         private void FolderViewOnChoosingItemContainer(ListViewBase sender, ChoosingItemContainerEventArgs args)
         {
             ListView.ChoosingItemContainer -= FolderViewOnChoosingItemContainer;
-            if (_navigatedBack)
-            {
-                _dispatcherQueue.TryEnqueue(() =>
-                {
-                    Common.TryRestoreScrollingStateOnce(ListView, this);
-                });
-            }
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
-            await ViewModel.OnNavigatedTo(e.Parameter);
-        }
+            if (e.NavigationMode == NavigationMode.Back
+                && Common.TryGetScrollingState(nameof(FolderListViewPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(ListView, this);
+            await ViewModel.OnNavigatedTo(e.Parameter);
+            RestoreScrollVerticalOffset();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ViewModel.Clean();
+            ViewModel.OnNavigatedFrom();
+        }
+
+        private void RestoreScrollVerticalOffset()
+        {
+            if (_scrollViewer == null) return;
+            if (_contentVerticalOffset > 0 && _scrollViewer.VerticalOffset == 0)
+            {
+                _scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
+            }
         }
 
         private void FolderView_OnItemContextRequested(ListViewContextTriggerBehavior sender, ListViewContextRequestedEventArgs e)
@@ -67,6 +71,18 @@ namespace Screenbox.Pages
             {
                 e.Handled = true;
             }
+        }
+
+        private void ListView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            _scrollViewer = ListView.FindDescendant<ScrollViewer>();
+            if (_scrollViewer == null) return;
+            _scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(FolderListViewPage), Frame.BackStackDepth);
         }
     }
 }
