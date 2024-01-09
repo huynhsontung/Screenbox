@@ -151,14 +151,19 @@ namespace Screenbox.Core.Services
             return Serializer.Deserialize<T>(readStream);
         }
 
+        public async Task OpenFileLocationAsync(string path)
+        {
+            string? folderPath = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(folderPath))
+                await Launcher.LaunchFolderPathAsync(folderPath);
+        }
+
         public async Task OpenFileLocationAsync(StorageFile file)
         {
             StorageFolder? folder = await file.GetParentAsync();
             if (folder == null)
             {
-                string? folderPath = Path.GetDirectoryName(file.Path);
-                if (!string.IsNullOrEmpty(folderPath))
-                    await Launcher.LaunchFolderPathAsync(folderPath);
+                await OpenFileLocationAsync(file.Path);
             }
             else
             {

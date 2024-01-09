@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
+using System;
 using System.Collections.Generic;
 using Windows.Media;
 using Windows.Storage;
@@ -27,6 +28,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private StorageFile? _mediaFile;
+        private Uri? _mediaUri;
 
         public PropertyViewModel(IFilesService filesService, IResourceService resourceService)
         {
@@ -77,23 +79,35 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            if (media is FileMediaViewModel { File: { } file })
+            _mediaFile = media switch
+            {
+                FileMediaViewModel { File: { } file } => file,
+                UriMediaViewModel { File: { } uriFile } => uriFile,
+                _ => _mediaFile
+            };
+
+            if (_mediaFile != null)
             {
                 CanNavigateToFile = true;
-                _mediaFile = file;
-
-                FileProperties[_resourceService.GetString(ResourceName.PropertyFileType)] = file.FileType;
-                FileProperties[_resourceService.GetString(ResourceName.PropertyContentType)] = file.ContentType;
+                FileProperties[_resourceService.GetString(ResourceName.PropertyFileType)] = _mediaFile.FileType;
+                FileProperties[_resourceService.GetString(ResourceName.PropertyContentType)] = _mediaFile.ContentType;
                 FileProperties[_resourceService.GetString(ResourceName.PropertySize)] = BytesToHumanReadable((long)media.MediaInfo.Size);
                 FileProperties[_resourceService.GetString(ResourceName.PropertyLastModified)] = media.MediaInfo.DateModified.ToString();
+            }
+            else if (media is UriMediaViewModel { Uri: { } uri })
+            {
+                _mediaUri = uri;
+                CanNavigateToFile = uri.IsFile;
             }
         }
 
         [RelayCommand(CanExecute = nameof(CanNavigateToFile))]
         private void OpenFileLocation()
         {
-            if (_mediaFile == null) return;
-            _filesService.OpenFileLocationAsync(_mediaFile);
+            if (_mediaFile != null)
+                _filesService.OpenFileLocationAsync(_mediaFile);
+            else if (_mediaUri != null)
+                _filesService.OpenFileLocationAsync(_mediaUri.OriginalString);
         }
 
         // https://stackoverflow.com/a/11124118
