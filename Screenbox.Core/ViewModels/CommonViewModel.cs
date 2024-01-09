@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -73,27 +72,9 @@ namespace Screenbox.Core.ViewModels
                 : (double)Application.Current.Resources["ContentPageBottomPaddingHeight"];
         }
 
-        public void SaveScrollingState(ListViewBase element, Page page)
-        {
-            if (element.FindDescendant<ScrollViewer>() is { } scrollViewer)
-                _scrollingStates[page.GetType().Name + page.Frame.BackStackDepth] = scrollViewer.VerticalOffset;
-        }
-
         public void SaveScrollingState(double verticalOffset, string pageTypeName, int backStackDepth)
         {
             _scrollingStates[pageTypeName + backStackDepth] = verticalOffset;
-        }
-
-        public bool TryRestoreScrollingStateOnce(ListViewBase element, Page page)
-        {
-            string key = page.GetType().Name + page.Frame.BackStackDepth;
-            if (_scrollingStates.TryGetValue(key, out double verticalOffset))
-            {
-                _scrollingStates.Remove(key);
-                return element.FindDescendant<ScrollViewer>()?.ChangeView(null, verticalOffset, null, true) ?? false;
-            }
-
-            return false;
         }
 
         public bool TryGetScrollingState(string pageTypeName, int backStackDepth, out double verticalOffset)
