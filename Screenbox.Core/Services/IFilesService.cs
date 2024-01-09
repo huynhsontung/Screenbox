@@ -22,6 +22,7 @@ namespace Screenbox.Core.Services
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public IAsyncOperation<IReadOnlyList<StorageFile>> PickMultipleFilesAsync(params string[] formats);
         public IAsyncOperation<StorageFolder> PickFolderAsync();
+        public Task OpenFileLocationAsync(string path);
         public Task OpenFileLocationAsync(StorageFile file);
         public void AddToRecent(IStorageItem item);
         public Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source);
