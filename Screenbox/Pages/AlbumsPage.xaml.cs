@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +18,7 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
-        private bool _navigatedBack;
+        private double _contentVerticalOffset;
 
         public AlbumsPage()
         {
@@ -30,7 +31,11 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchAlbums();
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
+            if (e.NavigationMode == NavigationMode.Back &&
+                Common.TryGetScrollingState(nameof(AlbumsPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -39,18 +44,20 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(AlbumGridView, this);
-        }
-
         private void AlbumGridView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack)
+            ScrollViewer? scrollViewer = AlbumGridView.FindDescendant<ScrollViewer>();
+            if (scrollViewer == null) return;
+            scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+            if (_contentVerticalOffset > 0)
             {
-                Common.TryRestoreScrollingStateOnce(AlbumGridView, this);
+                scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
             }
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(AlbumsPage), Frame.BackStackDepth);
         }
 
         private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

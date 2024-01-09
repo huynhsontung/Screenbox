@@ -116,10 +116,9 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void Clean()
+        public void OnNavigatedFrom()
         {
             _isActive = false;
-            Items.Clear();
         }
 
         protected virtual void Navigate(object? parameter = null)
