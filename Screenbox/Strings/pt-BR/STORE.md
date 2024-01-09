@@ -1,6 +1,6 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Reprodutor de mídia Screenbox
+## Reprodutor de Mídia Screenbox
 
 **O Screenbox é um reprodutor de mídia moderno para todos os seus dispositivos, com suporte a uma ampla variedade de formatos de arquivo.**
 
