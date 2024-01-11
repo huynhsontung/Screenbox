@@ -1,19 +1,19 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Медіапрогравач Screenbox
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox — це сучасний медіапрогравач із підтримкою широкого спектра типів файлів для всіх ваших пристроїв.**
 
-### Description
+### Опис
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox — це сучасний медіапрогравач, який привносить новий та свіжий погляд на класичну програму. Він пропонує елегантний та інтуїтивно зрозумілий інтерфейс, який здатний адаптуватися до особливостей вашої системи. Розроблений для безперебійної роботи на різноманітних пристроях з Windows та на консолях Xbox — Screenbox є швидким, легким і потужним.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox підтримує широкий спектр типів файлів і кодеків. Може відтворити майже будь-який медіафайл без усіляких додатків. Працюючи на базі LibVLC, Screenbox поєднує в собі все найкраще від медіапрогравача VLC та можливостей сучасних програм для Windows. Додаткові налаштування відтворення доступні за допомогою аргументів командного рядка VLC.
 
-### Features
+### Функції
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Сучасний інтерфейс із підтримкою жестів, оптимізований для всіх типів пристроїв з Windows.
+- Підтримка багатьох типів аудіо та відео.
+- Переглядайте та керуйте своєю колекцією музики та відео на комп’ютері чи в мережі.
+- Транслюйте ваші медіа на широкий спектр пристроїв з Chromecast.
+- Працюйте та насолоджуйтеся медіа одночасно, за допомогою режиму «Картинка в картинці».
