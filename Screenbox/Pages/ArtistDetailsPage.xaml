@@ -31,9 +31,9 @@
             <DataTemplate x:Key="AlbumGroupHeaderTemplate">
                 <UserControl>
                     <StackPanel
-                        x:Name="HeaderRootPanel"
+                        x:Name="HeaderRootStackPanel"
                         Width="160"
-                        Margin="0,0,12,0"
+                        Margin="0,0,12,12"
                         Orientation="Vertical">
                         <Grid
                             x:Name="AlbumArtGrid"
@@ -86,9 +86,9 @@
                                         </triggers:IsEqualStateTrigger>
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
-                                        <Setter Target="HeaderRootPanel.Width" Value="Auto" />
-                                        <Setter Target="HeaderRootPanel.Margin" Value="0,4,0,4" />
-                                        <Setter Target="HeaderRootPanel.Orientation" Value="Horizontal" />
+                                        <Setter Target="HeaderRootStackPanel.Width" Value="Auto" />
+                                        <Setter Target="HeaderRootStackPanel.Margin" Value="0,4,0,8" />
+                                        <Setter Target="HeaderRootStackPanel.Orientation" Value="Horizontal" />
                                         <Setter Target="AlbumArtGrid.Width" Value="72" />
                                         <Setter Target="AlbumArtGrid.Height" Value="72" />
                                         <Setter Target="AlbumArtIcon.FontSize" Value="32" />
@@ -182,6 +182,7 @@
                     <TextBlock
                         x:Name="Subtext"
                         FontWeight="Normal"
+                        MaxLines="2"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
                         TextWrapping="Wrap" />
@@ -229,7 +230,7 @@
             Grid.Row="1"
             Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
-            extensions:ListViewExtensions.ItemMargin="0,0,0,4"
+            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
@@ -265,13 +266,15 @@
                             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
                             <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
                             <Setter Property="Background" Value="{ThemeResource ListViewHeaderItemBackground}" />
-                            <Setter Property="Margin" Value="0,0,0,4" />
+                            <!--<Setter Property="Margin" Value="0,0,0,4" />-->
+                            <Setter Property="Margin" Value="0,0,0,0" />
                             <!--<Setter Property="Padding" Value="12,8,12,0" />-->
                             <Setter Property="Padding" Value="0,0,0,0" />
                             <Setter Property="HorizontalContentAlignment" Value="Left" />
                             <Setter Property="VerticalContentAlignment" Value="Top" />
                             <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}" />
                             <!--  Remove Header from XYNavigation  -->
+                            <!--<Setter Property="IsTabStop" Value="True" />-->
                             <Setter Property="IsTabStop" Value="False" />
                             <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
                             <Setter Property="Template">
