@@ -592,58 +592,58 @@
     <value>Субтитри</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Показувати останні відтворені медіа на головній сторінці</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Очистити історію останніх медіа</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Автоматичний розмір вікна</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Змінювати розмір вікна програми при відтворенні відео для найкращої відповідності його власній роздільності</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Підсилення гучності</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Дозволити максимальній гучності бути більшою за 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Жести</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Горизонтальне проведення для переходу по хронології</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Вертикальне проведення для регулювання гучності</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Натискання будь-де для відтворення чи зупинки</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Медіапрогравач Screenbox</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Початковий код</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Підтримати розробку ☕</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Завжди</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Ніколи</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>При запуску</value>
   </data>
   <data name="VersionText" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>Версія {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
