@@ -296,7 +296,7 @@
     <value>Нам не вдалося знайти музику</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>У вашій колекції музики відсутня будь-яка музика.</value>
+    <value>У вашій бібліотеці музики відсутня будь-яка музика.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Відкрити файл(-и)</value>
@@ -437,13 +437,13 @@
     <value>Пошук файлу(-ів) для додавання у чергу</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Додати папку до колекції музики</value>
+    <value>Додати папку до бібліотеки музики</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Додати медіа за посиланням</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Додати папку до колекції відео</value>
+    <value>Додати папку до бібліотеки відео</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Відкрити папку</value>
@@ -511,19 +511,19 @@
     <value>У доступі відмовлено. Будь ласка, перевірте ваші налаштування конфіденційності та переконайтеся в тому, що Screenbox має належні дозволи.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Немає доступу до колекції музики</value>
+    <value>Немає доступу до бібліотеки музики</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Немає доступу до колекції зображень</value>
+    <value>Немає доступу до бібліотеки зображень</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Немає доступу до колекції відео</value>
+    <value>Немає доступу до бібліотеки відео</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>Нам не вдалося знайти відео</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>У вашій колекції відео відсутні будь-які відео.</value>
+    <value>У вашій бібліотеці відео відсутні будь-які відео.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Відкрити налаштування конфіденційності</value>
@@ -574,19 +574,19 @@
     <value>Загальне</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Колекції</value>
+    <value>Бібліотеки</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
     <value>Програвач</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Розташування колекцій музики</value>
+    <value>Розташування бібліотеки музики</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Показувати останнє</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Розташування колекцій відео</value>
+    <value>Розташування бібліотеки відео</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Субтитри</value>
@@ -647,118 +647,118 @@
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Субтитри додано</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Критична помилка</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Немає сумісного візуалізатора. Переконайтеся, що на вашому пристрої доступний Direct3D 11.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>Не вдалося відкрити файл(-и)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>Уведіть посилання на файл чи потік</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>Відкрити сторінку «Пристрої» у налаштуваннях</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Задати параметри відтворення</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Задати</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Задати та відтворити</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Задати параметри VLC, які застосуються до потоку.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Деякі параметри можуть бути задані лише глобально.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>«Допомога з командним рядком VLC»</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Відвідайте {0}, щоб дізнатися повний список доступних параметрів.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Розширене</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Розширений режим</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>У розширеному режимі ви можете змінювати поведінку LibVLC за допомогою командного рядка.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Глобальні аргументи</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Аргументи командного рядка, які застосовуються до всіх відтворюваних медіа.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Вилучити папку</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Очікувані зміни</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Перезапустіть програму, щоб зміни набули чинності</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Не вдалося ініціалізувати</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Пов’язані посилання</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Політика конфіденційності</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Ліцензія</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Допомогти з перекладом</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Параметри</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Затримка</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Композитори</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Не вдалося додати папку</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Відкрити альбом</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Відкрити виконавця</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Оновити бібліотеки</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Оновити</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Використовувати індексатор для сканування</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Прискорити сканування бібліотеки за допомогою системного індексування, якщо це можливо. Вимкніть це, якщо ви бачите не всі медіа з вашої бібліотеки.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Керувати системним індексування</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Задати аргументи</value>
   </data>
 </root>
