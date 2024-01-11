@@ -85,15 +85,15 @@
         <Button
             x:Name="PlayButton"
             Grid.Column="1"
+            Width="32"
+            Height="32"
             Padding="7"
             VerticalAlignment="Center"
             CommandParameter="{Binding}"
             Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
-            <FontIcon
-                FontSize="{StaticResource DefaultIconFontSize}"
-                Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
             <Button.Resources>
                 <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentButtonBackground" />
                 <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="AccentButtonBackgroundPointerOver" />
