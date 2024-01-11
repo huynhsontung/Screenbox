@@ -98,7 +98,7 @@
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
+                    AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:ListViewContextTriggerBehavior ContextRequested="FolderView_OnItemContextRequested" Flyout="{x:Bind ItemFlyout}" />

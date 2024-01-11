@@ -16,15 +16,15 @@
                     <!--  Brushes  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <StaticResource x:Key="AlternateListViewItemFillColorBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="ListViewAltItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="AlternateListViewItemFillColorBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="ListViewAltItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
-                            <SolidColorBrush x:Key="AlternateListViewItemFillColorBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+                            <SolidColorBrush x:Key="ListViewAltItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemColorHighlightColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>

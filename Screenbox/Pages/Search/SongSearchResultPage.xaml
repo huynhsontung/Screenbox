@@ -53,7 +53,7 @@
             </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AlternateListViewItemFillColorBrush}"
+                    AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <!-- <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" /> -->
