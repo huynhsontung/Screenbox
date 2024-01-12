@@ -117,7 +117,10 @@
 
                     <!--  Require focus engagement on a gamepad  -->
                     <!--  https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#focus-engagement  -->
-                    <Style x:Key="ListViewItemFocusEngagementStyle" TargetType="ListViewItem">
+                    <Style
+                        x:Key="ListViewItemFocusEngagementStyle"
+                        BasedOn="{StaticResource DefaultListViewItemStyle}"
+                        TargetType="ListViewItem">
                         <Setter Property="IsFocusEngagementEnabled" Value="True" />
                     </Style>
 
