@@ -47,6 +47,9 @@ namespace Screenbox.Pages
 
         private void ArtistDetailsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
+            // Set initial visual state
+            VisualStateManager.GoToState(this, Common.NavigationViewDisplayMode.ToString(), false);
+
             // Retrieve the ScrollViewer that the GridView is using internally
             ScrollViewer scrollViewer = _scrollViewer = ItemList.FindDescendant<ScrollViewer>() ??
                                                         throw new Exception("Cannot find ScrollViewer in ListView");
