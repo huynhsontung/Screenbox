@@ -32,18 +32,46 @@
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
                     <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="SystemColorWindowColor" />
+                    <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
+                    <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorWindowTextColor" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+            <!--  Background brushes  -->
+            <LinearGradientBrush x:Key="HeaderLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0" Color="#B31C1C1C" />
+                    <GradientStop Offset="1" Color="#00000000" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Name="ControlsLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0" Color="#00000000" />
+                    <GradientStop Offset="1" Color="#B31C1C1C" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
 
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
@@ -137,14 +165,8 @@
             MinHeight="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Canvas.ZIndex="3">
-            <Border.Background>
-                <LinearGradientBrush x:Name="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="1" Color="#00000000" />
-                    <GradientStop Offset="0" Color="#99000000" />
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
+            Background="{ThemeResource HeaderBackgroundBrush}"
+            Canvas.ZIndex="3" />
 
         <Grid
             x:Name="TitleBarArea"
@@ -363,9 +385,13 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
-            Background="Transparent"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             Visibility="Collapsed">
+            <Button.Resources>
+                <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="RestoreButtonBackgroundPointerOver" />
+                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="RestoreButtonBackgroundPressed" />
+            </Button.Resources>
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="I" />
             </Button.KeyboardAccelerators>
@@ -453,19 +479,6 @@
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-        <Border
-            x:Name="PlayerControlsBackground"
-            Grid.Row="2"
-            Grid.Column="0"
-            Tapped="PlayerControlsBackground_OnTapped">
-            <Border.Background>
-                <LinearGradientBrush x:Name="ControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0" Color="#00000000" />
-                    <GradientStop Offset="1" Color="#99000000" />
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
-
         <controls:NotificationView
             x:Name="NotificationView"
             Grid.Row="1"
@@ -473,6 +486,13 @@
             Margin="12,0,12,-12"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom" />
+
+        <Border
+            x:Name="PlayerControlsBackground"
+            Grid.Row="2"
+            Grid.Column="0"
+            Background="{ThemeResource ControlsBackgroundBrush}"
+            Tapped="PlayerControlsBackground_OnTapped" />
 
         <controls:PlayerControls
             x:Name="PlayerControls"
