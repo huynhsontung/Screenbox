@@ -33,7 +33,7 @@
                     <StackPanel
                         x:Name="HeaderRootStackPanel"
                         Width="160"
-                        Margin="0,0,12,12"
+                        Margin="0,0,12,24"
                         Orientation="Vertical">
                         <Grid
                             x:Name="AlbumArtGrid"
