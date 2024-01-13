@@ -235,14 +235,14 @@ namespace Screenbox.Core.ViewModels
             return Task.CompletedTask;
         }
 
-        private void UpdateAlbum()
+        public void UpdateAlbum()
         {
             if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Album != null) return;
             MusicInfo musicProperties = MediaInfo.MusicProperties;
             Album = _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
         }
 
-        private void UpdateArtists()
+        public void UpdateArtists()
         {
             if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Artists.Length != 0) return;
             Artists = _artistFactory.ParseArtists(MediaInfo.MusicProperties.Artist, this);

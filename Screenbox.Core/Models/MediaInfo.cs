@@ -5,7 +5,7 @@ using Windows.Media;
 using Windows.Storage.FileProperties;
 
 namespace Screenbox.Core.Models;
-public sealed record MediaInfo
+public sealed class MediaInfo
 {
     public MediaPlaybackType MediaType { get; set; }
 
