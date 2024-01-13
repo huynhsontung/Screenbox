@@ -338,6 +338,7 @@ namespace Screenbox.Core.Services
                 }
 
                 song.Artists = Array.Empty<ArtistViewModel>();
+                song.Clean();
             }
 
             _albumFactory.Compact();
