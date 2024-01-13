@@ -38,6 +38,7 @@
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
+            ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
             <ListView.Resources>
