@@ -5,7 +5,7 @@ using Windows.Storage.FileProperties;
 namespace Screenbox.Core.Models;
 
 [ProtoContract]
-public sealed record MusicInfo
+public sealed class MusicInfo
 {
     [ProtoMember(1)] public string Title { get; set; } = string.Empty;
     [ProtoMember(2)] public string Artist { get; set; } = string.Empty;
