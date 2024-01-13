@@ -86,5 +86,51 @@ namespace Screenbox.Core.Factories
             artist.RelatedSongs.Add(song);
             return _allArtists[key] = artist;
         }
+
+        public void Remove(MediaViewModel song)
+        {
+            foreach (ArtistViewModel artist in song.Artists)
+            {
+                artist.RelatedSongs.Remove(song);
+                if (artist.RelatedSongs.Count == 0)
+                {
+                    string artistKey = artist.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
+                    _allArtists.Remove(artistKey);
+                }
+            }
+
+            song.Artists = Array.Empty<ArtistViewModel>();
+        }
+
+        public void Compact()
+        {
+            List<string> albumKeysToRemove =
+                _allArtists.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+
+            foreach (string albumKey in albumKeysToRemove)
+            {
+                _allArtists.Remove(albumKey);
+            }
+        }
+
+        public void Clear()
+        {
+            foreach (MediaViewModel media in UnknownArtist.RelatedSongs)
+            {
+                media.Artists = Array.Empty<ArtistViewModel>();
+            }
+
+            UnknownArtist.RelatedSongs.Clear();
+
+            foreach ((string _, ArtistViewModel artist) in _allArtists)
+            {
+                foreach (MediaViewModel media in artist.RelatedSongs)
+                {
+                    media.Artists = Array.Empty<ArtistViewModel>();
+                }
+            }
+
+            _allArtists.Clear();
+        }
     }
 }
