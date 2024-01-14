@@ -29,7 +29,9 @@ namespace Screenbox.Core.Services
         public bool IsLoadingVideos { get; private set; }
         public bool IsLoadingMusic { get; private set; }
         private bool UseIndexer => _settingsService.UseIndexer;
+        private bool SearchRemovableStorage => _settingsService.SearchRemovableStorage && SystemInformation.IsXbox;
 
+        private static readonly string[] CustomPropertyKeys = { SystemProperties.Title };
         private readonly ISettingsService _settingsService;
         private readonly IFilesService _filesService;
         private readonly MediaViewModelFactory _mediaFactory;
@@ -93,14 +95,31 @@ namespace Screenbox.Core.Services
             _musicFetchCts = cts;
             try
             {
-                await FetchMusicCancelableAsync(cts.Token);
+                StorageFileQueryResult libraryQuery = SearchRemovableStorage
+                    ? CreateRemovableStorageMusicQuery()
+                    : GetMusicLibraryQuery();
+                await InitializeMusicLibraryAsync();
+                cts.Token.ThrowIfCancellationRequested();
+                await FetchMusicCancelableAsync(libraryQuery, cts.Token);
             }
             catch (OperationCanceledException)
             {
-                return;
+                // ignored
             }
+            catch (Exception e)
+            {
+                if (e.HResult == unchecked((int)0x80270200)) // LIBRARY_E_NO_SAVE_LOCATION
+                {
+                    LogService.Log(e);
+                    return;
+                }
 
-            _musicFetchCts = null;
+                throw;
+            }
+            finally
+            {
+                _musicFetchCts = null;
+            }
         }
 
         public async Task FetchVideosAsync()
@@ -110,14 +129,31 @@ namespace Screenbox.Core.Services
             _videosFetchCts = cts;
             try
             {
-                await FetchVideosCancelableAsync(cts.Token);
+                StorageFileQueryResult libraryQuery = SearchRemovableStorage
+                    ? CreateRemovableStorageVideosQuery()
+                    : GetVideosLibraryQuery();
+                await InitializeVideosLibraryAsync();
+                cts.Token.ThrowIfCancellationRequested();
+                await FetchVideosCancelableAsync(libraryQuery, cts.Token);
             }
             catch (OperationCanceledException)
             {
-                return;
+                // ignored
             }
+            catch (Exception e)
+            {
+                if (e.HResult == unchecked((int)0x80270200)) // LIBRARY_E_NO_SAVE_LOCATION
+                {
+                    LogService.Log(e);
+                    return;
+                }
 
-            _videosFetchCts = null;
+                throw;
+            }
+            finally
+            {
+                _videosFetchCts = null;
+            }
         }
 
         public void RemoveMedia(MediaViewModel media)
@@ -222,14 +258,11 @@ namespace Screenbox.Core.Services
             return videos;
         }
 
-        private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
+        private async Task FetchMusicCancelableAsync(StorageFileQueryResult libraryQuery, CancellationToken cancellationToken)
         {
             IsLoadingMusic = true;
             try
             {
-                StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
-                await InitializeMusicLibraryAsync();
-                cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same songs instance
                 // If not empty then create a new list to avoid overwriting the cache
@@ -246,18 +279,6 @@ namespace Screenbox.Core.Services
                 if (hasCache) CleanOutdatedSongs();
                 _songs = songs;
             }
-            catch (Exception e)
-            {
-                if (e.HResult == unchecked((int)0x80270200))    // LIBRARY_E_NO_SAVE_LOCATION
-                {
-                    LogService.Log(e);
-                    return;
-                }
-                else
-                {
-                    throw;
-                }
-            }
             finally
             {
                 if (!cancellationToken.IsCancellationRequested)
@@ -270,32 +291,17 @@ namespace Screenbox.Core.Services
             await CacheSongsAsync(cancellationToken);
         }
 
-        private async Task FetchVideosCancelableAsync(CancellationToken cancellationToken)
+        private async Task FetchVideosCancelableAsync(StorageFileQueryResult libraryQuery, CancellationToken cancellationToken)
         {
             IsLoadingVideos = true;
             try
             {
-                StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
-                await InitializeVideosLibraryAsync();
-                cancellationToken.ThrowIfCancellationRequested();
                 List<MediaViewModel> videos = _videos = await LoadVideosCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same videos instance
                 // If not empty then create a new list to avoid overwriting the cache
                 if (videos.Count > 0) videos = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
                 await LoadLibraryDetailsAsync(videos, cancellationToken);
-            }
-            catch (Exception e)
-            {
-                if (e.HResult == unchecked((int)0x80270200))    // LIBRARY_E_NO_SAVE_LOCATION
-                {
-                    LogService.Log(e);
-                    return;
-                }
-                else
-                {
-                    throw;
-                }
             }
             finally
             {
@@ -441,40 +447,45 @@ namespace Screenbox.Core.Services
 
         private static StorageFileQueryResult CreateMusicLibraryQuery(bool useIndexer)
         {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Music.Artist,
-                SystemProperties.Media.Duration
-            };
-
             QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats)
             {
                 IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
             };
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
-                customPropertyKeys);
+                CustomPropertyKeys);
 
             return KnownFolders.MusicLibrary.CreateFileQueryWithOptions(queryOptions);
         }
 
         private static StorageFileQueryResult CreateVideosLibraryQuery(bool useIndexer)
         {
-            string[] customPropertyKeys =
-            {
-                SystemProperties.Title,
-                SystemProperties.Media.Duration
-            };
-
             QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats)
             {
                 IndexerOption = useIndexer ? IndexerOption.UseIndexerWhenAvailable : IndexerOption.DoNotUseIndexer
             };
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
-                customPropertyKeys);
+                CustomPropertyKeys);
             return KnownFolders.VideosLibrary.CreateFileQueryWithOptions(queryOptions);
+        }
+
+        private static StorageFileQueryResult CreateRemovableStorageMusicQuery()
+        {
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats);
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
+                CustomPropertyKeys);
+            return KnownFolders.RemovableDevices.CreateFileQueryWithOptions(queryOptions);
+        }
+
+        private static StorageFileQueryResult CreateRemovableStorageVideosQuery()
+        {
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats);
+            queryOptions.SetPropertyPrefetch(
+                PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
+                CustomPropertyKeys);
+            return KnownFolders.RemovableDevices.CreateFileQueryWithOptions(queryOptions);
         }
     }
 }

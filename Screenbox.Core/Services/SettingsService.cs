@@ -19,6 +19,7 @@ namespace Screenbox.Core.Services
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
         private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
+        private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
@@ -74,6 +75,12 @@ namespace Screenbox.Core.Services
             set => SetValue(GeneralShowRecent, value);
         }
 
+        public bool SearchRemovableStorage
+        {
+            get => GetValue<bool>(LibrariesSearchRemovableStorageKey);
+            set => SetValue(LibrariesSearchRemovableStorageKey, value);
+        }
+
         public MediaPlaybackAutoRepeatMode PersistentRepeatMode
         {
             get => (MediaPlaybackAutoRepeatMode)GetValue<int>(PersistentRepeatModeKey);
@@ -101,6 +108,7 @@ namespace Screenbox.Core.Services
             SetDefault(PersistentVolumeKey, 100);
             SetDefault(MaxVolumeKey, 100);
             SetDefault(LibrariesUseIndexerKey, true);
+            SetDefault(LibrariesSearchRemovableStorageKey, true);
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
