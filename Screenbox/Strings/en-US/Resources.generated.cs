@@ -2520,6 +2520,45 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsSearchRemovableStorageHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Search removable storage
+        /// </summary>
+        public static string SettingsSearchRemovableStorageHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsSearchRemovableStorageHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsSearchRemovableStorageDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Include media from storage devices, like USB sticks, in your libraries
+        /// </summary>
+        public static string SettingsSearchRemovableStorageDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsSearchRemovableStorageDescription");
+            }
+        }
+        #endregion
+
+        #region ActiveArguments
+        /// <summary>
+        ///   Looks up a localized string similar to: Active arguments
+        /// </summary>
+        public static string ActiveArguments
+        {
+            get
+            {
+                return _resourceLoader.GetString("ActiveArguments");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2723,6 +2762,9 @@ namespace Screenbox.Strings{
             SettingsUseIndexerDescription,
             ManageSystemIndexingLink,
             SetArguments,
+            SettingsSearchRemovableStorageHeader,
+            SettingsSearchRemovableStorageDescription,
+            ActiveArguments,
         }
 
         private static ResourceLoader _resourceLoader;

@@ -130,8 +130,8 @@
                     Text="{strings:Resources Key=SettingsCategoryLibraries}" />
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Include media from storage devices like USB sticks in your libraries"
-                    Header="Search removable storage"
+                    Description="{strings:Resources Key=SettingsSearchRemovableStorageDescription}"
+                    Header="{strings:Resources Key=SettingsSearchRemovableStorageHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe88e;}"
                     ItemTemplate="{StaticResource RemovableStorageFolderTemplate}"
                     ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
@@ -317,7 +317,7 @@
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
                             CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
-                            Header="Active arguments"
+                            Header="{strings:Resources Key=ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>
