@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
@@ -24,6 +25,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
+        [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
@@ -31,6 +33,8 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
         public ObservableCollection<StorageFolder> VideoLocations { get; }
+
+        public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
@@ -47,6 +51,7 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
+            RemovableStorageFolders = new ObservableCollection<StorageFolder>();
 
             // Load values
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
@@ -55,6 +60,7 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
+            _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
@@ -106,6 +112,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.ShowRecent = value;
             Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
+        }
+
+        partial void OnSearchRemovableStorageChanged(bool value)
+        {
+            _settingsService.SearchRemovableStorage = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage)));
         }
 
         partial void OnVolumeBoostChanged(int value)
@@ -240,6 +252,14 @@ namespace Screenbox.Core.ViewModels
             }
 
             UpdateLibraryLocations();
+            if (SystemInformation.IsXbox)
+            {
+                RemovableStorageFolders.Clear();
+                foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
+                {
+                    RemovableStorageFolders.Add(folder);
+                }
+            }
         }
 
         private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
