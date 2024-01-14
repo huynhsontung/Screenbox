@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -39,6 +40,8 @@ namespace Screenbox.Core.Services
         private readonly ArtistViewModelFactory _artistFactory;
         private readonly DispatcherQueueTimer _musicRefreshTimer;
         private readonly DispatcherQueueTimer _videosRefreshTimer;
+        private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
+        private readonly DeviceWatcher? _portableStorageDeviceWatcher;
 
         private StorageFileQueryResult? _musicLibraryQueryResult;
         private StorageFileQueryResult? _videosLibraryQueryResult;
@@ -61,8 +64,16 @@ namespace Screenbox.Core.Services
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _musicRefreshTimer = dispatcherQueue.CreateTimer();
             _videosRefreshTimer = dispatcherQueue.CreateTimer();
+            _storageDeviceRefreshTimer = dispatcherQueue.CreateTimer();
             _songs = new List<MediaViewModel>();
             _videos = new List<MediaViewModel>();
+
+            if (SystemInformation.IsXbox)
+            {
+                _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
+                _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
+                _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
+            }
         }
 
         public async Task<StorageLibrary> InitializeMusicLibraryAsync()
@@ -273,6 +284,7 @@ namespace Screenbox.Core.Services
                 {
                     libraryQuery = CreateRemovableStorageMusicQuery();
                     await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                    StartPortableStorageDeviceWatcher();
                 }
 
                 if (hasCache) _songs.ForEach(song => song.IsFromLibrary = false);
@@ -307,6 +319,7 @@ namespace Screenbox.Core.Services
                 {
                     libraryQuery = CreateRemovableStorageVideosQuery();
                     await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                    StartPortableStorageDeviceWatcher();
                 }
 
                 await LoadLibraryDetailsAsync(videos, cancellationToken);
@@ -430,6 +443,25 @@ namespace Screenbox.Core.Services
             async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+        }
+
+        private void OnPortableStorageDeviceChanged(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            if (!SearchRemovableStorage) return;
+            async void FetchAction()
+            {
+                await FetchVideosAsync();
+                await FetchMusicAsync();
+            }
+            _storageDeviceRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+        }
+
+        private void StartPortableStorageDeviceWatcher()
+        {
+            if (_portableStorageDeviceWatcher?.Status is DeviceWatcherStatus.Created or DeviceWatcherStatus.Stopped)
+            {
+                _portableStorageDeviceWatcher.Start();
+            }
         }
 
         private static async Task LoadLibraryDetailsAsync(List<MediaViewModel> mediaList, CancellationToken cancellationToken)
