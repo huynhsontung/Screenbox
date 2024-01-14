@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Events;
+using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

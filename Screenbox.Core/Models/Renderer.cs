@@ -2,14 +2,14 @@
 
 using LibVLCSharp.Shared;
 
-namespace Screenbox.Core
+namespace Screenbox.Core.Models
 {
     public sealed class Renderer
     {
         public bool IsAvailable { get; private set; }
 
         public string Name { get; }
-        
+
         public string Type { get; }
 
         public string? IconUri { get; }

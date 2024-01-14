@@ -112,6 +112,15 @@
                         <Setter Property="Height" Value="32" />
                     </Style>
 
+                    <!--  Require focus engagement on a gamepad  -->
+                    <!--  https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#focus-engagement  -->
+                    <Style
+                        x:Key="ListViewItemFocusEngagementStyle"
+                        BasedOn="{StaticResource DefaultListViewItemStyle}"
+                        TargetType="ListViewItem">
+                        <Setter Property="IsFocusEngagementEnabled" Value="True" />
+                    </Style>
+
                     <!--  Semantic zoom group-level style  -->
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
                         <Button

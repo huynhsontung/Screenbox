@@ -64,6 +64,12 @@
           "Microsoft.UI.Xaml": "2.7.0"
         }
       },
+      "LibVLC.UWP": {
+        "type": "Direct",
+        "requested": "[3.0.20-2312260030, )",
+        "resolved": "3.0.20-2312260030",
+        "contentHash": "f/PWalooJ3LlJdeLmPZ3huIKcxDVJJzcogKlEsFp7MYSMnDaSfWsfNc9wrAymjCBfMbDtBVULq84Gqt3WiG4Jg=="
+      },
       "Microsoft.AppCenter.Analytics": {
         "type": "Direct",
         "requested": "[5.0.3, )",
@@ -129,12 +135,6 @@
         "dependencies": {
           "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
         }
-      },
-      "VideoLAN.LibVLC.UWP": {
-        "type": "Direct",
-        "requested": "[3.3.3-20231219, )",
-        "resolved": "3.3.3-20231219",
-        "contentHash": "kXH/UY6Eqn6L8ZKDua37374Fymw6jTcZgFMOxehUSlVCR0A9g35TMj/ZDkYeflgPv+yWDhMQXZqcbnEIHkzGwQ=="
       },
       "CommunityToolkit.Common": {
         "type": "Transitive",
@@ -261,20 +261,20 @@
       },
       "protobuf-net": {
         "type": "Transitive",
-        "resolved": "3.1.33",
-        "contentHash": "tv6wc8QvCjGOY/grQ/irxUWqRtHpVzOLY87+jvINxYOD5n0o4TX9RukJ/FRkVyMeQtLLhf/0okQFb4rQgoWt8A==",
+        "resolved": "3.2.30",
+        "contentHash": "C/UTlmxEJHAHpqm8xQK1UyJKaIynVCSNG4mVrbLgnZ7ccH28nN49O8iMJvKEodTgVbnimvy+3mIiAdW6mATwnw==",
         "dependencies": {
           "System.Reflection.Emit": "4.7.0",
           "System.Reflection.Emit.Lightweight": "4.7.0",
-          "protobuf-net.Core": "3.1.33"
+          "protobuf-net.Core": "3.2.30"
         }
       },
       "protobuf-net.Core": {
         "type": "Transitive",
-        "resolved": "3.1.33",
-        "contentHash": "uq+KLED4Mwx1BnTE5TTtawQgaCRpajcbRKaYsEbY5biWWK1O5+rCBTd6+9EpK6CYxd2POUHkpwTslPs4SCoHOw==",
+        "resolved": "3.2.30",
+        "contentHash": "v2ZxxYrz+X212ukSx+uqkLuPu414bvmSAnTyf+PBUKR9ENJxO4P/csorA/27456MCp1JNoMssDj/f91RDiwBfQ==",
         "dependencies": {
-          "System.Collections.Immutable": "1.7.1",
+          "System.Collections.Immutable": "7.0.0",
           "System.Memory": "4.5.5"
         }
       },
@@ -404,10 +404,11 @@
       },
       "System.Collections.Immutable": {
         "type": "Transitive",
-        "resolved": "1.7.1",
-        "contentHash": "B43Zsz5EfMwyEbnObwRxW5u85fzJma3lrDeGcSAV1qkhSRTNY5uXAByTn9h9ddNdhM+4/YoLc/CI43umjwIl9Q==",
+        "resolved": "7.0.0",
+        "contentHash": "dQPcs0U1IKnBdRDBkrCTi1FoajSTBzLcVTpjO4MBCMC7f4pDOIPzgBoX8JjG7X6uZRJ8EBxsi8+DR1JuwjnzOQ==",
         "dependencies": {
-          "System.Memory": "4.5.4"
+          "System.Memory": "4.5.5",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
       },
       "System.ComponentModel.Annotations": {
@@ -481,7 +482,7 @@
           "Microsoft.AppCenter.Crashes": "[5.0.3, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Microsoft.UI.Xaml": "[2.8.6, )",
-          "protobuf-net": "[3.1.33, )"
+          "protobuf-net": "[3.2.30, )"
         }
       }
     },

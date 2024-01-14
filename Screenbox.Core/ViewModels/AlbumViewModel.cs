@@ -105,7 +105,7 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 List<MediaViewModel> songs = RelatedSongs
-                .OrderBy(m => m.TrackNumber)
+                .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
                     .ThenBy(m => m.Name, StringComparer.CurrentCulture)
                     .ToList();
 

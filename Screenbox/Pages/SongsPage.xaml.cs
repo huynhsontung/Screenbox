@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +18,7 @@ namespace Screenbox.Pages
 
         internal CommonViewModel Common { get; }
 
-        private bool _navigatedBack;
+        private double _contentVerticalOffset;
 
         public SongsPage()
         {
@@ -30,7 +31,11 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.FetchSongs();
-            _navigatedBack = e.NavigationMode == NavigationMode.Back;
+            if (e.NavigationMode == NavigationMode.Back &&
+                Common.TryGetScrollingState(nameof(SongsPage), Frame.BackStackDepth, out double verticalOffset))
+            {
+                _contentVerticalOffset = verticalOffset;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -39,18 +44,20 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            base.OnNavigatingFrom(e);
-            Common.SaveScrollingState(SongListView, this);
-        }
-
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_navigatedBack)
+            ScrollViewer? scrollViewer = SongListView.FindDescendant<ScrollViewer>();
+            if (scrollViewer == null) return;
+            scrollViewer.ViewChanging += ScrollViewerOnViewChanging;
+            if (_contentVerticalOffset > 0)
             {
-                Common.TryRestoreScrollingStateOnce(SongListView, this);
+                scrollViewer.ChangeView(null, _contentVerticalOffset, null, true);
             }
+        }
+
+        private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(SongsPage), Frame.BackStackDepth);
         }
     }
 }

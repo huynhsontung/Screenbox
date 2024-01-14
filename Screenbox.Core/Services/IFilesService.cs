@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Playback;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -23,8 +22,12 @@ namespace Screenbox.Core.Services
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);
         public IAsyncOperation<IReadOnlyList<StorageFile>> PickMultipleFilesAsync(params string[] formats);
         public IAsyncOperation<StorageFolder> PickFolderAsync();
-        public Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer);
+        public Task OpenFileLocationAsync(string path);
         public Task OpenFileLocationAsync(StorageFile file);
         public void AddToRecent(IStorageItem item);
+        public Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source);
+        public Task SaveToDiskAsync<T>(StorageFile file, T source);
+        public Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName);
+        public Task<T> LoadFromDiskAsync<T>(StorageFile file);
     }
 }

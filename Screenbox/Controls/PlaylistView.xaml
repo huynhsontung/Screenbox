@@ -227,6 +227,7 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">

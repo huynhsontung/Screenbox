@@ -145,6 +145,7 @@
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
+    <Compile Include="Helpers\LastPositionTracker.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
@@ -180,14 +181,18 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
-    <Compile Include="Models\LastPositionTracker.cs" />
+    <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MediaViewModelWithMruToken.cs" />
+    <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
+    <Compile Include="Models\PersistentVideoRecord.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
+    <Compile Include="Models\PersistentSongRecord.cs" />
+    <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
@@ -237,6 +242,7 @@
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="ViewModels\CommonViewModel.cs" />
+    <Compile Include="ViewModels\FileMediaViewModel.cs" />
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
@@ -258,6 +264,7 @@
     <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SongsPageViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
+    <Compile Include="ViewModels\UriMediaViewModel.cs" />
     <Compile Include="ViewModels\VideoSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
@@ -289,7 +296,7 @@
       <Version>2.8.6</Version>
     </PackageReference>
     <PackageReference Include="protobuf-net">
-      <Version>3.1.33</Version>
+      <Version>3.2.30</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

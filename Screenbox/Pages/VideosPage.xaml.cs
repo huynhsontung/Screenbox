@@ -68,7 +68,7 @@ namespace Screenbox.Pages
             Common.NavigationStates[typeof(VideosPage)] = ContentFrame.GetNavigationState();
             if (ContentFrame.Content is FolderViewPage page)
             {
-                page.ViewModel.Clean();
+                page.ViewModel.OnNavigatedFrom();
             }
         }
 

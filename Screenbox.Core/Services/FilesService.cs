@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
+using ProtoBuf;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -124,35 +124,38 @@ namespace Screenbox.Core.Services
             return picker.PickSingleFolderAsync();
         }
 
-        public async Task<StorageFile> SaveSnapshotAsync(IMediaPlayer mediaPlayer)
+        public async Task<StorageFile> SaveToDiskAsync<T>(StorageFolder folder, string fileName, T source)
         {
-            if (mediaPlayer is not VlcMediaPlayer player)
-            {
-                throw new NotImplementedException("Not supported on non VLC players");
-            }
+            StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+            await SaveToDiskAsync(file, source);
+            return file;
+        }
 
-            StorageFolder tempFolder = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync(
-                    $"snapshot_{DateTimeOffset.Now.Ticks}",
-                    CreationCollisionOption.FailIfExists);
+        public async Task SaveToDiskAsync<T>(StorageFile file, T source)
+        {
+            using Stream stream = await file.OpenStreamForWriteAsync();
+            Serializer.Serialize(stream, source);
+            stream.SetLength(stream.Position);  // A weird quirk of protobuf-net
+            await stream.FlushAsync();
+        }
 
-            try
-            {
-                if (!player.VlcPlayer.TakeSnapshot(0, tempFolder.Path, 0, 0))
-                    throw new Exception("VLC failed to save snapshot");
+        public async Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName)
+        {
+            StorageFile file = await folder.GetFileAsync(fileName);
+            return await LoadFromDiskAsync<T>(file);
+        }
 
-                StorageFile file = (await tempFolder.GetFilesAsync()).First();
-                StorageLibrary pictureLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Pictures);
-                StorageFolder defaultSaveFolder = pictureLibrary.SaveFolder;
-                StorageFolder destFolder =
-                    await defaultSaveFolder.CreateFolderAsync("Screenbox",
-                        CreationCollisionOption.OpenIfExists);
-                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
-                    NameCollisionOption.GenerateUniqueName);
-            }
-            finally
-            {
-                await tempFolder.DeleteAsync(StorageDeleteOption.PermanentDelete);
-            }
+        public async Task<T> LoadFromDiskAsync<T>(StorageFile file)
+        {
+            using Stream readStream = await file.OpenStreamForReadAsync();
+            return Serializer.Deserialize<T>(readStream);
+        }
+
+        public async Task OpenFileLocationAsync(string path)
+        {
+            string? folderPath = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(folderPath))
+                await Launcher.LaunchFolderPathAsync(folderPath);
         }
 
         public async Task OpenFileLocationAsync(StorageFile file)
@@ -160,9 +163,7 @@ namespace Screenbox.Core.Services
             StorageFolder? folder = await file.GetParentAsync();
             if (folder == null)
             {
-                string? folderPath = Path.GetDirectoryName(file.Path);
-                if (!string.IsNullOrEmpty(folderPath))
-                    await Launcher.LaunchFolderPathAsync(folderPath);
+                await OpenFileLocationAsync(file.Path);
             }
             else
             {

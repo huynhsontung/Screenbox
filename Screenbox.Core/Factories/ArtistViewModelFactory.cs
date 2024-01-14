@@ -19,7 +19,7 @@ namespace Screenbox.Core.Factories
 
         private readonly Dictionary<string, ArtistViewModel> _allArtists;
 
-        private static readonly string[] ArtistNameSeparators = { " & ", ", " };
+        private static readonly string[] ArtistNameSeparators = { ",", ", ", "; " };
 
         public ArtistViewModelFactory(IResourceService resourceService)
         {
@@ -28,11 +28,16 @@ namespace Screenbox.Core.Factories
             UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
 
+        public ArtistViewModel[] ParseArtists(string artist, MediaViewModel song)
+        {
+            return ParseArtists(artist.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries), song);
+        }
+
         public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
         {
             if (artists.Length == 0)
             {
-                AddSongToArtist(song);
+                AddSongToArtist(song, string.Empty);
                 return new[] { UnknownArtist };
             }
 
@@ -48,7 +53,7 @@ namespace Screenbox.Core.Factories
             }
 
             return artistNames
-                .Select(artist => AddSongToArtist(song, artist))
+                .Select(artist => AddSongToArtist(song, artist.Trim()))
                 .ToArray();
         }
 
@@ -61,9 +66,8 @@ namespace Screenbox.Core.Factories
             return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : UnknownArtist;
         }
 
-        public ArtistViewModel AddSongToArtist(MediaViewModel song, string? artistName = null)
+        public ArtistViewModel AddSongToArtist(MediaViewModel song, string artistName)
         {
-            artistName ??= song.MusicProperties?.Artist ?? string.Empty;
             if (string.IsNullOrEmpty(artistName))
             {
                 UnknownArtist.RelatedSongs.Add(song);
@@ -81,6 +85,52 @@ namespace Screenbox.Core.Factories
             artist = new ArtistViewModel(artistName);
             artist.RelatedSongs.Add(song);
             return _allArtists[key] = artist;
+        }
+
+        public void Remove(MediaViewModel song)
+        {
+            foreach (ArtistViewModel artist in song.Artists)
+            {
+                artist.RelatedSongs.Remove(song);
+                if (artist.RelatedSongs.Count == 0)
+                {
+                    string artistKey = artist.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
+                    _allArtists.Remove(artistKey);
+                }
+            }
+
+            song.Artists = Array.Empty<ArtistViewModel>();
+        }
+
+        public void Compact()
+        {
+            List<string> albumKeysToRemove =
+                _allArtists.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+
+            foreach (string albumKey in albumKeysToRemove)
+            {
+                _allArtists.Remove(albumKey);
+            }
+        }
+
+        public void Clear()
+        {
+            foreach (MediaViewModel media in UnknownArtist.RelatedSongs)
+            {
+                media.Artists = Array.Empty<ArtistViewModel>();
+            }
+
+            UnknownArtist.RelatedSongs.Clear();
+
+            foreach ((string _, ArtistViewModel artist) in _allArtists)
+            {
+                foreach (MediaViewModel media in artist.RelatedSongs)
+                {
+                    media.Artists = Array.Empty<ArtistViewModel>();
+                }
+            }
+
+            _allArtists.Clear();
         }
     }
 }

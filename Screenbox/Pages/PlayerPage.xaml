@@ -366,7 +366,7 @@
                     VerticalAlignment="Center"
                     FontSize="80"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Glyph="{x:Bind ViewModel.Media.Source, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
+                    Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
                 <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
                     <Image
                         x:Name="AlbumArtImage"

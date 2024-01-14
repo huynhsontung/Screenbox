@@ -5,6 +5,7 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Factories
@@ -39,15 +40,8 @@ namespace Screenbox.Core.Factories
             return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : UnknownAlbum;
         }
 
-        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string? albumName = null, string? artistName = null, uint year = 0)
+        public AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)
         {
-            albumName ??= song.MusicProperties?.Album ?? string.Empty;
-            artistName ??= song.MusicProperties?.AlbumArtist ?? string.Empty;
-            if (year == 0 && song.MusicProperties != null)
-            {
-                year = song.MusicProperties.Year;
-            }
-
             if (string.IsNullOrEmpty(albumName))
             {
                 UnknownAlbum.RelatedSongs.Add(song);
@@ -72,6 +66,51 @@ namespace Screenbox.Core.Factories
 
             album.RelatedSongs.Add(song);
             return _allAlbums[key] = album;
+        }
+
+        public void Remove(MediaViewModel song)
+        {
+            AlbumViewModel? album = song.Album;
+            if (album == null) return;
+            song.Album = null;
+            album.RelatedSongs.Remove(song);
+            if (album.RelatedSongs.Count == 0)
+            {
+                string albumKey = album.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
+                string artistKey = album.Artist.Trim().ToLower(CultureInfo.CurrentUICulture);
+                _allAlbums.Remove(GetAlbumKey(albumKey, artistKey));
+            }
+        }
+
+        public void Compact()
+        {
+            List<string> albumKeysToRemove =
+                _allAlbums.Where(p => p.Value.RelatedSongs.Count == 0).Select(p => p.Key).ToList();
+
+            foreach (string albumKey in albumKeysToRemove)
+            {
+                _allAlbums.Remove(albumKey);
+            }
+        }
+
+        public void Clear()
+        {
+            foreach (MediaViewModel media in UnknownAlbum.RelatedSongs)
+            {
+                media.Album = null;
+            }
+
+            UnknownAlbum.RelatedSongs.Clear();
+
+            foreach ((string _, AlbumViewModel album) in _allAlbums)
+            {
+                foreach (MediaViewModel media in album.RelatedSongs)
+                {
+                    media.Album = null;
+                }
+            }
+
+            _allAlbums.Clear();
         }
 
         private static string GetAlbumKey(string albumName, string artistName)

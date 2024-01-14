@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Screenbox.Core.Helpers;
+using Screenbox.Core.ViewModels;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -43,8 +44,9 @@ namespace Screenbox.Core.Services
 
             try
             {
-                if (item.Source is StorageFile file)
+                if (item is FileMediaViewModel fileItem)
                 {
+                    StorageFile file = fileItem.File;
                     if (file.IsSupportedAudio())
                     {
                         bool success = await displayUpdater.CopyFromFileAsync(MediaPlaybackType.Music, file);

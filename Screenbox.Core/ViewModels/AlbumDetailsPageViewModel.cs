@@ -47,7 +47,10 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnSourceChanged(AlbumViewModel value)
         {
-            var sorted = value.RelatedSongs.OrderBy(m => m.MusicProperties?.TrackNumber ?? uint.MaxValue)
+            var sorted = value.RelatedSongs.OrderBy(m =>
+                    m.MediaInfo.MusicProperties.TrackNumber != 0    // Track number should start with 1
+                        ? m.MediaInfo.MusicProperties.TrackNumber
+                        : uint.MaxValue)
                 .ThenBy(m => m.Name, StringComparer.CurrentCulture);
 
             SortedItems.Clear();
@@ -85,7 +88,7 @@ namespace Screenbox.Core.ViewModels
             TimeSpan duration = TimeSpan.Zero;
             foreach (MediaViewModel item in items)
             {
-                duration += item.Duration ?? TimeSpan.Zero;
+                duration += item.Duration;
             }
 
             return duration;

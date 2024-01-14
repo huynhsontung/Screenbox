@@ -21,7 +21,7 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class MusicPage : Page, IContentFrame
     {
-        public object? FrameContent => ContentFrame;
+        public object? FrameContent => ContentFrame.Content;
         public Type ContentSourcePageType => ContentFrame.SourcePageType;
         public bool CanGoBack => ContentFrame.CanGoBack;
 

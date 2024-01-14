@@ -27,6 +27,7 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
@@ -222,6 +223,8 @@ namespace Screenbox.Core.Playback
             }
         }
 
+        public bool CanSeek { get; private set; }
+
         public bool IsLoopingEnabled { get; set; }
 
         public double BufferingProgress { get; private set; }
@@ -229,8 +232,6 @@ namespace Screenbox.Core.Playback
         public uint NaturalVideoHeight { get; private set; }
 
         public uint NaturalVideoWidth { get; private set; }
-
-        public bool CanSeek => VlcPlayer.IsSeekable;
 
         public bool CanPause => VlcPlayer.CanPause;
 
@@ -267,9 +268,18 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Opening += VlcPlayer_Opening;
             VlcPlayer.ESAdded += VlcPlayer_ESAdded;
             VlcPlayer.ESSelected += VlcPlayer_ESSelected;
+            VlcPlayer.SeekableChanged += VlcPlayer_SeekableChanged;
 
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+        }
+
+        private void VlcPlayer_SeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)
+        {
+            bool seekable = e.Seekable > 0;
+            if (CanSeek == seekable) return;
+            CanSeek = seekable;
+            CanSeekChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void VlcPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
@@ -360,6 +370,7 @@ namespace Screenbox.Core.Playback
         private void VlcPlayer_Opening(object sender, EventArgs e)
         {
             MediaOpened?.Invoke(this, EventArgs.Empty);
+            NaturalDuration = TimeSpan.Zero;
             PlaybackState = MediaPlaybackState.Opening;
         }
 
@@ -425,30 +436,13 @@ namespace Screenbox.Core.Playback
             VlcPlayer.Pause();
         }
 
-        public async void Play()
+        public void Play()
         {
             if (PlaybackItem?.Media == null) return;
             if (_readyToPlay)
             {
                 _readyToPlay = false;
-                Media media = PlaybackItem.Media;
-                if (media.Mrl.StartsWith("winrt://"))
-                {
-                    VlcPlayer.Play(media);
-                }
-                else
-                {
-                    while (!media.IsParsed || media.ParsedStatus == MediaParsedStatus.Skipped)
-                    {
-                        await media.Parse(MediaParseOptions.ParseNetwork);
-                        if (media.SubItems.Count > 0)
-                        {
-                            media = media.SubItems[0] ?? media;
-                        }
-                    }
-
-                    VlcPlayer.Play(media);
-                }
+                VlcPlayer.Play(PlaybackItem.Media);
             }
             else
             {
