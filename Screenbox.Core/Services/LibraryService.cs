@@ -95,12 +95,9 @@ namespace Screenbox.Core.Services
             _musicFetchCts = cts;
             try
             {
-                StorageFileQueryResult libraryQuery = SearchRemovableStorage
-                    ? CreateRemovableStorageMusicQuery()
-                    : GetMusicLibraryQuery();
                 await InitializeMusicLibraryAsync();
                 cts.Token.ThrowIfCancellationRequested();
-                await FetchMusicCancelableAsync(libraryQuery, cts.Token);
+                await FetchMusicCancelableAsync(cts.Token);
             }
             catch (OperationCanceledException)
             {
@@ -129,12 +126,9 @@ namespace Screenbox.Core.Services
             _videosFetchCts = cts;
             try
             {
-                StorageFileQueryResult libraryQuery = SearchRemovableStorage
-                    ? CreateRemovableStorageVideosQuery()
-                    : GetVideosLibraryQuery();
                 await InitializeVideosLibraryAsync();
                 cts.Token.ThrowIfCancellationRequested();
-                await FetchVideosCancelableAsync(libraryQuery, cts.Token);
+                await FetchVideosCancelableAsync(cts.Token);
             }
             catch (OperationCanceledException)
             {
@@ -258,11 +252,12 @@ namespace Screenbox.Core.Services
             return videos;
         }
 
-        private async Task FetchMusicCancelableAsync(StorageFileQueryResult libraryQuery, CancellationToken cancellationToken)
+        private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
         {
             IsLoadingMusic = true;
             try
             {
+                StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
                 List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same songs instance
                 // If not empty then create a new list to avoid overwriting the cache
@@ -274,6 +269,12 @@ namespace Screenbox.Core.Services
                 }
 
                 await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                if (SearchRemovableStorage)
+                {
+                    libraryQuery = CreateRemovableStorageMusicQuery();
+                    await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                }
+
                 if (hasCache) _songs.ForEach(song => song.IsFromLibrary = false);
                 await LoadLibraryDetailsAsync(songs, cancellationToken);
                 if (hasCache) CleanOutdatedSongs();
@@ -291,16 +292,23 @@ namespace Screenbox.Core.Services
             await CacheSongsAsync(cancellationToken);
         }
 
-        private async Task FetchVideosCancelableAsync(StorageFileQueryResult libraryQuery, CancellationToken cancellationToken)
+        private async Task FetchVideosCancelableAsync(CancellationToken cancellationToken)
         {
             IsLoadingVideos = true;
             try
             {
+                StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
                 List<MediaViewModel> videos = _videos = await LoadVideosCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same videos instance
                 // If not empty then create a new list to avoid overwriting the cache
                 if (videos.Count > 0) videos = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                if (SearchRemovableStorage)
+                {
+                    libraryQuery = CreateRemovableStorageVideosQuery();
+                    await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                }
+
                 await LoadLibraryDetailsAsync(videos, cancellationToken);
             }
             finally
