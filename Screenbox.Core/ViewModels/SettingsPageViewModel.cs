@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -10,6 +11,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -39,6 +41,8 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
+        private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
         private StorageLibrary? _videosLibrary;
@@ -49,9 +53,18 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
             RemovableStorageFolders = new ObservableCollection<StorageFolder>();
+
+            if (SystemInformation.IsXbox)
+            {
+                _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
+                _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
+                _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
+                _portableStorageDeviceWatcher.Start();
+            }
 
             // Load values
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
@@ -114,10 +127,15 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
         }
 
-        partial void OnSearchRemovableStorageChanged(bool value)
+        async partial void OnSearchRemovableStorageChanged(bool value)
         {
             _settingsService.SearchRemovableStorage = value;
             Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage)));
+
+            if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
+            {
+                await RefreshLibrariesAsync();
+            }
         }
 
         partial void OnVolumeBoostChanged(int value)
@@ -207,6 +225,12 @@ namespace Screenbox.Core.ViewModels
             StorageApplicationPermissions.MostRecentlyUsedList.Clear();
         }
 
+        public void OnNavigatedFrom()
+        {
+            if (SystemInformation.IsXbox)
+                _portableStorageDeviceWatcher?.Stop();
+        }
+
         public async Task LoadLibraryLocations()
         {
             if (_videosLibrary == null)
@@ -252,19 +276,18 @@ namespace Screenbox.Core.ViewModels
             }
 
             UpdateLibraryLocations();
-            if (SystemInformation.IsXbox)
-            {
-                RemovableStorageFolders.Clear();
-                foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
-                {
-                    RemovableStorageFolders.Add(folder);
-                }
-            }
+            await UpdateRemovableStorageFoldersAsync();
         }
 
         private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateLibraryLocations);
+        }
+
+        private void OnPortableStorageDeviceChanged(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            async void RefreshAction() => await UpdateRemovableStorageFoldersAsync();
+            _storageDeviceRefreshTimer.Debounce(RefreshAction, TimeSpan.FromMilliseconds(500));
         }
 
         private void UpdateLibraryLocations()
@@ -285,6 +308,18 @@ namespace Screenbox.Core.ViewModels
                 foreach (StorageFolder folder in _musicLibrary.Folders)
                 {
                     MusicLocations.Add(folder);
+                }
+            }
+        }
+
+        private async Task UpdateRemovableStorageFoldersAsync()
+        {
+            if (SystemInformation.IsXbox)
+            {
+                RemovableStorageFolders.Clear();
+                foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
+                {
+                    RemovableStorageFolders.Add(folder);
                 }
             }
         }
