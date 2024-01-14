@@ -130,7 +130,7 @@
                     Text="{strings:Resources Key=SettingsCategoryLibraries}" />
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Include media from removable storage devices in your libraries."
+                    Description="Include media from storage devices like USB sticks in your libraries"
                     Header="Search removable storage"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe88e;}"
                     ItemTemplate="{StaticResource RemovableStorageFolderTemplate}"
