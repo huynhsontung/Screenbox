@@ -323,6 +323,7 @@ namespace Screenbox.Core.Services
                 }
 
                 await LoadLibraryDetailsAsync(videos, cancellationToken);
+                _videos = videos;
             }
             finally
             {
