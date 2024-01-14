@@ -233,8 +233,17 @@ namespace Screenbox.Core.Services
                 List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same songs instance
                 // If not empty then create a new list to avoid overwriting the cache
-                if (songs.Count > 0) songs = new List<MediaViewModel>();
+                bool hasCache = false;
+                if (songs.Count > 0)
+                {
+                    hasCache = true;
+                    songs = new List<MediaViewModel>();
+                }
+
                 await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                if (hasCache) _songs.ForEach(song => song.IsFromLibrary = false);
+                await LoadLibraryDetailsAsync(songs, cancellationToken);
+                if (hasCache) CleanOutdatedSongs();
                 _songs = songs;
             }
             catch (Exception e)
@@ -274,6 +283,7 @@ namespace Screenbox.Core.Services
                 // If not empty then create a new list to avoid overwriting the cache
                 if (videos.Count > 0) videos = new List<MediaViewModel>();
                 await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                await LoadLibraryDetailsAsync(videos, cancellationToken);
             }
             catch (Exception e)
             {
@@ -309,14 +319,30 @@ namespace Screenbox.Core.Services
                 target.AddRange(batch);
                 cancellationToken.ThrowIfCancellationRequested();
             }
+        }
 
-            foreach (MediaViewModel media in target)
+        private void CleanOutdatedSongs()
+        {
+            List<MediaViewModel> outdatedSongs = _songs.Where(song => !song.IsFromLibrary).ToList();
+            foreach (MediaViewModel song in outdatedSongs)
             {
-                // Expect UI thread
-                media.IsFromLibrary = true;
-                await media.LoadDetailsAsync();
-                cancellationToken.ThrowIfCancellationRequested();
+                if (song.Album != null)
+                {
+                    song.Album.RelatedSongs.Remove(song);
+                    song.Album = null;
+                }
+
+                foreach (ArtistViewModel artist in song.Artists)
+                {
+                    artist.RelatedSongs.Remove(song);
+                }
+
+                song.Artists = Array.Empty<ArtistViewModel>();
+                song.Clean();
             }
+
+            _albumFactory.Compact();
+            _artistFactory.Compact();
         }
 
         private StorageFileQueryResult GetMusicLibraryQuery()
@@ -390,6 +416,19 @@ namespace Screenbox.Core.Services
             async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+        }
+
+        private static async Task LoadLibraryDetailsAsync(List<MediaViewModel> mediaList, CancellationToken cancellationToken)
+        {
+            foreach (MediaViewModel media in mediaList)
+            {
+                // Expect UI thread
+                media.IsFromLibrary = true;
+                await media.LoadDetailsAsync();
+                media.UpdateAlbum();
+                media.UpdateArtists();
+                cancellationToken.ThrowIfCancellationRequested();
+            }
         }
 
         private static bool ShouldUpdateQuery(IStorageQueryResultBase query, bool useIndexer)
