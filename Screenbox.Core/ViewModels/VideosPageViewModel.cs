@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
@@ -21,11 +22,12 @@ namespace Screenbox.Core.ViewModels
     {
         public ObservableCollection<StorageFolder> Breadcrumbs { get; }
 
-        public object NavigationParameter { get; }
-
         [ObservableProperty] private bool _hasVideos;
 
         private bool HasLibrary => _libraryService.VideosLibrary != null;
+
+        private static StorageFolder FirstFolder =>
+            SystemInformation.IsXbox ? KnownFolders.RemovableDevices : KnownFolders.VideosLibrary;
 
         private readonly ILibraryService _libraryService;
         private readonly IResourceService _resourceService;
@@ -37,9 +39,8 @@ namespace Screenbox.Core.ViewModels
             _resourceService = resourceService;
             _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
-            Breadcrumbs = new ObservableCollection<StorageFolder> { KnownFolders.VideosLibrary };
+            Breadcrumbs = new ObservableCollection<StorageFolder> { FirstFolder };
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            NavigationParameter = new NavigationMetadata(typeof(VideosPageViewModel), KnownFolders.VideosLibrary);
         }
 
         public void UpdateVideos()
@@ -59,7 +60,7 @@ namespace Screenbox.Core.ViewModels
             Breadcrumbs.Clear();
             if (crumbs == null)
             {
-                Breadcrumbs.Add(KnownFolders.VideosLibrary);
+                Breadcrumbs.Add(FirstFolder);
             }
             else
             {
