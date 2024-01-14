@@ -480,7 +480,9 @@ namespace Screenbox.Core.Services
 
         private static StorageFileQueryResult CreateRemovableStorageMusicQuery()
         {
-            QueryOptions queryOptions = new(CommonFileQuery.OrderByTitle, FilesHelpers.SupportedAudioFormats);
+            // Removable storage does not support any other default queries.
+            // Other than Default and SortByName, all other queries return empty results.
+            QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedAudioFormats);
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.MusicProperties,
                 CustomPropertyKeys);
@@ -489,6 +491,8 @@ namespace Screenbox.Core.Services
 
         private static StorageFileQueryResult CreateRemovableStorageVideosQuery()
         {
+            // Removable storage does not support any other default queries.
+            // Other than Default and SortByName, all other queries return empty results.
             QueryOptions queryOptions = new(CommonFileQuery.OrderByName, FilesHelpers.SupportedVideoFormats);
             queryOptions.SetPropertyPrefetch(
                 PropertyPrefetchOptions.BasicProperties | PropertyPrefetchOptions.VideoProperties,
