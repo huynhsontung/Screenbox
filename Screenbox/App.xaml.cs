@@ -51,7 +51,17 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             InitializeComponent();
-            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
+            if (SystemInformation.IsXbox)
+            {
+                // Disable pointer mode on Xbox
+                // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/how-to-disable-mouse-mode#xaml
+                RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+
+                // Use Reveal focus for 10-foot experience
+                // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#reveal-focus
+                FocusVisualKind = FocusVisualKind.Reveal;
+            }
+
             Suspending += OnSuspending;
 
             IServiceProvider services = ConfigureServices();
