@@ -336,5 +336,6 @@
     <uap:Capability Name="musicLibrary"/>
     <Capability Name="privateNetworkClientServer"/>
     <uap:Capability Name="picturesLibrary"/>
+    <uap:Capability Name="removableStorage"/>
   </Capabilities>
 </Package>

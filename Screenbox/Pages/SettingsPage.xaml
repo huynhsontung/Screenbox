@@ -80,6 +80,10 @@
                     </Button>
                 </ctc:SettingsCard>
             </DataTemplate>
+
+            <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
+                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
+            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -123,15 +127,27 @@
                 <TextBlock
                     Margin="1,8,0,8"
                     Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-                    Text="{strings:Resources Key=SettingsCategoryLibraries}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
+                    Text="{strings:Resources Key=SettingsCategoryLibraries}" />
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsSearchRemovableStorageDescription}"
+                    Header="{strings:Resources Key=SettingsSearchRemovableStorageHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xe88e;}"
+                    ItemTemplate="{StaticResource RemovableStorageFolderTemplate}"
+                    ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
+                    Visibility="{x:Bind helpers:SystemInformation.IsXbox}">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind SearchRemovableStorageToggle}" />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch x:Name="SearchRemovableStorageToggle" IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
+                </ctc:SettingsExpander>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
-                    ItemsSource="{x:Bind ViewModel.MusicLocations, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.MusicLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddMusicFolderButton}" />
@@ -153,7 +169,7 @@
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
-                    ItemsSource="{x:Bind ViewModel.VideoLocations, Mode=OneWay}"
+                    ItemsSource="{x:Bind ViewModel.VideoLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddVideoFolderButton}" />
@@ -301,7 +317,7 @@
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
                             CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
-                            Header="Active arguments"
+                            Header="{strings:Resources Key=ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>

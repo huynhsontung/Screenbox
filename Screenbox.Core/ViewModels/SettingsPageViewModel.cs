@@ -3,12 +3,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -24,6 +27,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
+        [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
@@ -32,9 +36,13 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<StorageFolder> VideoLocations { get; }
 
+        public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
+
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
+        private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
         private StorageLibrary? _videosLibrary;
@@ -45,8 +53,18 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
+            RemovableStorageFolders = new ObservableCollection<StorageFolder>();
+
+            if (SystemInformation.IsXbox)
+            {
+                _portableStorageDeviceWatcher = DeviceInformation.CreateWatcher(DeviceClass.PortableStorageDevice);
+                _portableStorageDeviceWatcher.Updated += OnPortableStorageDeviceChanged;
+                _portableStorageDeviceWatcher.Removed += OnPortableStorageDeviceChanged;
+                _portableStorageDeviceWatcher.Start();
+            }
 
             // Load values
             _playerAutoResize = (int)_settingsService.PlayerAutoResize;
@@ -55,6 +73,7 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
+            _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
@@ -106,6 +125,17 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.ShowRecent = value;
             Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
+        }
+
+        async partial void OnSearchRemovableStorageChanged(bool value)
+        {
+            _settingsService.SearchRemovableStorage = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage)));
+
+            if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
+            {
+                await RefreshLibrariesAsync();
+            }
         }
 
         partial void OnVolumeBoostChanged(int value)
@@ -195,6 +225,12 @@ namespace Screenbox.Core.ViewModels
             StorageApplicationPermissions.MostRecentlyUsedList.Clear();
         }
 
+        public void OnNavigatedFrom()
+        {
+            if (SystemInformation.IsXbox)
+                _portableStorageDeviceWatcher?.Stop();
+        }
+
         public async Task LoadLibraryLocations()
         {
             if (_videosLibrary == null)
@@ -240,11 +276,18 @@ namespace Screenbox.Core.ViewModels
             }
 
             UpdateLibraryLocations();
+            await UpdateRemovableStorageFoldersAsync();
         }
 
         private void LibraryOnDefinitionChanged(StorageLibrary sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateLibraryLocations);
+        }
+
+        private void OnPortableStorageDeviceChanged(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            async void RefreshAction() => await UpdateRemovableStorageFoldersAsync();
+            _storageDeviceRefreshTimer.Debounce(RefreshAction, TimeSpan.FromMilliseconds(500));
         }
 
         private void UpdateLibraryLocations()
@@ -265,6 +308,18 @@ namespace Screenbox.Core.ViewModels
                 foreach (StorageFolder folder in _musicLibrary.Folders)
                 {
                     MusicLocations.Add(folder);
+                }
+            }
+        }
+
+        private async Task UpdateRemovableStorageFoldersAsync()
+        {
+            if (SystemInformation.IsXbox)
+            {
+                RemovableStorageFolders.Clear();
+                foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
+                {
+                    RemovableStorageFolders.Add(folder);
                 }
             }
         }
