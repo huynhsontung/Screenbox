@@ -2536,7 +2536,7 @@ namespace Screenbox.Strings{
 
         #region SettingsSearchRemovableStorageDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Include media from storage devices, like USB sticks, in your libraries
+        ///   Looks up a localized string similar to: Include media from storage devices like USB sticks in your libraries
         /// </summary>
         public static string SettingsSearchRemovableStorageDescription
         {
