@@ -71,7 +71,8 @@ namespace Screenbox.Controls
             set => SetValue(OverlayContentProperty, value);
         }
 
-        private Border? _overlayRoot;
+        private Grid? _overlayRoot;
+        private Border? _overlayContentHost;
         private Border? _contentBackground;
         private SplitView? _splitView;
         private Grid? _paneToggleButtonGrid;
@@ -124,12 +125,17 @@ namespace Screenbox.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_splitView?.FindDescendant<Border>(b => b.Name == "OverlayRoot") is { } overlayRoot)
+            if (_splitView?.FindDescendant<Grid>(b => b.Name == "OverlayRoot") is { } overlayRoot)
             {
                 _overlayRoot = overlayRoot;
                 overlayRoot.Tapped += OverlayRootOnTapped;
-                overlayRoot.Child = OverlayContent;
                 Canvas.SetZIndex(overlayRoot, OverlayZIndex);
+
+                if (overlayRoot.FindDescendant<Border>(b => b.Name == "OverlayContentHost") is { } overlayContentHost)
+                {
+                    _overlayContentHost = overlayContentHost;
+                    overlayContentHost.Child = OverlayContent;
+                }
             }
 
             if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
@@ -180,9 +186,9 @@ namespace Screenbox.Controls
         private static void OnOverlayContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CustomNavigationView view = (CustomNavigationView)d;
-            if (view._overlayRoot != null)
+            if (view._overlayContentHost != null)
             {
-                view._overlayRoot.Child = (UIElement)e.NewValue;
+                view._overlayContentHost.Child = (UIElement)e.NewValue;
             }
         }
 
