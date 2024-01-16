@@ -791,6 +791,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="packages.lock.json" />
     <None Include="Secrets.cs.template" />
+    <PRIResource Include="Strings\de-DE\ManifestResources.resw" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\ManifestResources.resw" />
     <PRIResource Include="Strings\pt-PT\Resources.resw" />
@@ -814,6 +816,8 @@
       <Generator>ReswPlusAdvancedGenerator</Generator>
       <LastGenOutput>Resources.generated.cs</LastGenOutput>
     </PRIResource>
+    <PRIResource Include="Strings\uk-UA\ManifestResources.resw" />
+    <PRIResource Include="Strings\uk-UA\Resources.resw" />
     <PRIResource Include="Strings\vi\ManifestResources.resw" />
     <PRIResource Include="Strings\vi\Resources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
