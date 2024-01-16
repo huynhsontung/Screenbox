@@ -759,6 +759,15 @@
     <value>Gerir as definições de indexação do sistema</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Definir argumentos</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Search removable storage</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Include media from storage devices like USB sticks in your libraries</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Active arguments</value>
   </data>
 </root>
