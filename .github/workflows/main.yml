@@ -87,7 +87,7 @@ jobs:
         -restore
       env:
         BuildMode: StoreUpload
-        BuildPlatforms: x86|x64
+        BuildPlatforms: x86|x64|arm64
         PackageDir: C:\DeployOutput
     
     - name: Create store-upload artifact
