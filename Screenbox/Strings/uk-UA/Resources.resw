@@ -762,12 +762,12 @@
     <value>Задати аргументи</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Шукати на знімних носіях</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Включати у ваші бібліотеки медіа з накопичувачів на кшталт USB</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Активні аргументи</value>
   </data>
 </root>
