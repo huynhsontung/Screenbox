@@ -762,12 +762,12 @@
     <value>Setați argumentele</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Căutare în stocare amovibilă</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Includeți fișiere media din dispozitive de stocare precum stick-uri USB în bibliotecile dvs.</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argumente active</value>
   </data>
 </root>
