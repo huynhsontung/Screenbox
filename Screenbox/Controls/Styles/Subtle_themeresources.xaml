@@ -44,8 +44,8 @@
             <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
             <StaticResource x:Key="SubtleButtonForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
             <StaticResource x:Key="SubtleButtonBorderBrush" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonBorderBrushPointerOver" ResourceKey="SystemControlHighlightTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonBorderBrushPressed" ResourceKey="SystemControlHighlightTransparentBrush" />
+            <StaticResource x:Key="SubtleButtonBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="SubtleButtonBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
             <StaticResource x:Key="SubtleButtonBorderBrushDisabled" ResourceKey="SystemControlTransparentBrush" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
@@ -141,7 +141,6 @@
         <Setter Property="Height" Value="40" />
         <Setter Property="Padding" Value="11" />
     </Style>
-
     <Style
         x:Key="SmallPlayerButtonStyle"
         BasedOn="{StaticResource SubtleButtonStyle}"
@@ -348,7 +347,6 @@
         <Setter Property="Height" Value="40" />
         <Setter Property="Padding" Value="11" />
     </Style>
-
     <Style
         x:Key="SmallPlayerToggleButtonStyle"
         BasedOn="{StaticResource SubtleToggleButtonStyle}"

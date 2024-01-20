@@ -56,8 +56,9 @@
             <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
                 <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                     <Button
+                        Width="32"
                         Height="32"
-                        VerticalAlignment="Center"
+                        Padding="7"
                         Command="{StaticResource RemoveVideosFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
@@ -69,8 +70,9 @@
             <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
                 <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
                     <Button
+                        Width="32"
                         Height="32"
-                        VerticalAlignment="Center"
+                        Padding="7"
                         Command="{StaticResource RemoveMusicFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
