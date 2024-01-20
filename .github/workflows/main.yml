@@ -82,7 +82,7 @@ jobs:
         -p:RestoreConfigFile=nuget.config `
         -p:RestoreLockedMode=true `
         -p:Configuration=Release `
-        -p:Platform=x64 `
+        -p:Platform=${{ matrix.platforms == 'x86|x64' && 'x64' || 'arm64' }} `
         -p:AppxBundle=Always `
         -p:AppxBundlePlatforms="${{ matrix.platforms }}" `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
