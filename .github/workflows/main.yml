@@ -35,7 +35,12 @@ jobs:
     strategy:
       matrix:
         # x86 and arm64 have different dll dependencies thus cannot be bundled together
-        platforms: [x86|x64, arm|arm64]
+        platform: [x64, arm64]
+        include:
+          - platform: x64
+            bundle-platforms: x86|x64
+          - platform: arm64
+            bundle-platforms: arm|arm64
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -82,9 +87,9 @@ jobs:
         -p:RestoreConfigFile=nuget.config `
         -p:RestoreLockedMode=true `
         -p:Configuration=Release `
-        -p:Platform=${{ matrix.platforms == 'x86|x64' && 'x64' || 'arm64' }} `
+        -p:Platform=${{ matrix.platform }} `
         -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="${{ matrix.platforms }}" `
+        -p:AppxBundlePlatforms="${{ matrix.bundle-platforms }}" `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=$env:PackageDir `
         -p:AppxPackageSigningEnabled=false `
@@ -97,7 +102,7 @@ jobs:
       uses: actions/upload-artifact@v3
       if: github.ref_type == 'tag'
       with:
-        name: store-upload-${{ matrix.platforms == 'x86|x64' && 'x64' || 'arm64' }}
+        name: store-upload-${{ matrix.platform }}
         path: |
           C:\DeployOutput\*.msixupload
           C:\DeployOutput\*.appxupload
@@ -105,7 +110,7 @@ jobs:
     - name: Create sideload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: Screenbox-sideload-${{ matrix.platforms == 'x86|x64' && 'x64' || 'arm64' }}
+        name: Screenbox-sideload-${{ matrix.platform }}
         path: |
           C:\DeployOutput\*_Test
 
