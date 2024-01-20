@@ -40,7 +40,7 @@ jobs:
           - platform: x64
             bundle-platforms: x86|x64
           - platform: arm64
-            bundle-platforms: arm|arm64
+            bundle-platforms: arm64
     steps:
     - name: Checkout
       uses: actions/checkout@v3
