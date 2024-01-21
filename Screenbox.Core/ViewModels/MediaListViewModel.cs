@@ -709,6 +709,10 @@ namespace Screenbox.Core.ViewModels
                 IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
                 return playlist.ToList();
             }
+            catch (OperationCanceledException)
+            {
+                return Array.Empty<MediaViewModel>();
+            }
             finally
             {
                 _cts = null;
