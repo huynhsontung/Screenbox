@@ -25,9 +25,9 @@
       },
       "CommunityToolkit.Uwp.Extensions": {
         "type": "Direct",
-        "requested": "[8.0.230907, )",
-        "resolved": "8.0.230907",
-        "contentHash": "QCvkPS4TCoxeihp7nfmhQr6LgH8VF0ERN8DNwICgd/BlAAUYI/JBMA5fOfuf8veO53MWpW1qGtz5xXtodD/zaw==",
+        "requested": "[8.0.240109, )",
+        "resolved": "8.0.240109",
+        "contentHash": "N2P6bH66aQ37dfrlfvDdTSO1cIip+FceMB8ZFZSPX8iwq4emZZHzTNrouS2hltB4LIn9XX0HV46fawWPnQIIeA==",
         "dependencies": {
           "CommunityToolkit.Common": "8.2.1",
           "Microsoft.UI.Xaml": "2.7.0"
