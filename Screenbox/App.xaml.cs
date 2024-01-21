@@ -38,8 +38,15 @@ namespace Screenbox
         {
             get
             {
-                string flowDirectionSetting = ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
-                return flowDirectionSetting == "RTL";
+                try
+                {
+                    string flowDirectionSetting = ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
+                    return flowDirectionSetting == "RTL";
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    return false;
+                }
             }
         }
 
