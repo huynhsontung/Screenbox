@@ -20,6 +20,7 @@ using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {
+    // TODO: Break this service into smaller ViewModels and services
     public sealed class LibraryService : ILibraryService
     {
         public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged;

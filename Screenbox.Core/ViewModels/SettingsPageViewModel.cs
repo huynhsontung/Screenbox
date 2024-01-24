@@ -172,7 +172,7 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private async Task RefreshLibrariesAsync()
         {
-            await Task.WhenAll(_libraryService.FetchMusicAsync(), _libraryService.FetchVideosAsync());
+            await Task.WhenAll(RefreshMusicLibrary(), RefreshVideosLibrary());
         }
 
         [RelayCommand]
@@ -321,6 +321,30 @@ namespace Screenbox.Core.ViewModels
                 {
                     RemovableStorageFolders.Add(folder);
                 }
+            }
+        }
+
+        private async Task RefreshMusicLibrary()
+        {
+            try
+            {
+                await _libraryService.FetchMusicAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
+        }
+
+        private async Task RefreshVideosLibrary()
+        {
+            try
+            {
+                await _libraryService.FetchVideosAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
             }
         }
 
