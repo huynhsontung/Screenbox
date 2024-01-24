@@ -88,6 +88,7 @@
             Width="32"
             Height="32"
             Padding="7"
+            VerticalAlignment="Center"
             CommandParameter="{Binding}"
             Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
@@ -97,8 +98,8 @@
                 <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
                 <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
                 <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="AccentTextFillColorSecondaryBrush" />
+                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="HyperlinkButtonForeground" />
+                <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
                 <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
             </Button.Resources>
         </Button>

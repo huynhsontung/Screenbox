@@ -485,7 +485,8 @@
             Grid.Column="0"
             Margin="12,0,12,-12"
             HorizontalAlignment="Center"
-            VerticalAlignment="Bottom" />
+            VerticalAlignment="Bottom"
+            Canvas.ZIndex="4" />
 
         <Border
             x:Name="PlayerControlsBackground"
