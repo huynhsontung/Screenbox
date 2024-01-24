@@ -132,7 +132,7 @@
                         x:Name="PlayButton"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
-                        CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay}"
+                        CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay, FallbackValue={x:Null}}"
                         Style="{StaticResource AccentButtonStyle}"
                         XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
