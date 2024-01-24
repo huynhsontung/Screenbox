@@ -24,9 +24,6 @@
             <x:Double x:Key="ToggleSwitchPostContentMargin">4</x:Double>
             <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
-            <!--  SettingsExpander bottom corners radius temporary (hopefully) fix  -->
-            <CornerRadius x:Key="SettingsCardBottomCornerRadius">0,0,3,3</CornerRadius>
-
             <!--  Section Header text style  -->
             <Style
                 x:Key="SettingsSectionHeaderTextBlockStyle"
@@ -59,6 +56,7 @@
                         Width="32"
                         Height="32"
                         Padding="7"
+                        VerticalAlignment="Center"
                         Command="{StaticResource RemoveVideosFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
@@ -73,6 +71,7 @@
                         Width="32"
                         Height="32"
                         Padding="7"
+                        VerticalAlignment="Center"
                         Command="{StaticResource RemoveMusicFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
@@ -186,7 +185,7 @@
                         <ctc:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
                             <ctc:SettingsCard.Header>
                                 <HyperlinkButton
                                     Margin="{StaticResource HyperlinkButtonInlineMargin}"
@@ -209,7 +208,7 @@
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard CornerRadius="{StaticResource SettingsCardBottomCornerRadius}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" Header="{strings:Resources Key=SettingsClearRecentHeader}">
                             <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -264,7 +263,7 @@
                         <ctc:SettingsCard ContentAlignment="Left">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard ContentAlignment="Left" CornerRadius="{StaticResource SettingsCardBottomCornerRadius}">
+                        <ctc:SettingsCard ContentAlignment="Left" CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
                             <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -300,7 +299,7 @@
                             </Button>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
-                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
+                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
                             Header="Active arguments"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
@@ -327,7 +326,7 @@
                         <ctc:SettingsCard
                             HorizontalContentAlignment="Left"
                             ContentAlignment="Vertical"
-                            CornerRadius="{StaticResource SettingsCardBottomCornerRadius}"
+                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
                             Header="{strings:Resources Key=RelatedLinks}">
                             <VariableSizedWrapGrid
                                 Margin="{StaticResource HyperlinkButtonInlineMargin}"

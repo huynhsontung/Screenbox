@@ -342,7 +342,7 @@
                 x:Name="PreviousButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                 Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
-                CornerRadius="4,0,0,4"
+                CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE892;" />
                 <Button.KeyboardAccelerators>
@@ -353,7 +353,7 @@
                 x:Name="NextButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                 Command="{x:Bind ViewModel.Playlist.NextCommand}"
-                CornerRadius="0,4,4,0"
+                CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xE893;" />
                 <Button.KeyboardAccelerators>
