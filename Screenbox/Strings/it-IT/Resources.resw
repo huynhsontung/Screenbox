@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>Frame salvato</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Picutre-in-picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Salva frame corrente</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
@@ -137,14 +137,14 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>Impossibile salvare il frame</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capitolo {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Impossibile caricare i sottotitoli</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Indietro</value>
@@ -212,7 +212,7 @@
     <value>Aggiungi alla coda</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Pulisci selezione</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Rimuovi</value>
@@ -227,7 +227,7 @@
     <value>Sposta giù</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>In riproduzione</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -245,7 +245,7 @@
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Vuoto</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restore video view</value>
@@ -275,10 +275,10 @@
     <value>Artista sconosciuto</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Album sconosciuto</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Genere sconosciuto</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>Aggiungi cartella</value>
@@ -293,10 +293,10 @@
     <value>Select multiple</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>Non è stata trovata alcuna musica</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>La tua libreria musicale non contiene alcuna musica.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Apri file</value>
@@ -335,7 +335,7 @@
     <value>Content type</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Artisti partecipanti</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
     <value>Percorso file</value>
@@ -371,7 +371,7 @@
     <value>Traccia</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Scrittori</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
     <value>Anno</value>
@@ -437,13 +437,13 @@
     <value>Browse for file(s) to add to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>Aggiungi cartella alla tua libreria musicale</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>Aggiungi media da URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>Aggiungi cartella alla tua libreria video</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Apri cartella</value>
@@ -520,16 +520,16 @@
     <value>Can't access videos library</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Non è stato trovato alcun video</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>La tua libreria video non contiene alcun video.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Apri impostazioni privacy</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Impossibile caricare media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
     <value>Aspect ratio</value>
@@ -544,7 +544,7 @@
     <value>Custom aspect ratio</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Velocità di riproduzione personalizzata</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>Nessuno</value>
@@ -595,7 +595,7 @@
     <value>Mostra i media riprodotti di recente nella home</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Cancella cronologia media recenti</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
     <value>Ridimensiona automaticamente</value>
@@ -604,7 +604,7 @@
     <value>Resize the app window to best match a video's native resolution on playback</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Amplificazione volume</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Consenti al volume massimo di superare il 100%</value>
@@ -613,13 +613,13 @@
     <value>Gesti</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Trascina orizzontalmente per posizionare</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Trascina verticalmente per regolare il volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Tocca in qualsiasi punto per riprodurre o mettere in pausa</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox Media Player</value>
@@ -760,5 +760,14 @@
   </data>
   <data name="SetArguments" xml:space="preserve">
     <value>Imposta parametri</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Search removable storage</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Include media from storage devices like USB sticks in your libraries</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Active arguments</value>
   </data>
 </root>

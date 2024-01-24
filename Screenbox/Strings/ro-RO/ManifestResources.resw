@@ -145,7 +145,7 @@
     <value>Videoclip Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Audio Matroska</value>
+    <value>Fișier Audio Matroska</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
     <value>Videoclip Matroska</value>
@@ -199,6 +199,9 @@
     <value>Flux de transport MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Fișier Audio WavPack</value>
+  </data>
+  <data name="FileDisplayNameAIFF" xml:space="preserve">
+    <value>Fișier Audio AIFF</value>
   </data>
 </root>

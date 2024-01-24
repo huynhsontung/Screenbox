@@ -51,8 +51,22 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             InitializeComponent();
-            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested; // Disable pointer mode on Xbox
-            HighContrastAdjustment = ApplicationHighContrastAdjustment.None; // Disable automatic High Contrast adjustments
+
+            if (SystemInformation.IsXbox)
+            {
+                // Disable pointer mode on Xbox
+                // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/how-to-disable-mouse-mode#xaml
+                RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+
+                // Use Reveal focus for 10-foot experience
+                // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#reveal-focus
+                FocusVisualKind = FocusVisualKind.Reveal;
+            }
+            
+            // Disable automatic High Contrast adjustments
+            // https://learn.microsoft.com/en-us/windows/apps/design/accessibility/high-contrast-themes#setting-highcontrastadjustment-to-none
+            HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
+
             Suspending += OnSuspending;
 
             IServiceProvider services = ConfigureServices();

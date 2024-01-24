@@ -109,7 +109,7 @@ namespace Screenbox.Core.ViewModels
                     break;
                 case "VideosLibrary":   // Special case for VideosPage
                     // VideosPage needs to serialize navigation state so it cannot set nav data
-                    Breadcrumbs = new[] { KnownFolders.VideosLibrary };
+                    Breadcrumbs = new[] { SystemInformation.IsXbox ? KnownFolders.RemovableDevices : KnownFolders.VideosLibrary };
                     NavData = new NavigationMetadata(typeof(VideosPageViewModel), Breadcrumbs);
                     await FetchFolderContentAsync(Breadcrumbs[0]);
                     break;

@@ -199,6 +199,9 @@
     <value>Corriente de Transporte MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Audio WavPack</value>
+  </data>
+  <data name="FileDisplayNameAIFF" xml:space="preserve">
+    <value>Audio AIFF</value>
   </data>
 </root>
