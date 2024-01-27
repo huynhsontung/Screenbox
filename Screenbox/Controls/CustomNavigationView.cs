@@ -3,7 +3,6 @@
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using System;
-using System.Numerics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -91,11 +90,6 @@ namespace Screenbox.Controls
             _paneToggleButtonGrid = (Grid?)GetTemplateChild("PaneToggleButtonGrid");
             _contentGrid = (Grid?)GetTemplateChild("ContentGrid");
             _paneContentGrid = (Grid?)GetTemplateChild("PaneContentGrid");
-            Grid? shadowCaster = (Grid?)GetTemplateChild("ShadowCaster");
-            if (shadowCaster != null)
-            {
-                shadowCaster.Translation = new Vector3(0, 0, 32);
-            }
 
             if (_splitView != null)
             {

@@ -21,8 +21,9 @@
                 <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
+            <Thickness x:Key="NavigationViewContentMargin">0,34,0,0</Thickness>
             <Thickness x:Key="NavigationViewMinimalContentMargin">0,48,0,0</Thickness>
+            <Thickness x:Key="NavigationViewPaneContentGridMargin">16,30,16,30</Thickness>
             <Thickness x:Key="NavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
             <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
@@ -52,7 +53,8 @@
             x:Name="AppTitleBar"
             Height="48"
             VerticalAlignment="Top"
-            Canvas.ZIndex="1">
+            Canvas.ZIndex="1"
+            Visibility="Collapsed">
             <!--  Width of the padding columns is set in LayoutMetricsChanged handler.  -->
             <!--
                 Using padding columns instead of Margin ensures that the background
@@ -115,9 +117,12 @@
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             ExpandedModeThresholdWidth="1058"
             IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
+            IsPaneToggleButtonVisible="False"
             IsSettingsVisible="False"
             IsTitleBarAutoPaddingEnabled="False"
+            OpenPaneLength="240"
             PaneClosing="NavView_OnPaneClosing"
+            PaneDisplayMode="Left"
             PaneOpening="NavView_OnPaneOpening"
             SelectionChanged="NavView_SelectionChanged"
             SplitViewStyle="{StaticResource CustomSplitViewStyle}">
