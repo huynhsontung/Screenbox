@@ -27,7 +27,7 @@
             FalseValue="{strings:Resources Key=Play}"
             TrueValue="{strings:Resources Key=Pause}" />
 
-        <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorDefault}" />
+        <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
     <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
@@ -87,17 +87,21 @@
             Grid.Column="1"
             Width="32"
             Height="32"
-            Padding="6"
+            Padding="7"
             VerticalAlignment="Center"
-            Background="Transparent"
-            BorderThickness="0"
             CommandParameter="{Binding}"
+            Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
-            <FontIcon
-                FontSize="{StaticResource DefaultIconFontSize}"
-                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <Button.Resources>
+                <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
+                <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
+                <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
+                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="HyperlinkButtonForeground" />
+                <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
+                <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+            </Button.Resources>
         </Button>
 
         <TextBlock
@@ -171,14 +175,14 @@
                         <StateTrigger IsActive="{Binding IsMediaActive, Mode=OneWay, FallbackValue=False}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
-                        <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentFillColorDefaultBrush}" />
                         <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
+                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

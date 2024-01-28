@@ -2,14 +2,36 @@
     x:Class="Screenbox.Controls.VolumeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     SizeChanged="VolumeControl_OnSizeChanged"
     mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <x:Double x:Key="BoostIndicatorZIndex">-1</x:Double>
+                    <Thickness x:Key="BoostIndicatorMargin">0,0,0,0</Thickness>
+                    <StaticResource x:Key="BoostIndicatorFillColorBrush" ResourceKey="SystemFillColorCriticalBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <x:Double x:Key="BoostIndicatorZIndex">-1</x:Double>
+                    <Thickness x:Key="BoostIndicatorMargin">0,0,0,0</Thickness>
+                    <StaticResource x:Key="BoostIndicatorFillColorBrush" ResourceKey="SystemFillColorCriticalBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <x:Double x:Key="BoostIndicatorZIndex">1</x:Double>
+                    <Thickness x:Key="BoostIndicatorMargin">0,-2,0,0</Thickness>
+                    <StaticResource x:Key="BoostIndicatorFillColorBrush" ResourceKey="SystemColorHighlightColorBrush" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -20,11 +42,9 @@
         <ToggleButton
             Grid.Column="0"
             Margin="0,0,4,0"
-            VerticalAlignment="Stretch"
-            local:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
-            Background="Transparent"
-            BorderThickness="0"
-            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}">
+            controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
+            IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
+            Style="{x:Bind ToggleButtonStyle, Mode=OneWay}">
             <FontIcon Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
@@ -33,14 +53,15 @@
         <Border
             x:Name="BoostIndicator"
             Grid.Column="1"
-            Height="4"
+            Height="{ThemeResource SliderTrackThemeHeight}"
+            Margin="{ThemeResource BoostIndicatorMargin}"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Background="Maroon"
-            CornerRadius="2" />
+            Background="{ThemeResource BoostIndicatorFillColorBrush}"
+            Canvas.ZIndex="{ThemeResource BoostIndicatorZIndex}"
+            CornerRadius="{Binding Source={StaticResource SliderTrackCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}" />
         <Slider
             x:Name="VolumeSlider"
-            x:Uid="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
@@ -50,7 +71,7 @@
         <TextBlock
             Grid.Column="2"
             Width="28"
-            Margin="12,0,0,0"
+            Margin="12,0,0,2"
             VerticalAlignment="Center"
             Text="{x:Bind VolumeSlider.Value, Mode=OneWay}"
             Visibility="{x:Bind ShowValueText, Mode=OneWay}" />

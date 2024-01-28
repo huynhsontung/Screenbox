@@ -7,10 +7,10 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+
     <StackPanel Orientation="Horizontal">
         <StackPanel
             VerticalAlignment="Center"
-            Background="Transparent"
             Orientation="Horizontal"
             Tapped="TimeDisplay_OnTapped">
             <TextBlock

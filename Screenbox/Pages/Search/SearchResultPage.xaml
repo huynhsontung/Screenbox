@@ -143,7 +143,7 @@
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <interactions:AlternatingListViewBehavior
-                                AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                                AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
                                 AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 AlternateBorderThickness="1" />
                             <!-- <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" /> -->

@@ -51,6 +51,7 @@ namespace Screenbox
         {
             ConfigureAppCenter();
             InitializeComponent();
+
             if (SystemInformation.IsXbox)
             {
                 // Disable pointer mode on Xbox
@@ -61,6 +62,10 @@ namespace Screenbox
                 // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#reveal-focus
                 FocusVisualKind = FocusVisualKind.Reveal;
             }
+            
+            // Disable automatic High Contrast adjustments
+            // https://learn.microsoft.com/en-us/windows/apps/design/accessibility/high-contrast-themes#setting-highcontrastadjustment-to-none
+            HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
 
             Suspending += OnSuspending;
 

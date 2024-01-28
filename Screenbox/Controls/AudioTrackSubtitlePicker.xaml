@@ -67,15 +67,11 @@
                     Padding="12,0"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
-                    BorderBrush="{x:Null}"
-                    BorderThickness="0"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
-                    Content="{strings:Resources Key=AddSubtitle}">
+                    Content="{strings:Resources Key=AddSubtitle}"
+                    Style="{StaticResource SubtleButtonStyle}">
                     <Button.Resources>
-                        <StaticResource x:Key="ButtonBackground" ResourceKey="ListViewItemBackground" />
-                        <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ListViewItemBackgroundPointerOver" />
-                        <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ListViewItemBackgroundPressed" />
-                        <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="ListViewItemForegroundPressed" />
+                        <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="ListViewItemForegroundPressed" />
                     </Button.Resources>
                 </Button>
             </ListView.Footer>

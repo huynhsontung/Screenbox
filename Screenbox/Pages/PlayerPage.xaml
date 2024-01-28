@@ -32,20 +32,46 @@
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
                 </ResourceDictionary>
-
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
                 </ResourceDictionary>
-
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
                     <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
+                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="SystemColorWindowColor" />
+                    <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
+                    <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorWindowTextColor" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+
+            <!--  Background brushes  -->
+            <LinearGradientBrush x:Key="HeaderLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0" Color="#B31C1C1C" />
+                    <GradientStop Offset="1" Color="#00000000" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
+            <LinearGradientBrush x:Name="ControlsLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+                <LinearGradientBrush.GradientStops>
+                    <GradientStop Offset="0" Color="#00000000" />
+                    <GradientStop Offset="1" Color="#B31C1C1C" />
+                </LinearGradientBrush.GradientStops>
+            </LinearGradientBrush>
 
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
@@ -139,14 +165,8 @@
             MinHeight="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Canvas.ZIndex="3">
-            <Border.Background>
-                <LinearGradientBrush x:Name="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="1" Color="#00000000" />
-                    <GradientStop Offset="0" Color="#99000000" />
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
+            Background="{ThemeResource HeaderBackgroundBrush}"
+            Canvas.ZIndex="3" />
 
         <Grid
             x:Name="TitleBarArea"
@@ -172,12 +192,11 @@
             <Button
                 x:Name="BackButton"
                 Grid.Column="1"
-                Width="46"
-                Height="46"
-                Margin="6,6,2,6"
-                Background="Transparent"
-                BorderThickness="0"
+                Width="44"
+                Height="44"
+                Margin="4,6,4,2"
                 Command="{x:Bind ViewModel.GoBackCommand}"
+                Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=Back}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
@@ -192,15 +211,13 @@
             <Button
                 x:Name="PlayQueueButton"
                 Grid.Column="2"
-                Width="46"
-                Height="46"
-                Margin="2,6,6,6"
-                HorizontalAlignment="Right"
+                Width="44"
+                Height="44"
+                Margin="0,6,0,2"
                 AllowDrop="True"
-                Background="Transparent"
-                BorderThickness="0"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
+                Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <SymbolIcon Symbol="MusicInfo" />
                 <Button.Flyout>
@@ -221,9 +238,9 @@
             </Button>
 
             <StackPanel
-                x:Name="TitleTextPanel"
+                x:Name="TitleTextStackPanel"
                 Grid.Column="3"
-                Margin="36,0,0,0"
+                Margin="20,0,0,0"
                 VerticalAlignment="Center"
                 IsHitTestVisible="False"
                 Orientation="Vertical">
@@ -232,11 +249,9 @@
                 </StackPanel.Transitions>
                 <TextBlock
                     x:Name="TitleText"
-                    FontSize="20"
-                    MaxLines="1"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
-                    TextTrimming="CharacterEllipsis" />
+                    TextWrapping="NoWrap" />
 
                 <TextBlock
                     x:Name="TitleTextSeparator"
@@ -339,7 +354,7 @@
             Visibility="Collapsed">
             <Grid
                 x:Name="AlbumArt"
-                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="8"
@@ -350,7 +365,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontSize="80"
-                    Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
                 <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
                     <Image
@@ -370,9 +385,13 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
-            Background="Transparent"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             Visibility="Collapsed">
+            <Button.Resources>
+                <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="RestoreButtonBackgroundPointerOver" />
+                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="RestoreButtonBackgroundPressed" />
+            </Button.Resources>
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="I" />
             </Button.KeyboardAccelerators>
@@ -460,26 +479,21 @@
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-        <Border
-            x:Name="PlayerControlsBackground"
-            Grid.Row="2"
-            Grid.Column="0"
-            Tapped="PlayerControlsBackground_OnTapped">
-            <Border.Background>
-                <LinearGradientBrush x:Name="ControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0" Color="#00000000" />
-                    <GradientStop Offset="1" Color="#99000000" />
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
-
         <controls:NotificationView
             x:Name="NotificationView"
             Grid.Row="1"
             Grid.Column="0"
             Margin="12,0,12,-12"
             HorizontalAlignment="Center"
-            VerticalAlignment="Bottom" />
+            VerticalAlignment="Bottom"
+            Canvas.ZIndex="4" />
+
+        <Border
+            x:Name="PlayerControlsBackground"
+            Grid.Row="2"
+            Grid.Column="0"
+            Background="{ThemeResource ControlsBackgroundBrush}"
+            Tapped="PlayerControlsBackground_OnTapped" />
 
         <controls:PlayerControls
             x:Name="PlayerControls"
@@ -616,16 +630,15 @@
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Height" Value="32" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
-                        <Setter Target="TitleText.FontSize" Value="12" />
-                        <Setter Target="TitleText.FontWeight" Value="Normal" />
-                        <Setter Target="SubtitleText.FontSize" Value="12" />
-                        <Setter Target="TitleTextPanel.Margin" Value="13,0,0,0" />
-                        <Setter Target="TitleTextPanel.Orientation" Value="Horizontal" />
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleTextStackPanel.Margin" Value="12,0,0,0" />
+                        <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
+                        <Setter Target="TitleText.Style" Value="{StaticResource CaptionTextBlockStyle}" />
                         <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
+                        <Setter Target="SubtitleText.FontSize" Value="12" />
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
@@ -645,80 +658,78 @@
                 </VisualState>
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
+                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
+                        <Setter Target="LayoutRoot.BorderThickness" Value="1" />
+                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
+                        <Setter Target="LayoutRoot.Height" Value="128" />
+                        <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
+                        <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="SecondColumn.Width" Value="*" />
+                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
-                        <Setter Target="TitleText.FontSize" Value="14" />
-                        <Setter Target="TitleText.FontWeight" Value="SemiBold" />
-                        <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleTextPanel.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
+                        <Setter Target="TitleText.Style" Value="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
                         <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
-                        <Setter Target="AlbumArt.CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         <Setter Target="AlbumArt.BorderThickness" Value="0" />
-                        <Setter Target="BackgroundElement.Opacity" Value="0" />
+                        <Setter Target="AlbumArt.CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
-                        <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
-                        <Setter Target="PlayerControls.Padding" Value="0" />
-                        <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
-                        <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
+                        <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
-                        <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
-                        <Setter Target="LayoutRoot.Height" Value="128" />
-                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
-                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
-                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
-                        <Setter Target="LayoutRoot.BorderThickness" Value="1" />
+                        <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
+                        <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
+                        <Setter Target="PlayerControls.Padding" Value="0" />
+                        <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">
                     <VisualState.Setters>
+                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
+                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
+                        <Setter Target="LayoutRoot.BorderThickness" Value="1" />
+                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
+                        <Setter Target="LayoutRoot.Height" Value="0" />
+                        <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
+                        <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="SecondColumn.Width" Value="*" />
+                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarElement.Margin" Value="0" />
-                        <Setter Target="TitleText.FontSize" Value="14" />
-                        <Setter Target="TitleText.FontWeight" Value="SemiBold" />
-                        <Setter Target="TitleTextPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleTextPanel.(Grid.ColumnSpan)" Value="2" />
-                        <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
+                        <Setter Target="BackButton.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
+                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
+                        <Setter Target="TitleText.Style" Value="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
                         <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtPanel.Opacity" Value="0" />
-                        <Setter Target="BackgroundElement.Opacity" Value="0" />
+                        <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
+                        <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <Setter Target="PlayerControls.IsEnabled" Value="False" />
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
-                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
-                        <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="NotificationView.Visibility" Value="Collapsed" />
-                        <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
-                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
-                        <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
-                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
-                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
-                        <Setter Target="LayoutRoot.BorderThickness" Value="1" />
-                        <Setter Target="LayoutRoot.Height" Value="0" />
                     </VisualState.Setters>
                     <Storyboard>
                         <FadeOutThemeAnimation TargetName="LayoutRoot" />

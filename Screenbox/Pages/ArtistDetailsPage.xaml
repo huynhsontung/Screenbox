@@ -155,7 +155,7 @@
                     Height="180"
                     Margin="0,0,20,0"
                     VerticalAlignment="Top"
-                    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="99"
@@ -165,7 +165,7 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         FontSize="64"
-                        Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xe77b;" />
                 </Grid>
 
@@ -311,7 +311,7 @@
             </ListView.GroupStyle>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
-                    AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                    AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
                     AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     AlternateBorderThickness="1" />
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

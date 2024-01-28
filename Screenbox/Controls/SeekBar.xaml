@@ -2,25 +2,26 @@
     x:Class="Screenbox.Controls.SeekBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+
     <UserControl.Resources>
         <ResourceDictionary>
-            <SolidColorBrush x:Key="SliderTrackFillPointerOver" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackFillPressed" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="Transparent" />
-            <SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="Transparent" />
+            <StaticResource x:Key="SliderTrackFillPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="SliderTrackFillPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="SliderTrackValueFillPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="SliderTrackValueFillPressed" ResourceKey="SystemControlTransparentBrush" />
             <!-- <SolidColorBrush x:Key="SliderOuterThumbBackground" Color="WhiteSmoke" /> -->
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
-        <local:ChapterProgressBar
+        <controls:ChapterProgressBar
             x:Name="PlayerProgressBar"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
@@ -33,10 +34,9 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             AutomationProperties.AccessibilityView="Raw"
-            Foreground="Orange"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.BufferingVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <local:CustomSlider
+        <controls:CustomSlider
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"

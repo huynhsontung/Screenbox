@@ -23,11 +23,11 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
-            <SolidColorBrush x:Key="ListViewHeaderItemDividerStroke" Color="Transparent" />
+            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
                 <TextBlock
-                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{Binding Key}" />
             </DataTemplate>
@@ -99,7 +99,7 @@
                     </ListView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
                         <interactions:AlternatingListViewBehavior
-                            AlternateBackground="{ThemeResource AccentListViewItemBackgroundBrush}"
+                            AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
                             AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             AlternateBorderThickness="1" />
                         <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
@@ -126,8 +126,8 @@
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
                     SelectionMode="None">
                     <GridView.Resources>
-                        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
-                        <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="Transparent" />
+                        <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                        <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush" />
                     </GridView.Resources>
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>

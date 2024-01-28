@@ -98,7 +98,7 @@
                         <Grid
                             Grid.Row="0"
                             Height="{StaticResource StorageItemGridViewItemThumbnailHeight}"
-                            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="4">
@@ -106,7 +106,7 @@
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 FontSize="52"
-                                Foreground="{ThemeResource ThumbnailMediaIconForeground}"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="{x:Bind Media, Converter={StaticResource MediaGlyphConverter}}"
                                 Visibility="{x:Bind Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                             <Border CornerRadius="4">

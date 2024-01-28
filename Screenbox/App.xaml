@@ -13,22 +13,19 @@
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
 
-                    <!--  Media content background and foreground  -->
+                    <!--  Brushes  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorLight2" />
+                            <StaticResource x:Key="ListViewAltItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="AccentListViewItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemAccentColorDark1" />
+                            <StaticResource x:Key="ListViewAltItemBackgroundBrush" ResourceKey="CardBackgroundFillColorDefaultBrush" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
-                            <SolidColorBrush x:Key="AccentListViewItemBackgroundBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
-                            <StaticResource x:Key="ThumbnailMediaIconForeground" ResourceKey="SystemControlForegroundBaseMediumHighBrush" />
-                            <StaticResource x:Key="AccentFillColorDefault" ResourceKey="SystemColorWindowColor" />
+                            <StaticResource x:Key="ListViewAltItemBackgroundBrush" ResourceKey="SystemColorButtonFaceColorBrush" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemColorHighlightColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 
@@ -127,8 +124,8 @@
                     <!--  Semantic zoom group-level style  -->
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
                         <Button
-                            Width="46"
-                            Height="46"
+                            Width="{StaticResource GridViewHeaderItemMinHeight}"
+                            Height="{StaticResource GridViewHeaderItemMinHeight}"
                             HorizontalAlignment="Stretch"
                             Background="Transparent"
                             BorderBrush="Transparent"
@@ -139,6 +136,9 @@
                     </DataTemplate>
 
                 </ResourceDictionary>
+
+                <ResourceDictionary Source="ms-appx:///Controls/Styles/Subtle_themeresources.xaml" />
+
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>
     </Application.Resources>
