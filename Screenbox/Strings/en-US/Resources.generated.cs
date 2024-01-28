@@ -1964,7 +1964,7 @@ namespace Screenbox.Strings{
 
         #region HyperlinkSponsor
         /// <summary>
-        ///   Looks up a localized string similar to: Support the development ☕
+        ///   Looks up a localized string similar to: Support the development
         /// </summary>
         public static string HyperlinkSponsor
         {
