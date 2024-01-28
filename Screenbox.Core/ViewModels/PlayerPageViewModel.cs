@@ -145,7 +145,7 @@ namespace Screenbox.Core.ViewModels
         public void Receive(UpdateVolumeStatusMessage message)
         {
             Receive(new UpdateStatusMessage(
-                _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, message.Value), message.Persistent));
+                _resourceService.GetString(ResourceName.VolumeChangeStatusMessage, message.Value)));
         }
 
         public void Receive(UpdateStatusMessage message)
@@ -156,7 +156,12 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 StatusMessage = message.Value;
-                if (message.Persistent || message.Value == null) return;
+                if (message.Value == null)
+                {
+                    _statusMessageTimer.Stop();
+                    return;
+                }
+
                 _statusMessageTimer.Debounce(() => StatusMessage = null, TimeSpan.FromSeconds(1));
             });
         }
@@ -274,7 +279,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume));
             args.Handled = true;
         }
 

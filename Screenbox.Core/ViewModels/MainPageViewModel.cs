@@ -111,7 +111,7 @@ namespace Screenbox.Core.ViewModels
             if (volumeChange != 0)
             {
                 int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume));
             }
 
             args.Handled = true;

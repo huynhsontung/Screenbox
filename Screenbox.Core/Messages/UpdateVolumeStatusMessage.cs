@@ -4,11 +4,8 @@ namespace Screenbox.Core.Messages
 {
     public sealed class UpdateVolumeStatusMessage : ValueChangedMessage<int>
     {
-        public bool Persistent { get; }
-
-        public UpdateVolumeStatusMessage(int value, bool persistent) : base(value)
+        public UpdateVolumeStatusMessage(int value) : base(value)
         {
-            Persistent = persistent;
         }
     }
 }
