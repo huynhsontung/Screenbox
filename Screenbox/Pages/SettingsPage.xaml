@@ -270,7 +270,6 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
-                    IsExpanded="True"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
@@ -329,11 +328,10 @@
                 <!--  About section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAbout}" />
                 <ctc:SettingsExpander
-                    Margin="0,0,0,24"
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="Made with ❤️ by Tung Huynh"
                     Header="{strings:Resources Key=AppFriendlyName}"
-                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}"
-                    IsExpanded="True">
+                    HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.scale-200.png}">
                     <TextBlock
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
@@ -342,23 +340,22 @@
                         <ctc:SettingsCard
                             HorizontalContentAlignment="Left"
                             ContentAlignment="Vertical"
-                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                            Header="{strings:Resources Key=RelatedLinks}">
-                            <VariableSizedWrapGrid
-                                Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                                ItemWidth="242"
-                                Orientation="Horizontal">
+                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
+                            <StackPanel Margin="{StaticResource HyperlinkButtonInlineMargin}" Orientation="Vertical">
                                 <!--  TODO: Add third-party license notice  -->
                                 <HyperlinkButton Content="{strings:Resources Key=PrivacyPolicy}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
                                 <HyperlinkButton Content="{strings:Resources Key=License}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSourceCode}" NavigateUri="https://github.com/huynhsontung/Screenbox" />
-                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
-                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
-                                <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
-                            </VariableSizedWrapGrid>
+                            </StackPanel>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
+
+                <StackPanel Margin="-11,4,0,28" Orientation="Vertical">
+                    <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
+                    <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
+                    <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
+                </StackPanel>
 
             </StackPanel>
         </ScrollViewer>
