@@ -20,6 +20,7 @@ using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
 namespace Screenbox.Core.Services
 {
+    // TODO: Break this service into smaller ViewModels and services
     public sealed class LibraryService : ILibraryService
     {
         public event TypedEventHandler<ILibraryService, object>? MusicLibraryContentChanged;
@@ -422,10 +423,15 @@ namespace Screenbox.Core.Services
             }
             catch (Exception e)
             {
-                files = Array.Empty<StorageFile>();
-                e.Data[nameof(fetchIndex)] = fetchIndex;
-                e.Data[nameof(batchSize)] = batchSize;
-                LogService.Log(e);
+                // System.Exception: The library, drive, or media pool is empty.
+                if (e.HResult != unchecked((int)0x800710D2))
+                {
+                    e.Data[nameof(fetchIndex)] = fetchIndex;
+                    e.Data[nameof(batchSize)] = batchSize;
+                    LogService.Log(e);
+                }
+
+                return new List<MediaViewModel>();
             }
 
             List<MediaViewModel> mediaBatch = files.Select(_mediaFactory.GetSingleton).ToList();

@@ -66,6 +66,10 @@ public sealed class UriMediaViewModel : MediaViewModel
                     break;
             }
         }
+        catch (UnauthorizedAccessException)
+        {
+            // ignored
+        }
         catch (Exception e)
         {
             // System.Exception: The RPC server is unavailable.

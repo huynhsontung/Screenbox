@@ -20,7 +20,10 @@ namespace Screenbox.Controls
         {
             OpenUrlDialog dialog = new();
             ContentDialogResult result = await dialog.ShowAsync();
-            return result != ContentDialogResult.Primary ? null : new Uri(dialog.UrlBox.Text);
+            string url = dialog.UrlBox.Text;
+            return result == ContentDialogResult.Primary && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri uri)
+                ? uri
+                : null;
         }
 
         private bool CanOpen(string url)

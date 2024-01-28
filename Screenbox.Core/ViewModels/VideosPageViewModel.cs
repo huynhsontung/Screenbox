@@ -39,12 +39,13 @@ namespace Screenbox.Core.ViewModels
             _resourceService = resourceService;
             _libraryService.VideosLibraryContentChanged += OnVideosLibraryContentChanged;
             _hasVideos = true;
-            Breadcrumbs = new ObservableCollection<StorageFolder> { FirstFolder };
+            Breadcrumbs = new ObservableCollection<StorageFolder>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         }
 
         public void UpdateVideos()
         {
+            if (Breadcrumbs.Count == 0) Breadcrumbs.Add(FirstFolder);
             HasVideos = _libraryService.GetVideosFetchResult().Count > 0;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
