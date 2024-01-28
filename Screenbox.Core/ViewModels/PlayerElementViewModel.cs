@@ -131,14 +131,13 @@ namespace Screenbox.Core.ViewModels
             PointerPoint? pointer = e.GetCurrentPoint((UIElement)e.OriginalSource);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
             int volume = Messenger.Send(new ChangeVolumeRequestMessage(mouseWheelDelta > 0 ? 5 : -5, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume, false));
+            Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
 
         public void VideoView_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (_manipulationLock == ManipulationLock.None) return;
             Messenger.Send(new OverrideControlsHideDelayMessage(100));
-            Messenger.Send(new UpdateStatusMessage(null));
             Messenger.Send(new TimeChangeOverrideMessage(false));
         }
 
@@ -159,7 +158,7 @@ namespace Screenbox.Core.ViewModels
             {
                 _manipulationLock = ManipulationLock.Vertical;
                 int volume = Messenger.Send(new ChangeVolumeRequestMessage((int)-verticalChange, true));
-                Messenger.Send(new UpdateVolumeStatusMessage(volume, true));
+                Messenger.Send(new UpdateVolumeStatusMessage(volume));
                 return;
             }
 
@@ -176,7 +175,7 @@ namespace Screenbox.Core.ViewModels
                 string changeText = Humanizer.ToDuration(newTime - _timeBeforeManipulation);
                 if (changeText[0] != '-') changeText = '+' + changeText;
                 string status = $"{Humanizer.ToDuration(newTime)} ({changeText})";
-                Messenger.Send(new UpdateStatusMessage(status, true));
+                Messenger.Send(new UpdateStatusMessage(status));
             }
         }
 
