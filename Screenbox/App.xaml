@@ -86,8 +86,9 @@
                     <!--  Subtitle margin  -->
                     <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
 
-                    <!--  Font  -->
-                    <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
+                    <!--  Custom Icons  -->
+                    <FontFamily x:Key="ScreenboxIconsFontFamily">ms-appx:///Assets/Screenbox-Icons.ttf#Screenbox Icons</FontFamily>
+
                     <x:Double x:Key="DefaultIconFontSize">16</x:Double>
                     <x:Double x:Key="PanelIconFontSize">126</x:Double>
                     <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>

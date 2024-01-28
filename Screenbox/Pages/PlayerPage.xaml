@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -75,8 +76,8 @@
 
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
-                FalseValue="D"
-                TrueValue="C" />
+                FalseValue="&#xE62E;"
+                TrueValue="&#xF5B0;" />
 
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
@@ -416,16 +417,15 @@
             Padding="11,8,11,9"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="6"
+            CornerRadius="8"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
             </animations:Implicit.ShowAnimations>
-
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
             </animations:Implicit.HideAnimations>
@@ -441,12 +441,12 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="70"
-            Height="70"
+            Width="72"
+            Height="72"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             CornerRadius="16"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
@@ -461,9 +461,9 @@
                 x:Name="PlayerStateBadgeIcon"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
-                FontSize="26"
-                Foreground="White"
+                contract13NotPresent:FontFamily="{StaticResource ScreenboxIconsFontFamily}"
+                FontSize="{StaticResource TitleTextBlockFontSize}"
+                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                 Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
 

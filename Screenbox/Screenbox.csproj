@@ -770,7 +770,7 @@
     <Content Include="Assets\Icons\Video\FileAssociationWMV.targetsize-72.png" />
     <Content Include="Assets\Icons\Video\FileAssociationWMV.targetsize-80.png" />
     <Content Include="Assets\Icons\Video\FileAssociationWMV.targetsize-96.png" />
-    <Content Include="Assets\Screenbox-Custom-Icons.ttf" />
+    <Content Include="Assets\Screenbox-Icons.ttf" />
     <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Assets\LargeTile.scale-100.png" />

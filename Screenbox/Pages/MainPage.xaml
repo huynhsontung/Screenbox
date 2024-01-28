@@ -5,6 +5,8 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:appModel="using:Windows.ApplicationModel"
+    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
+    xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -138,7 +140,13 @@
                     <TextBlock x:Name="NetworkNavItemText" Text="{strings:Resources Key=Network}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
-                <muxc:NavigationViewItem Icon="MusicInfo" Tag="queue">
+                <muxc:NavigationViewItem Tag="queue">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon
+                            contract13NotPresent:Glyph="&#xF102;"
+                            contract13Present:Glyph="&#xF112;"
+                            FontFamily="{StaticResource ScreenboxIconsFontFamily}" />
+                    </muxc:NavigationViewItem.Icon>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
