@@ -54,9 +54,20 @@ namespace Screenbox.Controls.Interactions
 
             AssociatedObject.ActualThemeChanged += OnActualThemeChanged;
             AssociatedObject.ContainerContentChanging += OnContainerContentChanging;
-            if (AssociatedObject.Items != null)
+            if (AssociatedObject.Items == null) return;
+            AssociatedObject.Items.VectorChanged += ItemsOnVectorChanged;
+            if (AssociatedObject.Items.Count > 0)
             {
-                AssociatedObject.Items.VectorChanged += ItemsOnVectorChanged;
+                // Update alternate layout on attached if there are items.
+                // Item containers may be cached if the list is previously loaded
+                // and ContainerContentChanging event is not triggered.
+                for (int i = 0; i < AssociatedObject.Items.Count; i++)
+                {
+                    if (AssociatedObject.ContainerFromIndex(i) is SelectorItem itemContainer)
+                    {
+                        UpdateAlternateLayout(itemContainer, i);
+                    }
+                }
             }
         }
 
