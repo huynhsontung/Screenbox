@@ -288,9 +288,16 @@ namespace Screenbox.Core.Services
                     StartPortableStorageDeviceWatcher();
                 }
 
-                if (hasCache) _songs.ForEach(song => song.IsFromLibrary = false);
                 await LoadLibraryDetailsAsync(songs, cancellationToken);
-                if (hasCache) CleanOutdatedSongs();
+                if (hasCache)
+                {
+                    // Ensure only songs not in the library has IsFromLibrary = false
+                    // These songs will be cleaned up later
+                    _songs.ForEach(song => song.IsFromLibrary = false);
+                    songs.ForEach(song => song.IsFromLibrary = true);
+                    CleanOutdatedSongs();
+                }
+
                 _songs = songs;
             }
             finally
