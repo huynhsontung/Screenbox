@@ -48,7 +48,7 @@
             <XamlUICommand
                 x:Key="PropertiesCommand"
                 Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
                 Label="{strings:Resources Key=Properties}" />
 
             <MenuFlyout x:Name="ItemFlyout">

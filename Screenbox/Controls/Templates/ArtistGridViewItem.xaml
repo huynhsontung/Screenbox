@@ -31,7 +31,7 @@
                         VerticalAlignment="Center"
                         FontSize="52"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xe77b;" />
+                        Glyph="&#xE77B;" />
                     <!--<Border CornerRadius="4">
                             <Image
                                 HorizontalAlignment="Center"

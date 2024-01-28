@@ -66,7 +66,7 @@
                 Grid.Column="0"
                 FontSize="{StaticResource PanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xe8b2;" />
+                Glyph="&#xE8B2;" />
 
             <StackPanel
                 Grid.Column="1"
@@ -91,7 +91,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xe8f4;" />
+                        <FontIcon Glyph="&#xE8F4;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
@@ -147,7 +147,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xe8f4;" />
+                        <FontIcon Glyph="&#xE8F4;" />
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"

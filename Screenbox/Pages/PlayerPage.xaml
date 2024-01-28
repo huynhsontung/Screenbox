@@ -203,7 +203,7 @@
                         <animatedvisuals:AnimatedBackVisualSource />
                     </muxc:AnimatedIcon.Source>
                     <muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:FontIconSource Glyph="&#xe70d;" />
+                        <muxc:FontIconSource Glyph="&#xE70D;" />
                     </muxc:AnimatedIcon.FallbackIconSource>
                 </muxc:AnimatedIcon>
             </Button>

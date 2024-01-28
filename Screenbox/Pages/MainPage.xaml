@@ -127,7 +127,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem Tag="videos">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xe8b2;" />
+                        <FontIcon Glyph="&#xE8B2;" />
                     </muxc:NavigationViewItem.Icon>
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
                 </muxc:NavigationViewItem>

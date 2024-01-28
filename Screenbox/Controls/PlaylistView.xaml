@@ -43,19 +43,19 @@
             <XamlUICommand
                 x:Key="MoveUpCommand"
                 Command="{x:Bind ViewModel.MoveItemUpCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe74a;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE74A;}"
                 Label="{strings:Resources Key=MoveUp}" />
 
             <XamlUICommand
                 x:Key="MoveDownCommand"
                 Command="{x:Bind ViewModel.MoveItemDownCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe74b;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE74B;}"
                 Label="{strings:Resources Key=MoveDown}" />
 
             <XamlUICommand
                 x:Key="PropertiesCommand"
                 Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
                 Label="{strings:Resources Key=Properties}" />
 
             <MenuFlyout x:Name="ItemFlyout">
@@ -95,7 +95,7 @@
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe838;" />
+                    <FontIcon Glyph="&#xE838;" />
                     <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
             </Button>
@@ -107,7 +107,7 @@
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe74d;" />
+                    <FontIcon Glyph="&#xE74D;" />
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
@@ -122,7 +122,7 @@
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe762;" />
+                    <FontIcon Glyph="&#xE762;" />
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
@@ -181,7 +181,7 @@
                     Label="{x:Bind strings:Resources.MoveUp}"
                     Visibility="Collapsed">
                     <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xe74a;" />
+                        <FontIcon Glyph="&#xE74A;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton
@@ -191,7 +191,7 @@
                     Label="{x:Bind strings:Resources.MoveDown}"
                     Visibility="Collapsed">
                     <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xe74b;" />
+                        <FontIcon Glyph="&#xE74B;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton

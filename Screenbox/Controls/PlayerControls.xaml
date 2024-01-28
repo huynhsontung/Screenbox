@@ -90,7 +90,7 @@
             <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenFilesCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xe838;}"
+                    Icon="{ui:FontIcon Glyph=&#xE838;}"
                     Text="{strings:Resources Key=OpenFiles}">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
@@ -191,7 +191,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AspectRatioSubMenu"
-                    Icon="{ui:FontIcon Glyph=&#xe799;}"
+                    Icon="{ui:FontIcon Glyph=&#xE799;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
                     Text="{strings:Resources Key=AspectRatio}">
                     <muxc:RadioMenuFlyoutItem
@@ -244,7 +244,7 @@
                         Text="{strings:Resources Key=Custom}" />
                 </MenuFlyoutSubItem>
                 <!--<MenuFlyoutSubItem
-                    Icon="{ui:FontIcon Glyph=&#xe714;}"
+                    Icon="{ui:FontIcon Glyph=&#xE714;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
                     Text="{x:Bind strings:Resources.VideoSettings}">
                 </MenuFlyoutSubItem>-->

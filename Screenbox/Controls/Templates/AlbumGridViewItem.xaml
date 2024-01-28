@@ -31,7 +31,7 @@
                         VerticalAlignment="Center"
                         FontSize="52"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xe93c;"
+                        Glyph="&#xE93C;"
                         Visibility="{Binding RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                     <Border CornerRadius="4">
                         <Image

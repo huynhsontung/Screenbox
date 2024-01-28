@@ -38,7 +38,7 @@
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xe946;}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
                     Text="{strings:Resources Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
