@@ -17,10 +17,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '6.x'
     
@@ -34,21 +34,16 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        # x86 and arm64 have different dll dependencies thus cannot be bundled together
-        platform: [x64, arm64]
-        include:
-          - platform: x64
-            bundle-platforms: x86|x64
-          - platform: arm64
-            bundle-platforms: arm64
+        # x86/x64 and arm64 have different dll dependencies thus cannot be bundled together
+        platform: [x86, x64, arm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: ~\.nuget\packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -56,7 +51,7 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Fetch Gomplate
-      uses: dsaltares/fetch-gh-release-asset@1.1.0
+      uses: dsaltares/fetch-gh-release-asset@1.1.1
       with:
         repo: hairyhenderson/gomplate
         version: tags/v3.11.3
@@ -88,8 +83,7 @@ jobs:
         -p:RestoreLockedMode=true `
         -p:Configuration=Release `
         -p:Platform=${{ matrix.platform }} `
-        -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="${{ matrix.bundle-platforms }}" `
+        -p:AppxBundle=Never `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=$env:PackageDir `
         -p:AppxPackageSigningEnabled=false `
@@ -99,7 +93,7 @@ jobs:
         PackageDir: C:\DeployOutput
     
     - name: Create store-upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: github.ref_type == 'tag'
       with:
         name: store-upload-${{ matrix.platform }}
@@ -108,7 +102,7 @@ jobs:
           C:\DeployOutput\*.appxupload
 
     - name: Create sideload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Screenbox-sideload-${{ matrix.platform }}
         path: |
@@ -119,21 +113,21 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        platform: [x64, arm64]
+        platform: [x86, x64, arm64]
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-${{ matrix.platform }}
         path: C:\Download\
     - name: Rename test folder
       run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
     - name: Rename test package
-      run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
+      run: Get-ChildItem -Path C:\Download\Screenbox\*.msix | Rename-Item -NewName Screenbox.msix
     - uses: huynhsontung/wack-certification@main
       with:
         name: 'WACK (${{ matrix.platform }})'
-        package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
+        package-path: 'C:\Download\Screenbox\Screenbox.msix'
         report-name: 'Screenbox.Certification.xml'
 
   release:
@@ -142,16 +136,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Download x86 package
+      uses: actions/download-artifact@v4
+      with:
+        name: Screenbox-sideload-x86
+        path: download/
 
     - name: Download x64 package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-x64
         path: download/
 
     - name: Download arm64 package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-arm64
         path: download/
