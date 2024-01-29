@@ -17,10 +17,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '6.x'
     
@@ -38,12 +38,12 @@ jobs:
         platform: [x86, x64, arm64]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: ~\.nuget\packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -51,7 +51,7 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Fetch Gomplate
-      uses: dsaltares/fetch-gh-release-asset@1.1.0
+      uses: dsaltares/fetch-gh-release-asset@1.1.1
       with:
         repo: hairyhenderson/gomplate
         version: tags/v3.11.3
@@ -93,7 +93,7 @@ jobs:
         PackageDir: C:\DeployOutput
     
     - name: Create store-upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: github.ref_type == 'tag'
       with:
         name: store-upload-${{ matrix.platform }}
@@ -102,7 +102,7 @@ jobs:
           C:\DeployOutput\*.appxupload
 
     - name: Create sideload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Screenbox-sideload-${{ matrix.platform }}
         path: |
@@ -116,7 +116,7 @@ jobs:
         platform: [x86, x64, arm64]
     steps:
     - name: Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-${{ matrix.platform }}
         path: C:\Download\
@@ -136,22 +136,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Download x86 package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-x86
         path: download/
 
     - name: Download x64 package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-x64
         path: download/
 
     - name: Download arm64 package
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Screenbox-sideload-arm64
         path: download/
