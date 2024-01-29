@@ -23,7 +23,7 @@ namespace Screenbox.Core.ViewModels
     {
         public string Location { get; protected set; }
 
-        public object Source { get; }
+        protected object Source { get; set; }
 
         public bool IsFromLibrary { get; set; }
 
@@ -93,6 +93,8 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            IsFromLibrary = source.IsFromLibrary;
+            ThumbnailSource = source.ThumbnailSource;
         }
 
         protected MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)

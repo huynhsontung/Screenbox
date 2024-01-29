@@ -35,6 +35,19 @@ public sealed class FileMediaViewModel : MediaViewModel
         File = file;
     }
 
+    public FileMediaViewModel(MediaViewModel source, StorageFile file, IFilesService filesService) : base(source)
+    {
+        _filesService = filesService;
+        _loadTask = Task.CompletedTask;
+        _loadThumbnailTask = Task.CompletedTask;
+        File = file;
+        Source = file;
+
+        // Difference instance. Reset Album and Artists references.
+        Album = null;
+        Artists = Array.Empty<ArtistViewModel>();
+    }
+
     private FileMediaViewModel(FileMediaViewModel source) : base(source)
     {
         _filesService = source._filesService;

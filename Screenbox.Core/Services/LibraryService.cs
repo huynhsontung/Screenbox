@@ -273,10 +273,10 @@ namespace Screenbox.Core.Services
                 List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
                 // If cache is empty, fetch from storage using the same songs instance
                 // If not empty then create a new list to avoid overwriting the cache
-                bool hasCache = false;
+                // bool hasCache = false;
                 if (songs.Count > 0)
                 {
-                    hasCache = true;
+                    // hasCache = true;
                     songs = new List<MediaViewModel>();
                 }
 
@@ -288,17 +288,19 @@ namespace Screenbox.Core.Services
                     StartPortableStorageDeviceWatcher();
                 }
 
-                await LoadLibraryDetailsAsync(songs, cancellationToken);
-                if (hasCache)
-                {
-                    // Ensure only songs not in the library has IsFromLibrary = false
-                    // These songs will be cleaned up later
-                    _songs.ForEach(song => song.IsFromLibrary = false);
-                    songs.ForEach(song => song.IsFromLibrary = true);
-                    CleanOutdatedSongs();
-                }
-
+                _albumFactory.Clear();
+                _artistFactory.Clear();
                 _songs = songs;
+                await LoadLibraryDetailsAsync(songs, cancellationToken);
+                // if (hasCache)
+                // {
+                //     // Ensure only songs not in the library has IsFromLibrary = false
+                //     _songs.ForEach(song => song.IsFromLibrary = false);
+                //     songs.ForEach(song => song.IsFromLibrary = true);
+                //     CleanOutdatedSongs(_songs);
+                //     cancellationToken.ThrowIfCancellationRequested();
+                // }
+
             }
             finally
             {
@@ -357,28 +359,17 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private void CleanOutdatedSongs()
+        private void CleanOutdatedSongs(IEnumerable<MediaViewModel> songs)
         {
-            List<MediaViewModel> outdatedSongs = _songs.Where(song => !song.IsFromLibrary).ToList();
+            List<MediaViewModel> outdatedSongs = songs
+                .Where(song => song is not FileMediaViewModel || !song.IsFromLibrary)
+                .ToList();
             foreach (MediaViewModel song in outdatedSongs)
             {
-                if (song.Album != null)
-                {
-                    song.Album.RelatedSongs.Remove(song);
-                    song.Album = null;
-                }
-
-                foreach (ArtistViewModel artist in song.Artists)
-                {
-                    artist.RelatedSongs.Remove(song);
-                }
-
-                song.Artists = Array.Empty<ArtistViewModel>();
+                _albumFactory.Remove(song);
+                _artistFactory.Remove(song);
                 song.Clean();
             }
-
-            _albumFactory.Compact();
-            _artistFactory.Compact();
         }
 
         private StorageFileQueryResult GetMusicLibraryQuery()
