@@ -34,13 +34,8 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        # x86 and arm64 have different dll dependencies thus cannot be bundled together
-        platform: [x64, arm64]
-        include:
-          - platform: x64
-            bundle-platforms: x86|x64
-          - platform: arm64
-            bundle-platforms: arm64
+        # x86/x64 and arm64 have different dll dependencies thus cannot be bundled together
+        platform: [x86, x64, arm64]
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -88,8 +83,7 @@ jobs:
         -p:RestoreLockedMode=true `
         -p:Configuration=Release `
         -p:Platform=${{ matrix.platform }} `
-        -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="${{ matrix.bundle-platforms }}" `
+        -p:AppxBundle=Never `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=$env:PackageDir `
         -p:AppxPackageSigningEnabled=false `
@@ -119,7 +113,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        platform: [x64, arm64]
+        platform: [x86, x64, arm64]
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v3
@@ -143,6 +137,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+
+    - name: Download x86 package
+      uses: actions/download-artifact@v3
+      with:
+        name: Screenbox-sideload-x86
+        path: download/
 
     - name: Download x64 package
       uses: actions/download-artifact@v3
