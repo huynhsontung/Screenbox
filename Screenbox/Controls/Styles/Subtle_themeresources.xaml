@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
-    xmlns:local="using:Microsoft.UI.Xaml.Controls">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
@@ -69,6 +69,7 @@
                         contract7NotPresent:CornerRadius="{ThemeResource ControlCornerRadius}"
                         contract7Present:BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         contract7Present:CornerRadius="{TemplateBinding CornerRadius}"
+                        muxc:AnimatedIcon.State="Normal"
                         AutomationProperties.AccessibilityView="Raw"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
@@ -96,6 +97,9 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleButtonForegroundPointerOver}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.(muxc:AnimatedIcon.State)" Value="PointerOver" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Pressed">
@@ -110,6 +114,9 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleButtonForegroundPressed}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.(muxc:AnimatedIcon.State)" Value="Pressed" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Disabled">
@@ -124,6 +131,10 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleButtonForegroundDisabled}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
+                                    <VisualState.Setters>
+                                        <!--  DisabledVisual Should be handled by the control, not the animated icon.  -->
+                                        <Setter Target="ContentPresenter.(muxc:AnimatedIcon.State)" Value="Normal" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
