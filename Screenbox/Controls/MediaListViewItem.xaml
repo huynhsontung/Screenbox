@@ -87,7 +87,7 @@
             Grid.Column="1"
             Width="32"
             Height="32"
-            Padding="7"
+            Padding="0"
             VerticalAlignment="Center"
             CommandParameter="{Binding}"
             Style="{StaticResource SubtleButtonStyle}"
