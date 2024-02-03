@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame gespeichert</value>
+    <value>Bild gespeichert</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Bild in Bild</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Aktuellen Frame speichern</value>
+    <value>Aktuelles Bild speichern</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Endlosschleife</value>
@@ -137,20 +137,20 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Fehler beim Speichern des Frames</value>
+    <value>Bild konnte nicht gespeichert werden</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Kapitel {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Fehler beim Laden des Untertitels</value>
+    <value>Untertitel konnten nicht geladen werden</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Zurück</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Stumm</value>
+    <value>Stummschalten</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
     <value>Stummschaltung aufheben</value>
@@ -162,7 +162,7 @@
     <value>Audio &amp; Untertitel</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Vollbild verlassen</value>
+    <value>Vollbildmodus verlassen</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Lautstärke</value>
@@ -171,7 +171,7 @@
     <value>Suchen</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Bild in Bild verlassen</value>
+    <value>Bild in Bild-Modus verlassen</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Weiter</value>
@@ -183,22 +183,22 @@
     <value>Wiedergabe</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Pausieren</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>Mehr</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Wiedergabeliste wiedergeben</value>
+    <value>Wiedergabeliste abspielen</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Wiederholen: aus</value>
+    <value>Wiederholen: Aus</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
     <value>Wiederholen: Alle</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Wiederholen: Eins</value>
+    <value>Wiederholen: Einmalig</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} Eintrag ausgewählt</value>
@@ -762,12 +762,12 @@
     <value>Argumente festlegen</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Wechseldatenträger durchsuchen</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Medien von Speichergeräten wie USB-Sticks in Ihre Bibliotheken einbeziehen</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Aktive Argumente</value>
   </data>
 </root>
