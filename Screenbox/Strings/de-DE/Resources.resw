@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Bild gespeichert</value>
+    <value>Frame gespeichert</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Bild in Bild</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Aktuelles Bild speichern</value>
+    <value>Aktuellen Frame speichern</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Endlosschleife</value>
@@ -137,7 +137,7 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Bild konnte nicht gespeichert werden</value>
+    <value>Fehler beim Speichern des Frames</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Kapitel {0}</value>
@@ -180,7 +180,7 @@
     <value>Vorherige</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Wiedergabe</value>
+    <value>Abspielen</value>
   </data>
   <data name="Pause" xml:space="preserve">
     <value>Pausieren</value>
@@ -269,7 +269,7 @@
     <value>Musik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Zufällung abspielen</value>
+    <value>Zufällig abspielen</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
     <value>Unbekannter Künstler</value>
