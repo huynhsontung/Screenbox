@@ -144,16 +144,16 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Gagal memuat sari kata</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>Bisu</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>Nyahbisu</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
     <value>Skrin penuh</value>
@@ -162,10 +162,10 @@
     <value>Audio &amp; kapsyen</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>Keluar skrin penuh</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Volum</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -186,7 +186,7 @@
     <value>Jeda</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>Lebih</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
     <value>Baris gilir main</value>
@@ -231,10 +231,10 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>Folder ini kosong</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} item</value>
@@ -272,25 +272,25 @@
     <value>Rombak dan main</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Artis tidak diketahui</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Album tidak diketahui</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Genre tidak diketahui</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>Tambah folder</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Rumah</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>Pilih berbilang</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>We couldn't find any music</value>
@@ -299,91 +299,91 @@
     <value>Your music library doesn't contain any music content.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>Buka fail</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Cari</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Tetapan</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>Selamat datang ke Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>Mari bermula mainkan beberapa kandungan media anda bagi memudahkan perkara.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Properties</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Tutup</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>Buka lokasi fail</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Artis album</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>Kadar bit</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Jenis kandungan</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Artis penyumbang</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>Lokasi fail</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>Jenis fail</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
     <value>Genre</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>Terakhir diubah suai</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>Panjang</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Penerbit</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Resolusi</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>Saiz</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Sari kata</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Tajuk</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>Trek</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Penulis</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>Tahun</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Tersuai</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Rangkaian</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Tiada peranti rangkaian tersedia</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
@@ -392,46 +392,46 @@
     <value>Recent</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>Tetapan video</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Buka</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} lokasi ditentukan</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} lokasi ditentukan</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Shuffle: Off</value>
+    <value>Rombak: Mati</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Shuffle: On</value>
+    <value>Rombak: Hidup</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
     <value>Resume where you left off</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>Pergi ke {0}</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Album</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>Artis</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>Lagu</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Browse for files to play</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>Tambah fail</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Browse for file(s) to add to the play queue</value>
@@ -440,26 +440,26 @@
     <value>Add a folder to your music library</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>Tambah media dari URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
     <value>Add a folder to your video library</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>Buka folder</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
-    <value>Open URL</value>
+    <value>Buka URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Kosong</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} lagu</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} lagu</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
@@ -467,7 +467,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
@@ -475,36 +475,36 @@
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>All videos</value>
+    <value>Semua video</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Video folders</value>
+    <value>Folder video</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>Hasil carian untuk "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>Lihat semua</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>Hasil artis untuk "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>Hasil album untuk "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Hasil lagu untuk "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Hasil video untuk "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>Tiada album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
@@ -532,7 +532,7 @@
     <value>Unable to load media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Nisbah aspek</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Fit</value>
@@ -541,28 +541,28 @@
     <value>Fill</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Nisbah aspek tersuai</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Kelajuan main balik tersuai</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Tiada</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Skala: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>Sari kata: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Trek {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Tambah sari kata</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Audio</value>
@@ -571,25 +571,25 @@
     <value>About</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Umum</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>Pustaka</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>Pemain</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>Lokasi pustaka muzik</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Show recent</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>Lokasi pustaka video</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>Sari kata</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
     <value>Display recently played media on the home page</value>
@@ -598,7 +598,7 @@
     <value>Clear recent media history</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>Auto saiz semula</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
     <value>Resize the app window to best match a video's native resolution on playback</value>
@@ -668,7 +668,7 @@
     <value>Set playback options</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>Tetapkan</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
     <value>Set and Play</value>
@@ -687,22 +687,22 @@
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Lanjutan</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Mod lanjutan</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Argumen global</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
     <value>Command line arguments that apply to all media playback.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Alih keluar folder</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
     <value>Pending changes</value>
@@ -714,13 +714,13 @@
     <value>Failed to initialize</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Pautan berkaitan</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Dasar privasi</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Lesen</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Help translate</value>
@@ -732,16 +732,16 @@
     <value>Timing offset</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Komposer</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>Couldn't add folder</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Buka album</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Buka artis</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
     <value>Segar semula pustaka</value>
@@ -750,16 +750,16 @@
     <value>Segar semula</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Guna pengindeks untuk mengimbas</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
     <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Urus tetapan pengindeksan sistem</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Tetapkan argumen</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
     <value>Search removable storage</value>
@@ -768,6 +768,6 @@
     <value>Include media from storage devices like USB sticks in your libraries</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argumen aktif</value>
   </data>
 </root>
