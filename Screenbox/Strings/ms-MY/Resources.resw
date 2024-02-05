@@ -133,7 +133,7 @@
     <value>Kelajuan main balik</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>Volum {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
@@ -389,7 +389,7 @@
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>Baru-baru ini</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
     <value>Tetapan video</value>
@@ -526,19 +526,19 @@
     <value>Your video library doesn't contain any video content.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>Buka tetapan privasi</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Tidak dapat memuat media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
     <value>Nisbah aspek</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>Muat</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Isi</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
     <value>Nisbah aspek tersuai</value>
