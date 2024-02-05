@@ -187,16 +187,16 @@
     <value>Video WebM</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Audio Media Windows</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Video Media Windows</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
     <value>Senarai Main M3U8</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>Strim Angkutan MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
     <value>Audio WavPack</value>
