@@ -174,10 +174,10 @@
     <value>Keluar gambar dalam gambar</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>Seterusnya</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>Sebelumnya</value>
   </data>
   <data name="Play" xml:space="preserve">
     <value>Main</value>
@@ -314,7 +314,7 @@
     <value>Mari bermula mainkan beberapa kandungan media anda bagi memudahkan perkara.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>Sifat</value>
   </data>
   <data name="Close" xml:space="preserve">
     <value>Tutup</value>
@@ -735,7 +735,7 @@
     <value>Komposer</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Tidak dapat menambah folder</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
     <value>Buka album</value>
