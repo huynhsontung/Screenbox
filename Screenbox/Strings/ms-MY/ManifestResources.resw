@@ -124,7 +124,7 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Pemain video moden dengan tumpuan pada prestasi dan kemudahgunaan pada pelbagai peranti Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>Fail Multimedia 3GPP</value>
@@ -169,7 +169,7 @@
     <value>Video MPEG</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Audio Ogg Vorbis</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
     <value>Video Ogg</value>
@@ -199,9 +199,9 @@
     <value>MPEG Transport Stream</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Audio WavPack</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>Audio AIFF</value>
   </data>
 </root>
