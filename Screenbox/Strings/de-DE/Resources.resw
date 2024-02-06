@@ -174,10 +174,10 @@
     <value>Bild in Bild-Modus verlassen</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Weiter</value>
+    <value>Nächster Titel</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Vorherige</value>
+    <value>Vorheriger Titel</value>
   </data>
   <data name="Play" xml:space="preserve">
     <value>Abspielen</value>
@@ -269,7 +269,7 @@
     <value>Musik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Zufällig abspielen</value>
+    <value>Mischen und abspielen</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
     <value>Unbekannter Künstler</value>
@@ -443,7 +443,7 @@
     <value>Medien von URL hinzufügen</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Ordner zur Musikbibliothek hinzufügen</value>
+    <value>Ordner zur Videobibliothek hinzufügen</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Ordner öffnen</value>
@@ -511,13 +511,13 @@
     <value>Zugriff verweigert. Bitte überprüfen Sie Ihre Privatsphäre-Einstellungen, um sicherzustellen, dass Screenbox über ausreichende Berechtigungen verfügt.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Zugriff auf Musik-Bibliothek nicht möglich</value>
+    <value>Zugriff auf Musikbibliothek nicht möglich</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
     <value>Zugriff auf die Bilder-Bibliothek nicht möglich</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Zugriff auf Video-Bibliothek nicht möglich</value>
+    <value>Zugriff auf die Videobibliothek nicht möglich</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>Keine Videos gefunden</value>
@@ -586,7 +586,7 @@
     <value>Zuletzt verwendete Medien anzeigen</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Speicherorte der Video-Bibliotheken</value>
+    <value>Speicherorte der Videobibliotheken</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Untertitel</value>
@@ -671,7 +671,7 @@
     <value>Setzen</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Setzen und abspiele</value>
+    <value>Setzen und abspielen</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Setze VLC-Optionen, die auf einen Stream angewendet werden.</value>
