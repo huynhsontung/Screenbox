@@ -299,7 +299,7 @@
     <value>У вашій бібліотеці музики відсутня будь-яка музика.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Відкрити файл(-и)</value>
+    <value>Відкрити файл(и)</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Пошук</value>
@@ -431,7 +431,7 @@
     <value>Пошук файлів для їх відтворення</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Додати файл(-и)</value>
+    <value>Додати файл(и)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Пошук файлу(-ів) для додавання у чергу</value>
@@ -656,7 +656,7 @@
     <value>Немає сумісного візуалізатора. Переконайтеся, що на вашому пристрої доступний Direct3D 11.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Не вдалося відкрити файл(-и)</value>
+    <value>Не вдалося відкрити файл(и)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>Уведіть посилання на файл чи потік</value>
