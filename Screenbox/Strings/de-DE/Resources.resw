@@ -443,7 +443,7 @@
     <value>Medien von URL hinzufügen</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Ordner zur Videobibliothek hinzufügen</value>
+    <value>Ordner zur Musikbibliothek hinzufügen</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Ordner öffnen</value>
