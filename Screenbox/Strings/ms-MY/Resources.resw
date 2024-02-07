@@ -221,10 +221,10 @@
     <value>Main kemudian</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>Gerak ke atas</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>Gerak ke bawah</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>Sedang bermain</value>
