@@ -218,7 +218,7 @@
     <value>Alih keluar</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>Main kemudian</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Move up</value>
@@ -227,7 +227,7 @@
     <value>Move down</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>Sedang bermain</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -248,7 +248,7 @@
     <value>Kosong</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Pulihkan pandangan video</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Acu</value>
@@ -296,7 +296,7 @@
     <value>We couldn't find any music</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>Pustaka muzik anda tidak mengandungi sebarang kandungan muzik.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Buka fail</value>
@@ -723,13 +723,13 @@
     <value>Lesen</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Bantu terjemah</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Options</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Pengimbangan masa</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
     <value>Komposer</value>
@@ -765,7 +765,7 @@
     <value>Cari storan boleh alih keluar</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Sertakan media daripada peranti storan seperti stik USB dalam pustaka anda</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>Argumen aktif</value>
