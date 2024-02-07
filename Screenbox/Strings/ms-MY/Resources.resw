@@ -762,7 +762,7 @@
     <value>Tetapkan argumen</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Cari storan boleh alih keluar</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
     <value>Include media from storage devices like USB sticks in your libraries</value>
