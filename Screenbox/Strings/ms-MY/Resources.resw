@@ -147,7 +147,7 @@
     <value>Gagal memuat sari kata</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Kembali</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
     <value>Bisu</value>
@@ -293,7 +293,7 @@
     <value>Pilih berbilang</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>Kami tidak menemui sebarang muzik</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>Pustaka muzik anda tidak mengandungi sebarang kandungan muzik.</value>
@@ -386,7 +386,7 @@
     <value>Tiada peranti rangkaian tersedia</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Tidak dapat mencari media anda? Pastikan peranti rangkaian anda dipasangkan dalam Tetapan Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Baru-baru ini</value>
@@ -428,7 +428,7 @@
     <value>Lagu</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>Semak imbas fail untuk bermain</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Tambah fail</value>
@@ -437,13 +437,13 @@
     <value>Browse for file(s) to add to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>Tambah folder pada pustaka muzik anda</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Tambah media dari URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>Tambah folder pada pustaka video anda</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Buka folder</value>
@@ -511,19 +511,19 @@
     <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>Tidak dapat mencapai pustaka muzik</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Tidak dapat mencapai pustaka gambar</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>Tidak dapat mencapai pustaka video</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Kami tidak menemui sebarang video</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>Pustaka video anda tidak mengandungi sebarang kandungan video.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Buka tetapan privasi</value>
@@ -568,7 +568,7 @@
     <value>Audio</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>Perihal</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
     <value>Umum</value>
@@ -583,7 +583,7 @@
     <value>Lokasi pustaka muzik</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Tunjuk baru-baru ini</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Lokasi pustaka video</value>
@@ -607,7 +607,7 @@
     <value>Galakan volum</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>Benarkan volum maksimum melebihi 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gerak isyarat</value>
@@ -665,13 +665,13 @@
     <value>Buka tetapan Peranti Tersambung</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Tetapkan pilihan main balik</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>Tetapkan</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>Tetapkan dan Main</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Set VLC options that apply to a stream.</value>
@@ -683,7 +683,7 @@
     <value>Bantuan baris arahan VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>Lihat {0} untuk senarai penuh pilihan yang tersedia.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -693,7 +693,7 @@
     <value>Mod lanjutan</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Mod lanjutan membenarkan anda menyuaikan perilaku LibVLC menggunakan argumen baris arahan.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Argumen global</value>
@@ -726,7 +726,7 @@
     <value>Bantu terjemah</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Pilihan</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Pengimbangan masa</value>
