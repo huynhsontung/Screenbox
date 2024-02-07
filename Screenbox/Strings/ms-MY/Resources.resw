@@ -412,7 +412,7 @@
     <value>Rombak: Hidup</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>Sambung semula di tempat anda berhenti</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
     <value>Pergi ke {0}</value>
@@ -604,13 +604,13 @@
     <value>Resize the app window to best match a video's native resolution on playback</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Galakan volum</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Gerak isyarat</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
     <value>Drag horizontally to seek</value>
@@ -619,7 +619,7 @@
     <value>Drag vertically to adjust volume</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>Ketik sebarang tempat untuk bermain atau menjeda</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Pemain Media Screenbox</value>
@@ -637,7 +637,7 @@
     <value>Sentiasa</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Jangan sekali-kali</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
     <value>On launch</value>
@@ -662,7 +662,7 @@
     <value>Masukkan URL untuk fail atau strim</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>Buka tetapan Peranti Tersambung</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
     <value>Set playback options</value>
@@ -680,7 +680,7 @@
     <value>Some options may only be set globally.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>Bantuan baris arahan VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
     <value>See {0} for the full list of available options.</value>
