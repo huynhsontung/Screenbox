@@ -471,7 +471,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} masa berjalan</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -592,7 +592,7 @@
     <value>Sari kata</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Papar media dimainkan baru-baru ini pada halaman rumah</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Clear recent media history</value>
@@ -601,7 +601,7 @@
     <value>Auto saiz semula</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Saiz semula tetingkap apl agar lebih sepadan dengan resolusi asli video semasa main balik</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Galakan volum</value>
@@ -616,7 +616,7 @@
     <value>Drag horizontally to seek</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Seret secara menegak untuk melaras volum</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
     <value>Ketik sebarang tempat untuk bermain atau menjeda</value>
@@ -640,7 +640,7 @@
     <value>Jangan sekali-kali</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>Semasa pelancaran</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>Versi {0}</value>
@@ -711,7 +711,7 @@
     <value>Relaunch the app for changes to take effect</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Gagal untuk bermula</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
     <value>Pautan berkaitan</value>
@@ -753,7 +753,7 @@
     <value>Guna pengindeks untuk mengimbas</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Percepat pengimbasan pustaka dengan menggunakan indeks sistem apabila tersedia. Matikan ini jika anda tidak melihat semua media dari lokasi pustaka anda.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
     <value>Urus tetapan pengindeksan sistem</value>
