@@ -8,7 +8,7 @@
 
 Screenbox ialah pemain media moden yang berusaha untuk membawa pandangan baharu yang segar pada aplikasi klasik. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
 
-Screenbox menyokong pelbagai format fail dan kodek. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox menyokong pelbagai format fail dan kodek. Play almost any media type without additional add-ons. Dikuasakan oleh LibVLC, Screenbox menggabungkan segala yang terbaik daripada pemain media VLC serta keupayaan aplikasi Windows moden. Pilihan main balik lanjutan tersedia menggunakan argumen baris arahan VLC.
 
 ### Ciri
 
