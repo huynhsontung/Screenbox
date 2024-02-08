@@ -199,9 +199,9 @@
     <value>Fluxo de transporte MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Áudio WavPack</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>Áudio AIFF</value>
   </data>
 </root>
