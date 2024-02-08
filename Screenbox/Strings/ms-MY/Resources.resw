@@ -168,7 +168,7 @@
     <value>Volum</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Geladah</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Keluar gambar dalam gambar</value>
@@ -212,7 +212,7 @@
     <value>Tambah ke baris gilir</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>Bersihkan pilihan</value>
   </data>
   <data name="Remove" xml:space="preserve">
     <value>Alih keluar</value>
@@ -284,7 +284,7 @@
     <value>Tambah folder</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Bersihkan</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Rumah</value>
@@ -434,7 +434,7 @@
     <value>Tambah fail</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Browse for file(s) to add to the play queue</value>
+    <value>Semak imbas fail untuk menambah ke baris gilir main</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Tambah folder pada pustaka muzik anda</value>
@@ -508,7 +508,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>Capaian dinafikan. Sila sahkan tetapan privasi anda untuk memastikan Screenbox mempunyai kebenaran yang mencukupi.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
     <value>Tidak dapat mencapai pustaka muzik</value>
@@ -595,7 +595,7 @@
     <value>Papar media dimainkan baru-baru ini pada halaman rumah</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>Bersihkan sejarah media baru-baru ini</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
     <value>Auto saiz semula</value>
@@ -613,7 +613,7 @@
     <value>Gerak isyarat</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>Seret secara mendatar untuk menggeladah</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
     <value>Seret secara menegak untuk melaras volum</value>
@@ -653,7 +653,7 @@
     <value>Ralat kritikal</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Tiada pemapar yang serasi tersedia. Sila pastikan Direct3D 11 tersedia pada peranti anda.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Gagal membuka fail</value>
@@ -674,10 +674,10 @@
     <value>Tetapkan dan Main</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Tetapkan pilihan VLC yang diterapkan pada strim.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Sesetengah pilihan hanya boleh ditetapkan secara global.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
     <value>Bantuan baris arahan VLC</value>
@@ -699,16 +699,16 @@
     <value>Argumen global</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Argumen baris arahan yang diterapkan pada semua main balik media.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Alih keluar folder</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Menanti perubahan</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Lancar semula apl agar perubahan terlaksana</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
     <value>Gagal untuk bermula</value>
