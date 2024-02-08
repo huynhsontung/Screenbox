@@ -762,12 +762,12 @@
     <value>Definir argumentos</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Procurar armazenamento amovível</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Incluir multimédia de dispositivos de armazenamento, como pens USB, nas suas bibliotecas</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argumentos ativos</value>
   </data>
 </root>
