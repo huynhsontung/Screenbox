@@ -20,6 +20,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -47,26 +48,12 @@
             ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Albums, FallbackValue={x:Null}}"
             SelectionMode="None">
             <GridView.Footer>
                 <Grid Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:AlbumViewModel">
-                    <controls:CommonGridViewItem
-                        Width="{StaticResource CommonGridViewItemWidth}"
-                        Height="{StaticResource CommonGridViewItemHeight}"
-                        Caption="{x:Bind ArtistName, Mode=OneWay}"
-                        PlayCommand="{x:Bind PlayAlbumCommand}"
-                        ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
-                        ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
-                        <controls:CommonGridViewItem.PlaceholderIconSource>
-                            <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
-                        </controls:CommonGridViewItem.PlaceholderIconSource>
-                    </controls:CommonGridViewItem>
-                </DataTemplate>
-            </GridView.ItemTemplate>
             <interactivity:Interaction.Behaviors>
                 <interactions:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>

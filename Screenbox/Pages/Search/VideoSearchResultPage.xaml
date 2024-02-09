@@ -20,6 +20,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -47,6 +48,7 @@
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource WideMediaGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Videos, FallbackValue={x:Null}}"
             SelectionMode="None">
             <GridView.Footer>
@@ -55,21 +57,6 @@
             <GridView.Resources>
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
             </GridView.Resources>
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:MediaViewModel">
-                    <controls:CommonGridViewItem
-                        Width="{StaticResource WideGridViewItemWidth}"
-                        Height="{StaticResource WideGridViewItemHeight}"
-                        Caption="{x:Bind Caption, Mode=OneWay}"
-                        PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
-                        ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
-                        ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
-                        <controls:CommonGridViewItem.PlaceholderIconSource>
-                            <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
-                        </controls:CommonGridViewItem.PlaceholderIconSource>
-                    </controls:CommonGridViewItem>
-                </DataTemplate>
-            </GridView.ItemTemplate>
             <interactivity:Interaction.Behaviors>
                 <interactions:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>

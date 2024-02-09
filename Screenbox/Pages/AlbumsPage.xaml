@@ -16,6 +16,10 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <CollectionViewSource
                 x:Name="AlbumsSource"
                 IsSourceGrouped="True"
@@ -60,6 +64,7 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="AlbumGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
+                    ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View}"
                     Loaded="AlbumGridView_OnLoaded"
                     SelectionMode="None">
@@ -76,21 +81,6 @@
                     <GridView.Footer>
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                     </GridView.Footer>
-                    <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="viewModels:AlbumViewModel">
-                            <controls:CommonGridViewItem
-                                Width="{StaticResource CommonGridViewItemWidth}"
-                                Height="{StaticResource CommonGridViewItemHeight}"
-                                Caption="{x:Bind ArtistName, Mode=OneWay}"
-                                PlayCommand="{x:Bind PlayAlbumCommand}"
-                                ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
-                                ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
-                                <controls:CommonGridViewItem.PlaceholderIconSource>
-                                    <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
-                                </controls:CommonGridViewItem.PlaceholderIconSource>
-                            </controls:CommonGridViewItem>
-                        </DataTemplate>
-                    </GridView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
                         <interactions:ListViewContextTriggerBehavior Flyout="{StaticResource AlbumFlyout}" />
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

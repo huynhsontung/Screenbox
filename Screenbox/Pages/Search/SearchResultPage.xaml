@@ -20,6 +20,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/ArtistGridViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -99,23 +100,9 @@
                         Padding="{StaticResource PageThumbnailMargin}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
+                        ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:AlbumViewModel">
-                                <controls:CommonGridViewItem
-                                    Width="{StaticResource CommonGridViewItemWidth}"
-                                    Height="{StaticResource CommonGridViewItemHeight}"
-                                    Caption="{x:Bind ArtistName, Mode=OneWay}"
-                                    PlayCommand="{x:Bind PlayAlbumCommand}"
-                                    ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
-                                    ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
-                                    <controls:CommonGridViewItem.PlaceholderIconSource>
-                                        <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
-                                    </controls:CommonGridViewItem.PlaceholderIconSource>
-                                </controls:CommonGridViewItem>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <interactions:ThumbnailGridViewBehavior />
                         </interactivity:Interaction.Behaviors>
@@ -186,6 +173,7 @@
                         Padding="{StaticResource PageThumbnailMargin}"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
+                        ItemTemplate="{StaticResource WideMediaGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Videos}"
                         SelectionMode="None">
                         <interactivity:Interaction.Behaviors>
@@ -194,21 +182,6 @@
                         <GridView.Resources>
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="viewModels:MediaViewModel">
-                                <controls:CommonGridViewItem
-                                    Width="{StaticResource WideGridViewItemWidth}"
-                                    Height="{StaticResource WideGridViewItemHeight}"
-                                    Caption="{x:Bind Caption, Mode=OneWay}"
-                                    PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
-                                    ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
-                                    ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
-                                    <controls:CommonGridViewItem.PlaceholderIconSource>
-                                        <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
-                                    </controls:CommonGridViewItem.PlaceholderIconSource>
-                                </controls:CommonGridViewItem>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
                     </GridView>
                 </StackPanel>
 

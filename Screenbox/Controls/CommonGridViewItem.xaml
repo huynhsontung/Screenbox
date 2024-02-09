@@ -58,8 +58,8 @@
                 Padding="0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Command="{x:Bind PlayCommand, Mode=OneWay}"
-                CommandParameter="{x:Bind DataContext, Mode=OneWay}"
+                Command="{x:Bind PlayCommand, Mode=TwoWay}"
+                CommandParameter="{Binding}"
                 CornerRadius="99"
                 Opacity="0"
                 Style="{StaticResource AccentButtonStyle}">

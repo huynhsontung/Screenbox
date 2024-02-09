@@ -21,6 +21,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
+                <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <XamlUICommand
@@ -215,6 +216,7 @@
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
+                ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None">
                 <GridView.Footer>
@@ -223,21 +225,6 @@
                 <GridView.Resources>
                     <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
                 </GridView.Resources>
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:MediaViewModel">
-                        <controls:CommonGridViewItem
-                            Width="{StaticResource CommonGridViewItemWidth}"
-                            Height="{StaticResource CommonGridViewItemHeight}"
-                            Caption="{x:Bind Caption, Mode=OneWay}"
-                            PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
-                            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
-                            ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
-                            <controls:CommonGridViewItem.PlaceholderIconSource>
-                                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
-                            </controls:CommonGridViewItem.PlaceholderIconSource>
-                        </controls:CommonGridViewItem>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
