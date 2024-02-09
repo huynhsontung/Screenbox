@@ -132,7 +132,7 @@ namespace Screenbox.Core.ViewModels
         private void Play(StorageItemViewModel item)
         {
             if (item.Media == null) return;
-            Messenger.SendQueueAndPlay(item.Media, _playableItems, false);
+            Messenger.SendQueueAndPlay(item.Media, _playableItems, true);
         }
 
         [RelayCommand]
