@@ -85,7 +85,7 @@
                     Padding="4,0"
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Artist}" />
+                    Text="{Binding ArtistName}" />
 
                 <VisualStateManager.VisualStateGroups>
                     <VisualStateGroup x:Name="CommonStates">

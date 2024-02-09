@@ -77,7 +77,7 @@ namespace Screenbox.Core.Factories
             if (album.RelatedSongs.Count == 0)
             {
                 string albumKey = album.Name.Trim().ToLower(CultureInfo.CurrentUICulture);
-                string artistKey = album.Artist.Trim().ToLower(CultureInfo.CurrentUICulture);
+                string artistKey = album.ArtistName.Trim().ToLower(CultureInfo.CurrentUICulture);
                 _allAlbums.Remove(GetAlbumKey(albumKey, artistKey));
             }
         }
