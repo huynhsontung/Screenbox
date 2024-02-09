@@ -13,6 +13,7 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:CommunityToolkit.WinUI"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:viewModels="using:Screenbox.Core.ViewModels"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -55,12 +56,18 @@
                 <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
             </GridView.Resources>
             <GridView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="viewModels:MediaViewModel">
                     <controls:CommonGridViewItem
                         Width="{StaticResource WideGridViewItemWidth}"
                         Height="{StaticResource WideGridViewItemHeight}"
+                        Caption="{x:Bind Caption, Mode=OneWay}"
                         PlayCommand="{StaticResource MediaListViewItemPlayCommand}"
-                        ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}" />
+                        ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
+                        ThumbnailSource="{x:Bind Thumbnail, Mode=OneWay}">
+                        <controls:CommonGridViewItem.PlaceholderIconSource>
+                            <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{x:Bind Converter={StaticResource MediaGlyphConverter}}" />
+                        </controls:CommonGridViewItem.PlaceholderIconSource>
+                    </controls:CommonGridViewItem>
                 </DataTemplate>
             </GridView.ItemTemplate>
             <interactivity:Interaction.Behaviors>

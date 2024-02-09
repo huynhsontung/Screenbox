@@ -81,8 +81,14 @@
                             <controls:CommonGridViewItem
                                 Width="{StaticResource CommonGridViewItemWidth}"
                                 Height="{StaticResource CommonGridViewItemHeight}"
+                                Caption="{x:Bind ArtistName, Mode=OneWay}"
                                 PlayCommand="{x:Bind PlayAlbumCommand}"
-                                ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}" />
+                                ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+                                ThumbnailSource="{x:Bind AlbumArt, Mode=OneWay}">
+                                <controls:CommonGridViewItem.PlaceholderIconSource>
+                                    <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
+                                </controls:CommonGridViewItem.PlaceholderIconSource>
+                            </controls:CommonGridViewItem>
                         </DataTemplate>
                     </GridView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>

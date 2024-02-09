@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    DataContextChanged="OnDataContextChanged"
     mc:Ignorable="d">
 
     <Grid Padding="4">
@@ -23,15 +22,18 @@
             Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
             BorderThickness="1"
-            CornerRadius="4">
-            <FontIcon
+            CornerRadius="{x:Bind CornerRadius}">
+            <IconSourceElement
                 x:Name="PlaceholderIcon"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="32"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-            <Border CornerRadius="4">
-                <Image x:Name="ThumbnailImage" Stretch="UniformToFill" />
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}" />
+            <Border CornerRadius="{x:Bind CornerRadius}">
+                <Image
+                    x:Name="ThumbnailImage"
+                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
+                    Stretch="UniformToFill" />
             </Border>
 
             <Grid
@@ -70,6 +72,7 @@
             Grid.Row="1"
             Margin="0,4,0,0"
             Padding="4,0"
+            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
             MaxLines="2"
             Style="{StaticResource BodyStrongTextBlockStyle}"
             Text="{Binding Name}"
@@ -80,7 +83,9 @@
             Grid.Row="2"
             Padding="4,0"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-            Style="{StaticResource CaptionTextBlockStyle}" />
+            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{x:Bind Caption, Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">
@@ -90,15 +95,6 @@
                         <Setter Target="PlayButton.Opacity" Value="1" />
                         <Setter Target="IsPlayingIcon.Opacity" Value="0" />
                     </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-
-            <VisualStateGroup x:Name="DataStates">
-                <VisualState x:Name="Media">
-                    <VisualState.Setters />
-                </VisualState>
-                <VisualState x:Name="Album">
-                    <VisualState.Setters />
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>

@@ -1,10 +1,7 @@
-﻿using Screenbox.Converters;
-using Screenbox.Core.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -16,6 +13,42 @@ public sealed partial class CommonGridViewItem : UserControl
 
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
         nameof(PlayCommand), typeof(ICommand), typeof(CommonGridViewItem), new PropertyMetadata(default(ICommand)));
+
+    public static readonly DependencyProperty HorizontalTextAlignmentProperty = DependencyProperty.Register(
+        nameof(HorizontalTextAlignment), typeof(TextAlignment), typeof(CommonGridViewItem), new PropertyMetadata(TextAlignment.Left));
+
+    public static readonly DependencyProperty CaptionProperty = DependencyProperty.Register(
+        nameof(Caption), typeof(string), typeof(CommonGridViewItem), new PropertyMetadata(string.Empty));
+
+    public static readonly DependencyProperty PlaceholderIconSourceProperty = DependencyProperty.Register(
+        nameof(PlaceholderIconSource), typeof(IconSource), typeof(CommonGridViewItem), new PropertyMetadata(default(IconSource)));
+
+    public static readonly DependencyProperty ThumbnailSourceProperty = DependencyProperty.Register(
+        nameof(ThumbnailSource), typeof(ImageSource), typeof(CommonGridViewItem), new PropertyMetadata(default(ImageSource)));
+
+    public ImageSource? ThumbnailSource
+    {
+        get => (ImageSource?)GetValue(ThumbnailSourceProperty);
+        set => SetValue(ThumbnailSourceProperty, value);
+    }
+
+    public IconSource? PlaceholderIconSource
+    {
+        get => (IconSource?)GetValue(PlaceholderIconSourceProperty);
+        set => SetValue(PlaceholderIconSourceProperty, value);
+    }
+
+    public string Caption
+    {
+        get => (string)GetValue(CaptionProperty);
+        set => SetValue(CaptionProperty, value);
+    }
+
+    public TextAlignment HorizontalTextAlignment
+    {
+        get => (TextAlignment)GetValue(HorizontalTextAlignmentProperty);
+        set => SetValue(HorizontalTextAlignmentProperty, value);
+    }
 
     public ICommand? PlayCommand
     {
@@ -32,54 +65,6 @@ public sealed partial class CommonGridViewItem : UserControl
     public CommonGridViewItem()
     {
         this.InitializeComponent();
-    }
-
-    private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
-    {
-        if (args.NewValue == null) return;
-        if (args.NewValue is INotifyPropertyChanged observable)
-        {
-            observable.PropertyChanged += ObservableOnPropertyChanged;
-        }
-
-        string stateName;
-        switch (args.NewValue)
-        {
-            case MediaViewModel media:
-                stateName = "Media";
-                PlaceholderIcon.Glyph = MediaGlyphConverter.Convert(media.MediaType);
-                ThumbnailImage.Source = media.Thumbnail;
-                CaptionText.Text = media.Caption ?? string.Empty;
-                break;
-            case AlbumViewModel album:
-                stateName = "Album";
-                PlaceholderIcon.Glyph = "\ue93c";
-                ThumbnailImage.Source = album.AlbumArt;
-                CaptionText.Text = album.ArtistName;
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-
-        VisualStateManager.GoToState(this, stateName, false);
-    }
-
-    private void ObservableOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case "Thumbnail" when DataContext is MediaViewModel media:
-                ThumbnailImage.Source = media.Thumbnail;
-                break;
-            case "Caption" when DataContext is MediaViewModel media:
-                CaptionText.Text = media.Caption ?? string.Empty;
-                break;
-            case "AlbumArt" when DataContext is AlbumViewModel album:
-                ThumbnailImage.Source = album.AlbumArt;
-                break;
-            case "ArtistName" when DataContext is AlbumViewModel album:
-                CaptionText.Text = album.ArtistName;
-                break;
-        }
+        CornerRadius = new CornerRadius(4);
     }
 }
