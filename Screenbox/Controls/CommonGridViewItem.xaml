@@ -41,7 +41,7 @@
                 Margin="8"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Visibility="{Binding IsPlaying, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{x:Bind IsPlaying, Mode=OneWay}">
                 <Ellipse
                     Width="40"
                     Height="40"
@@ -62,8 +62,9 @@
                 CommandParameter="{Binding}"
                 CornerRadius="99"
                 Opacity="0"
-                Style="{StaticResource AccentButtonStyle}">
-                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                Style="{StaticResource AccentButtonStyle}"
+                Visibility="{x:Bind CanPlay, Mode=OneWay}">
+                <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
             </Button>
         </Grid>
 

@@ -26,6 +26,24 @@ public sealed partial class CommonGridViewItem : UserControl
     public static readonly DependencyProperty ThumbnailSourceProperty = DependencyProperty.Register(
         nameof(ThumbnailSource), typeof(ImageSource), typeof(CommonGridViewItem), new PropertyMetadata(default(ImageSource)));
 
+    public static readonly DependencyProperty CanPlayProperty = DependencyProperty.Register(
+        nameof(CanPlay), typeof(bool), typeof(CommonGridViewItem), new PropertyMetadata(true));
+
+    public static readonly DependencyProperty IsPlayingProperty = DependencyProperty.Register(
+        nameof(IsPlaying), typeof(bool), typeof(CommonGridViewItem), new PropertyMetadata(default(bool)));
+
+    public bool IsPlaying
+    {
+        get => (bool)GetValue(IsPlayingProperty);
+        set => SetValue(IsPlayingProperty, value);
+    }
+
+    public bool CanPlay
+    {
+        get => (bool)GetValue(CanPlayProperty);
+        set => SetValue(CanPlayProperty, value);
+    }
+
     public ImageSource? ThumbnailSource
     {
         get => (ImageSource?)GetValue(ThumbnailSourceProperty);

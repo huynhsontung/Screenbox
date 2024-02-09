@@ -20,6 +20,7 @@
             Width="{StaticResource CommonGridViewItemWidth}"
             Height="{StaticResource CommonGridViewItemHeight}"
             Caption="{Binding ArtistName}"
+            IsPlaying="{Binding IsPlaying}"
             PlayCommand="{Binding PlayAlbumCommand}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding AlbumArt}">
@@ -34,6 +35,7 @@
             Width="{StaticResource CommonGridViewItemWidth}"
             Height="{StaticResource CommonGridViewItemHeight}"
             Caption="{Binding Caption}"
+            IsPlaying="{Binding IsPlaying}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding Thumbnail}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
@@ -47,6 +49,7 @@
             Width="{StaticResource WideGridViewItemWidth}"
             Height="{StaticResource WideGridViewItemHeight}"
             Caption="{Binding Caption}"
+            IsPlaying="{Binding IsPlaying}"
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding Thumbnail}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
