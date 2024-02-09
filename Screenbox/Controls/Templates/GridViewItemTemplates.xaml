@@ -30,6 +30,21 @@
         </controls:CommonGridViewItem>
     </DataTemplate>
 
+    <DataTemplate x:Key="ArtistGridViewItemTemplate">
+        <controls:CommonGridViewItem
+            Width="{StaticResource CommonGridViewItemWidth}"
+            Height="{StaticResource CommonGridViewItemHeight}"
+            CornerRadius="99"
+            HorizontalTextAlignment="Center"
+            IsPlaying="{Binding IsPlaying}"
+            PlayCommand="{Binding PlayArtistCommand}"
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe77b;" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
+
     <DataTemplate x:Key="MediaGridViewItemTemplate">
         <controls:CommonGridViewItem
             Width="{StaticResource CommonGridViewItemWidth}"
