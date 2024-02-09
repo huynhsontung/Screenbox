@@ -36,7 +36,7 @@ namespace Screenbox.Pages
 
         private void GridView_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double itemWidth = 168;    // CommonGridViewItemWidth
+            double itemWidth = (double)App.Current.Resources["CommonGridViewItemWidth"];
             int desiredCount = (int)(e.NewSize.Width / (itemWidth + 10));
             ViewModel.UpdateGridItems(desiredCount);
         }

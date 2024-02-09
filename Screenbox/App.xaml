@@ -86,11 +86,21 @@
                     <!--  Subtitle margin  -->
                     <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
 
+                    <!--  Grid item sizes  -->
+                    <x:Double x:Key="CommonGridViewItemWidth">168</x:Double>
+                    <x:Double x:Key="CommonGridViewItemHeight">226</x:Double>
+                    <x:Double x:Key="CommonGridViewItemThumbnailHeight">160</x:Double>
+                    <x:Double x:Key="WideGridViewItemWidth">230</x:Double>
+                    <x:Double x:Key="WideGridViewItemHeight">188</x:Double>
+                    <x:Double x:Key="WideGridViewItemThumbnailHeight">126</x:Double>
+
                     <!--  Font  -->
                     <FontFamily x:Key="ScreenboxCustomIconsFontFamily">ms-appx:///Assets/Screenbox-Custom-Icons.ttf#Screenbox-Custom-Icons</FontFamily>
                     <x:Double x:Key="DefaultIconFontSize">16</x:Double>
                     <x:Double x:Key="PanelIconFontSize">126</x:Double>
                     <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
+                    <x:Double x:Key="PlaceholderGridItemIconFontSize">52</x:Double>
+                    <x:Double x:Key="PlaceholderGridItemIconFontSizeSmall">42</x:Double>
 
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
