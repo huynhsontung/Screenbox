@@ -20,8 +20,8 @@ namespace Screenbox.Core.ViewModels
     {
         public string Name { get; }
 
-        public string Artist => string.IsNullOrEmpty(_albumArtist) && RelatedSongs.Count > 0
-            ? RelatedSongs[0].Artists?.FirstOrDefault()?.Name ?? string.Empty
+        public string ArtistName => string.IsNullOrEmpty(_albumArtist)
+            ? _songArtist
             : _albumArtist;
 
         public uint? Year
@@ -36,19 +36,22 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public BitmapImage? AlbumArt => RelatedSongs.Count > 0 ? RelatedSongs[0].Thumbnail : null;
+        public BitmapImage? AlbumArt => _albumArt;
 
         public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
         [ObservableProperty] private bool _isPlaying;
 
         private readonly string _albumArtist;
+        private string _songArtist;
+        private BitmapImage? _albumArt;
         private uint? _year;
 
         public AlbumViewModel(string album, string albumArtist)
         {
             Name = album;
             _albumArtist = albumArtist;
+            _songArtist = string.Empty;
             RelatedSongs = new ObservableCollection<MediaViewModel>();
             RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
         }
@@ -58,12 +61,13 @@ namespace Screenbox.Core.ViewModels
             if (RelatedSongs.Count > 0)
             {
                 await RelatedSongs[0].LoadThumbnailAsync();
+                UpdateProperties();
             }
         }
 
         public override string ToString()
         {
-            return $"{Name};{Artist}";
+            return $"{Name};{ArtistName}";
         }
 
         private void RelatedSongsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -83,6 +87,8 @@ namespace Screenbox.Core.ViewModels
                     media.PropertyChanged += MediaOnPropertyChanged;
                 }
             }
+
+            UpdateProperties();
         }
 
         private void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -91,6 +97,19 @@ namespace Screenbox.Core.ViewModels
             {
                 IsPlaying = media.IsPlaying ?? false;
             }
+
+            if (RelatedSongs.Count > 0 && ReferenceEquals(RelatedSongs[0], sender))
+            {
+                UpdateProperties();
+            }
+        }
+
+        private void UpdateProperties()
+        {
+            if (RelatedSongs.Count == 0) return;
+            MediaViewModel first = RelatedSongs[0];
+            SetProperty(ref _albumArt, first.Thumbnail, nameof(AlbumArt));
+            SetProperty(ref _songArtist, first.MainArtist?.Name ?? string.Empty, nameof(ArtistName));
         }
 
         [RelayCommand]
