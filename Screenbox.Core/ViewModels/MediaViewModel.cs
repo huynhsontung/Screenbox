@@ -76,7 +76,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         private bool? _isPlaying;
 
-        protected MediaViewModel(MediaViewModel source)
+        public MediaViewModel(MediaViewModel source)
         {
             _mediaService = source._mediaService;
             _albumFactory = source._albumFactory;
@@ -117,11 +117,6 @@ namespace Screenbox.Core.ViewModels
             // Media is already loaded, create PlaybackItem
             _loaded = true;
             _item = new PlaybackItem(media, media);
-        }
-
-        public virtual MediaViewModel Clone()
-        {
-            return new MediaViewModel(this);
         }
 
         partial void OnMediaInfoChanged(MediaInfo value)

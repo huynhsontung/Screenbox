@@ -43,11 +43,6 @@ public sealed class FileMediaViewModel : MediaViewModel
         File = source.File;
     }
 
-    public override MediaViewModel Clone()
-    {
-        return new FileMediaViewModel(this);
-    }
-
     public override Task LoadDetailsAsync()
     {
         if (!_loadTask.IsCompleted) return _loadTask;

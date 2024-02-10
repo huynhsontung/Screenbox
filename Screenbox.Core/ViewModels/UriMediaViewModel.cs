@@ -37,11 +37,6 @@ public sealed class UriMediaViewModel : MediaViewModel
         Uri = source.Uri;
     }
 
-    public override MediaViewModel Clone()
-    {
-        return new UriMediaViewModel(this);
-    }
-
     public override async Task LoadDetailsAsync()
     {
         if (!Uri.IsFile)

@@ -33,7 +33,7 @@ namespace Screenbox.Core.Helpers
         public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
         {
             // Clone to prevent queuing duplications
-            MediaViewModel clone = media.Clone();
+            MediaViewModel clone = new(media);
             messenger.Send(new QueuePlaylistMessage(clone, true));
             PlaylistInfo info = messenger.Send(new PlaylistRequestMessage());
             if (info.ActiveIndex == -1)
