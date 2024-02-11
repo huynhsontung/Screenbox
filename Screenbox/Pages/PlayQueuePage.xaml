@@ -25,7 +25,8 @@
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
                 Command="{x:Bind ViewModel.AddFolderCommand}"
-                Icon="{ui:FontIcon Glyph=&#xE8DA;}"
+                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                   Glyph=&#xF2CE;}"
                 Text="{strings:Resources Key=AddFolder}" />
             <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}">
                 <MenuFlyoutItem.Command>

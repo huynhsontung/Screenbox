@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
-    xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -32,13 +31,9 @@
                 TrueValue="{strings:Resources Key=Pause}" />
 
             <toolkitConverters:BoolToObjectConverter
-                x:Key="ShuffleModeGlyphConverterMDL2"
-                FalseValue="&#xF104;"
-                TrueValue="&#xF103;" />
-            <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
-                FalseValue="&#xF114;"
-                TrueValue="&#xF113;" />
+                FalseValue="&#xF83D;"
+                TrueValue="&#xE8B1;" />
 
             <Flyout x:Key="VolumeControlFlyout">
                 <controls:VolumeControl Width="200" ToggleButtonStyle="{StaticResource SmallPlayerToggleButtonStyle}" />
@@ -412,10 +407,7 @@
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon
-                    contract13NotPresent:Glyph="{Binding Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverterMDL2}, Mode=OneWay}"
-                    contract13Present:Glyph="{Binding Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}"
-                    FontFamily="{StaticResource ScreenboxIconsFontFamily}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -429,7 +421,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
+                <FontIcon contract13NotPresent:FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -478,7 +470,7 @@
                 </Button.KeyboardAccelerators>
                 <FontIcon
                     x:Name="CompactOverlayButtonIcon"
-                    contract13NotPresent:FontFamily="{StaticResource ScreenboxIconsFontFamily}"
+                    contract13NotPresent:FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     Glyph="&#xEE49;" />
             </Button>
             <!--  Fullscreen  -->
