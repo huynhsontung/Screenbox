@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -13,7 +14,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Media;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 

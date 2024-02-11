@@ -127,6 +127,7 @@
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
+    <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />

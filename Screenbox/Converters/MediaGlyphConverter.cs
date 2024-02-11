@@ -1,7 +1,7 @@
-﻿using Screenbox.Core.Helpers;
+﻿using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using System;
-using Windows.Media;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
 

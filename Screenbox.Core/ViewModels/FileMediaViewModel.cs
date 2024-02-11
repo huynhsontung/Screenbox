@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -7,7 +8,6 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
@@ -114,7 +114,7 @@ public sealed class FileMediaViewModel : MediaViewModel
         if (file.IsSupportedVideo()) return MediaPlaybackType.Video;
         if (file.IsSupportedAudio()) return MediaPlaybackType.Music;
         if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
-        // TODO: Support playlist type
+        if (file.IsSupportedPlaylist()) return MediaPlaybackType.Playlist;
         return MediaPlaybackType.Unknown;
     }
 }

@@ -1,12 +1,12 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;

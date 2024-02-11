@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels
@@ -30,6 +31,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
+        private readonly CoreDispatcher _dispatcher;
         private readonly Dictionary<string, string> _pathToMruMappings;
         private bool _isLoaded; // Assume this class is a singleton
 
@@ -42,6 +44,7 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _settingsService = settingsService;
             _libraryService = libraryService;
+            _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
             _pathToMruMappings = new Dictionary<string, string>();
             Recent = new ObservableCollection<MediaViewModel>();
 
@@ -177,6 +180,8 @@ namespace Screenbox.Core.ViewModels
 
                 // TODO: Add support for playing playlist file from home page
                 if (file.IsSupportedPlaylist()) continue;
+                if (!_dispatcher.HasThreadAccess)
+                    throw new InvalidOperationException("This method must be called on the UI thread.");
 
                 if (i >= Recent.Count)
                 {

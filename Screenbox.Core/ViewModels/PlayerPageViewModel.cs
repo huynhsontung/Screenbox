@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;

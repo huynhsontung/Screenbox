@@ -6,7 +6,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
-using Windows.Media;
 using Windows.Storage;
 
 namespace Screenbox.Core.ViewModels
