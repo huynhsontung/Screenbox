@@ -371,7 +371,7 @@
     <value>Пісні</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Автори слів</value>
+    <value>Сценаристи</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
     <value>Рік</value>
@@ -631,7 +631,7 @@
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Підтримати розробку ☕</value>
+    <value>Підтримати розробку</value>
   </data>
   <data name="Always" xml:space="preserve">
     <value>Завжди</value>
@@ -762,12 +762,12 @@
     <value>Задати аргументи</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Шукати на знімних носіях</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Включати у ваші бібліотеки медіа з накопичувачів на кшталт USB</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Активні аргументи</value>
   </data>
 </root>

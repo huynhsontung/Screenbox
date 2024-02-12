@@ -1,0 +1,109 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.CommonGridViewItem"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <Grid Padding="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="0"
+            Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
+            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="{x:Bind CornerRadius}">
+            <IconSourceElement
+                x:Name="PlaceholderIcon"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}" />
+            <Border CornerRadius="{x:Bind CornerRadius}">
+                <Image
+                    x:Name="ThumbnailImage"
+                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
+                    Stretch="UniformToFill" />
+            </Border>
+        </Grid>
+
+        <Grid
+            x:Name="IsPlayingIcon"
+            Grid.Row="0"
+            Margin="8"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Visibility="{x:Bind IsPlaying, Mode=OneWay}">
+            <Ellipse
+                Width="40"
+                Height="40"
+                Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                Stroke="{ThemeResource ControlElevationBorderBrush}"
+                StrokeThickness="0.8" />
+            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
+        </Grid>
+        <Button
+            x:Name="PlayButton"
+            Grid.Row="0"
+            Width="40"
+            Height="40"
+            Margin="8"
+            Padding="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Command="{x:Bind PlayCommand, Mode=TwoWay}"
+            CommandParameter="{Binding}"
+            CornerRadius="99"
+            Opacity="0"
+            Style="{StaticResource AccentButtonStyle}"
+            Visibility="{x:Bind CanPlay, Mode=OneWay}">
+            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
+        </Button>
+
+        <TextBlock
+            x:Name="TitleText"
+            Grid.Row="1"
+            Margin="0,4,0,0"
+            Padding="4,0"
+            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+            MaxLines="2"
+            Style="{StaticResource BodyStrongTextBlockStyle}"
+            Text="{Binding Name}"
+            TextWrapping="Wrap" />
+
+        <TextBlock
+            x:Name="CaptionText"
+            Grid.Row="2"
+            Padding="4,0"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{x:Bind Caption, Mode=OneWay}" />
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="CommonStates">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="PointerOver">
+                    <VisualState.Setters>
+                        <Setter Target="PlayButton.Opacity" Value="1" />
+                        <Setter Target="IsPlayingIcon.Opacity" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+
+    <interactivity:Interaction.Behaviors>
+        <interactions:MediaListViewItemBehavior />
+    </interactivity:Interaction.Behaviors>
+</UserControl>

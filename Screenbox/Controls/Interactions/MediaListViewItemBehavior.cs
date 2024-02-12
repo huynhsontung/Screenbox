@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
 using Screenbox.Core.ViewModels;
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -87,11 +88,15 @@ namespace Screenbox.Controls.Interactions
             if (AssociatedObject.FindDescendant("PlayButton") is ButtonBase button)
             {
                 _playButton = button;
-                if (listView.Resources.TryGetValue("MediaListViewItemPlayCommand", out object value) &&
-                    value is XamlUICommand command)
+                if (listView.Resources.TryGetValue("MediaListViewItemPlayCommand", out object value))
                 {
-                    // We only use XamlUICommand as a medium to pass command logic
-                    button.Command = command.Command;
+                    button.Command = value switch
+                    {
+                        // We only use XamlUICommand as a medium to pass command logic
+                        XamlUICommand command => command.Command,
+                        ICommand command => command,
+                        _ => button.Command
+                    };
                 }
             }
 

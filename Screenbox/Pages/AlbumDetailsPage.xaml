@@ -111,7 +111,7 @@
                         FontWeight="Normal"
                         MaxLines="1"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Artist}" />
+                        Text="{x:Bind ViewModel.Source.ArtistName}" />
                     <TextBlock
                         x:Name="Subtext"
                         Margin="0,8,0,0"

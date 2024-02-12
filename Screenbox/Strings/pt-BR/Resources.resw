@@ -631,7 +631,7 @@
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Apoie o desenvolvimento ☕</value>
+    <value>Apoie o desenvolvimento</value>
   </data>
   <data name="Always" xml:space="preserve">
     <value>Sempre</value>
@@ -762,12 +762,12 @@
     <value>Definir argumentos</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Pesquisar armazenamento removível</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Inclua mídia de dispositivos de armazenamento como pen drivers USB em suas bibliotecas</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argumentos ativos</value>
   </data>
 </root>
