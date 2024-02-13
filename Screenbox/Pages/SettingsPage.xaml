@@ -55,7 +55,7 @@
                     <Button
                         Width="32"
                         Height="32"
-                        Padding="7"
+                        Padding="0"
                         VerticalAlignment="Center"
                         Command="{StaticResource RemoveVideosFolderCommand}"
                         CommandParameter="{x:Bind}"
@@ -70,7 +70,7 @@
                     <Button
                         Width="32"
                         Height="32"
-                        Padding="7"
+                        Padding="0"
                         VerticalAlignment="Center"
                         Command="{StaticResource RemoveMusicFolderCommand}"
                         CommandParameter="{x:Bind}"
