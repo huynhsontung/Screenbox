@@ -201,11 +201,11 @@
     <value>Повторення: один файл</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>Вибрано елементів: {0}</value>
+    <value>Обрано елементів: {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>Вибрано елементів: {0}</value>
+    <value>Обрано елементів: {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
@@ -290,7 +290,7 @@
     <value>Головна</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Вибрати декілька</value>
+    <value>Обрати кілька</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>Нам не вдалося знайти музику</value>
@@ -377,7 +377,7 @@
     <value>Рік</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Власна</value>
+    <value>Інше значення</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Мережа</value>
