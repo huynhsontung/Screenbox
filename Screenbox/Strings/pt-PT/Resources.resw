@@ -218,7 +218,7 @@
     <value>Remover</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Reproduzir seguinte</value>
+    <value>Reproduzir a seguir</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Mover para cima</value>
