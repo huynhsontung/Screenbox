@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -21,9 +22,9 @@ namespace Screenbox.Core.ViewModels
 {
     public partial class MediaViewModel : ObservableRecipient
     {
-        public string Location { get; protected set; }
+        public string Location { get; }
 
-        public object Source { get; }
+        public object Source { get; private set; }
 
         public bool IsFromLibrary { get; set; }
 
@@ -95,7 +96,7 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        protected MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
+        private MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
         {
             _mediaService = mediaService;
             _albumFactory = albumFactory;
@@ -107,6 +108,21 @@ namespace Screenbox.Core.ViewModels
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
+        }
+
+        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory,
+            ArtistViewModelFactory artistFactory, StorageFile file) : this(file, mediaService, albumFactory, artistFactory)
+        {
+            Location = file.Path;
+            _name = file.DisplayName;
+            _altCaption = file.Name;
+        }
+
+        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory,
+            ArtistViewModelFactory artistFactory, Uri uri) : this(uri, mediaService, albumFactory, artistFactory)
+        {
+            Location = uri.OriginalString;
+            _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }
 
         public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Media media)
@@ -179,18 +195,36 @@ namespace Screenbox.Core.ViewModels
             _mediaService.DisposeMedia(item.Media);
         }
 
-        public async Task LoadDetailsAndThumbnailAsync()
+        public async Task LoadDetailsAsync(IFilesService filesService)
         {
-            await LoadDetailsAsync();
-            await LoadThumbnailAsync();
-        }
+            switch (Source)
+            {
+                case StorageFile file:
+                    MediaInfo = await filesService.GetMediaInfoAsync(file);
+                    break;
+                case Uri { IsFile: true } uri:
+                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    Source = uriFile;
+                    Name = uriFile.DisplayName;
+                    AltCaption = uriFile.Name;
+                    MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
+                    break;
+            }
 
-        public virtual Task LoadDetailsAsync()
-        {
-            // Update media type when it was previously set Unknown. Usually when source is an URI.
-            // We don't want to init PlaybackItem just for this.
-            if (MediaInfo.MediaType == MediaPlaybackType.Unknown && _item is { VideoTracks.Count: 0 })
-                MediaInfo.MediaType = MediaPlaybackType.Music;
+            switch (MediaType)
+            {
+                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0 }:
+                    // Update media type when it was previously set Unknown. Usually when source is a URI.
+                    // We don't want to init PlaybackItem just for this.
+                    MediaInfo.MediaType = MediaPlaybackType.Music;
+                    break;
+                case MediaPlaybackType.Music when !string.IsNullOrEmpty(MediaInfo.MusicProperties.Title):
+                    Name = MediaInfo.MusicProperties.Title;
+                    break;
+                case MediaPlaybackType.Video when !string.IsNullOrEmpty(MediaInfo.VideoProperties.Title):
+                    Name = MediaInfo.VideoProperties.Title;
+                    break;
+            }
 
             if (_item?.Media is { IsParsed: true } media)
             {
@@ -199,35 +233,30 @@ namespace Screenbox.Core.ViewModels
                     Name = title;
                 }
 
-                string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
-                if (!string.IsNullOrEmpty(artist))
-                {
-                    Caption = artist;
-                }
-
-                if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
-                {
-                    AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
-                }
-
                 VideoInfo videoProperties = MediaInfo.VideoProperties;
                 videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
                 videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
                 videoProperties.Episode = media.Meta(MetadataType.Episode) ?? videoProperties.Episode;
             }
-
-            return Task.CompletedTask;
         }
 
-        public virtual Task LoadThumbnailAsync()
+        public async Task LoadThumbnailAsync(IFilesService filesService)
         {
-            if (Thumbnail == null && _item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-                Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri uri))
+            if (Thumbnail != null) return;
+            if (Source is StorageFile file)
+            {
+                StorageItemThumbnail? source = await filesService.GetThumbnailAsync(file);
+                if (source == null) return;
+                ThumbnailSource = source;
+                BitmapImage image = new();
+                Thumbnail = image;
+                await image.SetSourceAsync(ThumbnailSource);
+            }
+            else if (_item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+                     Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri uri))
             {
                 Thumbnail = new BitmapImage(uri);
             }
-
-            return Task.CompletedTask;
         }
 
         public void UpdateAlbum()
@@ -245,7 +274,6 @@ namespace Screenbox.Core.ViewModels
 
         private void UpdateCaptions()
         {
-            if (!string.IsNullOrEmpty(Caption) || !string.IsNullOrEmpty(AltCaption)) return;
             if (Duration > TimeSpan.Zero)
             {
                 Caption = Humanizer.ToDuration(Duration);
@@ -262,6 +290,20 @@ namespace Screenbox.Core.ViewModels
             else if (!string.IsNullOrEmpty(musicProperties.Album))
             {
                 AltCaption = musicProperties.Album;
+            }
+
+            if (_item?.Media is { IsParsed: true } media)
+            {
+                string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
+                if (!string.IsNullOrEmpty(artist))
+                {
+                    Caption = artist;
+                }
+
+                if (media.Meta(MetadataType.Album) is { } album && !string.IsNullOrEmpty(album))
+                {
+                    AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
+                }
             }
         }
     }

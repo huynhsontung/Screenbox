@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -56,11 +57,11 @@ namespace Screenbox.Core.ViewModels
             RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
         }
 
-        public async Task LoadAlbumArtAsync()
+        public async Task LoadAlbumArtAsync(IFilesService filesService)
         {
             if (RelatedSongs.Count > 0)
             {
-                await RelatedSongs[0].LoadThumbnailAsync();
+                await RelatedSongs[0].LoadThumbnailAsync(filesService);
                 UpdateProperties();
             }
         }

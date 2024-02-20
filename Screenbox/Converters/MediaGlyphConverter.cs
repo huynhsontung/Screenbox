@@ -44,8 +44,7 @@ namespace Screenbox.Converters
             return value switch
             {
                 IStorageItem item => Convert(item),
-                FileMediaViewModel { File: var file } => Convert(file),
-                // UriMediaViewModel { Uri.IsFile: true, MediaType: var mediaType } => Convert(mediaType),
+                MediaViewModel { Source: StorageFile file } => Convert(file),
                 MediaViewModel { IsFromLibrary: true, MediaType: var mediaType } => Convert(mediaType),
                 _ => "\ue774"
             };

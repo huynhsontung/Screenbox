@@ -1,7 +1,6 @@
 ﻿using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +11,15 @@ namespace Screenbox.Core.Factories
 {
     public sealed class MediaViewModelFactory
     {
-        private readonly IFilesService _filesService;
         private readonly IMediaService _mediaService;
         private readonly ArtistViewModelFactory _artistFactory;
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
         private int _referencesCleanUpThreshold = 1000;
 
-        public MediaViewModelFactory(IFilesService filesService, IMediaService mediaService,
+        public MediaViewModelFactory(IMediaService mediaService,
             ArtistViewModelFactory artistFactory, AlbumViewModelFactory albumFactory)
         {
-            _filesService = filesService;
             _mediaService = mediaService;
             _artistFactory = artistFactory;
             _albumFactory = albumFactory;
@@ -30,12 +27,12 @@ namespace Screenbox.Core.Factories
 
         public MediaViewModel GetTransient(StorageFile file)
         {
-            return new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
+            return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, file);
         }
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
+            return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
@@ -44,7 +41,7 @@ namespace Screenbox.Core.Factories
                 return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, media);
 
             // Prefer URI source for easier clean up
-            UriMediaViewModel vm = new(_mediaService, _filesService, _albumFactory, _artistFactory, uri)
+            MediaViewModel vm = new(_mediaService, _albumFactory, _artistFactory, uri)
             {
                 Item = new PlaybackItem(media, media)
             };
@@ -62,7 +59,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
+            instance = new MediaViewModel(_mediaService, _albumFactory, _artistFactory, file);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);
@@ -79,7 +76,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new UriMediaViewModel(_mediaService, _filesService, _albumFactory, _artistFactory, uri);
+            instance = new MediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);

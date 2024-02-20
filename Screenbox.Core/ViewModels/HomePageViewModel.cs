@@ -189,7 +189,7 @@ namespace Screenbox.Core.ViewModels
                     _pathToMruMappings[media.Location] = token;
                     Recent.Add(media);
                 }
-                else if (GetFile(Recent[i]) is { } existing)
+                else if (Recent[i].Source is StorageFile existing)
                 {
                     try
                     {
@@ -212,7 +212,8 @@ namespace Screenbox.Core.ViewModels
 
             // Load media details for the remaining items
             if (!loadMediaDetails) return;
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAndThumbnailAsync());
+            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAsync(_filesService));
+            loadingTasks = Recent.Select(x => x.LoadThumbnailAsync(_filesService)).Concat(loadingTasks);
             await Task.WhenAll(loadingTasks);
         }
 
@@ -223,7 +224,7 @@ namespace Screenbox.Core.ViewModels
             int existingIndex = -1;
             for (int j = desiredIndex + 1; j < Recent.Count; j++)
             {
-                if (Recent[j] is FileMediaViewModel { File: { } existingFile } && file.IsEqual(existingFile))
+                if (Recent[j].Source is StorageFile existingFile && file.IsEqual(existingFile))
                 {
                     existingIndex = j;
                     break;
@@ -282,16 +283,6 @@ namespace Screenbox.Core.ViewModels
             IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
             if (files.Length == 0) return;
             Messenger.Send(new PlayMediaMessage(files));
-        }
-
-        private static StorageFile? GetFile(MediaViewModel media)
-        {
-            return media switch
-            {
-                FileMediaViewModel { File: { } file } => file,
-                UriMediaViewModel { File: { } file } => file,
-                _ => null
-            };
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)

@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -29,5 +30,6 @@ namespace Screenbox.Core.Services
         public Task SaveToDiskAsync<T>(StorageFile file, T source);
         public Task<T> LoadFromDiskAsync<T>(StorageFolder folder, string fileName);
         public Task<T> LoadFromDiskAsync<T>(StorageFile file);
+        public Task<MediaInfo> GetMediaInfoAsync(StorageFile file);
     }
 }

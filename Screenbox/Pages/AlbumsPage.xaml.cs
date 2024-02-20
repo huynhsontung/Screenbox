@@ -59,14 +59,5 @@ namespace Screenbox.Pages
         {
             Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(AlbumsPage), Frame.BackStackDepth);
         }
-
-        private void AlbumGridView_OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase != 0) return;
-            if (args.Item is AlbumViewModel album)
-            {
-                album.RelatedSongs[0].LoadThumbnailAsync();
-            }
-        }
     }
 }
