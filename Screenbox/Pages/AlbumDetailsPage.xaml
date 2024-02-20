@@ -86,7 +86,7 @@
                         VerticalAlignment="Center"
                         FontSize="64"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xe93c;"
+                        Glyph="&#xE93C;"
                         Visibility="{x:Bind ViewModel.Source.RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                     <Border CornerRadius="8">
                         <Image
@@ -136,7 +136,7 @@
                         Style="{StaticResource AccentButtonStyle}"
                         XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe768;" />
+                            <FontIcon Glyph="&#xE768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
@@ -149,7 +149,7 @@
                         Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                         XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe8b1;" />
+                            <FontIcon Glyph="&#xE8B1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>

@@ -31,14 +31,14 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
-                                       Glyph=B}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF5EB;}"
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xe946;}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
                     Text="{strings:Resources Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem

@@ -49,7 +49,7 @@
                                 VerticalAlignment="Center"
                                 FontSize="52"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Glyph="&#xe93c;"
+                                Glyph="&#xE93C;"
                                 Visibility="{Binding Key.RelatedSongs[0].Thumbnail, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
                             <Border CornerRadius="{StaticResource ControlCornerRadius}">
                                 <Image Source="{Binding Key.RelatedSongs[0].Thumbnail, FallbackValue={x:Null}}" Stretch="UniformToFill" />
@@ -166,7 +166,7 @@
                         VerticalAlignment="Center"
                         FontSize="64"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xe77b;" />
+                        Glyph="&#xE77B;" />
                 </Grid>
 
                 <StackPanel
@@ -203,7 +203,7 @@
                         Style="{StaticResource AccentButtonStyle}"
                         XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe768;" />
+                            <FontIcon Glyph="&#xE768;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
                         </StackPanel>
                         <interactivity:Interaction.Behaviors>
@@ -217,7 +217,7 @@
                         XYFocusDown="{x:Bind ItemList}"
                         XYFocusLeft="{x:Bind PlayButton}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe8b1;" />
+                            <FontIcon Glyph="&#xE8B1;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                         </StackPanel>
                     </Button>

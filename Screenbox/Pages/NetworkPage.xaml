@@ -75,7 +75,7 @@
                 Grid.Column="0"
                 FontSize="{StaticResource PanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xe8cd;" />
+                Glyph="&#xE8CD;" />
 
             <StackPanel
                 Grid.Column="1"

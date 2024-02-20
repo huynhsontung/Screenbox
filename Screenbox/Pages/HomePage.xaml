@@ -33,8 +33,8 @@
             <XamlUICommand
                 x:Key="PlayNextCommand"
                 Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
-                                               Glyph=B}"
+                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                               Glyph=&#xF5EB;}"
                 Label="{strings:Resources Key=PlayNext}" />
 
             <XamlUICommand
@@ -46,7 +46,7 @@
             <XamlUICommand
                 x:Key="PropertiesCommand"
                 Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
                 Label="{strings:Resources Key=Properties}" />
 
             <MenuFlyout x:Name="ItemFlyout">
@@ -70,11 +70,12 @@
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenFilesCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xe838;}"
+                    Icon="{ui:FontIcon Glyph=&#xE838;}"
                     Text="{strings:Resources Key=OpenFiles}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xe8da;}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF2CE;}"
                     Text="{strings:Resources Key=OpenFolder}" />
                 <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=OpenUrl}">
                     <MenuFlyoutItem.Command>
@@ -118,7 +119,7 @@
                 Flyout="{StaticResource OpenFlyout}"
                 ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xe838;" />
+                    <FontIcon Glyph="&#xE838;" />
                     <TextBlock
                         x:Name="HeaderOpenButtonText"
                         Margin="8,0,0,0"
@@ -181,7 +182,7 @@
                     Flyout="{StaticResource OpenFlyout}"
                     ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xe838;" />
+                        <FontIcon Glyph="&#xE838;" />
                         <TextBlock Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>

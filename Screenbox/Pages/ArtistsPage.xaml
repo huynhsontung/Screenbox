@@ -42,7 +42,7 @@
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xe77b;}"
+                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
                     Text="{strings:Resources Key=OpenArtist}" />
             </MenuFlyout>
         </ResourceDictionary>

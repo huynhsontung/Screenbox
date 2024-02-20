@@ -40,14 +40,14 @@
                 x:Key="RemoveMusicFolderCommand"
                 Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
                 Description="{strings:Resources Key=RemoveFolder}"
-                IconSource="{ui:FontIconSource Glyph=&#xe894;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE894;}"
                 Label="{strings:Resources Key=Remove}" />
 
             <XamlUICommand
                 x:Key="RemoveVideosFolderCommand"
                 Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
                 Description="{strings:Resources Key=RemoveFolder}"
-                IconSource="{ui:FontIconSource Glyph=&#xe894;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE894;}"
                 Label="{strings:Resources Key=Remove}" />
 
             <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
@@ -60,7 +60,7 @@
                         Command="{StaticResource RemoveVideosFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
-                        <FontIcon Glyph="&#xe894;" />
+                        <FontIcon Glyph="&#xE894;" />
                     </Button>
                 </ctc:SettingsCard>
             </DataTemplate>
@@ -75,7 +75,7 @@
                         Command="{StaticResource RemoveMusicFolderCommand}"
                         CommandParameter="{x:Bind}"
                         Style="{StaticResource SubtleButtonStyle}">
-                        <FontIcon Glyph="&#xe894;" />
+                        <FontIcon Glyph="&#xE894;" />
                     </Button>
                 </ctc:SettingsCard>
             </DataTemplate>
@@ -131,7 +131,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsSearchRemovableStorageDescription}"
                     Header="{strings:Resources Key=SettingsSearchRemovableStorageHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe88e;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE88E;}"
                     ItemTemplate="{StaticResource RemovableStorageFolderTemplate}"
                     ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox}">
@@ -144,7 +144,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8d6;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D6;}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -157,7 +157,7 @@
                         Command="{x:Bind ViewModel.AddMusicFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe8f4;" />
+                            <FontIcon Glyph="&#xE8F4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -166,7 +166,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b2;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8B2;}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -179,7 +179,7 @@
                         Command="{x:Bind ViewModel.AddVideosFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xe8f4;" />
+                            <FontIcon Glyph="&#xE8F4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -218,7 +218,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe8b7;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8B7;}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
                     </interactivity:Interaction.Behaviors>
@@ -236,7 +236,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe799;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE799;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
@@ -253,7 +253,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe767;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE767;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -269,7 +269,7 @@
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xeda4;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
@@ -290,7 +290,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
                     Header="{strings:Resources Key=SettingsAdvancedModeHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xe756;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AdvancedModeToggleSwitch}" />
