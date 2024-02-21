@@ -494,8 +494,8 @@ namespace Screenbox.Core.Services
                 // Expect UI thread
                 media.IsFromLibrary = true;
                 await media.LoadDetailsAsync(_filesService);
-                media.UpdateAlbum();
-                media.UpdateArtists();
+                media.UpdateAlbum(_albumFactory);
+                media.UpdateArtists(_artistFactory);
                 cancellationToken.ThrowIfCancellationRequested();
             }
         }

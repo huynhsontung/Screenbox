@@ -53,8 +53,6 @@ namespace Screenbox.Core.ViewModels
 
         private readonly IMediaService _mediaService;
         private readonly List<string> _options;
-        private readonly AlbumViewModelFactory _albumFactory;
-        private readonly ArtistViewModelFactory _artistFactory;
         private PlaybackItem? _item;
 
         [ObservableProperty] private string _name;
@@ -79,8 +77,6 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(MediaViewModel source)
         {
             _mediaService = source._mediaService;
-            _albumFactory = source._albumFactory;
-            _artistFactory = source._artistFactory;
             _item = source._item;
             _name = source._name;
             _thumbnail = source._thumbnail;
@@ -95,11 +91,9 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        private MediaViewModel(object source, IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory)
+        private MediaViewModel(object source, IMediaService mediaService)
         {
             _mediaService = mediaService;
-            _albumFactory = albumFactory;
-            _artistFactory = artistFactory;
             Source = source;
             Location = string.Empty;
             _name = string.Empty;
@@ -109,23 +103,20 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
         }
 
-        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory,
-            ArtistViewModelFactory artistFactory, StorageFile file) : this(file, mediaService, albumFactory, artistFactory)
+        public MediaViewModel(IMediaService mediaService, StorageFile file) : this(file, mediaService)
         {
             Location = file.Path;
             _name = file.DisplayName;
             _altCaption = file.Name;
         }
 
-        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory,
-            ArtistViewModelFactory artistFactory, Uri uri) : this(uri, mediaService, albumFactory, artistFactory)
+        public MediaViewModel(IMediaService mediaService, Uri uri) : this(uri, mediaService)
         {
             Location = uri.OriginalString;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }
 
-        public MediaViewModel(IMediaService mediaService, AlbumViewModelFactory albumFactory, ArtistViewModelFactory artistFactory, Media media)
-            : this(media, mediaService, albumFactory, artistFactory)
+        public MediaViewModel(IMediaService mediaService, Media media) : this(media, mediaService)
         {
             Location = media.Mrl;
 
@@ -136,8 +127,6 @@ namespace Screenbox.Core.ViewModels
         partial void OnMediaInfoChanged(MediaInfo value)
         {
             UpdateCaptions();
-            UpdateArtists();
-            UpdateAlbum();
         }
 
         private PlaybackItem? CreatePlaybackItem()
@@ -255,17 +244,23 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void UpdateAlbum()
+        public void UpdateAlbum(AlbumViewModelFactory factory)
         {
-            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Album != null) return;
+            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
+            if (Album != null)
+            {
+                factory.Remove(this);
+            }
+
             MusicInfo musicProperties = MediaInfo.MusicProperties;
-            Album = _albumFactory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
+            Album = factory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
         }
 
-        public void UpdateArtists()
+        public void UpdateArtists(ArtistViewModelFactory factory)
         {
-            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music || Artists.Length != 0) return;
-            Artists = _artistFactory.ParseArtists(MediaInfo.MusicProperties.Artist, this);
+            if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
+            factory.Remove(this);
+            Artists = factory.ParseArtists(MediaInfo.MusicProperties.Artist, this);
         }
 
         private void UpdateCaptions()

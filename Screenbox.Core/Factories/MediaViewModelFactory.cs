@@ -12,36 +12,31 @@ namespace Screenbox.Core.Factories
     public sealed class MediaViewModelFactory
     {
         private readonly IMediaService _mediaService;
-        private readonly ArtistViewModelFactory _artistFactory;
-        private readonly AlbumViewModelFactory _albumFactory;
         private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
         private int _referencesCleanUpThreshold = 1000;
 
-        public MediaViewModelFactory(IMediaService mediaService,
-            ArtistViewModelFactory artistFactory, AlbumViewModelFactory albumFactory)
+        public MediaViewModelFactory(IMediaService mediaService)
         {
             _mediaService = mediaService;
-            _artistFactory = artistFactory;
-            _albumFactory = albumFactory;
         }
 
         public MediaViewModel GetTransient(StorageFile file)
         {
-            return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, file);
+            return new MediaViewModel(_mediaService, file);
         }
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
+            return new MediaViewModel(_mediaService, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
         {
             if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
-                return new MediaViewModel(_mediaService, _albumFactory, _artistFactory, media);
+                return new MediaViewModel(_mediaService, media);
 
             // Prefer URI source for easier clean up
-            MediaViewModel vm = new(_mediaService, _albumFactory, _artistFactory, uri)
+            MediaViewModel vm = new(_mediaService, uri)
             {
                 Item = new PlaybackItem(media, media)
             };
@@ -59,7 +54,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new MediaViewModel(_mediaService, _albumFactory, _artistFactory, file);
+            instance = new MediaViewModel(_mediaService, file);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);
@@ -76,7 +71,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new MediaViewModel(_mediaService, _albumFactory, _artistFactory, uri);
+            instance = new MediaViewModel(_mediaService, uri);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);
