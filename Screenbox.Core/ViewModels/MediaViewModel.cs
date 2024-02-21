@@ -34,8 +34,8 @@ namespace Screenbox.Core.ViewModels
 
         public PlaybackItem? Item
         {
-            get => _item ?? GetPlaybackItem();
-            internal set => _loaded = (_item = value) != null;  // Only set on init. Don't need to worry about clean up in this case.
+            get => _item ??= CreatePlaybackItem();
+            internal set => _item = value;  // Only set on init. Don't need to worry about clean up in this case.
         }
 
         public IReadOnlyList<string> Options { get; }
@@ -56,7 +56,6 @@ namespace Screenbox.Core.ViewModels
         private readonly AlbumViewModelFactory _albumFactory;
         private readonly ArtistViewModelFactory _artistFactory;
         private PlaybackItem? _item;
-        private bool _loaded;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
@@ -131,7 +130,6 @@ namespace Screenbox.Core.ViewModels
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
-            _loaded = true;
             _item = new PlaybackItem(media, media);
         }
 
@@ -142,14 +140,13 @@ namespace Screenbox.Core.ViewModels
             UpdateAlbum();
         }
 
-        private PlaybackItem? GetPlaybackItem()
+        private PlaybackItem? CreatePlaybackItem()
         {
-            if (_loaded) return _item;
-            _loaded = true;
+            PlaybackItem? item = null;
             try
             {
                 Media media = _mediaService.CreateMedia(Source, _options.ToArray());
-                _item = new PlaybackItem(Source, media);
+                item = new PlaybackItem(Source, media);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -161,7 +158,7 @@ namespace Screenbox.Core.ViewModels
                 Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
             }
 
-            return _item;
+            return item;
         }
 
         public void SetOptions(string options)
@@ -181,14 +178,13 @@ namespace Screenbox.Core.ViewModels
 
             if (_item == null) return;
             Clean();
-            GetPlaybackItem();
+            _item = CreatePlaybackItem();
         }
 
         public void Clean()
         {
             // If source is Media then there is no way to recreate. Don't clean up.
             if (Source is Media) return;
-            _loaded = false;
             PlaybackItem? item = _item;
             _item = null;
             if (item == null) return;
