@@ -11,32 +11,32 @@ namespace Screenbox.Core.Factories
 {
     public sealed class MediaViewModelFactory
     {
-        private readonly IMediaService _mediaService;
+        private readonly LibVlcService _libVlcService;
         private readonly Dictionary<string, WeakReference<MediaViewModel>> _references = new();
         private int _referencesCleanUpThreshold = 1000;
 
-        public MediaViewModelFactory(IMediaService mediaService)
+        public MediaViewModelFactory(LibVlcService libVlcService)
         {
-            _mediaService = mediaService;
+            _libVlcService = libVlcService;
         }
 
         public MediaViewModel GetTransient(StorageFile file)
         {
-            return new MediaViewModel(_mediaService, file);
+            return new MediaViewModel(_libVlcService, file);
         }
 
         public MediaViewModel GetTransient(Uri uri)
         {
-            return new MediaViewModel(_mediaService, uri);
+            return new MediaViewModel(_libVlcService, uri);
         }
 
         public MediaViewModel GetTransient(Media media)
         {
             if (!Uri.TryCreate(media.Mrl, UriKind.Absolute, out Uri uri))
-                return new MediaViewModel(_mediaService, media);
+                return new MediaViewModel(_libVlcService, media);
 
             // Prefer URI source for easier clean up
-            MediaViewModel vm = new(_mediaService, uri)
+            MediaViewModel vm = new(_libVlcService, uri)
             {
                 Item = new PlaybackItem(media, media)
             };
@@ -54,7 +54,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new MediaViewModel(_mediaService, file);
+            instance = new MediaViewModel(_libVlcService, file);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);
@@ -71,7 +71,7 @@ namespace Screenbox.Core.Factories
                 reference.TryGetTarget(out MediaViewModel instance)) return instance;
 
             // No existing reference, create new instance
-            instance = new MediaViewModel(_mediaService, uri);
+            instance = new MediaViewModel(_libVlcService, uri);
             if (!string.IsNullOrEmpty(id))
             {
                 _references[id] = new WeakReference<MediaViewModel>(instance);

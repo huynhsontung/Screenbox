@@ -1,9 +1,12 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
+using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
@@ -18,14 +21,73 @@ namespace Screenbox.Core.Services
         public LibVlcService(INotificationService notificationService)
         {
             _notificationService = (NotificationService)notificationService;
+
+            // Clear FA periodically because of 1000 items limit
+            StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
-        public void Initialize(string[] swapChainOptions)
+        public VlcMediaPlayer Initialize(string[] swapChainOptions)
         {
-            LibVlc?.Dispose();
-            LibVlc = InitializeLibVlc(swapChainOptions);
-            MediaPlayer?.Close();
-            MediaPlayer = new VlcMediaPlayer(LibVlc);
+            LibVLC lib = InitializeLibVlc(swapChainOptions);
+            LibVlc = lib;
+            MediaPlayer = new VlcMediaPlayer(lib);
+            return MediaPlayer;
+        }
+
+        public Media CreateMedia(object source, params string[] options)
+        {
+            return source switch
+            {
+                IStorageFile file => CreateMedia(file, options),
+                string str => CreateMedia(str, options),
+                Uri uri => CreateMedia(uri, options),
+                _ => throw new ArgumentOutOfRangeException(nameof(source))
+            };
+        }
+
+        private Media CreateMedia(string str, params string[] options)
+        {
+            if (Uri.TryCreate(str, UriKind.Absolute, out Uri uri))
+            {
+                return CreateMedia(uri, options);
+            }
+
+            Guard.IsNotNull(LibVlc, nameof(LibVlc));
+            LibVLC libVlc = LibVlc;
+            return new Media(libVlc, str, FromType.FromPath, options);
+        }
+
+        private Media CreateMedia(IStorageFile file, params string[] options)
+        {
+            Guard.IsNotNull(LibVlc, nameof(LibVlc));
+            LibVLC libVlc = LibVlc;
+            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
+            return new Media(libVlc, mrl, FromType.FromLocation, options);
+        }
+
+        private Media CreateMedia(Uri uri, params string[] options)
+        {
+            Guard.IsNotNull(LibVlc, nameof(LibVlc));
+            LibVLC libVlc = LibVlc;
+            return new Media(libVlc, uri, options);
+        }
+
+        public void DisposeMedia(Media media)
+        {
+            string mrl = media.Mrl;
+            if (mrl.StartsWith("winrt://"))
+            {
+                try
+                {
+                    StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+                }
+                catch (Exception)
+                {
+                    LogService.Log($"Failed to remove FAL: {mrl.Substring(8)}");
+                }
+            }
+
+            media.Dispose();
         }
 
         private LibVLC InitializeLibVlc(string[] swapChainOptions)

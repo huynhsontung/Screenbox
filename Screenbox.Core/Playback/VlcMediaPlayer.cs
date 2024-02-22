@@ -237,6 +237,8 @@ namespace Screenbox.Core.Playback
 
         internal MediaPlayer VlcPlayer { get; }
 
+        internal LibVLC LibVlc { get; }
+
         private readonly Rect _defaultSourceRect;
         private ChapterCue? _chapter;
         private Rect _normalizedSourceRect;
@@ -249,6 +251,7 @@ namespace Screenbox.Core.Playback
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
+            LibVlc = libVlc;
             VlcPlayer = new MediaPlayer(libVlc);
             _defaultSourceRect = new Rect(0, 0, 1, 1);
             _normalizedSourceRect = _defaultSourceRect;

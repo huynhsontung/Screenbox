@@ -51,7 +51,7 @@ namespace Screenbox.Core.ViewModels
         public string TrackNumberText =>
             MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
-        private readonly IMediaService _mediaService;
+        private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
         private PlaybackItem? _item;
 
@@ -76,7 +76,7 @@ namespace Screenbox.Core.ViewModels
 
         public MediaViewModel(MediaViewModel source)
         {
-            _mediaService = source._mediaService;
+            _libVlcService = source._libVlcService;
             _item = source._item;
             _name = source._name;
             _thumbnail = source._thumbnail;
@@ -91,9 +91,9 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        private MediaViewModel(object source, IMediaService mediaService)
+        private MediaViewModel(object source, LibVlcService libVlcService)
         {
-            _mediaService = mediaService;
+            _libVlcService = libVlcService;
             Source = source;
             Location = string.Empty;
             _name = string.Empty;
@@ -103,20 +103,20 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
         }
 
-        public MediaViewModel(IMediaService mediaService, StorageFile file) : this(file, mediaService)
+        public MediaViewModel(LibVlcService libVlcService, StorageFile file) : this(file, libVlcService)
         {
             Location = file.Path;
             _name = file.DisplayName;
             _altCaption = file.Name;
         }
 
-        public MediaViewModel(IMediaService mediaService, Uri uri) : this(uri, mediaService)
+        public MediaViewModel(LibVlcService libVlcService, Uri uri) : this(uri, libVlcService)
         {
             Location = uri.OriginalString;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }
 
-        public MediaViewModel(IMediaService mediaService, Media media) : this(media, mediaService)
+        public MediaViewModel(LibVlcService libVlcService, Media media) : this(media, libVlcService)
         {
             Location = media.Mrl;
 
@@ -134,8 +134,15 @@ namespace Screenbox.Core.ViewModels
             PlaybackItem? item = null;
             try
             {
-                Media media = _mediaService.CreateMedia(Source, _options.ToArray());
-                item = new PlaybackItem(Source, media);
+                if (Source is Media mediaSource)
+                {
+                    item = new PlaybackItem(mediaSource, mediaSource);
+                }
+                else
+                {
+                    Media media = _libVlcService.CreateMedia(Source, _options.ToArray());
+                    item = new PlaybackItem(Source, media);
+                }
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -177,7 +184,7 @@ namespace Screenbox.Core.ViewModels
             PlaybackItem? item = _item;
             _item = null;
             if (item == null) return;
-            _mediaService.DisposeMedia(item.Media);
+            _libVlcService.DisposeMedia(item.Media);
         }
 
         public async Task LoadDetailsAsync(IFilesService filesService)
