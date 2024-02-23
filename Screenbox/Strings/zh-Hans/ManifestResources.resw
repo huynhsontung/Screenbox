@@ -202,6 +202,6 @@
     <value>WavPack 音频</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>AIFF 音频</value>
   </data>
 </root>
