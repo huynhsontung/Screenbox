@@ -768,6 +768,6 @@
     <value>Include media from storage devices like USB sticks in your libraries</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>活动参数</value>
   </data>
 </root>
