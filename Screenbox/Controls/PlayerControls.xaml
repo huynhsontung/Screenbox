@@ -50,7 +50,7 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0.05"
-                        SmallChange="0.05"
+                        SmallChange="0.01"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
                         Value="1.0" />
@@ -110,7 +110,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem x:Name="PlaybackSpeedSubMenu" Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
-                        <FontIcon Glyph="{x:Bind GetPlaybackSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetPlaybackSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"

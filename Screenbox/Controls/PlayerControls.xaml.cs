@@ -119,15 +119,17 @@ namespace Screenbox.Controls
         }
 
         /// <summary>
-        /// Get the Playback Speed glyph for a particular speed.
+        /// Get the Playback Speed glyph for a speed range to set on <see cref="PlaybackSpeedSubMenu"/>.
         /// </summary>
-        /// <returns>Speed Medium glyph if PlaybackSpeed is 1 x, Speed High glyph if is faster, Speed Off glyph if is slower</returns>
+        /// <returns>Speed Medium glyph if PlaybackSpeed equals 1 x, Speed High glyph if its greater than 1 x, Auto Racing glyph if its greater than 1.75 x, Speed Low glyph if its less than 1 x, Speed Off glyph if its less than 0.25 x</returns>
         private string GetPlaybackSpeedGlyph(double playbackSpeed)
         {
             return playbackSpeed switch
             {
+                >= 1.75 => "\ueb24",
                 > 1.01 => "\uec4a",
-                < 0.99 => "\uec48",
+                <= 0.25 => "\uec48",
+                < 0.99 => "\uf823",
                 _ => "\uec49"
             };
         }
