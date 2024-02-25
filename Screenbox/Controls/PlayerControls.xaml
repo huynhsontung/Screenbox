@@ -178,7 +178,8 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xEE71;}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xEE71;}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
