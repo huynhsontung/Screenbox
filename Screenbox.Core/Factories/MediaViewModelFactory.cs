@@ -59,7 +59,14 @@ namespace Screenbox.Core.Factories
         {
             string id = file.Path;
             if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
-                reference.TryGetTarget(out MediaViewModel instance)) return instance;
+                reference.TryGetTarget(out MediaViewModel instance))
+            {
+                // Prefer file instance instead of URI instance for reliability
+                if (instance is FileMediaViewModel) return instance;
+                instance = new FileMediaViewModel(instance, file, _filesService);
+                _references[id] = new WeakReference<MediaViewModel>(instance);
+                return instance;
+            }
 
             // No existing reference, create new instance
             instance = new FileMediaViewModel(_filesService, _mediaService, _albumFactory, _artistFactory, file);
