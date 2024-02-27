@@ -70,7 +70,7 @@
                     Text="{strings:Resources Key=NoMusicPanelHeader}" />
 
                 <TextBlock
-                    Margin="{StaticResource SubtitleTextMargin}"
+                    Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{strings:Resources Key=NoMusicPanelSubtext}"
                     TextWrapping="Wrap" />

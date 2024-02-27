@@ -56,7 +56,7 @@
                     <Grid
                         x:Name="ArtistsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -82,7 +82,7 @@
                     <Grid
                         x:Name="AlbumsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -112,7 +112,7 @@
                     <Grid
                         x:Name="SongsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -155,7 +155,7 @@
                     <Grid
                         x:Name="VideosResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"

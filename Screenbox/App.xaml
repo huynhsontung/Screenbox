@@ -63,6 +63,8 @@
 
                     <!--  Standardize header height with or without top nav  -->
                     <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
+                    <!--  SpiltButton height to match that of the button  -->
+                    <x:Double x:Key="SplitButtonHeight">32</x:Double>
 
                     <!--  Header margin  -->
                     <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
@@ -76,6 +78,8 @@
                     <Thickness x:Key="PageThumbnailMargin">52,0</Thickness>
                     <Thickness x:Key="PageThumbnailMarginMinimal">14,0</Thickness>
 
+                    <Thickness x:Key="BottomMediumMargin">0,0,0,12</Thickness>
+
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
@@ -84,9 +88,6 @@
                     <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
                     <!--  HyperlinkButton with caption text style padding to maintain the same height  -->
                     <Thickness x:Key="HyperlinkButtonCaptionPadding">11,7,11,7</Thickness>
-
-                    <!--  Subtitle margin  -->
-                    <Thickness x:Key="SubtitleTextMargin">0,0,0,12</Thickness>
 
                     <!--  Custom Icons  -->
                     <contract13NotPresent:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxMDL2Assets.ttf#Screenbox MDL2 Assets</contract13NotPresent:FontFamily>
@@ -120,11 +121,6 @@
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
                         <Setter Property="FontSize" Value="34" />
                         <Setter Property="FontWeight" Value="SemiBold" />
-                    </Style>
-
-                    <!--  SplitButton height to match Button  -->
-                    <Style TargetType="muxc:SplitButton">
-                        <Setter Property="Height" Value="32" />
                     </Style>
 
                     <!--  Require focus engagement on a gamepad  -->

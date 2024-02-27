@@ -79,7 +79,7 @@
                     Text="{strings:Resources Key=NoVideosPanelHeader}" />
 
                 <TextBlock
-                    Margin="{StaticResource SubtitleTextMargin}"
+                    Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{strings:Resources Key=NoVideosPanelSubtext}"
                     TextWrapping="Wrap" />
