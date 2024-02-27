@@ -6,7 +6,7 @@
 
 ### Deskripsi
 
-Screenbox adalah pemutar media modern yang berusaha memberikan nuansa baru pada aplikasi klasik. La menawarkan antarmuka pengguna yang ramping dan intuitif yang dapat menyesuaikan dengan kemampuan sistem Anda. Dirancang untuk pengalaman yang mulus di berbagai perangkat Windows dan konsol Xbox, Screenbox cepat, ringan, dan kuat.
+Screenbox adalah pemutar media modern yang berusaha memberikan nuansa baru pada aplikasi klasik. Ia menawarkan antarmuka pengguna yang ramping dan intuitif yang dapat menyesuaikan dengan kemampuan sistem Anda. Dirancang untuk pengalaman yang mulus di berbagai perangkat Windows dan konsol Xbox, Screenbox cepat, ringan, dan kuat.
 
 Screenbox mendukung berbagai macam format file dan codec. Putar hampir semua jenis media tanpa tambahan add-on. Didukung oleh LibVLC, Screenbox menggabungkan semua yang terbaik dari pemutar media VLC dan kemampuan aplikasi Windows modern. Opsi pemutaran lanjutan tersedia menggunakan argumen baris perintah VLC.
 
