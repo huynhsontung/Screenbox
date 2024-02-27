@@ -87,7 +87,7 @@
             Grid.Column="1"
             Width="32"
             Height="32"
-            Padding="7"
+            Padding="0"
             VerticalAlignment="Center"
             CommandParameter="{Binding}"
             Style="{StaticResource SubtleButtonStyle}"
@@ -98,7 +98,7 @@
                 <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
                 <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
                 <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="HyperlinkButtonForeground" />
+                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
                 <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
                 <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
             </Button.Resources>

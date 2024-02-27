@@ -57,7 +57,7 @@
                 Grid.Column="0"
                 FontSize="{StaticResource PanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xe8d6;" />
+                Glyph="&#xE8D6;" />
 
             <StackPanel
                 Grid.Column="1"
@@ -82,7 +82,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xe8f4;" />
+                        <FontIcon Glyph="&#xE8F4;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
@@ -142,7 +142,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xe8f4;" />
+                        <FontIcon Glyph="&#xE8F4;" />
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
@@ -167,7 +167,7 @@
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                     Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xe8b1;" />
+                        <FontIcon Glyph="&#xE8B1;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
                     </StackPanel>
                 </Button>

@@ -6,7 +6,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class HomePageViewModel : ObservableRecipient,
         IRecipient<PlaylistCurrentItemChangedMessage>
     {
-        public ObservableCollection<MediaViewModelWithMruToken> Recent { get; }
+        public ObservableCollection<MediaViewModel> Recent { get; }
 
         public bool HasRecentMedia => StorageApplicationPermissions.MostRecentlyUsedList.Entries.Count > 0 && _settingsService.ShowRecent;
 
@@ -31,6 +30,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
+        private readonly Dictionary<string, string> _pathToMruMappings;
         private bool _isLoaded; // Assume this class is a singleton
 
         public HomePageViewModel(MediaViewModelFactory mediaFactory,
@@ -42,7 +42,8 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _settingsService = settingsService;
             _libraryService = libraryService;
-            Recent = new ObservableCollection<MediaViewModelWithMruToken>();
+            _pathToMruMappings = new Dictionary<string, string>();
+            Recent = new ObservableCollection<MediaViewModel>();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -179,9 +180,11 @@ namespace Screenbox.Core.ViewModels
 
                 if (i >= Recent.Count)
                 {
-                    Recent.Add(new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
+                    MediaViewModel media = _mediaFactory.GetSingleton(file);
+                    _pathToMruMappings[media.Location] = token;
+                    Recent.Add(media);
                 }
-                else if (GetFile(Recent[i].Media) is { } existing)
+                else if (GetFile(Recent[i]) is { } existing)
                 {
                     try
                     {
@@ -204,7 +207,7 @@ namespace Screenbox.Core.ViewModels
 
             // Load media details for the remaining items
             if (!loadMediaDetails) return;
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.Media.LoadDetailsAndThumbnailAsync());
+            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAndThumbnailAsync());
             await Task.WhenAll(loadingTasks);
         }
 
@@ -215,7 +218,7 @@ namespace Screenbox.Core.ViewModels
             int existingIndex = -1;
             for (int j = desiredIndex + 1; j < Recent.Count; j++)
             {
-                if (Recent[j].Media is FileMediaViewModel { File: { } existingFile } && file.IsEqual(existingFile))
+                if (Recent[j] is FileMediaViewModel { File: { } existingFile } && file.IsEqual(existingFile))
                 {
                     existingIndex = j;
                     break;
@@ -224,40 +227,45 @@ namespace Screenbox.Core.ViewModels
 
             if (existingIndex == -1)
             {
-                Recent.Insert(desiredIndex, new MediaViewModelWithMruToken(token, _mediaFactory.GetSingleton(file)));
+                MediaViewModel media = _mediaFactory.GetSingleton(file);
+                _pathToMruMappings[media.Location] = token;
+                Recent.Insert(desiredIndex, media);
             }
             else
             {
-                MediaViewModelWithMruToken toInsert = Recent[existingIndex];
+                MediaViewModel toInsert = Recent[existingIndex];
                 Recent.RemoveAt(existingIndex);
                 Recent.Insert(desiredIndex, toInsert);
             }
         }
 
         [RelayCommand]
-        private void Play(MediaViewModelWithMruToken media)
+        private void Play(MediaViewModel media)
         {
-            if (media.Media.IsMediaActive)
+            if (media.IsMediaActive)
             {
                 Messenger.Send(new TogglePlayPauseMessage(false));
             }
             else
             {
-                Messenger.Send(new PlayMediaMessage(media.Media, false));
+                Messenger.Send(new PlayMediaMessage(media, false));
             }
         }
 
         [RelayCommand]
-        private void PlayNext(MediaViewModelWithMruToken media)
+        private void PlayNext(MediaViewModel media)
         {
-            Messenger.SendPlayNext(media.Media);
+            Messenger.SendPlayNext(media);
         }
 
         [RelayCommand]
-        private void Remove(MediaViewModelWithMruToken media)
+        private void Remove(MediaViewModel media)
         {
             Recent.Remove(media);
-            StorageApplicationPermissions.MostRecentlyUsedList.Remove(media.Token);
+            if (_pathToMruMappings.Remove(media.Location, out string token))
+            {
+                StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+            }
         }
 
         [RelayCommand]

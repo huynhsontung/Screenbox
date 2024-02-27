@@ -127,7 +127,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem Tag="videos">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xe8b2;" />
+                        <FontIcon Glyph="&#xE8B2;" />
                     </muxc:NavigationViewItem.Icon>
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
                 </muxc:NavigationViewItem>
@@ -138,7 +138,10 @@
                     <TextBlock x:Name="NetworkNavItemText" Text="{strings:Resources Key=Network}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
-                <muxc:NavigationViewItem Icon="MusicInfo" Tag="queue">
+                <muxc:NavigationViewItem Tag="queue">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="&#xE93F;" />
+                    </muxc:NavigationViewItem.Icon>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>

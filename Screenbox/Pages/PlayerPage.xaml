@@ -32,51 +32,44 @@
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
-                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
-                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
-                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
+                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="HeaderBackgroundLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="ControlsBackgroundLinearGradient" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
-                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="ControlFillColorSecondaryBrush" />
-                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="ControlFillColorTertiaryBrush" />
-                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="HeaderLinearGradient" />
-                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="ControlsLinearGradient" />
+                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="HeaderBackgroundLinearGradient" />
+                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="ControlsBackgroundLinearGradient" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
                     <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
-                    <StaticResource x:Key="RestoreButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
-                    <StaticResource x:Key="RestoreButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
-                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="SystemColorWindowColor" />
-                    <StaticResource x:Key="ControlsBackgroundBrush" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="SystemColorWindowColorBrush" />
+                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="SystemColorWindowColorBrush" />
+                    <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorButtonTextColorBrush" />
                     <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
-                    <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorWindowTextColor" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
-            <!--  Background brushes  -->
-            <LinearGradientBrush x:Key="HeaderLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+            <LinearGradientBrush x:Key="HeaderBackgroundLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
                 <LinearGradientBrush.GradientStops>
-                    <GradientStop Offset="0" Color="#B31C1C1C" />
+                    <GradientStop Offset="0" Color="{StaticResource SystemChromeBlackMediumLowColor}" />
                     <GradientStop Offset="1" Color="#00000000" />
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
-            <LinearGradientBrush x:Name="ControlsLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
+            <LinearGradientBrush x:Name="ControlsBackgroundLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
                 <LinearGradientBrush.GradientStops>
                     <GradientStop Offset="0" Color="#00000000" />
-                    <GradientStop Offset="1" Color="#B31C1C1C" />
+                    <GradientStop Offset="1" Color="{StaticResource SystemChromeBlackMediumLowColor}" />
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
 
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
-                FalseValue="D"
-                TrueValue="C" />
+                FalseValue="&#xE62E;"
+                TrueValue="&#xF5B0;" />
 
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
@@ -165,7 +158,7 @@
             MinHeight="32"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="{ThemeResource HeaderBackgroundBrush}"
+            Background="{ThemeResource HeaderBackgroundGradientBrush}"
             Canvas.ZIndex="3" />
 
         <Grid
@@ -203,7 +196,7 @@
                         <animatedvisuals:AnimatedBackVisualSource />
                     </muxc:AnimatedIcon.Source>
                     <muxc:AnimatedIcon.FallbackIconSource>
-                        <muxc:FontIconSource Glyph="&#xe70d;" />
+                        <muxc:FontIconSource Glyph="&#xE70D;" />
                     </muxc:AnimatedIcon.FallbackIconSource>
                 </muxc:AnimatedIcon>
             </Button>
@@ -214,12 +207,16 @@
                 Width="44"
                 Height="44"
                 Margin="0,6,0,2"
+                Padding="0"
                 AllowDrop="True"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
-                <SymbolIcon Symbol="MusicInfo" />
+                <FontIcon
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    FontSize="20"
+                    Glyph="&#xE93F;" />
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
@@ -388,9 +385,25 @@
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             Visibility="Collapsed">
             <Button.Resources>
-                <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
-                <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="RestoreButtonBackgroundPointerOver" />
-                <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="RestoreButtonBackgroundPressed" />
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="SubtleFillColorTransparentBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Light">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="SubtleFillColorTransparentBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="HighContrast">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
             </Button.Resources>
             <Button.KeyboardAccelerators>
                 <KeyboardAccelerator Key="I" />
@@ -416,16 +429,15 @@
             Padding="11,8,11,9"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="6"
+            CornerRadius="8"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
             </animations:Implicit.ShowAnimations>
-
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
             </animations:Implicit.HideAnimations>
@@ -441,12 +453,12 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="70"
-            Height="70"
+            Width="72"
+            Height="72"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
-            Background="{ThemeResource SystemControlBackgroundChromeBlackMediumBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             CornerRadius="16"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
@@ -461,9 +473,9 @@
                 x:Name="PlayerStateBadgeIcon"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontFamily="{StaticResource ScreenboxCustomIconsFontFamily}"
-                FontSize="26"
-                Foreground="White"
+                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                FontSize="{StaticResource TitleTextBlockFontSize}"
+                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                 Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
 
@@ -492,7 +504,7 @@
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
             Grid.Column="0"
-            Background="{ThemeResource ControlsBackgroundBrush}"
+            Background="{ThemeResource ControlsBackgroundGradientBrush}"
             Tapped="PlayerControlsBackground_OnTapped" />
 
         <controls:PlayerControls

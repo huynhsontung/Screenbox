@@ -1,0 +1,63 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Screenbox.Controls">
+
+    <DataTemplate x:Key="AlbumGridViewItemTemplate">
+        <controls:CommonGridViewItem
+            Width="{StaticResource CommonGridViewItemWidth}"
+            Height="{StaticResource CommonGridViewItemHeight}"
+            Caption="{Binding ArtistName}"
+            IsPlaying="{Binding IsPlaying}"
+            PlayCommand="{Binding PlayAlbumCommand}"
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+            ThumbnailSource="{Binding AlbumArt}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ArtistGridViewItemTemplate">
+        <controls:CommonGridViewItem
+            Width="{StaticResource CommonGridViewItemWidth}"
+            Height="{StaticResource CommonGridViewItemHeight}"
+            CornerRadius="99"
+            HorizontalTextAlignment="Center"
+            IsPlaying="{Binding IsPlaying}"
+            PlayCommand="{Binding PlayArtistCommand}"
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe77b;" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MediaGridViewItemTemplate">
+        <controls:CommonGridViewItem
+            Width="{StaticResource CommonGridViewItemWidth}"
+            Height="{StaticResource CommonGridViewItemHeight}"
+            Caption="{Binding Caption}"
+            IsPlaying="{Binding IsPlaying}"
+            ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
+            ThumbnailSource="{Binding Thumbnail}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
+
+    <DataTemplate x:Key="WideMediaGridViewItemTemplate">
+        <controls:CommonGridViewItem
+            Width="{StaticResource WideGridViewItemWidth}"
+            Height="{StaticResource WideGridViewItemHeight}"
+            Caption="{Binding Caption}"
+            IsPlaying="{Binding IsPlaying}"
+            ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
+            ThumbnailSource="{Binding Thumbnail}">
+            <controls:CommonGridViewItem.PlaceholderIconSource>
+                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSizeSmall}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
+            </controls:CommonGridViewItem.PlaceholderIconSource>
+        </controls:CommonGridViewItem>
+    </DataTemplate>
+</ResourceDictionary>

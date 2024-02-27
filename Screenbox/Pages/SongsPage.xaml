@@ -41,14 +41,14 @@
             <XamlUICommand
                 x:Key="PlayNextCommand"
                 Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxCustomIconsFontFamily},
-                                               Glyph=B}"
+                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                               Glyph=&#xF5EB;}"
                 Label="{strings:Resources Key=PlayNext}" />
 
             <XamlUICommand
                 x:Key="PropertiesCommand"
                 Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xe946;}"
+                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
                 Label="{strings:Resources Key=Properties}" />
 
             <MenuFlyout x:Name="ItemFlyout">

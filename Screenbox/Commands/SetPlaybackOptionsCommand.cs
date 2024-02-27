@@ -50,7 +50,6 @@ internal class SetPlaybackOptionsCommand : IRelayCommand
     private static MediaViewModel? TryGetMedia(object parameter) => parameter switch
     {
         MediaViewModel media => media,
-        MediaViewModelWithMruToken mediaWithMru => mediaWithMru.Media,
         StorageItemViewModel storageItemViewModel => storageItemViewModel.Media,
         _ => null
     };
