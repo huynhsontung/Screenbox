@@ -100,7 +100,8 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}">
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}">
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
@@ -247,7 +248,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="WelcomePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />

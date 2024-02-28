@@ -70,7 +70,8 @@
             x:Name="TitleText"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}"
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind ViewModel.TitleText}" />
 
@@ -152,7 +153,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TitleText.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="16,0,16,12" />
                         <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />

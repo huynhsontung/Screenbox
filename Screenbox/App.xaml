@@ -61,20 +61,33 @@
                         FalseValue="{strings:Resources Key=Play}"
                         TrueValue="{strings:Resources Key=Pause}" />
 
+                    <!--  Custom Icons  -->
+                    <contract13NotPresent:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxMDL2Assets.ttf#Screenbox MDL2 Assets</contract13NotPresent:FontFamily>
+                    <contract13Present:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxFluentIcons.ttf#Screenbox Fluent Icons</contract13Present:FontFamily>
+
+                    <!--  Font sizes  -->
+                    <x:Double x:Key="DefaultIconFontSize">16</x:Double>
+                    <x:Double x:Key="PanelIconFontSize">126</x:Double>
+                    <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
+                    <x:Double x:Key="PlaceholderGridItemIconFontSize">52</x:Double>
+                    <x:Double x:Key="PlaceholderGridItemIconFontSizeSmall">42</x:Double>
+
                     <!--  Standardize header height with or without top nav  -->
                     <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
                     <!--  SpiltButton height to match that of the button  -->
                     <x:Double x:Key="SplitButtonHeight">32</x:Double>
 
-                    <!--  Header margin  -->
-                    <Thickness x:Key="PageHeaderMargin">56,0,56,12</Thickness>
-                    <Thickness x:Key="PageHeaderMarginMinimal">16,0,16,12</Thickness>
+                    <!--  Grid item sizes  -->
+                    <x:Double x:Key="CommonGridViewItemWidth">168</x:Double>
+                    <x:Double x:Key="CommonGridViewItemHeight">226</x:Double>
+                    <x:Double x:Key="CommonGridViewItemThumbnailHeight">160</x:Double>
+                    <x:Double x:Key="WideGridViewItemWidth">230</x:Double>
+                    <x:Double x:Key="WideGridViewItemHeight">188</x:Double>
+                    <x:Double x:Key="WideGridViewItemThumbnailHeight">126</x:Double>
 
-                    <!--  Content margin  -->
+                    <!--  Content margins  -->
                     <Thickness x:Key="PageContentMargin">56,0</Thickness>
                     <Thickness x:Key="PageContentMarginMinimal">16,0</Thickness>
-
-                    <!--  Content thumbnail margin  -->
                     <Thickness x:Key="PageThumbnailMargin">52,0</Thickness>
                     <Thickness x:Key="PageThumbnailMarginMinimal">14,0</Thickness>
 
@@ -88,25 +101,6 @@
                     <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
                     <!--  HyperlinkButton with caption text style padding to maintain the same height  -->
                     <Thickness x:Key="HyperlinkButtonCaptionPadding">11,7,11,7</Thickness>
-
-                    <!--  Custom Icons  -->
-                    <contract13NotPresent:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxMDL2Assets.ttf#Screenbox MDL2 Assets</contract13NotPresent:FontFamily>
-                    <contract13Present:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxFluentIcons.ttf#Screenbox Fluent Icons</contract13Present:FontFamily>
-
-                    <!--  Grid item sizes  -->
-                    <x:Double x:Key="CommonGridViewItemWidth">168</x:Double>
-                    <x:Double x:Key="CommonGridViewItemHeight">226</x:Double>
-                    <x:Double x:Key="CommonGridViewItemThumbnailHeight">160</x:Double>
-                    <x:Double x:Key="WideGridViewItemWidth">230</x:Double>
-                    <x:Double x:Key="WideGridViewItemHeight">188</x:Double>
-                    <x:Double x:Key="WideGridViewItemThumbnailHeight">126</x:Double>
-
-                    <!--  Font  -->
-                    <x:Double x:Key="DefaultIconFontSize">16</x:Double>
-                    <x:Double x:Key="PanelIconFontSize">126</x:Double>
-                    <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
-                    <x:Double x:Key="PlaceholderGridItemIconFontSize">52</x:Double>
-                    <x:Double x:Key="PlaceholderGridItemIconFontSizeSmall">42</x:Double>
 
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />

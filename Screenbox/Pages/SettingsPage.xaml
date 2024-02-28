@@ -95,11 +95,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}">
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}">
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
@@ -365,7 +367,7 @@
             Title="{strings:Resources Key=PendingChanges}"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="{StaticResource PageHeaderMargin}"
+            Margin="{StaticResource PageContentMargin}"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             IsClosable="False"
@@ -391,10 +393,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
-                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
