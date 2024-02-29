@@ -1,7 +1,7 @@
-﻿using System;
-using Windows.Media;
-using Windows.UI.Xaml.Data;
+﻿using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
+using System;
+using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Converters
 {

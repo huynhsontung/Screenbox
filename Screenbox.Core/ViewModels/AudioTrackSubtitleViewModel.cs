@@ -61,7 +61,7 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (_mediaPlayer == null) return;
-            if (message.Value is not FileMediaViewModel { File: { } file }) return;
+            if (message.Value?.Source is not StorageFile file) return;
             QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
             {
                 ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(file.Name)}\""

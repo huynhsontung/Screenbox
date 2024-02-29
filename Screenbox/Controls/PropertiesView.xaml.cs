@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -32,10 +32,10 @@ namespace Screenbox.Controls
             Loaded += OnLoaded;
         }
 
-        private async void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
             if (Media == null) return;
-            await Media.LoadDetailsAsync();
+            ViewModel.OnLoaded(Media);
         }
 
         private static void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

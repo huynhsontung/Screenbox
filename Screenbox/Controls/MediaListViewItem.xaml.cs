@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using System;
-using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

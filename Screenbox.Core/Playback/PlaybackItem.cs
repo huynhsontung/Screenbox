@@ -25,7 +25,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-        public PlaybackItem(object source, Media media)
+        internal PlaybackItem(object source, Media media)
         {
             OriginalSource = source;
             Media = media;

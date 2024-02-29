@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
@@ -73,6 +72,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IWindowService _windowService;
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
+        private readonly IFilesService _filesService;
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
@@ -84,6 +84,7 @@ namespace Screenbox.Core.ViewModels
             _windowService = windowService;
             _resourceService = resourceService;
             _settingsService = settingsService;
+            _filesService = filesService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _openingTimer = _dispatcherQueue.CreateTimer();
             _controlsVisibilityTimer = _dispatcherQueue.CreateTimer();
@@ -585,8 +586,8 @@ namespace Screenbox.Core.ViewModels
             Media = current;
             if (current != null)
             {
-                await current.LoadDetailsAsync();
-                await current.LoadThumbnailAsync();
+                await current.LoadDetailsAsync(_filesService);
+                await current.LoadThumbnailAsync(_filesService);
                 MediaType = current.MediaType;
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)

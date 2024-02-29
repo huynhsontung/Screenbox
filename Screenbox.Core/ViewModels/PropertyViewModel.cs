@@ -6,7 +6,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
-using Windows.Media;
 using Windows.Storage;
 
 namespace Screenbox.Core.ViewModels
@@ -38,6 +37,11 @@ namespace Screenbox.Core.ViewModels
             VideoProperties = new Dictionary<string, string>();
             AudioProperties = new Dictionary<string, string>();
             FileProperties = new Dictionary<string, string>();
+        }
+
+        public async void OnLoaded(MediaViewModel media)
+        {
+            await media.LoadDetailsAsync(_filesService);
         }
 
         public void UpdateProperties(MediaViewModel media)
@@ -79,25 +83,21 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            _mediaFile = media switch
-            {
-                FileMediaViewModel { File: { } file } => file,
-                UriMediaViewModel { File: { } uriFile } => uriFile,
-                _ => _mediaFile
-            };
 
-            if (_mediaFile != null)
+            switch (media.Source)
             {
-                CanNavigateToFile = true;
-                FileProperties[_resourceService.GetString(ResourceName.PropertyFileType)] = _mediaFile.FileType;
-                FileProperties[_resourceService.GetString(ResourceName.PropertyContentType)] = _mediaFile.ContentType;
-                FileProperties[_resourceService.GetString(ResourceName.PropertySize)] = BytesToHumanReadable((long)media.MediaInfo.Size);
-                FileProperties[_resourceService.GetString(ResourceName.PropertyLastModified)] = media.MediaInfo.DateModified.ToString();
-            }
-            else if (media is UriMediaViewModel { Uri: { } uri })
-            {
-                _mediaUri = uri;
-                CanNavigateToFile = uri.IsFile;
+                case StorageFile file:
+                    _mediaFile = file;
+                    CanNavigateToFile = true;
+                    FileProperties[_resourceService.GetString(ResourceName.PropertyFileType)] = _mediaFile.FileType;
+                    FileProperties[_resourceService.GetString(ResourceName.PropertyContentType)] = _mediaFile.ContentType;
+                    FileProperties[_resourceService.GetString(ResourceName.PropertySize)] = BytesToHumanReadable((long)media.MediaInfo.Size);
+                    FileProperties[_resourceService.GetString(ResourceName.PropertyLastModified)] = media.MediaInfo.DateModified.ToString();
+                    break;
+                case Uri uri:
+                    _mediaUri = uri;
+                    CanNavigateToFile = uri.IsFile;
+                    break;
             }
         }
 

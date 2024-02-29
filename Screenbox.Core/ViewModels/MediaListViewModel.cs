@@ -225,15 +225,15 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnCurrentItemChanged(MediaViewModel? value)
         {
-            switch (value)
+            switch (value?.Source)
             {
-                case FileMediaViewModel { File: { } item }:
-                    _filesService.AddToRecent(item);
+                case StorageFile file:
+                    _filesService.AddToRecent(file);
                     break;
-                case UriMediaViewModel { Uri.IsFile: true } uriMedia:
+                case Uri { IsFile: true } uri:
                     try
                     {
-                        StorageFile file = await uriMedia.GetFileAsync();
+                        StorageFile file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
                         _filesService.AddToRecent(file);
                     }
                     catch (Exception)
@@ -344,8 +344,8 @@ namespace Screenbox.Core.ViewModels
             _mediaBuffer = newBuffer;
             await Task.WhenAll(toLoad.Select(x =>
                 x.Item?.Media.IsParsed ?? true
-                    ? x.LoadThumbnailAsync()
-                    : Task.WhenAll(x.Item?.Media.Parse(), x.LoadThumbnailAsync())));
+                    ? x.LoadThumbnailAsync(_filesService)
+                    : Task.WhenAll(x.Item?.Media.Parse(), x.LoadThumbnailAsync(_filesService))));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -466,7 +466,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (media.Item == null
                 || media.Item.Media is { IsParsed: true, SubItems.Count: 0 }
-                || (media is FileMediaViewModel { File: { } file } && !file.IsSupportedPlaylist())
+                || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || await RecursiveParsePlaylistAsync(media) is not { Count: > 0 } playlist)
             {
                 Items.Add(media);
@@ -580,7 +580,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (Items.Count == 0 || CurrentItem == null) return;
             int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem is FileMediaViewModel { File: { } file })
+            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is StorageFile file)
             {
                 StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
                 if (nextFile != null)
@@ -618,7 +618,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem is FileMediaViewModel { File: { } file })
+            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is StorageFile file)
             {
                 StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
                 if (previousFile != null)

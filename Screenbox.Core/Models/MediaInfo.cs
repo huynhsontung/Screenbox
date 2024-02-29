@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
+using Screenbox.Core.Enums;
 using System;
-using Windows.Media;
 using Windows.Storage.FileProperties;
 
 namespace Screenbox.Core.Models;

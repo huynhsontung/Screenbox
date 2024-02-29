@@ -69,7 +69,7 @@ namespace Screenbox
                 // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#reveal-focus
                 FocusVisualKind = FocusVisualKind.Reveal;
             }
-            
+
             // Disable automatic High Contrast adjustments
             // https://learn.microsoft.com/en-us/windows/apps/design/accessibility/high-contrast-themes#setting-highcontrastadjustment-to-none
             HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
@@ -130,7 +130,6 @@ namespace Screenbox
             services.AddSingleton<ISearchService, SearchService>();
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IWindowService, WindowService>();
-            services.AddSingleton<IMediaService, MediaService>();
             services.AddSingleton<ICastService, CastService>();
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
