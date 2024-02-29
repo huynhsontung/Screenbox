@@ -28,12 +28,21 @@ namespace Screenbox.Core.Factories
             UnknownArtist = new ArtistViewModel(resourceService.GetString(ResourceName.UnknownArtist));
         }
 
-        public ArtistViewModel[] ParseArtists(string artist, MediaViewModel song)
+        public ArtistViewModel[] ParseArtists(string artist)
         {
-            return ParseArtists(artist.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries), song);
+            ArtistViewModel[] artists = artist.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries)
+                .Select(GetArtistFromName)
+                .ToArray();
+
+            return artists.Length == 0 ? new[] { UnknownArtist } : artists;
         }
 
-        public ArtistViewModel[] ParseArtists(string[] artists, MediaViewModel song)
+        public ArtistViewModel[] ParseAddArtists(string artist, MediaViewModel song)
+        {
+            return ParseAddArtists(artist.Split(ArtistNameSeparators, StringSplitOptions.RemoveEmptyEntries), song);
+        }
+
+        private ArtistViewModel[] ParseAddArtists(string[] artists, MediaViewModel song)
         {
             if (artists.Length == 0)
             {
@@ -63,7 +72,7 @@ namespace Screenbox.Core.Factories
                 return UnknownArtist;
 
             string key = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
-            return _allArtists.TryGetValue(key, out ArtistViewModel artist) ? artist : UnknownArtist;
+            return _allArtists.GetValueOrDefault(key, UnknownArtist);
         }
 
         public ArtistViewModel AddSongToArtist(MediaViewModel song, string artistName)

@@ -235,6 +235,12 @@ namespace Screenbox.Core.ViewModels
         public async Task LoadThumbnailAsync(IFilesService filesService)
         {
             if (Thumbnail != null) return;
+            if (Source is Uri { IsFile: true } uri)
+            {
+                StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                Source = uriFile;
+            }
+
             if (Source is StorageFile file)
             {
                 StorageItemThumbnail? source = await filesService.GetThumbnailAsync(file);
@@ -245,29 +251,38 @@ namespace Screenbox.Core.ViewModels
                 await image.SetSourceAsync(ThumbnailSource);
             }
             else if (_item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
-                     Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri uri))
+                     Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
-                Thumbnail = new BitmapImage(uri);
+                Thumbnail = new BitmapImage(artworkUri);
             }
         }
 
         public void UpdateAlbum(AlbumViewModelFactory factory)
         {
             if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
+            MusicInfo musicProperties = MediaInfo.MusicProperties;
             if (Album != null)
             {
+                if (factory.GetAlbumFromName(musicProperties.Album, musicProperties.AlbumArtist) == Album)
+                    return;
+
                 factory.Remove(this);
             }
 
-            MusicInfo musicProperties = MediaInfo.MusicProperties;
             Album = factory.AddSongToAlbum(this, musicProperties.Album, musicProperties.AlbumArtist, musicProperties.Year);
         }
 
         public void UpdateArtists(ArtistViewModelFactory factory)
         {
             if (!IsFromLibrary || MediaType != MediaPlaybackType.Music) return;
-            factory.Remove(this);
-            Artists = factory.ParseArtists(MediaInfo.MusicProperties.Artist, this);
+            if (Artists.Length > 0)
+            {
+                ArtistViewModel[] artists = factory.ParseArtists(MediaInfo.MusicProperties.Artist);
+                if (artists.SequenceEqual(Artists)) return;
+                factory.Remove(this);
+            }
+
+            Artists = factory.ParseAddArtists(MediaInfo.MusicProperties.Artist, this);
         }
 
         private void UpdateCaptions()
