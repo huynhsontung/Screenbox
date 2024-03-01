@@ -50,7 +50,7 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0.05"
-                        SmallChange="0.05"
+                        SmallChange="0.01"
                         StepFrequency="0.05"
                         ValueChanged="SpeedSlider_OnValueChanged"
                         Value="1.0" />
@@ -110,7 +110,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem x:Name="PlaybackSpeedSubMenu" Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
-                        <FontIcon Glyph="{x:Bind GetPlaybackSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetPlaybackSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
@@ -178,7 +178,8 @@
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xEE71;}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xEE71;}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
@@ -265,7 +266,8 @@
                 <MenuFlyoutItem
                     x:Name="CompactOverlayMenuItem"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xEE49;}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xEE49;}"
                     Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
