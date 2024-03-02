@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels
@@ -30,6 +31,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
+        private readonly CoreDispatcher _dispatcher;
         private readonly Dictionary<string, string> _pathToMruMappings;
         private bool _isLoaded; // Assume this class is a singleton
 
@@ -42,6 +44,7 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _settingsService = settingsService;
             _libraryService = libraryService;
+            _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
             _pathToMruMappings = new Dictionary<string, string>();
             Recent = new ObservableCollection<MediaViewModel>();
 
@@ -177,6 +180,8 @@ namespace Screenbox.Core.ViewModels
 
                 // TODO: Add support for playing playlist file from home page
                 if (file.IsSupportedPlaylist()) continue;
+                if (!_dispatcher.HasThreadAccess)
+                    throw new InvalidOperationException("This method must be called on the UI thread.");
 
                 if (i >= Recent.Count)
                 {
@@ -184,7 +189,7 @@ namespace Screenbox.Core.ViewModels
                     _pathToMruMappings[media.Location] = token;
                     Recent.Add(media);
                 }
-                else if (GetFile(Recent[i]) is { } existing)
+                else if (Recent[i].Source is StorageFile existing)
                 {
                     try
                     {
@@ -207,7 +212,8 @@ namespace Screenbox.Core.ViewModels
 
             // Load media details for the remaining items
             if (!loadMediaDetails) return;
-            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAndThumbnailAsync());
+            IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAsync(_filesService));
+            loadingTasks = Recent.Select(x => x.LoadThumbnailAsync(_filesService)).Concat(loadingTasks);
             await Task.WhenAll(loadingTasks);
         }
 
@@ -218,7 +224,7 @@ namespace Screenbox.Core.ViewModels
             int existingIndex = -1;
             for (int j = desiredIndex + 1; j < Recent.Count; j++)
             {
-                if (Recent[j] is FileMediaViewModel { File: { } existingFile } && file.IsEqual(existingFile))
+                if (Recent[j].Source is StorageFile existingFile && file.IsEqual(existingFile))
                 {
                     existingIndex = j;
                     break;
@@ -277,16 +283,6 @@ namespace Screenbox.Core.ViewModels
             IStorageFile[] files = items.OfType<IStorageFile>().ToArray();
             if (files.Length == 0) return;
             Messenger.Send(new PlayMediaMessage(files));
-        }
-
-        private static StorageFile? GetFile(MediaViewModel media)
-        {
-            return media switch
-            {
-                FileMediaViewModel { File: { } file } => file,
-                UriMediaViewModel { File: { } file } => file,
-                _ => null
-            };
         }
 
         private static async Task<StorageFile?> ConvertMruTokenToStorageFileAsync(string token)

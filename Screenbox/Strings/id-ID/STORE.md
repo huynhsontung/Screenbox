@@ -1,19 +1,19 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Pemutar Media Screenbox
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox adalah pemutar media modern untuk semua perangkat Anda, dengan dukungan untuk berbagai format file.**
 
-### Description
+### Deskripsi
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox adalah pemutar media modern yang berusaha memberikan nuansa baru pada aplikasi klasik. Ia menawarkan antarmuka pengguna yang ramping dan intuitif yang dapat menyesuaikan dengan kemampuan sistem Anda. Dirancang untuk pengalaman yang mulus di berbagai perangkat Windows dan konsol Xbox, Screenbox cepat, ringan, dan kuat.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox mendukung berbagai macam format file dan codec. Putar hampir semua jenis media tanpa tambahan add-on. Didukung oleh LibVLC, Screenbox menggabungkan semua yang terbaik dari pemutar media VLC dan kemampuan aplikasi Windows modern. Opsi pemutaran lanjutan tersedia menggunakan argumen baris perintah VLC.
 
-### Features
+### Fitur
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Pengalaman pengguna modern dengan dukungan gestur, dioptimalkan untuk semua jenis perangkat Windows.
+- Mendukung banyak format audio dan video.
+- Telusuri dan kelola perpustakaan musik dan video Anda di mesin atau melalui jaringan.
+- Siarkan media Anda ke berbagai perangkat dengan Chromecast.
+- Bekerja dan menikmati media Anda secara bersamaan menggunakan mode picture-in-picture.

@@ -37,7 +37,7 @@ namespace Screenbox.Core.Factories
             string albumKey = albumName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string artistKey = artistName.Trim().ToLower(CultureInfo.CurrentUICulture);
             string key = GetAlbumKey(albumKey, artistKey);
-            return _allAlbums.TryGetValue(key, out AlbumViewModel album) ? album : UnknownAlbum;
+            return _allAlbums.GetValueOrDefault(key, UnknownAlbum);
         }
 
         public AlbumViewModel AddSongToAlbum(MediaViewModel song, string albumName, string artistName, uint year)

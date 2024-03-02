@@ -117,7 +117,7 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void PlayNext(MediaViewModel item)
         {
-            Playlist.Items.Insert(Playlist.CurrentIndex + 1, item.Clone());
+            Playlist.Items.Insert(Playlist.CurrentIndex + 1, new MediaViewModel(item));
         }
 
         [RelayCommand(CanExecute = nameof(HasSelection))]

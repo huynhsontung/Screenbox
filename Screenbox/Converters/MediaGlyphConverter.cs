@@ -1,7 +1,7 @@
-﻿using Screenbox.Core.Helpers;
+﻿using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using System;
-using Windows.Media;
 using Windows.Storage;
 using Windows.UI.Xaml.Data;
 
@@ -44,8 +44,7 @@ namespace Screenbox.Converters
             return value switch
             {
                 IStorageItem item => Convert(item),
-                FileMediaViewModel { File: var file } => Convert(file),
-                // UriMediaViewModel { Uri.IsFile: true, MediaType: var mediaType } => Convert(mediaType),
+                MediaViewModel { Source: StorageFile file } => Convert(file),
                 MediaViewModel { IsFromLibrary: true, MediaType: var mediaType } => Convert(mediaType),
                 _ => "\ue774"
             };

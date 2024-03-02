@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -17,12 +18,14 @@ namespace Screenbox.Core.ViewModels
         public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
 
         private readonly ILibraryService _libraryService;
+        private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
 
-        public AlbumsPageViewModel(ILibraryService libraryService)
+        public AlbumsPageViewModel(ILibraryService libraryService, IFilesService filesService)
         {
             _libraryService = libraryService;
+            _filesService = filesService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
@@ -57,6 +60,15 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 _refreshTimer.Stop();
+            }
+        }
+
+        public async void OnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+        {
+            if (args.Phase != 0) return;
+            if (args.Item is AlbumViewModel album)
+            {
+                await album.RelatedSongs[0].LoadThumbnailAsync(_filesService);
             }
         }
 

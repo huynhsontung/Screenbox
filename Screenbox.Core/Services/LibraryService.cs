@@ -212,10 +212,25 @@ namespace Screenbox.Core.Services
 
         private async Task<List<MediaViewModel>> LoadSongsCacheAsync(CancellationToken cancellationToken)
         {
-            List<PersistentSongRecord> records;
             try
             {
-                records = await _filesService.LoadFromDiskAsync<List<PersistentSongRecord>>(ApplicationData.Current.LocalFolder, SongsCacheFileName);
+                List<PersistentSongRecord> records =
+                    await _filesService.LoadFromDiskAsync<List<PersistentSongRecord>>(
+                        ApplicationData.Current.LocalFolder, SongsCacheFileName);
+                cancellationToken.ThrowIfCancellationRequested();
+                List<MediaViewModel> songs = records.Select(record =>
+                {
+                    MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+                    media.IsFromLibrary = true;
+                    if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
+                    media.MediaInfo = new MediaInfo(record.Properties);
+                    return media;
+                }).ToList();
+                return songs;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -224,25 +239,29 @@ namespace Screenbox.Core.Services
                 // and other Protobuf exceptions
                 return new List<MediaViewModel>();
             }
-
-            cancellationToken.ThrowIfCancellationRequested();
-            List<MediaViewModel> songs = records.Select(record =>
-            {
-                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
-                media.IsFromLibrary = true;
-                media.Name = record.Title;
-                media.MediaInfo = new MediaInfo(record.Properties);
-                return media;
-            }).ToList();
-            return songs;
         }
 
         private async Task<List<MediaViewModel>> LoadVideosCacheAsync(CancellationToken cancellationToken)
         {
-            List<PersistentVideoRecord> records;
             try
             {
-                records = await _filesService.LoadFromDiskAsync<List<PersistentVideoRecord>>(ApplicationData.Current.LocalFolder, VideoCacheFileName);
+                List<PersistentVideoRecord> records =
+                    await _filesService.LoadFromDiskAsync<List<PersistentVideoRecord>>(
+                        ApplicationData.Current.LocalFolder, VideoCacheFileName);
+                cancellationToken.ThrowIfCancellationRequested();
+                List<MediaViewModel> videos = records.Select(record =>
+                {
+                    MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
+                    media.IsFromLibrary = true;
+                    if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
+                    media.MediaInfo = new MediaInfo(record.Properties);
+                    return media;
+                }).ToList();
+                return videos;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -252,16 +271,6 @@ namespace Screenbox.Core.Services
                 return new List<MediaViewModel>();
             }
 
-            cancellationToken.ThrowIfCancellationRequested();
-            List<MediaViewModel> videos = records.Select(record =>
-            {
-                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
-                media.IsFromLibrary = true;
-                media.Name = record.Title;
-                media.MediaInfo = new MediaInfo(record.Properties);
-                return media;
-            }).ToList();
-            return videos;
         }
 
         private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
@@ -478,15 +487,15 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private static async Task LoadLibraryDetailsAsync(List<MediaViewModel> mediaList, CancellationToken cancellationToken)
+        private async Task LoadLibraryDetailsAsync(List<MediaViewModel> mediaList, CancellationToken cancellationToken)
         {
             foreach (MediaViewModel media in mediaList)
             {
                 // Expect UI thread
                 media.IsFromLibrary = true;
-                await media.LoadDetailsAsync();
-                media.UpdateAlbum();
-                media.UpdateArtists();
+                await media.LoadDetailsAsync(_filesService);
+                media.UpdateAlbum(_albumFactory);
+                media.UpdateArtists(_artistFactory);
                 cancellationToken.ThrowIfCancellationRequested();
             }
         }

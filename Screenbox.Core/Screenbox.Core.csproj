@@ -127,6 +127,7 @@
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
+    <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
@@ -210,7 +211,6 @@
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
-    <Compile Include="Services\IMediaService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IResourceService.cs" />
@@ -221,7 +221,6 @@
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\LogService.cs" />
-    <Compile Include="Services\MediaService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\SearchService.cs" />
@@ -241,7 +240,6 @@
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="ViewModels\CommonViewModel.cs" />
-    <Compile Include="ViewModels\FileMediaViewModel.cs" />
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
@@ -263,7 +261,6 @@
     <Compile Include="ViewModels\SongSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\SongsPageViewModel.cs" />
     <Compile Include="ViewModels\StorageItemViewModel.cs" />
-    <Compile Include="ViewModels\UriMediaViewModel.cs" />
     <Compile Include="ViewModels\VideoSearchResultPageViewModel.cs" />
     <Compile Include="ViewModels\VideosPageViewModel.cs" />
     <Compile Include="ViewModels\VolumeViewModel.cs" />
