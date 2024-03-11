@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FFmpegInteropX;
+using System;
 using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback;
 internal class WindowsPlaybackItem : IPlaybackItem
 {
-    internal MediaPlaybackItem MediaSource { get; }
+    internal FFmpegMediaSource MediaSource { get; }
+    internal MediaPlaybackItem SourceItem { get; }
     public object OriginalSource { get; }
     public PlaybackAudioTrackList AudioTracks { get; }
     public PlaybackVideoTrackList VideoTracks { get; }
@@ -12,14 +14,15 @@ internal class WindowsPlaybackItem : IPlaybackItem
     public PlaybackChapterList Chapters { get; }
     public TimeSpan StartTime { get; set; }
 
-    public WindowsPlaybackItem(MediaPlaybackItem source)
+    public WindowsPlaybackItem(FFmpegMediaSource source)
     {
         MediaSource = source;
+        SourceItem = source.CreateMediaPlaybackItem();
         OriginalSource = source;
-        AudioTracks = new PlaybackAudioTrackList(source.AudioTracks);
-        VideoTracks = new PlaybackVideoTrackList(source.VideoTracks);
-        SubtitleTracks = new PlaybackSubtitleTrackList(source.TimedMetadataTracks);
-        Chapters = new PlaybackChapterList(source.TimedMetadataTracks, this);
+        AudioTracks = new PlaybackAudioTrackList(SourceItem.AudioTracks);
+        VideoTracks = new PlaybackVideoTrackList(SourceItem.VideoTracks);
+        SubtitleTracks = new PlaybackSubtitleTrackList(SourceItem.TimedMetadataTracks);
+        Chapters = new PlaybackChapterList(SourceItem.TimedMetadataTracks, this);
         StartTime = TimeSpan.Zero;
     }
 }

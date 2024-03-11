@@ -33,6 +33,12 @@
           "Microsoft.UI.Xaml": "2.7.0"
         }
       },
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "LibVLCSharp": {
         "type": "Direct",
         "requested": "[3.7.0, )",
@@ -332,6 +338,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-arm": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -383,6 +395,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-arm-aot": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -434,6 +452,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-arm64-aot": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -485,6 +509,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-x64": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -536,6 +566,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-x64-aot": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -587,6 +623,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-x86": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
@@ -638,6 +680,12 @@
       }
     },
     "UAP,Version=v10.0.17763/win10-x86-aot": {
+      "FFmpegInteropX": {
+        "type": "Direct",
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+      },
       "Microsoft.NETCore.UniversalWindowsPlatform": {
         "type": "Direct",
         "requested": "[6.2.14, )",
