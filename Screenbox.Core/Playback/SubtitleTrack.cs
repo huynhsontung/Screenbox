@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
-using Windows.Media.Core;
-using LibVLCSharp.Shared;
 using CommunityToolkit.Diagnostics;
+using LibVLCSharp.Shared;
+using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
@@ -12,9 +12,9 @@ namespace Screenbox.Core.Playback
 
         public string Id { get; }
 
-        public string? Label { get; set; }
+        public string Label { get; set; }
 
-        public string? Language { get; }
+        public string Language { get; }
 
         public MediaTrackKind TrackKind => MediaTrackKind.TimedMetadata;
 
@@ -23,10 +23,17 @@ namespace Screenbox.Core.Playback
             Guard.IsTrue(textTrack.TrackType == TrackType.Text, nameof(textTrack.TrackType));
             VlcSpu = textTrack.Id;
             Id = textTrack.Id.ToString();
-            Language = textTrack.Language;
+            Language = textTrack.Language ?? string.Empty;
             Label = string.IsNullOrEmpty(textTrack.Description)
-                ? textTrack.Language
+                ? textTrack.Language ?? string.Empty
                 : $"{textTrack.Description} ({textTrack.Language})";
+        }
+
+        public SubtitleTrack(TimedMetadataTrack track)
+        {
+            Id = track.Id;
+            Label = track.Label;
+            Language = track.Language;
         }
     }
 }

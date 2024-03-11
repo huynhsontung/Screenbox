@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Media.Imaging;
@@ -33,11 +35,13 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public PlaybackItem? Item
+        public IPlaybackItem? Item
         {
             get => _item ??= CreatePlaybackItem();
             internal set => _item = value;  // Only set on init. Don't need to worry about clean up in this case.
         }
+
+        public PlaybackBackendType Backend { get; set; }
 
         public IReadOnlyList<string> Options { get; }
 
@@ -54,7 +58,7 @@ namespace Screenbox.Core.ViewModels
 
         private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
-        private PlaybackItem? _item;
+        private IPlaybackItem? _item;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
@@ -125,7 +129,7 @@ namespace Screenbox.Core.ViewModels
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
-            _item = new PlaybackItem(media, media);
+            _item = new VlcPlaybackItem(media, media);
         }
 
         partial void OnMediaInfoChanged(MediaInfo value)
@@ -133,19 +137,38 @@ namespace Screenbox.Core.ViewModels
             UpdateCaptions();
         }
 
-        private PlaybackItem? CreatePlaybackItem()
+        private IPlaybackItem? CreatePlaybackItem()
         {
-            PlaybackItem? item = null;
+            IPlaybackItem? item = null;
             try
             {
+                if (Backend is PlaybackBackendType.Windows)
+                {
+                    switch (Source)
+                    {
+                        case IStorageFile file:
+                            MediaSource fileSource = MediaSource.CreateFromStorageFile(file);
+                            item = new WindowsPlaybackItem(new MediaPlaybackItem(fileSource));
+                            break;
+                        case Uri uri:
+                            MediaSource uriSource = MediaSource.CreateFromUri(uri);
+                            item = new WindowsPlaybackItem(new MediaPlaybackItem(uriSource));
+                            break;
+                        default:
+                            throw new NotSupportedException("Source is not supported for Windows backend");
+                    }
+
+                    return item;
+                }
+
                 if (Source is Media mediaSource)
                 {
-                    item = new PlaybackItem(mediaSource, mediaSource);
+                    item = new VlcPlaybackItem(mediaSource, mediaSource);
                 }
                 else
                 {
                     Media media = _libVlcService.CreateMedia(Source, _options.ToArray());
-                    item = new PlaybackItem(Source, media);
+                    item = new VlcPlaybackItem(Source, media);
                 }
             }
             catch (ArgumentOutOfRangeException)
@@ -185,10 +208,10 @@ namespace Screenbox.Core.ViewModels
         {
             // If source is Media then there is no way to recreate. Don't clean up.
             if (Source is Media) return;
-            PlaybackItem? item = _item;
+            IPlaybackItem? item = _item;
             _item = null;
-            if (item == null) return;
-            _libVlcService.DisposeMedia(item.Media);
+            if (item is VlcPlaybackItem vlcItem)
+                _libVlcService.DisposeMedia(vlcItem.Media);
         }
 
         public async Task LoadDetailsAsync(IFilesService filesService)
@@ -222,7 +245,7 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            if (_item?.Media is { IsParsed: true } media)
+            if (_item is VlcPlaybackItem { Media: { IsParsed: true } media })
             {
                 if (media.Meta(MetadataType.Title) is { } title && !title.StartsWith('{'))
                 {
@@ -254,7 +277,8 @@ namespace Screenbox.Core.ViewModels
                 Thumbnail = image;
                 await image.SetSourceAsync(ThumbnailSource);
             }
-            else if (_item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+            else if (_item is VlcPlaybackItem { Media: { } media } &&
+                     media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
                 Thumbnail = new BitmapImage(artworkUri);
@@ -309,7 +333,7 @@ namespace Screenbox.Core.ViewModels
                 AltCaption = musicProperties.Album;
             }
 
-            if (_item?.Media is { IsParsed: true } media)
+            if (_item is VlcPlaybackItem { Media: { IsParsed: true } media })
             {
                 string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
                 if (!string.IsNullOrEmpty(artist))

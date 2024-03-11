@@ -33,7 +33,7 @@
         </UserControl>
 
         <!--  Use -1 bottom margin to avoid white line artifact  -->
-        <local:VideoView
+        <!--<local:VideoView
             x:Name="VlcVideoView"
             Margin="0,0,0,-1"
             Canvas.ZIndex="0"
@@ -42,6 +42,9 @@
             IsTabStop="False"
             KeyboardAcceleratorPlacementMode="Hidden"
             MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />
+            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />-->
+
+
+        <MediaPlayerElement x:Name="MediaPlayerElement" Canvas.ZIndex="0" />
     </Grid>
 </UserControl>

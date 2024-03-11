@@ -33,6 +33,7 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerElementViewModel>();
+            MediaPlayerElement.SetMediaPlayer(ViewModel.WindowsPlayer);
         }
 
         private void VlcVideoView_OnInitialized(object sender, InitializedEventArgs e)

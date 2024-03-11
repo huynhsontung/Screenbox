@@ -245,6 +245,8 @@ namespace Screenbox.Core.ViewModels
             }
 
             Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
+
+            if (value?.Item is WindowsPlaybackItem) return;
             await Task.WhenAll(
                 _transportControlsService.UpdateTransportControlsDisplayAsync(value),
                 UpdateMediaBufferAsync());
@@ -343,9 +345,9 @@ namespace Screenbox.Core.ViewModels
 
             _mediaBuffer = newBuffer;
             await Task.WhenAll(toLoad.Select(x =>
-                x.Item?.Media.IsParsed ?? true
-                    ? x.LoadThumbnailAsync(_filesService)
-                    : Task.WhenAll(x.Item?.Media.Parse(), x.LoadThumbnailAsync(_filesService))));
+                x.Item is VlcPlaybackItem { Media: { IsParsed: false } media }
+                    ? Task.WhenAll(media.Parse(), x.LoadThumbnailAsync(_filesService))
+                    : x.LoadThumbnailAsync(_filesService)));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -465,7 +467,7 @@ namespace Screenbox.Core.ViewModels
         private async Task<MediaViewModel> EnqueueAsync(MediaViewModel media)
         {
             if (media.Item == null
-                || media.Item.Media is { IsParsed: true, SubItems.Count: 0 }
+                || media.Item is VlcPlaybackItem { Media: { IsParsed: true, SubItems.Count: 0 } }
                 || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || await RecursiveParsePlaylistAsync(media) is not { Count: > 0 } playlist)
             {
@@ -698,16 +700,25 @@ namespace Screenbox.Core.ViewModels
             try
             {
                 _cts = cts;
-                Media media = source.Item.Media;
-                MediaParsedStatus parsedStatus = media.ParsedStatus;
-                if (!media.IsParsed)
+                if (source.Item is VlcPlaybackItem { Media: { } media })
                 {
-                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 5000, cts.Token);
-                }
+                    MediaParsedStatus parsedStatus = media.ParsedStatus;
+                    if (!media.IsParsed)
+                    {
+                        parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 5000, cts.Token);
+                    }
 
-                if (parsedStatus != MediaParsedStatus.Done) return Array.Empty<MediaViewModel>();
-                IEnumerable<MediaViewModel> playlist = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
-                return playlist.ToList();
+                    if (parsedStatus != MediaParsedStatus.Done) return Array.Empty<MediaViewModel>();
+                    IEnumerable<MediaViewModel> playlist =
+                        media.SubItems.Select(item => _mediaFactory.GetTransient(item));
+                    return playlist.ToList();
+                }
+                else
+                {
+                    // TODO: handle WindowsPlaybackItem
+                    LogService.Log("TODO: handle WindowsPlaybackItem");
+                    return Array.Empty<MediaViewModel>();
+                }
             }
             catch (OperationCanceledException)
             {
