@@ -22,7 +22,7 @@ public class WindowsMediaPlayer : IMediaPlayer
     public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalDurationChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
-    public event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;    // Cannot be mapped
+    public event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? PositionChanged;
     public event TypedEventHandler<IMediaPlayer, EventArgs>? ChapterChanged;    // Cannot be mapped
     public event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackStateChanged;
@@ -92,7 +92,7 @@ public class WindowsMediaPlayer : IMediaPlayer
             else
             {
                 _playbackItem = value;
-                WindowsPlayer.Source = (value as WindowsPlaybackItem)?.MediaSource;
+                WindowsPlayer.Source = (value as WindowsPlaybackItem)?.SourceItem;
                 // RegisterItemHandlers(_playbackItem);
             }
 
@@ -124,6 +124,7 @@ public class WindowsMediaPlayer : IMediaPlayer
         session.NaturalDurationChanged += (sender, args) => NaturalDurationChanged?.Invoke(this, EventArgs.Empty);
         session.NaturalVideoSizeChanged += (sender, args) => NaturalVideoSizeChanged?.Invoke(this, EventArgs.Empty);
         session.PositionChanged += (sender, args) => PositionChanged?.Invoke(this, EventArgs.Empty);
+        session.SeekableRangesChanged += (sender, args) => CanSeekChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Close()
@@ -153,6 +154,7 @@ public class WindowsMediaPlayer : IMediaPlayer
 
     public void AddSubtitle(IStorageFile file, bool select = true)
     {
-        throw new NotImplementedException();
+        // TODO: Implement adding external subtitle
+        // throw new NotImplementedException();
     }
 }

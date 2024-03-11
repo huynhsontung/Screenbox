@@ -63,16 +63,18 @@ namespace Screenbox.Core.ViewModels
             WindowsPlayer = new Windows.Media.Playback.MediaPlayer();
             LoadSettings();
 
-            if (_backend == PlaybackBackendType.LibVlc)
-            {
-                transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
-                transportControlsService.TransportControls.PlaybackPositionChangeRequested +=
-                    TransportControlsOnPlaybackPositionChangeRequested;
-            }
-            else
+            if (_backend != PlaybackBackendType.LibVlc)
             {
                 _mediaPlayer = new WindowsMediaPlayer(WindowsPlayer);
+                _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                _mediaPlayer.PositionChanged += OnPositionChanged;
+                _mediaPlayer.MediaFailed += OnMediaFailed;
+                Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
             }
+
+            transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
+            transportControlsService.TransportControls.PlaybackPositionChangeRequested +=
+                TransportControlsOnPlaybackPositionChangeRequested;
 
             // View model does not receive any message
             IsActive = true;
@@ -196,13 +198,11 @@ namespace Screenbox.Core.ViewModels
 
         private void OnMediaFailed(IMediaPlayer sender, object? args)
         {
-            if (sender is WindowsMediaPlayer) return;
             _transportControlsService.ClosePlayback();
         }
 
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
-            if (sender is WindowsMediaPlayer) return;
             _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
         }
 
@@ -248,7 +248,6 @@ namespace Screenbox.Core.ViewModels
                 UpdateDisplayRequest(sender.PlaybackState, _requestTracker);
             });
 
-            if (sender is WindowsMediaPlayer) return;
             _transportControlsService.UpdatePlaybackStatus(sender.PlaybackState);
         }
 

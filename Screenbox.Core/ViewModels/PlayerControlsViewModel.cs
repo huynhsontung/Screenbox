@@ -112,6 +112,11 @@ namespace Screenbox.Core.ViewModels
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
+            if (Messenger.Send(new MediaPlayerRequestMessage()).Response is { } mediaPlayer)
+            {
+                Receive(new MediaPlayerChangedMessage(mediaPlayer));
+            }
+
             IsActive = true;
         }
 

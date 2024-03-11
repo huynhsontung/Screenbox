@@ -88,6 +88,11 @@ namespace Screenbox.Core.ViewModels
             _repeatMode = settingsService.PersistentRepeatMode;
             _currentIndex = -1;
 
+            if (Messenger.Send(new MediaPlayerRequestMessage()).Response is { } mediaPlayer)
+            {
+                Receive(new MediaPlayerChangedMessage(mediaPlayer));
+            }
+
             Items.CollectionChanged += OnCollectionChanged;
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
             transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
@@ -199,9 +204,9 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnCurrentItemChanging(MediaViewModel? value)
         {
-            if (_mediaPlayer != null)
+            if (_mediaPlayer != null && value == null)
             {
-                _mediaPlayer.PlaybackItem = value?.Item;
+                _mediaPlayer.PlaybackItem = null;
             }
 
             if (CurrentItem != null)
@@ -246,7 +251,6 @@ namespace Screenbox.Core.ViewModels
 
             Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
 
-            if (value?.Item is WindowsPlaybackItem) return;
             await Task.WhenAll(
                 _transportControlsService.UpdateTransportControlsDisplayAsync(value),
                 UpdateMediaBufferAsync());
@@ -344,10 +348,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             _mediaBuffer = newBuffer;
-            await Task.WhenAll(toLoad.Select(x =>
-                x.Item is VlcPlaybackItem { Media: { IsParsed: false } media }
-                    ? Task.WhenAll(media.Parse(), x.LoadThumbnailAsync(_filesService))
-                    : x.LoadThumbnailAsync(_filesService)));
+            await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync(_filesService)));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -466,8 +467,9 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<MediaViewModel> EnqueueAsync(MediaViewModel media)
         {
-            if (media.Item == null
-                || media.Item is VlcPlaybackItem { Media: { IsParsed: true, SubItems.Count: 0 } }
+            IPlaybackItem? item = await GetPlaybackItemAsync(media);
+            if (item == null
+                || item is VlcPlaybackItem { Media: { IsParsed: true, SubItems.Count: 0 } }
                 || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || await RecursiveParsePlaylistAsync(media) is not { Count: > 0 } playlist)
             {
@@ -535,9 +537,14 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private void PlaySingle(MediaViewModel vm)
+        private async void PlaySingle(MediaViewModel vm)
         {
-            // OnCurrentItemChanging handles the rest
+            if (_mediaPlayer != null)
+            {
+                IPlaybackItem? item = await GetPlaybackItemAsync(vm);
+                _mediaPlayer.PlaybackItem = item;
+            }
+
             CurrentItem = vm;
             _mediaPlayer?.Play();
         }
@@ -691,7 +698,8 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<IList<MediaViewModel>> ParsePlaylistAsync(MediaViewModel source)
         {
-            if (source.Item == null) return Array.Empty<MediaViewModel>();
+            IPlaybackItem? item = await GetPlaybackItemAsync(source);
+            if (item == null) return Array.Empty<MediaViewModel>();
 
             // Load playlist is atomic
             _cts?.Cancel();
@@ -700,7 +708,7 @@ namespace Screenbox.Core.ViewModels
             try
             {
                 _cts = cts;
-                if (source.Item is VlcPlaybackItem { Media: { } media })
+                if (item is VlcPlaybackItem { Media: { } media })
                 {
                     MediaParsedStatus parsedStatus = media.ParsedStatus;
                     if (!media.IsParsed)
@@ -728,6 +736,20 @@ namespace Screenbox.Core.ViewModels
             {
                 _cts = null;
             }
+        }
+
+        private async Task<IPlaybackItem?> GetPlaybackItemAsync(MediaViewModel media)
+        {
+            try
+            {
+                return await media.GetPlaybackItemAsync();
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, media.Location));
+            }
+
+            return null;
         }
 
         private static void Shuffle<T>(IList<T> list, Random rng)

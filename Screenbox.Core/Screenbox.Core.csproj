@@ -274,6 +274,9 @@
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
       <Version>8.0.240109</Version>
     </PackageReference>
+    <PackageReference Include="FFmpegInteropX">
+      <Version>1.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.3</Version>
     </PackageReference>

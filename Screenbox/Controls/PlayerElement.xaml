@@ -21,6 +21,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             AllowFocusOnInteraction="False"
+            Canvas.ZIndex="1"
             DoubleTapped="VideoViewButton_OnDoubleTapped"
             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
             ManipulationCompleted="{x:Bind ViewModel.VideoView_ManipulationCompleted}"

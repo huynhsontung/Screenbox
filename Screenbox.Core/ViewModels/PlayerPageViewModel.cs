@@ -94,6 +94,11 @@ namespace Screenbox.Core.ViewModels
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
+            if (Messenger.Send(new MediaPlayerRequestMessage()).Response is { } mediaPlayer)
+            {
+                Receive(new MediaPlayerChangedMessage(mediaPlayer));
+            }
+
             // Activate the view model's messenger
             IsActive = true;
         }

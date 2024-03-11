@@ -1,5 +1,4 @@
 ﻿using LibVLCSharp.Shared;
-using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -36,10 +35,7 @@ namespace Screenbox.Core.Factories
                 return new MediaViewModel(_libVlcService, media);
 
             // Prefer URI source for easier clean up
-            MediaViewModel vm = new(_libVlcService, uri)
-            {
-                Item = new VlcPlaybackItem(media, media)
-            };
+            MediaViewModel vm = new(_libVlcService, uri);
 
             if (media.Meta(MetadataType.Title) is { } name)
                 vm.Name = name;

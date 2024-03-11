@@ -1,7 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
+using FFmpegInteropX;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -15,10 +15,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels
@@ -35,13 +34,7 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public IPlaybackItem? Item
-        {
-            get => _item ??= CreatePlaybackItem();
-            internal set => _item = value;  // Only set on init. Don't need to worry about clean up in this case.
-        }
-
-        public PlaybackBackendType Backend { get; set; }
+        public PlaybackBackendType Backend { get; set; } = PlaybackBackendType.Windows;
 
         public IReadOnlyList<string> Options { get; }
 
@@ -94,6 +87,7 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            Backend = source.Backend;
         }
 
         private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
@@ -137,30 +131,29 @@ namespace Screenbox.Core.ViewModels
             UpdateCaptions();
         }
 
-        private IPlaybackItem? CreatePlaybackItem()
+        public async Task<IPlaybackItem> GetPlaybackItemAsync()
         {
-            IPlaybackItem? item = null;
-            try
+            if (_item != null) return _item;
+            IPlaybackItem? item;
+            if (Backend is PlaybackBackendType.Windows or PlaybackBackendType.Auto)
             {
-                if (Backend is PlaybackBackendType.Windows)
+                switch (Source)
                 {
-                    switch (Source)
-                    {
-                        case IStorageFile file:
-                            MediaSource fileSource = MediaSource.CreateFromStorageFile(file);
-                            item = new WindowsPlaybackItem(new MediaPlaybackItem(fileSource));
-                            break;
-                        case Uri uri:
-                            MediaSource uriSource = MediaSource.CreateFromUri(uri);
-                            item = new WindowsPlaybackItem(new MediaPlaybackItem(uriSource));
-                            break;
-                        default:
-                            throw new NotSupportedException("Source is not supported for Windows backend");
-                    }
-
-                    return item;
+                    case IStorageFile file:
+                        IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                        FFmpegMediaSource fileMediaSource = await FFmpegMediaSource.CreateFromStreamAsync(stream);
+                        item = new WindowsPlaybackItem(fileMediaSource);
+                        break;
+                    case Uri uri:
+                        FFmpegMediaSource uriMediaSource = await FFmpegMediaSource.CreateFromUriAsync(uri.OriginalString);
+                        item = new WindowsPlaybackItem(uriMediaSource);
+                        break;
+                    default:
+                        throw new NotSupportedException("Source is not supported for Windows backend");
                 }
-
+            }
+            else
+            {
                 if (Source is Media mediaSource)
                 {
                     item = new VlcPlaybackItem(mediaSource, mediaSource);
@@ -171,17 +164,8 @@ namespace Screenbox.Core.ViewModels
                     item = new VlcPlaybackItem(Source, media);
                 }
             }
-            catch (ArgumentOutOfRangeException)
-            {
-                // Coding error. Rethrow.
-                throw;
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new MediaLoadFailedNotificationMessage(e.Message, Location));
-            }
 
-            return item;
+            return _item = item;
         }
 
         public void SetOptions(string options)
@@ -201,7 +185,6 @@ namespace Screenbox.Core.ViewModels
 
             if (_item == null) return;
             Clean();
-            _item = CreatePlaybackItem();
         }
 
         public void Clean()
