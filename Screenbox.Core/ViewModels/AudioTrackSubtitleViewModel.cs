@@ -125,7 +125,7 @@ namespace Screenbox.Core.ViewModels
             {
                 AudioTrack audioTrack = ItemAudioTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                AudioTracks.Add(audioTrack.Label ?? defaultTrackLabel);
+                AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
             }
         }
 

@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
-using Windows.Media.Core;
-using LibVLCSharp.Shared;
 using CommunityToolkit.Diagnostics;
+using LibVLCSharp.Shared;
+using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
@@ -10,9 +10,9 @@ namespace Screenbox.Core.Playback
     {
         public string Id { get; }
 
-        public string? Label { get; set; }
+        public string Label { get; set; }
 
-        public string? Language { get; }
+        public string Language { get; }
 
         public MediaTrackKind TrackKind => MediaTrackKind.Video;
 
@@ -20,8 +20,15 @@ namespace Screenbox.Core.Playback
         {
             Guard.IsTrue(videoTrack.TrackType == TrackType.Video, nameof(videoTrack.TrackType));
             Id = videoTrack.Id.ToString();
+            Language = videoTrack.Language ?? string.Empty;
+            Label = videoTrack.Description ?? videoTrack.Language ?? string.Empty;
+        }
+
+        public VideoTrack(Windows.Media.Core.VideoTrack videoTrack)
+        {
+            Id = videoTrack.Id;
+            Label = videoTrack.Label;
             Language = videoTrack.Language;
-            Label = videoTrack.Description ?? videoTrack.Language;
         }
     }
 }

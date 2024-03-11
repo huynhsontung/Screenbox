@@ -128,6 +128,7 @@
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
+    <Compile Include="Enums\PlaybackBackendType.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
@@ -196,15 +197,18 @@
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
+    <Compile Include="Playback\IPlaybackItem.cs" />
     <Compile Include="Playback\PlaybackAudioTrackList.cs" />
     <Compile Include="Playback\PlaybackChapterList.cs" />
-    <Compile Include="Playback\PlaybackItem.cs" />
+    <Compile Include="Playback\VlcPlaybackItem.cs" />
     <Compile Include="Playback\PlaybackSubtitleTrackList.cs" />
     <Compile Include="Playback\PlaybackVideoTrackList.cs" />
     <Compile Include="Playback\SingleSelectTrackList.cs" />
     <Compile Include="Playback\SubtitleTrack.cs" />
     <Compile Include="Playback\VideoTrack.cs" />
     <Compile Include="Playback\VlcMediaPlayer.cs" />
+    <Compile Include="Playback\WindowsMediaPlayer.cs" />
+    <Compile Include="Playback\WindowsPlaybackItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CastService.cs" />
     <Compile Include="Services\FilesService.cs" />
