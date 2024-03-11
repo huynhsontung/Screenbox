@@ -186,8 +186,25 @@
       },
       "FFmpegInteropX": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "2.0.0-pre3",
+        "contentHash": "FzoYL3r5cqS03049epme9+NiqVJVjq5X2MLkZlZpZYFj1iRbU/IJqM1VxRS5O7Tvhg2WFNHSQVNoKIURh7wTGw==",
+        "dependencies": {
+          "FFmpegInteropX.UWP.FFmpeg": "5.1.100-pre3",
+          "FFmpegInteropX.UWP.Lib": "2.0.0-pre3"
+        }
+      },
+      "FFmpegInteropX.UWP.FFmpeg": {
+        "type": "Transitive",
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "LibVLCSharp": {
         "type": "Transitive",
@@ -482,13 +499,18 @@
         "resolved": "4.5.0",
         "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
       },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
+      },
       "screenbox.core": {
         "type": "Project",
         "dependencies": {
           "CommunityToolkit.Diagnostics": "[8.2.2, )",
           "CommunityToolkit.Mvvm": "[8.2.2, )",
           "CommunityToolkit.Uwp.Extensions": "[8.0.240109, )",
-          "FFmpegInteropX": "[1.0.1, )",
+          "FFmpegInteropX": "[2.0.0-pre3, )",
           "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.3, )",
           "Microsoft.AppCenter.Crashes": "[5.0.3, )",
@@ -518,10 +540,18 @@
           "runtime.win10-arm.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -558,6 +588,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-arm-aot": {
@@ -580,10 +615,18 @@
           "runtime.win10-arm-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -620,6 +663,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-arm64-aot": {
@@ -642,10 +690,18 @@
           "runtime.win10-arm64-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -682,6 +738,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-x64": {
@@ -704,10 +765,18 @@
           "runtime.win10-x64.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -744,6 +813,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-x64-aot": {
@@ -766,10 +840,18 @@
           "runtime.win10-x64-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -806,6 +888,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-x86": {
@@ -828,10 +915,18 @@
           "runtime.win10-x86.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -868,6 +963,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     },
     "UAP,Version=v10.0.18362/win10-x86-aot": {
@@ -890,10 +990,18 @@
           "runtime.win10-x86-aot.Microsoft.NETCore.UniversalWindowsPlatform": "6.2.14"
         }
       },
-      "FFmpegInteropX": {
+      "FFmpegInteropX.UWP.FFmpeg": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "V9s3Ebkn5Qh35O0giHocb0woZ2YtnGo1pgBVTqNjZwQkckAs6r9xxFAUEfiTcc8ecKDFTyk8C0gAmJ2DsL9JkA=="
+        "resolved": "5.1.100-pre3",
+        "contentHash": "Z2SIxr8MzVemtOApk1AE8zWqzpye6ehowRKsAVEwvF93ryM4tuIIleSVL/54SyEfCJRL3bCI4TVgjjcNV18L4Q=="
+      },
+      "FFmpegInteropX.UWP.Lib": {
+        "type": "Transitive",
+        "resolved": "2.0.0-pre3",
+        "contentHash": "CvNm6NW88/XI7WCiAiQUm90XJ+7sRQtJQwOrYJp2STxFGHFWDgBXmTrjVaSHqDTZpABlgamJBIMsEdH5iPRrpw==",
+        "dependencies": {
+          "Win2D.uwp": "1.26.0"
+        }
       },
       "Microsoft.Web.WebView2": {
         "type": "Transitive",
@@ -930,6 +1038,11 @@
         "dependencies": {
           "System.Reflection.Emit.ILGeneration": "4.7.0"
         }
+      },
+      "Win2D.uwp": {
+        "type": "Transitive",
+        "resolved": "1.26.0",
+        "contentHash": "smA/NJWM3ruhWeKPHmCyW8PX8w1ckD9SN7qWEOePe/iuFKvLyC8govCHq/F40hQCRs8zBqHWaWBpekTnQuXx6w=="
       }
     }
   }
