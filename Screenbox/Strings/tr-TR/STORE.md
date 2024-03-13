@@ -1,19 +1,19 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox Medya Oynatıcı
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox, çok çeşitli dosya formatlarını destekleyen, tüm cihazlarınız için modern bir medya oynatıcısıdır.**
 
-### Description
+### Açıklama
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox, klasik uygulamaya yepyeni bir bakış açısı getirmeye çalışan modern bir medya oynatıcısıdır. Sisteminizin yeteneklerine uyum sağlayabilecek şık ve sezgisel bir kullanıcı arayüzü sunar. Çok çeşitli Windows cihazları ve Xbox konsollarında kusursuz bir deneyim için tasarlanan Screenbox hızlı, hafif ve güçlüdür.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox çok çeşitli dosya formatlarını ve codec bileşenlerini destekler. Ek eklentilere gerek kalmadan hemen hemen tüm medya türlerini oynatın. LibVLC tarafından desteklenen Screenbox, VLC medya oynatıcısının en iyi özelliklerini ve modern Windows uygulaması yeteneklerini birleştirir. Gelişmiş oynatma seçenekleri, VLC komut satırı değişkenleri kullanılarak kullanılabilir.
 
-### Features
+### Özellikler
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- Her tür Windows cihazı için optimize edilmiş, hareket desteğine sahip modern bir kullanıcı deneyimi.
+- Birçok ses ve video formatını destekleyin.
+- Makinenizde veya ağ üzerinden müzik ve video kitaplığınıza göz atın ve bunları yönetin.
+- Medyanızı Chromecast ile çok çeşitli cihazlara yayınlayın.
+- Resim içinde resim modunu kullanarak aynı anda hem çalışın hem de medyanızın keyfini çıkarın.
