@@ -762,10 +762,10 @@
     <value>设置参数</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>搜索可移除的存储</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>将存储设备中的 USB 等媒体包含进您的库</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>活动参数</value>
