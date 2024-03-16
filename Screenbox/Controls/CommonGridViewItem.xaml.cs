@@ -85,4 +85,14 @@ public sealed partial class CommonGridViewItem : UserControl
         this.InitializeComponent();
         CornerRadius = new CornerRadius(4);
     }
+
+    private void OnThumbnailImageOpened(object sender, object e)
+    {
+        PlaceholderIcon.Visibility = Visibility.Collapsed;
+    }
+
+    private void OnThumbnailImageChanged(object sender, object e)
+    {
+        PlaceholderIcon.Visibility = Visibility.Visible;
+    }
 }
