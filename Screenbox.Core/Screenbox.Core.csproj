@@ -275,9 +275,6 @@
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
       <Version>8.0.240109</Version>
     </PackageReference>
-    <PackageReference Include="FFmpegInteropX">
-      <Version>2.0.0-pre3</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
       <Version>5.0.3</Version>
     </PackageReference>
@@ -305,6 +302,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.lock.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FFmpegInteropX\Source\FFmpegInteropX.vcxproj">
+      <Project>{9cfa3b3e-b7af-4629-84e2-c962c5b046b1}</Project>
+      <Name>FFmpegInteropX</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
