@@ -145,6 +145,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (ItemAudioTrackList == null) return;
             AudioTracks.Clear();
+            ItemAudioTrackList.Refresh();
             if (ItemAudioTrackList.Count <= 0) return;
 
             for (int index = 0; index < ItemAudioTrackList.Count; index++)

@@ -23,6 +23,36 @@ namespace Screenbox.Core.Playback
             SelectedIndex = 0;
         }
 
+        public PlaybackAudioTrackList(MediaPlaybackAudioTrackList source)
+        {
+            _source = source;
+            SelectedIndex = source.SelectedIndex;
+            source.SelectedIndexChanged += (sender, args) => SelectedIndex = sender.SelectedIndex;
+            foreach (Windows.Media.Core.AudioTrack audioTrack in source)
+            {
+                TrackList.Add(new AudioTrack(audioTrack));
+            }
+
+            SelectedIndexChanged += OnSelectedIndexChanged;
+        }
+
+        public void Refresh()
+        {
+            if (_source == null) return;
+            TrackList.Clear();
+            foreach (Windows.Media.Core.AudioTrack audioTrack in _source)
+            {
+                TrackList.Add(new AudioTrack(audioTrack));
+            }
+        }
+
+        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            // Only update for Windows track list. VLC track list is handled by the player.
+            if (_source == null || _source.SelectedIndex == sender.SelectedIndex) return;
+            _source.SelectedIndex = sender.SelectedIndex;
+        }
+
         //public PlaybackAudioTrackList(MediaPlaybackItem playbackItem)
         //{
         //    playbackItem.AudioTracksChanged += PlaybackItem_AudioTracksChanged;
