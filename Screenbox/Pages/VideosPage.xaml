@@ -37,7 +37,8 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}"
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}"
             Visibility="Collapsed">
             <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Videos}" />
         </Grid>
@@ -79,7 +80,7 @@
                     Text="{strings:Resources Key=NoVideosPanelHeader}" />
 
                 <TextBlock
-                    Margin="{StaticResource SubtitleTextMargin}"
+                    Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{strings:Resources Key=NoVideosPanelSubtext}"
                     TextWrapping="Wrap" />
@@ -215,7 +216,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoVideosPanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoVideosPanel.ColumnSpacing" Value="16" />
                         <Setter Target="NoVideosPanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />

@@ -95,24 +95,21 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <Grid
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}">
             <TextBlock
                 x:Name="HeaderText"
-                Grid.Column="0"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
-
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                Grid.Column="1"
+                Height="{StaticResource SplitButtonHeight}"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
@@ -170,20 +167,21 @@
                     Text="{strings:Resources Key=WelcomePanelHeader}" />
 
                 <TextBlock
-                    Margin="{StaticResource SubtitleTextMargin}"
+                    Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{strings:Resources Key=WelcomePanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
+                    Height="{StaticResource SplitButtonHeight}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
                     ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
+                    <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xE838;" />
-                        <TextBlock Text="{strings:Resources Key=OpenFiles}" />
+                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>
                         <interactions:SplitButtonXYNavigationBehavior />
@@ -250,7 +248,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="WelcomePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />

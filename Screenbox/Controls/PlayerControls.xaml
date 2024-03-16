@@ -23,13 +23,7 @@
                 <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
-            <toolkitConverters:BoolToObjectConverter
-                x:Key="BoolToPlayPauseTextConverter"
-                FalseValue="{strings:Resources Key=Play}"
-                TrueValue="{strings:Resources Key=Pause}" />
-
             <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
                 FalseValue="&#xF83D;"

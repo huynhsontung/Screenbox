@@ -28,7 +28,8 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}"
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}"
             Visibility="Collapsed">
             <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Music}" />
         </Grid>
@@ -70,7 +71,7 @@
                     Text="{strings:Resources Key=NoMusicPanelHeader}" />
 
                 <TextBlock
-                    Margin="{StaticResource SubtitleTextMargin}"
+                    Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{strings:Resources Key=NoMusicPanelSubtext}"
                     TextWrapping="Wrap" />
@@ -159,6 +160,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
                 <Button
                     x:Name="ShufflePlayButton"
                     Grid.Row="0"
@@ -215,7 +217,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoMusicPanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoMusicPanel.ColumnSpacing" Value="16" />
                         <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />

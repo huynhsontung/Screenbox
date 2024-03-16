@@ -35,7 +35,8 @@
             x:Name="HeaderText"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}"
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}"
@@ -56,7 +57,7 @@
                     <Grid
                         x:Name="ArtistsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -82,7 +83,7 @@
                     <Grid
                         x:Name="AlbumsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -112,7 +113,7 @@
                     <Grid
                         x:Name="SongsResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -143,7 +144,7 @@
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
                             <interactions:AlternatingListViewBehavior
-                                AlternateBackground="{ThemeResource ListViewAltItemBackgroundBrush}"
+                                AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 AlternateBorderThickness="1" />
                             <!-- <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" /> -->
@@ -155,7 +156,7 @@
                     <Grid
                         x:Name="VideosResultHeader"
                         Height="32"
-                        Margin="{StaticResource SubtitleTextMargin}"
+                        Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource PageContentMargin}">
                         <TextBlock
                             HorizontalAlignment="Left"
@@ -201,7 +202,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ArtistsResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                         <Setter Target="AlbumsResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />

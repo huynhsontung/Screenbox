@@ -50,13 +50,15 @@
             x:Name="HeaderGrid"
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
-            Margin="{StaticResource PageHeaderMargin}">
+            Margin="{StaticResource BottomMediumMargin}"
+            Padding="{StaticResource PageContentMargin}">
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
                 x:Name="HeaderAddButton"
+                Height="{StaticResource SplitButtonHeight}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
@@ -99,7 +101,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Margin" Value="{StaticResource PageHeaderMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>

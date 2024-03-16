@@ -21,11 +21,6 @@
 
     <UserControl.Resources>
         <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
-        <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
-        <toolkitConverters:BoolToObjectConverter
-            x:Key="BoolToPlayPauseTextConverter"
-            FalseValue="{strings:Resources Key=Play}"
-            TrueValue="{strings:Resources Key=Pause}" />
 
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
