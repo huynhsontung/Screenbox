@@ -39,6 +39,16 @@ namespace Screenbox.Core.Playback
             SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
+        public void Refresh()
+        {
+            if (_source == null) return;
+            TrackList.Clear();
+            foreach (Windows.Media.Core.AudioTrack audioTrack in _source)
+            {
+                TrackList.Add(new AudioTrack(audioTrack));
+            }
+        }
+
         private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
             // Only update for Windows track list. VLC track list is handled by the player.
