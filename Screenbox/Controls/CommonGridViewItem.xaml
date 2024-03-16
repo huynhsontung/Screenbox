@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
+    DataContextChanged="OnThumbnailImageChanged"
     mc:Ignorable="d">
 
     <Grid Padding="4">
@@ -32,6 +33,9 @@
             <Border CornerRadius="{x:Bind CornerRadius}">
                 <Image
                     x:Name="ThumbnailImage"
+                    HorizontalAlignment="Center"
+                    ImageFailed="OnThumbnailImageChanged"
+                    ImageOpened="OnThumbnailImageOpened"
                     Source="{x:Bind ThumbnailSource, Mode=OneWay}"
                     Stretch="UniformToFill" />
             </Border>
