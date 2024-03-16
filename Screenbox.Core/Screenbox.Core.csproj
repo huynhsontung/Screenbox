@@ -198,6 +198,7 @@
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
     <Compile Include="Playback\IMediaPlayer.cs" />
     <Compile Include="Playback\IPlaybackItem.cs" />
+    <Compile Include="Playback\MediaTrack.cs" />
     <Compile Include="Playback\PlaybackAudioTrackList.cs" />
     <Compile Include="Playback\PlaybackChapterList.cs" />
     <Compile Include="Playback\VlcPlaybackItem.cs" />
