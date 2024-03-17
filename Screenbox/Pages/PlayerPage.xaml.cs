@@ -150,7 +150,8 @@ namespace Screenbox.Pages
 
         private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double edgeLength = Math.Max(e.NewSize.Width, e.NewSize.Height);
+            double overshoot = 200;   // extra space for animation
+            double edgeLength = Math.Max(e.NewSize.Width, e.NewSize.Height) + overshoot;
             BackgroundArt.Width = edgeLength;
             BackgroundArt.Height = edgeLength;
         }
@@ -254,11 +255,24 @@ namespace Screenbox.Pages
                 case nameof(PlayerPageViewModel.NavigationViewDisplayMode) when ViewModel.ViewMode == WindowViewMode.Default:
                     UpdateMiniPlayerMargin();
                     break;
-                case nameof(PlayerPageViewModel.IsPlaying) when _startup && ViewModel.IsPlaying:
-                    // Only when the app is file activated
-                    // Wait till playback starts then focus the player controls
-                    _startup = false;
-                    PlayerControls.FocusFirstButton();
+                case nameof(PlayerPageViewModel.IsPlaying):
+                    if (ViewModel.IsPlaying)
+                    {
+                        if (_startup)
+                        {
+                            // Only when the app is file activated
+                            // Wait till playback starts then focus the player controls
+                            _startup = false;
+                            PlayerControls.FocusFirstButton();
+                        }
+
+                        BackgroundArtAnimation.Resume();
+                    }
+                    else
+                    {
+                        BackgroundArtAnimation.Pause();
+                    }
+
                     break;
             }
         }
