@@ -277,6 +277,9 @@
                 x:Name="BackgroundArt"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="BackgroundArtTranslateTransform" />
+                </Grid.RenderTransform>
                 <Image
                     x:Name="BackgroundImageNext"
                     Source="{x:Bind AlbumArtImage.Source, Mode=OneWay}"
@@ -559,6 +562,45 @@
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                     </VisualState.Setters>
+                    <Storyboard x:Name="BackgroundArtAnimation">
+                        <DoubleAnimationUsingKeyFrames
+                            RepeatBehavior="Forever"
+                            Storyboard.TargetName="BackgroundArtTranslateTransform"
+                            Storyboard.TargetProperty="X">
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="-100" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:30" Value="100">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                            <DiscreteDoubleKeyFrame KeyTime="0:1:00" Value="100" />
+                            <EasingDoubleKeyFrame KeyTime="0:1:30" Value="-100">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                            <DiscreteDoubleKeyFrame KeyTime="0:2:00" Value="-100" />
+                        </DoubleAnimationUsingKeyFrames>
+                        <DoubleAnimationUsingKeyFrames
+                            BeginTime="0:0:30"
+                            RepeatBehavior="Forever"
+                            Storyboard.TargetName="BackgroundArtTranslateTransform"
+                            Storyboard.TargetProperty="Y">
+                            <DiscreteDoubleKeyFrame KeyTime="0:0:0" Value="-100" />
+                            <EasingDoubleKeyFrame KeyTime="0:0:30" Value="100">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                            <DiscreteDoubleKeyFrame KeyTime="0:1:00" Value="100" />
+                            <EasingDoubleKeyFrame KeyTime="0:1:30" Value="-100">
+                                <EasingDoubleKeyFrame.EasingFunction>
+                                    <QuadraticEase EasingMode="EaseInOut" />
+                                </EasingDoubleKeyFrame.EasingFunction>
+                            </EasingDoubleKeyFrame>
+                            <DiscreteDoubleKeyFrame KeyTime="0:2:00" Value="-100" />
+                        </DoubleAnimationUsingKeyFrames>
+                    </Storyboard>
                 </VisualState>
 
                 <VisualStateGroup.Transitions>
