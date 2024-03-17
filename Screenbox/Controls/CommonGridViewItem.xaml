@@ -8,7 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
-    DataContextChanged="OnThumbnailImageChanged"
     mc:Ignorable="d">
 
     <Grid Padding="4">
@@ -29,13 +28,12 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}" />
+                IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}"
+                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, Mode=OneWay}" />
             <Border CornerRadius="{x:Bind CornerRadius}">
                 <Image
                     x:Name="ThumbnailImage"
                     HorizontalAlignment="Center"
-                    ImageFailed="OnThumbnailImageChanged"
-                    ImageOpened="OnThumbnailImageOpened"
                     Source="{x:Bind ThumbnailSource, Mode=OneWay}"
                     Stretch="UniformToFill" />
             </Border>
