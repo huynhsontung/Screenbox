@@ -201,11 +201,11 @@
     <value>Повторення: один файл</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>Вибрано елементів: {0}</value>
+    <value>Обрано елементів: {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>Вибрано елементів: {0}</value>
+    <value>Обрано елементів: {0}</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
@@ -290,7 +290,7 @@
     <value>Головна</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Вибрати декілька</value>
+    <value>Обрати кілька</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>Нам не вдалося знайти музику</value>
@@ -299,7 +299,7 @@
     <value>У вашій бібліотеці музики відсутня будь-яка музика.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Відкрити файл(-и)</value>
+    <value>Відкрити файл(и)</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Пошук</value>
@@ -377,16 +377,16 @@
     <value>Рік</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Власна</value>
+    <value>Інше значення</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Мережа</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>Мережевих пристроїв не виявлено</value>
+    <value>Мережеві пристрої відсутні</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Не вдається знайти ваші медіа? Переконайтеся, що ваш мережевий пристрій під’єднано у налаштуваннях Windows.</value>
+    <value>Не бачите ваші медіа? Переконайтеся, що ваш мережевий пристрій під’єднано у налаштуваннях Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Останнє</value>
@@ -428,13 +428,13 @@
     <value>Пісні</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Пошук файлів для їх відтворення</value>
+    <value>Пошук файлів для відтворення</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Додати файл(-и)</value>
+    <value>Додати файл(и)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Пошук файлу(-ів) для додавання у чергу</value>
+    <value>Пошук файлів для додавання у чергу</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Додати папку до бібліотеки музики</value>
@@ -558,7 +558,7 @@
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Пісня {0}</value>
+    <value>Доріжка {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
@@ -656,10 +656,10 @@
     <value>Немає сумісного візуалізатора. Переконайтеся, що на вашому пристрої доступний Direct3D 11.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Не вдалося відкрити файл(-и)</value>
+    <value>Не вдалося відкрити файл(и)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Уведіть посилання на файл чи потік</value>
+    <value>Введіть посилання на файл чи потік</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
     <value>Відкрити сторінку «Пристрої» у налаштуваннях</value>

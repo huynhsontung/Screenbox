@@ -228,7 +228,7 @@
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>Sedang diputar</value>
-    <comment>Tooltip pada item yang sedang diputar</comment>
+    <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
     <value>Video</value>
@@ -513,261 +513,261 @@
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
     <value>Tidak dapat mengakses perpustakaan musik</value>
   </data>
-    <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-      <value>Tidak dapat mengakses perpustakaan gambar</value>
-    </data>
-    <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-      <value>Tidak dapat mengakses perpustakaan video</value>
-    </data>
-    <data name="NoVideosPanelHeader" xml:space="preserve">
-      <value>Kami tidak dapat menemukan video apapun</value>
-    </data>
-    <data name="NoVideosPanelSubtext" xml:space="preserve">
-      <value>Perpustakaan video Anda tidak memiliki konten video.</value>
-    </data>
-    <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-      <value>Buka pengaturan privasi</value>
-    </data>
-    <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-      <value>Tidak dapat memuat media</value>
-    </data>
-    <data name="AspectRatio" xml:space="preserve">
-      <value>Rasio aspek</value>
-    </data>
-    <data name="Fit" xml:space="preserve">
-      <value>Pas</value>
-    </data>
-    <data name="Fill" xml:space="preserve">
-      <value>Isi</value>
-    </data>
-    <data name="CustomAspectRatio" xml:space="preserve">
-      <value>Rasio aspek kustom</value>
-    </data>
-    <data name="CustomPlaybackSpeed" xml:space="preserve">
-      <value>Kecepatan pemutaran kustom</value>
-    </data>
-    <data name="None" xml:space="preserve">
-      <value>Tidak ada</value>
-    </data>
-    <data name="ScaleStatus" xml:space="preserve">
-      <value>Skala: {0}</value>
-      <comment>#Format[String scale]</comment>
-    </data>
-    <data name="SubtitleStatus" xml:space="preserve">
-      <value>Subtitle: {0}</value>
-      <comment>#Format[String name]</comment>
-    </data>
-    <data name="TrackIndex" xml:space="preserve">
-      <value>Trek {0}</value>
-      <comment>#Format[Int index]</comment>
-    </data>
-    <data name="AddSubtitle" xml:space="preserve">
-      <value>Tambahkan subtitle</value>
-    </data>
-    <data name="Audio" xml:space="preserve">
-      <value>Audio</value>
-    </data>
-    <data name="SettingsCategoryAbout" xml:space="preserve">
-      <value>Tentang</value>
-    </data>
-    <data name="SettingsCategoryGeneral" xml:space="preserve">
-      <value>Umum</value>
-    </data>
-    <data name="SettingsCategoryLibraries" xml:space="preserve">
-      <value>Perpustakaan</value>
-    </data>
-    <data name="SettingsCategoryPlayer" xml:space="preserve">
-      <value>Pemutar</value>
-    </data>
-    <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-      <value>Lokasi perpustakaan musik</value>
-    </data>
-    <data name="SettingsShowRecentHeader" xml:space="preserve">
-      <value>Tampilkan terbaru</value>
-    </data>
-    <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-      <value>Lokasi perpustakaan video</value>
-    </data>
-    <data name="Subtitles" xml:space="preserve">
-      <value>Subtitle</value>
-    </data>
-    <data name="SettingsShowRecentDescription" xml:space="preserve">
-      <value>Tampilkan media yang baru diputar di halaman utama</value>
-    </data>
-    <data name="SettingsClearRecentHeader" xml:space="preserve">
-      <value>Bersihkan riwayat media terbaru</value>
-    </data>
-    <data name="SettingsAutoResizeHeader" xml:space="preserve">
-      <value>Ubah ukuran otomatis</value>
-    </data>
-    <data name="SettingsAutoResizeDescription" xml:space="preserve">
-      <value>Ubah ukuran jendela aplikasi agar cocok dengan resolusi asli video saat diputar</value>
-    </data>
-    <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-      <value>Peningkatan volume</value>
-    </data>
-    <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-      <value>Izinkan volume maksimum melebihi 100%</value>
-    </data>
-    <data name="SettingsGesturesHeader" xml:space="preserve">
-      <value>Gestur</value>
-    </data>
-    <data name="SettingsGestureSeek" xml:space="preserve">
-      <value>Geser secara horizontal untuk mencari</value>
-    </data>
-    <data name="SettingsGestureVolume" xml:space="preserve">
-      <value>Geser secara vertikal untuk mengatur volume</value>
-    </data>
-    <data name="SettingsGestureTap" xml:space="preserve">
-      <value>Ketuk di mana saja untuk memutar atau menjeda</value>
-    </data>
-    <data name="AppFriendlyName" xml:space="preserve">
-      <value>Pemutar Media Screenbox</value>
-    </data>
-    <data name="HyperlinkSourceCode" xml:space="preserve">
-      <value>Kode sumber</value>
-    </data>
-    <data name="HyperlinkDiscord" xml:space="preserve">
-      <value>Discord</value>
-    </data>
-    <data name="HyperlinkSponsor" xml:space="preserve">
-      <value>Dukung pengembangan</value>
-    </data>
-    <data name="Always" xml:space="preserve">
-      <value>Selalu</value>
-    </data>
-    <data name="Never" xml:space="preserve">
-      <value>Jangan pernah</value>
-    </data>
-    <data name="OnLaunch" xml:space="preserve">
-      <value>Saat diluncurkan</value>
-    </data>
-    <data name="VersionText" xml:space="preserve">
-      <value>Versi {0}</value>
-      <comment>#Format[VERSION]</comment>
-    </data>
-    <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-      <value>Takarir ditambahkan</value>
-    </data>
-    <data name="CriticalError" xml:space="preserve">
-      <value>Kesalahan kritis</value>
-    </data>
-    <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-      <value>Tidak ada renderer kompatibel yang tersedia. Pastikan Direct3D 11 tersedia di perangkat Anda.</value>
-    </data>
-    <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-      <value>Gagal membuka file</value>
-    </data>
-    <data name="OpenUrlPlaceholder" xml:space="preserve">
-      <value>Masukkan URL untuk sebuah file atau stream</value>
-    </data>
-    <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-      <value>Buka pengaturan Perangkat Terhubung</value>
-    </data>
-    <data name="SetPlaybackOptions" xml:space="preserve">
-      <value>Atur opsi pemutaran</value>
-    </data>
-    <data name="Set" xml:space="preserve">
-      <value>Atur</value>
-    </data>
-    <data name="SetAndPlay" xml:space="preserve">
-      <value>Atur dan Putar</value>
-    </data>
-    <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-      <value>Atur opsi VLC yang berlaku untuk stream.</value>
-    </data>
-    <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-      <value>Beberapa opsi hanya dapat diatur secara global.</value>
-    </data>
-    <data name="VlcCommandLineHelpLink" xml:space="preserve">
-      <value>Bantuan baris perintah VLC</value>
-    </data>
-    <data name="VlcCommandLineHelpText" xml:space="preserve">
-      <value>Lihat {0} untuk daftar lengkap opsi yang tersedia.</value>
-      <comment>{0} = Bantuan baris perintah VLC</comment>
-    </data>
-    <data name="SettingsCategoryAdvanced" xml:space="preserve">
-      <value>Tingkat lanjut</value>
-    </data>
-    <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-      <value>Mode lanjut</value>
-    </data>
-    <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-      <value>Mode tingkat lanjut memungkinkan Anda untuk mengubah perilaku LibVLC menggunakan argumen baris perintah.</value>
-    </data>
-    <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-      <value>Argumen global</value>
-    </data>
-    <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-      <value>Argumen baris perintah yang berlaku untuk semua pemutaran media.</value>
-    </data>
-    <data name="RemoveFolder" xml:space="preserve">
-      <value>Hapus folder</value>
-    </data>
-    <data name="PendingChanges" xml:space="preserve">
-      <value>Perubahan tertunda</value>
-    </data>
-    <data name="RelaunchForChangesMessage" xml:space="preserve">
-      <value>Mulai ulang aplikasi agar perubahan berlaku</value>
-    </data>
-    <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-      <value>Gagal menginisialisasi</value>
-    </data>
-    <data name="RelatedLinks" xml:space="preserve">
-      <value>Tautan terkait</value>
-    </data>
-    <data name="PrivacyPolicy" xml:space="preserve">
-      <value>Kebijakan privasi</value>
-    </data>
-    <data name="License" xml:space="preserve">
-      <value>Lisensi</value>
-    </data>
-    <data name="HyperlinkTranslate" xml:space="preserve">
-      <value>Bantu terjemahkan</value>
-    </data>
-    <data name="Options" xml:space="preserve">
-      <value>Opsi</value>
-    </data>
-    <data name="TimingOffset" xml:space="preserve">
-      <value>Offset waktu</value>
-    </data>
-    <data name="PropertyComposers" xml:space="preserve">
-      <value>Komposer</value>
-    </data>
-    <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-      <value>Tidak dapat menambahkan folder</value>
-    </data>
-    <data name="OpenAlbum" xml:space="preserve">
-      <value>Buka album</value>
-    </data>
-    <data name="OpenArtist" xml:space="preserve">
-      <value>Buka artis</value>
-    </data>
-    <data name="RefreshLibraries" xml:space="preserve">
-      <value>Segarkan perpustakaan</value>
-    </data>
-    <data name="Refresh" xml:space="preserve">
-      <value>Segarkan</value>
-    </data>
-    <data name="SettingsUseIndexerHeader" xml:space="preserve">
-      <value>Gunakan indexer untuk pemindaian</value>
-    </data>
-    <data name="SettingsUseIndexerDescription" xml:space="preserve">
-      <value>Percepat pemindaian perpustakaan dengan menggunakan indeks sistem jika tersedia. Matikan ini jika Anda tidak melihat semua media dari lokasi perpustakaan Anda.</value>
-    </data>
-    <data name="ManageSystemIndexingLink" xml:space="preserve">
-      <value>Atur pengaturan indeks sistem</value>
-    </data>
-    <data name="SetArguments" xml:space="preserve">
-      <value>Atur argumen</value>
-    </data>
-    <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-      <value>Cari penyimpanan eksternal</value>
-    </data>
-    <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-      <value>Sertakan media dari perangkat penyimpanan seperti USB dalam perpustakaan Anda</value>
-    </data>
-    <data name="ActiveArguments" xml:space="preserve">
-      <value>Argumen aktif</value>
-    </data>
-  </root>
+  <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
+    <value>Tidak dapat mengakses perpustakaan gambar</value>
+  </data>
+  <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
+    <value>Tidak dapat mengakses perpustakaan video</value>
+  </data>
+  <data name="NoVideosPanelHeader" xml:space="preserve">
+    <value>Kami tidak dapat menemukan video apapun</value>
+  </data>
+  <data name="NoVideosPanelSubtext" xml:space="preserve">
+    <value>Perpustakaan video Anda tidak memiliki konten video.</value>
+  </data>
+  <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
+    <value>Buka pengaturan privasi</value>
+  </data>
+  <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
+    <value>Tidak dapat memuat media</value>
+  </data>
+  <data name="AspectRatio" xml:space="preserve">
+    <value>Rasio aspek</value>
+  </data>
+  <data name="Fit" xml:space="preserve">
+    <value>Pas</value>
+  </data>
+  <data name="Fill" xml:space="preserve">
+    <value>Isi</value>
+  </data>
+  <data name="CustomAspectRatio" xml:space="preserve">
+    <value>Rasio aspek kustom</value>
+  </data>
+  <data name="CustomPlaybackSpeed" xml:space="preserve">
+    <value>Kecepatan pemutaran kustom</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Tidak ada</value>
+  </data>
+  <data name="ScaleStatus" xml:space="preserve">
+    <value>Skala: {0}</value>
+    <comment>#Format[String scale]</comment>
+  </data>
+  <data name="SubtitleStatus" xml:space="preserve">
+    <value>Subtitle: {0}</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="TrackIndex" xml:space="preserve">
+    <value>Trek {0}</value>
+    <comment>#Format[Int index]</comment>
+  </data>
+  <data name="AddSubtitle" xml:space="preserve">
+    <value>Tambahkan subtitle</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>Audio</value>
+  </data>
+  <data name="SettingsCategoryAbout" xml:space="preserve">
+    <value>Tentang</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>Umum</value>
+  </data>
+  <data name="SettingsCategoryLibraries" xml:space="preserve">
+    <value>Perpustakaan</value>
+  </data>
+  <data name="SettingsCategoryPlayer" xml:space="preserve">
+    <value>Pemutar</value>
+  </data>
+  <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
+    <value>Lokasi perpustakaan musik</value>
+  </data>
+  <data name="SettingsShowRecentHeader" xml:space="preserve">
+    <value>Tampilkan terbaru</value>
+  </data>
+  <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
+    <value>Lokasi perpustakaan video</value>
+  </data>
+  <data name="Subtitles" xml:space="preserve">
+    <value>Subtitle</value>
+  </data>
+  <data name="SettingsShowRecentDescription" xml:space="preserve">
+    <value>Tampilkan media yang baru diputar di halaman utama</value>
+  </data>
+  <data name="SettingsClearRecentHeader" xml:space="preserve">
+    <value>Bersihkan riwayat media terbaru</value>
+  </data>
+  <data name="SettingsAutoResizeHeader" xml:space="preserve">
+    <value>Ubah ukuran otomatis</value>
+  </data>
+  <data name="SettingsAutoResizeDescription" xml:space="preserve">
+    <value>Ubah ukuran jendela aplikasi agar cocok dengan resolusi asli video saat diputar</value>
+  </data>
+  <data name="SettingsVolumeBoostHeader" xml:space="preserve">
+    <value>Peningkatan volume</value>
+  </data>
+  <data name="SettingsVolumeBoostDescription" xml:space="preserve">
+    <value>Izinkan volume maksimum melebihi 100%</value>
+  </data>
+  <data name="SettingsGesturesHeader" xml:space="preserve">
+    <value>Gestur</value>
+  </data>
+  <data name="SettingsGestureSeek" xml:space="preserve">
+    <value>Geser secara horizontal untuk mencari</value>
+  </data>
+  <data name="SettingsGestureVolume" xml:space="preserve">
+    <value>Geser secara vertikal untuk mengatur volume</value>
+  </data>
+  <data name="SettingsGestureTap" xml:space="preserve">
+    <value>Ketuk di mana saja untuk memutar atau menjeda</value>
+  </data>
+  <data name="AppFriendlyName" xml:space="preserve">
+    <value>Pemutar Media Screenbox</value>
+  </data>
+  <data name="HyperlinkSourceCode" xml:space="preserve">
+    <value>Kode sumber</value>
+  </data>
+  <data name="HyperlinkDiscord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="HyperlinkSponsor" xml:space="preserve">
+    <value>Dukung pengembangan</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>Selalu</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Jangan pernah</value>
+  </data>
+  <data name="OnLaunch" xml:space="preserve">
+    <value>Saat diluncurkan</value>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Versi {0}</value>
+    <comment>#Format[VERSION]</comment>
+  </data>
+  <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
+    <value>Takarir ditambahkan</value>
+  </data>
+  <data name="CriticalError" xml:space="preserve">
+    <value>Kesalahan kritis</value>
+  </data>
+  <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
+    <value>Tidak ada renderer kompatibel yang tersedia. Pastikan Direct3D 11 tersedia di perangkat Anda.</value>
+  </data>
+  <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
+    <value>Gagal membuka file</value>
+  </data>
+  <data name="OpenUrlPlaceholder" xml:space="preserve">
+    <value>Masukkan URL untuk sebuah file atau stream</value>
+  </data>
+  <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
+    <value>Buka pengaturan Perangkat Terhubung</value>
+  </data>
+  <data name="SetPlaybackOptions" xml:space="preserve">
+    <value>Atur opsi pemutaran</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Atur</value>
+  </data>
+  <data name="SetAndPlay" xml:space="preserve">
+    <value>Atur dan Putar</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
+    <value>Atur opsi VLC yang berlaku untuk stream.</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
+    <value>Beberapa opsi hanya dapat diatur secara global.</value>
+  </data>
+  <data name="VlcCommandLineHelpLink" xml:space="preserve">
+    <value>Bantuan baris perintah VLC</value>
+  </data>
+  <data name="VlcCommandLineHelpText" xml:space="preserve">
+    <value>Lihat {0} untuk daftar lengkap opsi yang tersedia.</value>
+    <comment>{0} = VLC command-line help</comment>
+  </data>
+  <data name="SettingsCategoryAdvanced" xml:space="preserve">
+    <value>Tingkat lanjut</value>
+  </data>
+  <data name="SettingsAdvancedModeHeader" xml:space="preserve">
+    <value>Mode lanjut</value>
+  </data>
+  <data name="SettingsAdvancedModeDescription" xml:space="preserve">
+    <value>Mode tingkat lanjut memungkinkan Anda untuk mengubah perilaku LibVLC menggunakan argumen baris perintah.</value>
+  </data>
+  <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
+    <value>Argumen global</value>
+  </data>
+  <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
+    <value>Argumen baris perintah yang berlaku untuk semua pemutaran media.</value>
+  </data>
+  <data name="RemoveFolder" xml:space="preserve">
+    <value>Hapus folder</value>
+  </data>
+  <data name="PendingChanges" xml:space="preserve">
+    <value>Perubahan tertunda</value>
+  </data>
+  <data name="RelaunchForChangesMessage" xml:space="preserve">
+    <value>Mulai ulang aplikasi agar perubahan berlaku</value>
+  </data>
+  <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
+    <value>Gagal menginisialisasi</value>
+  </data>
+  <data name="RelatedLinks" xml:space="preserve">
+    <value>Tautan terkait</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Kebijakan privasi</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Lisensi</value>
+  </data>
+  <data name="HyperlinkTranslate" xml:space="preserve">
+    <value>Bantu terjemahkan</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Opsi</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Offset waktu</value>
+  </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Komposer</value>
+  </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>Tidak dapat menambahkan folder</value>
+  </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Buka album</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Buka artis</value>
+  </data>
+  <data name="RefreshLibraries" xml:space="preserve">
+    <value>Segarkan perpustakaan</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Segarkan</value>
+  </data>
+  <data name="SettingsUseIndexerHeader" xml:space="preserve">
+    <value>Gunakan indexer untuk pemindaian</value>
+  </data>
+  <data name="SettingsUseIndexerDescription" xml:space="preserve">
+    <value>Percepat pemindaian perpustakaan dengan menggunakan indeks sistem jika tersedia. Matikan ini jika Anda tidak melihat semua media dari lokasi perpustakaan Anda.</value>
+  </data>
+  <data name="ManageSystemIndexingLink" xml:space="preserve">
+    <value>Atur pengaturan indeks sistem</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Atur argumen</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Cari penyimpanan eksternal</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Sertakan media dari perangkat penyimpanan seperti USB dalam perpustakaan Anda</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Argumen aktif</value>
+  </data>
+</root>

@@ -144,13 +144,13 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Fehler beim Laden des Untertitels</value>
+    <value>Untertitel konnten nicht geladen werden</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Zurück</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Stumm</value>
+    <value>Stummschalten</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
     <value>Stummschaltung aufheben</value>
@@ -162,7 +162,7 @@
     <value>Audio &amp; Untertitel</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Vollbild verlassen</value>
+    <value>Vollbildmodus verlassen</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Lautstärke</value>
@@ -171,34 +171,34 @@
     <value>Suchen</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Bild in Bild verlassen</value>
+    <value>Bild in Bild-Modus verlassen</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Weiter</value>
+    <value>Nächster Titel</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Vorherige</value>
+    <value>Vorheriger Titel</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Wiedergabe</value>
+    <value>Abspielen</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Pausieren</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>Mehr</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Wiedergabeliste wiedergeben</value>
+    <value>Wiedergabeliste abspielen</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Wiederholen: aus</value>
+    <value>Wiederholen: Aus</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
     <value>Wiederholen: Alle</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Wiederholen: Eins</value>
+    <value>Wiederholen: Einmalig</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} Eintrag ausgewählt</value>
@@ -227,7 +227,7 @@
     <value>Nach unten</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Wird gespielt</value>
+    <value>Wird abgespielt</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -251,13 +251,13 @@
     <value>Videoansicht wiederherstellen</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>Besetzung</value>
+    <value>Übertragen</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Casting beenden</value>
+    <value>Übertragung beenden</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting auf</value>
+    <value>Übertragen auf</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
     <value>Auf ein Gerät übertragen</value>
@@ -269,7 +269,7 @@
     <value>Musik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle und spielen</value>
+    <value>Mischen und abspielen</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
     <value>Unbekannter Künstler</value>
@@ -293,16 +293,16 @@
     <value>Mehrfachauswahl</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>Wir konnten keine Musik finden</value>
+    <value>Keine Musik gefunden</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Deine Musikbibliothek enthält keine Musikinhalte.</value>
+    <value>Ihre Musikbibliothek enthält keine Musikinhalte.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Datei(en) öffnen</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Suche</value>
+    <value>Suchen</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
@@ -350,7 +350,7 @@
     <value>Zuletzt geändert</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Länge</value>
+    <value>Dauer</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
     <value>Produzenten</value>
@@ -368,7 +368,7 @@
     <value>Titel</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Song</value>
+    <value>Track</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
     <value>Autoren</value>
@@ -443,7 +443,7 @@
     <value>Medien von URL hinzufügen</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Ordner zur Musikbibliothek hinzufügen</value>
+    <value>Ordner zur Videobibliothek hinzufügen</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Ordner öffnen</value>
@@ -496,7 +496,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Songergebnisse für "{0}"</value>
+    <value>Liedergebnisse für "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
@@ -511,16 +511,16 @@
     <value>Zugriff verweigert. Bitte überprüfen Sie Ihre Privatsphäre-Einstellungen, um sicherzustellen, dass Screenbox über ausreichende Berechtigungen verfügt.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Zugriff auf die Musikbibliothek nicht möglich</value>
+    <value>Zugriff auf Musikbibliothek nicht möglich</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Zugriff auf die Bilderbibliothek nicht möglich</value>
+    <value>Zugriff auf die Bilder-Bibliothek nicht möglich</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
     <value>Zugriff auf die Videobibliothek nicht möglich</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>Wir konnten keine Videos finden</value>
+    <value>Keine Videos gefunden</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
     <value>Ihre Video-Bibliothek enthält keine Videoinhalte.</value>
@@ -529,7 +529,7 @@
     <value>Privatsphäre-Einstellungen öffnen</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Fehler beim Laden der Medien</value>
+    <value>Fehler beim Laden von Medien</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
     <value>Seitenverhältnis</value>
@@ -577,7 +577,7 @@
     <value>Bibliotheken</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Abspieler</value>
+    <value>Player</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
     <value>Speicherorte der Musikbibliotheken</value>
@@ -604,7 +604,7 @@
     <value>Die Größe des App-Fensters anpassen, um die native Auflösung eines Videos bei der Wiedergabe am besten zu erreichen</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Lautstärkenverstärker</value>
+    <value>Lautstärkeverstärker</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Erlaube die maximale Lautstärke über 100% zu gehen</value>
@@ -671,7 +671,7 @@
     <value>Setzen</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Setze und spiele</value>
+    <value>Setzen und abspielen</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Setze VLC-Optionen, die auf einen Stream angewendet werden.</value>
@@ -699,7 +699,7 @@
     <value>Globale Argumente</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Befehlszeilenargumente, die für alle Medienwiedergabe gelten.</value>
+    <value>Befehlszeilenargumente, die für alle Medienwiedergaben gelten.</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Ordner entfernen</value>
@@ -762,12 +762,12 @@
     <value>Argumente festlegen</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Wechseldatenträger durchsuchen</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Medien von Speichergeräten wie USB-Sticks in Ihre Bibliotheken einbeziehen</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Aktive Argumente</value>
   </data>
 </root>

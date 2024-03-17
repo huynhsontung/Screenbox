@@ -124,7 +124,7 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Pemain video moden dengan tumpuan pada prestasi dan kemudahgunaan pada pelbagai peranti Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>Fail Multimedia 3GPP</value>
@@ -169,13 +169,13 @@
     <value>Video MPEG</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Audio Ogg Vorbis</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
     <value>Video Ogg</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>Filem QuickTime</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
     <value>Audio WAVE</value>
@@ -187,21 +187,21 @@
     <value>Video WebM</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Audio Media Windows</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Video Media Windows</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
     <value>Senarai Main M3U8</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>Strim Angkutan MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Audio WavPack</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>Audio AIFF</value>
   </data>
 </root>

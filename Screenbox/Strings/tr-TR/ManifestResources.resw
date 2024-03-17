@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Ekran kutusu</value>
+    <value>Screenbox</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Ekran kutusu</value>
+    <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>Çok çeşitli Windows cihazlarında performansa ve kullanım kolaylığına odaklanan modern bir video oynatıcı.</value>
@@ -199,9 +199,9 @@
     <value>MPEG Yayın Akışı</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPack Ses</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>AIFF Ses</value>
   </data>
 </root>
