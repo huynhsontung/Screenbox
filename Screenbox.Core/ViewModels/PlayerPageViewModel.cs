@@ -47,6 +47,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
+        [ObservableProperty] private ElementTheme _actualTheme;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AudioOnly))]
