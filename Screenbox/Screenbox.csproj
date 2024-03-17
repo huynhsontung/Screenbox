@@ -846,6 +846,8 @@
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\ManifestResources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\ms-MY\ManifestResources.resw" />
+    <PRIResource Include="Strings\ms-MY\Resources.resw" />
     <PRIResource Include="Strings\nl-NL\ManifestResources.resw" />
     <PRIResource Include="Strings\nl-NL\Resources.resw" />
     <PRIResource Include="Strings\pl-PL\ManifestResources.resw" />
@@ -858,6 +860,8 @@
     <PRIResource Include="Strings\ro-RO\Resources.resw" />
     <PRIResource Include="Strings\ru-RU\ManifestResources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
+    <PRIResource Include="Strings\tr-TR\ManifestResources.resw" />
+    <PRIResource Include="Strings\tr-TR\Resources.resw" />
     <PRIResource Include="Strings\uk-UA\ManifestResources.resw" />
     <PRIResource Include="Strings\uk-UA\Resources.resw" />
     <PRIResource Include="Strings\vi\ManifestResources.resw" />
