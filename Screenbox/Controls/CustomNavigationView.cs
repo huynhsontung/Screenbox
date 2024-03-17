@@ -32,18 +32,6 @@ namespace Screenbox.Controls
             typeof(CustomNavigationView),
             new PropertyMetadata(Visibility.Visible, OnContentVisibilityChanged));
 
-        public static readonly DependencyProperty SplitViewStyleProperty = DependencyProperty.Register(
-            nameof(SplitViewStyle),
-            typeof(Style),
-            typeof(CustomNavigationView),
-            new PropertyMetadata(null));
-
-        public Style? SplitViewStyle
-        {
-            get => (Style?)GetValue(SplitViewStyleProperty);
-            set => SetValue(SplitViewStyleProperty, value);
-        }
-
         /// <summary>
         /// Visibility of everything except the overlay element.
         /// </summary>
@@ -71,7 +59,7 @@ namespace Screenbox.Controls
             set => SetValue(OverlayContentProperty, value);
         }
 
-        private Border? _overlayRoot;
+        private readonly Border _overlayRoot;
         private Border? _contentBackground;
         private SplitView? _splitView;
         private Grid? _paneToggleButtonGrid;
@@ -81,6 +69,15 @@ namespace Screenbox.Controls
         public CustomNavigationView()
         {
             Loaded += OnLoaded;
+
+            Border overlayRoot = new()
+            {
+                Name = "OverlayRoot"
+            };
+            overlayRoot.Tapped += OverlayRootOnTapped;
+            overlayRoot.SetValue(Grid.ColumnProperty, 0);
+            overlayRoot.SetValue(Grid.ColumnSpanProperty, 2);
+            _overlayRoot = overlayRoot;
         }
 
         protected override void OnApplyTemplate()
@@ -94,11 +91,6 @@ namespace Screenbox.Controls
             if (shadowCaster != null)
             {
                 shadowCaster.Translation = new Vector3(0, 0, 32);
-            }
-
-            if (_splitView != null)
-            {
-                _splitView.Style = SplitViewStyle;
             }
 
             SetContentVisibility(ContentVisibility);
@@ -124,12 +116,9 @@ namespace Screenbox.Controls
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (_splitView?.FindDescendant<Border>(b => b.Name == "OverlayRoot") is { } overlayRoot)
+            if (_splitView?.FindDescendant<Grid>() is { } splitViewGrid)
             {
-                _overlayRoot = overlayRoot;
-                overlayRoot.Tapped += OverlayRootOnTapped;
-                overlayRoot.Child = OverlayContent;
-                Canvas.SetZIndex(overlayRoot, OverlayZIndex);
+                splitViewGrid.Children.Add(_overlayRoot);
             }
 
             if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
@@ -180,19 +169,13 @@ namespace Screenbox.Controls
         private static void OnOverlayContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CustomNavigationView view = (CustomNavigationView)d;
-            if (view._overlayRoot != null)
-            {
-                view._overlayRoot.Child = (UIElement)e.NewValue;
-            }
+            view._overlayRoot.Child = (UIElement)e.NewValue;
         }
 
         private static void OnOverlayZIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             CustomNavigationView view = (CustomNavigationView)d;
-            if (view._overlayRoot != null)
-            {
-                Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
-            }
+            Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
         }
 
         private static ImplicitAnimationSet GetShowAnimations()
