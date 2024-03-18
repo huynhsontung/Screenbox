@@ -555,7 +555,7 @@
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ActualTheme, Mode=OneWay}" />
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
@@ -638,7 +638,7 @@
                         To="AudioOnly">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ActualTheme, Mode=OneWay}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />

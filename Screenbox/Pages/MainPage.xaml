@@ -17,17 +17,11 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomSplitView.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
-            <Thickness x:Key="NavigationViewMinimalContentMargin">0,48,0,0</Thickness>
-            <Thickness x:Key="NavigationViewContentGridBorderThickness">0,0,0,0</Thickness>
+            <Thickness x:Key="NavigationViewContentMargin">0,0,0,0</Thickness>
+            <Thickness x:Key="NavigationViewMinimalContentMargin">0,0,0,0</Thickness>
+            <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
-            <StaticResource x:Key="NavigationViewContentBackground" ResourceKey="SystemControlTransparentBrush" />
-
             <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
@@ -119,8 +113,7 @@
             IsTitleBarAutoPaddingEnabled="False"
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
-            SelectionChanged="NavView_SelectionChanged"
-            SplitViewStyle="{StaticResource CustomSplitViewStyle}">
+            SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem Icon="Home" Tag="home">
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
@@ -175,7 +168,7 @@
                 </Grid>
             </controls:CustomNavigationView.OverlayContent>
 
-            <Grid x:Name="ContentGrid">
+            <Grid x:Name="ContentGrid" Margin="0,48,0,0">
                 <Frame
                     x:Name="ContentFrame"
                     Navigated="ContentFrame_Navigated"
