@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
@@ -206,6 +207,10 @@ namespace Screenbox.Pages
                     }
 
                     break;
+                case nameof(PlayerPageViewModel.ViewMode) when SystemInformation.IsXbox:
+                    // Xbox always defaults to fullscreen layout
+                    VisualStateManager.GoToState(this, "Fullscreen", false);
+                    break;
                 case nameof(PlayerPageViewModel.ViewMode):
                     switch (ViewModel.ViewMode)
                     {
@@ -236,7 +241,7 @@ namespace Screenbox.Pages
                     {
                         case PlayerVisibilityState.Visible:
                             VisualStateManager.GoToState(this, "NoPreview", true);
-                            VisualStateManager.GoToState(this, "Normal", true);
+                            VisualStateManager.GoToState(this, SystemInformation.IsXbox ? "Fullscreen" : "Normal", true);
                             SetTitleBar();
                             break;
                         case PlayerVisibilityState.Minimal:

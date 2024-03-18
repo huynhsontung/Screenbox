@@ -78,18 +78,20 @@
                                 Background="{ThemeResource SplitViewContentBackground}"
                                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" />
                             <Border Child="{TemplateBinding Content}" />
-                            <Rectangle
-                                x:Name="LightDismissLayer"
-                                Fill="Transparent"
-                                Visibility="Collapsed" />
 
                         </Grid>
 
                         <!--  Overlay Area  -->
-                        <Border
+                        <Grid
                             x:Name="OverlayRoot"
                             Grid.Column="0"
-                            Grid.ColumnSpan="2" />
+                            Grid.ColumnSpan="2">
+                            <Border x:Name="OverlayContentHost" />
+                            <Rectangle
+                                x:Name="LightDismissLayer"
+                                Fill="Transparent"
+                                Visibility="Collapsed" />
+                        </Grid>
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="DisplayModeStates">
