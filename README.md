@@ -38,6 +38,16 @@ Some notable features:
 
 And many more on the way!
 
+## Install
+
+The recommended way to install Screenbox is through the [Microsoft Store](https://www.microsoft.com/store/apps/9NTSNMSVCB5L). Installing through the store ensures the app stays up to date automatically. You don't need a Microsoft account to download apps from the store. The app can also be installed through winget using the following command.
+
+```shell
+winget install "Screenbox Media Player" -s msstore
+```
+
+The sideload package found on the release page is supposed to be used for validation purposes only. It lacks a proper app certificate and does not have automatic update. Before installing the package, you must install the bundled certificate in the CA Root store. This action requires you to have the system administrator permission. If you understand the implications of installing a sideload package and still wish to install it anyway, excute the `Install.ps1` file in an elavated PowerShell instance.
+
 ## Contribute
 
 Feel free to open an issue if you want to report a bug, give feedback, or just want to ask a question. PRs are very welcome!
