@@ -54,7 +54,7 @@
                 <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding Media}" />
+                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
