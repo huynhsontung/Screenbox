@@ -5,6 +5,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:appModel="using:Windows.ApplicationModel"
+    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,8 +18,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <Thickness x:Key="NavigationViewContentMargin">0,0,0,0</Thickness>
-            <Thickness x:Key="NavigationViewMinimalContentMargin">0,0,0,0</Thickness>
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
@@ -27,6 +26,10 @@
             <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
+
+            <!--  Left pane acrylic on Windows 10  -->
+            <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
+            <contract13NotPresent:StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlChromeMediumAcrylicElementMediumBrush" />
 
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
@@ -168,7 +171,7 @@
                 </Grid>
             </controls:CustomNavigationView.OverlayContent>
 
-            <Grid x:Name="ContentGrid" Margin="0,48,0,0">
+            <Grid x:Name="ContentGrid" Padding="0,48,0,0">
                 <Frame
                     x:Name="ContentFrame"
                     Navigated="ContentFrame_Navigated"
