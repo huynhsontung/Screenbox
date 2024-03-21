@@ -32,16 +32,12 @@ jobs:
   
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        # x86/x64 and arm64 have different dll dependencies thus cannot be bundled together
-        platform: [x86, x64, arm64]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
     - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v2
 
     - uses: actions/cache@v4
       with:
@@ -82,21 +78,23 @@ jobs:
         -p:RestoreConfigFile=nuget.config `
         -p:RestoreLockedMode=true `
         -p:Configuration=Release `
-        -p:Platform=${{ matrix.platform }} `
-        -p:AppxBundle=Never `
+        -p:Platform=x64 `
+        -p:AppxBundle=Always `
+        -p:AppxBundlePlatforms="$env:BuildPlatforms" `
         -p:UapAppxPackageBuildMode=$env:BuildMode `
         -p:AppxPackageDir=$env:PackageDir `
         -p:AppxPackageSigningEnabled=false `
         -restore
       env:
         BuildMode: StoreUpload
+        BuildPlatforms: x86|x64|arm64
         PackageDir: C:\DeployOutput
     
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v4
       if: github.ref_type == 'tag'
       with:
-        name: store-upload-${{ matrix.platform }}
+        name: store-upload
         path: |
           C:\DeployOutput\*.msixupload
           C:\DeployOutput\*.appxupload
@@ -104,30 +102,27 @@ jobs:
     - name: Create sideload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Screenbox-sideload-${{ matrix.platform }}
+        name: Screenbox-sideload
         path: |
           C:\DeployOutput\*_Test
 
   wack:
     needs: build
     runs-on: windows-latest
-    strategy:
-      matrix:
-        platform: [x86, x64, arm64]
     steps:
     - name: Download artifacts
       uses: actions/download-artifact@v4
       with:
-        name: Screenbox-sideload-${{ matrix.platform }}
+        name: Screenbox-sideload
         path: C:\Download\
     - name: Rename test folder
       run: Get-ChildItem -Directory -Path C:\Download\Screenbox_*_Test | Rename-Item -NewName Screenbox
     - name: Rename test package
-      run: Get-ChildItem -Path C:\Download\Screenbox\*.msix | Rename-Item -NewName Screenbox.msix
+      run: Get-ChildItem -Path C:\Download\Screenbox\*.msixbundle | Rename-Item -NewName Screenbox.msixbundle
     - uses: huynhsontung/wack-certification@main
       with:
-        name: 'WACK (${{ matrix.platform }})'
-        package-path: 'C:\Download\Screenbox\Screenbox.msix'
+        name: 'WACK'
+        package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
         report-name: 'Screenbox.Certification.xml'
 
   release:
@@ -138,22 +133,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Download x86 package
+    - name: Download package
       uses: actions/download-artifact@v4
       with:
-        name: Screenbox-sideload-x86
-        path: download/
-
-    - name: Download x64 package
-      uses: actions/download-artifact@v4
-      with:
-        name: Screenbox-sideload-x64
-        path: download/
-
-    - name: Download arm64 package
-      uses: actions/download-artifact@v4
-      with:
-        name: Screenbox-sideload-arm64
+        name: Screenbox-sideload
         path: download/
 
     - name: Zip artifact
