@@ -124,7 +124,7 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>一款现代化的视频播放器，注重性能和易用性，适用于各种Windows设备。</value>
+    <value>一款现代化的视频播放器，注重性能和易用性，适用于各种 Windows 设备。</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>3GPP 多媒体文件</value>
