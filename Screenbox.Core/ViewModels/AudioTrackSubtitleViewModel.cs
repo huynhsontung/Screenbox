@@ -119,13 +119,14 @@ namespace Screenbox.Core.ViewModels
         {
             if (ItemAudioTrackList == null) return;
             AudioTracks.Clear();
+            ItemAudioTrackList.Refresh();
             if (ItemAudioTrackList.Count <= 0) return;
 
             for (int index = 0; index < ItemAudioTrackList.Count; index++)
             {
                 AudioTrack audioTrack = ItemAudioTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                AudioTracks.Add(audioTrack.Label ?? defaultTrackLabel);
+                AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
             }
         }
 

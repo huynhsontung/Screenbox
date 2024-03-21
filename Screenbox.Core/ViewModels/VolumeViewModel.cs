@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
-using System;
-using Windows.System;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using System;
+using Windows.System;
+using Windows.UI.Input;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -34,6 +34,11 @@ namespace Screenbox.Core.ViewModels
             _isMute = _volume == 0;
             _volumeGlyph = GetVolumeGlyph();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+            if (Messenger.Send(new MediaPlayerRequestMessage()).Response is { } mediaPlayer)
+            {
+                Receive(new MediaPlayerChangedMessage(mediaPlayer));
+            }
 
             // View model doesn't receive any messages
             IsActive = true;

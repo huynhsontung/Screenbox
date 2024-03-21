@@ -19,7 +19,6 @@ using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -28,7 +27,9 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
-        public MediaPlayer? VlcPlayer { get; private set; }
+        public LibVLCSharp.Shared.MediaPlayer? VlcPlayer { get; private set; }
+
+        public Windows.Media.Playback.MediaPlayer WindowsPlayer { get; }
 
         private readonly LibVlcService _libVlcService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -39,11 +40,12 @@ namespace Screenbox.Core.ViewModels
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
-        private VlcMediaPlayer? _mediaPlayer;
+        private IMediaPlayer? _mediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
         private bool _playerSeekGesture;
         private bool _playerVolumeGesture;
+        private PlaybackBackendType _backend = PlaybackBackendType.Windows;   // TODO: Populate through settings
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -58,10 +60,21 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _clickTimer = _dispatcherQueue.CreateTimer();
             _requestTracker = new DisplayRequestTracker();
+            WindowsPlayer = new Windows.Media.Playback.MediaPlayer();
             LoadSettings();
 
+            if (_backend != PlaybackBackendType.LibVlc)
+            {
+                _mediaPlayer = new WindowsMediaPlayer(WindowsPlayer);
+                _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                _mediaPlayer.PositionChanged += OnPositionChanged;
+                _mediaPlayer.MediaFailed += OnMediaFailed;
+                Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+            }
+
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
-            transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
+            transportControlsService.TransportControls.PlaybackPositionChangeRequested +=
+                TransportControlsOnPlaybackPositionChangeRequested;
 
             // View model does not receive any message
             IsActive = true;
@@ -276,7 +289,8 @@ namespace Screenbox.Core.ViewModels
         private void DisposeMediaPlayer()
         {
             _mediaPlayer?.Close();
-            _mediaPlayer?.LibVlc.Dispose();
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+                vlcMediaPlayer.LibVlc.Dispose();
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)
