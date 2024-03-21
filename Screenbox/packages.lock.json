@@ -66,9 +66,9 @@
       },
       "LibVLC.UWP": {
         "type": "Direct",
-        "requested": "[3.0.20-2401280802, )",
-        "resolved": "3.0.20-2401280802",
-        "contentHash": "Q73g6Pgl2X5GgkbJQf7M5guIWOwcuzMoWxlQuQRhj/S36lxaYXGqpD5y2qNAyPDbT5kg7uNcfdmXM0BNChK7PA=="
+        "requested": "[3.0.20-2403201858, )",
+        "resolved": "3.0.20-2403201858",
+        "contentHash": "JWPF5AzL9bmPTOeonpMWXGV41iwceTCHIJDe6QJ+9cvjRNwqRcyjQvijBMrHWtImpx3xQs1C4vF4HJ18g6l1wQ=="
       },
       "Microsoft.AppCenter.Analytics": {
         "type": "Direct",
