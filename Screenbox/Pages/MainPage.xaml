@@ -27,9 +27,10 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <!--  Left pane acrylic on Windows 10  -->
+            <!--  Left pane acrylic  -->
             <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-            <contract13NotPresent:StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemControlChromeMediumAcrylicElementMediumBrush" />
+            <!--  LeftMinimal and overlay pane acrylic  -->
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
 
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
