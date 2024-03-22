@@ -847,6 +847,8 @@
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\ManifestResources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\id-ID\ManifestResources.resw" />
+    <PRIResource Include="Strings\id-ID\Resources.resw" />
     <PRIResource Include="Strings\ms-MY\ManifestResources.resw" />
     <PRIResource Include="Strings\ms-MY\Resources.resw" />
     <PRIResource Include="Strings\nl-NL\ManifestResources.resw" />
