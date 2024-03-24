@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -91,32 +92,35 @@ namespace Screenbox.Core.ViewModels
             Source = source.Source;
         }
 
-        private MediaViewModel(object source, LibVlcService libVlcService)
+        private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
         {
             _libVlcService = libVlcService;
             Source = source;
             Location = string.Empty;
             _name = string.Empty;
-            _mediaInfo = new MediaInfo();
+            _mediaInfo = mediaInfo;
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
         }
 
-        public MediaViewModel(LibVlcService libVlcService, StorageFile file) : this(file, libVlcService)
+        public MediaViewModel(LibVlcService libVlcService, StorageFile file)
+            : this(file, new MediaInfo(FilesHelpers.GetMediaTypeForFile(file)), libVlcService)
         {
             Location = file.Path;
             _name = file.DisplayName;
             _altCaption = file.Name;
         }
 
-        public MediaViewModel(LibVlcService libVlcService, Uri uri) : this(uri, libVlcService)
+        public MediaViewModel(LibVlcService libVlcService, Uri uri)
+            : this(uri, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
         {
             Location = uri.OriginalString;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }
 
-        public MediaViewModel(LibVlcService libVlcService, Media media) : this(media, libVlcService)
+        public MediaViewModel(LibVlcService libVlcService, Media media)
+            : this(media, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
         {
             Location = media.Mrl;
 
@@ -205,7 +209,7 @@ namespace Screenbox.Core.ViewModels
 
             switch (MediaType)
             {
-                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0 }:
+                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0, Media.IsParsed: true }:
                     // Update media type when it was previously set Unknown. Usually when source is a URI.
                     // We don't want to init PlaybackItem just for this.
                     MediaInfo.MediaType = MediaPlaybackType.Music;

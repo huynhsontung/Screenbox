@@ -191,12 +191,12 @@ namespace Screenbox.Core.Services
 
         public async Task<MediaInfo> GetMediaInfoAsync(StorageFile file)
         {
-            if (!file.IsAvailable) return new MediaInfo();
+            MediaPlaybackType mediaType = FilesHelpers.GetMediaTypeForFile(file);
+            if (!file.IsAvailable) return new MediaInfo(mediaType);
 
             try
             {
                 BasicProperties basicProperties = await file.GetBasicPropertiesAsync();
-                MediaPlaybackType mediaType = GetMediaTypeForFile(file);
                 switch (mediaType)
                 {
                     case MediaPlaybackType.Video:
@@ -214,7 +214,7 @@ namespace Screenbox.Core.Services
                     LogService.Log(e);
             }
 
-            return new MediaInfo();
+            return new MediaInfo(mediaType);
         }
 
         private FileOpenPicker GetFilePickerForFormats(IReadOnlyCollection<string> formats)
@@ -238,15 +238,6 @@ namespace Screenbox.Core.Services
             }
 
             return picker;
-        }
-
-        private static MediaPlaybackType GetMediaTypeForFile(IStorageFile file)
-        {
-            if (file.IsSupportedVideo()) return MediaPlaybackType.Video;
-            if (file.IsSupportedAudio()) return MediaPlaybackType.Music;
-            if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
-            if (file.IsSupportedPlaylist()) return MediaPlaybackType.Playlist;
-            return MediaPlaybackType.Unknown;
         }
     }
 }

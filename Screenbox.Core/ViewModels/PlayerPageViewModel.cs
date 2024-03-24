@@ -43,15 +43,12 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isPlaying;
         [ObservableProperty] private bool _isPlayingBadge;
         [ObservableProperty] private bool _isOpening;
+        [ObservableProperty] private bool _audioOnly;
         [ObservableProperty] private bool _showPlayPauseBadge;
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
         [ObservableProperty] private ElementTheme _actualTheme;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(AudioOnly))]
-        private MediaPlaybackType _mediaType;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -62,8 +59,6 @@ namespace Screenbox.Core.ViewModels
         private MediaPlaybackState _playbackState;
 
         public bool SeekBarPointerInteracting { get; set; }
-
-        public bool AudioOnly => MediaType == MediaPlaybackType.Music;
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _openingTimer;
@@ -589,7 +584,7 @@ namespace Screenbox.Core.ViewModels
             {
                 await current.LoadDetailsAsync(_filesService);
                 await current.LoadThumbnailAsync(_filesService);
-                MediaType = current.MediaType;
+                AudioOnly = current.MediaType == MediaPlaybackType.Music;
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
