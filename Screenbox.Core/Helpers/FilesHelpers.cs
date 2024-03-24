@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using Screenbox.Core.Enums;
+using System.Collections.Immutable;
 using Windows.Storage;
 
 namespace Screenbox.Core.Helpers;
@@ -23,4 +24,13 @@ public static class FilesHelpers
     public static bool IsSupportedPlaylist(this IStorageFile file) => SupportedPlaylistFormats.Contains(file.FileType.ToLowerInvariant());
     public static bool IsSupported(this IStorageFile file) => SupportedFormats.Contains(file.FileType.ToLowerInvariant());
     public static bool IsSupportedSubtitle(this IStorageFile file) => SupportedSubtitleFormats.Contains(file.FileType.ToLowerInvariant());
+
+    public static MediaPlaybackType GetMediaTypeForFile(IStorageFile file)
+    {
+        if (file.IsSupportedVideo()) return MediaPlaybackType.Video;
+        if (file.IsSupportedAudio()) return MediaPlaybackType.Music;
+        if (file.ContentType.StartsWith("image")) return MediaPlaybackType.Image;
+        if (file.IsSupportedPlaylist()) return MediaPlaybackType.Playlist;
+        return MediaPlaybackType.Unknown;
+    }
 }

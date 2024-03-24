@@ -9,16 +9,17 @@ public sealed class MediaInfo
 {
     public MediaPlaybackType MediaType { get; set; }
 
-    public VideoInfo VideoProperties { get; set; }
+    public VideoInfo VideoProperties { get; }
 
-    public MusicInfo MusicProperties { get; set; }
+    public MusicInfo MusicProperties { get; }
 
-    public ulong Size { get; set; }
+    public ulong Size { get; }
 
-    public DateTimeOffset DateModified { get; set; }
+    public DateTimeOffset DateModified { get; }
 
-    public MediaInfo()
+    public MediaInfo(MediaPlaybackType mediaType)
     {
+        MediaType = mediaType;
         VideoProperties = new VideoInfo();
         MusicProperties = new MusicInfo();
     }
