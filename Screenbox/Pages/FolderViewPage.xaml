@@ -78,21 +78,21 @@
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
-            Margin="56,0,56,12"
+            Margin="{StaticResource PageContentMargin}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
         <muxc:ProgressBar
-            x:Name="LoadingProgressBar"
             Grid.Row="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="0,4,0,0"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="FolderView"
             Grid.Row="2"
+            Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource PageThumbnailMargin}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -154,8 +154,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="16,0,16,12" />
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                         <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>

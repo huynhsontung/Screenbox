@@ -75,10 +75,11 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <SemanticZoom Margin="0,24,0,0">
+        <SemanticZoom>
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
+                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource PageContentMargin}"
                     extensions:ListViewExtensions.ItemCornerRadius="8"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
