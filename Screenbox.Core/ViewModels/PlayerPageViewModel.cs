@@ -201,7 +201,7 @@ namespace Screenbox.Core.ViewModels
                         }
                         else
                         {
-                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                            Messenger.Send(new PlayFilesMessage(items));
                         }
 
                         return;

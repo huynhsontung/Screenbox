@@ -28,7 +28,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MediaListViewModel : ObservableRecipient,
         IRecipient<PlayMediaMessage>,
-        IRecipient<PlayFilesWithNeighborsMessage>,
+        IRecipient<PlayFilesMessage>,
         IRecipient<QueuePlaylistMessage>,
         IRecipient<ClearPlaylistMessage>,
         IRecipient<PlaylistRequestMessage>,
@@ -126,7 +126,7 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public async void Receive(PlayFilesWithNeighborsMessage message)
+        public async void Receive(PlayFilesMessage message)
         {
             IReadOnlyList<IStorageItem> files = message.Value;
             _neighboringFilesQuery = message.NeighboringFilesQuery;

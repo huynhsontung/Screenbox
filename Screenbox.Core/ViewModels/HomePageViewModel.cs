@@ -77,7 +77,7 @@ namespace Screenbox.Core.ViewModels
                     IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
-                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        Messenger.Send(new PlayFilesMessage(items));
                         return;
                     }
                 }
