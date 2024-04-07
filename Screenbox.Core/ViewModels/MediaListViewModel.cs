@@ -150,7 +150,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ClearPlaylistMessage message)
         {
-            ClearPlaylist();
+            ClearPlaylistAndNeighboringQuery();
         }
 
         public void Receive(QueuePlaylistMessage message)
@@ -192,7 +192,7 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 _lastUpdated = message.Value;
-                ClearPlaylist();
+                ClearPlaylistAndNeighboringQuery();
                 EnqueueAndPlay(message.Value);
             }
         }
@@ -544,6 +544,12 @@ namespace Screenbox.Core.ViewModels
         private void Clear()
         {
             CurrentItem = null;
+            ClearPlaylistAndNeighboringQuery();
+        }
+
+        private void ClearPlaylistAndNeighboringQuery()
+        {
+            _neighboringFilesQuery = null;
             ClearPlaylist();
         }
 
