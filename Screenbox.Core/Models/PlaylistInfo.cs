@@ -1,18 +1,29 @@
 ﻿#nullable enable
 
 using System.Collections.Generic;
+using Windows.Storage.Search;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
-namespace Screenbox.Core.Models
+namespace Screenbox.Core.Models;
+public sealed class PlaylistInfo
 {
-    public sealed record PlaylistInfo(IReadOnlyCollection<MediaViewModel> Playlist, MediaViewModel? ActiveItem, int ActiveIndex, object? LastUpdate)
+    public StorageFileQueryResult? NeighboringFilesQuery { get; }
+
+    public IReadOnlyCollection<MediaViewModel> Playlist { get; }
+
+    public MediaViewModel? ActiveItem { get; }
+
+    public int ActiveIndex { get; }
+
+    public object? LastUpdate { get; }
+
+    public PlaylistInfo(IReadOnlyCollection<MediaViewModel> playlist, MediaViewModel? activeItem, int activeIndex,
+        object? lastUpdate, StorageFileQueryResult? neighboringFilesQuery)
     {
-        public IReadOnlyCollection<MediaViewModel> Playlist { get; } = Playlist;
-
-        public MediaViewModel? ActiveItem { get; } = ActiveItem;
-
-        public int ActiveIndex { get; } = ActiveIndex;
-
-        public object? LastUpdate { get; } = LastUpdate;
+        Playlist = playlist;
+        ActiveItem = activeItem;
+        ActiveIndex = activeIndex;
+        LastUpdate = lastUpdate;
+        NeighboringFilesQuery = neighboringFilesQuery;
     }
 }

@@ -62,18 +62,44 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             if (message.Value?.Source is not StorageFile file) return;
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-            {
-                ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(file.Name)}\""
-            };
+            IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
 
-            StorageFileQueryResult? query = await _filesService.GetNeighboringFilesQueryAsync(file, options);
-            if (query == null) return;
-            IReadOnlyList<StorageFile> subtitles = await query.GetFilesAsync(0, 1);
             if (subtitles.Count <= 0) return;
             StorageFile subtitle = subtitles[0];
             // Preload subtitle but don't select it
             _mediaPlayer.AddSubtitle(subtitle, false);
+        }
+
+        private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
+        {
+            IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
+            StorageFileQueryResult? query = Messenger.Send<PlaylistRequestMessage>().Response.NeighboringFilesQuery;
+            if (query != null)
+            {
+                uint count = await query.GetItemCountAsync();
+                if (count < 50)
+                {
+                    IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, count);
+                    subtitles = files.Where(f =>
+                        f.IsSupportedSubtitle() && f.Name.StartsWith(Path.GetFileNameWithoutExtension(sourceFile.Name),
+                            StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+            }
+            else
+            {
+                QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+                {
+                    ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
+                };
+
+                query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+                if (query != null)
+                {
+                    subtitles = await query.GetFilesAsync(0, 50);
+                }
+            }
+
+            return subtitles;
         }
 
         partial void OnSubtitleTrackIndexChanged(int value)

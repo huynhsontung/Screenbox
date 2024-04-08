@@ -174,7 +174,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(PlaylistRequestMessage message)
         {
-            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated));
+            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated, _neighboringFilesQuery));
         }
 
         public void Receive(PlayMediaMessage message)
