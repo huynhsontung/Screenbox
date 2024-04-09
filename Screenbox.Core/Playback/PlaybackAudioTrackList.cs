@@ -1,12 +1,15 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
     {
         private readonly Media _media;
+        private readonly MediaPlaybackAudioTrackList? _source;
 
         public PlaybackAudioTrackList(Media media)
         {
@@ -61,7 +64,7 @@ namespace Screenbox.Core.Playback
         //    {
         //        TrackList.Add(new AudioTrack(track));
         //    }
-            
+
         //    SelectedIndex = audioTracks.SelectedIndex;
         //    audioTracks.SelectedIndexChanged += AudioTracks_SelectedIndexChanged;
         //}
@@ -73,9 +76,9 @@ namespace Screenbox.Core.Playback
             AddVlcMediaTracks(_media.Tracks);
         }
 
-        private void AddVlcMediaTracks(MediaTrack[] tracks)
+        private void AddVlcMediaTracks(LibVLCSharp.Shared.MediaTrack[] tracks)
         {
-            foreach (MediaTrack track in tracks)
+            foreach (LibVLCSharp.Shared.MediaTrack track in tracks)
             {
                 if (track.TrackType == TrackType.Audio)
                 {
@@ -95,7 +98,7 @@ namespace Screenbox.Core.Playback
         //            {
         //                TrackList.Add(new AudioTrack(track));
         //            }
-                    
+
         //            break;
         //        case CollectionChange.ItemInserted:
         //            TrackList.Insert(index, new AudioTrack(sender.AudioTracks[index]));

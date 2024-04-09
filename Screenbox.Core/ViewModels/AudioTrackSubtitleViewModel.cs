@@ -152,7 +152,7 @@ namespace Screenbox.Core.ViewModels
             {
                 AudioTrack audioTrack = ItemAudioTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                AudioTracks.Add(audioTrack.Label ?? defaultTrackLabel);
+                AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Screenbox.Core.ViewModels
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label!);
+                SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label);
             }
         }
     }
