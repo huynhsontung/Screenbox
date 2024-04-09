@@ -53,9 +53,9 @@ namespace Screenbox.Core.Playback
             AddVlcMediaTracks(_media.Tracks);
         }
 
-        private void AddVlcMediaTracks(MediaTrack[] tracks)
+        private void AddVlcMediaTracks(LibVLCSharp.Shared.MediaTrack[] tracks)
         {
-            foreach (MediaTrack track in tracks)
+            foreach (LibVLCSharp.Shared.MediaTrack track in tracks)
             {
                 if (track.TrackType == TrackType.Video)
                 {

@@ -71,7 +71,7 @@ namespace Screenbox.Core.Playback
             // Delay to wait for _media.Tracks to populate
             // Run in new thread to ensure VLC thread safety
             await Task.Delay(50).ConfigureAwait(false);
-            foreach (MediaTrack track in _media.Tracks)
+            foreach (LibVLCSharp.Shared.MediaTrack track in _media.Tracks)
             {
                 if (track.TrackType == TrackType.Text && track.Id == trackId)
                 {
@@ -95,9 +95,9 @@ namespace Screenbox.Core.Playback
             AddVlcMediaTracks(_media.Tracks);
         }
 
-        private void AddVlcMediaTracks(MediaTrack[] tracks)
+        private void AddVlcMediaTracks(LibVLCSharp.Shared.MediaTrack[] tracks)
         {
-            foreach (MediaTrack track in tracks)
+            foreach (LibVLCSharp.Shared.MediaTrack track in tracks)
             {
                 if (track.TrackType == TrackType.Text)
                 {
