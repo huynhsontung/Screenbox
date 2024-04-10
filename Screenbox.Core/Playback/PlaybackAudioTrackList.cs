@@ -8,7 +8,7 @@ namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
     {
-        private readonly Media _media;
+        private readonly Media? _media;
         private readonly MediaPlaybackAudioTrackList? _source;
 
         public PlaybackAudioTrackList(Media media)
@@ -71,7 +71,7 @@ namespace Screenbox.Core.Playback
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
-            if (e.ParsedStatus != MediaParsedStatus.Done) return;
+            if (_media == null || e.ParsedStatus != MediaParsedStatus.Done) return;
             _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
         }
