@@ -1,14 +1,18 @@
 ﻿#nullable enable
 
-using Windows.Media.Core;
-using LibVLCSharp.Shared;
 using CommunityToolkit.Diagnostics;
+using LibVLCSharp.Shared;
+using Windows.Media.Core;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class SubtitleTrack : MediaTrack
     {
-        internal int VlcSpu { get; }
+        internal int VlcSpu { get; set; }
+
+        public SubtitleTrack(string language = "") : base(MediaTrackKind.TimedMetadata, language)
+        {
+        }
 
         public SubtitleTrack(LibVLCSharp.Shared.MediaTrack textTrack) : base(textTrack)
         {

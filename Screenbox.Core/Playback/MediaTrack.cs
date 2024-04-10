@@ -8,7 +8,7 @@ using Windows.Media.Core;
 namespace Screenbox.Core.Playback;
 public abstract class MediaTrack : IMediaTrack
 {
-    public string Id { get; }
+    public string Id { get; internal set; }
 
     public string Label { get; set; }
 
@@ -18,6 +18,14 @@ public abstract class MediaTrack : IMediaTrack
     private readonly string _languageStr;
 
     public MediaTrackKind TrackKind { get; }
+
+    internal MediaTrack(MediaTrackKind trackKind, string language = "")
+    {
+        TrackKind = trackKind;
+        _languageStr = language;
+        Id = string.Empty;
+        Label = string.Empty;
+    }
 
     protected MediaTrack(LibVLCSharp.Shared.MediaTrack track)
     {

@@ -60,14 +60,16 @@ namespace Screenbox.Core.ViewModels
         /// </summary>
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
-            if (_mediaPlayer == null) return;
-            if (message.Value?.Source is not StorageFile file) return;
+            if (_mediaPlayer is not VlcMediaPlayer player) return;
+            if (message.Value is not { Source: StorageFile file, Item: { } item }) return;
             IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
 
             if (subtitles.Count <= 0) return;
-            StorageFile subtitle = subtitles[0];
-            // Preload subtitle but don't select it
-            _mediaPlayer.AddSubtitle(subtitle, false);
+            foreach (StorageFile subtitleFile in subtitles)
+            {
+                // Preload subtitle but don't select it
+                item.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
+            }
         }
 
         private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
@@ -117,13 +119,13 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private async Task AddSubtitle()
         {
-            if (_mediaPlayer?.PlaybackItem == null) return;
+            if (ItemSubtitleTrackList == null || _mediaPlayer is not VlcMediaPlayer player) return;
             try
             {
                 StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
                 if (file == null) return;
 
-                _mediaPlayer.AddSubtitle(file);
+                ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
                 Messenger.Send(new SubtitleAddedNotificationMessage(file));
             }
             catch (Exception e)
