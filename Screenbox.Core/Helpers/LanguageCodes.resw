@@ -1,0 +1,669 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="abk" xml:space="preserve">
+    <value>ab</value>
+  </data>
+  <data name="ave" xml:space="preserve">
+    <value>ae</value>
+  </data>
+  <data name="afr" xml:space="preserve">
+    <value>af</value>
+  </data>
+  <data name="aka" xml:space="preserve">
+    <value>ak</value>
+  </data>
+  <data name="amh" xml:space="preserve">
+    <value>am</value>
+  </data>
+  <data name="arg" xml:space="preserve">
+    <value>an</value>
+  </data>
+  <data name="ara" xml:space="preserve">
+    <value>ar</value>
+  </data>
+  <data name="asm" xml:space="preserve">
+    <value>as</value>
+  </data>
+  <data name="ava" xml:space="preserve">
+    <value>av</value>
+  </data>
+  <data name="aym" xml:space="preserve">
+    <value>ay</value>
+  </data>
+  <data name="aze" xml:space="preserve">
+    <value>az</value>
+  </data>
+  <data name="bak" xml:space="preserve">
+    <value>ba</value>
+  </data>
+  <data name="bel" xml:space="preserve">
+    <value>be</value>
+  </data>
+  <data name="bul" xml:space="preserve">
+    <value>bg</value>
+  </data>
+  <data name="bih" xml:space="preserve">
+    <value>bh</value>
+  </data>
+  <data name="bis" xml:space="preserve">
+    <value>bi</value>
+  </data>
+  <data name="bam" xml:space="preserve">
+    <value>bm</value>
+  </data>
+  <data name="ben" xml:space="preserve">
+    <value>bn</value>
+  </data>
+  <data name="tib" xml:space="preserve">
+    <value>bo</value>
+  </data>
+  <data name="bre" xml:space="preserve">
+    <value>br</value>
+  </data>
+  <data name="bos" xml:space="preserve">
+    <value>bs</value>
+  </data>
+  <data name="cat" xml:space="preserve">
+    <value>ca</value>
+  </data>
+  <data name="che" xml:space="preserve">
+    <value>ce</value>
+  </data>
+  <data name="cha" xml:space="preserve">
+    <value>ch</value>
+  </data>
+  <data name="cos" xml:space="preserve">
+    <value>co</value>
+  </data>
+  <data name="cre" xml:space="preserve">
+    <value>cr</value>
+  </data>
+  <data name="cze" xml:space="preserve">
+    <value>cs</value>
+  </data>
+  <data name="chu" xml:space="preserve">
+    <value>cu</value>
+  </data>
+  <data name="chv" xml:space="preserve">
+    <value>cv</value>
+  </data>
+  <data name="wel" xml:space="preserve">
+    <value>cy</value>
+  </data>
+  <data name="dan" xml:space="preserve">
+    <value>da</value>
+  </data>
+  <data name="ger" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="div" xml:space="preserve">
+    <value>dv</value>
+  </data>
+  <data name="dzo" xml:space="preserve">
+    <value>dz</value>
+  </data>
+  <data name="ewe" xml:space="preserve">
+    <value>ee</value>
+  </data>
+  <data name="gre" xml:space="preserve">
+    <value>el</value>
+  </data>
+  <data name="eng" xml:space="preserve">
+    <value>en</value>
+  </data>
+  <data name="epo" xml:space="preserve">
+    <value>eo</value>
+  </data>
+  <data name="spa" xml:space="preserve">
+    <value>es</value>
+  </data>
+  <data name="est" xml:space="preserve">
+    <value>et</value>
+  </data>
+  <data name="baq" xml:space="preserve">
+    <value>eu</value>
+  </data>
+  <data name="per" xml:space="preserve">
+    <value>fa</value>
+  </data>
+  <data name="ful" xml:space="preserve">
+    <value>ff</value>
+  </data>
+  <data name="fin" xml:space="preserve">
+    <value>fi</value>
+  </data>
+  <data name="fij" xml:space="preserve">
+    <value>fj</value>
+  </data>
+  <data name="fao" xml:space="preserve">
+    <value>fo</value>
+  </data>
+  <data name="fre" xml:space="preserve">
+    <value>fr</value>
+  </data>
+  <data name="fry" xml:space="preserve">
+    <value>fy</value>
+  </data>
+  <data name="gle" xml:space="preserve">
+    <value>ga</value>
+  </data>
+  <data name="gla" xml:space="preserve">
+    <value>gd</value>
+  </data>
+  <data name="glg" xml:space="preserve">
+    <value>gl</value>
+  </data>
+  <data name="grn" xml:space="preserve">
+    <value>gn</value>
+  </data>
+  <data name="guj" xml:space="preserve">
+    <value>gu</value>
+  </data>
+  <data name="glv" xml:space="preserve">
+    <value>gv</value>
+  </data>
+  <data name="hau" xml:space="preserve">
+    <value>ha</value>
+  </data>
+  <data name="heb" xml:space="preserve">
+    <value>he</value>
+  </data>
+  <data name="hin" xml:space="preserve">
+    <value>hi</value>
+  </data>
+  <data name="hmo" xml:space="preserve">
+    <value>ho</value>
+  </data>
+  <data name="hrv" xml:space="preserve">
+    <value>hr</value>
+  </data>
+  <data name="hat" xml:space="preserve">
+    <value>ht</value>
+  </data>
+  <data name="hun" xml:space="preserve">
+    <value>hu</value>
+  </data>
+  <data name="arm" xml:space="preserve">
+    <value>hy</value>
+  </data>
+  <data name="her" xml:space="preserve">
+    <value>hz</value>
+  </data>
+  <data name="ina" xml:space="preserve">
+    <value>ia</value>
+  </data>
+  <data name="ind" xml:space="preserve">
+    <value>id</value>
+  </data>
+  <data name="ile" xml:space="preserve">
+    <value>ie</value>
+  </data>
+  <data name="ibo" xml:space="preserve">
+    <value>ig</value>
+  </data>
+  <data name="iii" xml:space="preserve">
+    <value>ii</value>
+  </data>
+  <data name="ipk" xml:space="preserve">
+    <value>ik</value>
+  </data>
+  <data name="ido" xml:space="preserve">
+    <value>io</value>
+  </data>
+  <data name="ice" xml:space="preserve">
+    <value>is</value>
+  </data>
+  <data name="ita" xml:space="preserve">
+    <value>it</value>
+  </data>
+  <data name="iku" xml:space="preserve">
+    <value>iu</value>
+  </data>
+  <data name="jpn" xml:space="preserve">
+    <value>ja</value>
+  </data>
+  <data name="jav" xml:space="preserve">
+    <value>jv</value>
+  </data>
+  <data name="geo" xml:space="preserve">
+    <value>ka</value>
+  </data>
+  <data name="kon" xml:space="preserve">
+    <value>kg</value>
+  </data>
+  <data name="kik" xml:space="preserve">
+    <value>ki</value>
+  </data>
+  <data name="kua" xml:space="preserve">
+    <value>kj</value>
+  </data>
+  <data name="kaz" xml:space="preserve">
+    <value>kk</value>
+  </data>
+  <data name="kal" xml:space="preserve">
+    <value>kl</value>
+  </data>
+  <data name="khm" xml:space="preserve">
+    <value>km</value>
+  </data>
+  <data name="kan" xml:space="preserve">
+    <value>kn</value>
+  </data>
+  <data name="kor" xml:space="preserve">
+    <value>ko</value>
+  </data>
+  <data name="kau" xml:space="preserve">
+    <value>kr</value>
+  </data>
+  <data name="kas" xml:space="preserve">
+    <value>ks</value>
+  </data>
+  <data name="kur" xml:space="preserve">
+    <value>ku</value>
+  </data>
+  <data name="kom" xml:space="preserve">
+    <value>kv</value>
+  </data>
+  <data name="cor" xml:space="preserve">
+    <value>kw</value>
+  </data>
+  <data name="kir" xml:space="preserve">
+    <value>ky</value>
+  </data>
+  <data name="lat" xml:space="preserve">
+    <value>la</value>
+  </data>
+  <data name="ltz" xml:space="preserve">
+    <value>lb</value>
+  </data>
+  <data name="lug" xml:space="preserve">
+    <value>lg</value>
+  </data>
+  <data name="lim" xml:space="preserve">
+    <value>li</value>
+  </data>
+  <data name="lin" xml:space="preserve">
+    <value>ln</value>
+  </data>
+  <data name="lao" xml:space="preserve">
+    <value>lo</value>
+  </data>
+  <data name="lit" xml:space="preserve">
+    <value>lt</value>
+  </data>
+  <data name="lub" xml:space="preserve">
+    <value>lu</value>
+  </data>
+  <data name="lav" xml:space="preserve">
+    <value>lv</value>
+  </data>
+  <data name="mlg" xml:space="preserve">
+    <value>mg</value>
+  </data>
+  <data name="mah" xml:space="preserve">
+    <value>mh</value>
+  </data>
+  <data name="mao" xml:space="preserve">
+    <value>mi</value>
+  </data>
+  <data name="mac" xml:space="preserve">
+    <value>mk</value>
+  </data>
+  <data name="mal" xml:space="preserve">
+    <value>ml</value>
+  </data>
+  <data name="mon" xml:space="preserve">
+    <value>mn</value>
+  </data>
+  <data name="mar" xml:space="preserve">
+    <value>mr</value>
+  </data>
+  <data name="may" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="mlt" xml:space="preserve">
+    <value>mt</value>
+  </data>
+  <data name="bur" xml:space="preserve">
+    <value>my</value>
+  </data>
+  <data name="nau" xml:space="preserve">
+    <value>na</value>
+  </data>
+  <data name="nob" xml:space="preserve">
+    <value>nb</value>
+  </data>
+  <data name="nde" xml:space="preserve">
+    <value>nd</value>
+  </data>
+  <data name="nep" xml:space="preserve">
+    <value>ne</value>
+  </data>
+  <data name="ndo" xml:space="preserve">
+    <value>ng</value>
+  </data>
+  <data name="dut" xml:space="preserve">
+    <value>nl</value>
+  </data>
+  <data name="nno" xml:space="preserve">
+    <value>nn</value>
+  </data>
+  <data name="nor" xml:space="preserve">
+    <value>no</value>
+  </data>
+  <data name="nbl" xml:space="preserve">
+    <value>nr</value>
+  </data>
+  <data name="nav" xml:space="preserve">
+    <value>nv</value>
+  </data>
+  <data name="nya" xml:space="preserve">
+    <value>ny</value>
+  </data>
+  <data name="oci" xml:space="preserve">
+    <value>oc</value>
+  </data>
+  <data name="oji" xml:space="preserve">
+    <value>oj</value>
+  </data>
+  <data name="orm" xml:space="preserve">
+    <value>om</value>
+  </data>
+  <data name="ori" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="oss" xml:space="preserve">
+    <value>os</value>
+  </data>
+  <data name="pan" xml:space="preserve">
+    <value>pa</value>
+  </data>
+  <data name="pli" xml:space="preserve">
+    <value>pi</value>
+  </data>
+  <data name="pol" xml:space="preserve">
+    <value>pl</value>
+  </data>
+  <data name="pus" xml:space="preserve">
+    <value>ps</value>
+  </data>
+  <data name="por" xml:space="preserve">
+    <value>pt</value>
+  </data>
+  <data name="que" xml:space="preserve">
+    <value>qu</value>
+  </data>
+  <data name="roh" xml:space="preserve">
+    <value>rm</value>
+  </data>
+  <data name="run" xml:space="preserve">
+    <value>rn</value>
+  </data>
+  <data name="rum" xml:space="preserve">
+    <value>ro</value>
+  </data>
+  <data name="rus" xml:space="preserve">
+    <value>ru</value>
+  </data>
+  <data name="kin" xml:space="preserve">
+    <value>rw</value>
+  </data>
+  <data name="san" xml:space="preserve">
+    <value>sa</value>
+  </data>
+  <data name="srd" xml:space="preserve">
+    <value>sc</value>
+  </data>
+  <data name="snd" xml:space="preserve">
+    <value>sd</value>
+  </data>
+  <data name="sme" xml:space="preserve">
+    <value>se</value>
+  </data>
+  <data name="sag" xml:space="preserve">
+    <value>sg</value>
+  </data>
+  <data name="sin" xml:space="preserve">
+    <value>si</value>
+  </data>
+  <data name="slo" xml:space="preserve">
+    <value>sk</value>
+  </data>
+  <data name="slv" xml:space="preserve">
+    <value>sl</value>
+  </data>
+  <data name="smo" xml:space="preserve">
+    <value>sm</value>
+  </data>
+  <data name="sna" xml:space="preserve">
+    <value>sn</value>
+  </data>
+  <data name="som" xml:space="preserve">
+    <value>so</value>
+  </data>
+  <data name="alb" xml:space="preserve">
+    <value>sq</value>
+  </data>
+  <data name="srp" xml:space="preserve">
+    <value>sr</value>
+  </data>
+  <data name="ssw" xml:space="preserve">
+    <value>ss</value>
+  </data>
+  <data name="sot" xml:space="preserve">
+    <value>st</value>
+  </data>
+  <data name="sun" xml:space="preserve">
+    <value>su</value>
+  </data>
+  <data name="swe" xml:space="preserve">
+    <value>sv</value>
+  </data>
+  <data name="swa" xml:space="preserve">
+    <value>sw</value>
+  </data>
+  <data name="tam" xml:space="preserve">
+    <value>ta</value>
+  </data>
+  <data name="tel" xml:space="preserve">
+    <value>te</value>
+  </data>
+  <data name="tgk" xml:space="preserve">
+    <value>tg</value>
+  </data>
+  <data name="tha" xml:space="preserve">
+    <value>th</value>
+  </data>
+  <data name="tir" xml:space="preserve">
+    <value>ti</value>
+  </data>
+  <data name="tuk" xml:space="preserve">
+    <value>tk</value>
+  </data>
+  <data name="tgl" xml:space="preserve">
+    <value>tl</value>
+  </data>
+  <data name="tsn" xml:space="preserve">
+    <value>tn</value>
+  </data>
+  <data name="ton" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="tur" xml:space="preserve">
+    <value>tr</value>
+  </data>
+  <data name="tso" xml:space="preserve">
+    <value>ts</value>
+  </data>
+  <data name="tat" xml:space="preserve">
+    <value>tt</value>
+  </data>
+  <data name="twi" xml:space="preserve">
+    <value>tw</value>
+  </data>
+  <data name="tah" xml:space="preserve">
+    <value>ty</value>
+  </data>
+  <data name="uig" xml:space="preserve">
+    <value>ug</value>
+  </data>
+  <data name="ukr" xml:space="preserve">
+    <value>uk</value>
+  </data>
+  <data name="urd" xml:space="preserve">
+    <value>ur</value>
+  </data>
+  <data name="uzb" xml:space="preserve">
+    <value>uz</value>
+  </data>
+  <data name="ven" xml:space="preserve">
+    <value>ve</value>
+  </data>
+  <data name="vie" xml:space="preserve">
+    <value>vi</value>
+  </data>
+  <data name="vol" xml:space="preserve">
+    <value>vo</value>
+  </data>
+  <data name="wln" xml:space="preserve">
+    <value>wa</value>
+  </data>
+  <data name="wol" xml:space="preserve">
+    <value>wo</value>
+  </data>
+  <data name="xho" xml:space="preserve">
+    <value>xh</value>
+  </data>
+  <data name="yid" xml:space="preserve">
+    <value>yi</value>
+  </data>
+  <data name="yor" xml:space="preserve">
+    <value>yo</value>
+  </data>
+  <data name="zha" xml:space="preserve">
+    <value>za</value>
+  </data>
+  <data name="chi" xml:space="preserve">
+    <value>zh</value>
+  </data>
+  <data name="zul" xml:space="preserve">
+    <value>zu</value>
+  </data>
+</root>

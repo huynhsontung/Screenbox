@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Screenbox.Core.Helpers;
 using System;
 using Windows.Globalization;
 using Windows.Media.Core;
@@ -33,6 +34,8 @@ public abstract class MediaTrack : IMediaTrack
         _languageStr = track.Language ?? string.Empty;
         if (Windows.Globalization.Language.IsWellFormed(_languageStr))
         {
+            if (LanguageHelper.TryConvertISO6392ToISO6391(_languageStr, out string bc47Tag))
+                _languageStr = bc47Tag;
             _language = new Language(_languageStr);
         }
 
