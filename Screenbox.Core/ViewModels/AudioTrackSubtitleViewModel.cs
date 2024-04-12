@@ -78,14 +78,10 @@ namespace Screenbox.Core.ViewModels
             StorageFileQueryResult? query = Messenger.Send<PlaylistRequestMessage>().Response.NeighboringFilesQuery;
             if (query != null)
             {
-                uint count = await query.GetItemCountAsync();
-                if (count < 50)
-                {
-                    IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, count);
-                    subtitles = files.Where(f =>
-                        f.IsSupportedSubtitle() && f.Name.StartsWith(Path.GetFileNameWithoutExtension(sourceFile.Name),
-                            StringComparison.OrdinalIgnoreCase)).ToList();
-                }
+                IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, 50);
+                subtitles = files.Where(f =>
+                    f.IsSupportedSubtitle() && f.Name.StartsWith(Path.GetFileNameWithoutExtension(sourceFile.Name),
+                        StringComparison.OrdinalIgnoreCase)).ToList();
             }
             else
             {
