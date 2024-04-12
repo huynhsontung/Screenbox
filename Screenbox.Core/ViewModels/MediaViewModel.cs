@@ -214,7 +214,6 @@ namespace Screenbox.Core.ViewModels
                     }
                     catch (IOException)
                     {
-                        // Likely System.IO.PathTooLongException
                         return;
                     }
 
@@ -255,10 +254,17 @@ namespace Screenbox.Core.ViewModels
         public async Task LoadThumbnailAsync(IFilesService filesService)
         {
             if (Thumbnail != null) return;
-            if (Source is Uri { IsFile: true } uri)
+            if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
             {
-                StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                Source = uriFile;
+                try
+                {
+                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    UpdateSource(uriFile);
+                }
+                catch (IOException)
+                {
+                    return;
+                }
             }
 
             if (Source is StorageFile file)

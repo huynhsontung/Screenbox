@@ -230,7 +230,7 @@ namespace Screenbox.Core.ViewModels
                 case StorageFile file:
                     _filesService.AddToRecent(file);
                     break;
-                case Uri { IsFile: true } uri:
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
                     try
                     {
                         StorageFile file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
