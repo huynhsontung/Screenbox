@@ -1,12 +1,15 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackAudioTrackList : SingleSelectTrackList<AudioTrack>
     {
-        private readonly Media _media;
+        private readonly Media? _media;
+        private readonly MediaPlaybackAudioTrackList? _source;
 
         public PlaybackAudioTrackList(Media media)
         {
@@ -23,6 +26,36 @@ namespace Screenbox.Core.Playback
             SelectedIndex = 0;
         }
 
+        public PlaybackAudioTrackList(MediaPlaybackAudioTrackList source)
+        {
+            _source = source;
+            SelectedIndex = source.SelectedIndex;
+            source.SelectedIndexChanged += (sender, args) => SelectedIndex = sender.SelectedIndex;
+            foreach (Windows.Media.Core.AudioTrack audioTrack in source)
+            {
+                TrackList.Add(new AudioTrack(audioTrack));
+            }
+
+            SelectedIndexChanged += OnSelectedIndexChanged;
+        }
+
+        public void Refresh()
+        {
+            if (_source == null) return;
+            TrackList.Clear();
+            foreach (Windows.Media.Core.AudioTrack audioTrack in _source)
+            {
+                TrackList.Add(new AudioTrack(audioTrack));
+            }
+        }
+
+        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            // Only update for Windows track list. VLC track list is handled by the player.
+            if (_source == null || _source.SelectedIndex == sender.SelectedIndex) return;
+            _source.SelectedIndex = sender.SelectedIndex;
+        }
+
         //public PlaybackAudioTrackList(MediaPlaybackItem playbackItem)
         //{
         //    playbackItem.AudioTracksChanged += PlaybackItem_AudioTracksChanged;
@@ -31,21 +64,21 @@ namespace Screenbox.Core.Playback
         //    {
         //        TrackList.Add(new AudioTrack(track));
         //    }
-            
+
         //    SelectedIndex = audioTracks.SelectedIndex;
         //    audioTracks.SelectedIndexChanged += AudioTracks_SelectedIndexChanged;
         //}
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
-            if (e.ParsedStatus != MediaParsedStatus.Done) return;
+            if (_media == null || e.ParsedStatus != MediaParsedStatus.Done) return;
             _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
         }
 
-        private void AddVlcMediaTracks(MediaTrack[] tracks)
+        private void AddVlcMediaTracks(LibVLCSharp.Shared.MediaTrack[] tracks)
         {
-            foreach (MediaTrack track in tracks)
+            foreach (LibVLCSharp.Shared.MediaTrack track in tracks)
             {
                 if (track.TrackType == TrackType.Audio)
                 {
@@ -65,7 +98,7 @@ namespace Screenbox.Core.Playback
         //            {
         //                TrackList.Add(new AudioTrack(track));
         //            }
-                    
+
         //            break;
         //        case CollectionChange.ItemInserted:
         //            TrackList.Insert(index, new AudioTrack(sender.AudioTracks[index]));

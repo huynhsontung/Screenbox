@@ -181,7 +181,7 @@ namespace Screenbox
             }
 
             Window.Current.Activate();
-            WeakReferenceMessenger.Default.Send(new PlayFilesWithNeighborsMessage(args.Files, args.NeighboringFilesQuery));
+            WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
             Analytics.TrackEvent("FileActivated", new Dictionary<string, string>
             {
                 { "PreviousExecutionState", args.PreviousExecutionState.ToString() }

@@ -60,20 +60,48 @@ namespace Screenbox.Core.ViewModels
         /// </summary>
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
-            if (_mediaPlayer == null) return;
-            if (message.Value?.Source is not StorageFile file) return;
-            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-            {
-                ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(file.Name)}\""
-            };
+            if (_mediaPlayer is not VlcMediaPlayer player) return;
+            if (message.Value is not { Source: StorageFile file, Item: { } item }) return;
+            IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
 
-            StorageFileQueryResult? query = await _filesService.GetNeighboringFilesQueryAsync(file, options);
-            if (query == null) return;
-            IReadOnlyList<StorageFile> subtitles = await query.GetFilesAsync(0, 1);
             if (subtitles.Count <= 0) return;
-            StorageFile subtitle = subtitles[0];
-            // Preload subtitle but don't select it
-            _mediaPlayer.AddSubtitle(subtitle, false);
+            foreach (StorageFile subtitleFile in subtitles)
+            {
+                // Preload subtitle but don't select it
+                item.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
+            }
+        }
+
+        private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
+        {
+            IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
+            StorageFileQueryResult? query = Messenger.Send<PlaylistRequestMessage>().Response.NeighboringFilesQuery;
+            if (query != null)
+            {
+                uint count = await query.GetItemCountAsync();
+                if (count < 50)
+                {
+                    IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, count);
+                    subtitles = files.Where(f =>
+                        f.IsSupportedSubtitle() && f.Name.StartsWith(Path.GetFileNameWithoutExtension(sourceFile.Name),
+                            StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+            }
+            else
+            {
+                QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+                {
+                    ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
+                };
+
+                query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+                if (query != null)
+                {
+                    subtitles = await query.GetFilesAsync(0, 50);
+                }
+            }
+
+            return subtitles;
         }
 
         partial void OnSubtitleTrackIndexChanged(int value)
@@ -91,13 +119,13 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private async Task AddSubtitle()
         {
-            if (_mediaPlayer?.PlaybackItem == null) return;
+            if (ItemSubtitleTrackList == null || _mediaPlayer is not VlcMediaPlayer player) return;
             try
             {
                 StorageFile? file = await _filesService.PickFileAsync(FilesHelpers.SupportedSubtitleFormats.Add("*").ToArray());
                 if (file == null) return;
 
-                _mediaPlayer.AddSubtitle(file);
+                ItemSubtitleTrackList.AddExternalSubtitle(player, file, true);
                 Messenger.Send(new SubtitleAddedNotificationMessage(file));
             }
             catch (Exception e)
@@ -119,13 +147,14 @@ namespace Screenbox.Core.ViewModels
         {
             if (ItemAudioTrackList == null) return;
             AudioTracks.Clear();
+            ItemAudioTrackList.Refresh();
             if (ItemAudioTrackList.Count <= 0) return;
 
             for (int index = 0; index < ItemAudioTrackList.Count; index++)
             {
                 AudioTrack audioTrack = ItemAudioTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                AudioTracks.Add(audioTrack.Label ?? defaultTrackLabel);
+                AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
             }
         }
 
@@ -140,7 +169,7 @@ namespace Screenbox.Core.ViewModels
             {
                 SubtitleTrack subtitleTrack = ItemSubtitleTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
-                SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label!);
+                SubtitleTracks.Add(string.IsNullOrEmpty(subtitleTrack.Label) ? defaultTrackLabel : subtitleTrack.Label);
             }
         }
     }

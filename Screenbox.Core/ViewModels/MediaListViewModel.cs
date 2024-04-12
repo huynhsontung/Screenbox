@@ -28,7 +28,7 @@ namespace Screenbox.Core.ViewModels
 {
     public sealed partial class MediaListViewModel : ObservableRecipient,
         IRecipient<PlayMediaMessage>,
-        IRecipient<PlayFilesWithNeighborsMessage>,
+        IRecipient<PlayFilesMessage>,
         IRecipient<QueuePlaylistMessage>,
         IRecipient<ClearPlaylistMessage>,
         IRecipient<PlaylistRequestMessage>,
@@ -126,7 +126,7 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public async void Receive(PlayFilesWithNeighborsMessage message)
+        public async void Receive(PlayFilesMessage message)
         {
             IReadOnlyList<IStorageItem> files = message.Value;
             _neighboringFilesQuery = message.NeighboringFilesQuery;
@@ -150,7 +150,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ClearPlaylistMessage message)
         {
-            ClearPlaylist();
+            ClearPlaylistAndNeighboringQuery();
         }
 
         public void Receive(QueuePlaylistMessage message)
@@ -174,7 +174,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(PlaylistRequestMessage message)
         {
-            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated));
+            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated, _neighboringFilesQuery));
         }
 
         public void Receive(PlayMediaMessage message)
@@ -192,7 +192,7 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 _lastUpdated = message.Value;
-                ClearPlaylist();
+                ClearPlaylistAndNeighboringQuery();
                 EnqueueAndPlay(message.Value);
             }
         }
@@ -544,6 +544,12 @@ namespace Screenbox.Core.ViewModels
         private void Clear()
         {
             CurrentItem = null;
+            ClearPlaylistAndNeighboringQuery();
+        }
+
+        private void ClearPlaylistAndNeighboringQuery()
+        {
+            _neighboringFilesQuery = null;
             ClearPlaylist();
         }
 
