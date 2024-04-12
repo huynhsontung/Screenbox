@@ -191,6 +191,13 @@ namespace Screenbox.Core.ViewModels
             _libVlcService.DisposeMedia(item.Media);
         }
 
+        public void UpdateSource(StorageFile file)
+        {
+            Source = file;
+            Name = file.DisplayName;
+            AltCaption = file.Name;
+        }
+
         public async Task LoadDetailsAsync(IFilesService filesService)
         {
             switch (Source)
@@ -198,11 +205,9 @@ namespace Screenbox.Core.ViewModels
                 case StorageFile file:
                     MediaInfo = await filesService.GetMediaInfoAsync(file);
                     break;
-                case Uri { IsFile: true } uri:
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
                     StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    Source = uriFile;
-                    Name = uriFile.DisplayName;
-                    AltCaption = uriFile.Name;
+                    UpdateSource(uriFile);
                     MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
                     break;
             }
