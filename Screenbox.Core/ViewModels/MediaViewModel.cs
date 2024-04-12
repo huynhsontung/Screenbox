@@ -13,6 +13,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -206,7 +207,17 @@ namespace Screenbox.Core.ViewModels
                     MediaInfo = await filesService.GetMediaInfoAsync(file);
                     break;
                 case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    StorageFile uriFile;
+                    try
+                    {
+                        uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    }
+                    catch (IOException)
+                    {
+                        // Likely System.IO.PathTooLongException
+                        return;
+                    }
+
                     UpdateSource(uriFile);
                     MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
                     break;
