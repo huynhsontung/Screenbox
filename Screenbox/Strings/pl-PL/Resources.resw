@@ -765,7 +765,7 @@
     <value>Search removable storage</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Zawieraj media z nośników danych takich jak nośniki USB w bibliotece</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>Active arguments</value>
