@@ -1,9 +1,7 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
-using Screenbox.Core.ViewModels;
 using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,7 +12,6 @@ namespace Screenbox.Controls.Interactions
 {
     internal class MediaListViewItemBehavior : Behavior<Control>
     {
-        private readonly CommonViewModel _common = Ioc.Default.GetRequiredService<CommonViewModel>();
         private SelectorItem? _selector;
         private ListViewBase? _listView;
         private ButtonBase? _playButton;
@@ -80,10 +77,10 @@ namespace Screenbox.Controls.Interactions
             UpdateSelectionModeVisualState((ListViewSelectionMode)listView.GetValue(ListViewBase.SelectionModeProperty));
 
             // Bind buttons command
-            BindButtonsCommand(listView);
+            BindPlayButtonCommand(listView);
         }
 
-        private void BindButtonsCommand(ListViewBase listView)
+        private void BindPlayButtonCommand(ListViewBase listView)
         {
             if (AssociatedObject.FindDescendant("PlayButton") is ButtonBase button)
             {
@@ -98,16 +95,6 @@ namespace Screenbox.Controls.Interactions
                         _ => button.Command
                     };
                 }
-            }
-
-            if (AssociatedObject.FindDescendant("AlbumButton") is ButtonBase albumButton)
-            {
-                albumButton.Command = _common.OpenAlbumCommand;
-            }
-
-            if (AssociatedObject.FindDescendant("ArtistButton") is ButtonBase artistButton)
-            {
-                artistButton.Command = _common.OpenArtistCommand;
             }
         }
 

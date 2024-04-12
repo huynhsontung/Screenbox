@@ -134,12 +134,9 @@
                         ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         SelectionMode="None">
-                        <ListView.Resources>
-                            <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand}" />
-                        </ListView.Resources>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <controls:MediaListViewItem />
+                                <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlaySongCommand, ElementName=SongListView}" />
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>

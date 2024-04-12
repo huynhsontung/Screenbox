@@ -84,6 +84,7 @@
             Height="32"
             Padding="0"
             VerticalAlignment="Center"
+            Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
             Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
@@ -115,6 +116,7 @@
             Margin="4,0"
             Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
+            Command="{x:Bind Common.OpenArtistCommand}"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">
@@ -131,6 +133,7 @@
             Margin="4,0"
             Padding="{StaticResource HyperlinkButtonCaptionPadding}"
             VerticalAlignment="Center"
+            Command="{x:Bind Common.OpenAlbumCommand}"
             CommandParameter="{Binding Album}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
             Visibility="Collapsed">

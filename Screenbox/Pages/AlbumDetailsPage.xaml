@@ -170,12 +170,12 @@
             ItemsSource="{x:Bind ViewModel.SortedItems}"
             SelectionMode="None"
             XYFocusUp="{x:Bind PlayButton}">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem IsAlbumColumnVisible="False" IsTrackNumberVisible="True" />
+                    <controls:MediaListViewItem
+                        IsAlbumColumnVisible="False"
+                        IsTrackNumberVisible="True"
+                        PlayCommand="{Binding DataContext.PlayCommand, ElementName=ItemList}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>

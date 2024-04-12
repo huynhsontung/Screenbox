@@ -231,12 +231,9 @@
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem IsIconVisible="True" />
+                    <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{Binding DataContext.PlaySingleCommand, ElementName=PlaylistListView}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <interactivity:Interaction.Behaviors>
