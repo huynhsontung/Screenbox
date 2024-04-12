@@ -13,6 +13,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -191,6 +192,13 @@ namespace Screenbox.Core.ViewModels
             _libVlcService.DisposeMedia(item.Media);
         }
 
+        public void UpdateSource(StorageFile file)
+        {
+            Source = file;
+            Name = file.DisplayName;
+            AltCaption = file.Name;
+        }
+
         public async Task LoadDetailsAsync(IFilesService filesService)
         {
             switch (Source)
@@ -198,11 +206,18 @@ namespace Screenbox.Core.ViewModels
                 case StorageFile file:
                     MediaInfo = await filesService.GetMediaInfoAsync(file);
                     break;
-                case Uri { IsFile: true } uri:
-                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    Source = uriFile;
-                    Name = uriFile.DisplayName;
-                    AltCaption = uriFile.Name;
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                    StorageFile uriFile;
+                    try
+                    {
+                        uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    }
+                    catch (IOException)
+                    {
+                        return;
+                    }
+
+                    UpdateSource(uriFile);
                     MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
                     break;
             }
@@ -239,10 +254,17 @@ namespace Screenbox.Core.ViewModels
         public async Task LoadThumbnailAsync(IFilesService filesService)
         {
             if (Thumbnail != null) return;
-            if (Source is Uri { IsFile: true } uri)
+            if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
             {
-                StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                Source = uriFile;
+                try
+                {
+                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    UpdateSource(uriFile);
+                }
+                catch (IOException)
+                {
+                    return;
+                }
             }
 
             if (Source is StorageFile file)
