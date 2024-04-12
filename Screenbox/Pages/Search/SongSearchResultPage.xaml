@@ -42,12 +42,9 @@
             ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand, FallbackValue={x:Null}}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem />
+                    <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlaySongCommand, ElementName=SongListView, FallbackValue={x:Null}}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Footer>

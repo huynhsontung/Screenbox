@@ -89,12 +89,9 @@
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     Loaded="SongListView_OnLoaded"
                     SelectionMode="None">
-                    <ListView.Resources>
-                        <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
-                    </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <controls:MediaListViewItem />
+                            <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlayCommand, ElementName=SongListView}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <interactivity:Interaction.Behaviors>
