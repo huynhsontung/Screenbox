@@ -203,14 +203,14 @@
             <TextBlock
                 x:Name="GridViewHeaderText"
                 Grid.Row="0"
-                Margin="{StaticResource PageContentMargin}"
+                Padding="{StaticResource PageContentMargin}"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{strings:Resources Key=Recent}" />
             <GridView
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
-                Margin="0,16,0,0"
+                Margin="0,24,0,0"
                 Padding="{StaticResource PageThumbnailMargin}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -254,7 +254,7 @@
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
                         <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
-                        <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>

@@ -78,8 +78,6 @@
 
     <Grid>
         <muxc:ProgressBar
-            x:Name="LoadingProgressBar"
-            Margin="{StaticResource PageContentMargin}"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
@@ -134,7 +132,6 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>

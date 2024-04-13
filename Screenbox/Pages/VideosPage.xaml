@@ -160,7 +160,7 @@
                 <interactions:GamepadXYNavigationBehavior />
             </interactivity:Interaction.Behaviors>
 
-            <Grid>
+            <Grid Margin="{StaticResource TopMediumMargin}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -169,7 +169,7 @@
                 <muxc:BreadcrumbBar
                     x:Name="BreadcrumbBar"
                     Grid.Row="0"
-                    Margin="56,12"
+                    Margin="{StaticResource PageContentMargin}"
                     ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
                     ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
@@ -223,7 +223,7 @@
                         <Setter Target="HeaderNavView.Margin" Value="16,0" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="16,12" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -55,10 +55,11 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <SemanticZoom Margin="0,24,0,0">
+        <SemanticZoom>
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
+                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource PageThumbnailMargin}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
