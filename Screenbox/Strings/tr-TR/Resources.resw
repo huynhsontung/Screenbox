@@ -595,7 +595,7 @@
     <value>Son oynatılan medyayı ana sayfada görüntüle</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Yakın medya geçmişini temizle</value>
+    <value>Medya geçmişini temizle</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
     <value>Otomatik yeniden boyutlandırma</value>
