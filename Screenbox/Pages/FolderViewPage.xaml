@@ -72,8 +72,13 @@
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource PageContentMargin}"
+            MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind ViewModel.TitleText}" />
+            Text="{x:Bind ViewModel.TitleText}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"

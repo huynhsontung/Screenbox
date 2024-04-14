@@ -39,7 +39,11 @@
             Padding="{StaticResource PageContentMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultVideoHeader(ViewModel.SearchQuery), FallbackValue={}}" />
+            Text="{x:Bind strings:Resources.SearchResultVideoHeader(ViewModel.SearchQuery), FallbackValue={}}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <GridView
             x:Name="VideosGridView"

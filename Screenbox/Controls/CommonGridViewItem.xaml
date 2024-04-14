@@ -80,8 +80,11 @@
             HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
             MaxLines="2"
             Style="{StaticResource BodyStrongTextBlockStyle}"
-            Text="{Binding Name}"
-            TextWrapping="Wrap" />
+            Text="{Binding Name}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <TextBlock
             x:Name="CaptionText"
@@ -90,7 +93,12 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind Caption, Mode=OneWay}" />
+            Text="{x:Bind Caption, Mode=OneWay}"
+            TextWrapping="NoWrap">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">

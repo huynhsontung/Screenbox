@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
@@ -34,7 +36,11 @@
             Padding="{StaticResource PageContentMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultArtistHeader(ViewModel.SearchQuery), FallbackValue={}}" />
+            Text="{x:Bind strings:Resources.SearchResultArtistHeader(ViewModel.SearchQuery), FallbackValue={}}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <GridView
             x:Name="ArtistGridView"

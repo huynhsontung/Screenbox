@@ -39,8 +39,11 @@
             Padding="{StaticResource PageContentMargin}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}"
-            TextTrimming="CharacterEllipsis" />
+            Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <ScrollViewer
             Grid.Row="1"

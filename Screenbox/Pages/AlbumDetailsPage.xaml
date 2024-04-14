@@ -103,21 +103,34 @@
                     Orientation="Vertical">
                     <TextBlock
                         x:Name="AlbumTitleText"
-                        MaxLines="1"
                         Style="{StaticResource TitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name}" />
+                        Text="{x:Bind ViewModel.Source.Name}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                     <TextBlock
                         x:Name="ArtistNameText"
                         FontWeight="Normal"
-                        MaxLines="1"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.ArtistName}" />
+                        Text="{x:Bind ViewModel.Source.ArtistName}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                     <TextBlock
                         x:Name="Subtext"
                         Margin="0,8,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                        MaxLines="1"
-                        Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}" />
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                 </StackPanel>
 
                 <StackPanel
