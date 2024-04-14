@@ -52,47 +52,48 @@
             ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
             Visibility="Collapsed" />
 
-        <Grid Grid.Column="1">
-            <TextBlock
-                x:Name="TrackNumberText"
-                Padding="0,0,8,0"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                IsHitTestVisible="False"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding TrackNumberText, FallbackValue=''}"
-                TextWrapping="NoWrap"
-                Visibility="{x:Bind IsTrackNumberVisible}" />
-            <FontIcon
-                x:Name="ItemMediaTypeIcon"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
-                IsHitTestVisible="False"
-                Visibility="{x:Bind IsIconVisible}" />
-            <Button
-                x:Name="PlayButton"
-                Width="32"
-                Height="32"
-                Padding="0"
-                VerticalAlignment="Center"
-                Command="{x:Bind PlayCommand, Mode=OneWay}"
-                CommandParameter="{Binding}"
-                Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
-                Visibility="Collapsed">
-                <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
-                <Button.Resources>
-                    <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
-                    <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
-                    <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                    <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                    <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
-                    <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
-                </Button.Resources>
-            </Button>
-        </Grid>
+        <TextBlock
+            x:Name="TrackNumberText"
+            Grid.Column="1"
+            Padding="0,0,8,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            IsHitTestVisible="False"
+            Style="{StaticResource CaptionTextBlockStyle}"
+            Text="{Binding TrackNumberText, FallbackValue=''}"
+            TextWrapping="NoWrap"
+            Visibility="{x:Bind IsTrackNumberVisible}" />
+        <FontIcon
+            x:Name="ItemMediaTypeIcon"
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
+            IsHitTestVisible="False"
+            Visibility="{x:Bind IsIconVisible}" />
+        <Button
+            x:Name="PlayButton"
+            Grid.Column="1"
+            Width="32"
+            Height="32"
+            Padding="0"
+            VerticalAlignment="Center"
+            Command="{x:Bind PlayCommand, Mode=OneWay}"
+            CommandParameter="{Binding}"
+            Style="{StaticResource SubtleButtonStyle}"
+            ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
+            Visibility="Collapsed">
+            <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <Button.Resources>
+                <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
+                <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
+                <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
+                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
+                <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+            </Button.Resources>
+        </Button>
 
         <TextBlock
             x:Name="TitleText"
