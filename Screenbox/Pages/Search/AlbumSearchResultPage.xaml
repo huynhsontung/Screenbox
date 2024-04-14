@@ -48,7 +48,7 @@
         <GridView
             x:Name="AlbumGridView"
             Grid.Row="1"
-            Margin="0,12,0,0"
+            Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource PageThumbnailMargin}"
             ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"

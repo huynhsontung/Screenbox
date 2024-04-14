@@ -37,7 +37,7 @@
         <ListView
             x:Name="SongListView"
             Grid.Row="1"
-            Margin="0,12,0,0"
+            Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource PageContentMargin}"
             extensions:ListViewExtensions.ItemCornerRadius="8"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"

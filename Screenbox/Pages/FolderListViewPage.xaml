@@ -113,7 +113,8 @@
         <!--  Empty content  -->
         <TextBlock
             x:Name="NoContentText"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -133,7 +134,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

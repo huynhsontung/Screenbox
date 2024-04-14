@@ -139,7 +139,8 @@
         <TextBlock
             x:Name="NoContentText"
             Grid.Row="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -161,7 +162,7 @@
                         <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

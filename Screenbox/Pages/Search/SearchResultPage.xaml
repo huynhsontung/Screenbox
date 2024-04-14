@@ -52,11 +52,13 @@
             <StackPanel
                 Orientation="Vertical"
                 SizeChanged="GridView_OnSizeChanged"
-                Spacing="24"
                 XYFocusDownNavigationStrategy="RectilinearDistance"
                 XYFocusKeyboardNavigation="Enabled">
                 <!--  Artists Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowArtists}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowArtists}">
                     <Grid
                         x:Name="ArtistsResultHeader"
                         Height="32"
@@ -82,7 +84,10 @@
                         SelectionMode="None" />
                 </StackPanel>
                 <!--  Albums Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowAlbums}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowAlbums}">
                     <Grid
                         x:Name="AlbumsResultHeader"
                         Height="32"
@@ -112,7 +117,10 @@
                     </GridView>
                 </StackPanel>
                 <!--  Songs Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowSongs}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowSongs}">
                     <Grid
                         x:Name="SongsResultHeader"
                         Height="32"
