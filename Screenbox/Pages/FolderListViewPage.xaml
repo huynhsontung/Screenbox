@@ -58,20 +58,23 @@
                 <FontIcon
                     Grid.Column="0"
                     HorizontalAlignment="Center"
-                    FontSize="16"
                     Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                 <TextBlock
                     Grid.Column="1"
-                    Margin="0,0,16,0"
-                    MaxLines="1"
+                    Margin="8,0,16,0"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind Name}" />
+                    Text="{x:Bind Name}"
+                    TextWrapping="NoWrap">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:OverflowTextToolTipBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </TextBlock>
                 <TextBlock
                     Grid.Column="2"
                     HorizontalAlignment="Right"
-                    MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind CaptionText, Mode=OneWay}" />
+                    Text="{x:Bind CaptionText, Mode=OneWay}"
+                    TextWrapping="NoWrap" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
