@@ -77,6 +77,8 @@ namespace Screenbox.Pages
             ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
 
             CreateHeaderAnimation(_props, scrollingProperties.Translation.Y);
+
+            if (ViewModel.Source.RelatedSongs.Count == 0) return;
             MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
             if (firstSong.ThumbnailSource != null)
             {

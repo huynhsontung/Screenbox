@@ -68,7 +68,7 @@ namespace Screenbox.Core.ViewModels
             if (args.Phase != 0) return;
             if (args.Item is AlbumViewModel album)
             {
-                await album.RelatedSongs[0].LoadThumbnailAsync(_filesService);
+                await album.LoadAlbumArtAsync(_filesService);
             }
         }
 
