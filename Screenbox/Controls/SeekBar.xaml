@@ -49,6 +49,7 @@
             Maximum="{x:Bind ViewModel.Length, Mode=OneWay, FallbackValue=0}"
             Minimum="0"
             PointerExited="SeekBarSlider_OnPointerExited"
+            PointerWheelChanged="SeekBarSlider_OnPointerWheelChanged"
             SizeChanged="SeekBarSlider_OnSizeChanged"
             SmallChange="5000"
             Style="{StaticResource DefaultSliderStyle}"
