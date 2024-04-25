@@ -32,6 +32,7 @@
                     <commands:ShowPropertiesCommand x:Key="ShowPropertiesCommand" />
 
                     <!--  Converters  -->
+                    <converters:FirstOrDefaultConverter x:Key="FirstOrDefaultConverter" />
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />

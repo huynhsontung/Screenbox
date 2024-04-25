@@ -87,11 +87,11 @@
                         FontSize="64"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xE93C;"
-                        Visibility="{x:Bind ViewModel.Source.RelatedSongs[0].Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
+                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
                     <Border CornerRadius="8">
                         <Image
                             HorizontalAlignment="Center"
-                            Source="{x:Bind ViewModel.Source.RelatedSongs[0].Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                            Source="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}"
                             Stretch="UniformToFill" />
                     </Border>
                 </Grid>
@@ -132,7 +132,7 @@
                         x:Name="PlayButton"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
-                        CommandParameter="{x:Bind ViewModel.SortedItems[0], Mode=OneWay, FallbackValue={x:Null}}"
+                        CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
                         Style="{StaticResource AccentButtonStyle}"
                         XYFocusDown="{x:Bind ItemList}">
                         <StackPanel Orientation="Horizontal">

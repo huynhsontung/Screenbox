@@ -273,8 +273,18 @@ namespace Screenbox.Core.ViewModels
                 if (source == null) return;
                 ThumbnailSource = source;
                 BitmapImage image = new();
+
+                try
+                {
+                    await image.SetSourceAsync(ThumbnailSource);
+                }
+                catch (Exception)
+                {
+                    // WinRT component not found exception???
+                    return;
+                }
+
                 Thumbnail = image;
-                await image.SetSourceAsync(ThumbnailSource);
             }
             else if (_item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))

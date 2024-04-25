@@ -218,6 +218,7 @@
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DefaultStringConverter.cs" />
+    <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />

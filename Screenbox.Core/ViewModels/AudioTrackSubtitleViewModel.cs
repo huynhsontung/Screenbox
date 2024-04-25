@@ -61,7 +61,9 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (_mediaPlayer is not VlcMediaPlayer player) return;
-            if (message.Value is not { Source: StorageFile file, Item: { } item }) return;
+            if (message.Value is not { Source: StorageFile file, Item: { } item, MediaType: MediaPlaybackType.Video })
+                return;
+
             IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
 
             if (subtitles.Count <= 0) return;
@@ -78,10 +80,19 @@ namespace Screenbox.Core.ViewModels
             StorageFileQueryResult? query = Messenger.Send<PlaylistRequestMessage>().Response.NeighboringFilesQuery;
             if (query != null)
             {
-                IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, 50);
-                subtitles = files.Where(f =>
-                    f.IsSupportedSubtitle() && f.Name.StartsWith(Path.GetFileNameWithoutExtension(sourceFile.Name),
-                        StringComparison.OrdinalIgnoreCase)).ToList();
+                try
+                {
+                    IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, 50);
+                    subtitles = files.Where(f =>
+                            f.IsSupportedSubtitle() && f.Name.StartsWith(
+                                Path.GetFileNameWithoutExtension(sourceFile.Name),
+                                StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                }
+                catch (Exception e)
+                {
+                    LogService.Log(e);
+                }
             }
             else
             {

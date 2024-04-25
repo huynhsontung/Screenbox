@@ -28,7 +28,7 @@ namespace Screenbox.Controls.Interactions
             switch (args.Item)
             {
                 case AlbumViewModel album:
-                    await album.RelatedSongs[0].LoadThumbnailAsync(_filesService);
+                    await album.LoadAlbumArtAsync(_filesService);
                     break;
                 case MediaViewModel media:
                     await media.LoadThumbnailAsync(_filesService);

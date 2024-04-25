@@ -50,9 +50,9 @@
                                 FontSize="52"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="&#xE93C;"
-                                Visibility="{Binding Key.RelatedSongs[0].Thumbnail, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
+                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
                             <Border CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Image Source="{Binding Key.RelatedSongs[0].Thumbnail, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                                <Image Source="{Binding Key.AlbumArt}" Stretch="UniformToFill" />
                             </Border>
                         </Grid>
 
