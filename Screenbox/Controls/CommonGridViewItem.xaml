@@ -63,7 +63,7 @@
             Padding="0"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Command="{x:Bind PlayCommand, Mode=TwoWay}"
+            Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
             CornerRadius="99"
             Opacity="0"
