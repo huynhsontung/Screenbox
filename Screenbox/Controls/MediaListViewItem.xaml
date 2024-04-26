@@ -55,28 +55,23 @@
         <TextBlock
             x:Name="TrackNumberText"
             Grid.Column="1"
-            Margin="8"
+            Padding="0,0,8,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             IsHitTestVisible="False"
-            MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding TrackNumberText, FallbackValue=''}"
+            TextWrapping="NoWrap"
             Visibility="{x:Bind IsTrackNumberVisible}" />
-
         <FontIcon
-            x:Name="ItemIcon"
+            x:Name="ItemMediaTypeIcon"
             Grid.Column="1"
-            Margin="8"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            FontFamily="{StaticResource SymbolThemeFontFamily}"
-            FontSize="{StaticResource DefaultIconFontSize}"
             Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
-
         <Button
             x:Name="PlayButton"
             Grid.Column="1"
@@ -89,7 +84,7 @@
             Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
-            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+            <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
             <Button.Resources>
                 <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
                 <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
@@ -103,12 +98,15 @@
         <TextBlock
             x:Name="TitleText"
             Grid.Column="2"
-            Margin="8,0,8,0"
+            Margin="8,0,0,0"
             VerticalAlignment="Center"
-            MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding Name}"
-            TextTrimming="CharacterEllipsis" />
+            TextWrapping="NoWrap">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <HyperlinkButton
             x:Name="ArtistButton"
@@ -122,9 +120,13 @@
             Visibility="Collapsed">
             <TextBlock
                 x:Name="ArtistText"
-                MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding MainArtist.Name, FallbackValue=''}" />
+                Text="{Binding MainArtist.Name, FallbackValue=''}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <interactions:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
         </HyperlinkButton>
 
         <HyperlinkButton
@@ -139,9 +141,13 @@
             Visibility="Collapsed">
             <TextBlock
                 x:Name="AlbumText"
-                MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Album.Name, FallbackValue=''}" />
+                Text="{Binding Album.Name, FallbackValue=''}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <interactions:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
         </HyperlinkButton>
 
         <TextBlock
@@ -150,21 +156,25 @@
             Margin="4,0"
             VerticalAlignment="Center"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-            MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}}"
-            Visibility="Collapsed" />
+            TextWrapping="NoWrap"
+            Visibility="Collapsed">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <TextBlock
             x:Name="DurationText"
             Grid.Column="6"
-            Margin="8,0,16,0"
+            Margin="0,0,16,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-            MaxLines="1"
             Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{Binding DurationText}" />
+            Text="{Binding DurationText}"
+            TextWrapping="NoWrap" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ActivityStates">
@@ -175,7 +185,7 @@
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
                         <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                        <Setter Target="ItemIcon.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="ItemMediaTypeIcon.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
@@ -222,16 +232,16 @@
             <VisualStateGroup x:Name="MultiSelectStates">
                 <VisualState x:Name="MultiSelectDisabled">
                     <VisualState.Setters>
-                        <Setter Target="PlayingIndicator.Opacity" Value="1" />
-                        <Setter Target="ItemIcon.Opacity" Value="1" />
                         <Setter Target="RootGridTranslateTransform.X" Value="0" />
+                        <Setter Target="PlayingIndicator.Opacity" Value="1" />
+                        <Setter Target="ItemMediaTypeIcon.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="MultiSelectEnabled">
                     <VisualState.Setters>
-                        <Setter Target="PlayingIndicator.Opacity" Value="0" />
-                        <Setter Target="ItemIcon.Opacity" Value="0" />
                         <Setter Target="RootGridTranslateTransform.X" Value="-32" />
+                        <Setter Target="PlayingIndicator.Opacity" Value="0" />
+                        <Setter Target="ItemMediaTypeIcon.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -288,9 +298,9 @@
                 <VisualState x:Name="Normal" />
                 <VisualState x:Name="PointerOver">
                     <VisualState.Setters>
-                        <Setter Target="PlayButton.Visibility" Value="Visible" />
                         <Setter Target="TrackNumberText.Visibility" Value="Collapsed" />
-                        <Setter Target="ItemIcon.Visibility" Value="Collapsed" />
+                        <Setter Target="ItemMediaTypeIcon.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

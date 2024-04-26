@@ -67,7 +67,11 @@
                                 x:Name="AlbumTitle"
                                 MaxLines="2"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{Binding Key.Name}" />
+                                Text="{Binding Key.Name}">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:OverflowTextToolTipBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <TextBlock
                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -178,14 +182,21 @@
                         x:Name="TitleText"
                         Style="{StaticResource TitleTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Name}"
-                        TextWrapping="NoWrap" />
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                     <TextBlock
                         x:Name="Subtext"
                         FontWeight="Normal"
                         MaxLines="2"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
-                        TextWrapping="Wrap" />
+                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                 </StackPanel>
 
                 <StackPanel

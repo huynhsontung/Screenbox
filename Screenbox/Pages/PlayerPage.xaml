@@ -259,9 +259,11 @@
 
                 <TextBlock
                     x:Name="SubtitleText"
+                    Foreground="{StaticResource TextFillColorSecondaryBrush}"
                     OpticalMarginAlignment="TrimSideBearings"
+                    Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
-                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
             </StackPanel>
         </Grid>

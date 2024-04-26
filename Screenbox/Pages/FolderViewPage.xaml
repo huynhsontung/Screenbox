@@ -72,8 +72,13 @@
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource PageContentMargin}"
+            MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind ViewModel.TitleText}" />
+            Text="{x:Bind ViewModel.TitleText}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
@@ -134,7 +139,8 @@
         <TextBlock
             x:Name="NoContentText"
             Grid.Row="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource PageContentMargin}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -156,7 +162,7 @@
                         <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
                         <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
