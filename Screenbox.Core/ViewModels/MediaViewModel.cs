@@ -224,7 +224,7 @@ namespace Screenbox.Core.ViewModels
 
             switch (MediaType)
             {
-                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0, Media.IsParsed: true }:
+                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done }:
                     // Update media type when it was previously set Unknown. Usually when source is a URI.
                     // We don't want to init PlaybackItem just for this.
                     MediaInfo.MediaType = MediaPlaybackType.Music;

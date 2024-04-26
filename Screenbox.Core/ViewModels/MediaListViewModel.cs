@@ -708,7 +708,7 @@ namespace Screenbox.Core.ViewModels
                 MediaParsedStatus parsedStatus = media.ParsedStatus;
                 if (!media.IsParsed)
                 {
-                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 5000, cts.Token);
+                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 10000, cts.Token);
                 }
 
                 if (parsedStatus != MediaParsedStatus.Done) return Array.Empty<MediaViewModel>();
