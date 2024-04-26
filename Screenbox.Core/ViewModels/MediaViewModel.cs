@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
@@ -116,6 +117,7 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(LibVlcService libVlcService, Uri uri)
             : this(uri, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
         {
+            Guard.IsTrue(uri.IsAbsoluteUri);
             Location = uri.OriginalString;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }

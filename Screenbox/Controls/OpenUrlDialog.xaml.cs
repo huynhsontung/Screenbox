@@ -21,14 +21,14 @@ namespace Screenbox.Controls
             OpenUrlDialog dialog = new();
             ContentDialogResult result = await dialog.ShowAsync();
             string url = dialog.UrlBox.Text;
-            return result == ContentDialogResult.Primary && Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri uri)
+            return result == ContentDialogResult.Primary && Uri.TryCreate(url, UriKind.Absolute, out Uri uri)
                 ? uri
                 : null;
         }
 
         private bool CanOpen(string url)
         {
-            return Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out Uri _);
+            return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
         }
     }
 }
