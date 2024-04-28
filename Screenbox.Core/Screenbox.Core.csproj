@@ -151,6 +151,7 @@
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
+    <Compile Include="Helpers\VlcMediaExtensions.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
