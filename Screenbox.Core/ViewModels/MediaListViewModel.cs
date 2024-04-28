@@ -128,11 +128,13 @@ namespace Screenbox.Core.ViewModels
 
             if (_delayPlay != null)
             {
-                _dispatcherQueue.TryEnqueue(() =>
+                async void SetPlayQueue()
                 {
                     ClearPlaylist();
-                    EnqueueAndPlay(_delayPlay);
-                });
+                    await EnqueueAndPlay(_delayPlay);
+                }
+
+                _dispatcherQueue.TryEnqueue(SetPlayQueue);
             }
         }
 
@@ -202,7 +204,7 @@ namespace Screenbox.Core.ViewModels
             message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated, _neighboringFilesQuery));
         }
 
-        public void Receive(PlayMediaMessage message)
+        public async void Receive(PlayMediaMessage message)
         {
             if (_mediaPlayer == null)
             {
@@ -218,7 +220,7 @@ namespace Screenbox.Core.ViewModels
             {
                 _lastUpdated = message.Value;
                 ClearPlaylistAndNeighboringQuery();
-                EnqueueAndPlay(message.Value);
+                await EnqueueAndPlay(message.Value);
             }
         }
 
@@ -231,6 +233,7 @@ namespace Screenbox.Core.ViewModels
 
             if (CurrentItem != null)
             {
+                _cts?.Cancel();
                 CurrentItem.IsMediaActive = false;
                 CurrentItem.IsPlaying = null;
             }
@@ -270,9 +273,8 @@ namespace Screenbox.Core.ViewModels
             }
 
             Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
-            await Task.WhenAll(
-                _transportControlsService.UpdateTransportControlsDisplayAsync(value),
-                UpdateMediaBufferAsync());
+            await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
+            await UpdateMediaBufferAsync();
             Analytics.TrackEvent("PlaylistCurrentItemChanged", value != null
                 ? new Dictionary<string, string>
                 {
@@ -491,14 +493,14 @@ namespace Screenbox.Core.ViewModels
         private async Task<PlaylistCreateResult> CreatePlaylistAsync(MediaViewModel media)
         {
             if (media.Item == null
-                || media.Item.Media is { IsParsed: true, SubItems.Count: 0 }
+                || media.Item.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
                 || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
             {
                 return new PlaylistCreateResult(media);
             }
 
-            return new PlaylistCreateResult(media, playlist);
+            return new PlaylistCreateResult(playlist[0], playlist);
         }
 
         private async Task<PlaylistCreateResult> CreatePlaylistAsync(StorageFile file)
@@ -534,13 +536,29 @@ namespace Screenbox.Core.ViewModels
             _ => throw new ArgumentException("Unsupported media type", nameof(value))
         };
 
-        private async void EnqueueAndPlay(object value)
+        private MediaViewModel? GetMedia(object value) => value switch
+        {
+            MediaViewModel media => media,
+            StorageFile file => _mediaFactory.GetSingleton(file),
+            Uri uri => _mediaFactory.GetTransient(uri),
+            _ => null
+        };
+
+        private async Task EnqueueAndPlay(object value)
         {
             try
             {
-                PlaylistCreateResult? result = await CreatePlaylistAsync(value);
-                if (result != null)
+                MediaViewModel? playNext = GetMedia(value);
+                if (playNext != null)
                 {
+                    Enqueue(new[] { playNext });
+                    PlaySingle(playNext);
+                }
+
+                PlaylistCreateResult? result = await CreatePlaylistAsync(playNext ?? value);
+                if (result != null && !result.PlayNext.Source.Equals(playNext?.Source))
+                {
+                    ClearPlaylist();
                     Enqueue(result.Playlist);
                     PlaySingle(result.PlayNext);
                 }
@@ -728,13 +746,15 @@ namespace Screenbox.Core.ViewModels
             {
                 _cts = cts;
                 Media media = source.Item.Media;
-                MediaParsedStatus parsedStatus = media.ParsedStatus;
-                if (!media.IsParsed)
+                if (!media.IsParsed || media.ParsedStatus is MediaParsedStatus.Skipped)    // Not yet parsed
                 {
-                    parsedStatus = await media.Parse(MediaParseOptions.ParseNetwork, 10000, cts.Token);
+                    await media.ParseAsync(TimeSpan.FromSeconds(10), cts.Token);
                 }
 
-                if (parsedStatus != MediaParsedStatus.Done) return Array.Empty<MediaViewModel>();
+                // If token is cancelled, it is likely that media is already disposed
+                // Must immediately throw
+                cts.Token.ThrowIfCancellationRequested();   // Important
+
                 IEnumerable<MediaViewModel> subItems = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
                 return subItems.ToList();
             }
