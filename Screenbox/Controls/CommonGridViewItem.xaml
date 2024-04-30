@@ -65,7 +65,7 @@
             VerticalAlignment="Bottom"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
-            CornerRadius="99"
+            CornerRadius="{StaticResource CircularCornerRadius}"
             Opacity="0"
             Style="{StaticResource AccentButtonStyle}"
             Visibility="{x:Bind CanPlay, Mode=OneWay}">

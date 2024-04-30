@@ -102,6 +102,8 @@
                     <!--  HyperlinkButton with caption text style padding to maintain the same height  -->
                     <Thickness x:Key="HyperlinkButtonCaptionPadding">11,7,11,7</Thickness>
 
+                    <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
+
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
                         <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />

@@ -22,7 +22,7 @@
         <controls:CommonGridViewItem
             Width="{StaticResource CommonGridViewItemWidth}"
             Height="{StaticResource CommonGridViewItemHeight}"
-            CornerRadius="99"
+            CornerRadius="{StaticResource CircularCornerRadius}"
             HorizontalTextAlignment="Center"
             IsPlaying="{Binding IsPlaying}"
             PlayCommand="{Binding PlayArtistCommand}"

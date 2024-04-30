@@ -359,7 +359,7 @@
                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32">
                 <FontIcon
@@ -437,7 +437,7 @@
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
@@ -464,7 +464,7 @@
             VerticalAlignment="Center"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
-            CornerRadius="16"
+            CornerRadius="{StaticResource CircularCornerRadius}"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="0.8" Duration="0:0:0.03" />

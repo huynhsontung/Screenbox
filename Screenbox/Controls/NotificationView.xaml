@@ -47,7 +47,7 @@
         ActionButton="{x:Bind ViewModel.ActionButton, Mode=OneWay}"
         CloseButtonCommand="{x:Bind ViewModel.CloseCommand}"
         Content="{x:Bind ViewModel.Content, Mode=OneWay}"
-        CornerRadius="8"
+        CornerRadius="{StaticResource OverlayCornerRadius}"
         IsOpen="{x:Bind ViewModel.IsOpen, Mode=TwoWay}"
         Message="{x:Bind ViewModel.Message, Mode=OneWay}"
         Severity="{x:Bind ConvertInfoBarSeverity(ViewModel.Severity), Mode=OneWay}" />
