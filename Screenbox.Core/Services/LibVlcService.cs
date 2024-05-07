@@ -38,7 +38,7 @@ namespace Screenbox.Core.Services
         {
             return source switch
             {
-                StorageFile file => CreateMedia(file, options),
+                IStorageFile file => CreateMedia(file, options),
                 string str => CreateMedia(str, options),
                 Uri uri => CreateMedia(uri, options),
                 _ => throw new ArgumentOutOfRangeException(nameof(source))
@@ -57,7 +57,7 @@ namespace Screenbox.Core.Services
             return new Media(libVlc, str, FromType.FromPath, options);
         }
 
-        private Media CreateMedia(IStorageItem file, params string[] options)
+        private Media CreateMedia(IStorageFile file, params string[] options)
         {
             Guard.IsNotNull(LibVlc, nameof(LibVlc));
             LibVLC libVlc = LibVlc;

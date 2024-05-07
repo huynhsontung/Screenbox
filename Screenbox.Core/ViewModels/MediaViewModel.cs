@@ -241,6 +241,13 @@ namespace Screenbox.Core.ViewModels
 
             if (_item?.Media is { IsParsed: true } media)
             {
+                if (Source is not IStorageItem &&
+                    media.Meta(MetadataType.Title) is { } title &&
+                    !Guid.TryParse(title, out Guid _))
+                {
+                    Name = title;
+                }
+
                 VideoInfo videoProperties = MediaInfo.VideoProperties;
                 videoProperties.ShowName = media.Meta(MetadataType.ShowName) ?? videoProperties.ShowName;
                 videoProperties.Season = media.Meta(MetadataType.Season) ?? videoProperties.Season;
