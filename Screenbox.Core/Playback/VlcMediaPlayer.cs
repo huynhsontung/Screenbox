@@ -3,13 +3,13 @@
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
 using System;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Media.Devices;
 using Windows.Media.Playback;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.Playback
@@ -423,7 +423,7 @@ namespace Screenbox.Core.Playback
         public void AddSubtitle(IStorageFile file, bool select = true)
         {
             if (PlaybackItem == null) return;
-            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
+            string mrl = "winrt://" + SharedStorageAccessManager.AddFile(file);
             VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, select);
         }
 

@@ -5,8 +5,8 @@ using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
@@ -21,9 +21,6 @@ namespace Screenbox.Core.Services
         public LibVlcService(INotificationService notificationService)
         {
             _notificationService = (NotificationService)notificationService;
-
-            // Clear FA periodically because of 1000 items limit
-            StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
         public VlcMediaPlayer Initialize(string[] swapChainOptions)
@@ -61,7 +58,7 @@ namespace Screenbox.Core.Services
         {
             Guard.IsNotNull(LibVlc, nameof(LibVlc));
             LibVLC libVlc = LibVlc;
-            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
+            string mrl = "winrt://" + SharedStorageAccessManager.AddFile(file);
             return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
 
@@ -72,18 +69,18 @@ namespace Screenbox.Core.Services
             return new Media(libVlc, uri, options);
         }
 
-        public void DisposeMedia(Media media)
+        public static void DisposeMedia(Media media)
         {
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
             {
                 try
                 {
-                    StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+                    SharedStorageAccessManager.RemoveFile(mrl.Substring(8));
                 }
                 catch (Exception)
                 {
-                    LogService.Log($"Failed to remove FAL: {mrl.Substring(8)}");
+                    LogService.Log($"Failed to remove shared storage access token {mrl.Substring(8)}");
                 }
             }
 
