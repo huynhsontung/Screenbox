@@ -5,8 +5,8 @@ using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 
 namespace Screenbox.Core.Services
 {
@@ -21,6 +21,9 @@ namespace Screenbox.Core.Services
         public LibVlcService(INotificationService notificationService)
         {
             _notificationService = (NotificationService)notificationService;
+
+            // Clear FA periodically because of 1000 items limit
+            StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
         public VlcMediaPlayer Initialize(string[] swapChainOptions)
@@ -35,7 +38,7 @@ namespace Screenbox.Core.Services
         {
             return source switch
             {
-                IStorageFile file => CreateMedia(file, options),
+                StorageFile file => CreateMedia(file, options),
                 string str => CreateMedia(str, options),
                 Uri uri => CreateMedia(uri, options),
                 _ => throw new ArgumentOutOfRangeException(nameof(source))
@@ -54,11 +57,11 @@ namespace Screenbox.Core.Services
             return new Media(libVlc, str, FromType.FromPath, options);
         }
 
-        private Media CreateMedia(IStorageFile file, params string[] options)
+        private Media CreateMedia(IStorageItem file, params string[] options)
         {
             Guard.IsNotNull(LibVlc, nameof(LibVlc));
             LibVLC libVlc = LibVlc;
-            string mrl = "winrt://" + SharedStorageAccessManager.AddFile(file);
+            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
             return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
 
@@ -74,13 +77,14 @@ namespace Screenbox.Core.Services
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
             {
+                string token = mrl.Substring(8);
                 try
                 {
-                    SharedStorageAccessManager.RemoveFile(mrl.Substring(8));
+                    StorageApplicationPermissions.FutureAccessList.Remove(token);
                 }
                 catch (Exception)
                 {
-                    LogService.Log($"Failed to remove shared storage access token {mrl.Substring(8)}");
+                    LogService.Log($"Failed to remove access token {token}");
                 }
             }
 
