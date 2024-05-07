@@ -191,7 +191,7 @@ namespace Screenbox.Core.ViewModels
             PlaybackItem? item = _item;
             _item = null;
             if (item == null) return;
-            _libVlcService.DisposeMedia(item.Media);
+            LibVlcService.DisposeMedia(item.Media);
         }
 
         public void UpdateSource(StorageFile file)
@@ -241,7 +241,9 @@ namespace Screenbox.Core.ViewModels
 
             if (_item?.Media is { IsParsed: true } media)
             {
-                if (media.Meta(MetadataType.Title) is { } title && !title.StartsWith('{'))
+                if (Source is not IStorageItem &&
+                    media.Meta(MetadataType.Title) is { } title &&
+                    !Guid.TryParse(title, out Guid _))
                 {
                     Name = title;
                 }

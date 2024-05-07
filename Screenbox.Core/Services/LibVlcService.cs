@@ -72,18 +72,19 @@ namespace Screenbox.Core.Services
             return new Media(libVlc, uri, options);
         }
 
-        public void DisposeMedia(Media media)
+        public static void DisposeMedia(Media media)
         {
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
             {
+                string token = mrl.Substring(8);
                 try
                 {
-                    StorageApplicationPermissions.FutureAccessList.Remove(mrl.Substring(8));
+                    StorageApplicationPermissions.FutureAccessList.Remove(token);
                 }
                 catch (Exception)
                 {
-                    LogService.Log($"Failed to remove FAL: {mrl.Substring(8)}");
+                    LogService.Log($"Failed to remove access token {token}");
                 }
             }
 
