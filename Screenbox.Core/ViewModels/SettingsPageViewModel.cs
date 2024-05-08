@@ -328,7 +328,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchMusicAsync();
+                await _libraryService.FetchMusicAsync(false);
             }
             catch (UnauthorizedAccessException)
             {
@@ -340,7 +340,7 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchVideosAsync();
+                await _libraryService.FetchVideosAsync(false);
             }
             catch (UnauthorizedAccessException)
             {

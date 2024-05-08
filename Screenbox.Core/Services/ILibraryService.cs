@@ -19,8 +19,8 @@ namespace Screenbox.Core.Services
         public bool IsLoadingMusic { get; }
         Task<StorageLibrary> InitializeMusicLibraryAsync();
         Task<StorageLibrary> InitializeVideosLibraryAsync();
-        Task FetchMusicAsync();
-        Task FetchVideosAsync();
+        Task FetchMusicAsync(bool useCache = true);
+        Task FetchVideosAsync(bool useCache = true);
         MusicLibraryFetchResult GetMusicFetchResult();
         IReadOnlyList<MediaViewModel> GetVideosFetchResult();
     }

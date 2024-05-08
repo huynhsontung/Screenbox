@@ -100,7 +100,7 @@ namespace Screenbox.Core.Services
             return _videos.AsReadOnly();
         }
 
-        public async Task FetchMusicAsync()
+        public async Task FetchMusicAsync(bool useCache = true)
         {
             _musicFetchCts?.Cancel();
             using CancellationTokenSource cts = new();
@@ -109,7 +109,7 @@ namespace Screenbox.Core.Services
             {
                 await InitializeMusicLibraryAsync();
                 cts.Token.ThrowIfCancellationRequested();
-                await FetchMusicCancelableAsync(cts.Token);
+                await FetchMusicCancelableAsync(useCache, cts.Token);
             }
             catch (OperationCanceledException)
             {
@@ -131,7 +131,7 @@ namespace Screenbox.Core.Services
             }
         }
 
-        public async Task FetchVideosAsync()
+        public async Task FetchVideosAsync(bool useCache = true)
         {
             _videosFetchCts?.Cancel();
             using CancellationTokenSource cts = new();
@@ -140,7 +140,7 @@ namespace Screenbox.Core.Services
             {
                 await InitializeVideosLibraryAsync();
                 cts.Token.ThrowIfCancellationRequested();
-                await FetchVideosCancelableAsync(cts.Token);
+                await FetchVideosCancelableAsync(useCache, cts.Token);
             }
             catch (OperationCanceledException)
             {
@@ -273,23 +273,22 @@ namespace Screenbox.Core.Services
 
         }
 
-        private async Task FetchMusicCancelableAsync(CancellationToken cancellationToken)
+        private async Task FetchMusicCancelableAsync(bool useCache, CancellationToken cancellationToken)
         {
             IsLoadingMusic = true;
             try
             {
                 StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
-                List<MediaViewModel> songs = _songs = await LoadSongsCacheAsync(cancellationToken);
-                // If cache is empty, fetch from storage using the same songs instance
-                // If not empty then create a new list to avoid overwriting the cache
-                bool hasCache = false;
-                if (songs.Count > 0)
+                List<MediaViewModel> songs = useCache
+                    ? _songs = await LoadSongsCacheAsync(cancellationToken)
+                    : new List<MediaViewModel>();
+
+                bool hasCache = songs.Count > 0;
+                if (!hasCache)
                 {
-                    hasCache = true;
-                    songs = new List<MediaViewModel>();
+                    await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
                 }
 
-                await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
                 if (SearchRemovableStorage)
                 {
                     libraryQuery = CreateRemovableStorageMusicQuery();
@@ -297,8 +296,20 @@ namespace Screenbox.Core.Services
                     StartPortableStorageDeviceWatcher();
                 }
 
-                await LoadLibraryDetailsAsync(songs, cancellationToken);
-                if (hasCache)
+                foreach (MediaViewModel song in songs)
+                {
+                    song.IsFromLibrary = true;
+                    if (!hasCache)
+                    {
+                        await song.LoadDetailsAsync(_filesService);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
+                    song.UpdateAlbum(_albumFactory);
+                    song.UpdateArtists(_artistFactory);
+                }
+
+                if (hasCache && songs != _songs)
                 {
                     // Ensure only songs not in the library has IsFromLibrary = false
                     // These songs will be cleaned up later
@@ -321,17 +332,22 @@ namespace Screenbox.Core.Services
             await CacheSongsAsync(cancellationToken);
         }
 
-        private async Task FetchVideosCancelableAsync(CancellationToken cancellationToken)
+        private async Task FetchVideosCancelableAsync(bool useCache, CancellationToken cancellationToken)
         {
             IsLoadingVideos = true;
             try
             {
                 StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
-                List<MediaViewModel> videos = _videos = await LoadVideosCacheAsync(cancellationToken);
-                // If cache is empty, fetch from storage using the same videos instance
-                // If not empty then create a new list to avoid overwriting the cache
-                if (videos.Count > 0) videos = new List<MediaViewModel>();
-                await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                List<MediaViewModel> videos = useCache
+                    ? _videos = await LoadVideosCacheAsync(cancellationToken)
+                    : new List<MediaViewModel>();
+
+                bool hasCache = videos.Count > 0;
+                if (!hasCache)
+                {
+                    await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                }
+
                 if (SearchRemovableStorage)
                 {
                     libraryQuery = CreateRemovableStorageVideosQuery();
@@ -339,7 +355,16 @@ namespace Screenbox.Core.Services
                     StartPortableStorageDeviceWatcher();
                 }
 
-                await LoadLibraryDetailsAsync(videos, cancellationToken);
+                foreach (MediaViewModel video in videos)
+                {
+                    video.IsFromLibrary = true;
+                    if (!hasCache)
+                    {
+                        await video.LoadDetailsAsync(_filesService);
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+                }
+
                 _videos = videos;
             }
             finally
@@ -484,19 +509,6 @@ namespace Screenbox.Core.Services
             if (_portableStorageDeviceWatcher?.Status is DeviceWatcherStatus.Created or DeviceWatcherStatus.Stopped)
             {
                 _portableStorageDeviceWatcher.Start();
-            }
-        }
-
-        private async Task LoadLibraryDetailsAsync(List<MediaViewModel> mediaList, CancellationToken cancellationToken)
-        {
-            foreach (MediaViewModel media in mediaList)
-            {
-                // Expect UI thread
-                media.IsFromLibrary = true;
-                await media.LoadDetailsAsync(_filesService);
-                media.UpdateAlbum(_albumFactory);
-                media.UpdateArtists(_artistFactory);
-                cancellationToken.ThrowIfCancellationRequested();
             }
         }
 
