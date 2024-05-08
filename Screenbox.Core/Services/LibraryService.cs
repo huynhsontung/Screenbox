@@ -299,14 +299,18 @@ namespace Screenbox.Core.Services
                 foreach (MediaViewModel song in songs)
                 {
                     song.IsFromLibrary = true;
-                    if (!hasCache)
+                    if (hasCache)
+                    {
+                        song.UpdateAlbum(_albumFactory);
+                        song.UpdateArtists(_artistFactory);
+                    }
+                    else
                     {
                         await song.LoadDetailsAsync(_filesService);
                         cancellationToken.ThrowIfCancellationRequested();
+                        song.UpdateAlbum(_albumFactory);
+                        song.UpdateArtists(_artistFactory);
                     }
-
-                    song.UpdateAlbum(_albumFactory);
-                    song.UpdateArtists(_artistFactory);
                 }
 
                 if (hasCache && songs != _songs)
