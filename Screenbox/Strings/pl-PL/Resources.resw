@@ -759,15 +759,15 @@
     <value>Zarządzaj ustawieniami indeksowania systemu</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Ustaw argumenty</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Wyszukaj w pamięci wymiennej</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
     <value>Zawieraj media z nośników danych takich jak nośniki USB w bibliotece</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Aktywne argumenty</value>
   </data>
 </root>
