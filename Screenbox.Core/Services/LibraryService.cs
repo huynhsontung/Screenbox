@@ -80,13 +80,17 @@ namespace Screenbox.Core.Services
         public async Task<StorageLibrary> InitializeMusicLibraryAsync()
         {
             // No need to add handler for StorageLibrary.DefinitionChanged
-            return MusicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            MusicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
+            MusicLibrary.ChangeTracker.Enable();
+            return MusicLibrary;
         }
 
         public async Task<StorageLibrary> InitializeVideosLibraryAsync()
         {
             // No need to add handler for StorageLibrary.DefinitionChanged
-            return VideosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            VideosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+            VideosLibrary.ChangeTracker.Enable();
+            return VideosLibrary;
         }
 
         public MusicLibraryFetchResult GetMusicFetchResult()
@@ -275,7 +279,13 @@ namespace Screenbox.Core.Services
 
         private async Task FetchMusicCancelableAsync(bool useCache, CancellationToken cancellationToken)
         {
+            if (MusicLibrary == null) return;
             IsLoadingMusic = true;
+
+            bool hasCache;
+            var libraryChangeTracker = MusicLibrary.ChangeTracker;
+            libraryChangeTracker.Enable();
+            var changeReader = libraryChangeTracker.GetChangeReader();
             try
             {
                 StorageFileQueryResult libraryQuery = GetMusicLibraryQuery();
@@ -283,12 +293,31 @@ namespace Screenbox.Core.Services
                     ? _songs = await LoadSongsCacheAsync(cancellationToken)
                     : new List<MediaViewModel>();
 
-                bool hasCache = songs.Count > 0;
+                hasCache = songs.Count > 0;
+
+                // Update cache with changes from library tracker. Invalidate cache if needed.
+                var changeId = changeReader.GetLastChangeId();
+                if (changeId == StorageLibraryLastChangeId.Unknown)
+                {
+                    hasCache = false;
+                }
+                else if (changeId > 0)
+                {
+                    hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
+                }
+
+                // Recrawl the library if there is no cache or cache is invalidated
                 if (!hasCache)
                 {
+                    if (songs.Count > 0)
+                    {
+                        songs = new List<MediaViewModel>();
+                    }
+
                     await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
                 }
 
+                // Search removable storage if the system is Xbox
                 if (SearchRemovableStorage)
                 {
                     libraryQuery = CreateRemovableStorageMusicQuery();
@@ -298,8 +327,7 @@ namespace Screenbox.Core.Services
 
                 foreach (MediaViewModel song in songs)
                 {
-                    song.IsFromLibrary = true;
-                    if (hasCache)
+                    if (hasCache && song.IsFromLibrary)
                     {
                         song.UpdateAlbum(_albumFactory);
                         song.UpdateArtists(_artistFactory);
@@ -334,6 +362,81 @@ namespace Screenbox.Core.Services
 
             MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
             await CacheSongsAsync(cancellationToken);
+            if (hasCache)
+            {
+                await changeReader.AcceptChangesAsync();
+            }
+            else
+            {
+                libraryChangeTracker.Reset();
+            }
+        }
+
+        private async Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+        {
+            ulong changeId = changeReader.GetLastChangeId();
+            if (changeId == 0) return true;
+            if (changeId == StorageLibraryLastChangeId.Unknown) return false;
+            var changeBatch = await changeReader.ReadBatchAsync();
+            foreach (StorageLibraryChange change in changeBatch)
+            {
+                // If this is a folder change then give up
+                if (!change.IsOfType(StorageItemTypes.File) &&
+                    change.ChangeType is not (StorageLibraryChangeType.IndexingStatusChanged
+                        or StorageLibraryChangeType.EncryptionChanged)) return false;
+
+                StorageFile file;
+                MediaViewModel existing;
+                switch (change.ChangeType)
+                {
+                    case StorageLibraryChangeType.Created:
+                    case StorageLibraryChangeType.MovedIntoLibrary:
+                        file = (StorageFile)await change.GetStorageItemAsync();
+                        mediaList.Add(_mediaFactory.GetSingleton(file));
+                        break;
+
+                    case StorageLibraryChangeType.Deleted:
+                    case StorageLibraryChangeType.MovedOutOfLibrary:
+                        existing = mediaList.Find(s =>
+                            s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
+                        if (existing != null)
+                        {
+                            RemoveMedia(existing);
+                            mediaList.Remove(existing);
+                        }
+
+                        break;
+
+                    case StorageLibraryChangeType.MovedOrRenamed:
+                        file = (StorageFile)await change.GetStorageItemAsync();
+                        existing = mediaList.Find(s =>
+                            s.Location.Equals(change.PreviousPath, StringComparison.OrdinalIgnoreCase));
+
+                        var newMedia = _mediaFactory.GetSingleton(file);
+                        if (existing != null)
+                        {
+                            var existingInfo = existing.MediaInfo;
+                            RemoveMedia(existing);
+                            mediaList.Remove(existing);
+                            newMedia.MediaInfo = existingInfo;
+                        }
+
+                        mediaList.Add(newMedia);
+                        break;
+
+                    case StorageLibraryChangeType.ContentsChanged:
+                    case StorageLibraryChangeType.ContentsReplaced:
+                    case StorageLibraryChangeType.EncryptionChanged:
+                    case StorageLibraryChangeType.IndexingStatusChanged:
+                        break;
+                    case StorageLibraryChangeType.ChangeTrackingLost:
+                        return false;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            return true;
         }
 
         private async Task FetchVideosCancelableAsync(bool useCache, CancellationToken cancellationToken)
