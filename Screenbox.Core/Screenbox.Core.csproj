@@ -188,6 +188,8 @@
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
+    <Compile Include="Models\PersistentMusicLibrary.cs" />
+    <Compile Include="Models\PersistentVideoLibrary.cs" />
     <Compile Include="Models\PersistentVideoRecord.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
