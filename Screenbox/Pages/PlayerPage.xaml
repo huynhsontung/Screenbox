@@ -259,7 +259,7 @@
 
                 <TextBlock
                     x:Name="SubtitleText"
-                    Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                    Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
                     OpticalMarginAlignment="TrimSideBearings"
                     Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"

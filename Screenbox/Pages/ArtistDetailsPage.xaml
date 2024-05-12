@@ -265,12 +265,6 @@
                         GroupHeaderPlacement="Left" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-            <ListView.Header>
-                <Border x:Name="ListHeaderPadding" Height="140" />
-            </ListView.Header>
-            <ListView.Footer>
-                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
             <ListView.GroupStyle>
                 <GroupStyle HeaderTemplate="{StaticResource AlbumGroupHeaderTemplate}" HidesIfEmpty="True">
                     <GroupStyle.HeaderContainerStyle>
@@ -320,6 +314,12 @@
                     </GroupStyle.HeaderContainerStyle>
                 </GroupStyle>
             </ListView.GroupStyle>
+            <ListView.Header>
+                <Border x:Name="ListHeaderPadding" Height="140" />
+            </ListView.Header>
+            <ListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"

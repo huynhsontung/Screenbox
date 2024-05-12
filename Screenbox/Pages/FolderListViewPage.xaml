@@ -98,6 +98,9 @@
             ItemsSource="{x:Bind ViewModel.Items}"
             Loaded="ListView_OnLoaded"
             SelectionMode="None">
+            <ListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
@@ -108,9 +111,6 @@
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
-            <ListView.Footer>
-                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
         </ListView>
 
         <!--  Empty content  -->

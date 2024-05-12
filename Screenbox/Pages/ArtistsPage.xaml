@@ -63,17 +63,11 @@
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
+                    ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"
                     SelectionMode="None">
-                    <GridView.Resources>
-                        <ResourceDictionary>
-                            <ResourceDictionary.MergedDictionaries>
-                                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
-                            </ResourceDictionary.MergedDictionaries>
-                        </ResourceDictionary>
-                    </GridView.Resources>
                     <GridView.GroupStyle>
                         <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
                     </GridView.GroupStyle>

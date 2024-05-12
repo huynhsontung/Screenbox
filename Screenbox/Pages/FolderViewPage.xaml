@@ -19,10 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <MenuFlyout x:Name="ItemFlyout">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
@@ -102,6 +98,7 @@
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemsSource="{x:Bind ViewModel.Items}"
             Loaded="FolderView_OnLoaded"
             SelectionMode="None">

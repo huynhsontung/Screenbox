@@ -90,8 +90,8 @@
             x:Name="CaptionText"
             Grid.Row="2"
             Padding="4,0"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{x:Bind Caption, Mode=OneWay}"
             TextWrapping="NoWrap">

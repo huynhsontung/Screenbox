@@ -58,7 +58,6 @@
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
                 x:Name="HeaderAddButton"
-                Height="{StaticResource SplitButtonHeight}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"

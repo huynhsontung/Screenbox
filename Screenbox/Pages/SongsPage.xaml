@@ -95,6 +95,12 @@
                             <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlayCommand, ElementName=SongListView}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                    </ListView.GroupStyle>
+                    <ListView.Footer>
+                        <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                    </ListView.Footer>
                     <interactivity:Interaction.Behaviors>
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -104,12 +110,6 @@
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                         <interactions:FocusOnItemClickBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ListView.Footer>
-                        <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                    </ListView.Footer>
-                    <ListView.GroupStyle>
-                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
-                    </ListView.GroupStyle>
                 </ListView>
             </SemanticZoom.ZoomedInView>
 

@@ -20,7 +20,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -79,6 +78,7 @@
                         Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Artists}"
                         SelectionMode="None" />
@@ -108,6 +108,7 @@
                         Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">
@@ -181,15 +182,16 @@
                         Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource WideMediaGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Videos}"
                         SelectionMode="None">
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:ThumbnailGridViewBehavior />
-                        </interactivity:Interaction.Behaviors>
                         <GridView.Resources>
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:ThumbnailGridViewBehavior />
+                        </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
 

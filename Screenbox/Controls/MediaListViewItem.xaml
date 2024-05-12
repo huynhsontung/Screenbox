@@ -25,7 +25,7 @@
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
-    <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
+    <Grid XYFocusKeyboardNavigation="Disabled">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
             <ColumnDefinition Width="32" />
@@ -58,8 +58,8 @@
             Padding="0,0,8,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             IsHitTestVisible="False"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding TrackNumberText, FallbackValue=''}"
             TextWrapping="NoWrap"
@@ -155,7 +155,7 @@
             Grid.Column="5"
             Margin="4,0"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}}"
             TextWrapping="NoWrap"
@@ -171,7 +171,7 @@
             Margin="0,0,16,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding DurationText}"
             TextWrapping="NoWrap" />

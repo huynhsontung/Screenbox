@@ -70,7 +70,10 @@
                         Margin="0,0,4,0"
                         Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
-                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{strings:Resources Key=Options}" />
+                        <TextBlock
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{strings:Resources Key=Options}"
+                            TextWrapping="NoWrap" />
                     </HyperlinkButton>
                 </Grid>
             </ListView.Header>

@@ -20,7 +20,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -108,7 +107,6 @@
                 Text="{strings:Resources Key=Home}" />
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                Height="{StaticResource SplitButtonHeight}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
@@ -174,7 +172,6 @@
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
-                    Height="{StaticResource SplitButtonHeight}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
@@ -215,15 +212,16 @@
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
+                ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                 ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None">
-                <GridView.Footer>
-                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                </GridView.Footer>
                 <GridView.Resources>
                     <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
                 </GridView.Resources>
+                <GridView.Footer>
+                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                </GridView.Footer>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
