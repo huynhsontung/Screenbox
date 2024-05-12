@@ -51,7 +51,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}">
+            Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
@@ -82,7 +82,7 @@
         <controls:PlaylistView
             x:Name="PlaylistView"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}" />
+            Padding="{StaticResource ContentPagePadding}" />
 
         <interactivity:Interaction.Behaviors>
             <interactions:GamepadXYNavigationBehavior />
@@ -101,9 +101,9 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="PlaylistView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

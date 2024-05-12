@@ -47,7 +47,7 @@
                                 x:Name="AlbumArtIcon"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="52"
+                                FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="&#xE93C;"
                                 Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
@@ -127,7 +127,7 @@
             Grid.Row="0"
             Height="200"
             Margin="0,0,0,-108"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             Canvas.ZIndex="1">
 
             <Border
@@ -239,7 +239,7 @@
         <ListView
             x:Name="ItemList"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -346,14 +346,14 @@
                         <!--<Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />-->
                         <Setter Target="Header.Height" Value="160" />
                         <Setter Target="Header.Margin" Value="0,0,0,-68" />
-                        <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ProfilePicture.Width" Value="140" />
                         <Setter Target="ProfilePicture.Height" Value="140" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
                         <Setter Target="Subtext.Style" Value="{StaticResource BodyTextBlockStyle}" />
                         <Setter Target="Subtext.TextWrapping" Value="NoWrap" />
                         <Setter Target="ButtonPanel.Margin" Value="0" />
-                        <Setter Target="ItemList.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
                         <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>

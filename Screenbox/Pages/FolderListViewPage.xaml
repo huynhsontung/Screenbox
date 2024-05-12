@@ -86,7 +86,7 @@
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <ListView
             x:Name="ListView"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
@@ -117,7 +117,7 @@
         <TextBlock
             x:Name="NoContentText"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -136,8 +136,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

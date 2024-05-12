@@ -448,8 +448,7 @@
             </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
-                FontSize="20"
-                FontWeight="SemiBold"
+                Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
         </Border>
 
@@ -694,7 +693,7 @@
                         <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
                         <Setter Target="TitleText.Style" Value="{StaticResource CaptionTextBlockStyle}" />
                         <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
-                        <Setter Target="SubtitleText.FontSize" Value="12" />
+                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />

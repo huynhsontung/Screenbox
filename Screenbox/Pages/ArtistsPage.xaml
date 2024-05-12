@@ -58,7 +58,7 @@
                 <GridView
                     x:Name="ArtistGridView"
                     Margin="{StaticResource TopLargeMargin}"
-                    Padding="{StaticResource PageThumbnailMargin}"
+                    Padding="{StaticResource GridViewContentPagePadding}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
@@ -91,7 +91,7 @@
                 <GridView
                     x:Name="GroupOverview"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource PageContentMargin}"
+                    Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -123,8 +123,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

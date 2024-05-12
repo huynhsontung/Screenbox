@@ -101,7 +101,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}">
+            Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
@@ -134,7 +134,7 @@
             x:Name="WelcomePanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="16"
@@ -153,7 +153,7 @@
                 x:Name="WelcomePanelIcon"
                 Grid.Column="0"
                 Margin="0,-16,0,0"
-                FontSize="{StaticResource PanelIconFontSize}"
+                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
                 Text="👋" />
 
             <StackPanel
@@ -203,7 +203,7 @@
             <TextBlock
                 x:Name="GridViewHeaderText"
                 Grid.Row="0"
-                Padding="{StaticResource PageContentMargin}"
+                Padding="{StaticResource ContentPagePadding}"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{strings:Resources Key=Recent}" />
@@ -211,7 +211,7 @@
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
                 Margin="0,24,0,0"
-                Padding="{StaticResource PageThumbnailMargin}"
+                Padding="{StaticResource GridViewContentPagePadding}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
@@ -248,14 +248,14 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
-                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
-                        <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
+                        <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

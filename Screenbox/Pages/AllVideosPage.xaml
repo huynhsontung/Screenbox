@@ -66,7 +66,7 @@
         <GridView
             x:Name="VideosGridView"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageThumbnailMargin}"
+            Padding="{StaticResource GridViewContentPagePadding}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
             IsItemClickEnabled="True"
             ItemTemplate="{StaticResource WideMediaGridViewItemTemplate}"
@@ -98,7 +98,7 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="VideosGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

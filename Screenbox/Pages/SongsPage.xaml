@@ -80,7 +80,7 @@
                 <ListView
                     x:Name="SongListView"
                     Margin="{StaticResource TopLargeMargin}"
-                    Padding="{StaticResource PageContentMargin}"
+                    Padding="{StaticResource ContentPagePadding}"
                     extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -117,7 +117,7 @@
                 <GridView
                     x:Name="GroupOverview"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource PageContentMargin}"
+                    Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -149,8 +149,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

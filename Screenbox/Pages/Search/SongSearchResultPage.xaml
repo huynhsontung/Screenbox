@@ -25,7 +25,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultSongHeader(ViewModel.SearchQuery), FallbackValue={}}">
@@ -38,7 +38,7 @@
             x:Name="SongListView"
             Grid.Row="1"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -76,8 +76,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

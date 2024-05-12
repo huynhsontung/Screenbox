@@ -13,7 +13,7 @@
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding AlbumArt}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
-                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe93c;" />
+                <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="&#xE93C;" />
             </controls:CommonGridViewItem.PlaceholderIconSource>
         </controls:CommonGridViewItem>
     </DataTemplate>
@@ -28,7 +28,7 @@
             PlayCommand="{Binding PlayArtistCommand}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
-                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="&#xe77b;" />
+                <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="&#xE77B;" />
             </controls:CommonGridViewItem.PlaceholderIconSource>
         </controls:CommonGridViewItem>
     </DataTemplate>
@@ -42,7 +42,7 @@
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding Thumbnail}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
-                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSize}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
+                <FontIconSource FontSize="{StaticResource GridItemPlaceholderIconFontSize}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
             </controls:CommonGridViewItem.PlaceholderIconSource>
         </controls:CommonGridViewItem>
     </DataTemplate>
@@ -56,7 +56,7 @@
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
             ThumbnailSource="{Binding Thumbnail}">
             <controls:CommonGridViewItem.PlaceholderIconSource>
-                <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSizeSmall}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
+                <FontIconSource FontSize="{StaticResource WideGridItemPlaceholderIconFontSize}" Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}" />
             </controls:CommonGridViewItem.PlaceholderIconSource>
         </controls:CommonGridViewItem>
     </DataTemplate>

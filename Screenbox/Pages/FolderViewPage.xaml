@@ -71,7 +71,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
             Text="{x:Bind ViewModel.TitleText}">
@@ -83,7 +83,7 @@
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource ContentPagePadding}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
@@ -98,7 +98,7 @@
             x:Name="FolderView"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageThumbnailMargin}"
+            Padding="{StaticResource GridViewContentPagePadding}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
@@ -119,7 +119,7 @@
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
                         <controls:CommonGridViewItem.PlaceholderIconSource>
-                            <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSizeSmall}" Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
+                            <FontIconSource FontSize="{StaticResource WideGridItemPlaceholderIconFontSize}" Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                         </controls:CommonGridViewItem.PlaceholderIconSource>
                     </controls:CommonGridViewItem>
                 </DataTemplate>
@@ -140,7 +140,7 @@
             x:Name="NoContentText"
             Grid.Row="2"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -159,10 +159,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="FolderView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
