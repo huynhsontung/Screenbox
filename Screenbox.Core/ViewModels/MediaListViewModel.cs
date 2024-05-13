@@ -493,10 +493,11 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<PlaylistCreateResult> CreatePlaylistAsync(MediaViewModel media)
         {
-            if (media.Item == null
-                || media.Item.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
-                || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
+            // The ordering of the conditional terms below is important
+            // Delay check Item as much as possible. Item is lazy init.
+            if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
+                || media.Item?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
                 || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
             {
                 return new PlaylistCreateResult(media);
