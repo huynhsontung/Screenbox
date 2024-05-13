@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -492,9 +493,11 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<PlaylistCreateResult> CreatePlaylistAsync(MediaViewModel media)
         {
-            if (media.Item == null
-                || media.Item.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
-                || (media.Source is StorageFile file && !file.IsSupportedPlaylist())
+            // The ordering of the conditional terms below is important
+            // Delay check Item as much as possible. Item is lazy init.
+            if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
+                || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
+                || media.Item?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
                 || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
             {
                 return new PlaylistCreateResult(media);
@@ -766,6 +769,13 @@ namespace Screenbox.Core.ViewModels
             {
                 _cts = null;
             }
+        }
+
+        private static bool IsUriLocalPlaylistFile(Uri uri)
+        {
+            if (!uri.IsAbsoluteUri || !uri.IsLoopback || !uri.IsFile) return false;
+            var extension = Path.GetExtension(uri.LocalPath);
+            return FilesHelpers.SupportedPlaylistFormats.Contains(extension, StringComparer.OrdinalIgnoreCase);
         }
 
         private static void Shuffle<T>(IList<T> list, Random rng)
