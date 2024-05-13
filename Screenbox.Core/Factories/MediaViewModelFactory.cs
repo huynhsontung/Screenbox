@@ -38,7 +38,7 @@ namespace Screenbox.Core.Factories
             // Prefer URI source for easier clean up
             MediaViewModel vm = new(_libVlcService, uri)
             {
-                Item = new PlaybackItem(media, media)
+                Item = new Lazy<PlaybackItem>(new PlaybackItem(media, media))
             };
 
             if (media.Meta(MetadataType.Title) is { } name)

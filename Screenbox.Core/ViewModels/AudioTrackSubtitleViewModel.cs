@@ -61,7 +61,7 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (_mediaPlayer is not VlcMediaPlayer player) return;
-            if (message.Value is not { Source: StorageFile file, Item: { } item, MediaType: MediaPlaybackType.Video })
+            if (message.Value is not { Source: StorageFile file, MediaType: MediaPlaybackType.Video } media)
                 return;
 
             IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
@@ -70,7 +70,7 @@ namespace Screenbox.Core.ViewModels
             foreach (StorageFile subtitleFile in subtitles)
             {
                 // Preload subtitle but don't select it
-                item.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
+                media.Item.Value?.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
             }
         }
 

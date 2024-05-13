@@ -229,7 +229,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer != null)
             {
-                _mediaPlayer.PlaybackItem = value?.Item;
+                _mediaPlayer.PlaybackItem = value?.Item.Value;
             }
 
             if (CurrentItem != null)
@@ -371,9 +371,9 @@ namespace Screenbox.Core.ViewModels
 
             _mediaBuffer = newBuffer;
             await Task.WhenAll(toLoad.Select(x =>
-                x.Item?.Media.IsParsed ?? true
+                x.Item.Value?.Media.IsParsed ?? true
                     ? x.LoadThumbnailAsync(_filesService)
-                    : Task.WhenAll(x.Item?.Media.Parse(), x.LoadThumbnailAsync(_filesService))));
+                    : Task.WhenAll(x.Item.Value?.Media.Parse(), x.LoadThumbnailAsync(_filesService))));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -497,7 +497,7 @@ namespace Screenbox.Core.ViewModels
             // Delay check Item as much as possible. Item is lazy init.
             if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
                 || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
-                || media.Item?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
+                || media.Item.Value?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
                 || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
             {
                 return new PlaylistCreateResult(media);
@@ -739,7 +739,7 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<IList<MediaViewModel>> ParseSubMediaAsync(MediaViewModel source)
         {
-            if (source.Item == null) return Array.Empty<MediaViewModel>();
+            if (source.Item.Value == null) return Array.Empty<MediaViewModel>();
 
             // Parsing sub items is atomic
             _cts?.Cancel();
@@ -748,7 +748,7 @@ namespace Screenbox.Core.ViewModels
             try
             {
                 _cts = cts;
-                Media media = source.Item.Media;
+                Media media = source.Item.Value.Media;
                 if (!media.IsParsed || media.ParsedStatus is MediaParsedStatus.Skipped)    // Not yet parsed
                 {
                     await media.ParseAsync(TimeSpan.FromSeconds(10), cts.Token);
