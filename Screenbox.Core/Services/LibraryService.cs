@@ -341,8 +341,19 @@ namespace Screenbox.Core.Services
                     }
                 }
 
+                if (songs != _songs)
+                {
+                    // Ensure only songs not in the library has IsFromLibrary = false
+                    _songs.ForEach(song => song.IsFromLibrary = false);
+                    songs.ForEach(song => song.IsFromLibrary = true);
+                    CleanOutdatedSongs();
+                }
+
+                // Populate Album and Artists for each song
                 foreach (MediaViewModel song in songs)
                 {
+                    // If cache is available but IsFromLibrary = false then it may have been added
+                    // by a background library change. Load details first in this case.
                     if (hasCache && song.IsFromLibrary)
                     {
                         song.UpdateAlbum(_albumFactory);
@@ -357,15 +368,7 @@ namespace Screenbox.Core.Services
                     }
                 }
 
-                if (songs != _songs)
-                {
-                    // Ensure only songs not in the library has IsFromLibrary = false
-                    // These songs will be cleaned up later
-                    _songs.ForEach(song => song.IsFromLibrary = false);
-                    songs.ForEach(song => song.IsFromLibrary = true);
-                    CleanOutdatedSongs();
-                    _songs = songs;
-                }
+                _songs = songs;
             }
             finally
             {
@@ -482,6 +485,9 @@ namespace Screenbox.Core.Services
             }
         }
 
+        /// <summary>
+        /// Clean up songs that are no longer from the library
+        /// </summary>
         private void CleanOutdatedSongs()
         {
             List<MediaViewModel> outdatedSongs = _songs.Where(song => !song.IsFromLibrary).ToList();
@@ -641,14 +647,14 @@ namespace Screenbox.Core.Services
         {
             async void FetchAction() => await FetchVideosAsync();
             // Delay fetch due to query result not yet updated at this time
-            _videosRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+            _videosRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
 
         private void OnMusicLibraryContentChanged(object sender, object args)
         {
             async void FetchAction() => await FetchMusicAsync();
             // Delay fetch due to query result not yet updated at this time
-            _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+            _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
 
         private void OnPortableStorageDeviceChanged(DeviceWatcher sender, DeviceInformationUpdate args)
@@ -659,7 +665,7 @@ namespace Screenbox.Core.Services
                 await FetchVideosAsync();
                 await FetchMusicAsync();
             }
-            _storageDeviceRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(500));
+            _storageDeviceRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
 
         private void StartPortableStorageDeviceWatcher()
