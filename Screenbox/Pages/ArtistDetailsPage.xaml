@@ -19,8 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <ThemeShadow x:Key="SharedShadow" />
 
             <CollectionViewSource
@@ -91,7 +89,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="HeaderRootStackPanel.Width" Value="Auto" />
-                                        <Setter Target="HeaderRootStackPanel.Margin" Value="0,4,0,8" />
+                                        <Setter Target="HeaderRootStackPanel.Margin" Value="0,8,0,8" />
                                         <Setter Target="HeaderRootStackPanel.Orientation" Value="Horizontal" />
                                         <Setter Target="AlbumArtGrid.Width" Value="72" />
                                         <Setter Target="AlbumArtGrid.Height" Value="72" />
@@ -268,29 +266,14 @@
             <ListView.GroupStyle>
                 <GroupStyle HeaderTemplate="{StaticResource AlbumGroupHeaderTemplate}" HidesIfEmpty="True">
                     <GroupStyle.HeaderContainerStyle>
+                        <!--  Remove margin, padding, bottom divider and from navigation  -->
                         <Style TargetType="ListViewHeaderItem">
-                            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-                            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
-                            <Setter Property="Background" Value="{ThemeResource ListViewHeaderItemBackground}" />
-                            <!--<Setter Property="Margin" Value="0,0,0,4" />-->
                             <Setter Property="Margin" Value="0,0,0,0" />
-                            <!--<Setter Property="Padding" Value="12,8,12,0" />-->
                             <Setter Property="Padding" Value="0,0,0,0" />
-                            <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            <Setter Property="VerticalContentAlignment" Value="Top" />
-                            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}" />
-                            <!--  Remove Header from XYNavigation  -->
-                            <!--<Setter Property="IsTabStop" Value="True" />-->
                             <Setter Property="IsTabStop" Value="False" />
-                            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListViewHeaderItem">
-                                        <!--<StackPanel
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="{TemplateBinding CornerRadius}">-->
                                         <ContentPresenter
                                             x:Name="ContentPresenter"
                                             Margin="{TemplateBinding Padding}"
@@ -299,14 +282,6 @@
                                             Content="{TemplateBinding Content}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
                                             ContentTransitions="{TemplateBinding ContentTransitions}" />
-                                        <!--<Rectangle
-                                                Height="1"
-                                                Margin="12,8,12,0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Bottom"
-                                                Stroke="{ThemeResource ListViewHeaderItemDividerStroke}"
-                                                StrokeThickness="0.5" />
-                                        </StackPanel>-->
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>

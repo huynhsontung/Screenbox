@@ -23,13 +23,8 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
-            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" />
             </DataTemplate>
 
             <XamlUICommand
@@ -96,7 +91,10 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.GroupStyle>
-                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                        <GroupStyle
+                            HeaderContainerStyle="{StaticResource ListViewHeaderItemSubtleButtonStyle}"
+                            HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                            HidesIfEmpty="True" />
                     </ListView.GroupStyle>
                     <ListView.Footer>
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />

@@ -25,13 +25,8 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
-            <StaticResource x:Key="GridViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" />
             </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
@@ -71,7 +66,10 @@
                     Loaded="AlbumGridView_OnLoaded"
                     SelectionMode="None">
                     <GridView.GroupStyle>
-                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                        <GroupStyle
+                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                            HidesIfEmpty="True" />
                     </GridView.GroupStyle>
                     <GridView.Footer>
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
