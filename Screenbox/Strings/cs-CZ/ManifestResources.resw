@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>Screenbox</value>
+    <value/>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>Screenbox</value>
+    <value/>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
