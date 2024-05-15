@@ -108,7 +108,10 @@ namespace Screenbox.Controls
         private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
         {
             bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
-            if (isMenuValue && PlaybackSpeedSubMenu.Items?.FirstOrDefault(x => IsValueEqualTag(playbackSpeed, x.Tag)) is RadioMenuFlyoutItem matchItem)
+            if (isMenuValue &&
+                PlaybackSpeedSubMenu.Items?.FirstOrDefault(x =>
+                        x.Tag is double predefinedSpeed && Math.Abs(predefinedSpeed - playbackSpeed) < 0.0001) is
+                    RadioMenuFlyoutItem matchItem)
             {
                 matchItem.IsChecked = true;
             }
@@ -164,12 +167,6 @@ namespace Screenbox.Controls
         private void TimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             ViewModel.SubtitleTimingOffset = (long)e.NewValue;
-        }
-
-        private static bool IsValueEqualTag(double value, object? tag)
-        {
-            if (!double.TryParse(tag as string, out double tagValue)) return false;
-            return Math.Abs(value - tagValue) < 0.0001;
         }
     }
 }

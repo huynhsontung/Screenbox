@@ -12,6 +12,7 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media.Playback;
@@ -288,9 +289,8 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private void SetPlaybackSpeed(string speedText)
+        private void SetPlaybackSpeed(double speed)
         {
-            if (!double.TryParse(speedText, out double speed)) return;
             PlaybackSpeed = speed;
         }
 
@@ -308,8 +308,8 @@ namespace Screenbox.Core.ViewModels
                 default:
                     string[] values = aspect.Split(':', StringSplitOptions.RemoveEmptyEntries);
                     if (values.Length != 2) return;
-                    if (!double.TryParse(values[0], out double width)) return;
-                    if (!double.TryParse(values[1], out double height)) return;
+                    if (!double.TryParse(values[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double width)) return;
+                    if (!double.TryParse(values[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double height)) return;
                     _aspectRatio = new Size(width, height);
                     break;
             }

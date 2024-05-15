@@ -23,6 +23,16 @@
                 <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <!--  Preset values for playback speed options  -->
+            <x:Double x:Key="Speed025">0.25</x:Double>
+            <x:Double x:Key="Speed050">0.5</x:Double>
+            <x:Double x:Key="Speed075">0.75</x:Double>
+            <x:Double x:Key="Speed100">1.0</x:Double>
+            <x:Double x:Key="Speed125">1.25</x:Double>
+            <x:Double x:Key="Speed150">1.5</x:Double>
+            <x:Double x:Key="Speed175">1.75</x:Double>
+            <x:Double x:Key="Speed200">2.0</x:Double>
+
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
             <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
@@ -111,21 +121,21 @@
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed025MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="0.25"
+                        Tag="{StaticResource Speed025}"
                         Text="0.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed05MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed05MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="0.5"
+                        Tag="{StaticResource Speed050}"
                         Text="0.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed075MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed075MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="0.75"
+                        Tag="{StaticResource Speed075}"
                         Text="0.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed1MenuItem"
@@ -133,35 +143,35 @@
                         CommandParameter="{x:Bind PlaybackSpeed1MenuItem.Tag}"
                         GroupName="SpeedGroup"
                         IsChecked="True"
-                        Tag="1"
+                        Tag="{StaticResource Speed100}"
                         Text="1 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed125MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed125MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="1.25"
+                        Tag="{StaticResource Speed125}"
                         Text="1.25 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed15MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed15MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="1.5"
+                        Tag="{StaticResource Speed150}"
                         Text="1.5 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed175MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed175MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="1.75"
+                        Tag="{StaticResource Speed175}"
                         Text="1.75 ×" />
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed2MenuItem"
                         Command="{x:Bind ViewModel.SetPlaybackSpeedCommand}"
                         CommandParameter="{x:Bind PlaybackSpeed2MenuItem.Tag}"
                         GroupName="SpeedGroup"
-                        Tag="2"
+                        Tag="{StaticResource Speed200}"
                         Text="2 ×" />
                     <MenuFlyoutSeparator />
                     <muxc:RadioMenuFlyoutItem
