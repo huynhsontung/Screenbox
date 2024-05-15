@@ -194,9 +194,9 @@ namespace Screenbox.Core.ViewModels
                     if (items.Count > 0)
                     {
                         if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
-                            _mediaPlayer is VlcMediaPlayer player && Media?.Item != null)
+                            _mediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
                         {
-                            Media.Item.SubtitleTracks.AddExternalSubtitle(player, file, true);
+                            Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
                             Messenger.Send(new SubtitleAddedNotificationMessage(file));
                         }
                         else

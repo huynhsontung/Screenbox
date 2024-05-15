@@ -35,11 +35,7 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
-        public PlaybackItem? Item
-        {
-            get => _item ??= CreatePlaybackItem();
-            internal set => _item = value;  // Only set on init. Don't need to worry about clean up in this case.
-        }
+        public Lazy<PlaybackItem?> Item { get; internal set; }
 
         public IReadOnlyList<string> Options { get; }
 
@@ -56,7 +52,6 @@ namespace Screenbox.Core.ViewModels
 
         private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
-        private PlaybackItem? _item;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
@@ -80,7 +75,6 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(MediaViewModel source)
         {
             _libVlcService = source._libVlcService;
-            _item = source._item;
             _name = source._name;
             _thumbnail = source._thumbnail;
             _mediaInfo = source._mediaInfo;
@@ -92,6 +86,7 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            Item = source.Item;
         }
 
         private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
@@ -104,6 +99,7 @@ namespace Screenbox.Core.ViewModels
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
+            Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         }
 
         public MediaViewModel(LibVlcService libVlcService, StorageFile file)
@@ -128,7 +124,7 @@ namespace Screenbox.Core.ViewModels
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
-            _item = new PlaybackItem(media, media);
+            Item = new Lazy<PlaybackItem?>(new PlaybackItem(media, media));
         }
 
         partial void OnMediaInfoChanged(MediaInfo value)
@@ -179,17 +175,16 @@ namespace Screenbox.Core.ViewModels
             _options.Clear();
             _options.AddRange(opts);
 
-            if (_item == null) return;
+            if (!Item.IsValueCreated) return;
             Clean();
-            _item = CreatePlaybackItem();
         }
 
         public void Clean()
         {
             // If source is Media then there is no way to recreate. Don't clean up.
-            if (Source is Media) return;
-            PlaybackItem? item = _item;
-            _item = null;
+            if (Source is Media || !Item.IsValueCreated) return;
+            PlaybackItem? item = Item.Value;
+            Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
             if (item == null) return;
             LibVlcService.DisposeMedia(item.Media);
         }
@@ -226,7 +221,7 @@ namespace Screenbox.Core.ViewModels
 
             switch (MediaType)
             {
-                case MediaPlaybackType.Unknown when _item is { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done }:
+                case MediaPlaybackType.Unknown when Item is { IsValueCreated: true, Value: { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done } }:
                     // Update media type when it was previously set Unknown. Usually when source is a URI.
                     // We don't want to init PlaybackItem just for this.
                     MediaInfo.MediaType = MediaPlaybackType.Music;
@@ -239,7 +234,7 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            if (_item?.Media is { IsParsed: true } media)
+            if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
             {
                 if (Source is not IStorageItem &&
                     media.Meta(MetadataType.Title) is { } title &&
@@ -290,7 +285,8 @@ namespace Screenbox.Core.ViewModels
 
                 Thumbnail = image;
             }
-            else if (_item?.Media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
+            else if (Item is { IsValueCreated: true, Value.Media: { } media } &&
+                     media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
                 Thumbnail = new BitmapImage(artworkUri);
@@ -345,7 +341,7 @@ namespace Screenbox.Core.ViewModels
                 AltCaption = musicProperties.Album;
             }
 
-            if (_item?.Media is { IsParsed: true } media)
+            if (Item is { IsValueCreated: true, Value.Media: { IsParsed: true } media })
             {
                 string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
                 if (!string.IsNullOrEmpty(artist))
