@@ -12,9 +12,8 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical">
+    <StackPanel Width="220" Orientation="Vertical">
         <ListView
-            Width="220"
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.AudioTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
@@ -22,19 +21,19 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <Border Height="40">
+                <Border MinHeight="40" Padding="4,0">
                     <TextBlock
-                        Margin="16,0,0,0"
+                        Padding="12,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Audio}" />
+                        Text="{strings:Resources Key=Audio}"
+                        TextWrapping="NoWrap" />
                 </Border>
             </ListView.Header>
         </ListView>
         <MenuFlyoutSeparator Margin="-4,4,-4,2" IsTabStop="False" />
         <ListView
-            Width="220"
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
@@ -54,20 +53,20 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
-                <Grid Height="40">
+                <Grid MinHeight="40" Padding="4,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
-                        Margin="16,0,0,0"
+                        Padding="12,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Subtitles}" />
+                        Text="{strings:Resources Key=Subtitles}"
+                        TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
-                        Margin="0,0,4,0"
                         Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
                         <TextBlock
@@ -80,9 +79,9 @@
             <ListView.Footer>
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
-                    Height="36"
+                    MinHeight="36"
                     Margin="4,2"
-                    Padding="12,0"
+                    Padding="12,4"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"

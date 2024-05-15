@@ -14,7 +14,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid
             Grid.Row="0"
@@ -72,33 +71,41 @@
             <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
         </Button>
 
-        <TextBlock
-            x:Name="TitleText"
+        <Grid
             Grid.Row="1"
+            MinHeight="56"
             Margin="0,4,0,0"
-            Padding="4,0"
-            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
-            MaxLines="2"
-            Style="{StaticResource BodyStrongTextBlockStyle}"
-            Text="{Binding Name}">
-            <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
-            </interactivity:Interaction.Behaviors>
-        </TextBlock>
+            Padding="4,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <TextBlock
-            x:Name="CaptionText"
-            Grid.Row="2"
-            Padding="4,0"
-            HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
-            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
-            Style="{StaticResource CaptionTextBlockStyle}"
-            Text="{x:Bind Caption, Mode=OneWay}"
-            TextWrapping="NoWrap">
-            <interactivity:Interaction.Behaviors>
-                <interactions:OverflowTextToolTipBehavior />
-            </interactivity:Interaction.Behaviors>
-        </TextBlock>
+            <TextBlock
+                x:Name="TitleText"
+                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+                LineHeight="20"
+                MaxLines="2"
+                Style="{StaticResource BodyStrongTextBlockStyle}"
+                Text="{Binding Name}">
+                <interactivity:Interaction.Behaviors>
+                    <interactions:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+
+            <TextBlock
+                x:Name="CaptionText"
+                Grid.Row="1"
+                HorizontalTextAlignment="{x:Bind HorizontalTextAlignment}"
+                Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind Caption, Mode=OneWay}"
+                TextWrapping="NoWrap">
+                <interactivity:Interaction.Behaviors>
+                    <interactions:OverflowTextToolTipBehavior />
+                </interactivity:Interaction.Behaviors>
+            </TextBlock>
+        </Grid>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="CommonStates">

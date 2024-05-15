@@ -6,7 +6,6 @@
     <DataTemplate x:Key="AlbumGridViewItemTemplate">
         <controls:CommonGridViewItem
             Width="{StaticResource CommonGridViewItemWidth}"
-            Height="{StaticResource CommonGridViewItemHeight}"
             Caption="{Binding ArtistName}"
             IsPlaying="{Binding IsPlaying}"
             PlayCommand="{Binding PlayAlbumCommand}"
@@ -21,7 +20,6 @@
     <DataTemplate x:Key="ArtistGridViewItemTemplate">
         <controls:CommonGridViewItem
             Width="{StaticResource CommonGridViewItemWidth}"
-            Height="{StaticResource CommonGridViewItemHeight}"
             CornerRadius="{StaticResource CircularCornerRadius}"
             HorizontalTextAlignment="Center"
             IsPlaying="{Binding IsPlaying}"
@@ -36,7 +34,6 @@
     <DataTemplate x:Key="MediaGridViewItemTemplate">
         <controls:CommonGridViewItem
             Width="{StaticResource CommonGridViewItemWidth}"
-            Height="{StaticResource CommonGridViewItemHeight}"
             Caption="{Binding Caption}"
             IsPlaying="{Binding IsPlaying}"
             ThumbnailHeight="{StaticResource CommonGridViewItemThumbnailHeight}"
@@ -50,7 +47,6 @@
     <DataTemplate x:Key="WideMediaGridViewItemTemplate">
         <controls:CommonGridViewItem
             Width="{StaticResource WideGridViewItemWidth}"
-            Height="{StaticResource WideGridViewItemHeight}"
             Caption="{Binding Caption}"
             IsPlaying="{Binding IsPlaying}"
             ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"

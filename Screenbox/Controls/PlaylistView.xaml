@@ -86,7 +86,7 @@
         <StackPanel
             x:Name="ActionButtonRow"
             Grid.Row="0"
-            Height="50"
+            MinHeight="50"
             Padding="{x:Bind Padding, Mode=OneWay}"
             Orientation="Horizontal">
             <Button

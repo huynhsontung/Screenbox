@@ -109,7 +109,6 @@
                 <DataTemplate x:DataType="viewModels:StorageItemViewModel">
                     <controls:CommonGridViewItem
                         Width="{StaticResource WideGridViewItemWidth}"
-                        Height="{StaticResource WideGridViewItemHeight}"
                         CanPlay="{x:Bind IsFile}"
                         Caption="{x:Bind local:FolderViewPage.GetCaptionText(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{Binding Media.IsPlaying, FallbackValue=False}"

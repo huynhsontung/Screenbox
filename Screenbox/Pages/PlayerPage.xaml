@@ -188,6 +188,7 @@
                 Width="44"
                 Height="44"
                 Margin="4,6,4,2"
+                VerticalAlignment="Top"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=Back}">
@@ -208,6 +209,7 @@
                 Height="44"
                 Margin="0,6,0,2"
                 Padding="0"
+                VerticalAlignment="Top"
                 AllowDrop="True"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"

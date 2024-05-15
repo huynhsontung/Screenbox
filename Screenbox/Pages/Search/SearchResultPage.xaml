@@ -60,7 +60,7 @@
                     Visibility="{x:Bind ViewModel.ShowArtists}">
                     <Grid
                         x:Name="ArtistsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
@@ -90,7 +90,7 @@
                     Visibility="{x:Bind ViewModel.ShowAlbums}">
                     <Grid
                         x:Name="AlbumsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
@@ -124,7 +124,7 @@
                     Visibility="{x:Bind ViewModel.ShowSongs}">
                     <Grid
                         x:Name="SongsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
@@ -164,7 +164,7 @@
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowVideos}">
                     <Grid
                         x:Name="VideosResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
                         Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
