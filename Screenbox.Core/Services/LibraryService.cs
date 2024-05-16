@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
@@ -311,12 +312,20 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        var changeId = changeReader.GetLastChangeId();
-                        if (changeId == StorageLibraryLastChangeId.Unknown)
+                        if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
+                                "GetLastChangeId"))
                         {
-                            hasCache = false;
+                            var changeId = changeReader.GetLastChangeId();
+                            if (changeId == StorageLibraryLastChangeId.Unknown)
+                            {
+                                hasCache = false;
+                            }
+                            else if (changeId > 0)
+                            {
+                                hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
+                            }
                         }
-                        else if (changeId > 0)
+                        else
                         {
                             hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
                         }
@@ -578,9 +587,6 @@ namespace Screenbox.Core.Services
 
         private async Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
         {
-            ulong changeId = changeReader.GetLastChangeId();
-            if (changeId == 0) return true;
-            if (changeId == StorageLibraryLastChangeId.Unknown) return false;
             var changeBatch = await changeReader.ReadBatchAsync();
             foreach (StorageLibraryChange change in changeBatch)
             {
