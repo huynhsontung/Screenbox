@@ -582,8 +582,12 @@ namespace Screenbox.Core.Services
                     return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
                 }
             }
+            else
+            {
+                return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+            }
 
-            return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+            return true;
         }
 
         private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
