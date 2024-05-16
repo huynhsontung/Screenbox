@@ -361,9 +361,8 @@ namespace Screenbox.Core.Services
                 // Populate Album and Artists for each song
                 foreach (MediaViewModel song in songs)
                 {
-                    // If cache is available but IsFromLibrary = false then it may have been added
-                    // by a background library change. Load details first in this case.
-                    if (hasCache && song.IsFromLibrary)
+                    // A cached song always has a URI as source
+                    if (hasCache && song.Source is Uri)
                     {
                         song.UpdateAlbum(_albumFactory);
                         song.UpdateArtists(_artistFactory);
