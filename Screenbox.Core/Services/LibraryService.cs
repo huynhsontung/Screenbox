@@ -312,20 +312,7 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
-                                "GetLastChangeId"))
-                        {
-                            var changeId = changeReader.GetLastChangeId();
-                            if (changeId == StorageLibraryLastChangeId.Unknown)
-                            {
-                                hasCache = false;
-                            }
-                            else if (changeId > 0)
-                            {
-                                hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
-                            }
-                        }
-                        else
+                        if (hasCache)
                         {
                             hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
                         }
@@ -421,12 +408,7 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, VideosLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        var changeId = changeReader.GetLastChangeId();
-                        if (changeId == StorageLibraryLastChangeId.Unknown)
-                        {
-                            hasCache = false;
-                        }
-                        else if (changeId > 0)
+                        if (hasCache)
                         {
                             hasCache = await TryResolveLibraryChangeAsync(videos, changeReader);
                         }
@@ -585,6 +567,26 @@ namespace Screenbox.Core.Services
         }
 
         private async Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+        {
+            if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
+                    "GetLastChangeId"))
+            {
+                var changeId = changeReader.GetLastChangeId();
+                if (changeId == StorageLibraryLastChangeId.Unknown)
+                {
+                    return false;
+                }
+
+                if (changeId > 0)
+                {
+                    return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+                }
+            }
+
+            return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+        }
+
+        private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
         {
             var changeBatch = await changeReader.ReadBatchAsync();
             foreach (StorageLibraryChange change in changeBatch)
