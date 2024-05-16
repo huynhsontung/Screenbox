@@ -566,7 +566,7 @@ namespace Screenbox.Core.Services
             return mediaBatch;
         }
 
-        private async Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
+        private Task<bool> TryResolveLibraryChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
         {
             if (ApiInformation.IsMethodPresent("Windows.Storage.StorageLibraryChangeReader",
                     "GetLastChangeId"))
@@ -574,20 +574,20 @@ namespace Screenbox.Core.Services
                 var changeId = changeReader.GetLastChangeId();
                 if (changeId == StorageLibraryLastChangeId.Unknown)
                 {
-                    return false;
+                    return Task.FromResult(false);
                 }
 
                 if (changeId > 0)
                 {
-                    return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+                    return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
                 }
             }
             else
             {
-                return await TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
+                return TryResolveLibraryBatchChangeAsync(mediaList, changeReader);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         private async Task<bool> TryResolveLibraryBatchChangeAsync(List<MediaViewModel> mediaList, StorageLibraryChangeReader changeReader)
