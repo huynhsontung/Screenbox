@@ -635,6 +635,12 @@ namespace Screenbox.Core.Services
 
                     case StorageLibraryChangeType.ContentsChanged:
                     case StorageLibraryChangeType.ContentsReplaced:
+                        file = (StorageFile)await change.GetStorageItemAsync();
+                        existing = mediaList.Find(s =>
+                            s.Location.Equals(file.Path, StringComparison.OrdinalIgnoreCase));
+                        existing?.UpdateSource(file);
+                        break;
+
                     case StorageLibraryChangeType.EncryptionChanged:
                     case StorageLibraryChangeType.IndexingStatusChanged:
                         break;
