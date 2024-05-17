@@ -35,7 +35,6 @@ namespace Screenbox.Controls
 
         internal SeekBarViewModel ViewModel => (SeekBarViewModel)DataContext;
         private readonly DispatcherQueueTimer _previewToolTipTimer;
-        private bool _overridePreviewToolTipDelay;
         private Thumb? _seekBarThumb;
 
         private readonly ToolTip _previewToolTip;
@@ -80,15 +79,13 @@ namespace Screenbox.Controls
 
         private void PointerMovedEventHandler(object s, PointerRoutedEventArgs e)
         {
-            if (!ViewModel.ShouldShowPreview) return;
             PointerPoint pointerPoint = e.GetCurrentPoint(SeekBarSlider);
             UpdatePreviewTime(pointerPoint);
-            if (_previewToolTip.IsOpen || _overridePreviewToolTipDelay)
-            {
-                _overridePreviewToolTipDelay = false;
-                _previewToolTipTimer.Stop();
-                ShowPreviewToolTip(pointerPoint);
-            }
+            double halfWidth = SeekBarSlider.ActualWidth / 2;
+            _previewToolTip.Translation = new Vector3((float)(-halfWidth + pointerPoint.Position.X), 0, 0);
+            if (!ViewModel.ShouldShowPreview || !_previewToolTip.IsOpen) return;
+            _previewToolTipTimer.Stop();
+            _previewToolTip.IsOpen = true;
         }
 
         private void SeekBarSlider_OnPointerEntered(object sender, PointerRoutedEventArgs e)
@@ -99,8 +96,7 @@ namespace Screenbox.Controls
             }
 
             ViewModel.ShouldShowPreview = true;
-            PointerPoint pointerPoint = e.GetCurrentPoint(SeekBarSlider);
-            _previewToolTipTimer.Debounce(() => ShowPreviewToolTip(pointerPoint), TimeSpan.FromMilliseconds(50));
+            _previewToolTipTimer.Debounce(() => _previewToolTip.IsOpen = true, TimeSpan.FromMilliseconds(100));
         }
 
         private void SeekBarSlider_OnPointerExited(object sender, PointerRoutedEventArgs e)
@@ -141,13 +137,6 @@ namespace Screenbox.Controls
         {
             _previewToolTipTimer.Stop();
             _previewToolTip.IsOpen = false;
-        }
-
-        private void ShowPreviewToolTip(PointerPoint pointerPoint)
-        {
-            double halfWidth = SeekBarSlider.ActualWidth / 2;
-            _previewToolTip.IsOpen = true;
-            _previewToolTip.Translation = new Vector3((float)(-halfWidth + pointerPoint.Position.X), 0, 0);
         }
 
         private void UpdatePreviewTime(PointerPoint pointerPoint)
