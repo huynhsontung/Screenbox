@@ -744,30 +744,30 @@
     <value>Ouvrir un artiste</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Actualiser les bibliothèques</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Actualiser</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>Utiliser l'indexeur pour l'analyse</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Accélérez l'analyse de la bibliothèque en utilisant l'index du système quand disponible. Désactivez cette option si vous ne voyez pas tous les médias de vos emplacements de bibliothèque.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Gérer les paramètres d'indexation du système</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Définir les arguments</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Rechercher un stockage amovible</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Inclure des médias provenant de périphériques de stockage tels que des clés USB dans vos bibliothèques</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Arguments actifs</value>
   </data>
 </root>
