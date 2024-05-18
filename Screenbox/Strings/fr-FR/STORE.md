@@ -6,7 +6,7 @@
 
 ### Description
 
-Screenbox est un lecteur multimédia moderne qui réimagine l'application classique. Screenbox combine l'intuitivité d'une magnifique interface avec une puissance, rapidité, et portabilité inégalées. Conçu et développé dans l'open-source, Screenbox restera toujours gratuit.
+Screenbox est un lecteur multimédia moderne qui réimagine l'application classique. Screenbox combine l'intuitivité d'une magnifique interface avec une puissance, une rapidité et une portabilité inégalées. Conçu et développé en open-source, Screenbox restera toujours gratuit.
 
 Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
