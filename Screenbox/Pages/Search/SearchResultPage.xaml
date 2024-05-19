@@ -140,7 +140,7 @@
                     <ListView
                         x:Name="SongListView"
                         Padding="{StaticResource ContentPagePadding}"
-                        extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
+                        extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                         extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"

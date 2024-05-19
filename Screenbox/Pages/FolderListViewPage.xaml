@@ -87,7 +87,7 @@
         <ListView
             x:Name="ListView"
             Padding="{StaticResource ContentPagePadding}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"

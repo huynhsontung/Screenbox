@@ -51,7 +51,7 @@
                 Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 Stroke="{ThemeResource ControlElevationBorderBrush}"
                 StrokeThickness="0.8" />
-            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE103;" />
+            <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="&#xE769;" />
         </Grid>
         <Button
             x:Name="PlayButton"

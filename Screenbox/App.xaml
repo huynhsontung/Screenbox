@@ -114,9 +114,8 @@
                     <!--  Semantic zoom group-level style  -->
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
                         <Button
-                            Width="{StaticResource GridViewHeaderItemMinHeight}"
-                            Height="{StaticResource GridViewHeaderItemMinHeight}"
-                            HorizontalAlignment="Stretch"
+                            MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
+                            MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             ClickMode="Hover"

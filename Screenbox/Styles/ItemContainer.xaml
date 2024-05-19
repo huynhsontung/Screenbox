@@ -66,9 +66,11 @@
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
+    <CornerRadius x:Key="MediaViewItemCornerRadius">8,8,8,8</CornerRadius>
     <x:Double x:Key="GridViewItemPressedScale">0.95</x:Double>
 
-    <!--  GridViewItem with top vertical alignment and Pressed ScaleTransform animation  -->
+    <!--  GridViewItem with and Pressed ScaleTransform animation  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/winui2/main/dev/CommonStyles/GridViewItem_themeresources.xaml  -->
     <contract13NotPresent:Style
         x:Key="GridViewItemMediaCardStyle"
         BasedOn="{StaticResource DefaultGridViewItemStyle}"
@@ -80,7 +82,7 @@
         <!--<Setter Property="TabNavigation" Value="Local" />-->
         <!--<Setter Property="IsHoldingEnabled" Value="True" />-->
         <!--<Setter Property="HorizontalContentAlignment" Value="Center" />-->
-        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
         <!--<Setter Property="Margin" Value="0,0,4,4" />-->
         <!--<Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}" />-->
         <!--<Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}" />-->
@@ -198,30 +200,30 @@
             </Setter.Value>
         </Setter>
     </contract13NotPresent:Style>
-    <!--  GridViewItem with Top VerticalContentAlignment, Pressed ScaleTransform animation, increased corner radius and custom PointerOver/Pressed BorderBrush/Background brushes  -->
+    <!--  GridViewItem with Pressed ScaleTransform animation, increased corner radius and custom PointerOver/Pressed BorderBrush/Background brushes  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/winui2/main/dev/CommonStyles/GridViewItem_themeresources_21h1.xaml  -->
     <contract13Present:Style
         x:Key="GridViewItemMediaCardStyle"
         BasedOn="{StaticResource DefaultGridViewItemStyle}"
         TargetType="GridViewItem">
-        <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
-        <Setter Property="Background" Value="{ThemeResource GridViewItemBackground}" />
-        <Setter Property="Foreground" Value="{ThemeResource GridViewItemForeground}" />
-        <Setter Property="TabNavigation" Value="Local" />
-        <Setter Property="IsHoldingEnabled" Value="True" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />-->
-        <Setter Property="VerticalContentAlignment" Value="Top" />
-        <!--<Setter Property="Margin" Value="0,0,4,4" />
-        <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}" />
-        <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}" />
-        <Setter Property="AllowDrop" Value="True" />
-        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
-        <Setter Property="FocusVisualMargin" Value="-3" />
-        <Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource GridViewItemFocusVisualPrimaryBrush}" />
-        <Setter Property="FocusVisualPrimaryThickness" Value="2" />
-        <Setter Property="FocusVisualSecondaryBrush" Value="{ThemeResource GridViewItemFocusVisualSecondaryBrush}" />
-        <Setter Property="FocusVisualSecondaryThickness" Value="1" />-->
+        <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
+        <!--<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />-->
+        <!--<Setter Property="Background" Value="{ThemeResource GridViewItemBackground}" />-->
+        <!--<Setter Property="Foreground" Value="{ThemeResource GridViewItemForeground}" />-->
+        <!--<Setter Property="TabNavigation" Value="Local" />-->
+        <!--<Setter Property="IsHoldingEnabled" Value="True" />-->
+        <!--<Setter Property="HorizontalContentAlignment" Value="Center" />-->
+        <!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
+        <!--<Setter Property="Margin" Value="0,0,4,4" />-->
+        <!--<Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}" />-->
+        <!--<Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}" />-->
+        <!--<Setter Property="AllowDrop" Value="True" />-->
+        <!--<Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />-->
+        <!--<Setter Property="FocusVisualMargin" Value="-3" />-->
+        <!--<Setter Property="FocusVisualPrimaryBrush" Value="{ThemeResource GridViewItemFocusVisualPrimaryBrush}" />-->
+        <!--<Setter Property="FocusVisualPrimaryThickness" Value="2" />-->
+        <!--<Setter Property="FocusVisualSecondaryBrush" Value="{ThemeResource GridViewItemFocusVisualSecondaryBrush}" />-->
+        <!--<Setter Property="FocusVisualSecondaryThickness" Value="1" />-->
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewItem">
@@ -249,7 +251,7 @@
                         ContentMargin="{TemplateBinding Padding}"
                         ContentTransitions="{TemplateBinding ContentTransitions}"
                         Control.IsTemplateFocusTarget="True"
-                        CornerRadius="{ThemeResource OverlayCornerRadius}"
+                        CornerRadius="{ThemeResource MediaViewItemCornerRadius}"
                         DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
                         DragBackground="{ThemeResource GridViewItemDragBackground}"
                         DragForeground="{ThemeResource GridViewItemDragForeground}"
@@ -381,7 +383,7 @@
         <Setter Property="Foreground" Value="{ThemeResource ListViewHeaderItemSubtleButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource ListViewHeaderItemSubtleButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
-        <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+        <Setter Property="CornerRadius" Value="{ThemeResource MediaViewItemCornerRadius}" />
         <Setter Property="Margin" Value="4,0,4,4" />
         <!--<Setter Property="Padding" Value="12,8,12,0" />-->
         <!--<Setter Property="HorizontalContentAlignment" Value="Left" />-->
@@ -393,18 +395,14 @@
                 <ControlTemplate TargetType="GridViewHeaderItem">
                     <Grid
                         x:Name="RootGrid"
-                        Padding="{TemplateBinding Padding}"
-                        contract7Present:BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                        contract7Present:CornerRadius="{TemplateBinding CornerRadius}"
                         Background="{TemplateBinding Background}"
+                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <contract7Present:Grid.BackgroundTransition>
-                            <BrushTransition />
-                        </contract7Present:Grid.BackgroundTransition>
-
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter
                             x:Name="ContentPresenter"
+                            Margin="{TemplateBinding Padding}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Content="{TemplateBinding Content}"
@@ -460,7 +458,7 @@
         <Setter Property="Foreground" Value="{ThemeResource ListViewHeaderItemSubtleButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource ListViewHeaderItemSubtleButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
-        <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+        <Setter Property="CornerRadius" Value="{ThemeResource MediaViewItemCornerRadius}" />
         <!--<Setter Property="Margin" Value="0,0,0,4" />-->
         <!--<Setter Property="Padding" Value="12,8,12,0" />-->
         <!--<Setter Property="HorizontalContentAlignment" Value="Left" />-->
@@ -472,18 +470,14 @@
                 <ControlTemplate TargetType="ListViewHeaderItem">
                     <Grid
                         x:Name="RootGrid"
-                        Padding="{TemplateBinding Padding}"
-                        contract7Present:BackgroundSizing="{TemplateBinding BackgroundSizing}"
-                        contract7Present:CornerRadius="{TemplateBinding CornerRadius}"
                         Background="{TemplateBinding Background}"
+                        BackgroundSizing="{TemplateBinding BackgroundSizing}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <contract7Present:Grid.BackgroundTransition>
-                            <BrushTransition />
-                        </contract7Present:Grid.BackgroundTransition>
-
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter
                             x:Name="ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                             Content="{TemplateBinding Content}"

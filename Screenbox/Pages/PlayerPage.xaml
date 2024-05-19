@@ -732,7 +732,7 @@
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleText.Style" Value="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />

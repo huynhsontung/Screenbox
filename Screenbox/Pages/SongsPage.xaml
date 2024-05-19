@@ -76,7 +76,7 @@
                     x:Name="SongListView"
                     Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource ContentPagePadding}"
-                    extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
+                    extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"

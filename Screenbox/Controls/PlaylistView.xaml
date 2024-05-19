@@ -217,7 +217,7 @@
             Grid.Row="1"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource OverlayCornerRadius}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
