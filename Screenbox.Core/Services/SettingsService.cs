@@ -12,7 +12,7 @@ namespace Screenbox.Core.Services
 {
     public sealed class SettingsService : ISettingsService
     {
-        private readonly IPropertySet _settingsStorage = ApplicationData.Current.LocalSettings.Values;
+        private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
         private const string PlayerAutoResizeKey = "Player/AutoResize";
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
@@ -22,6 +22,7 @@ namespace Screenbox.Core.Services
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
+        private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
@@ -99,6 +100,12 @@ namespace Screenbox.Core.Services
             set => SetValue(AdvancedModeKey, value);
         }
 
+        public bool UseMultipleInstances
+        {
+            get => GetValue<bool>(AdvancedMultipleInstancesKey);
+            set => SetValue(AdvancedMultipleInstancesKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
@@ -112,6 +119,7 @@ namespace Screenbox.Core.Services
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
+            SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides
@@ -124,9 +132,9 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private T? GetValue<T>(string key)
+        private static T? GetValue<T>(string key)
         {
-            if (_settingsStorage.TryGetValue(key, out object value))
+            if (SettingsStorage.TryGetValue(key, out object value))
             {
                 return (T)value;
             }
@@ -134,15 +142,15 @@ namespace Screenbox.Core.Services
             return default;
         }
 
-        private void SetValue<T>(string key, T value)
+        private static void SetValue<T>(string key, T value)
         {
-            _settingsStorage[key] = value;
+            SettingsStorage[key] = value;
         }
 
-        private void SetDefault<T>(string key, T value)
+        private static void SetDefault<T>(string key, T value)
         {
-            if (_settingsStorage.ContainsKey(key) && _settingsStorage[key] is T) return;
-            _settingsStorage[key] = value;
+            if (SettingsStorage.ContainsKey(key) && SettingsStorage[key] is T) return;
+            SettingsStorage[key] = value;
         }
 
         private static string SanitizeArguments(string raw)
