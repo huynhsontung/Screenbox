@@ -120,16 +120,6 @@ namespace Screenbox.Core.Services
             {
                 // ignored
             }
-            catch (Exception e)
-            {
-                if (e.HResult == unchecked((int)0x80270200)) // LIBRARY_E_NO_SAVE_LOCATION
-                {
-                    LogService.Log(e);
-                    return;
-                }
-
-                throw;
-            }
             finally
             {
                 _musicFetchCts = null;
@@ -150,16 +140,6 @@ namespace Screenbox.Core.Services
             catch (OperationCanceledException)
             {
                 // ignored
-            }
-            catch (Exception e)
-            {
-                if (e.HResult == unchecked((int)0x80270200)) // LIBRARY_E_NO_SAVE_LOCATION
-                {
-                    LogService.Log(e);
-                    return;
-                }
-
-                throw;
             }
             finally
             {
@@ -672,14 +652,34 @@ namespace Screenbox.Core.Services
 
         private void OnVideosLibraryContentChanged(object sender, object args)
         {
-            async void FetchAction() => await FetchVideosAsync();
+            async void FetchAction()
+            {
+                try
+                {
+                    await FetchVideosAsync();
+                }
+                catch (Exception)
+                {
+                    // pass   
+                }
+            }
             // Delay fetch due to query result not yet updated at this time
             _videosRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
 
         private void OnMusicLibraryContentChanged(object sender, object args)
         {
-            async void FetchAction() => await FetchMusicAsync();
+            async void FetchAction()
+            {
+                try
+                {
+                    await FetchMusicAsync();
+                }
+                catch (Exception)
+                {
+                    // pass
+                }
+            };
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
@@ -689,8 +689,15 @@ namespace Screenbox.Core.Services
             if (!SearchRemovableStorage) return;
             async void FetchAction()
             {
-                await FetchVideosAsync();
-                await FetchMusicAsync();
+                try
+                {
+                    await FetchVideosAsync();
+                    await FetchMusicAsync();
+                }
+                catch (Exception)
+                {
+                    // pass
+                }
             }
             _storageDeviceRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }

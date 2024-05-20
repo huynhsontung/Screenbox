@@ -345,6 +345,11 @@ namespace Screenbox.Core.ViewModels
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
             }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
+            }
         }
 
         private async Task RefreshVideosLibrary()
@@ -356,6 +361,11 @@ namespace Screenbox.Core.ViewModels
             catch (UnauthorizedAccessException)
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
             }
         }
 
