@@ -16,6 +16,7 @@ namespace Screenbox.Core.Services
         int MaxVolume { get; set; }
         string GlobalArguments { get; set; }
         bool AdvancedMode { get; set; }
+        bool UseMultipleInstances { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
 }

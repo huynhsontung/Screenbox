@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using Screenbox;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Services;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -22,15 +24,14 @@ public static class Program
         }
         else
         {
-            // Define a key for this instance, based on some app-specific logic.
-            // If the key is always unique, then the app will never redirect.
-            // If the key is always non-unique, then the app will always redirect
-            // to the first instance. In practice, the app should produce a key
-            // that is sometimes unique and sometimes not, depending on its own needs.
             AppInstance instance;
+            var settingsService = new SettingsService();
             var registeredInstances = AppInstance.GetInstances();
             IActivatedEventArgs? activatedArgs = AppInstance.GetActivatedEventArgs();    // This is null on Xbox
-            if (activatedArgs?.Kind == ActivationKind.File || registeredInstances.Count == 0)
+            bool isFileActivated = activatedArgs?.Kind == ActivationKind.File;
+            bool isFeatureEnabled = settingsService.UseMultipleInstances;
+            bool isXbox = SystemInformation.IsXbox;
+            if ((!isXbox && isFeatureEnabled && isFileActivated) || registeredInstances.Count == 0)
             {
                 string key = Guid.NewGuid().ToString();
                 instance = AppInstance.FindOrRegisterInstanceForKey(key);
