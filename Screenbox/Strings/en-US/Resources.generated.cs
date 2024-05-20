@@ -2559,6 +2559,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsUseMultipleInstancesHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Allow multiple instances
+        /// </summary>
+        public static string SettingsUseMultipleInstancesHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsUseMultipleInstancesHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsUseMultipleInstancesDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Always open media files in a new instance
+        /// </summary>
+        public static string SettingsUseMultipleInstancesDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsUseMultipleInstancesDescription");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2765,6 +2791,8 @@ namespace Screenbox.Strings{
             SettingsSearchRemovableStorageHeader,
             SettingsSearchRemovableStorageDescription,
             ActiveArguments,
+            SettingsUseMultipleInstancesHeader,
+            SettingsUseMultipleInstancesDescription,
         }
 
         private static ResourceLoader _resourceLoader;
