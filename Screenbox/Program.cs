@@ -1,4 +1,6 @@
-﻿using Screenbox;
+﻿#nullable enable
+
+using Screenbox;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -12,11 +14,6 @@ public static class Program
 
     static void Main(string[] args)
     {
-        // First, we'll get our activation event args, which are typically richer
-        // than the incoming command-line args. We can use these in our app-defined
-        // logic for generating the key for this instance.
-        IActivatedEventArgs activatedArgs = AppInstance.GetActivatedEventArgs();
-
         // If the Windows shell indicates a recommended instance, then
         // the app can choose to redirect this activation to that instance instead.
         if (AppInstance.RecommendedInstance != null)
@@ -32,7 +29,8 @@ public static class Program
             // that is sometimes unique and sometimes not, depending on its own needs.
             AppInstance instance;
             var registeredInstances = AppInstance.GetInstances();
-            if (activatedArgs.Kind == ActivationKind.File || registeredInstances.Count == 0)
+            IActivatedEventArgs? activatedArgs = AppInstance.GetActivatedEventArgs();    // This is null on Xbox
+            if (activatedArgs?.Kind == ActivationKind.File || registeredInstances.Count == 0)
             {
                 string key = Guid.NewGuid().ToString();
                 instance = AppInstance.FindOrRegisterInstanceForKey(key);
