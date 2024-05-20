@@ -317,6 +317,10 @@ namespace Screenbox.Core.ViewModels
             if (SystemInformation.IsXbox)
             {
                 RemovableStorageFolders.Clear();
+                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                if (accessStatus != KnownFoldersAccessStatus.Allowed)
+                    return;
+
                 foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
                 {
                     RemovableStorageFolders.Add(folder);

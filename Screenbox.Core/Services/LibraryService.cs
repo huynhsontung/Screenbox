@@ -301,6 +301,7 @@ namespace Screenbox.Core.Services
             var changeReader = libraryChangeTracker.GetChangeReader();
             try
             {
+                await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
                 var libraryQuery = GetMusicLibraryQuery();
                 List<MediaViewModel> songs = new();
                 if (useCache)
@@ -331,9 +332,13 @@ namespace Screenbox.Core.Services
                     // Search removable storage if the system is Xbox
                     if (SearchRemovableStorage)
                     {
-                        libraryQuery = CreateRemovableStorageMusicQuery();
-                        await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
-                        StartPortableStorageDeviceWatcher();
+                        var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                        if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                        {
+                            libraryQuery = CreateRemovableStorageMusicQuery();
+                            await BatchFetchMediaAsync(libraryQuery, songs, cancellationToken);
+                            StartPortableStorageDeviceWatcher();
+                        }
                     }
                 }
 
@@ -397,6 +402,7 @@ namespace Screenbox.Core.Services
             var changeReader = libraryChangeTracker.GetChangeReader();
             try
             {
+                await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
                 StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
                 List<MediaViewModel> videos = new();
                 if (useCache)
@@ -425,9 +431,13 @@ namespace Screenbox.Core.Services
                     // Search removable storage if the system is Xbox
                     if (SearchRemovableStorage)
                     {
-                        libraryQuery = CreateRemovableStorageVideosQuery();
-                        await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
-                        StartPortableStorageDeviceWatcher();
+                        var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                        if (accessStatus is KnownFoldersAccessStatus.Allowed or KnownFoldersAccessStatus.AllowedPerAppFolder)
+                        {
+                            libraryQuery = CreateRemovableStorageVideosQuery();
+                            await BatchFetchMediaAsync(libraryQuery, videos, cancellationToken);
+                            StartPortableStorageDeviceWatcher();
+                        }
                     }
                 }
 

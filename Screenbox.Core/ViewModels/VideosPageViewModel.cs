@@ -26,9 +26,6 @@ namespace Screenbox.Core.ViewModels
 
         private bool HasLibrary => _libraryService.VideosLibrary != null;
 
-        private static StorageFolder FirstFolder =>
-            SystemInformation.IsXbox ? KnownFolders.RemovableDevices : KnownFolders.VideosLibrary;
-
         private readonly ILibraryService _libraryService;
         private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -45,7 +42,8 @@ namespace Screenbox.Core.ViewModels
 
         public void UpdateVideos()
         {
-            if (Breadcrumbs.Count == 0) Breadcrumbs.Add(FirstFolder);
+            if (Breadcrumbs.Count == 0 && TryGetFirstFolder(out StorageFolder firstFolder))
+                Breadcrumbs.Add(firstFolder);
             HasVideos = _libraryService.GetVideosFetchResult().Count > 0;
             AddFolderCommand.NotifyCanExecuteChanged();
         }
@@ -56,12 +54,29 @@ namespace Screenbox.Core.ViewModels
             UpdateBreadcrumbs(crumbs);
         }
 
+        private bool TryGetFirstFolder(out StorageFolder folder)
+        {
+            try
+            {
+                folder = SystemInformation.IsXbox ? KnownFolders.RemovableDevices : KnownFolders.VideosLibrary;
+                return true;
+            }
+            catch (Exception e)
+            {
+                folder = ApplicationData.Current.TemporaryFolder;
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
+                return false;
+            }
+        }
+
         private void UpdateBreadcrumbs(IReadOnlyList<StorageFolder>? crumbs)
         {
             Breadcrumbs.Clear();
             if (crumbs == null)
             {
-                Breadcrumbs.Add(FirstFolder);
+                if (TryGetFirstFolder(out StorageFolder firstFolder))
+                    Breadcrumbs.Add(firstFolder);
             }
             else
             {
