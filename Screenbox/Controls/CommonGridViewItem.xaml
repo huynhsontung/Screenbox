@@ -10,11 +10,12 @@
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <Grid Padding="4">
+    <Grid Padding="4" RowSpacing="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
         <Grid
             Grid.Row="0"
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
@@ -71,11 +72,27 @@
             <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
         </Button>
 
-        <Grid
-            Grid.Row="1"
-            MinHeight="56"
-            Margin="0,4,0,0"
-            Padding="4,0">
+        <!--
+            This simulates the maximum amount of vertical space the text can occupy.
+            Otherwise, on certain conditions, making the text larger can cause it to be cut off.
+        -->
+        <StackPanel Grid.Row="1" Padding="4,0">
+            <TextBlock
+                AutomationProperties.AccessibilityView="Raw"
+                FontSize="{StaticResource BodyTextBlockFontSize}"
+                IsHitTestVisible="False"
+                LineHeight="20"
+                Opacity="0">
+                <LineBreak />
+            </TextBlock>
+            <TextBlock
+                AutomationProperties.AccessibilityView="Raw"
+                FontSize="{StaticResource CaptionTextBlockFontSize}"
+                IsHitTestVisible="False"
+                Opacity="0" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" Padding="4,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
