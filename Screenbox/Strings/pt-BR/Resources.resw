@@ -189,7 +189,7 @@
     <value>Mais</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Lista de reprodução</value>
+    <value>Fila de reprodução</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Repetir: Desligado</value>
@@ -231,7 +231,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Vídeos</value>
+    <value>Biblioteca de vídeos</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>Esta pasta está vazia</value>
@@ -266,7 +266,7 @@
     <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Músicas</value>
+    <value>Biblioteca de músicas</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Reproduzir aleatoriamente</value>
@@ -281,7 +281,7 @@
     <value>Gênero desconhecido</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Adicionar pasta</value>
+    <value>Adicionar uma pasta</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Limpar</value>
@@ -580,13 +580,13 @@
     <value>Reprodutor</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de músicas</value>
+    <value>Locais na biblioteca de música</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Mostrar recentes</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Localização da biblioteca de vídeos</value>
+    <value>Locais na biblioteca de vídeos</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Legendas</value>
@@ -693,7 +693,7 @@
     <value>Modo avançado</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>O modo avançado permite personalizar o comportamento do LibVLC usando argumentos de linha de comando.</value>
+    <value>Permite personalizar o comportamento do LibVLC usando argumentos de linha de comando.</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Argumentos globais</value>
