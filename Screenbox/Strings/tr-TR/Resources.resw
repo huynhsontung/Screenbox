@@ -770,4 +770,10 @@
   <data name="ActiveArguments" xml:space="preserve">
     <value>Aktif argümanlar</value>
   </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Allow multiple instances</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Always open media files in a new instance</value>
+  </data>
 </root>
