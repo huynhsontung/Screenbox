@@ -592,7 +592,7 @@
     <value>Legendas</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Exibir mídia reproduzida recentemente na página inicial</value>
+    <value>Exibir mídia reproduzida recente na página inicial</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Limpar histórico de mídia recente</value>
@@ -771,9 +771,9 @@
     <value>Argumentos ativos</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Permitir múltiplas instâncias</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Sempre abrir arquivos de mídia em uma nova instância</value>
   </data>
 </root>
