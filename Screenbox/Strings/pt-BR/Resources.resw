@@ -389,7 +389,7 @@
     <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas Configurações do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recente</value>
+    <value>Mídia recente</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
     <value>Ajustes de vídeo</value>
@@ -583,7 +583,7 @@
     <value>Locais na biblioteca de música</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Mostrar recentes</value>
+    <value>Mostrar mídia recente</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Locais na biblioteca de vídeos</value>
