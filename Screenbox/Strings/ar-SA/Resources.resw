@@ -732,7 +732,7 @@
     <value>موازنة التوقيت</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>الملحنون</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>تعذر إضافة المجلد</value>
