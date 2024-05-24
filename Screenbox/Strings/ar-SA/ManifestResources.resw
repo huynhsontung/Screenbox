@@ -124,7 +124,7 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>مشغل فيديو حديث مع التركيز على الأداء وسهولة الاستخدام على مجموعة واسعة من أجهزة Windows.</value>
+    <value>مشغل فيديو حديث يركز على الأداء وسهولة الاستخدام على مجموعة واسعة من أجهزة Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>ملف 3GPP متعدد الوسائط</value>
@@ -142,7 +142,7 @@
     <value>صوت FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>فيديو فلاش</value>
+    <value>فيديو Flash</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
     <value>صوت Matroska</value>
@@ -199,9 +199,9 @@
     <value>بث نقل MPEG</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>صوت WavPack</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>صوت AIFF</value>
   </data>
 </root>
