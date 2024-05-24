@@ -121,7 +121,7 @@
     <value>تم حفظ الإطار</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>صورة في صورة</value>
+    <value>صورة داخل صورة</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>حفظ الإطار الحالي</value>
@@ -293,7 +293,7 @@
     <value>تحديد متعدد</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>لم نتمكن من العثور على أي موسيقى</value>
+    <value>لم يتم العثور على أي موسيقى</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>مكتبة الموسيقى الخاصة بك لا تحتوي على أي محتوى موسيقي.</value>
@@ -753,27 +753,27 @@
     <value>استخدام المفهرس للمسح</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>سرع مسح المكتبة عن طريق استخدام فهرس النظام عند توفره. قم بإيقاف هذا الخيار إذا كنت لا ترى جميع الوسائط من مواقع مكتبتك.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>إدارة إعدادات فهرسة النظام</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>تعيين المعطيات</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>البحث في وحدة التخزين القابلة للإزالة</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>تضمين وسائط من أجهزة التخزين مثل أقراص USB في مكتباتك</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>المعطيات النشطة</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>السماح بنسخ متعددة</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>فتح ملفات الوسائط دائمًا في نوافذ جديدة</value>
   </data>
 </root>
