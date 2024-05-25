@@ -771,9 +771,9 @@
     <value>活动参数</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>允许多个实例</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>始终在新实例中打开媒体文件</value>
   </data>
 </root>
