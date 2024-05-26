@@ -79,6 +79,7 @@
             Height="32"
             Padding="0"
             VerticalAlignment="Center"
+            BackgroundSizing="OuterBorderEdge"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
