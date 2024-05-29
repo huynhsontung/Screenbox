@@ -60,34 +60,31 @@
                         TrueValue="{strings:Resources Key=Pause}" />
 
                     <!--  Custom Icons  -->
-                    <contract13NotPresent:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxMDL2Assets.ttf#Screenbox MDL2 Assets</contract13NotPresent:FontFamily>
-                    <contract13Present:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/ScreenboxFluentIcons.ttf#Screenbox Fluent Icons</contract13Present:FontFamily>
-
+                    <contract13NotPresent:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/Fonts/ScreenboxMDL2Assets.ttf#Screenbox MDL2 Assets</contract13NotPresent:FontFamily>
+                    <contract13Present:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/Fonts/ScreenboxFluentIcons.ttf#Screenbox Fluent Icons</contract13Present:FontFamily>
                     <!--  Font sizes  -->
+                    <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>
+                    <!--  Icon font sizes  -->
                     <x:Double x:Key="DefaultIconFontSize">16</x:Double>
-                    <x:Double x:Key="PanelIconFontSize">126</x:Double>
-                    <x:Double x:Key="PanelIconFontSizeMinimal">88</x:Double>
-                    <x:Double x:Key="PlaceholderGridItemIconFontSize">52</x:Double>
-                    <x:Double x:Key="PlaceholderGridItemIconFontSizeSmall">42</x:Double>
+                    <x:Double x:Key="GridItemPlaceholderIconFontSize">52</x:Double>
+                    <x:Double x:Key="WideGridItemPlaceholderIconFontSize">42</x:Double>
+                    <x:Double x:Key="NoContentPanelGlyphFontSize">126</x:Double>
+                    <x:Double x:Key="NoContentPanelMinimalGlyphFontSize">88</x:Double>
 
                     <!--  Standardize header height with or without top nav  -->
                     <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
-                    <!--  SpiltButton height to match that of the button  -->
-                    <x:Double x:Key="SplitButtonHeight">32</x:Double>
 
                     <!--  Grid item sizes  -->
                     <x:Double x:Key="CommonGridViewItemWidth">168</x:Double>
-                    <x:Double x:Key="CommonGridViewItemHeight">226</x:Double>
                     <x:Double x:Key="CommonGridViewItemThumbnailHeight">160</x:Double>
-                    <x:Double x:Key="WideGridViewItemWidth">230</x:Double>
-                    <x:Double x:Key="WideGridViewItemHeight">188</x:Double>
-                    <x:Double x:Key="WideGridViewItemThumbnailHeight">126</x:Double>
+                    <x:Double x:Key="WideGridViewItemWidth">232</x:Double>
+                    <x:Double x:Key="WideGridViewItemThumbnailHeight">128</x:Double>
 
                     <!--  Content margins  -->
-                    <Thickness x:Key="PageContentMargin">56,0</Thickness>
-                    <Thickness x:Key="PageContentMarginMinimal">16,0</Thickness>
-                    <Thickness x:Key="PageThumbnailMargin">52,0</Thickness>
-                    <Thickness x:Key="PageThumbnailMarginMinimal">14,0</Thickness>
+                    <Thickness x:Key="ContentPagePadding">56,0</Thickness>
+                    <Thickness x:Key="ContentPageMinimalPadding">16,0</Thickness>
+                    <Thickness x:Key="GridViewContentPagePadding">52,0</Thickness>
+                    <Thickness x:Key="GridViewContentPageMinimalPadding">14,0</Thickness>
 
                     <Thickness x:Key="TopMediumMargin">0,12,0,0</Thickness>
                     <Thickness x:Key="TopLargeMargin">0,16,0,0</Thickness>
@@ -97,10 +94,7 @@
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
 
-                    <!--  Inline HyperlinkButton margin  -->
-                    <Thickness x:Key="HyperlinkButtonInlineMargin">-12,0,0,0</Thickness>
-                    <!--  HyperlinkButton with caption text style padding to maintain the same height  -->
-                    <Thickness x:Key="HyperlinkButtonCaptionPadding">11,7,11,7</Thickness>
+                    <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
 
                     <Style TargetType="FontIcon">
                         <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
@@ -110,28 +104,18 @@
                     <!--  Header style  -->
                     <Style
                         x:Key="PageHeaderTextBlockStyle"
-                        BasedOn="{StaticResource TitleTextBlockStyle}"
+                        BasedOn="{StaticResource BaseTextBlockStyle}"
                         TargetType="TextBlock">
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
                         <Setter Property="FontSize" Value="34" />
-                        <Setter Property="FontWeight" Value="SemiBold" />
-                    </Style>
-
-                    <!--  Require focus engagement on a gamepad  -->
-                    <!--  https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#focus-engagement  -->
-                    <Style
-                        x:Key="ListViewItemFocusEngagementStyle"
-                        BasedOn="{StaticResource DefaultListViewItemStyle}"
-                        TargetType="ListViewItem">
-                        <Setter Property="IsFocusEngagementEnabled" Value="True" />
+                        <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
                     </Style>
 
                     <!--  Semantic zoom group-level style  -->
                     <DataTemplate x:Key="GroupOverviewLetterItemTemplate">
                         <Button
-                            Width="{StaticResource GridViewHeaderItemMinHeight}"
-                            Height="{StaticResource GridViewHeaderItemMinHeight}"
-                            HorizontalAlignment="Stretch"
+                            MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
+                            MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             ClickMode="Hover"
@@ -142,7 +126,8 @@
 
                 </ResourceDictionary>
 
-                <ResourceDictionary Source="ms-appx:///Controls/Styles/Subtle_themeresources.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/ItemContainer.xaml" />
 
             </muxc:XamlControlsResources.MergedDictionaries>
         </muxc:XamlControlsResources>

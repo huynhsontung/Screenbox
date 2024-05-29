@@ -41,7 +41,7 @@
             Grid.Row="0"
             Height="200"
             Margin="0,0,0,-108"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             Canvas.ZIndex="1">
 
             <Border
@@ -50,7 +50,7 @@
                 Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,8" />
 
@@ -76,7 +76,7 @@
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="8"
+                    CornerRadius="{StaticResource OverlayCornerRadius}"
                     Shadow="{StaticResource SharedShadow}"
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,8">
@@ -88,7 +88,7 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Glyph="&#xE93C;"
                         Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
-                    <Border CornerRadius="8">
+                    <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
                         <Image
                             HorizontalAlignment="Center"
                             Source="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}"
@@ -173,8 +173,8 @@
         <ListView
             x:Name="ItemList"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            Padding="{StaticResource ContentPagePadding}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
@@ -223,12 +223,12 @@
                         <Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />
                         <Setter Target="Header.Height" Value="160" />
                         <Setter Target="Header.Margin" Value="0,0,0,-68" />
-                        <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="AlbumArt.Width" Value="140" />
                         <Setter Target="AlbumArt.Height" Value="140" />
                         <Setter Target="AlbumArtIcon.FontSize" Value="52" />
                         <Setter Target="ButtonPanel.Margin" Value="0" />
-                        <Setter Target="ItemList.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>
                 </VisualState>

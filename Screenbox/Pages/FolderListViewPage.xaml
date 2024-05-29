@@ -86,8 +86,8 @@
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <ListView
             x:Name="ListView"
-            Padding="{StaticResource PageContentMargin}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            Padding="{StaticResource ContentPagePadding}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -98,6 +98,9 @@
             ItemsSource="{x:Bind ViewModel.Items}"
             Loaded="ListView_OnLoaded"
             SelectionMode="None">
+            <ListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
@@ -108,16 +111,13 @@
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
-            <ListView.Footer>
-                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
         </ListView>
 
         <!--  Empty content  -->
         <TextBlock
             x:Name="NoContentText"
             Margin="{StaticResource TopLargeMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -136,8 +136,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoContentText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

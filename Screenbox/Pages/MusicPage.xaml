@@ -29,7 +29,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             Visibility="Collapsed">
             <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Music}" />
         </Grid>
@@ -38,7 +38,7 @@
             x:Name="NoMusicPanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="32"
@@ -56,7 +56,7 @@
             <FontIcon
                 x:Name="NoMusicPanelIcon"
                 Grid.Column="0"
-                FontSize="{StaticResource PanelIconFontSize}"
+                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xE8D6;" />
 
@@ -120,23 +120,23 @@
                 <muxc:NavigationViewItem
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
-                    FontSize="18"
+                    FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs" />
                 <muxc:NavigationViewItem
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
-                    FontSize="18"
+                    FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums" />
                 <muxc:NavigationViewItem
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
-                    FontSize="18"
+                    FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="artists" />
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.PaneFooter>
                 <Button
                     x:Name="HeaderAddFolderButton"
-                    Margin="{StaticResource PageContentMargin}"
+                    Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
@@ -164,7 +164,7 @@
                 <Button
                     x:Name="ShufflePlayButton"
                     Grid.Row="0"
-                    Margin="{StaticResource PageContentMargin}"
+                    Margin="{StaticResource ContentPagePadding}"
                     AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                     Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                     Style="{StaticResource AccentButtonStyle}">
@@ -214,14 +214,14 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoMusicPanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoMusicPanel.ColumnSpacing" Value="16" />
-                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
+                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
                         <Setter Target="HeaderNavView.Margin" Value="16,0" />
-                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

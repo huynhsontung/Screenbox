@@ -101,7 +101,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}">
+            Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
@@ -115,10 +115,10 @@
             <StackPanel
                 x:Name="ContentRoot"
                 Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                Padding="{StaticResource PageContentMargin}">
+                Padding="{StaticResource ContentPagePadding}">
                 <StackPanel.ChildrenTransitions>
-                    <RepositionThemeTransition IsStaggeringEnabled="False" />
                     <EntranceThemeTransition FromVerticalOffset="50" IsStaggeringEnabled="True" />
+                    <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
                 <interactivity:Interaction.Behaviors>
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -374,7 +374,7 @@
             Title="{strings:Resources Key=PendingChanges}"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             IsClosable="False"
@@ -400,10 +400,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="ContentRoot.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
-                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

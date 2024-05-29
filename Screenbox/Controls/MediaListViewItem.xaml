@@ -25,7 +25,7 @@
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
-    <Grid Height="46" XYFocusKeyboardNavigation="Disabled">
+    <Grid XYFocusKeyboardNavigation="Disabled">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
             <ColumnDefinition Width="32" />
@@ -58,8 +58,8 @@
             Padding="0,0,8,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             IsHitTestVisible="False"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding TrackNumberText, FallbackValue=''}"
             TextWrapping="NoWrap"
@@ -79,19 +79,50 @@
             Height="32"
             Padding="0"
             VerticalAlignment="Center"
+            BackgroundSizing="OuterBorderEdge"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
-            Style="{StaticResource SubtleButtonStyle}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
             <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
             <Button.Resources>
-                <StaticResource x:Key="SubtleButtonBackground" ResourceKey="HyperlinkButtonBackground" />
-                <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
-                <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                <StaticResource x:Key="SubtleButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
-                <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
-                <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
+                            <StaticResource x:Key="ButtonForeground" ResourceKey="HyperlinkButtonForeground" />
+                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
+                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
+                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
+                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="Light">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
+                            <StaticResource x:Key="ButtonForeground" ResourceKey="HyperlinkButtonForeground" />
+                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
+                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
+                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
+                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="HighContrast">
+                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
+                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
+                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
+                            <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorButtonTextColorBrush" />
+                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
+                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
+                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
+                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
+                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
             </Button.Resources>
         </Button>
 
@@ -112,7 +143,7 @@
             x:Name="ArtistButton"
             Grid.Column="3"
             Margin="4,0"
-            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
+            Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
             VerticalAlignment="Center"
             Command="{x:Bind Common.OpenArtistCommand}"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
@@ -133,7 +164,7 @@
             x:Name="AlbumButton"
             Grid.Column="4"
             Margin="4,0"
-            Padding="{StaticResource HyperlinkButtonCaptionPadding}"
+            Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
             VerticalAlignment="Center"
             Command="{x:Bind Common.OpenAlbumCommand}"
             CommandParameter="{Binding Album}"
@@ -155,7 +186,7 @@
             Grid.Column="5"
             Margin="4,0"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding MediaInfo.MusicProperties.Genre, Converter={StaticResource GenreTextConverter}}"
             TextWrapping="NoWrap"
@@ -171,7 +202,7 @@
             Margin="0,0,16,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
-            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
             Text="{Binding DurationText}"
             TextWrapping="NoWrap" />
@@ -190,7 +221,9 @@
                         <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="AlbumButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="GenreText.Opacity" Value="1" />
                         <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="DurationText.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

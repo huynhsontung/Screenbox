@@ -374,7 +374,7 @@
                 Margin="8,0,0,2"
                 VerticalAlignment="Center"
                 ChapterName="{x:Bind ViewModel.ChapterName, Mode=OneWay}"
-                FontSize="14"
+                FontSize="{StaticResource BodyTextBlockFontSize}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
                 TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />

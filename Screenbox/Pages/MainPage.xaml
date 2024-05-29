@@ -18,6 +18,23 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <!--  Left pane acrylic  -->
+                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
+                    <!--  LeftMinimal and overlay pane acrylic  -->
+                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
+                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <contract13NotPresent:SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
+                    <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
             <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
             <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
@@ -27,16 +44,11 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <!--  Left pane acrylic  -->
-            <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-            <!--  LeftMinimal and overlay pane acrylic  -->
-            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="16" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
+                    <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
                     <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
                 </StackPanel>
             </DataTemplate>

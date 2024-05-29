@@ -23,13 +23,8 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedArtists}" />
 
-            <StaticResource x:Key="GridViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" />
             </DataTemplate>
 
             <MenuFlyout x:Key="ArtistFlyout">
@@ -58,24 +53,21 @@
                 <GridView
                     x:Name="ArtistGridView"
                     Margin="{StaticResource TopLargeMargin}"
-                    Padding="{StaticResource PageThumbnailMargin}"
+                    Padding="{StaticResource GridViewContentPagePadding}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="ArtistGridView_OnContainerContentChanging"
                     IsItemClickEnabled="True"
+                    ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"
                     SelectionMode="None">
-                    <GridView.Resources>
-                        <ResourceDictionary>
-                            <ResourceDictionary.MergedDictionaries>
-                                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
-                            </ResourceDictionary.MergedDictionaries>
-                        </ResourceDictionary>
-                    </GridView.Resources>
                     <GridView.GroupStyle>
-                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
+                        <GroupStyle
+                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                            HidesIfEmpty="True" />
                     </GridView.GroupStyle>
                     <GridView.Footer>
                         <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -91,7 +83,7 @@
                 <GridView
                     x:Name="GroupOverview"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource PageContentMargin}"
+                    Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -123,8 +115,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

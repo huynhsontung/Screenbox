@@ -23,13 +23,8 @@
                 IsSourceGrouped="True"
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
-            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock
-                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                    Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" />
             </DataTemplate>
 
             <XamlUICommand
@@ -80,8 +75,8 @@
                 <ListView
                     x:Name="SongListView"
                     Margin="{StaticResource TopLargeMargin}"
-                    Padding="{StaticResource PageContentMargin}"
-                    extensions:ListViewExtensions.ItemCornerRadius="8"
+                    Padding="{StaticResource ContentPagePadding}"
+                    extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -95,6 +90,15 @@
                             <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlayCommand, ElementName=SongListView}" />
                         </DataTemplate>
                     </ListView.ItemTemplate>
+                    <ListView.GroupStyle>
+                        <GroupStyle
+                            HeaderContainerStyle="{StaticResource ListViewHeaderItemSubtleButtonStyle}"
+                            HeaderTemplate="{StaticResource GroupHeaderTemplate}"
+                            HidesIfEmpty="True" />
+                    </ListView.GroupStyle>
+                    <ListView.Footer>
+                        <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                    </ListView.Footer>
                     <interactivity:Interaction.Behaviors>
                         <interactions:AlternatingListViewBehavior
                             AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -104,12 +108,6 @@
                         <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                         <interactions:FocusOnItemClickBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ListView.Footer>
-                        <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                    </ListView.Footer>
-                    <ListView.GroupStyle>
-                        <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" HidesIfEmpty="True" />
-                    </ListView.GroupStyle>
                 </ListView>
             </SemanticZoom.ZoomedInView>
 
@@ -117,7 +115,7 @@
                 <GridView
                     x:Name="GroupOverview"
                     Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-                    Padding="{StaticResource PageContentMargin}"
+                    Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
@@ -149,8 +147,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
