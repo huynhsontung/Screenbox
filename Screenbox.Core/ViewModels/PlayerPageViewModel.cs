@@ -191,7 +191,6 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnDrop(object sender, DragEventArgs e)
         {
-            if (_mediaPlayer == null) return;
             try
             {
                 if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -199,14 +198,15 @@ namespace Screenbox.Core.ViewModels
                     IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
-                        if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle())
+                        if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
+                            _mediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
                         {
-                            _mediaPlayer.AddSubtitle(file);
+                            Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
                             Messenger.Send(new SubtitleAddedNotificationMessage(file));
                         }
                         else
                         {
-                            Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                            Messenger.Send(new PlayFilesMessage(items));
                         }
 
                         return;

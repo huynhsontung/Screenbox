@@ -9,6 +9,8 @@ namespace Screenbox.Core.Services
 {
     public sealed class NavigationService : INavigationService
     {
+        public event EventHandler? Navigated;
+
         private readonly Dictionary<Type, Type> _vmPageMapping;
 
         public NavigationService(params KeyValuePair<Type, Type>[] mapping)
@@ -29,6 +31,7 @@ namespace Screenbox.Core.Services
             if (rootFrame.Content is IContentFrame page)
             {
                 page.NavigateContent(pageType, parameter);
+                Navigated?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -44,6 +47,7 @@ namespace Screenbox.Core.Services
                 if (page.ContentSourcePageType == parentPageType && page.FrameContent is IContentFrame childPage)
                 {
                     childPage.NavigateContent(targetPageType, parameter);
+                    Navigated?.Invoke(this, EventArgs.Empty);
                     return;
                 }
 
@@ -62,6 +66,7 @@ namespace Screenbox.Core.Services
                 if (page.ContentSourcePageType == pageType)
                 {
                     page.NavigateContent(pageType, parameter);
+                    Navigated?.Invoke(this, EventArgs.Empty);
                     break;
                 }
 

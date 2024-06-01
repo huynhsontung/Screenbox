@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
+using LibVLCSharp.Shared;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
@@ -75,9 +76,23 @@ namespace Screenbox
             HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
 
             Suspending += OnSuspending;
+            UnhandledException += OnUnhandledException;
 
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
+        }
+
+        private static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            if (e.Exception is VLCException
+                {
+                    Message: "Could not create Direct3D11 device : No compatible adapter found."
+                })
+            {
+                e.Handled = true;
+                WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
+                LogService.Log(e);
+            }
         }
 
         private static IServiceProvider ConfigureServices()
@@ -181,7 +196,7 @@ namespace Screenbox
             }
 
             Window.Current.Activate();
-            WeakReferenceMessenger.Default.Send(new PlayFilesWithNeighborsMessage(args.Files, args.NeighboringFilesQuery));
+            WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
             Analytics.TrackEvent("FileActivated", new Dictionary<string, string>
             {
                 { "PreviousExecutionState", args.PreviousExecutionState.ToString() }

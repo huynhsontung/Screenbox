@@ -336,7 +336,7 @@ namespace Screenbox.Core.Playback
             if (PlaybackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
             if (e.Type == TrackType.Text)
             {
-                PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id, VlcPlayer);
+                PlaybackItem.SubtitleTracks.NotifyTrackAdded(e.Id);
             }
         }
 
@@ -424,7 +424,6 @@ namespace Screenbox.Core.Playback
         {
             if (PlaybackItem == null) return;
             string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "subtitle");
-            PlaybackItem.SubtitleTracks.PendingTrackLabel = file.Name;
             VlcPlayer.AddSlave(MediaSlaveType.Subtitle, mrl, select);
         }
 

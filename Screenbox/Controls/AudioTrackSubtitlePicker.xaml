@@ -3,15 +3,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:system="using:System"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical">
+    <StackPanel Width="220" Orientation="Vertical">
         <ListView
-            Width="220"
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.AudioTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
@@ -19,52 +21,67 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <Border Height="40">
+                <Border MinHeight="40" Padding="4,0">
                     <TextBlock
-                        Margin="16,0,0,0"
+                        Padding="12,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Audio}" />
+                        Text="{strings:Resources Key=Audio}"
+                        TextWrapping="NoWrap" />
                 </Border>
             </ListView.Header>
         </ListView>
         <MenuFlyoutSeparator Margin="-4,4,-4,2" IsTabStop="False" />
         <ListView
-            Width="220"
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
             ScrollViewer.VerticalScrollMode="Disabled"
             SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="system:String">
+                    <TextBlock
+                        x:Name="TrackNameText"
+                        Text="{x:Bind}"
+                        TextTrimming="Clip">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
             <ListView.Header>
-                <Grid Height="40">
+                <Grid MinHeight="40" Padding="4,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBlock
-                        Margin="16,0,0,0"
+                        Padding="12,0,0,0"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{strings:Resources Key=Subtitles}" />
+                        Text="{strings:Resources Key=Subtitles}"
+                        TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
-                        Margin="0,0,4,0"
-                        Padding="{StaticResource HyperlinkButtonCaptionPadding}"
+                        Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
-                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{strings:Resources Key=Options}" />
+                        <TextBlock
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{strings:Resources Key=Options}"
+                            TextWrapping="NoWrap" />
                     </HyperlinkButton>
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
-                    Height="36"
+                    MinHeight="36"
                     Margin="4,2"
-                    Padding="12,0"
+                    Padding="12,4"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Stretch"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"

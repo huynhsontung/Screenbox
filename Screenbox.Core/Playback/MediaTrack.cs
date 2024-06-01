@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using LibVLCSharp.Shared;
+using Screenbox.Core.Helpers;
 using System;
 using Windows.Globalization;
 using Windows.Media.Core;
@@ -8,7 +9,7 @@ using Windows.Media.Core;
 namespace Screenbox.Core.Playback;
 public abstract class MediaTrack : IMediaTrack
 {
-    public string Id { get; }
+    public string Id { get; internal set; }
 
     public string Label { get; set; }
 
@@ -19,12 +20,22 @@ public abstract class MediaTrack : IMediaTrack
 
     public MediaTrackKind TrackKind { get; }
 
+    internal MediaTrack(MediaTrackKind trackKind, string language = "")
+    {
+        TrackKind = trackKind;
+        _languageStr = language;
+        Id = string.Empty;
+        Label = string.Empty;
+    }
+
     protected MediaTrack(LibVLCSharp.Shared.MediaTrack track)
     {
         TrackKind = Convert(track.TrackType);
         _languageStr = track.Language ?? string.Empty;
         if (Windows.Globalization.Language.IsWellFormed(_languageStr))
         {
+            if (LanguageHelper.TryConvertISO6392ToISO6391(_languageStr, out string bc47Tag))
+                _languageStr = bc47Tag;
             _language = new Language(_languageStr);
         }
 

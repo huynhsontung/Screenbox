@@ -20,7 +20,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -36,11 +35,14 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}"
-            TextTrimming="CharacterEllipsis" />
+            Text="{x:Bind strings:Resources.SearchResultHeader(ViewModel.SearchQuery)}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <ScrollViewer
             Grid.Row="1"
@@ -49,16 +51,18 @@
             <StackPanel
                 Orientation="Vertical"
                 SizeChanged="GridView_OnSizeChanged"
-                Spacing="24"
                 XYFocusDownNavigationStrategy="RectilinearDistance"
                 XYFocusKeyboardNavigation="Enabled">
                 <!--  Artists Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowArtists}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowArtists}">
                     <Grid
                         x:Name="ArtistsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
-                        Padding="{StaticResource PageContentMargin}">
+                        Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
@@ -71,20 +75,24 @@
                     </Grid>
                     <GridView
                         x:Name="ArtistGridView"
-                        Padding="{StaticResource PageThumbnailMargin}"
+                        Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Artists}"
                         SelectionMode="None" />
                 </StackPanel>
                 <!--  Albums Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowAlbums}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowAlbums}">
                     <Grid
                         x:Name="AlbumsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
-                        Padding="{StaticResource PageContentMargin}">
+                        Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
@@ -97,9 +105,10 @@
                     </Grid>
                     <GridView
                         x:Name="AlbumGridView"
-                        Padding="{StaticResource PageThumbnailMargin}"
+                        Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Albums}"
                         SelectionMode="None">
@@ -109,12 +118,15 @@
                     </GridView>
                 </StackPanel>
                 <!--  Songs Section  -->
-                <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowSongs}">
+                <StackPanel
+                    Margin="0,0,0,24"
+                    Orientation="Vertical"
+                    Visibility="{x:Bind ViewModel.ShowSongs}">
                     <Grid
                         x:Name="SongsResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
-                        Padding="{StaticResource PageContentMargin}">
+                        Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
@@ -127,19 +139,16 @@
                     </Grid>
                     <ListView
                         x:Name="SongListView"
-                        Padding="{StaticResource PageContentMargin}"
-                        extensions:ListViewExtensions.ItemCornerRadius="8"
+                        Padding="{StaticResource ContentPagePadding}"
+                        extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                         extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
                         ItemsSource="{x:Bind ViewModel.Songs}"
                         SelectionMode="None">
-                        <ListView.Resources>
-                            <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand}" />
-                        </ListView.Resources>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <controls:MediaListViewItem />
+                                <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlaySongCommand, ElementName=SongListView}" />
                             </DataTemplate>
                         </ListView.ItemTemplate>
                         <interactivity:Interaction.Behaviors>
@@ -155,9 +164,9 @@
                 <StackPanel Orientation="Vertical" Visibility="{x:Bind ViewModel.ShowVideos}">
                     <Grid
                         x:Name="VideosResultHeader"
-                        Height="32"
+                        MinHeight="32"
                         Margin="{StaticResource BottomMediumMargin}"
-                        Padding="{StaticResource PageContentMargin}">
+                        Padding="{StaticResource ContentPagePadding}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             Style="{StaticResource SubtitleTextBlockStyle}"
@@ -170,18 +179,19 @@
                     </Grid>
                     <GridView
                         x:Name="VideosGridView"
-                        Padding="{StaticResource PageThumbnailMargin}"
+                        Padding="{StaticResource GridViewContentPagePadding}"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
+                        ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                         ItemTemplate="{StaticResource WideMediaGridViewItemTemplate}"
                         ItemsSource="{x:Bind ViewModel.Videos}"
                         SelectionMode="None">
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:ThumbnailGridViewBehavior />
-                        </interactivity:Interaction.Behaviors>
                         <GridView.Resources>
                             <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand, FallbackValue={x:Null}}" />
                         </GridView.Resources>
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:ThumbnailGridViewBehavior />
+                        </interactivity:Interaction.Behaviors>
                     </GridView>
                 </StackPanel>
 
@@ -202,15 +212,15 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="ArtistsResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="AlbumsResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="SongsResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="VideosResultHeader.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="VideosGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ArtistsResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="AlbumsResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="SongsResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="VideosResultHeader.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="VideosGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -10,6 +10,10 @@ namespace Screenbox.Core.Playback
     {
         internal int VlcSpu { get; }
 
+        public SubtitleTrack(string language = "") : base(MediaTrackKind.TimedMetadata, language)
+        {
+        }
+
         public SubtitleTrack(LibVLCSharp.Shared.MediaTrack textTrack) : base(textTrack)
         {
             Guard.IsTrue(textTrack.TrackType == TrackType.Text, nameof(textTrack.TrackType));

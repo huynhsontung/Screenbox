@@ -6,6 +6,7 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Helpers;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
@@ -67,6 +68,17 @@ namespace Screenbox.Pages
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
             AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
             LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
+
+            INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
+            navigationService.Navigated += NavigationServiceOnNavigated;
+        }
+
+        private void NavigationServiceOnNavigated(object sender, EventArgs e)
+        {
+            if (ViewModel.PlayerVisibility != PlayerVisibilityState.Visible) return;
+            ViewModel.GoBack();
+            if (PlayQueueFlyout.IsOpen)
+                PlayQueueFlyout.Hide();
         }
 
         private void ThemeListenerOnThemeChanged(ThemeListener sender)

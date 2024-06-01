@@ -19,8 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <StaticResource x:Key="ListViewHeaderItemDividerStroke" ResourceKey="SystemControlTransparentBrush" />
-
             <ThemeShadow x:Key="SharedShadow" />
 
             <CollectionViewSource
@@ -47,12 +45,12 @@
                                 x:Name="AlbumArtIcon"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="52"
+                                FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Glyph="&#xE93C;"
-                                Visibility="{Binding Key.RelatedSongs[0].Thumbnail, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, FallbackValue=Visible}" />
+                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
                             <Border CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Image Source="{Binding Key.RelatedSongs[0].Thumbnail, FallbackValue={x:Null}}" Stretch="UniformToFill" />
+                                <Image Source="{Binding Key.AlbumArt}" Stretch="UniformToFill" />
                             </Border>
                         </Grid>
 
@@ -67,7 +65,11 @@
                                 x:Name="AlbumTitle"
                                 MaxLines="2"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"
-                                Text="{Binding Key.Name}" />
+                                Text="{Binding Key.Name}">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:OverflowTextToolTipBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
                             <TextBlock
                                 Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                                 Style="{StaticResource CaptionTextBlockStyle}"
@@ -87,7 +89,7 @@
                                     </VisualState.StateTriggers>
                                     <VisualState.Setters>
                                         <Setter Target="HeaderRootStackPanel.Width" Value="Auto" />
-                                        <Setter Target="HeaderRootStackPanel.Margin" Value="0,4,0,8" />
+                                        <Setter Target="HeaderRootStackPanel.Margin" Value="0,8,0,8" />
                                         <Setter Target="HeaderRootStackPanel.Orientation" Value="Horizontal" />
                                         <Setter Target="AlbumArtGrid.Width" Value="72" />
                                         <Setter Target="AlbumArtGrid.Height" Value="72" />
@@ -123,7 +125,7 @@
             Grid.Row="0"
             Height="200"
             Margin="0,0,0,-108"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             Canvas.ZIndex="1">
 
             <Border
@@ -132,7 +134,7 @@
                 Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,8" />
 
@@ -158,7 +160,7 @@
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="99"
+                    CornerRadius="{StaticResource CircularCornerRadius}"
                     SizeChanged="ProfilePicture_OnSizeChanged">
                     <FontIcon
                         x:Name="ProfilePictureIcon"
@@ -178,14 +180,21 @@
                         x:Name="TitleText"
                         Style="{StaticResource TitleTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Name}"
-                        TextWrapping="NoWrap" />
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                     <TextBlock
                         x:Name="Subtext"
                         FontWeight="Normal"
                         MaxLines="2"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
-                        TextWrapping="Wrap" />
+                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
                 </StackPanel>
 
                 <StackPanel
@@ -228,8 +237,8 @@
         <ListView
             x:Name="ItemList"
             Grid.Row="1"
-            Padding="{StaticResource PageContentMargin}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            Padding="{StaticResource ContentPagePadding}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
@@ -238,12 +247,12 @@
             ItemsSource="{x:Bind AlbumSource.View}"
             SelectionMode="None"
             XYFocusUp="{x:Bind PlayButton}">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem IsAlbumColumnVisible="False" IsTrackNumberVisible="True" />
+                    <controls:MediaListViewItem
+                        IsAlbumColumnVisible="False"
+                        IsTrackNumberVisible="True"
+                        PlayCommand="{Binding DataContext.PlayCommand, ElementName=ItemList}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>
@@ -254,38 +263,17 @@
                         GroupHeaderPlacement="Left" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-            <ListView.Header>
-                <Border x:Name="ListHeaderPadding" Height="140" />
-            </ListView.Header>
-            <ListView.Footer>
-                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
             <ListView.GroupStyle>
                 <GroupStyle HeaderTemplate="{StaticResource AlbumGroupHeaderTemplate}" HidesIfEmpty="True">
                     <GroupStyle.HeaderContainerStyle>
+                        <!--  Remove margin, padding, bottom divider and from navigation  -->
                         <Style TargetType="ListViewHeaderItem">
-                            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-                            <Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />
-                            <Setter Property="Background" Value="{ThemeResource ListViewHeaderItemBackground}" />
-                            <!--<Setter Property="Margin" Value="0,0,0,4" />-->
                             <Setter Property="Margin" Value="0,0,0,0" />
-                            <!--<Setter Property="Padding" Value="12,8,12,0" />-->
                             <Setter Property="Padding" Value="0,0,0,0" />
-                            <Setter Property="HorizontalContentAlignment" Value="Left" />
-                            <Setter Property="VerticalContentAlignment" Value="Top" />
-                            <Setter Property="MinHeight" Value="{ThemeResource ListViewHeaderItemMinHeight}" />
-                            <!--  Remove Header from XYNavigation  -->
-                            <!--<Setter Property="IsTabStop" Value="True" />-->
                             <Setter Property="IsTabStop" Value="False" />
-                            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListViewHeaderItem">
-                                        <!--<StackPanel
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="{TemplateBinding CornerRadius}">-->
                                         <ContentPresenter
                                             x:Name="ContentPresenter"
                                             Margin="{TemplateBinding Padding}"
@@ -294,14 +282,6 @@
                                             Content="{TemplateBinding Content}"
                                             ContentTemplate="{TemplateBinding ContentTemplate}"
                                             ContentTransitions="{TemplateBinding ContentTransitions}" />
-                                        <!--<Rectangle
-                                                Height="1"
-                                                Margin="12,8,12,0"
-                                                HorizontalAlignment="Stretch"
-                                                VerticalAlignment="Bottom"
-                                                Stroke="{ThemeResource ListViewHeaderItemDividerStroke}"
-                                                StrokeThickness="0.5" />
-                                        </StackPanel>-->
                                     </ControlTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -309,6 +289,12 @@
                     </GroupStyle.HeaderContainerStyle>
                 </GroupStyle>
             </ListView.GroupStyle>
+            <ListView.Header>
+                <Border x:Name="ListHeaderPadding" Height="140" />
+            </ListView.Header>
+            <ListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -335,14 +321,14 @@
                         <!--<Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />-->
                         <Setter Target="Header.Height" Value="160" />
                         <Setter Target="Header.Margin" Value="0,0,0,-68" />
-                        <Setter Target="Header.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ProfilePicture.Width" Value="140" />
                         <Setter Target="ProfilePicture.Height" Value="140" />
                         <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
                         <Setter Target="Subtext.Style" Value="{StaticResource BodyTextBlockStyle}" />
                         <Setter Target="Subtext.TextWrapping" Value="NoWrap" />
                         <Setter Target="ButtonPanel.Margin" Value="0" />
-                        <Setter Target="ItemList.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
                         <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>

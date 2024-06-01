@@ -19,7 +19,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -36,19 +35,24 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultAlbumHeader(ViewModel.SearchQuery), FallbackValue={}}" />
+            Text="{x:Bind strings:Resources.SearchResultAlbumHeader(ViewModel.SearchQuery), FallbackValue={}}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <GridView
             x:Name="AlbumGridView"
             Grid.Row="1"
-            Margin="0,12,0,0"
-            Padding="{StaticResource PageThumbnailMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource GridViewContentPagePadding}"
             ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemTemplate="{StaticResource AlbumGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Albums, FallbackValue={x:Null}}"
             SelectionMode="None">
@@ -73,8 +77,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="AlbumGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

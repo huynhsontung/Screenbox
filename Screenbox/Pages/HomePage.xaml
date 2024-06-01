@@ -20,7 +20,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -101,14 +100,13 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}">
+            Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="HeaderText"
                 Style="{StaticResource PageHeaderTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
-                Height="{StaticResource SplitButtonHeight}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
@@ -134,7 +132,7 @@
             x:Name="WelcomePanel"
             Grid.Row="1"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="16"
@@ -153,7 +151,7 @@
                 x:Name="WelcomePanelIcon"
                 Grid.Column="0"
                 Margin="0,-16,0,0"
-                FontSize="{StaticResource PanelIconFontSize}"
+                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
                 Text="👋" />
 
             <StackPanel
@@ -174,7 +172,6 @@
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
-                    Height="{StaticResource SplitButtonHeight}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"
@@ -203,27 +200,28 @@
             <TextBlock
                 x:Name="GridViewHeaderText"
                 Grid.Row="0"
-                Margin="{StaticResource PageContentMargin}"
+                Padding="{StaticResource ContentPagePadding}"
                 AutomationProperties.HeadingLevel="Level2"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{strings:Resources Key=Recent}" />
             <GridView
                 x:Name="RecentFilesGridView"
                 Grid.Row="1"
-                Margin="0,16,0,0"
-                Padding="{StaticResource PageThumbnailMargin}"
+                Margin="0,24,0,0"
+                Padding="{StaticResource GridViewContentPagePadding}"
                 ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                 ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                 IsItemClickEnabled="True"
+                ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
                 ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
                 ItemsSource="{x:Bind ViewModel.Recent}"
                 SelectionMode="None">
-                <GridView.Footer>
-                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                </GridView.Footer>
                 <GridView.Resources>
                     <commands:BindableCommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlayCommand}" />
                 </GridView.Resources>
+                <GridView.Footer>
+                    <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                </GridView.Footer>
                 <interactivity:Interaction.Behaviors>
                     <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                     <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -248,14 +246,14 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderOpenButtonText.Visibility" Value="Collapsed" />
-                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
-                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
-                        <Setter Target="GridViewHeaderText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
+                        <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

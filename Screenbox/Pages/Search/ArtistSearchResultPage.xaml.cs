@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,7 +29,7 @@ namespace Screenbox.Pages
             base.OnNavigatedTo(e);
             if (e.Parameter is SearchResultPageViewModel vm)
             {
-                ViewModel = vm;
+                DataContext = ViewModel = vm;
             }
         }
     }

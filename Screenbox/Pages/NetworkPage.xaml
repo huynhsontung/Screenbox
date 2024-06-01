@@ -17,7 +17,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="Auto" MinHeight="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -26,7 +26,7 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}">
+            Padding="{StaticResource ContentPagePadding}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -42,7 +42,7 @@
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource ContentPagePadding}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
@@ -57,7 +57,7 @@
             Grid.Row="1"
             Grid.RowSpan="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             ColumnSpacing="32"
@@ -75,7 +75,7 @@
             <FontIcon
                 x:Name="NoNetworkDrivePanelIcon"
                 Grid.Column="0"
-                FontSize="{StaticResource PanelIconFontSize}"
+                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xE8CD;" />
 
@@ -115,11 +115,11 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoNetworkDrivePanel.ColumnSpacing" Value="16" />
-                        <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource PanelIconFontSizeMinimal}" />
+                        <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -1,23 +1,44 @@
-﻿#nullable enable
+#nullable enable
 
 using LibVLCSharp.Shared;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.Media.Core;
+using Windows.Storage;
 using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
-        // This only allows to add one external subtitle at a time
-        // TODO: Find a better solution for pending subtitle track label
-        internal string PendingTrackLabel { get; set; }
-
         private readonly Media? _media;
         private readonly MediaPlaybackTimedMetadataTrackList? _source;
+        private readonly List<LazySubtitleTrack> _pendingSubtitleTracks;
+
+        private class LazySubtitleTrack
+        {
+            public SubtitleTrack Track { get; }
+
+            public StorageFile File { get; }
+
+            public VlcMediaPlayer Player { get; }
+
+            public LazySubtitleTrack(VlcMediaPlayer player, StorageFile file)
+            {
+                Player = player;
+                File = file;
+                Track = new SubtitleTrack
+                {
+                    Id = "-1",
+                    VlcSpu = -1,
+                    Label = file.Name,
+                };
+            }
+        }
 
         public PlaybackSubtitleTrackList(Media media)
         {
+            _pendingSubtitleTracks = new List<LazySubtitleTrack>();
             _media = media;
             if (media.Tracks.Length > 0)
             {
@@ -28,7 +49,7 @@ namespace Screenbox.Core.Playback
                 media.ParsedChanged += Media_ParsedChanged;
             }
 
-            PendingTrackLabel = string.Empty;
+            SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
         public PlaybackSubtitleTrackList(MediaPlaybackTimedMetadataTrackList source)
@@ -73,18 +94,29 @@ namespace Screenbox.Core.Playback
             await Task.Delay(50).ConfigureAwait(false);
             foreach (LibVLCSharp.Shared.MediaTrack track in _media.Tracks)
             {
-                if (track.TrackType == TrackType.Text && track.Id == trackId)
-                {
-                    SubtitleTrack sub = new(track);
-                    sub.Label ??= PendingTrackLabel;
-                    PendingTrackLabel = string.Empty;
-                    TrackList.Add(sub);
-                    if (trackId == mediaPlayer.Spu)
-                    {
-                        SelectedIndex = Count - 1;
-                    }
-                    return;
-                }
+                selectedTrack.VlcSpu = -1;
+                lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+            }
+        }
+
+        public void AddExternalSubtitle(VlcMediaPlayer player, StorageFile file, bool select)
+        {
+            var lazySub = new LazySubtitleTrack(player, file);
+            _pendingSubtitleTracks.Add(lazySub);
+            TrackList.Add(lazySub.Track);
+
+            if (select)
+            {
+                SelectedIndex = TrackList.Count - 1;
+            }
+        }
+
+        internal void NotifyTrackAdded(int trackId)
+        {
+            if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { VlcSpu: -1 } selectedTrack)
+            {
+                selectedTrack.VlcSpu = trackId;
+                selectedTrack.Id = trackId.ToString();
             }
         }
 

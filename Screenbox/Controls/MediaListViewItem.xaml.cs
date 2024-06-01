@@ -1,8 +1,10 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
 using System;
+using System.Windows.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -11,6 +13,15 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Controls;
 public sealed partial class MediaListViewItem : UserControl
 {
+    public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
+        nameof(PlayCommand), typeof(ICommand), typeof(MediaListViewItem), new PropertyMetadata(default(ICommand)));
+
+    public ICommand PlayCommand
+    {
+        get => (ICommand)GetValue(PlayCommandProperty);
+        set => SetValue(PlayCommandProperty, value);
+    }
+
     public bool IsTrackNumberVisible { get; set; }
 
     public bool IsAlbumColumnVisible { get; set; } = true;
@@ -19,9 +30,12 @@ public sealed partial class MediaListViewItem : UserControl
 
     private bool _firstPlay = true;
 
+    private CommonViewModel Common { get; }
+
     public MediaListViewItem()
     {
         this.InitializeComponent();
+        Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         PlayingStates.CurrentStateChanged += PlayingStatesOnCurrentStateChanged;
     }
 

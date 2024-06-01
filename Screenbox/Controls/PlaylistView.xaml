@@ -86,7 +86,7 @@
         <StackPanel
             x:Name="ActionButtonRow"
             Grid.Row="0"
-            Height="50"
+            MinHeight="50"
             Padding="{x:Bind Padding, Mode=OneWay}"
             Orientation="Horizontal">
             <Button
@@ -138,7 +138,7 @@
             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CommandBarBorderBrushOpen}"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
             Shadow="{StaticResource SharedShadow}"
             Translation="0,0,32"
             Visibility="Collapsed">
@@ -217,7 +217,7 @@
             Grid.Row="1"
             Margin="0,8,0,0"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -231,14 +231,14 @@
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySingleCommand}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem IsIconVisible="True" />
+                    <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{Binding DataContext.PlaySingleCommand, ElementName=PlaylistListView}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.Footer>
+                <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -248,9 +248,6 @@
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
-            <ListView.Footer>
-                <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
         </ListView>
 
         <VisualStateManager.VisualStateGroups>

@@ -77,7 +77,7 @@ namespace Screenbox.Core.ViewModels
                     IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
-                        Messenger.Send(new PlayFilesWithNeighborsMessage(items, null));
+                        Messenger.Send(new PlayFilesMessage(items));
                         return;
                     }
                 }
@@ -133,6 +133,11 @@ namespace Screenbox.Core.ViewModels
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
             }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
+            }
         }
 
         private async Task PrefetchVideosLibraryAsync()
@@ -144,6 +149,11 @@ namespace Screenbox.Core.ViewModels
             catch (UnauthorizedAccessException)
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
             }
         }
 

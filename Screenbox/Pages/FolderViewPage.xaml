@@ -19,10 +19,6 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Controls/Styles/CustomGridViewItem.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <MenuFlyout x:Name="ItemFlyout">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
@@ -71,32 +67,38 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
+            MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind ViewModel.TitleText}" />
+            Text="{x:Bind ViewModel.TitleText}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <muxc:BreadcrumbBar
             x:Name="BreadcrumbBar"
             Grid.Row="1"
-            Margin="56,0,56,12"
+            Margin="{StaticResource ContentPagePadding}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
 
         <muxc:ProgressBar
-            x:Name="LoadingProgressBar"
             Grid.Row="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="0,4,0,0"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <GridView
             x:Name="FolderView"
             Grid.Row="2"
-            Padding="{StaticResource PageThumbnailMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource GridViewContentPagePadding}"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
+            ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemsSource="{x:Bind ViewModel.Items}"
             Loaded="FolderView_OnLoaded"
             SelectionMode="None">
@@ -107,14 +109,13 @@
                 <DataTemplate x:DataType="viewModels:StorageItemViewModel">
                     <controls:CommonGridViewItem
                         Width="{StaticResource WideGridViewItemWidth}"
-                        Height="{StaticResource WideGridViewItemHeight}"
                         CanPlay="{x:Bind IsFile}"
                         Caption="{x:Bind local:FolderViewPage.GetCaptionText(IsFile, CaptionText, ItemCount), Mode=OneWay}"
                         IsPlaying="{Binding Media.IsPlaying, FallbackValue=False}"
                         ThumbnailHeight="{StaticResource WideGridViewItemThumbnailHeight}"
                         ThumbnailSource="{x:Bind Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}">
                         <controls:CommonGridViewItem.PlaceholderIconSource>
-                            <FontIconSource FontSize="{StaticResource PlaceholderGridItemIconFontSizeSmall}" Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
+                            <FontIconSource FontSize="{StaticResource WideGridItemPlaceholderIconFontSize}" Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                         </controls:CommonGridViewItem.PlaceholderIconSource>
                     </controls:CommonGridViewItem>
                 </DataTemplate>
@@ -134,7 +135,8 @@
         <TextBlock
             x:Name="NoContentText"
             Grid.Row="2"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -153,11 +155,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="TitleText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="BreadcrumbBar.Margin" Value="16,0,16,12" />
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="FolderView.Padding" Value="{StaticResource PageThumbnailMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="TitleText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="FolderView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

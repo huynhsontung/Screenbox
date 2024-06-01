@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FFmpegInteropX;
 using LibVLCSharp.Shared;
@@ -12,6 +13,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -33,6 +35,8 @@ namespace Screenbox.Core.ViewModels
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
+        public Lazy<IPlaybackItem?> Item { get; internal set; }
+
         public PlaybackBackendType Backend { get; set; } = PlaybackBackendType.Windows;
 
         public IReadOnlyList<string> Options { get; }
@@ -50,7 +54,6 @@ namespace Screenbox.Core.ViewModels
 
         private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
-        private IPlaybackItem? _item;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
@@ -74,7 +77,6 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(MediaViewModel source)
         {
             _libVlcService = source._libVlcService;
-            _item = source._item;
             _name = source._name;
             _thumbnail = source._thumbnail;
             _mediaInfo = source._mediaInfo;
@@ -86,6 +88,7 @@ namespace Screenbox.Core.ViewModels
             Options = new ReadOnlyCollection<string>(_options);
             Location = source.Location;
             Source = source.Source;
+            Item = source.Item;
             Backend = source.Backend;
         }
 
@@ -99,6 +102,7 @@ namespace Screenbox.Core.ViewModels
             _artists = Array.Empty<ArtistViewModel>();
             _options = new List<string>();
             Options = new ReadOnlyCollection<string>(_options);
+            Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         }
 
         public MediaViewModel(LibVlcService libVlcService, StorageFile file)
@@ -112,6 +116,7 @@ namespace Screenbox.Core.ViewModels
         public MediaViewModel(LibVlcService libVlcService, Uri uri)
             : this(uri, new MediaInfo(MediaPlaybackType.Unknown), libVlcService)
         {
+            Guard.IsTrue(uri.IsAbsoluteUri);
             Location = uri.OriginalString;
             _name = uri.Segments.Length > 0 ? Uri.UnescapeDataString(uri.Segments.Last()) : string.Empty;
         }
@@ -122,7 +127,7 @@ namespace Screenbox.Core.ViewModels
             Location = media.Mrl;
 
             // Media is already loaded, create PlaybackItem
-            _item = new VlcPlaybackItem(media, media);
+            Item = new Lazy<PlaybackItem?>(new VlcPlaybackItem(media, media));
         }
 
         partial void OnMediaInfoChanged(MediaInfo value)
@@ -182,18 +187,25 @@ namespace Screenbox.Core.ViewModels
             _options.Clear();
             _options.AddRange(opts);
 
-            if (_item == null) return;
+            if (!Item.IsValueCreated) return;
             Clean();
         }
 
         public void Clean()
         {
             // If source is Media then there is no way to recreate. Don't clean up.
-            if (Source is Media) return;
-            IPlaybackItem? item = _item;
-            _item = null;
+            if (Source is Media || !Item.IsValueCreated) return;
+            IPlaybackItem? item = Item.Value;
+            Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
             if (item is VlcPlaybackItem vlcItem)
                 _libVlcService.DisposeMedia(vlcItem.Media);
+        }
+
+        public void UpdateSource(StorageFile file)
+        {
+            Source = file;
+            Name = file.DisplayName;
+            AltCaption = file.Name;
         }
 
         public async Task LoadDetailsAsync(IFilesService filesService)
@@ -203,18 +215,25 @@ namespace Screenbox.Core.ViewModels
                 case StorageFile file:
                     MediaInfo = await filesService.GetMediaInfoAsync(file);
                     break;
-                case Uri { IsFile: true } uri:
-                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    Source = uriFile;
-                    Name = uriFile.DisplayName;
-                    AltCaption = uriFile.Name;
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                    StorageFile uriFile;
+                    try
+                    {
+                        uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    }
+                    catch (IOException)
+                    {
+                        return;
+                    }
+
+                    UpdateSource(uriFile);
                     MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
                     break;
             }
 
             switch (MediaType)
             {
-                case MediaPlaybackType.Unknown when _item is VlcPlaybackItem { VideoTracks.Count: 0, Media.IsParsed: true }:
+                case MediaPlaybackType.Unknown when Item is { IsValueCreated: true, Value: VlcPlaybackItem { VideoTracks.Count: 0, Media.ParsedStatus: MediaParsedStatus.Done } }:
                     // Update media type when it was previously set Unknown. Usually when source is a URI.
                     // We don't want to init PlaybackItem just for this.
                     MediaInfo.MediaType = MediaPlaybackType.Music;
@@ -227,9 +246,11 @@ namespace Screenbox.Core.ViewModels
                     break;
             }
 
-            if (_item is VlcPlaybackItem { Media: { IsParsed: true } media })
+            if (Item is { IsValueCreated: true, Value: VlcPlaybackItem { Media: { IsParsed: true } media }})
             {
-                if (media.Meta(MetadataType.Title) is { } title && !title.StartsWith('{'))
+                if (Source is not IStorageItem &&
+                    media.Meta(MetadataType.Title) is { } title &&
+                    !Guid.TryParse(title, out Guid _))
                 {
                     Name = title;
                 }
@@ -244,10 +265,17 @@ namespace Screenbox.Core.ViewModels
         public async Task LoadThumbnailAsync(IFilesService filesService)
         {
             if (Thumbnail != null) return;
-            if (Source is Uri { IsFile: true } uri)
+            if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
             {
-                StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                Source = uriFile;
+                try
+                {
+                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    UpdateSource(uriFile);
+                }
+                catch (IOException)
+                {
+                    return;
+                }
             }
 
             if (Source is StorageFile file)
@@ -256,10 +284,20 @@ namespace Screenbox.Core.ViewModels
                 if (source == null) return;
                 ThumbnailSource = source;
                 BitmapImage image = new();
+
+                try
+                {
+                    await image.SetSourceAsync(ThumbnailSource);
+                }
+                catch (Exception)
+                {
+                    // WinRT component not found exception???
+                    return;
+                }
+
                 Thumbnail = image;
-                await image.SetSourceAsync(ThumbnailSource);
             }
-            else if (_item is VlcPlaybackItem { Media: { } media } &&
+            else if (Item is { IsValueCreated: true, Value: VlcPlaybackItem { Media: { } media } } &&
                      media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
@@ -315,7 +353,7 @@ namespace Screenbox.Core.ViewModels
                 AltCaption = musicProperties.Album;
             }
 
-            if (_item is VlcPlaybackItem { Media: { IsParsed: true } media })
+            if (Item is { IsValueCreated: true, Value: VlcPlaybackItem { Media: { IsParsed: true } media } })
             {
                 string artist = media.Meta(MetadataType.Artist) ?? string.Empty;
                 if (!string.IsNullOrEmpty(artist))

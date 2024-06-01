@@ -147,10 +147,12 @@
     <Compile Include="Factories\StorageItemViewModelFactory.cs" />
     <Compile Include="Helpers\CollectionExtensions.cs" />
     <Compile Include="Helpers\FilesHelpers.cs" />
+    <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\LastPositionTracker.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
+    <Compile Include="Helpers\VlcMediaExtensions.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
@@ -164,7 +166,7 @@
     <Compile Include="Messages\NavigationViewDisplayModeRequestMessage.cs" />
     <Compile Include="Messages\OverrideControlsHideDelayMessage.cs" />
     <Compile Include="Messages\PlayerControlsVisibilityChangedMessage.cs" />
-    <Compile Include="Messages\PlayFilesWithNeighborsMessage.cs" />
+    <Compile Include="Messages\PlayFilesMessage.cs" />
     <Compile Include="Messages\PlaylistCurrentItemChangedMessage.cs" />
     <Compile Include="Messages\PlaylistRequestMessage.cs" />
     <Compile Include="Messages\PlayMediaMessage.cs" />
@@ -187,6 +189,8 @@
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
+    <Compile Include="Models\PersistentMusicLibrary.cs" />
+    <Compile Include="Models\PersistentVideoLibrary.cs" />
     <Compile Include="Models\PersistentVideoRecord.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
@@ -301,6 +305,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Helpers\LanguageCodes.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <None Include="packages.lock.json" />
   </ItemGroup>
   <ItemGroup>

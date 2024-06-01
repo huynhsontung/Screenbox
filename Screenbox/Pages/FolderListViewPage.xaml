@@ -58,35 +58,36 @@
                 <FontIcon
                     Grid.Column="0"
                     HorizontalAlignment="Center"
-                    FontSize="16"
                     Glyph="{x:Bind StorageItem, Converter={StaticResource MediaGlyphConverter}}" />
                 <TextBlock
                     Grid.Column="1"
-                    Margin="0,0,16,0"
-                    MaxLines="1"
+                    Margin="8,0,16,0"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind Name}" />
+                    Text="{x:Bind Name}"
+                    TextWrapping="NoWrap">
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:OverflowTextToolTipBehavior />
+                    </interactivity:Interaction.Behaviors>
+                </TextBlock>
                 <TextBlock
                     Grid.Column="2"
                     HorizontalAlignment="Right"
-                    MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{x:Bind CaptionText, Mode=OneWay}" />
+                    Text="{x:Bind CaptionText, Mode=OneWay}"
+                    TextWrapping="NoWrap" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
 
     <Grid>
         <muxc:ProgressBar
-            x:Name="LoadingProgressBar"
-            Margin="{StaticResource PageContentMargin}"
             VerticalAlignment="Top"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
         <ListView
             x:Name="ListView"
-            Padding="{StaticResource PageContentMargin}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            Padding="{StaticResource ContentPagePadding}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.Command="{x:Bind ViewModel.ClickCommand}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
@@ -97,6 +98,9 @@
             ItemsSource="{x:Bind ViewModel.Items}"
             Loaded="ListView_OnLoaded"
             SelectionMode="None">
+            <ListView.Footer>
+                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+            </ListView.Footer>
             <interactivity:Interaction.Behaviors>
                 <interactions:AutoFocusBehavior />
                 <interactions:AlternatingListViewBehavior
@@ -107,15 +111,13 @@
                 <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
                 <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
-            <ListView.Footer>
-                <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-            </ListView.Footer>
         </ListView>
 
         <!--  Empty content  -->
         <TextBlock
             x:Name="NoContentText"
-            Margin="{StaticResource PageContentMargin}"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Text="{strings:Resources Key=EmptyFolder}"
@@ -134,9 +136,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="LoadingProgressBar.Margin" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="ListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="NoContentText.Margin" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="ListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="NoContentText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

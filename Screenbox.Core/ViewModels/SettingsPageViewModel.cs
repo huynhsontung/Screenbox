@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _showRecent;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
+        [ObservableProperty] private bool _useMultipleInstances;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
 
@@ -155,6 +156,12 @@ namespace Screenbox.Core.ViewModels
             _settingsService.AdvancedMode = value;
             Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode)));
             IsRelaunchRequired = CheckForRelaunch();
+        }
+
+        partial void OnUseMultipleInstancesChanged(bool value)
+        {
+            _settingsService.UseMultipleInstances = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances)));
         }
 
         partial void OnGlobalArgumentsChanged(string value)
@@ -317,6 +324,10 @@ namespace Screenbox.Core.ViewModels
             if (SystemInformation.IsXbox)
             {
                 RemovableStorageFolders.Clear();
+                var accessStatus = await KnownFolders.RequestAccessAsync(KnownFolderId.RemovableDevices);
+                if (accessStatus != KnownFoldersAccessStatus.Allowed)
+                    return;
+
                 foreach (StorageFolder folder in await KnownFolders.RemovableDevices.GetFoldersAsync())
                 {
                     RemovableStorageFolders.Add(folder);
@@ -328,11 +339,16 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchMusicAsync();
+                await _libraryService.FetchMusicAsync(false);
             }
             catch (UnauthorizedAccessException)
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
             }
         }
 
@@ -340,11 +356,16 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                await _libraryService.FetchVideosAsync();
+                await _libraryService.FetchVideosAsync(false);
             }
             catch (UnauthorizedAccessException)
             {
                 Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
             }
         }
 

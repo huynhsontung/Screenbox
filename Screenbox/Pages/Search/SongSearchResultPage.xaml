@@ -25,29 +25,30 @@
             Grid.Row="0"
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
-            Padding="{StaticResource PageContentMargin}"
+            Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
             Style="{StaticResource PageHeaderTextBlockStyle}"
-            Text="{x:Bind strings:Resources.SearchResultSongHeader(ViewModel.SearchQuery), FallbackValue={}}" />
+            Text="{x:Bind strings:Resources.SearchResultSongHeader(ViewModel.SearchQuery), FallbackValue={}}">
+            <interactivity:Interaction.Behaviors>
+                <interactions:OverflowTextToolTipBehavior />
+            </interactivity:Interaction.Behaviors>
+        </TextBlock>
 
         <ListView
             x:Name="SongListView"
             Grid.Row="1"
-            Margin="0,12,0,0"
-            Padding="{StaticResource PageContentMargin}"
-            extensions:ListViewExtensions.ItemCornerRadius="8"
+            Margin="{StaticResource TopLargeMargin}"
+            Padding="{StaticResource ContentPagePadding}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
-            <ListView.Resources>
-                <XamlUICommand x:Key="MediaListViewItemPlayCommand" Command="{x:Bind ViewModel.PlaySongCommand, FallbackValue={x:Null}}" />
-            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <controls:MediaListViewItem />
+                    <controls:MediaListViewItem PlayCommand="{Binding DataContext.PlaySongCommand, ElementName=SongListView, FallbackValue={x:Null}}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Footer>
@@ -75,8 +76,8 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="HeaderText.Padding" Value="{StaticResource PageContentMarginMinimal}" />
-                        <Setter Target="SongListView.Padding" Value="{StaticResource PageContentMarginMinimal}" />
+                        <Setter Target="HeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

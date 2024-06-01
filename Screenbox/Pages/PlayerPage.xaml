@@ -188,6 +188,7 @@
                 Width="44"
                 Height="44"
                 Margin="4,6,4,2"
+                VerticalAlignment="Top"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=Back}">
@@ -208,6 +209,7 @@
                 Height="44"
                 Margin="0,6,0,2"
                 Padding="0"
+                VerticalAlignment="Top"
                 AllowDrop="True"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
@@ -259,9 +261,11 @@
 
                 <TextBlock
                     x:Name="SubtitleText"
+                    Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
                     OpticalMarginAlignment="TrimSideBearings"
+                    Style="{StaticResource BodyTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, FallbackValue={}}"
-                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
             </StackPanel>
         </Grid>
@@ -357,7 +361,7 @@
                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
-                CornerRadius="8"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32">
                 <FontIcon
@@ -435,7 +439,7 @@
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            CornerRadius="8"
+            CornerRadius="{StaticResource OverlayCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
@@ -446,8 +450,7 @@
             </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
-                FontSize="20"
-                FontWeight="SemiBold"
+                Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
         </Border>
 
@@ -462,7 +465,7 @@
             VerticalAlignment="Center"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
-            CornerRadius="16"
+            CornerRadius="{StaticResource CircularCornerRadius}"
             Visibility="{x:Bind ViewModel.ShowPlayPauseBadge, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="0.8" Duration="0:0:0.03" />
@@ -692,7 +695,7 @@
                         <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
                         <Setter Target="TitleText.Style" Value="{StaticResource CaptionTextBlockStyle}" />
                         <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
-                        <Setter Target="SubtitleText.FontSize" Value="12" />
+                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
@@ -729,7 +732,7 @@
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleText.Style" Value="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.CornerRadius" Value="4" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />

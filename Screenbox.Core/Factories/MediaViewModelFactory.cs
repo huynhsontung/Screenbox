@@ -35,7 +35,10 @@ namespace Screenbox.Core.Factories
                 return new MediaViewModel(_libVlcService, media);
 
             // Prefer URI source for easier clean up
-            MediaViewModel vm = new(_libVlcService, uri);
+            MediaViewModel vm = new(_libVlcService, uri)
+            {
+                Item = new Lazy<PlaybackItem>(new PlaybackItem(media, media))
+            };
 
             if (media.Meta(MetadataType.Title) is { } name)
                 vm.Name = name;
@@ -47,7 +50,17 @@ namespace Screenbox.Core.Factories
         {
             string id = file.Path;
             if (_references.TryGetValue(id, out WeakReference<MediaViewModel> reference) &&
-                reference.TryGetTarget(out MediaViewModel instance)) return instance;
+                reference.TryGetTarget(out MediaViewModel instance))
+            {
+                // Prefer storage file source
+                if (instance.Source is not IStorageFile)
+                {
+                    instance.UpdateSource(file);
+                }
+
+                return instance;
+            }
+
 
             // No existing reference, create new instance
             instance = new MediaViewModel(_libVlcService, file);
