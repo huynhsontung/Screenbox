@@ -3,6 +3,6 @@
 public enum PlaybackBackendType
 {
     Auto,
-    Windows,
+    Ffmpeg,
     LibVlc,
 }

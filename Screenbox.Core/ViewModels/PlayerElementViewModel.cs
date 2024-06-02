@@ -45,7 +45,7 @@ namespace Screenbox.Core.ViewModels
         private TimeSpan _timeBeforeManipulation;
         private bool _playerSeekGesture;
         private bool _playerVolumeGesture;
-        private PlaybackBackendType _backend = PlaybackBackendType.Windows;   // TODO: Populate through settings
+        private PlaybackBackendType _backend = PlaybackBackendType.Ffmpeg;   // TODO: Populate through settings
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,

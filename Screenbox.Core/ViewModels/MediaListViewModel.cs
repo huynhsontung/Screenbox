@@ -815,8 +815,8 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                if ((_settingsService.PlaybackBackend == PlaybackBackendType.Windows && media.Item is VlcPlaybackItem) ||
-                    (_settingsService.PlaybackBackend != PlaybackBackendType.Windows) && media.Item is WindowsPlaybackItem)
+                if ((_settingsService.PlaybackBackend == PlaybackBackendType.Ffmpeg && media.Item is VlcPlaybackItem) ||
+                    (_settingsService.PlaybackBackend != PlaybackBackendType.Ffmpeg) && media.Item is WindowsPlaybackItem)
                 {
                     media.Clean();
                 }
@@ -842,7 +842,7 @@ namespace Screenbox.Core.ViewModels
         private async Task<IPlaybackItem> CreatePlaybackItemAsync(MediaViewModel media)
         {
             IPlaybackItem item;
-            if (_settingsService.PlaybackBackend is PlaybackBackendType.Windows)
+            if (_settingsService.PlaybackBackend is PlaybackBackendType.Ffmpeg)
             {
                 switch (media.Source)
                 {

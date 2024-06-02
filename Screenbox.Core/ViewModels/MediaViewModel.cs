@@ -35,7 +35,7 @@ namespace Screenbox.Core.ViewModels
 
         public IPlaybackItem? Item { get; internal set; }
 
-        public PlaybackBackendType Backend { get; set; } = PlaybackBackendType.Windows;
+        public PlaybackBackendType Backend { get; set; } = PlaybackBackendType.Ffmpeg;
 
         public IReadOnlyList<string> Options { get; }
 
