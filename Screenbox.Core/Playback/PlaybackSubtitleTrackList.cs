@@ -4,8 +4,8 @@ using LibVLCSharp.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Media.Core;
-using Windows.Storage;
 using Windows.Media.Playback;
+using Windows.Storage;
 
 namespace Screenbox.Core.Playback
 {
@@ -54,6 +54,7 @@ namespace Screenbox.Core.Playback
 
         public PlaybackSubtitleTrackList(MediaPlaybackTimedMetadataTrackList source)
         {
+            _pendingSubtitleTracks = new List<LazySubtitleTrack>();
             _source = source;
             foreach (TimedMetadataTrack metadataTrack in source)
             {
@@ -65,37 +66,33 @@ namespace Screenbox.Core.Playback
             }
 
             SelectedIndexChanged += OnSelectedIndexChanged;
-            PendingTrackLabel = string.Empty;
         }
 
         private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
-            // Only update for Windows track list. VLC track list is handled by the player.
-            if (_source == null) return;
-            if (sender.SelectedIndex == -1)
+            if (_media != null)
             {
-                for (uint i = 0; i < _source.Count; i++)
+                if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
+                    _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&
+                    (selectedTrack.VlcSpu == -1 || lazyTrack.Player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
                 {
-                    _source.SetPresentationMode(i, TimedMetadataTrackPresentationMode.Disabled);
+                    selectedTrack.VlcSpu = -1;
+                    lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
                 }
             }
-            else
+            else if (_source != null)
             {
-                _source.SetPresentationMode((uint)sender.SelectedIndex, TimedMetadataTrackPresentationMode.PlatformPresented);
-            }
-        }
-
-        internal async void NotifyTrackAdded(int trackId, LibVLCSharp.Shared.MediaPlayer mediaPlayer)
-        {
-            if (_media == null) return;
-
-            // Delay to wait for _media.Tracks to populate
-            // Run in new thread to ensure VLC thread safety
-            await Task.Delay(50).ConfigureAwait(false);
-            foreach (LibVLCSharp.Shared.MediaTrack track in _media.Tracks)
-            {
-                selectedTrack.VlcSpu = -1;
-                lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+                if (sender.SelectedIndex == -1)
+                {
+                    for (uint i = 0; i < _source.Count; i++)
+                    {
+                        _source.SetPresentationMode(i, TimedMetadataTrackPresentationMode.Disabled);
+                    }
+                }
+                else
+                {
+                    _source.SetPresentationMode((uint)sender.SelectedIndex, TimedMetadataTrackPresentationMode.PlatformPresented);
+                }
             }
         }
 

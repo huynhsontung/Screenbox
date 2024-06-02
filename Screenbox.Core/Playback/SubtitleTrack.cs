@@ -8,7 +8,7 @@ namespace Screenbox.Core.Playback
 {
     public sealed class SubtitleTrack : MediaTrack
     {
-        internal int VlcSpu { get; }
+        internal int VlcSpu { get; set; }
 
         public SubtitleTrack(string language = "") : base(MediaTrackKind.TimedMetadata, language)
         {
