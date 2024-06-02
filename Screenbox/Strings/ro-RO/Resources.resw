@@ -771,9 +771,9 @@
     <value>Argumente active</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Permiteți mai multe instanțe</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Deschideți întotdeauna fișierele media într-o instanță nouă</value>
   </data>
 </root>
