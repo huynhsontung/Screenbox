@@ -184,7 +184,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ClearPlaylistMessage message)
         {
-            ClearPlaylistAndNeighboringQuery();
+            Clear();
         }
 
         public async void Receive(QueuePlaylistMessage message)
