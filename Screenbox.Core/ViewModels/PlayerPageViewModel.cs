@@ -587,9 +587,13 @@ namespace Screenbox.Core.ViewModels
             Media = current;
             if (current != null)
             {
+                // If media type is known. Update layout right away.
+                if (current.MediaType != MediaPlaybackType.Unknown)
+                    AudioOnly = current.MediaType == MediaPlaybackType.Music;
+
                 await current.LoadDetailsAsync(_filesService);
-                await current.LoadThumbnailAsync(_filesService);
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                await current.LoadThumbnailAsync(_filesService);
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
