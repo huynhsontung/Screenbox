@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.PlayerElement"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vlcSharp="using:LibVLCSharp.Platforms.Windows"
@@ -33,19 +34,35 @@
             <Border Background="Transparent" />
         </UserControl>
 
-        <!--  Use -1 bottom margin to avoid white line artifact  -->
-        <!--<vlcSharp:VideoView
-            x:Name="VlcVideoView"
-            Margin="0,0,0,-1"
-            Canvas.ZIndex="0"
-            Initialized="VlcVideoView_OnInitialized"
-            IsHitTestVisible="False"
-            IsTabStop="False"
-            KeyboardAcceleratorPlacementMode="Hidden"
-            MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
-            SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />-->
+        <ctc:SwitchPresenter x:Name="PlaybackElementSwitch" Value="{x:Bind ViewModel.IsFfmpeg, Mode=OneWay}">
+            <ctc:Case>
+                <ctc:Case.Value>
+                    <x:Boolean>True</x:Boolean>
+                </ctc:Case.Value>
+                <MediaPlayerElement
+                    x:Name="MediaPlayerElement"
+                    Canvas.ZIndex="0"
+                    Loaded="MediaPlayerElement_OnLoaded" />
+            </ctc:Case>
+            <ctc:Case>
+                <ctc:Case.Value>
+                    <x:Boolean>False</x:Boolean>
+                </ctc:Case.Value>
+                <!--  Use -1 bottom margin to avoid white line artifact  -->
+                <vlcSharp:VideoView
+                    x:Name="VlcVideoView"
+                    Margin="0,0,0,-1"
+                    Canvas.ZIndex="0"
+                    Initialized="VlcVideoView_OnInitialized"
+                    IsHitTestVisible="False"
+                    IsTabStop="False"
+                    KeyboardAcceleratorPlacementMode="Hidden"
+                    MediaPlayer="{x:Bind ViewModel.VlcPlayer}"
+                    SizeChanged="{x:Bind ViewModel.OnSizeChanged}" />
+            </ctc:Case>
+        </ctc:SwitchPresenter>
 
 
-        <MediaPlayerElement x:Name="MediaPlayerElement" Canvas.ZIndex="0" />
+
     </Grid>
 </UserControl>
