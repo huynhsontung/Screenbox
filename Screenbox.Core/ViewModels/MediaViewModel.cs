@@ -35,8 +35,6 @@ namespace Screenbox.Core.ViewModels
 
         public IPlaybackItem? Item { get; internal set; }
 
-        public PlaybackBackendType Backend { get; set; } = PlaybackBackendType.Ffmpeg;
-
         public IReadOnlyList<string> Options { get; }
 
         public MediaPlaybackType MediaType => MediaInfo.MediaType;
@@ -85,7 +83,6 @@ namespace Screenbox.Core.ViewModels
             Location = source.Location;
             Source = source.Source;
             Item = source.Item;
-            Backend = source.Backend;
         }
 
         private MediaViewModel(object source, MediaInfo mediaInfo)
