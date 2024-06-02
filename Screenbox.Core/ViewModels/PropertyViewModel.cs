@@ -60,7 +60,7 @@ namespace Screenbox.Core.ViewModels
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyWriters)] = string.Join("; ", media.MediaInfo.VideoProperties.Writers);
                     MediaProperties[_resourceService.GetString(ResourceName.PropertyLength)] = Humanizer.ToDuration(media.MediaInfo.VideoProperties.Duration);
 
-                    VideoProperties[_resourceService.GetString(ResourceName.PropertyResolution)] = $"{media.MediaInfo.VideoProperties.Width}x{media.MediaInfo.VideoProperties.Height}";
+                    VideoProperties[_resourceService.GetString(ResourceName.PropertyResolution)] = $"{media.MediaInfo.VideoProperties.Width}×{media.MediaInfo.VideoProperties.Height}";
                     VideoProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MediaInfo.VideoProperties.Bitrate / 1000} kbps";
 
                     AudioProperties[_resourceService.GetString(ResourceName.PropertyBitRate)] = $"{media.MediaInfo.MusicProperties.Bitrate / 1000} kbps";
