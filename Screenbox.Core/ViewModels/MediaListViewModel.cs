@@ -3,8 +3,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using FFmpegInteropX;
 using LibVLCSharp.Shared;
 using Microsoft.AppCenter.Analytics;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -23,6 +25,7 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
+using Windows.Storage.Streams;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels
@@ -51,6 +54,7 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private int _currentIndex;
 
+        private readonly LibVlcService _libVlcService;
         private readonly IFilesService _filesService;
         private readonly ISettingsService _settingsService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -98,7 +102,7 @@ namespace Screenbox.Core.ViewModels
 
         public MediaListViewModel(IFilesService filesService, ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService,
-            MediaViewModelFactory mediaFactory)
+            MediaViewModelFactory mediaFactory, LibVlcService libVlcService)
         {
             Items = new ObservableCollection<MediaViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -106,6 +110,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
             _mediaFactory = mediaFactory;
+            _libVlcService = libVlcService;
             _mediaBuffer = new List<MediaViewModel>(0);
             _repeatMode = settingsService.PersistentRepeatMode;
             _currentIndex = -1;
@@ -173,7 +178,7 @@ namespace Screenbox.Core.ViewModels
                 ClearPlaylist();
                 MediaViewModel? next = await EnqueueAsync(files);
                 if (next != null)
-                    PlaySingle(next);
+                    await PlaySingle(next);
             }
         }
 
@@ -220,7 +225,7 @@ namespace Screenbox.Core.ViewModels
 
             if (message is { Existing: true, Value: MediaViewModel next })
             {
-                PlaySingle(next);
+                await PlaySingle(next);
             }
             else
             {
@@ -234,7 +239,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer != null && value == null)
             {
-                _mediaPlayer.PlaybackItem = value?.Item.Value;
+                _mediaPlayer.PlaybackItem = null;
             }
 
             if (CurrentItem != null)
@@ -375,10 +380,11 @@ namespace Screenbox.Core.ViewModels
             }
 
             _mediaBuffer = newBuffer;
-            await Task.WhenAll(toLoad.Select(x =>
-                x.Item.Value?.Media.IsParsed ?? true
-                    ? x.LoadThumbnailAsync(_filesService)
-                    : Task.WhenAll(x.Item.Value?.Media.Parse(), x.LoadThumbnailAsync(_filesService))));
+            foreach (MediaViewModel mediaViewModel in toLoad)
+            {
+                await GetPlaybackItemAsync(mediaViewModel);
+                await mediaViewModel.LoadThumbnailAsync(_filesService);
+            }
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
@@ -501,8 +507,16 @@ namespace Screenbox.Core.ViewModels
             // The ordering of the conditional terms below is important
             // Delay check Item as much as possible. Item is lazy init.
             if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
-                || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
-                || media.Item.Value?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
+                || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri))
+            {
+                return new PlaylistCreateResult(media);
+            }
+
+            var item = await GetPlaybackItemAsync(media);
+            if (item is VlcPlaybackItem
+                {
+                    Media: { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
+                }
                 || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
             {
                 return new PlaylistCreateResult(media);
@@ -560,7 +574,7 @@ namespace Screenbox.Core.ViewModels
                 if (playNext != null)
                 {
                     Enqueue(new[] { playNext });
-                    PlaySingle(playNext);
+                    await PlaySingle(playNext);
                 }
 
                 PlaylistCreateResult? result = await CreatePlaylistAsync(playNext ?? value);
@@ -568,7 +582,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     ClearPlaylist();
                     Enqueue(result.Playlist);
-                    PlaySingle(result.PlayNext);
+                    await PlaySingle(result.PlayNext);
                 }
             }
             catch (OperationCanceledException)
@@ -578,7 +592,7 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private async void PlaySingle(MediaViewModel vm)
+        private async Task PlaySingle(MediaViewModel vm)
         {
             if (_mediaPlayer != null)
             {
@@ -645,17 +659,17 @@ namespace Screenbox.Core.ViewModels
                     var result = await CreatePlaylistAsync(nextFile);
                     Enqueue(result.Playlist);
                     MediaViewModel next = result.PlayNext;
-                    PlaySingle(next);
+                    await PlaySingle(next);
                 }
             }
             else if (index == Items.Count - 1 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
-                PlaySingle(Items[0]);
+                await PlaySingle(Items[0]);
             }
             else if (index >= 0 && index < Items.Count - 1)
             {
                 MediaViewModel next = Items[index + 1];
-                PlaySingle(next);
+                await PlaySingle(next);
             }
         }
 
@@ -685,7 +699,7 @@ namespace Screenbox.Core.ViewModels
                     var result = await CreatePlaylistAsync(previousFile);
                     Enqueue(result.Playlist);
                     MediaViewModel prev = result.PlayNext;
-                    PlaySingle(prev);
+                    await PlaySingle(prev);
                 }
                 else
                 {
@@ -698,12 +712,12 @@ namespace Screenbox.Core.ViewModels
             }
             else if (index == 0 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
             {
-                PlaySingle(Items.Last());
+                await PlaySingle(Items.Last());
             }
             else if (index >= 1 && index < Items.Count)
             {
                 MediaViewModel previous = Items[index - 1];
-                PlaySingle(previous);
+                await PlaySingle(previous);
             }
             else
             {
@@ -718,7 +732,7 @@ namespace Screenbox.Core.ViewModels
                 switch (RepeatMode)
                 {
                     case MediaPlaybackAutoRepeatMode.List when CurrentIndex == Items.Count - 1:
-                        PlaySingle(Items[0]);
+                        _ = PlaySingle(Items[0]);
                         break;
                     case MediaPlaybackAutoRepeatMode.Track:
                         sender.Position = TimeSpan.Zero;
@@ -749,7 +763,8 @@ namespace Screenbox.Core.ViewModels
 
         private async Task<IList<MediaViewModel>> ParseSubMediaAsync(MediaViewModel source)
         {
-            if (source.Item.Value == null) return Array.Empty<MediaViewModel>();
+            var item = await GetPlaybackItemAsync(source);
+            if (item == null) return Array.Empty<MediaViewModel>();
 
             // Parsing sub items is atomic
             _cts?.Cancel();
@@ -769,7 +784,7 @@ namespace Screenbox.Core.ViewModels
                     // Must immediately throw
                     cts.Token.ThrowIfCancellationRequested();   // Important
 
-                    IEnumerable<MediaViewModel> subItems = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
+                    IEnumerable<MediaViewModel> subItems = media.SubItems.Select(subItem => _mediaFactory.GetTransient(subItem));
                     return subItems.ToList();
                 }
                 else
@@ -800,7 +815,21 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                return await media.GetPlaybackItemAsync();
+                if ((_settingsService.PlaybackBackend == PlaybackBackendType.Windows && media.Item is VlcPlaybackItem) ||
+                    (_settingsService.PlaybackBackend != PlaybackBackendType.Windows) && media.Item is WindowsPlaybackItem)
+                {
+                    media.Clean();
+                }
+
+                return media.Item ??= await CreatePlaybackItemAsync(media);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw;
+            }
+            catch (NotSupportedException)
+            {
+                throw;
             }
             catch (Exception e)
             {
@@ -808,6 +837,42 @@ namespace Screenbox.Core.ViewModels
             }
 
             return null;
+        }
+
+        private async Task<IPlaybackItem> CreatePlaybackItemAsync(MediaViewModel media)
+        {
+            IPlaybackItem item;
+            if (_settingsService.PlaybackBackend is PlaybackBackendType.Windows)
+            {
+                switch (media.Source)
+                {
+                    case IStorageFile file:
+                        IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+                        FFmpegMediaSource fileMediaSource = await FFmpegMediaSource.CreateFromStreamAsync(stream);
+                        item = new WindowsPlaybackItem(fileMediaSource);
+                        break;
+                    case Uri uri:
+                        FFmpegMediaSource uriMediaSource = await FFmpegMediaSource.CreateFromUriAsync(uri.OriginalString);
+                        item = new WindowsPlaybackItem(uriMediaSource);
+                        break;
+                    default:
+                        throw new NotSupportedException("Source is not supported for Windows backend");
+                }
+            }
+            else
+            {
+                if (media.Source is Media mediaSource)
+                {
+                    item = new VlcPlaybackItem(mediaSource, mediaSource);
+                }
+                else
+                {
+                    Media vlcMedia = _libVlcService.CreateMedia(media.Source, media.Options.ToArray());
+                    item = new VlcPlaybackItem(media.Source, vlcMedia);
+                }
+            }
+
+            return item;
         }
 
         private static void Shuffle<T>(IList<T> list, Random rng)
