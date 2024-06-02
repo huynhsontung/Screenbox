@@ -77,6 +77,7 @@ namespace Screenbox.Core.ViewModels
             _showRecent = _settingsService.ShowRecent;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
+            _playbackBackend = (int)_settingsService.PlaybackBackend;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
