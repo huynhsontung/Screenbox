@@ -295,6 +295,18 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE737;}">
                     <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
+                <ctc:SettingsCard Margin="{StaticResource SettingsCardMargin}" Header="Playback backend">
+                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlaybackBackend, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <x:String>Auto</x:String>
+                        <x:String>FFmpeg</x:String>
+                        <x:String>LibVLC</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAdvancedModeDescription}"
