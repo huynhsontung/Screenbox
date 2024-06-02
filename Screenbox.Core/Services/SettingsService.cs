@@ -109,8 +109,8 @@ namespace Screenbox.Core.Services
 
         public PlaybackBackendType PlaybackBackend
         {
-            get => GetValue<PlaybackBackendType>(AdvancedPlaybackBackendKey);
-            set => SetValue(AdvancedPlaybackBackendKey, value);
+            get => (PlaybackBackendType)GetValue<int>(AdvancedPlaybackBackendKey);
+            set => SetValue(AdvancedPlaybackBackendKey, (int)value);
         }
 
         public SettingsService()
@@ -127,7 +127,7 @@ namespace Screenbox.Core.Services
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
             SetDefault(AdvancedMultipleInstancesKey, false);
-            SetDefault(AdvancedPlaybackBackendKey, PlaybackBackendType.Auto);
+            SetDefault(AdvancedPlaybackBackendKey, (int)PlaybackBackendType.Auto);
             SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides
