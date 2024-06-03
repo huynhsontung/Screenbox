@@ -771,9 +771,9 @@
     <value>Aktif argümanlar</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Birden çok örneğe izin ver</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Medya dosyalarını her zaman yeni bir örnekte açın</value>
   </data>
 </root>
