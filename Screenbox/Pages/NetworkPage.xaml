@@ -43,8 +43,10 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
+            AccessKey="CB"
             ItemClicked="BreadcrumbBar_OnItemClicked"
-            ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+            ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
+            KeyTipPlacementMode="Right" />
 
         <Frame
             x:Name="FolderViewFrame"

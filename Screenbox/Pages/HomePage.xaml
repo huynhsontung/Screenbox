@@ -68,15 +68,20 @@
 
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
+                    AccessKey="F"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon Glyph=&#xE838;}"
                     Text="{strings:Resources Key=OpenFiles}" />
                 <MenuFlyoutItem
+                    AccessKey="A"
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF2CE;}"
                     Text="{strings:Resources Key=OpenFolder}" />
-                <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=OpenUrl}">
+                <MenuFlyoutItem
+                    AccessKey="U"
+                    Icon="{ui:SymbolIcon Symbol=Globe}"
+                    Text="{strings:Resources Key=OpenUrl}">
                     <MenuFlyoutItem.Command>
                         <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
                     </MenuFlyoutItem.Command>
@@ -109,6 +114,7 @@
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                AccessKey="CF"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}"
@@ -172,6 +178,7 @@
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
+                    AccessKey="CF"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}"

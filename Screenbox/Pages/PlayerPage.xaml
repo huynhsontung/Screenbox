@@ -190,6 +190,7 @@
                 Height="44"
                 Margin="4,6,4,2"
                 VerticalAlignment="Top"
+                AccessKey="B"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=Back}">
@@ -211,6 +212,7 @@
                 Margin="0,6,0,2"
                 Padding="0"
                 VerticalAlignment="Top"
+                AccessKey="Q"
                 AllowDrop="True"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
@@ -232,6 +234,7 @@
                             MinHeight="200"
                             MaxHeight="500"
                             x:Load="False"
+                            IsAccessKeyScope="True"
                             IsFlyout="True" />
                     </Flyout>
                 </Button.Flyout>
@@ -422,7 +425,9 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
+            AccessKey="I"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
+            KeyTipPlacementMode="Center"
             Visibility="Collapsed">
             <Button.Resources>
                 <ResourceDictionary>

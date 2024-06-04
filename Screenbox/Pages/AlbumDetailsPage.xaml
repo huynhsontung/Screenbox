@@ -143,6 +143,7 @@
                     Spacing="16">
                     <Button
                         x:Name="PlayButton"
+                        AccessKey="CA"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
@@ -158,6 +159,7 @@
                     </Button>
 
                     <Button
+                        AccessKey="CH"
                         AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                         Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                         XYFocusDown="{x:Bind ItemList}">

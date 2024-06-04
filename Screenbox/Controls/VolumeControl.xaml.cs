@@ -10,9 +10,16 @@ namespace Screenbox.Controls
 {
     public sealed partial class VolumeControl : UserControl
     {
+        /// <summary>
+        /// Identifies the <see cref="ToggleButtonStyle"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ToggleButtonStyleProperty = DependencyProperty.Register(
-            nameof(ToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(null));
+            nameof(ToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(default(Style)));
 
+        /// <summary>
+        /// Gets or sets the Style that defines the look of the volume toggle button.
+        /// </summary>
+        /// <returns>The Style that defines the look of the volume toggle button. The default is DefaultToggleButtonStyle.</returns>
         public Style ToggleButtonStyle
         {
             get { return (Style)GetValue(ToggleButtonStyleProperty); }

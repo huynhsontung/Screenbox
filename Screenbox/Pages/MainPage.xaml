@@ -131,23 +131,41 @@
             PaneOpening="NavView_OnPaneOpening"
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Icon="Home" Tag="home">
+                <muxc:NavigationViewItem
+                    AccessKey="NH"
+                    Icon="Home"
+                    KeyTipPlacementMode="Right"
+                    Tag="home">
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Tag="videos">
+                <muxc:NavigationViewItem
+                    AccessKey="NV"
+                    KeyTipPlacementMode="Right"
+                    Tag="videos">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8B2;" />
                     </muxc:NavigationViewItem.Icon>
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Icon="Audio" Tag="music">
+                <muxc:NavigationViewItem
+                    AccessKey="NM"
+                    Icon="Audio"
+                    KeyTipPlacementMode="Right"
+                    Tag="music">
                     <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=Music}" />
                 </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem Icon="MapDrive" Tag="network">
+                <muxc:NavigationViewItem
+                    AccessKey="NN"
+                    Icon="MapDrive"
+                    KeyTipPlacementMode="Right"
+                    Tag="network">
                     <TextBlock x:Name="NetworkNavItemText" Text="{strings:Resources Key=Network}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
-                <muxc:NavigationViewItem Tag="queue">
+                <muxc:NavigationViewItem
+                    AccessKey="NQ"
+                    KeyTipPlacementMode="Right"
+                    Tag="queue">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="&#xE93F;" />
                     </muxc:NavigationViewItem.Icon>
@@ -156,7 +174,10 @@
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.FooterMenuItems>
                 <!--  Reimplement settings nav item to allow transition  -->
-                <muxc:NavigationViewItem Tag="settings">
+                <muxc:NavigationViewItem
+                    AccessKey="NS"
+                    KeyTipPlacementMode="Right"
+                    Tag="settings">
                     <muxc:NavigationViewItem.Icon>
                         <muxc:AnimatedIcon>
                             <animatedVisuals:AnimatedSettingsVisualSource />

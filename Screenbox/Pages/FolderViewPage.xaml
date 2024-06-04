@@ -80,9 +80,11 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
+            AccessKey="CB"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
-            ItemsSource="{x:Bind ViewModel.Breadcrumbs}" />
+            ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
+            KeyTipPlacementMode="Right" />
 
         <muxc:ProgressBar
             Grid.Row="2"
