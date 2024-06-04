@@ -11,7 +11,7 @@ namespace Screenbox.Controls
     public sealed partial class VolumeControl : UserControl
     {
         public static readonly DependencyProperty ToggleButtonStyleProperty = DependencyProperty.Register(
-            nameof(ToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(null));
+            nameof(ToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(default(Style)));
 
         public Style ToggleButtonStyle
         {

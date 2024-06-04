@@ -78,6 +78,7 @@
                     TextWrapping="Wrap" />
 
                 <Button
+                    AccessKey="CA"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
@@ -119,16 +120,19 @@
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
+                    AccessKey="TS"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs" />
                 <muxc:NavigationViewItem
+                    AccessKey="TA"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums" />
                 <muxc:NavigationViewItem
+                    AccessKey="TP"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
@@ -139,6 +143,7 @@
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
+                    AccessKey="CA"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"

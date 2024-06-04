@@ -86,6 +86,7 @@
                     TextWrapping="Wrap" />
 
                 <Button
+                    AccessKey="CA"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
@@ -127,12 +128,14 @@
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     x:Name="FoldersMenuItem"
+                    AccessKey="TF"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=VideoFolders}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="folders" />
                 <muxc:NavigationViewItem
                     x:Name="AllVideosMenuItem"
+                    AccessKey="TV"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=AllVideos}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
@@ -143,6 +146,7 @@
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
+                    AccessKey="CA"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
