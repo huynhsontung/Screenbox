@@ -40,6 +40,7 @@
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
+            AccessKey="S"
             Background="{x:Bind Background, Mode=OneWay}"
             Foreground="{x:Bind Foreground, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"

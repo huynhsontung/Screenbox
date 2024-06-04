@@ -20,15 +20,21 @@
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
+                AccessKey="F"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon Glyph=&#xE838;}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
+                AccessKey="O"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph=&#xF2CE;}"
                 Text="{strings:Resources Key=AddFolder}" />
-            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}">
+            <MenuFlyoutItem
+                AccessKey="U"
+                Icon="{ui:SymbolIcon Symbol=Globe}"
+                KeyTipPlacementMode="Left"
+                Text="{strings:Resources Key=AddUrl}">
                 <MenuFlyoutItem.Command>
                     <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.AddUrlCommand}" />
                 </MenuFlyoutItem.Command>
@@ -60,6 +66,7 @@
                 x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                AccessKey="CF"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}"
