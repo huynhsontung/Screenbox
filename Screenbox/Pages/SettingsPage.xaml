@@ -295,7 +295,11 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE737;}">
                     <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
-                <ctc:SettingsCard Margin="{StaticResource SettingsCardMargin}" Header="Playback backend">
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Some features are only available on each specific backend"
+                    Header="Playback backend"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE9F5;}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlaybackBackend, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
