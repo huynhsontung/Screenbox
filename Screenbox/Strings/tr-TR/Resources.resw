@@ -189,7 +189,7 @@
     <value>Daha Fazla</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Oynatma sırası</value>
+    <value>Oynatma Sırası</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Tekrarlama Kapalı</value>
@@ -287,7 +287,7 @@
     <value>Temizle</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Anasayfa</value>
+    <value>Ana Sayfa</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
     <value>Birden fazla seç</value>
@@ -769,5 +769,11 @@
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>Aktif argümanlar</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Birden çok örneğe izin ver</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Medya dosyalarını her zaman yeni bir örnekte açın</value>
   </data>
 </root>
