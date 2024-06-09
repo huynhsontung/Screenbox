@@ -771,7 +771,7 @@
     <value>Argumentos ativos</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Permitir múltiplas instâncias</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Always open media files in a new instance</value>
