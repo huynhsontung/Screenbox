@@ -51,6 +51,8 @@ namespace Screenbox.Core.Services
         private List<MediaViewModel> _videos;
         private CancellationTokenSource? _musicFetchCts;
         private CancellationTokenSource? _videosFetchCts;
+        private bool _musicChangeTrackerAvailable;
+        private bool _videosChangeTrackerAvailable;
 
         private const string SongsCacheFileName = "songs.bin";
         private const string VideoCacheFileName = "videos.bin";
@@ -82,7 +84,16 @@ namespace Screenbox.Core.Services
         {
             // No need to add handler for StorageLibrary.DefinitionChanged
             MusicLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Music);
-            MusicLibrary.ChangeTracker.Enable();
+            try
+            {
+                MusicLibrary.ChangeTracker.Enable();
+                _musicChangeTrackerAvailable = true;
+            }
+            catch (Exception)
+            {
+                // pass
+            }
+
             return MusicLibrary;
         }
 
@@ -90,7 +101,16 @@ namespace Screenbox.Core.Services
         {
             // No need to add handler for StorageLibrary.DefinitionChanged
             VideosLibrary ??= await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
-            VideosLibrary.ChangeTracker.Enable();
+            try
+            {
+                VideosLibrary.ChangeTracker.Enable();
+                _videosChangeTrackerAvailable = true;
+            }
+            catch (Exception)
+            {
+                // pass
+            }
+
             return VideosLibrary;
         }
 
@@ -273,14 +293,12 @@ namespace Screenbox.Core.Services
         {
             if (MusicLibrary == null) return;
             IsLoadingMusic = true;
-
-            useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
-            bool hasCache = false;
-            var libraryChangeTracker = MusicLibrary.ChangeTracker;
-            libraryChangeTracker.Enable();
-            var changeReader = libraryChangeTracker.GetChangeReader();
+            StorageLibraryChangeTracker? libraryChangeTracker = null;
+            StorageLibraryChangeReader? changeReader = null;
             try
             {
+                useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
+                bool hasCache = false;
                 await KnownFolders.RequestAccessAsync(KnownFolderId.MusicLibrary);
                 var libraryQuery = GetMusicLibraryQuery();
                 List<MediaViewModel> songs = new();
@@ -293,9 +311,19 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        if (hasCache)
+                        if (hasCache && _musicChangeTrackerAvailable)
                         {
-                            hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
+                            try
+                            {
+                                libraryChangeTracker = MusicLibrary.ChangeTracker;
+                                libraryChangeTracker.Enable();
+                                changeReader = libraryChangeTracker.GetChangeReader();
+                                hasCache = await TryResolveLibraryChangeAsync(songs, changeReader);
+                            }
+                            catch (Exception e)
+                            {
+                                LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                            }
                         }
                     }
                 }
@@ -349,6 +377,17 @@ namespace Screenbox.Core.Services
                 }
 
                 _songs = songs;
+
+                MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+                await CacheSongsAsync(cancellationToken);
+                if (hasCache && _musicChangeTrackerAvailable)
+                {
+                    await changeReader?.AcceptChangesAsync();
+                }
+                else
+                {
+                    libraryChangeTracker?.Reset();
+                }
             }
             finally
             {
@@ -357,31 +396,19 @@ namespace Screenbox.Core.Services
                     IsLoadingMusic = false;
                 }
             }
-
-            MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
-            await CacheSongsAsync(cancellationToken);
-            if (hasCache)
-            {
-                await changeReader.AcceptChangesAsync();
-            }
-            else
-            {
-                libraryChangeTracker.Reset();
-            }
         }
 
         private async Task FetchVideosCancelableAsync(bool useCache, CancellationToken cancellationToken)
         {
             if (VideosLibrary == null) return;
             IsLoadingVideos = true;
+            StorageLibraryChangeTracker? libraryChangeTracker = null;
+            StorageLibraryChangeReader? changeReader = null;
 
-            useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
-            bool hasCache = false;
-            var libraryChangeTracker = VideosLibrary.ChangeTracker;
-            libraryChangeTracker.Enable();
-            var changeReader = libraryChangeTracker.GetChangeReader();
             try
             {
+                useCache = useCache && !SystemInformation.IsXbox;   // Don't use cache on Xbox
+                bool hasCache = false;
                 await KnownFolders.RequestAccessAsync(KnownFolderId.VideosLibrary);
                 StorageFileQueryResult libraryQuery = GetVideosLibraryQuery();
                 List<MediaViewModel> videos = new();
@@ -394,9 +421,19 @@ namespace Screenbox.Core.Services
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, VideosLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
-                        if (hasCache)
+                        if (hasCache && _videosChangeTrackerAvailable)
                         {
-                            hasCache = await TryResolveLibraryChangeAsync(videos, changeReader);
+                            try
+                            {
+                                libraryChangeTracker = VideosLibrary.ChangeTracker;
+                                libraryChangeTracker.Enable();
+                                changeReader = libraryChangeTracker.GetChangeReader();
+                                hasCache = await TryResolveLibraryChangeAsync(videos, changeReader);
+                            }
+                            catch (Exception e)
+                            {
+                                LogService.Log($"Failed to resolve change from library tracker\n{e}");
+                            }
                         }
                     }
                 }
@@ -432,6 +469,17 @@ namespace Screenbox.Core.Services
                 }
 
                 _videos = videos;
+
+                VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
+                await CacheVideosAsync(cancellationToken);
+                if (hasCache)
+                {
+                    await changeReader?.AcceptChangesAsync();
+                }
+                else
+                {
+                    libraryChangeTracker?.Reset();
+                }
             }
             finally
             {
@@ -439,17 +487,6 @@ namespace Screenbox.Core.Services
                 {
                     IsLoadingVideos = false;
                 }
-            }
-
-            VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
-            await CacheVideosAsync(cancellationToken);
-            if (hasCache)
-            {
-                await changeReader.AcceptChangesAsync();
-            }
-            else
-            {
-                libraryChangeTracker.Reset();
             }
         }
 
