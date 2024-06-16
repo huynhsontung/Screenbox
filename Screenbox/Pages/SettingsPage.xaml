@@ -292,7 +292,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
                     Header="{strings:Resources Key=SettingsUseMultipleInstancesHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE737;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE737;}"
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
                 <ctc:SettingsExpander
