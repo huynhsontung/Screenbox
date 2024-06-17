@@ -23,6 +23,7 @@ namespace Screenbox.Core.Services
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
+        private const string AdvancedPlaybackBackendKey = "Advanced/PlaybackBackend";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
@@ -106,6 +107,12 @@ namespace Screenbox.Core.Services
             set => SetValue(AdvancedMultipleInstancesKey, value);
         }
 
+        public PlaybackBackendType PlaybackBackend
+        {
+            get => (PlaybackBackendType)GetValue<int>(AdvancedPlaybackBackendKey);
+            set => SetValue(AdvancedPlaybackBackendKey, (int)value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
@@ -120,6 +127,7 @@ namespace Screenbox.Core.Services
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
             SetDefault(AdvancedMultipleInstancesKey, false);
+            SetDefault(AdvancedPlaybackBackendKey, (int)PlaybackBackendType.Auto);
             SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides

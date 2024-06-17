@@ -17,6 +17,7 @@ namespace Screenbox.Core.Services
         string GlobalArguments { get; set; }
         bool AdvancedMode { get; set; }
         bool UseMultipleInstances { get; set; }
+        PlaybackBackendType PlaybackBackend { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
 }

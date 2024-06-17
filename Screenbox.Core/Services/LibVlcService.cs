@@ -29,6 +29,8 @@ namespace Screenbox.Core.Services
         public VlcMediaPlayer Initialize(string[] swapChainOptions)
         {
             LibVLC lib = InitializeLibVlc(swapChainOptions);
+            MediaPlayer?.VlcPlayer.Dispose();
+            LibVlc?.Dispose();
             LibVlc = lib;
             MediaPlayer = new VlcMediaPlayer(lib);
             return MediaPlayer;

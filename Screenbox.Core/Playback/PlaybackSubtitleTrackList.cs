@@ -1,14 +1,18 @@
-﻿using LibVLCSharp.Shared;
+#nullable enable
+
+using LibVLCSharp.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Media.Core;
+using Windows.Media.Playback;
 using Windows.Storage;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackSubtitleTrackList : SingleSelectTrackList<SubtitleTrack>
     {
-        private readonly Media _media;
+        private readonly Media? _media;
+        private readonly MediaPlaybackTimedMetadataTrackList? _source;
         private readonly List<LazySubtitleTrack> _pendingSubtitleTracks;
 
         private class LazySubtitleTrack
@@ -36,26 +40,59 @@ namespace Screenbox.Core.Playback
         {
             _pendingSubtitleTracks = new List<LazySubtitleTrack>();
             _media = media;
-            if (_media.Tracks.Length > 0)
+            if (media.Tracks.Length > 0)
             {
-                AddVlcMediaTracks(_media.Tracks);
+                AddVlcMediaTracks(media.Tracks);
             }
             else
             {
-                _media.ParsedChanged += Media_ParsedChanged;
+                media.ParsedChanged += Media_ParsedChanged;
             }
 
             SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
-        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object args)
+        public PlaybackSubtitleTrackList(MediaPlaybackTimedMetadataTrackList source)
         {
-            if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
-                _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&
-                (selectedTrack.VlcSpu == -1 || lazyTrack.Player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
+            _pendingSubtitleTracks = new List<LazySubtitleTrack>();
+            _source = source;
+            foreach (TimedMetadataTrack metadataTrack in source)
             {
-                selectedTrack.VlcSpu = -1;
-                lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+                if (metadataTrack.TimedMetadataKind is TimedMetadataKind.Caption or TimedMetadataKind.Subtitle
+                    or TimedMetadataKind.ImageSubtitle)
+                {
+                    TrackList.Add(new SubtitleTrack(metadataTrack));
+                }
+            }
+
+            SelectedIndexChanged += OnSelectedIndexChanged;
+        }
+
+        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            if (_media != null)
+            {
+                if (SelectedIndex >= 0 && TrackList[SelectedIndex] is { } selectedTrack &&
+                    _pendingSubtitleTracks.FirstOrDefault(x => ReferenceEquals(x.Track, selectedTrack)) is { } lazyTrack &&
+                    (selectedTrack.VlcSpu == -1 || lazyTrack.Player.VlcPlayer.SpuCount < selectedTrack.VlcSpu))
+                {
+                    selectedTrack.VlcSpu = -1;
+                    lazyTrack.Player.AddSubtitle(lazyTrack.File, true);
+                }
+            }
+            else if (_source != null)
+            {
+                if (sender.SelectedIndex == -1)
+                {
+                    for (uint i = 0; i < _source.Count; i++)
+                    {
+                        _source.SetPresentationMode(i, TimedMetadataTrackPresentationMode.Disabled);
+                    }
+                }
+                else
+                {
+                    _source.SetPresentationMode((uint)sender.SelectedIndex, TimedMetadataTrackPresentationMode.PlatformPresented);
+                }
             }
         }
 
@@ -82,7 +119,7 @@ namespace Screenbox.Core.Playback
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)
         {
-            if (e.ParsedStatus != MediaParsedStatus.Done) return;
+            if (_media == null || e.ParsedStatus != MediaParsedStatus.Done) return;
             _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
         }
