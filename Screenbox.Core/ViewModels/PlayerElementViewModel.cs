@@ -11,7 +11,6 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -83,34 +82,33 @@ namespace Screenbox.Core.ViewModels
             message.Reply(_mediaPlayer);
         }
 
-        public void Initialize(string[] swapChainOptions)
+        public async void Initialize(string[] swapChainOptions)
         {
-            Task.Run(() =>
+            string[] args = _settingsService.GlobalArguments.Length > 0
+                ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Concat(swapChainOptions).ToArray()
+                : swapChainOptions;
+
+            VlcMediaPlayer player;
+            try
             {
-                string[] args = _settingsService.GlobalArguments.Length > 0
-                    ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                        .Concat(swapChainOptions).ToArray()
-                    : swapChainOptions;
+                player = _libVlcService.Initialize(args);
+            }
+            catch (VLCException e)
+            {
+                player = _libVlcService.Initialize(swapChainOptions);
+                Messenger.Send(new ErrorMessage(
+                    _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
+            }
 
-                VlcMediaPlayer player;
-                try
-                {
-                    player = _libVlcService.Initialize(args);
-                }
-                catch (VLCException e)
-                {
-                    player = _libVlcService.Initialize(swapChainOptions);
-                    Messenger.Send(new ErrorMessage(
-                        _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
-                }
+            _mediaPlayer = player;
+            VlcPlayer = player.VlcPlayer;
+            player.PlaybackStateChanged += OnPlaybackStateChanged;
+            player.PositionChanged += OnPositionChanged;
+            player.MediaFailed += OnMediaFailed;
+            Messenger.Send(new MediaPlayerChangedMessage(player));
 
-                _mediaPlayer = player;
-                VlcPlayer = player.VlcPlayer;
-                player.PlaybackStateChanged += OnPlaybackStateChanged;
-                player.PositionChanged += OnPositionChanged;
-                player.MediaFailed += OnMediaFailed;
-                Messenger.Send(new MediaPlayerChangedMessage(player));
-            });
+            await player.InitAudioGraphAsync();
         }
 
         public void OnClick()
