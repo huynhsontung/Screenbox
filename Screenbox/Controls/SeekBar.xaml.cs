@@ -133,6 +133,13 @@ namespace Screenbox.Controls
             }
         }
 
+        private void SeekBarSlider_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
+            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
+            SeekBarSlider.Value += mouseWheelDelta > 0 ? 10000 : -10000;
+        }
+
         private void ResetPreviewToolTip()
         {
             _previewToolTipTimer.Stop();
