@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using Sentry;
 
 namespace Screenbox.Core.Services
 {
@@ -35,6 +36,7 @@ namespace Screenbox.Core.Services
 
         private static void TrackError(Exception e)
         {
+            SentrySdk.CaptureException(e);
             if (e.Data.Count > 0)
             {
                 Dictionary<string, string> dict = new(e.Data.Count);

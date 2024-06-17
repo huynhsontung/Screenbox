@@ -299,6 +299,9 @@
     <PackageReference Include="protobuf-net">
       <Version>3.2.30</Version>
     </PackageReference>
+    <PackageReference Include="Sentry">
+      <Version>4.7.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Helpers\LanguageCodes.resw">
