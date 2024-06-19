@@ -135,6 +135,7 @@ namespace Screenbox
             services.AddSingleton<StorageItemViewModelFactory>();
             services.AddSingleton<ArtistViewModelFactory>();
             services.AddSingleton<AlbumViewModelFactory>();
+            services.AddSingleton<LivelyWallpaperFactory>();
             services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
 
             // Services

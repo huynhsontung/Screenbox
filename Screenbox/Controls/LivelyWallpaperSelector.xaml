@@ -1,0 +1,110 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.LivelyWallpaperSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Screenbox.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:data="using:Screenbox.Core.Models"
+    xmlns:local="using:Screenbox.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:NullVisibilityConverter x:Name="NullVisibilityConverter" />
+        <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <StackPanel Spacing="5">
+            <ListView ItemsSource="{x:Bind Wallpapers, Mode=OneWay}" SelectedItem="{x:Bind Selection, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="90" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="200" />
+                            </Grid.ColumnDefinitions>
+                            <!--  Preview  -->
+                            <Grid Grid.Column="0" CornerRadius="5">
+                                <Image
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="{Binding PreviewPath, Mode=OneWay}"
+                                    Stretch="UniformToFill" />
+                                <Border
+                                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="5" />
+                            </Grid>
+                            <!--  Description  -->
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="5,0,0,5"
+                                Spacing="2.5">
+                                <TextBlock
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                                    Text="{Binding Model.Title, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                                <Line Stroke="{ThemeResource SystemBaseMediumLowColor}" X2="400" />
+                                <TextBlock
+                                    MaxLines="2"
+                                    Opacity="0.75"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="{Binding Model.Desc, Mode=OneWay}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap"
+                                    ToolTipService.ToolTip="{Binding Model.Desc, Mode=OneWay}" />
+                            </StackPanel>
+                            <!--  Actions  -->
+                            <StackPanel
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <HyperlinkButton
+                                    NavigateUri="{Binding AuthorUrl}"
+                                    ToolTipService.ToolTip="{Binding AuthorUrl.OriginalString}"
+                                    Visibility="{Binding AuthorUrl, Converter={StaticResource NullVisibilityConverter}, Mode=OneWay}">
+                                    <HyperlinkButton.Content>
+                                        <FontIcon FontSize="14" Glyph="&#xE774;" />
+                                    </HyperlinkButton.Content>
+                                </HyperlinkButton>
+                                <!--  Open wallpaper location  -->
+                                <Button
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Command="{Binding DataContext.OpenWallpaperLocationCommand, ElementName=LayoutRoot}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
+                                    <FontIcon FontSize="14" Glyph="&#xE838;" />
+                                </Button>
+                                <!--  Delete wallpaper  -->
+                                <Button
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Command="{Binding DataContext.DeleteWallpaperCommand, ElementName=LayoutRoot}"
+                                    CommandParameter="{Binding}"
+                                    Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
+                                    <FontIcon FontSize="14" Glyph="&#xE947;" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!--  Let user select new wallpaper to install  -->
+            <Button HorizontalAlignment="Stretch" Command="{x:Bind OpenWallpaperCommand}">
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <FontIcon Glyph="&#xE838;" />
+                    <TextBlock VerticalAlignment="Center" Text="{strings:Resources Key=OpenFiles}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
