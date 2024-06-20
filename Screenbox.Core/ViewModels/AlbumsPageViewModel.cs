@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed class AlbumsPageViewModel
+    public sealed class AlbumsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
 
@@ -44,6 +44,7 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            Songs = musicLibrary.Songs;
 
             IEnumerable<IGrouping<string, AlbumViewModel>> groupings = musicLibrary.Albums
                 .OrderBy(a => a.Name, StringComparer.CurrentCulture)

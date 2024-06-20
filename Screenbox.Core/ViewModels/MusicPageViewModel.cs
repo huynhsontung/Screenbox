@@ -10,7 +10,6 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
@@ -22,10 +21,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _isLoading;
 
         [ObservableProperty] private bool _hasContent;
-
-        public int Count => _songs.Count;
-
-        private bool HasSongs => _songs.Count > 0;
 
         private bool LibraryLoaded => _libraryService.MusicLibrary != null;
 
@@ -53,7 +48,6 @@ namespace Screenbox.Core.ViewModels
             IsLoading = _libraryService.IsLoadingMusic;
             HasContent = _songs.Count > 0 || IsLoading;
             AddFolderCommand.NotifyCanExecuteChanged();
-            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
 
             if (IsLoading)
             {
@@ -68,17 +62,6 @@ namespace Screenbox.Core.ViewModels
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
             _dispatcherQueue.TryEnqueue(UpdateSongs);
-        }
-
-        [RelayCommand(CanExecute = nameof(HasSongs))]
-        private void ShuffleAndPlay()
-        {
-            if (_songs.Count == 0) return;
-            Random rnd = new();
-            List<MediaViewModel> shuffledList = _songs.OrderBy(_ => rnd.Next()).ToList();
-            Messenger.Send(new ClearPlaylistMessage());
-            Messenger.Send(new QueuePlaylistMessage(shuffledList));
-            Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
         }
 
         [RelayCommand(CanExecute = nameof(LibraryLoaded))]

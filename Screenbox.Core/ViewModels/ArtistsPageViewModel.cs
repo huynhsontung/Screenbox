@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -11,7 +10,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed class ArtistsPageViewModel : ObservableRecipient
+    public sealed class ArtistsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
@@ -40,6 +39,7 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            Songs = musicLibrary.Songs;
 
             IEnumerable<IGrouping<string, ArtistViewModel>> groupings = musicLibrary.Artists
                 .OrderBy(a => a.Name, StringComparer.CurrentCulture)

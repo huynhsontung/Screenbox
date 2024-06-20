@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
@@ -12,21 +11,19 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class SongsPageViewModel : ObservableRecipient
+    public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
-        private IReadOnlyList<MediaViewModel> _songs;
 
         public SongsPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
-            _songs = Array.Empty<MediaViewModel>();
             GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
             PopulateGroups();
 
@@ -43,12 +40,13 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
-            _songs = musicLibrary.Songs;
+            Songs = musicLibrary.Songs;
+            ShuffleAndPlayCommand.NotifyCanExecuteChanged();
 
             // Populate song groups with fetched result
             IEnumerable<IGrouping<string, MediaViewModel>> groupings =
-                _songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name));
-            if (_songs.Count < 5000)
+                Songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name));
+            if (Songs.Count < 5000)
             {
                 // Only sync when the number of items is low enough
                 // Sync on too many items can cause UI hang
@@ -90,8 +88,8 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void Play(MediaViewModel media)
         {
-            if (_songs.Count == 0) return;
-            Messenger.SendQueueAndPlay(media, _songs);
+            if (Songs.Count == 0) return;
+            Messenger.SendQueueAndPlay(media, Songs);
         }
 
         [RelayCommand]
