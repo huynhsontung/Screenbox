@@ -98,6 +98,19 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <HyperlinkButton HorizontalAlignment="Left" NavigateUri="https://www.rocksdanister.com/lively">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontSize="12" Opacity="0.75">
+                        Powered by
+                    </TextBlock>
+                    <Image
+                        Width="15"
+                        Height="15"
+                        Margin="2.5,0,2.5,0"
+                        Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
+                    <TextBlock FontSize="12" Opacity="0.75">Lively Wallpaper</TextBlock>
+                </StackPanel>
+            </HyperlinkButton>
             <!--  Let user select new wallpaper to install  -->
             <Button HorizontalAlignment="Stretch" Command="{x:Bind OpenWallpaperCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
