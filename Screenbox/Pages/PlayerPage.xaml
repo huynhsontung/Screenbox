@@ -5,6 +5,7 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -66,6 +67,7 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
 
+            <converters:NullVisibilityConverter x:Name="NullVisibilityConverter" />
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
                 FalseValue="&#xE62E;"
@@ -317,6 +319,50 @@
             </Border>
         </Grid>
 
+        <!--  Music visualizer  -->
+        <!--  Final visibility is determined by both binding and the VisualState setters, VisualState takes precedence over binding.  -->
+        <Grid
+            x:Name="LivelyWallpaperContainer"
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="2"
+            Visibility="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+            <controls:LivelyWebWallpaperPlayer
+                x:Name="LivelyWallpaperPlayer"
+                x:Load="{x:Bind ViewModel.AudioOnly, Mode=OneWay}"
+                EffectiveVisibility="{x:Bind LivelyWallpaperContainer.Visibility, Mode=OneWay}"
+                Media="{x:Bind ViewModel.Media, Mode=OneWay}"
+                Source="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay}" />
+        </Grid>
+        <StackPanel
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="0,0,10,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="1"
+            Orientation="Horizontal"
+            Spacing="5"
+            Visibility="{x:Bind ViewModel.AudioOnly, Mode=OneWay}">
+            <Button Background="Transparent" BorderThickness="0">
+                <FontIcon Glyph="&#xE91B;" />
+                <Button.Flyout>
+                    <Flyout>
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="5" />
+                                <Setter Property="CornerRadius" Value="5" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <controls:LivelyWallpaperSelector
+                            DeleteWallpaperCommand="{x:Bind ViewModel.DeleteVisualizerCommand, Mode=OneWay}"
+                            OpenWallpaperCommand="{x:Bind ViewModel.OpenVisualizerCommand}"
+                            Selection="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}"
+                            Wallpapers="{x:Bind ViewModel.Visualizers, Mode=OneWay}" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
+
         <controls:PlayerElement
             x:Name="VideoView"
             Grid.Row="0"
@@ -561,8 +607,8 @@
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
                         <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
-                        <Setter Target="HeaderBackground.Opacity" Value="0" />
-                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
+                        <Setter Target="HeaderBackground.Opacity" Value="1" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                     </VisualState.Setters>
                     <Storyboard x:Name="BackgroundArtAnimation">
@@ -670,9 +716,14 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="LayoutGroup" CurrentStateChanged="OnLayoutVisualStateChanged">
-                <VisualState x:Name="Normal" />
+                <VisualState x:Name="Normal">
+                    <VisualState.Setters>
+                        <Setter Target="AlbumArtPanel.Opacity" Value="0" />
+                    </VisualState.Setters>
+                </VisualState>
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
+                        <Setter Target="AlbumArtPanel.Opacity" Value="0" />
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
@@ -715,6 +766,7 @@
                 </VisualState>
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
+                        <Setter Target="LivelyWallpaperContainer.Visibility" Value="Collapsed" />
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />

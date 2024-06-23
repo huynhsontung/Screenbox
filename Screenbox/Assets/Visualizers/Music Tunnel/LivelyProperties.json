@@ -1,0 +1,54 @@
+{
+  "isSquare": {
+    "type": "checkbox",
+    "value": true,
+    "text": "Square"
+  },
+  "speed": {
+    "max": 1,
+    "min": 0,
+    "step": 0.01,
+    "text": "Speed",
+    "type": "slider",
+    "value": 0.1
+  },
+  "colorRadius": {
+    "max": 2,
+    "min": 0,
+    "step": 0.01,
+    "text": "Album Backdrop",
+    "help": "Improves visibility",
+    "type": "slider",
+    "value": 1
+  },
+  "blurIntensity": {
+    "max": 10,
+    "min": 0,
+    "step": 0.1,
+    "text": "Blur",
+    "type": "slider",
+    "value": 5
+  },
+  "parallaxIntensity": {
+    "max": 5,
+    "min": 0,
+    "text": "Parallax",
+    "type": "slider",
+    "value": 1
+  },
+  "displayScaling": {
+    "max": 1,
+    "min": 0.1,
+    "step": 0.01,
+    "text": "Scaling",
+    "type": "slider",
+    "help": "Lower values improve performance",
+    "value": 1
+  },
+  "fpsLock": {
+    "type": "checkbox",
+    "value": false,
+    "help": "Improves performance",
+    "text": "30FPS Lock"
+  }
+}
