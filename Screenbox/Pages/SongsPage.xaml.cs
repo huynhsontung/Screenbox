@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
+using System.ComponentModel;
 using System.Linq;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -21,17 +23,37 @@ namespace Screenbox.Pages
 
         private double _contentVerticalOffset;
 
+        private readonly DispatcherQueue _dispatcherQueue;
+
         public SongsPage()
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<SongsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        }
+
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SongsPageViewModel.SortBy))
+            {
+                var state = ViewModel.SortBy switch
+                {
+                    "album" => "SortByAlbum",
+                    "artist" => "SortByArtist",
+                    _ => "SortByTitle"
+                };
+                VisualStateManager.GoToState(this, state, true);
+                UpdateGroupViewItemWidth();
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ViewModel.FetchSongs();
+            if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchSongs))
+                ViewModel.FetchSongs();
             if (e.NavigationMode == NavigationMode.Back &&
                 Common.TryGetScrollingState(nameof(SongsPage), Frame.BackStackDepth, out double verticalOffset))
             {
@@ -65,6 +87,29 @@ namespace Screenbox.Pages
         {
             var item = SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == tag) ?? SortByFlyout.Items?.FirstOrDefault();
             return (item as MenuFlyoutItem)?.Text ?? string.Empty;
+        }
+
+        private void GroupOverview_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateGroupViewItemWidth();
+        }
+
+        private void UpdateGroupViewItemWidth()
+        {
+            if (GroupOverview.ItemsPanelRoot == null) return;
+            var gridContentWidth = GroupOverview.ActualWidth -
+                                   (GroupOverview.Margin.Left + GroupOverview.Margin.Right) -
+                                   (GroupOverview.Padding.Left + GroupOverview.Padding.Right);
+            var numColumns = (int)gridContentWidth / 400;
+            var itemWidth = numColumns > 0 ? gridContentWidth / numColumns - (numColumns - 1) * 8 : gridContentWidth;
+
+            foreach (var child in GroupOverview.ItemsPanelRoot.Children)
+            {
+                var element = (FrameworkElement)child;
+                element.Width = string.IsNullOrEmpty(ViewModel.SortBy) || ViewModel.SortBy == "name"
+                    ? double.NaN
+                    : itemWidth;
+            }
         }
     }
 }

@@ -174,7 +174,8 @@
                     VerticalAlignment="Center"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
-                    SelectionMode="None">
+                    SelectionMode="None"
+                    SizeChanged="GroupOverview_OnSizeChanged">
                     <GridView.Resources>
                         <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
                         <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush" />
@@ -205,6 +206,21 @@
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SortByStates">
+                <VisualState x:Name="SortByTitle" />
+                <VisualState x:Name="SortByAlbum">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="SortByArtist">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -46,19 +46,24 @@ public static class CollectionExtensions
     }
 
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
-        IEnumerable<IGrouping<TKey, TValue>> reference)
+        IReadOnlyList<IGrouping<TKey, TValue>> reference)
     {
-        Dictionary<TKey, List<TValue>> groupings = reference.ToDictionary(g => g.Key, g => g.ToList());
-        foreach (ObservableGroup<TKey, TValue> observableGroup in target)
+        var refDict = reference.ToDictionary(g => g.Key, g => g.ToList());
+        var targetDict = target.ToDictionary(g => g.Key, g => g);
+        var keysToSync = targetDict.Keys.Where(refDict.ContainsKey);
+
+        // Add & Remove
+        var unifiedGroups = reference.Select(g =>
+                targetDict.TryGetValue(g.Key, out var targetGroup)
+                    ? targetGroup
+                    : g as ObservableGroup<TKey, TValue> ?? new ObservableGroup<TKey, TValue>(g))
+            .ToList();
+        target.SyncItems(unifiedGroups);
+
+        // Sync
+        foreach (TKey key in keysToSync)
         {
-            if (groupings.TryGetValue(observableGroup.Key, out List<TValue> grouping))
-            {
-                observableGroup.SyncItems(grouping);
-            }
-            else
-            {
-                observableGroup.Clear();
-            }
+            targetDict[key].SyncItems(refDict[key]);
         }
     }
 }

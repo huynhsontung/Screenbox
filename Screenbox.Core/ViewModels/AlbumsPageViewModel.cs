@@ -6,7 +6,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
@@ -46,11 +45,12 @@ namespace Screenbox.Core.ViewModels
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
             Songs = musicLibrary.Songs;
 
-            IEnumerable<IGrouping<string, AlbumViewModel>> groupings = musicLibrary.Albums
+            var groupings = musicLibrary.Albums
                 .OrderBy(a => a.Name, StringComparer.CurrentCulture)
                 .GroupBy(album => album == musicLibrary.UnknownAlbum
                     ? "\u2026"
-                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name));
+                    : MediaGroupingHelpers.GetFirstLetterGroup(album.Name))
+                .ToList();
             GroupedAlbums.SyncObservableGroups(groupings);
 
             // Progressively update when it's still loading
