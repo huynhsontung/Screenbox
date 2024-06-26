@@ -771,9 +771,9 @@
     <value>使用中的引數</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>允許多個視窗</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>始終以新視窗開啟媒體檔案</value>
   </data>
 </root>

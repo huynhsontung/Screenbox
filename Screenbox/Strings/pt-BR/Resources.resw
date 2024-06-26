@@ -311,7 +311,7 @@
     <value>Bem-vindo(a) ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Vamos começar reproduzindo algum do seu conteúdo de multimídia para começar as coisas.</value>
+    <value>Vamos começar reproduzindo alguns dos seus conteúdos de multimídia para começar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
@@ -380,13 +380,13 @@
     <value>Personalizado</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Rede</value>
+    <value>Dispositivos de rede</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>Nenhum dispositivo de rede disponível</value>
+    <value>Nenhum dispositivo disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas Configurações do Windows.</value>
+    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo esteja conectado nas Configurações do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Mídia recente</value>
@@ -622,10 +622,10 @@
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Reprodutor de mídia Screenbox</value>
+    <value>Reprodutor de Multimídia Screenbox</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Código-fonte</value>
+    <value>Código fonte</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
