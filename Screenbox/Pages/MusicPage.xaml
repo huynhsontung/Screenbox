@@ -157,11 +157,6 @@
             </interactivity:Interaction.Behaviors>
 
             <Grid Margin="{StaticResource TopLargeMargin}">
-                <muxc:ProgressBar
-                    Margin="{StaticResource TopMediumMargin}"
-                    VerticalAlignment="Top"
-                    IsIndeterminate="True"
-                    Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
                 <Frame x:Name="ContentFrame" Navigated="ContentFrame_OnNavigated" />
             </Grid>
         </muxc:NavigationView>

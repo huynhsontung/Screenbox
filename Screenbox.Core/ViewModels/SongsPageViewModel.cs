@@ -46,6 +46,7 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            IsLoading = _libraryService.IsLoadingMusic;
             Songs = musicLibrary.Songs;
 
             // Populate song groups with fetched result

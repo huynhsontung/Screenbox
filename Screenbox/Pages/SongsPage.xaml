@@ -123,12 +123,17 @@
             </TextBlock>
         </muxc:DropDownButton>
 
+        <muxc:ProgressBar
+            Grid.Row="1"
+            Margin="{StaticResource TopMediumMargin}"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-        <SemanticZoom Grid.Row="1">
+        <SemanticZoom Grid.Row="1" Margin="{StaticResource TopLargeMargin}">
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
-                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource ContentPagePadding}"
                     extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"

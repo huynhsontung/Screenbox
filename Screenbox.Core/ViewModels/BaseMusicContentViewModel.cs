@@ -20,6 +20,8 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
     [ObservableProperty]
     private string _sortBy = string.Empty;
 
+    [ObservableProperty] private bool _isLoading;
+
     [RelayCommand(CanExecute = nameof(HasSongs))]
     private void ShuffleAndPlay()
     {
