@@ -24,7 +24,7 @@
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <XamlUICommand
