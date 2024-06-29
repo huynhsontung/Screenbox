@@ -177,6 +177,7 @@
                     Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
                     SelectionMode="None"

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
+using System;
 using System.ComponentModel;
 using System.Linq;
 using Windows.System;
@@ -101,7 +102,9 @@ namespace Screenbox.Pages
                                    (GroupOverview.Margin.Left + GroupOverview.Margin.Right) -
                                    (GroupOverview.Padding.Left + GroupOverview.Padding.Right);
             var numColumns = (int)gridContentWidth / 400;
-            var itemWidth = numColumns > 0 ? gridContentWidth / numColumns - (numColumns - 1) * 8 : gridContentWidth;
+            var itemWidth = numColumns > 0 ? gridContentWidth / numColumns : gridContentWidth;
+            itemWidth -= 4; // Item paddings
+            itemWidth = Math.Floor(itemWidth);
 
             foreach (var child in GroupOverview.ItemsPanelRoot.Children)
             {
