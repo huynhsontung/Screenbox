@@ -1,4 +1,5 @@
 ﻿using ProtoBuf;
+using System;
 
 namespace Screenbox.Core.Models;
 
@@ -14,12 +15,16 @@ internal record PersistentSongRecord
     [ProtoMember(3)]
     public MusicInfo Properties { get; set; }
 
+    [ProtoMember(4)]
+    public DateTime DateAdded { get; set; } // Must be UTC datetime
+
     public PersistentSongRecord() { }
 
-    public PersistentSongRecord(string title, string path, MusicInfo properties)
+    public PersistentSongRecord(string title, string path, MusicInfo properties, DateTimeOffset dateAdded)
     {
         Title = title;
         Path = path;
         Properties = properties;
+        DateAdded = dateAdded.UtcDateTime;
     }
 }
