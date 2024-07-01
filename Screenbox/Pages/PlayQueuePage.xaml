@@ -67,10 +67,10 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AccessKey="CF"
+                AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
-                Flyout="{StaticResource AddToPlayQueueFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
+                Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE838;" />
                     <TextBlock
@@ -79,7 +79,10 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonXYNavigationBehavior />
+                    <interactions:SplitButtonAccessibilityBehavior
+                        PrimaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                        SecondaryButtonAccessKey="CM"
+                        SecondaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
