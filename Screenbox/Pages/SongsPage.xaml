@@ -125,12 +125,8 @@
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">
                 <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
-                <TextBlock x:Name="SortByText">
-                    <Run Text="Sort by:" />
-                </TextBlock>
-                <TextBlock>
-                    <Run Text=" " /><Run Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-                </TextBlock>
+                <TextBlock x:Name="SortByText"><Run Text="Sort by" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
             </StackPanel>
         </muxc:DropDownButton>
 
