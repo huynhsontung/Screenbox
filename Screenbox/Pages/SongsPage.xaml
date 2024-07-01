@@ -98,11 +98,11 @@
                 <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
-                        CommandParameter="name"
+                        CommandParameter="title"
                         GroupName="SortOrder"
                         IsChecked="True"
-                        Tag="name"
-                        Text="Name" />
+                        Tag="title"
+                        Text="Title" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="album"
