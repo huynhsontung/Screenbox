@@ -174,9 +174,10 @@
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
+    <Compile Include="Controls\Interactions\NavigationViewAccessKeysBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonAccessibilityBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
@@ -293,6 +294,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Strings\en-US\KeyboardResources.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KeyboardResources.resw</DependentUpon>
+    </Compile>
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -836,6 +842,10 @@
     <None Include="Secrets.cs.template" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en-US\KeyboardResources.resw">
+      <Generator>ReswPlusGenerator</Generator>
+      <LastGenOutput>KeyboardResources.generated.cs</LastGenOutput>
+    </PRIResource>
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
