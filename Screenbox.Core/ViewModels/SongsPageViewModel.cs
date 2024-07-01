@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
@@ -18,8 +17,6 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
-
-        [ObservableProperty] private double _groupOverviewItemWidth;
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -111,6 +108,17 @@ namespace Screenbox.Core.ViewModels
             return groups;
         }
 
+        private List<IGrouping<string, MediaViewModel>> GetYearGrouping()
+        {
+            var groups = Songs.GroupBy(m =>
+                    m.MediaInfo.MusicProperties.Year > 0
+                        ? m.MediaInfo.MusicProperties.Year.ToString()
+                        : MediaGroupingHelpers.OtherGroupSymbol)
+                .OrderByDescending(g => g.Key == MediaGroupingHelpers.OtherGroupSymbol ? 0 : uint.Parse(g.Key))
+                .ToList();
+            return groups;
+        }
+
         private List<IGrouping<string, MediaViewModel>> GetDefaultGrouping()
         {
             var groups = Songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name))
@@ -133,6 +141,7 @@ namespace Screenbox.Core.ViewModels
             {
                 "album" => GetAlbumGrouping(musicLibrary),
                 "artist" => GetArtistGrouping(musicLibrary),
+                "year" => GetYearGrouping(),
                 _ => GetDefaultGrouping()
             };
         }

@@ -116,6 +116,12 @@
                         GroupName="SortOrder"
                         Tag="artist"
                         Text="Artist" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="year"
+                        GroupName="SortOrder"
+                        Tag="year"
+                        Text="Released year" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <TextBlock>

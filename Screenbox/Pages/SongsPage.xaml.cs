@@ -109,9 +109,11 @@ namespace Screenbox.Pages
             foreach (var child in GroupOverview.ItemsPanelRoot.Children)
             {
                 var element = (FrameworkElement)child;
-                element.Width = string.IsNullOrEmpty(ViewModel.SortBy) || ViewModel.SortBy == "name"
-                    ? double.NaN
-                    : itemWidth;
+                element.Width = ViewModel.SortBy == "year"
+                    ? 80
+                    : GroupOverview.HorizontalAlignment != HorizontalAlignment.Stretch
+                        ? double.NaN
+                        : itemWidth;
             }
         }
     }
