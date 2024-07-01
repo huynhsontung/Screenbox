@@ -2,7 +2,6 @@
     x:Class="Screenbox.Pages.SongsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -124,9 +123,15 @@
                         Text="Released year" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
-            <TextBlock>
-                <Run Text="Sort by:" /> <Run Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
+                <TextBlock x:Name="SortByText">
+                    <Run Text="Sort by:" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text=" " /><Run Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+                </TextBlock>
+            </StackPanel>
         </muxc:DropDownButton>
 
         <muxc:ProgressBar
@@ -218,6 +223,7 @@
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByText.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
