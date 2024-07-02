@@ -103,8 +103,8 @@ namespace Screenbox.Pages
 
         private void UpdateSortByFlyout()
         {
-            if (SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == ViewModel.SortBy) is RadioMenuFlyoutItem
-                radioItem)
+            if ((SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == ViewModel.SortBy) ??
+                 SortByFlyout.Items?.FirstOrDefault()) is RadioMenuFlyoutItem radioItem)
             {
                 radioItem.IsChecked = true;
             }
