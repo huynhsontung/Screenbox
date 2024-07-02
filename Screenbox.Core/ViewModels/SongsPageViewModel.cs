@@ -124,7 +124,7 @@ namespace Screenbox.Core.ViewModels
             var groups = Songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name))
                 .OrderBy(g => g.Key, StringComparer.CurrentCulture)
                 .ToList();
-            var etcIndex = groups.FindIndex(g => g.Key == MediaGroupingHelpers.GroupHeaders.Last().ToString());
+            var etcIndex = groups.FindIndex(g => g.Key == MediaGroupingHelpers.OtherGroupSymbol);
             if (etcIndex >= 0)
             {
                 var etcGroup = groups[etcIndex];

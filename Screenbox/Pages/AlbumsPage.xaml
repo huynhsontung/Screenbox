@@ -26,7 +26,7 @@
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
@@ -77,21 +77,45 @@
             BorderBrush="Transparent">
             <muxc:DropDownButton.Flyout>
                 <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Name" />
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Album" />
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Artist" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="title"
+                        GroupName="SortOrder"
+                        IsChecked="True"
+                        Tag="title"
+                        Text="Title" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="artist"
+                        GroupName="SortOrder"
+                        Tag="artist"
+                        Text="Artist" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="year"
+                        GroupName="SortOrder"
+                        Tag="year"
+                        Text="Released year" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
-            <TextBlock>
-                <Run Text="Sort by:" /> <Run Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </TextBlock>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
+                <TextBlock x:Name="SortByText"><Run Text="Sort by" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+            </StackPanel>
         </muxc:DropDownButton>
 
-        <SemanticZoom Grid.Row="1">
+        <muxc:ProgressBar
+            Grid.Row="1"
+            Margin="{StaticResource TopMediumMargin}"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
+        <SemanticZoom Grid.Row="1" Margin="{StaticResource TopLargeMargin}">
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
-                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource GridViewContentPagePadding}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -125,9 +149,11 @@
                     Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View.CollectionGroups}"
-                    SelectionMode="None">
+                    SelectionMode="None"
+                    SizeChanged="GroupOverview_OnSizeChanged">
                     <GridView.Resources>
                         <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
                         <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush" />
@@ -158,6 +184,16 @@
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByText.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SortByStates">
+                <VisualState x:Name="SortByTitle" />
+                <VisualState x:Name="SortByArtist">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
