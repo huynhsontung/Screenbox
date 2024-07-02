@@ -30,6 +30,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            ViewModel.OnNavigatedTo();
             if (e.NavigationMode == NavigationMode.Back
                 && Common.TryGetPageState(nameof(ArtistsPage), Frame.BackStackDepth, out var state)
                 && state is double verticalOffset)
@@ -37,7 +38,7 @@ namespace Screenbox.Pages
                 _contentVerticalOffset = verticalOffset;
             }
 
-            ViewModel.FetchArtists();
+            ViewModel.FetchContent();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

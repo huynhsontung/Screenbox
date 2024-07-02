@@ -48,6 +48,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            ViewModel.OnNavigatedTo();
             if (Common.NavigationStates.TryGetValue(typeof(MusicPage), out string navigationState))
             {
                 ContentFrame.SetNavigationState(navigationState);
@@ -64,6 +65,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            ViewModel.OnNavigatedFrom();
             Common.NavigationStates[typeof(MusicPage)] = ContentFrame.GetNavigationState();
         }
 

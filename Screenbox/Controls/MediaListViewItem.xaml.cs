@@ -36,7 +36,6 @@ public sealed partial class MediaListViewItem : UserControl
     {
         this.InitializeComponent();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-        PlayingStates.CurrentStateChanged += PlayingStatesOnCurrentStateChanged;
     }
 
     private GridLength BoolToGridLength(bool visibility) =>
