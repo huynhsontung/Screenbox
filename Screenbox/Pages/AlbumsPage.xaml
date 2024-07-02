@@ -2,6 +2,7 @@
     x:Class="Screenbox.Pages.AlbumsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -111,7 +112,10 @@
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-        <SemanticZoom Grid.Row="1" Margin="{StaticResource TopLargeMargin}">
+        <SemanticZoom
+            x:Name="SemanticZoom"
+            Grid.Row="1"
+            Margin="{StaticResource TopLargeMargin}">
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
@@ -166,6 +170,19 @@
                     </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
+
+            <animations:Implicit.ShowAnimations>
+                <animations:TranslationAnimation
+                    EasingMode="EaseOut"
+                    EasingType="Default"
+                    From="{StaticResource EntranceTranslateAnimationOffset}"
+                    To="0"
+                    Duration="{StaticResource EntranceTranslateAnimationDuration}" />
+                <animations:OpacityAnimation
+                    From="0"
+                    To="1"
+                    Duration="{StaticResource EntranceTranslateAnimationDuration}" />
+            </animations:Implicit.ShowAnimations>
         </SemanticZoom>
 
         <VisualStateManager.VisualStateGroups>
