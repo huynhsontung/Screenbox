@@ -33,7 +33,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
-        private readonly Dictionary<string, double> _scrollingStates;
+        private readonly Dictionary<string, object> _pageStates;
 
         public CommonViewModel(INavigationService navigationService,
             IFilesService filesService,
@@ -46,7 +46,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             NavigationStates = new Dictionary<Type, string>();
-            _scrollingStates = new Dictionary<string, double>();
+            _pageStates = new Dictionary<string, object>();
 
             // Activate the view model's messenger
             IsActive = true;
@@ -72,14 +72,14 @@ namespace Screenbox.Core.ViewModels
                 : (double)Application.Current.Resources["ContentPageBottomPaddingHeight"];
         }
 
-        public void SaveScrollingState(double verticalOffset, string pageTypeName, int backStackDepth)
+        public void SavePageState(object state, string pageTypeName, int backStackDepth)
         {
-            _scrollingStates[pageTypeName + backStackDepth] = verticalOffset;
+            _pageStates[pageTypeName + backStackDepth] = state;
         }
 
-        public bool TryGetScrollingState(string pageTypeName, int backStackDepth, out double verticalOffset)
+        public bool TryGetPageState(string pageTypeName, int backStackDepth, out object state)
         {
-            return _scrollingStates.TryGetValue(pageTypeName + backStackDepth, out verticalOffset);
+            return _pageStates.TryGetValue(pageTypeName + backStackDepth, out state);
         }
 
         [RelayCommand]

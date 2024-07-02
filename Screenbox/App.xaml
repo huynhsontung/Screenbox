@@ -116,11 +116,16 @@
                         <Button
                             MinWidth="{StaticResource GridViewHeaderItemMinHeight}"
                             MinHeight="{StaticResource GridViewHeaderItemMinHeight}"
+                            HorizontalAlignment="Stretch"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             ClickMode="Hover"
                             IsEnabled="{Binding Group.Count, Converter={StaticResource DoubleToBoolConverter}, Mode=OneWay}">
-                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Group.Key}" />
+                            <TextBlock
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                Text="{Binding Group.Key}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap" />
                         </Button>
                     </DataTemplate>
 

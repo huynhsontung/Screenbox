@@ -48,7 +48,25 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <SemanticZoom>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button
+            x:Name="ShufflePlayButton"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPagePadding}"
+            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+            Style="{StaticResource AccentButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Glyph="&#xE8B1;" />
+                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+            </StackPanel>
+        </Button>
+
+        <SemanticZoom Grid.Row="1">
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="ArtistGridView"
@@ -117,6 +135,8 @@
                     <VisualState.Setters>
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ShufflePlayButton.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByButton.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
