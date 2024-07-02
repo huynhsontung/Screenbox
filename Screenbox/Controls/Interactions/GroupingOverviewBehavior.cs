@@ -21,6 +21,12 @@ internal class GroupingOverviewBehavior : Behavior<GridView>
         AssociatedObject.SizeChanged += AssociatedObjectOnSizeChanged;
     }
 
+    protected override void OnDetaching()
+    {
+        base.OnDetaching();
+        AssociatedObject.SizeChanged -= AssociatedObjectOnSizeChanged;
+    }
+
     private static void OnGroupTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var behavior = (GroupingOverviewBehavior)d;
