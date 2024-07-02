@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
+using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,6 +46,7 @@ namespace Screenbox.Pages
                     _ => "SortByTitle"
                 };
                 VisualStateManager.GoToState(this, state, true);
+                UpdateSortByFlyout();
                 SavePageState(0);
             }
         }
@@ -96,6 +98,15 @@ namespace Screenbox.Pages
         {
             var item = SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == tag) ?? SortByFlyout.Items?.FirstOrDefault();
             return (item as MenuFlyoutItem)?.Text ?? string.Empty;
+        }
+
+        private void UpdateSortByFlyout()
+        {
+            if (SortByFlyout.Items?.FirstOrDefault(x => x.Tag as string == ViewModel.SortBy) is RadioMenuFlyoutItem
+                radioItem)
+            {
+                radioItem.IsChecked = true;
+            }
         }
     }
 }
