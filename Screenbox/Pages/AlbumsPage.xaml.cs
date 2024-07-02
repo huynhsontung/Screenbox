@@ -54,6 +54,7 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            ViewModel.OnNavigatedTo();
             if (e.NavigationMode == NavigationMode.Back
                 && Common.TryGetPageState(nameof(AlbumsPage), Frame.BackStackDepth, out var state)
                 && state is KeyValuePair<string, double> pair)
@@ -62,8 +63,8 @@ namespace Screenbox.Pages
                 _contentVerticalOffset = pair.Value;
             }
 
-            if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchAlbums))
-                ViewModel.FetchAlbums();
+            if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchContent))
+                ViewModel.FetchContent();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

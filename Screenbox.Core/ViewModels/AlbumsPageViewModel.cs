@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Windows.System;
 using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
@@ -20,28 +19,16 @@ namespace Screenbox.Core.ViewModels
 
         private readonly ILibraryService _libraryService;
         private readonly IFilesService _filesService;
-        private readonly DispatcherQueue _dispatcherQueue;
-        private readonly DispatcherQueueTimer _refreshTimer;
 
-        public AlbumsPageViewModel(ILibraryService libraryService, IFilesService filesService)
+        public AlbumsPageViewModel(ILibraryService libraryService, IFilesService filesService) : base(libraryService)
         {
             _libraryService = libraryService;
             _filesService = filesService;
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
-
-            libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             PropertyChanged += OnPropertyChanged;
         }
 
-        public void OnNavigatedFrom()
-        {
-            _libraryService.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
-            _refreshTimer.Stop();
-        }
-
-        public void FetchAlbums()
+        public override void FetchContent()
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
@@ -67,11 +54,11 @@ namespace Screenbox.Core.ViewModels
             // Progressively update when it's still loading
             if (_libraryService.IsLoadingMusic)
             {
-                _refreshTimer.Debounce(FetchAlbums, TimeSpan.FromSeconds(5));
+                RefreshTimer.Debounce(FetchContent, TimeSpan.FromSeconds(5));
             }
             else
             {
-                _refreshTimer.Stop();
+                RefreshTimer.Stop();
             }
         }
 
@@ -152,11 +139,6 @@ namespace Screenbox.Core.ViewModels
                     GroupedAlbums.AddGroup(group);
                 }
             }
-        }
-
-        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
-        {
-            _dispatcherQueue.TryEnqueue(FetchAlbums);
         }
     }
 }

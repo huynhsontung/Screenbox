@@ -27,9 +27,18 @@ namespace Screenbox.Core.ViewModels
         {
             _libraryService = libraryService;
             _resourceService = resourceService;
-            _libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _hasContent = true;
+        }
+
+        public void OnNavigatedTo()
+        {
+            _libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+        }
+
+        public void OnNavigatedFrom()
+        {
+            _libraryService.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
         }
 
         public void UpdateSongs()

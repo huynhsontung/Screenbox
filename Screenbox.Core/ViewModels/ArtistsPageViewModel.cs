@@ -5,7 +5,6 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
-using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -14,27 +13,15 @@ namespace Screenbox.Core.ViewModels
         public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
         private readonly ILibraryService _libraryService;
-        private readonly DispatcherQueue _dispatcherQueue;
-        private readonly DispatcherQueueTimer _refreshTimer;
 
-        public ArtistsPageViewModel(ILibraryService libraryService)
+        public ArtistsPageViewModel(ILibraryService libraryService) : base(libraryService)
         {
             _libraryService = libraryService;
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedArtists = new ObservableGroupedCollection<string, ArtistViewModel>();
             PopulateGroups();
-
-            libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
         }
 
-        public void OnNavigatedFrom()
-        {
-            _libraryService.MusicLibraryContentChanged -= OnMusicLibraryContentChanged;
-            _refreshTimer.Stop();
-        }
-
-        public void FetchArtists()
+        public override void FetchContent()
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
@@ -51,11 +38,11 @@ namespace Screenbox.Core.ViewModels
             // Progressively update when it's still loading
             if (_libraryService.IsLoadingMusic)
             {
-                _refreshTimer.Debounce(FetchArtists, TimeSpan.FromSeconds(5));
+                RefreshTimer.Debounce(FetchContent, TimeSpan.FromSeconds(5));
             }
             else
             {
-                _refreshTimer.Stop();
+                RefreshTimer.Stop();
             }
         }
 
@@ -65,11 +52,6 @@ namespace Screenbox.Core.ViewModels
             {
                 GroupedArtists.AddGroup(key);
             }
-        }
-
-        private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
-        {
-            _dispatcherQueue.TryEnqueue(FetchArtists);
         }
     }
 }
