@@ -66,25 +66,6 @@
             </StackPanel>
         </Button>
 
-        <muxc:DropDownButton
-            x:Name="SortByButton"
-            Grid.Row="0"
-            Margin="{StaticResource ContentPagePadding}"
-            HorizontalAlignment="Right"
-            Background="Transparent"
-            BorderBrush="Transparent">
-            <muxc:DropDownButton.Flyout>
-                <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Name" />
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Album" />
-                    <muxc:RadioMenuFlyoutItem GroupName="SortOrder" Text="Artist" />
-                </MenuFlyout>
-            </muxc:DropDownButton.Flyout>
-            <TextBlock>
-                <Run Text="Sort by:" /> <Run Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </TextBlock>
-        </muxc:DropDownButton>
-
         <SemanticZoom Grid.Row="1">
             <SemanticZoom.ZoomedInView>
                 <GridView
