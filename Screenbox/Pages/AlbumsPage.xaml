@@ -152,8 +152,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View.CollectionGroups}"
-                    SelectionMode="None"
-                    SizeChanged="GroupOverview_OnSizeChanged">
+                    SelectionMode="None">
                     <GridView.Resources>
                         <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
                         <StaticResource x:Key="ButtonBorderBrushDisabled" ResourceKey="ControlFillColorTransparentBrush" />
@@ -163,6 +162,9 @@
                             <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
+                    </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
