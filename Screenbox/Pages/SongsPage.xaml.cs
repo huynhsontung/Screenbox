@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Windows.System;
@@ -45,19 +46,23 @@ namespace Screenbox.Pages
                     _ => "SortByTitle"
                 };
                 VisualStateManager.GoToState(this, state, true);
+                SavePageState(0);
             }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (e.NavigationMode == NavigationMode.Back
+                && Common.TryGetPageState(nameof(SongsPage), Frame.BackStackDepth, out var state)
+                && state is KeyValuePair<string, double> pair)
+            {
+                ViewModel.SortBy = pair.Key;
+                _contentVerticalOffset = pair.Value;
+            }
+
             if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchSongs))
                 ViewModel.FetchSongs();
-            if (e.NavigationMode == NavigationMode.Back &&
-                Common.TryGetScrollingState(nameof(SongsPage), Frame.BackStackDepth, out double verticalOffset))
-            {
-                _contentVerticalOffset = verticalOffset;
-            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -79,7 +84,13 @@ namespace Screenbox.Pages
 
         private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(SongsPage), Frame.BackStackDepth);
+            SavePageState(e.NextView.VerticalOffset);
+        }
+
+        private void SavePageState(double verticalOffset)
+        {
+            Common.SavePageState(new KeyValuePair<string, double>(ViewModel.SortBy, verticalOffset), nameof(SongsPage),
+                Frame.BackStackDepth);
         }
 
         private string GetSortByText(string tag)
