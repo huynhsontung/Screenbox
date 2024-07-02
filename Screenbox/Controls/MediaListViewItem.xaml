@@ -11,7 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
     d:DesignHeight="300"
@@ -228,7 +227,7 @@
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="PlayingStates">
+            <VisualStateGroup x:Name="PlayingStates" CurrentStateChanged="PlayingStatesOnCurrentStateChanged">
                 <VisualState x:Name="Playing">
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.PlaybackRate" Value="1" />
