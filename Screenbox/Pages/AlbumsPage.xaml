@@ -83,24 +83,24 @@
                         GroupName="SortOrder"
                         IsChecked="True"
                         Tag="title"
-                        Text="Title" />
+                        Text="{strings:Resources Key=PropertyTitle}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="artist"
                         GroupName="SortOrder"
                         Tag="artist"
-                        Text="Artist" />
+                        Text="{strings:Resources Key=Artist}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetSortByCommand}"
                         CommandParameter="year"
                         GroupName="SortOrder"
                         Tag="year"
-                        Text="Released year" />
+                        Text="{strings:Resources Key=ReleasedYear}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">
                 <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
-                <TextBlock x:Name="SortByText"><Run Text="Sort by" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
             </StackPanel>
         </muxc:DropDownButton>
