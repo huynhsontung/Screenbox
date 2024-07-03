@@ -94,7 +94,7 @@
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
 
-                    <x:String x:Key="EntranceTranslateAnimationOffset">0,50,0</x:String>
+                    <x:String x:Key="EntranceTranslateAnimationOffset">0,40,0</x:String>
                     <x:String x:Key="EntranceTranslateAnimationDuration">0:0:0.4</x:String>
 
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
