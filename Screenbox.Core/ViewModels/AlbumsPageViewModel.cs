@@ -83,15 +83,22 @@ namespace Screenbox.Core.ViewModels
                     ? MediaGroupingHelpers.OtherGroupSymbol
                     : MediaGroupingHelpers.GetFirstLetterGroup(album.Name))
                 .ToList();
-            var etcIndex = groups.FindIndex(g => g.Key == MediaGroupingHelpers.OtherGroupSymbol);
-            if (etcIndex >= 0)
+
+            var sortedGroup = new List<IGrouping<string, AlbumViewModel>>();
+            foreach (char header in MediaGroupingHelpers.GroupHeaders)
             {
-                var etcGroup = groups[etcIndex];
-                groups.RemoveAt(etcIndex);
-                groups.Add(etcGroup);
+                string groupHeader = header.ToString();
+                if (groups.Find(g => g.Key == groupHeader) is { } group)
+                {
+                    sortedGroup.Add(group);
+                }
+                else
+                {
+                    sortedGroup.Add(new ListGrouping<string, AlbumViewModel>(groupHeader));
+                }
             }
 
-            return groups;
+            return sortedGroup;
         }
 
         private List<IGrouping<string, AlbumViewModel>> GetArtistGrouping(MusicLibraryFetchResult musicLibrary)

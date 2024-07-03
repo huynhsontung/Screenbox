@@ -148,6 +148,7 @@
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\LastPositionTracker.cs" />
+    <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />

@@ -4,6 +4,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.System;
 
@@ -40,12 +41,7 @@ namespace Screenbox.Core.ViewModels
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
             Songs = musicLibrary.Songs;
 
-            var groupings = musicLibrary.Artists
-                .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-                .GroupBy(artist => artist == musicLibrary.UnknownArtist
-                    ? "\u2026"
-                    : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
-                .ToList();
+            var groupings = GetDefaultGrouping(musicLibrary);
             GroupedArtists.SyncObservableGroups(groupings);
 
             // Progressively update when it's still loading
@@ -57,6 +53,32 @@ namespace Screenbox.Core.ViewModels
             {
                 _refreshTimer.Stop();
             }
+        }
+
+        private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(MusicLibraryFetchResult fetchResult)
+        {
+            var groups = fetchResult.Artists
+                .OrderBy(a => a.Name, StringComparer.CurrentCulture)
+                .GroupBy(artist => artist == fetchResult.UnknownArtist
+                    ? MediaGroupingHelpers.OtherGroupSymbol
+                    : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
+                .ToList();
+
+            var sortedGroup = new List<IGrouping<string, ArtistViewModel>>();
+            foreach (char header in MediaGroupingHelpers.GroupHeaders)
+            {
+                string groupHeader = header.ToString();
+                if (groups.Find(g => g.Key == groupHeader) is { } group)
+                {
+                    sortedGroup.Add(group);
+                }
+                else
+                {
+                    sortedGroup.Add(new ListGrouping<string, ArtistViewModel>(groupHeader));
+                }
+            }
+
+            return sortedGroup;
         }
 
         private void PopulateGroups()
