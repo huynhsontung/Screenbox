@@ -17,9 +17,6 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
     [NotifyCanExecuteChangedFor(nameof(ShuffleAndPlayCommand))]
     private IReadOnlyList<MediaViewModel> _songs = Array.Empty<MediaViewModel>();
 
-    [ObservableProperty]
-    private string _sortBy = string.Empty;
-
     [ObservableProperty] private bool _isLoading;
 
     [RelayCommand(CanExecute = nameof(HasSongs))]
@@ -31,11 +28,5 @@ public abstract partial class BaseMusicContentViewModel : ObservableRecipient
         Messenger.Send(new ClearPlaylistMessage());
         Messenger.Send(new QueuePlaylistMessage(shuffledList));
         Messenger.Send(new PlayMediaMessage(shuffledList[0], true));
-    }
-
-    [RelayCommand]
-    private void SetSortBy(string tag)
-    {
-        SortBy = tag;
     }
 }

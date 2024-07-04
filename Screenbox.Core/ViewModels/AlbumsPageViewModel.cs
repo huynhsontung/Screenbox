@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -14,9 +16,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed class AlbumsPageViewModel : BaseMusicContentViewModel
+    public sealed partial class AlbumsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, AlbumViewModel> GroupedAlbums { get; }
+
+        [ObservableProperty]
+        private string _sortBy = string.Empty;
 
         private readonly ILibraryService _libraryService;
         private readonly IFilesService _filesService;
@@ -164,6 +169,12 @@ namespace Screenbox.Core.ViewModels
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
         {
             _dispatcherQueue.TryEnqueue(FetchAlbums);
+        }
+
+        [RelayCommand]
+        private void SetSortBy(string tag)
+        {
+            SortBy = tag;
         }
     }
 }

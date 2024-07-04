@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
@@ -17,6 +18,9 @@ namespace Screenbox.Core.ViewModels
     public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
+
+        [ObservableProperty]
+        private string _sortBy = string.Empty;
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -169,6 +173,12 @@ namespace Screenbox.Core.ViewModels
                     GroupedSongs.AddGroup(group);
                 }
             }
+        }
+
+        [RelayCommand]
+        private void SetSortBy(string tag)
+        {
+            SortBy = tag;
         }
 
         [RelayCommand]
