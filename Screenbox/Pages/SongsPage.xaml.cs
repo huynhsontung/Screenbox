@@ -33,7 +33,6 @@ namespace Screenbox.Pages
             DataContext = Ioc.Default.GetRequiredService<SongsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -65,12 +64,15 @@ namespace Screenbox.Pages
 
             if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchSongs))
                 ViewModel.FetchSongs();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+            ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
 
         private void SongListView_OnLoaded(object sender, RoutedEventArgs e)

@@ -33,7 +33,6 @@ namespace Screenbox.Pages
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             DataContext = Ioc.Default.GetRequiredService<AlbumsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -64,12 +63,15 @@ namespace Screenbox.Pages
 
             if (!_dispatcherQueue.TryEnqueue(ViewModel.FetchAlbums))
                 ViewModel.FetchAlbums();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+            ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
 
         private void AlbumGridView_OnLoaded(object sender, RoutedEventArgs e)
