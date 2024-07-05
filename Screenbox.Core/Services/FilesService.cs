@@ -135,7 +135,11 @@ namespace Screenbox.Core.Services
 
         public async Task SaveToDiskAsync<T>(StorageFile file, T source)
         {
-            using Stream stream = await file.OpenStreamForWriteAsync();
+            using var stream = await file.OpenStreamForWriteAsync();
+            // using var dataWriter = new StreamWriter(stream);
+            // using var jsonWriter = new JsonTextWriter(dataWriter);
+            // var serializer = JsonSerializer.Create();
+            // serializer.Serialize(jsonWriter, source);
             Serializer.Serialize(stream, source);
             stream.SetLength(stream.Position);  // A weird quirk of protobuf-net
             await stream.FlushAsync();
@@ -151,6 +155,10 @@ namespace Screenbox.Core.Services
         {
             using Stream readStream = await file.OpenStreamForReadAsync();
             return Serializer.Deserialize<T>(readStream);
+            // using var dataReader = new StreamReader(readStream);
+            // using var jsonReader = new JsonTextReader(dataReader);
+            // var serializer = JsonSerializer.Create();
+            // return serializer.Deserialize<T>(jsonReader) ?? throw new NullReferenceException();
         }
 
         public async Task OpenFileLocationAsync(string path)
