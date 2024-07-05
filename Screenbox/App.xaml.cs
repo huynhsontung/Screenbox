@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +14,12 @@ using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Screenbox.Pages;
 using Screenbox.Services;
+using Sentry;
+using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
+using System.Security;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -58,6 +63,7 @@ namespace Screenbox
         public App()
         {
             ConfigureAppCenter();
+            ConfigureSentry();
             InitializeComponent();
 
             if (SystemInformation.IsXbox)
@@ -82,6 +88,8 @@ namespace Screenbox
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
         }
 
+        [SecurityCritical]
+        [HandleProcessCorruptedStateExceptions]
         private static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             if (e.Exception is VLCException
@@ -92,6 +100,18 @@ namespace Screenbox
                 e.Handled = true;
                 WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
                 LogService.Log(e);
+            }
+            else if (e.Exception is { } exception)
+            {
+                // Tell Sentry this was an unhandled exception
+                exception.Data[Mechanism.HandledKey] = false;
+                exception.Data[Mechanism.MechanismKey] = "Application.UnhandledException";
+
+                // Capture the exception
+                SentrySdk.CaptureException(exception);
+
+                // Flush the event immediately
+                SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
             }
         }
 
@@ -181,6 +201,18 @@ namespace Screenbox
 #endif
         }
 
+        private static void ConfigureSentry()
+        {
+            SentrySdk.Init(options =>
+            {
+                options.Dsn = Secrets.SentryDsn;
+                options.SampleRate = 0.5f;
+                options.IsGlobalModeEnabled = true;
+                options.AutoSessionTracking = true;
+                options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString()}";
+            });
+        }
+
         private void SetMinWindowSize()
         {
             //var view = ApplicationView.GetForCurrentView();
@@ -248,6 +280,7 @@ namespace Screenbox
             IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
             Analytics.TrackEvent("Suspending");
             await Task.WhenAll(tasks);
+            await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
             deferral.Complete();
         }
 
