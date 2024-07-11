@@ -321,18 +321,23 @@
 
         <!--  Music visualizer  -->
         <!--  Final visibility is determined by both binding and the VisualState setters, VisualState takes precedence over binding.  -->
-        <Grid
-            x:Name="LivelyWallpaperContainer"
+        <controls:LivelyWebWallpaperPlayer
+            x:Name="LivelyWallpaperPlayer"
+            Grid.Row="0"
             Grid.RowSpan="3"
+            Grid.Column="0"
             Grid.ColumnSpan="2"
+            Media="{x:Bind ViewModel.Media, Mode=OneWay}"
+            Source="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay}"
             Visibility="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
-            <controls:LivelyWebWallpaperPlayer
-                x:Name="LivelyWallpaperPlayer"
-                x:Load="{x:Bind ViewModel.AudioOnly, Mode=OneWay}"
-                EffectiveVisibility="{x:Bind LivelyWallpaperContainer.Visibility, Mode=OneWay}"
-                Media="{x:Bind ViewModel.Media, Mode=OneWay}"
-                Source="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay}" />
-        </Grid>
+            <animations:Implicit.ShowAnimations>
+                <animations:OpacityAnimation
+                    From="0"
+                    To="1.0"
+                    Duration="0:0:2" />
+            </animations:Implicit.ShowAnimations>
+        </controls:LivelyWebWallpaperPlayer>
+
         <StackPanel
             Grid.Row="1"
             Grid.ColumnSpan="2"
@@ -766,7 +771,7 @@
                 </VisualState>
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
-                        <Setter Target="LivelyWallpaperContainer.Visibility" Value="Collapsed" />
+                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
