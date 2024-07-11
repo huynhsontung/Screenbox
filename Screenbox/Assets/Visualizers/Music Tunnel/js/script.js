@@ -87,7 +87,8 @@ window.addEventListener("resize", function (e) {
   material.uniforms.u_resolution.value = new THREE.Vector2(
     window.innerWidth * settings.scale,
     window.innerHeight * settings.scale
-  );
+    );
+   render();
 });
 
 //parallax
@@ -169,11 +170,11 @@ function livelyPropertyListener(name, val) {
 async function livelyCurrentTrack(data) {
   let obj = JSON.parse(data);
   //when no track is playing its null
-  if (obj != null) {
+  if (obj) {
     headerTitle.innerText = obj.Title;
     headerArtist.innerText = obj.Artist;
 
-    if (obj.Thumbnail != null) {
+    if (obj.Thumbnail) {
       const base64String = !obj.Thumbnail.startsWith("data:image/")
         ? "data:image/png;base64," + obj.Thumbnail
         : obj.Thumbnail;
@@ -185,11 +186,11 @@ async function livelyCurrentTrack(data) {
       albumart.src = backgroundSrcDefault;
     }
 
-    if (material != null) material.uniforms.u_center.value = true;
+    if (material) material.uniforms.u_center.value = true;
     trackContainer.style.opacity = 1;
   } else {
     setTexture(backgroundSrcDefault);
-    if (material != null) material.uniforms.u_center.value = false;
+    if (material) material.uniforms.u_center.value = false;
 
     trackContainer.style.opacity = 0;
   }
