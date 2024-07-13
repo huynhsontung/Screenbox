@@ -2585,6 +2585,45 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SortBy
+        /// <summary>
+        ///   Looks up a localized string similar to: Sort by
+        /// </summary>
+        public static string SortBy
+        {
+            get
+            {
+                return _resourceLoader.GetString("SortBy");
+            }
+        }
+        #endregion
+
+        #region Artist
+        /// <summary>
+        ///   Looks up a localized string similar to: Artist
+        /// </summary>
+        public static string Artist
+        {
+            get
+            {
+                return _resourceLoader.GetString("Artist");
+            }
+        }
+        #endregion
+
+        #region ReleasedYear
+        /// <summary>
+        ///   Looks up a localized string similar to: Released year
+        /// </summary>
+        public static string ReleasedYear
+        {
+            get
+            {
+                return _resourceLoader.GetString("ReleasedYear");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2793,6 +2832,9 @@ namespace Screenbox.Strings{
             ActiveArguments,
             SettingsUseMultipleInstancesHeader,
             SettingsUseMultipleInstancesDescription,
+            SortBy,
+            Artist,
+            ReleasedYear,
         }
 
         private static ResourceLoader _resourceLoader;
