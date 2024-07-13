@@ -1,19 +1,19 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## スクリーンボックス メディアプレーヤー
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenboxは、すべてのデバイスに適合し、幅広いファイル形式に対応した近代的なメディアプレーヤーです。**
 
-### Description
+### 概要
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenboxは、古典的なアプリケーションに新しいアプローチをもたらす、モダンなメディアプレーヤーです。 システムの機能に適応することができる洗練された直感的なユーザーインターフェースを提供しています。 WindowsデバイスおよびXboxコンソールの幅広い範囲でストレスのない体験を提供するために設計された、高速で軽量、パワフルなScreenboxです。
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenboxはさまざまなファイル形式とコーデックをサポートしています。 追加のアドオンなしでほとんどすべてのメディアタイプを再生します。 LibVLCのパワーを活用したScreenboxは、VLCメディアプレイヤーの最高の機能と現代のWindowsアプリの機能を組み合わせています。 VLCコマンドライン引数を使用すると、高度な再生オプションが利用できます。
 
-### Features
+### 特徴
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
+- あらゆる種類のWindowsデバイスに最適化されたジェスチャーサポートを備えた最新のユーザーエクスペリエンス
+- 多くの音声および映像フォーマットをサポートしています。
+- あなたのコンピュータまたはネットワーク上で、音楽やビデオライブラリを参照して管理します。
 - Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- 作業しながら、ピクチャーインピクチャーモードを使用してメディアを楽しみましょう。
