@@ -542,7 +542,8 @@ namespace Screenbox.Core.ViewModels
 
         public bool TryHideControls(bool skipFocusCheck = false)
         {
-            if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
+            bool shouldCheckPlaying = _settingsService.PlayerShowControls ? !IsPlaying : false;
+            if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
                 SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
             if (!skipFocusCheck)
@@ -627,9 +628,14 @@ namespace Screenbox.Core.ViewModels
                 IsPlaying = state == MediaPlaybackState.Playing;
                 IsOpening = false;
 
-                if (!IsPlaying)
+                if (!IsPlaying && _settingsService.PlayerShowControls)
                 {
                     ControlsHidden = false;
+                }
+
+                if (!IsPlaying && !_settingsService.PlayerShowControls)
+                {
+                    DelayHideControls();
                 }
 
                 if (!ControlsHidden && IsPlaying)

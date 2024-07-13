@@ -18,6 +18,7 @@ namespace Screenbox.Core.Services
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
+        private const string PlayerShowControlsKey = "Player/ShowControls";
         private const string PlayerLivelyPathKey = "Player/Lively/Path";
         private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
@@ -77,6 +78,12 @@ namespace Screenbox.Core.Services
             set => SetValue(GeneralShowRecent, value);
         }
 
+        public bool PlayerShowControls
+        {
+            get => GetValue<bool>(PlayerShowControlsKey);
+            set => SetValue(PlayerShowControlsKey, value);
+        }
+
         public bool SearchRemovableStorage
         {
             get => GetValue<bool>(LibrariesSearchRemovableStorageKey);
@@ -119,6 +126,7 @@ namespace Screenbox.Core.Services
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
+            SetDefault(PlayerShowControlsKey, true);
             SetDefault(PersistentVolumeKey, 100);
             SetDefault(MaxVolumeKey, 100);
             SetDefault(LibrariesUseIndexerKey, true);
@@ -136,6 +144,7 @@ namespace Screenbox.Core.Services
                 SetValue(PlayerSeekGestureKey, false);
                 SetValue(PlayerVolumeGestureKey, false);
                 SetValue(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
+                SetValue(PlayerShowControlsKey, true);
             }
         }
 

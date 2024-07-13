@@ -293,6 +293,12 @@
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
+                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                </ctc:SettingsCard>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"
