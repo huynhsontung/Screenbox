@@ -156,16 +156,16 @@
     <value>Unmute</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>フルスクリーン</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
     <value>Audio &amp; captions</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>フルスクリーンを終了</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>音量</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -174,13 +174,13 @@
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>次へ</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>前へ</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>再生</value>
   </data>
   <data name="Pause" xml:space="preserve">
     <value>Pause</value>
