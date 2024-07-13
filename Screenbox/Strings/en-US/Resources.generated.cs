@@ -1767,6 +1767,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SettingsShowControlsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Show controls
+        /// </summary>
+        public static string SettingsControlsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsShowControlsHeader");
+            }
+        }
+        #endregion
+
         #region SettingsVideoLibraryLocationsHeader
         /// <summary>
         ///   Looks up a localized string similar to: Video library locations
@@ -2730,6 +2743,7 @@ namespace Screenbox.Strings{
             SettingsCategoryPlayer,
             SettingsMusicLibraryLocationsHeader,
             SettingsShowRecentHeader,
+            SettingsShowControlsHeader,
             SettingsVideoLibraryLocationsHeader,
             Subtitles,
             SettingsShowRecentDescription,
