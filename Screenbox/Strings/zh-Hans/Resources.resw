@@ -776,4 +776,13 @@
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>始终在新实例中打开媒体文件</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Released year</value>
+  </data>
 </root>
