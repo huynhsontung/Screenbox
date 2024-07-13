@@ -133,34 +133,34 @@
     <value>3GPP2 Multimedia File</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AACファイル形式</value>
+    <value>AAC音声フォーマット</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>AVI映像フォーマット</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>FLAC音声フォーマット</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
     <value>Flash Video</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Mastroska音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Mastroska映像フォーマット</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>MIDI音楽データ</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>MP3音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>MPEG-4映像フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>MPEG-4音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
     <value>iTunes Video</value>
