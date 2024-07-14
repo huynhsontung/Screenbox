@@ -86,7 +86,7 @@ internal class NavigationViewAccessKeysBehavior : BehaviorBase<NavigationView>
 
         if (AssociatedObject.FindDescendant<Button>(btn => btn.Name == "NavigationViewBackButton") is { } navigationViewBackButton)
         {
-            navigationViewBackButton.AccessKey = "B";
+            navigationViewBackButton.AccessKey = Strings.KeyboardResources.NavBackButtonKey;
             navigationViewBackButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
             //navigationViewBackButton.AccessKey = BackButtonAccessKey;
             //navigationViewBackButton.KeyTipPlacementMode = BackButtonKeyTipPlacementMode;
@@ -95,7 +95,7 @@ internal class NavigationViewAccessKeysBehavior : BehaviorBase<NavigationView>
 
         if (AssociatedObject.FindDescendant<Button>(btn => btn.Name == "NavigationViewCloseButton") is { } navigationViewCloseButton)
         {
-            navigationViewCloseButton.AccessKey = "B";
+            navigationViewCloseButton.AccessKey = Strings.KeyboardResources.NavCloseButtonKey;
             navigationViewCloseButton.KeyTipPlacementMode = KeyTipPlacementMode.Bottom;
             //navigationViewCloseButton.AccessKey = CloseButtonAccessKey;
             //navigationViewCloseButton.KeyTipPlacementMode = CloseButtonKeyTipPlacementMode;
@@ -103,7 +103,7 @@ internal class NavigationViewAccessKeysBehavior : BehaviorBase<NavigationView>
 
         if (AssociatedObject.FindDescendant<Button>(btn => btn.Name == "TogglePaneButton") is { } togglePaneButton)
         {
-            togglePaneButton.AccessKey = "NE";
+            togglePaneButton.AccessKey = Strings.KeyboardResources.NavToggleMenuPaneButtonKey;
             togglePaneButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
             //togglePaneButton.AccessKey = TogglePaneButtonAccessKey;
             //togglePaneButton.KeyTipPlacementMode = TogglePaneButtonKeyTipPlacementMode;
@@ -112,7 +112,7 @@ internal class NavigationViewAccessKeysBehavior : BehaviorBase<NavigationView>
 
         if (AssociatedObject.FindDescendant<Button>(btn => btn.Name == "PaneAutoSuggestButton") is { } paneAutoSuggestButton)
         {
-            paneAutoSuggestButton.AccessKey = "NF";
+            paneAutoSuggestButton.AccessKey = Strings.KeyboardResources.NavAutoSuggestButtonKey;
             paneAutoSuggestButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
             paneAutoSuggestButton.IsTextScaleFactorEnabled = false;
             //paneAutoSuggestButton.AccessKey = PaneAutoSuggestButtonAccessKey;

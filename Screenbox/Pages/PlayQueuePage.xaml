@@ -20,18 +20,18 @@
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
-                AccessKey="F"
+                AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon Glyph=&#xE838;}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
-                AccessKey="O"
+                AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph=&#xF2CE;}"
                 Text="{strings:Resources Key=AddFolder}" />
             <MenuFlyoutItem
-                AccessKey="U"
+                AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
                 Icon="{ui:SymbolIcon Symbol=Globe}"
                 KeyTipPlacementMode="Left"
                 Text="{strings:Resources Key=AddUrl}">
@@ -66,7 +66,7 @@
                 x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                AccessKey="CF"
+                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
@@ -81,7 +81,7 @@
                 <interactivity:Interaction.Behaviors>
                     <interactions:SplitButtonAccessibilityBehavior
                         PrimaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                        SecondaryButtonAccessKey="CM"
+                        SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                         SecondaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
