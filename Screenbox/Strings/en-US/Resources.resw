@@ -785,4 +785,10 @@
   <data name="ReleasedYear" xml:space="preserve">
     <value>Released year</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
+  </data>
 </root>

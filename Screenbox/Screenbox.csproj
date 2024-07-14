@@ -178,7 +178,7 @@
     <Compile Include="Controls\Interactions\NavigationViewAccessKeysBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonAccessibilityBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>

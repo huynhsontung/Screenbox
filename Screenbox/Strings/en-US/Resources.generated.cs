@@ -2624,6 +2624,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region OpenFilesSecondaryToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: More options for opening media
+        /// </summary>
+        public static string OpenFilesSecondaryToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFilesSecondaryToolTip");
+            }
+        }
+        #endregion
+
+        #region AddFilesToPlayQueueSecondaryToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: More options for adding media to the play queue
+        /// </summary>
+        public static string AddFilesToPlayQueueSecondaryToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddFilesToPlayQueueSecondaryToolTip");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2835,6 +2861,8 @@ namespace Screenbox.Strings{
             SortBy,
             Artist,
             ReleasedYear,
+            OpenFilesSecondaryToolTip,
+            AddFilesToPlayQueueSecondaryToolTip,
         }
 
         private static ResourceLoader _resourceLoader;
