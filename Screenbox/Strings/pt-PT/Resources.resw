@@ -777,12 +777,12 @@
     <value>Abrir sempre os ficheiros multimédia numa nova instância</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Ordenar por</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artista</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Ano de lançamento</value>
   </data>
 </root>
