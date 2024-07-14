@@ -134,14 +134,14 @@
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    AccessKey="NH"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemHomeKey}"
                     Icon="Home"
                     KeyTipPlacementMode="Right"
                     Tag="home">
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    AccessKey="NV"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemVideosKey}"
                     KeyTipPlacementMode="Right"
                     Tag="videos">
                     <muxc:NavigationViewItem.Icon>
@@ -150,14 +150,14 @@
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    AccessKey="NM"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
                     Icon="Audio"
                     KeyTipPlacementMode="Right"
                     Tag="music">
                     <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=Music}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    AccessKey="NN"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemNetworkKey}"
                     Icon="MapDrive"
                     KeyTipPlacementMode="Right"
                     Tag="network">
@@ -165,7 +165,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
-                    AccessKey="NQ"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemQueueKey}"
                     KeyTipPlacementMode="Right"
                     Tag="queue">
                     <muxc:NavigationViewItem.Icon>
@@ -177,7 +177,7 @@
             <muxc:NavigationView.FooterMenuItems>
                 <!--  Reimplement settings nav item to allow transition  -->
                 <muxc:NavigationViewItem
-                    AccessKey="NS"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemSettingsKey}"
                     KeyTipPlacementMode="Right"
                     Tag="settings">
                     <muxc:NavigationViewItem.Icon>

@@ -78,7 +78,7 @@
                     TextWrapping="Wrap" />
 
                 <Button
-                    AccessKey="CA"
+                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
@@ -120,19 +120,19 @@
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    AccessKey="TS"
+                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemSongsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs" />
                 <muxc:NavigationViewItem
-                    AccessKey="TA"
+                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemAlbumsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums" />
                 <muxc:NavigationViewItem
-                    AccessKey="TP"
+                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemArtistsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
@@ -143,7 +143,7 @@
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
-                    AccessKey="CA"
+                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"

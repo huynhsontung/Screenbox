@@ -301,6 +301,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Strings\en-US\KeyboardResources.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KeyboardResources.resw</DependentUpon>
+    </Compile>
     <Compile Include="Strings\en-US\Resources.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -862,6 +867,10 @@
     <None Include="Secrets.cs.template" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en-US\KeyboardResources.resw">
+      <Generator>ReswPlusGenerator</Generator>
+      <LastGenOutput>KeyboardResources.generated.cs</LastGenOutput>
+    </PRIResource>
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
     <PRIResource Include="Strings\en-US\Resources.resw">
       <Generator>ReswPlusAdvancedGenerator</Generator>

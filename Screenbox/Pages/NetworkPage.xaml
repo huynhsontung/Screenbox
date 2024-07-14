@@ -43,7 +43,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="CB"
+            AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
             KeyTipPlacementMode="Right" />

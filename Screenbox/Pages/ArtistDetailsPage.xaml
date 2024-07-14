@@ -207,7 +207,7 @@
                     Spacing="16">
                     <Button
                         x:Name="PlayButton"
-                        AccessKey="CA"
+                        AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
                         AutomationProperties.Name="{strings:Resources Key=Play}"
                         Command="{x:Bind ViewModel.PlayCommand}"
                         Style="{StaticResource AccentButtonStyle}"
@@ -222,7 +222,7 @@
                     </Button>
 
                     <Button
-                        AccessKey="CH"
+                        AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
                         AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
                         Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                         XYFocusDown="{x:Bind ItemList}"

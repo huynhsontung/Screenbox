@@ -137,25 +137,25 @@ namespace Screenbox.Controls.Interactions
 
             if (AssociatedObject.FindDescendant<Button>(bb => bb.Name == "NavigationViewBackButton") is { } navigationViewBackButton)
             {
-                navigationViewBackButton.AccessKey = "B";
+                navigationViewBackButton.AccessKey = Strings.KeyboardResources.NavigationBackButtonKey;
                 navigationViewBackButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
             }
 
             if (AssociatedObject.FindDescendant<Button>(cb => cb.Name == "NavigationViewCloseButton") is { } navigationViewCloseButton)
             {
-                navigationViewCloseButton.AccessKey = "B";
+                navigationViewCloseButton.AccessKey = Strings.KeyboardResources.NavigationCloseButtonKey;
                 navigationViewCloseButton.KeyTipPlacementMode = KeyTipPlacementMode.Bottom;
             }
 
             if (AssociatedObject.FindDescendant<Button>(pb => pb.Name == "TogglePaneButton") is { } togglePaneButton)
             {
-                togglePaneButton.AccessKey = "NE";
+                togglePaneButton.AccessKey = Strings.KeyboardResources.NavigationTogglePaneButtonKey;
                 togglePaneButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
             }
 
             if (AssociatedObject.FindDescendant<Button>(sb => sb.Name == "PaneAutoSuggestButton") is { } paneAutoSuggestButton)
             {
-                paneAutoSuggestButton.AccessKey = "NF";
+                paneAutoSuggestButton.AccessKey = Strings.KeyboardResources.NavigationPaneAutoSuggestButtonKey;
                 paneAutoSuggestButton.KeyTipPlacementMode = KeyTipPlacementMode.Right;
 
                 // Disable button glyph text scaling

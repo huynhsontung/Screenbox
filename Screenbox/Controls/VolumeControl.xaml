@@ -43,7 +43,7 @@
             Grid.Column="0"
             Margin="0,0,4,0"
             controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
-            AccessKey="M"
+            AccessKey="{strings:KeyboardResources Key=PlayerMuteKey}"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
             Style="{x:Bind ToggleButtonStyle, Mode=OneWay}">
             <FontIcon Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
@@ -65,7 +65,7 @@
             x:Name="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
-            AccessKey="V"
+            AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"

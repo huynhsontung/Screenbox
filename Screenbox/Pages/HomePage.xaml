@@ -68,19 +68,20 @@
 
             <MenuFlyout x:Key="OpenFlyout" Placement="BottomEdgeAlignedRight">
                 <MenuFlyoutItem
-                    AccessKey="F"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon Glyph=&#xE838;}"
                     Text="{strings:Resources Key=OpenFiles}" />
                 <MenuFlyoutItem
-                    AccessKey="A"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
                     Command="{x:Bind ViewModel.OpenFolderCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF2CE;}"
                     Text="{strings:Resources Key=OpenFolder}" />
                 <MenuFlyoutItem
-                    AccessKey="U"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
                     Icon="{ui:SymbolIcon Symbol=Globe}"
+                    KeyTipPlacementMode="Left"
                     Text="{strings:Resources Key=OpenUrl}">
                     <MenuFlyoutItem.Command>
                         <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.OpenUrlCommand}" />
@@ -114,7 +115,7 @@
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                AccessKey="CF"
+                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
@@ -129,7 +130,7 @@
                 <interactivity:Interaction.Behaviors>
                     <interactions:SplitButtonAccessibilityBehavior
                         PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
-                        SecondaryButtonAccessKey="CM"
+                        SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                         SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
@@ -181,7 +182,7 @@
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
-                    AccessKey="CF"
+                    AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                     AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
@@ -193,7 +194,7 @@
                     <interactivity:Interaction.Behaviors>
                         <interactions:SplitButtonAccessibilityBehavior
                             PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
-                            SecondaryButtonAccessKey="CM"
+                            SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                             SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
                     </interactivity:Interaction.Behaviors>
                 </muxc:SplitButton>

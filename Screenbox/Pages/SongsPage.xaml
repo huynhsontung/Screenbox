@@ -78,6 +78,7 @@
             x:Name="ShufflePlayButton"
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
+            AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
             AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
@@ -92,6 +93,7 @@
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
+            AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
             Background="Transparent"
             BorderBrush="Transparent">
             <muxc:DropDownButton.Flyout>

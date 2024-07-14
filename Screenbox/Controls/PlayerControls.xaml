@@ -98,7 +98,7 @@
 
             <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
-                    AccessKey="F"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon Glyph=&#xE838;}"
                     KeyTipPlacementMode="Left"
@@ -109,7 +109,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    AccessKey="P"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
@@ -121,7 +121,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
-                    AccessKey="S"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemSpeedKey}"
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
@@ -192,14 +192,14 @@
                         Text="{strings:Resources Key=Custom}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
-                    AccessKey="N"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemSaveSnapshotKey}"
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xEE71;}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
-                    AccessKey="C"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemCastKey}"
                     Click="CastMenuFlyoutItem_OnClick"
                     Icon="{ui:FontIcon Glyph=&#xEC15;}"
                     IsEnabled="{x:Bind IsCastButtonEnabled(ViewModel.HasActiveItem), Mode=OneWay}"
@@ -211,7 +211,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AspectRatioSubMenu"
-                    AccessKey="R"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemAspectRatioKey}"
                     Icon="{ui:FontIcon Glyph=&#xE799;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
                     Text="{strings:Resources Key=AspectRatio}">
@@ -271,7 +271,7 @@
                 </MenuFlyoutSubItem>-->
 
                 <MenuFlyoutItem
-                    AccessKey="A"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemAdvancedKey}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
@@ -285,7 +285,7 @@
                 <MenuFlyoutSeparator x:Name="ExtraOptionsSeparator" Visibility="Collapsed" />
                 <MenuFlyoutItem
                     x:Name="CompactOverlayMenuItem"
-                    AccessKey="Y"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemCompactOverlayKey}"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xEE49;}"
@@ -301,7 +301,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     x:Name="FullscreenMenuItem"
-                    AccessKey="U"
+                    AccessKey="{strings:KeyboardResources Key=MenuItemFullscreenKey}"
                     Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                     Icon="{ui:FontIcon Glyph=&#xE740;}"
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
@@ -353,21 +353,21 @@
                 x:Name="PlayPauseButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
-                AccessKey="P"
+                AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
+                <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                     <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                     <KeyboardAccelerator Key="Space" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                 </Button.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
             </Button>
             <!--  Previous/Next  -->
             <Button
                 x:Name="PreviousButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
-                AccessKey="R"
+                AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
                 Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                 CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -379,7 +379,7 @@
             <Button
                 x:Name="NextButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
-                AccessKey="X"
+                AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
                 Command="{x:Bind ViewModel.Playlist.NextCommand}"
                 CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -416,10 +416,10 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
+                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
-                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" />
             </Button>
             <controls:VolumeControl
                 x:Name="VolumeControl"
@@ -432,7 +432,7 @@
                 x:Name="ShuffleButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
-                AccessKey="H"
+                AccessKey="{strings:KeyboardResources Key=PlayerShuffleKey}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
@@ -446,7 +446,7 @@
                 x:Name="RepeatButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
-                AccessKey="E"
+                AccessKey="{strings:KeyboardResources Key=PlayerRepeatKey}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
@@ -492,33 +492,33 @@
                 x:Name="CompactOverlayButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
-                AccessKey="Y"
+                AccessKey="{strings:KeyboardResources Key=PlayerCompactOverlayKey}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="M" Modifiers="Control" />
-                    <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
-                </Button.KeyboardAccelerators>
                 <FontIcon
                     x:Name="CompactOverlayButtonIcon"
                     contract13NotPresent:FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     Glyph="&#xEE49;" />
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="M" Modifiers="Control" />
+                    <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
+                </Button.KeyboardAccelerators>
             </Button>
             <!--  Fullscreen  -->
             <Button
                 x:Name="FullscreenButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
-                AccessKey="F"
+                AccessKey="{strings:KeyboardResources Key=PlayerFullscreenKey}"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE740;" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />
                 </Button.KeyboardAccelerators>
-                <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE740;" />
             </Button>
             <!--  More  -->
             <Button
