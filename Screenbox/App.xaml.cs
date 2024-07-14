@@ -203,6 +203,7 @@ namespace Screenbox
 
         private static void ConfigureSentry()
         {
+#if !DEBUG
             SentrySdk.Init(options =>
             {
                 options.Dsn = Secrets.SentryDsn;
@@ -211,6 +212,7 @@ namespace Screenbox
                 options.AutoSessionTracking = true;
                 options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString()}";
             });
+#endif
         }
 
         private void SetMinWindowSize()
