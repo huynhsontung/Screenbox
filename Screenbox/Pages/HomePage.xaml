@@ -115,10 +115,10 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 AccessKey="CF"
+                AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                 AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                 Command="{x:Bind Common.OpenFilesCommand}"
-                Flyout="{StaticResource OpenFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
+                Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE838;" />
                     <TextBlock
@@ -127,7 +127,10 @@
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonXYNavigationBehavior />
+                    <interactions:SplitButtonAccessibilityBehavior
+                        PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
+                        SecondaryButtonAccessKey="CM"
+                        SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
@@ -179,16 +182,19 @@
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
                     AccessKey="CF"
+                    AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
-                    Flyout="{StaticResource OpenFlyout}"
-                    ToolTipService.ToolTip="{strings:Resources Key=OpenFilesToolTip}">
+                    Flyout="{StaticResource OpenFlyout}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon Glyph="&#xE838;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SplitButtonXYNavigationBehavior />
+                        <interactions:SplitButtonAccessibilityBehavior
+                            PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
+                            SecondaryButtonAccessKey="CM"
+                            SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
                     </interactivity:Interaction.Behaviors>
                 </muxc:SplitButton>
             </StackPanel>

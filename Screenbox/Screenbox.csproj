@@ -178,7 +178,7 @@
     <Compile Include="Controls\Interactions\NavigationViewAccessKeyBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonAccessibilityBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
       <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>

@@ -403,6 +403,7 @@
     <!--  Increase padding to match the default Button height  -->
     <Style TargetType="muxc:SplitButton">
         <Setter Property="Padding" Value="{ThemeResource SplitButtonPadding}" />
+        <Setter Property="XYFocusRightNavigationStrategy" Value="NavigationDirectionDistance" />
     </Style>
 
 </ResourceDictionary>
