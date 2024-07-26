@@ -302,7 +302,7 @@
     <value>Ouvrir un fichier</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Recherche</value>
+    <value>Rechercher</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -317,7 +317,7 @@
     <value>Propriétés</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Ferme</value>
+    <value>Fermer</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Ouvrir l'emplacement du fichier</value>
