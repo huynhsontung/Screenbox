@@ -777,12 +777,12 @@
     <value>始終以新視窗開啟媒體檔案</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>排序方式</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>演出者</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>發行年份</value>
   </data>
 </root>
