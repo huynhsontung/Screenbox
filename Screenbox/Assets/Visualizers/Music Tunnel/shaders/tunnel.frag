@@ -32,8 +32,12 @@ void main() {
         r = length(p);
     }
 
-    // index texture by radious and angle 
-    vec2 uv = vec2(0.3 / r + 0.2 * u_time * u_speed, 0.5 + a / kPi);
+    // index texture by radious and angle
+    float u = 0.3 / r + 0.2 * u_time * u_speed;
+    float v = 0.5 + a / kPi;
+    // wrap v coor correctly. v should be in [-1, 1]
+    if (v > 1.0) v -= 2.0;
+    vec2 uv = vec2(u, v);
 
     // naive fetch color
     vec3 col = texture2D(u_tex0, uv).xyz;
