@@ -60,7 +60,7 @@ namespace Screenbox.Controls
 
                 if ((ka.Modifiers & VirtualKeyModifiers.Menu) != 0)
                 {
-                    builder.Append(builder.Length > 0 ? "+Menu+" : "Menu+");
+                    builder.Append(builder.Length > 0 ? "+Alt+" : "Alt+");
                 }
 
                 if ((ka.Modifiers & VirtualKeyModifiers.Shift) != 0)
