@@ -7,7 +7,6 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -15,9 +14,6 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -64,6 +60,10 @@ namespace Screenbox.Core.ViewModels
 
         public bool SeekBarPointerInteracting { get; set; }
 
+        // public bool ShowVisualizer => _settingsService.LivelyIsEnabled &&
+        //                               !string.IsNullOrEmpty(_settingsService.LivelyWallpaperPath);
+        public bool ShowVisualizer { get; } = true;
+
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _openingTimer;
         private readonly DispatcherQueueTimer _controlsVisibilityTimer;
@@ -73,14 +73,13 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly IFilesService _filesService;
-        private readonly LivelyWallpaperFactory _wallpaperFactory;
         private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private bool _resizeNext;
         private DateTimeOffset _lastUpdated;
 
-        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService, IFilesService filesService, LivelyWallpaperFactory wallpaperFactory)
+        public PlayerPageViewModel(IWindowService windowService, IResourceService resourceService, ISettingsService settingsService, IFilesService filesService)
         {
             _windowService = windowService;
             _resourceService = resourceService;
@@ -95,131 +94,12 @@ namespace Screenbox.Core.ViewModels
             _playerVisibility = PlayerVisibilityState.Hidden;
             _lastPositionTracker = new LastPositionTracker(filesService);
             _lastUpdated = DateTimeOffset.MinValue;
-            _wallpaperFactory = wallpaperFactory;
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
-
-            _ = InitializeVisualizers();
-        }
-
-        [ObservableProperty]
-        private ObservableCollection<LivelyWallpaperModel> visualizers = new();
-
-        [ObservableProperty]
-        private LivelyWallpaperModel selectedVisualizer;
-
-        private async Task InitializeVisualizers()
-        {
-            var localFolder = ApplicationData.Current.LocalFolder;
-            var installFolder = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-            var defaultVisualizerFolder = await StorageFolder.GetFolderFromPathAsync(Path.Combine(installFolder, "Assets", "Visualizers"));
-            var userVisualizerFolder = await localFolder.CreateFolderAsync("Visualizers", CreationCollisionOption.OpenIfExists);
-            var defaultVisualizers = await defaultVisualizerFolder.GetFoldersAsync();
-            var userVisualizers = await userVisualizerFolder.GetFoldersAsync();
-            var allVisualizers = defaultVisualizers.Select(folder => (folder, isPreset: true))
-                .Concat(userVisualizers.Select(folder => (folder, isPreset: false)));
-
-            foreach (var (folder, isPreset) in allVisualizers)
-            {
-                var (wallpaperModel, wallpaperSuccess) = await _wallpaperFactory.TryGetWallpaper(folder, isPreset);
-                if (!wallpaperSuccess)
-                    continue;
-
-                Visualizers.Add(wallpaperModel);
-            }
-
-            if (WebView2Util.IsWebViewAvailable())
-            {
-                // Optional: Load previously selected visualizer from save by using the unique Path.
-                // If NULL wallpaper visibility will be hidden but WebView process state will be based on on x:Load=AudioOnly property.
-                SelectedVisualizer = Visualizers.FirstOrDefault();
-            }
-            else
-            {
-                // Optional: Prompt user to install WebView2 and display error message.
-                // await WebView2Util.DownloadWebView();
-            }
-        }
-
-        [RelayCommand]
-        private async Task OpenVisualizer()
-        {
-            IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync(".zip");
-            if (files is null || files.Count == 0)
-                return;
-
-            if (files.Count > 1)
-            {
-                foreach (var file in files)
-                    await InstallVisualizer(file);
-            }
-            else
-            {
-                // Optional: Ask for user confirmation before install.
-                var model = await InstallVisualizer(files[0]);
-                if (model is not null)
-                    SelectedVisualizer = model;
-            }
-        }
-
-        private async Task<LivelyWallpaperModel?> InstallVisualizer(StorageFile wallpaperFile)
-        {
-            var (model, success) = await _wallpaperFactory.TryGetWallpaperMetadata(wallpaperFile);
-            if (success)
-            {
-                // We are skipping wallpapers without albumart.
-                // Optionally can allow this and just display the albumart in-app instead.
-                if (!model.IsLocalWebWallpaper() || !model.IsMusicWallpaper())
-                {
-                    // Optional: Show relevant error message.
-                    return null;
-                }
-
-                var localFolder = ApplicationData.Current.LocalFolder;
-                var visualizersFolder = await localFolder.CreateFolderAsync("Visualizers", CreationCollisionOption.OpenIfExists);
-                var destinationFolder = await visualizersFolder.CreateFolderAsync(Path.GetRandomFileName(), CreationCollisionOption.FailIfExists);
-
-                await LivelyWallpaperUtil.InstallWallpaper(wallpaperFile, destinationFolder);
-                var (wallpaperModel, wallpaperSuccess) = await _wallpaperFactory.TryGetWallpaper(destinationFolder, false);
-                if (!wallpaperSuccess)
-                {
-                    await destinationFolder.DeleteAsync();
-                    return null;
-                }
-
-                Visualizers.Add(wallpaperModel);
-                return wallpaperModel;
-            }
-            else
-            {
-                // Optional: Show error message.
-            }
-            return null;
-        }
-
-        [RelayCommand]
-        private async Task DeleteVisualizer(LivelyWallpaperModel visualizer)
-        {
-            if (visualizer is null || visualizer.IsPreset)
-                return;
-
-            if (SelectedVisualizer == visualizer)
-                SelectedVisualizer = Visualizers.FirstOrDefault();
-            Visualizers.Remove(visualizer);
-
-            try
-            {
-                var folder = await StorageFolder.GetFolderFromPathAsync(visualizer.Path);
-                await folder.DeleteAsync();
-            }
-            catch (Exception ex)
-            {
-                // Show error.
-            }
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)

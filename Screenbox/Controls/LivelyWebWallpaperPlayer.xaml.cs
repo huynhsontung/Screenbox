@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json;
@@ -8,10 +9,12 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -25,19 +28,6 @@ namespace Screenbox.Controls;
 // Source: https://github.com/rocksdanister/lively
 public sealed partial class LivelyWebWallpaperPlayer : UserControl
 {
-    public LivelyWallpaperModel? Source
-    {
-        get { return (LivelyWallpaperModel)GetValue(SourceProperty); }
-        set
-        {
-            SetValue(SourceProperty, value);
-            UpdatePage();
-        }
-    }
-
-    public static readonly DependencyProperty SourceProperty =
-        DependencyProperty.Register("Source", typeof(LivelyWallpaperModel), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(null));
-
     public MediaViewModel? Media
     {
         get => (MediaViewModel?)GetValue(MediaProperty);
@@ -60,16 +50,9 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     public static readonly DependencyProperty AudioProperty =
         DependencyProperty.Register("Audio", typeof(double[]), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(Array.Empty<double>()));
 
-    public bool IsLoading
-    {
-        get { return (bool)GetValue(IsLoadingProperty); }
-        private set { SetValue(IsLoadingProperty, value); }
-    }
-
-    public static readonly DependencyProperty IsLoadingProperty =
-        DependencyProperty.Register("IsLoading", typeof(bool), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(false));
-
     public event EventHandler<Exception>? WallpaperError;
+
+    internal LivelyWallpaperPlayerViewModel ViewModel => (LivelyWallpaperPlayerViewModel)DataContext;
 
     // We handle the WebView life-cycle by code.
     private WebView2? _webView;
@@ -81,6 +64,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     public LivelyWebWallpaperPlayer()
     {
         this.InitializeComponent();
+        DataContext = Ioc.Default.GetRequiredService<LivelyWallpaperPlayerViewModel>();
     }
 
     private static async void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -104,7 +88,10 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         _propertyChangedToken = RegisterPropertyChangedCallback(VisibilityProperty, OnVisibilityChanged);
 
         await InitializeWebView2();
+        await ViewModel.LoadAsync();
         UpdatePage();
+
+        ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
     }
 
     // x:Load xaml can be used to close and or restart WebView process.
@@ -112,7 +99,16 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     {
         UnregisterPropertyChangedCallback(VisibilityProperty, _propertyChangedToken);
         if (Media != null) Media.PropertyChanged -= MediaOnPropertyChanged;
+        ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         CloseWebView2();
+    }
+
+    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModel.Source))
+        {
+            UpdatePage();
+        }
     }
 
     private async void OnVisibilityChanged(DependencyObject sender, DependencyProperty dp)
@@ -141,7 +137,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
             _webView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
             // Mute audio output.
             _webView.CoreWebView2.IsMuted = true;
-            _webView.CoreWebView2.OpenDevToolsWindow();
+            // _webView.CoreWebView2.OpenDevToolsWindow();
 
             _isWebViewInitialized = true;
         }
@@ -162,7 +158,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     private void WebView_NavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
     {
         _currentNavigationId = args.NavigationId;
-        IsLoading = true;
+        ViewModel.IsLoading = true;
     }
 
     private async void WebView_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
@@ -172,21 +168,21 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
 
         await UpdateLivelyProperties();
         await UpdateMusic();
-        IsLoading = false;
+        ViewModel.IsLoading = false;
     }
 
     private void UpdatePage()
     {
-        if (!_isWebViewInitialized || Source is null)
+        if (!_isWebViewInitialized || ViewModel.Source is null)
             return;
 
-        var htmlPath = Path.Combine(Source.Path, Source.Model.FileName);
+        var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
         _webView.NavigateToLocalPath(htmlPath);
     }
 
     private async Task UpdateVisibility(Visibility visibility)
     {
-        if (!_isWebViewInitialized || IsLoading)
+        if (!_isWebViewInitialized || ViewModel.IsLoading)
             return;
 
         switch (visibility)
@@ -213,35 +209,46 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-IV-:-Interaction#controls
     private async Task UpdateLivelyProperties()
     {
-        if (Source is null || _webView is null)
+        if (ViewModel.Source is null || _webView is null)
             return;
 
         var functionName = "livelyPropertyListener";
-        var propertyPath = Path.Combine(Source.Path, "LivelyProperties.json");
-        if (!File.Exists(propertyPath))
-            return;
+        var propertyPath = Path.Combine(ViewModel.Source.Path, "LivelyProperties.json");
 
-        var jsonString = File.ReadAllText(propertyPath);
-        var jsonObject = JObject.Parse(jsonString);
-        foreach (var item in jsonObject)
+        string jsonString;
+        try
         {
-            switch (item.Value["type"].ToString())
+            var file = await StorageFile.GetFileFromPathAsync(propertyPath);
+            jsonString = await FileIO.ReadTextAsync(file);
+        }
+        catch (Exception)
+        {
+            return;
+        }
+
+        var jsonObject = JObject.Parse(jsonString);
+        foreach (KeyValuePair<string, JToken?> item in jsonObject)
+        {
+            var typeToken = item.Value?["type"];
+            var valueToken = item.Value?["value"];
+            if (typeToken == null || valueToken == null) continue;
+            switch (typeToken.ToString())
             {
                 case "slider":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (double)item.Value["value"]);
+                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (double)valueToken);
                     break;
                 case "dropdown":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (int)item.Value["value"]);
+                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (int)valueToken);
                     break;
                 case "checkbox":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (bool)item.Value["value"]);
+                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (bool)valueToken);
                     break;
                 case "color":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (string)item.Value["value"]);
+                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, valueToken.ToString());
                     break;
                 case "folderDropdown":
-                    var relativePath = Path.Combine(item.Value["folder"].ToString(), item.Value["value"].ToString());
-                    var filePath = Path.Combine(Source.Path, relativePath);
+                    var relativePath = Path.Combine(item.Value["folder"].ToString(), valueToken.ToString());
+                    var filePath = Path.Combine(ViewModel.Source.Path, relativePath);
                     await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, File.Exists(filePath) ? relativePath : null);
                     break;
                 case "button":
@@ -256,7 +263,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     private async Task UpdateMusic()
     {
         // WebView rendering process pauses when visibility is hidden.
-        if (Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !Source.IsMusic || Visibility == Visibility.Collapsed)
+        if (ViewModel.Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !ViewModel.Source.IsMusic || Visibility == Visibility.Collapsed)
             return;
 
         LivelyMusicModel? model = null;
@@ -279,7 +286,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     private async Task UpdateAudio()
     {
         // WebView rendering process pauses when visibility is hidden.
-        if (Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !Source.IsMusic)
+        if (ViewModel.Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !ViewModel.Source.IsMusic)
             return;
 
         await _webView.ExecuteScriptFunctionAsync("livelyAudioListener", Audio);
@@ -288,7 +295,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--pause-event
     private async Task UpdatePauseState()
     {
-        if (Source is null || _webView is null || !Source.IsPauseNotify)
+        if (ViewModel.Source is null || _webView is null || !ViewModel.Source.IsPauseNotify)
             return;
 
         // var obj = new LivelyPlaybackStateModel()

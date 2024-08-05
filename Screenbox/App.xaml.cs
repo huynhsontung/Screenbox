@@ -7,7 +7,6 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
-using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -118,57 +117,13 @@ namespace Screenbox
         private static IServiceProvider ConfigureServices()
         {
             ServiceCollection services = new();
-
-            // View models
-            services.AddTransient<PlayerElementViewModel>();
-            services.AddTransient<PropertyViewModel>();
-            services.AddTransient<ChapterViewModel>();
-            services.AddTransient<AudioTrackSubtitleViewModel>();
-            services.AddTransient<SeekBarViewModel>();
-            services.AddTransient<VideosPageViewModel>();
-            services.AddTransient<NetworkPageViewModel>();
-            services.AddTransient<FolderViewPageViewModel>();
-            services.AddTransient<FolderListViewPageViewModel>();
-            services.AddTransient<PlayerControlsViewModel>();
-            services.AddTransient<CastControlViewModel>();
-            services.AddTransient<PlayerPageViewModel>();
-            services.AddTransient<MainPageViewModel>();
-            services.AddTransient<PlayQueuePageViewModel>();
-            services.AddTransient<SettingsPageViewModel>();
-            services.AddTransient<PlaylistViewModel>();
-            services.AddTransient<AlbumDetailsPageViewModel>();
-            services.AddTransient<ArtistDetailsPageViewModel>();
-            services.AddTransient<SongsPageViewModel>();
-            services.AddTransient<AlbumsPageViewModel>();
-            services.AddTransient<ArtistsPageViewModel>();
-            services.AddTransient<AllVideosPageViewModel>();
-            services.AddTransient<MusicPageViewModel>();
-            services.AddTransient<SearchResultPageViewModel>();
-            services.AddTransient<NotificationViewModel>();
-            services.AddSingleton<CommonViewModel>();   // Shared between many pages
-            services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
-            services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
-            services.AddSingleton<MediaListViewModel>(); // Global playlist
+            ServiceHelpers.PopulateCoreServices(services);
 
             // Factories
-            services.AddSingleton<MediaViewModelFactory>();
-            services.AddSingleton<StorageItemViewModelFactory>();
-            services.AddSingleton<ArtistViewModelFactory>();
-            services.AddSingleton<AlbumViewModelFactory>();
-            services.AddSingleton<LivelyWallpaperFactory>();
             services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());
 
             // Services
-            services.AddSingleton<LibVlcService>();
             services.AddSingleton<IResourceService, ResourceService>();
-            services.AddSingleton<IFilesService, FilesService>();
-            services.AddSingleton<ILibraryService, LibraryService>();
-            services.AddSingleton<ISearchService, SearchService>();
-            services.AddSingleton<INotificationService, NotificationService>();
-            services.AddSingleton<IWindowService, WindowService>();
-            services.AddSingleton<ICastService, CastService>();
-            services.AddSingleton<ISettingsService, SettingsService>();
-            services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
                 new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
                 new KeyValuePair<Type, Type>(typeof(VideosPageViewModel), typeof(VideosPage)),

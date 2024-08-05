@@ -227,7 +227,6 @@
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
-    <Compile Include="Converters\NullVisibilityConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />

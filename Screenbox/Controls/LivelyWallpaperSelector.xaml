@@ -2,25 +2,30 @@
     x:Class="Screenbox.Controls.LivelyWallpaperSelector"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:data="using:Screenbox.Core.Models"
-    xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    Loaded="LivelyWallpaperSelector_OnLoaded"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters:NullVisibilityConverter x:Name="NullVisibilityConverter" />
         <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
+
+        <StandardUICommand
+            x:Key="OpenVisualizerCommand"
+            Command="{x:Bind ViewModel.OpenWallpaperLocationCommand}"
+            Kind="Open" />
+
+        <StandardUICommand
+            x:Key="DeleteVisualizerCommand"
+            Command="{x:Bind ViewModel.DeleteVisualizerCommand}"
+            Kind="Delete" />
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
         <StackPanel Spacing="5">
-            <ListView ItemsSource="{x:Bind Wallpapers, Mode=OneWay}" SelectedItem="{x:Bind Selection, Mode=TwoWay}">
+            <ListView ItemsSource="{x:Bind ViewModel.Visualizers}" SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="90" Margin="5">
@@ -70,7 +75,7 @@
                                 <HyperlinkButton
                                     NavigateUri="{Binding AuthorUrl}"
                                     ToolTipService.ToolTip="{Binding AuthorUrl.OriginalString}"
-                                    Visibility="{Binding AuthorUrl, Converter={StaticResource NullVisibilityConverter}, Mode=OneWay}">
+                                    Visibility="{Binding AuthorUrl, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}">
                                     <HyperlinkButton.Content>
                                         <FontIcon FontSize="14" Glyph="&#xE774;" />
                                     </HyperlinkButton.Content>
@@ -79,7 +84,7 @@
                                 <Button
                                     Background="Transparent"
                                     BorderThickness="0"
-                                    Command="{Binding DataContext.OpenWallpaperLocationCommand, ElementName=LayoutRoot}"
+                                    Command="{StaticResource OpenVisualizerCommand}"
                                     CommandParameter="{Binding}"
                                     Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                     <FontIcon FontSize="14" Glyph="&#xE838;" />
@@ -88,7 +93,7 @@
                                 <Button
                                     Background="Transparent"
                                     BorderThickness="0"
-                                    Command="{Binding DataContext.DeleteWallpaperCommand, ElementName=LayoutRoot}"
+                                    Command="{StaticResource DeleteVisualizerCommand}"
                                     CommandParameter="{Binding}"
                                     Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
                                     <FontIcon FontSize="14" Glyph="&#xE947;" />
@@ -112,7 +117,7 @@
                 </StackPanel>
             </HyperlinkButton>
             <!--  Let user select new wallpaper to install  -->
-            <Button HorizontalAlignment="Stretch" Command="{x:Bind OpenWallpaperCommand}">
+            <Button HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.OpenVisualizerCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <FontIcon Glyph="&#xE838;" />
                     <TextBlock VerticalAlignment="Center" Text="{strings:Resources Key=OpenFiles}" />

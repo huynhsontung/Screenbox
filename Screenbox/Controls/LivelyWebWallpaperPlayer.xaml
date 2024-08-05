@@ -14,6 +14,6 @@
             VerticalAlignment="Top"
             Canvas.ZIndex="1"
             IsIndeterminate="True"
-            Visibility="{x:Bind IsLoading, Mode=OneWay}" />
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
     </Grid>
 </UserControl>

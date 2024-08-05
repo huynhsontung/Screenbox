@@ -18,6 +18,8 @@ namespace Screenbox.Core.Services
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
         private const string PlayerTapGestureKey = "Player/Gesture/Tap";
+        private const string PlayerLivelyEnabledKey = "Player/Lively/IsEnabled";
+        private const string PlayerLivelyPathKey = "Player/Lively/Path";
         private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
@@ -104,6 +106,18 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<bool>(AdvancedMultipleInstancesKey);
             set => SetValue(AdvancedMultipleInstancesKey, value);
+        }
+
+        public bool LivelyIsEnabled
+        {
+            get => GetValue<bool>(PlayerLivelyEnabledKey);
+            set => SetValue(PlayerLivelyEnabledKey, value);
+        }
+
+        public string LivelyWallpaperPath
+        {
+            get => GetValue<string>(PlayerLivelyPathKey) ?? string.Empty;
+            set => SetValue(PlayerLivelyPathKey, value);
         }
 
         public SettingsService()

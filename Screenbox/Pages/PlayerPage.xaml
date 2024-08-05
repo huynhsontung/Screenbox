@@ -67,7 +67,6 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
 
-            <converters:NullVisibilityConverter x:Name="NullVisibilityConverter" />
             <toolkitConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
                 FalseValue="&#xE62E;"
@@ -327,9 +326,9 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
+            x:Load="{x:Bind ViewModel.ShowVisualizer}"
             Media="{x:Bind ViewModel.Media, Mode=OneWay}"
-            Source="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay}"
-            Visibility="{x:Bind ViewModel.SelectedVisualizer, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+            Visibility="{x:Bind ViewModel.ShowVisualizer, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation
                     From="0"
@@ -340,6 +339,7 @@
 
         <StackPanel
             Grid.Row="1"
+            Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="0,0,10,0"
             HorizontalAlignment="Right"
@@ -358,11 +358,7 @@
                                 <Setter Property="CornerRadius" Value="5" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
-                        <controls:LivelyWallpaperSelector
-                            DeleteWallpaperCommand="{x:Bind ViewModel.DeleteVisualizerCommand, Mode=OneWay}"
-                            OpenWallpaperCommand="{x:Bind ViewModel.OpenVisualizerCommand}"
-                            Selection="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}"
-                            Wallpapers="{x:Bind ViewModel.Visualizers, Mode=OneWay}" />
+                        <controls:LivelyWallpaperSelector />
                     </Flyout>
                 </Button.Flyout>
             </Button>
