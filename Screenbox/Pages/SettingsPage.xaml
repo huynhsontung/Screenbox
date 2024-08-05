@@ -200,8 +200,15 @@
                         Command="{x:Bind ViewModel.RefreshLibrariesCommand}"
                         Content="{strings:Resources Key=Refresh}" />
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                        <ctc:SettingsCard ContentAlignment="Left">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Content="{strings:Resources Key=SettingsUseIndexerHeader}" IsChecked="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="{strings:Resources Key=SettingsUseIndexerDescription}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
                             <ctc:SettingsCard.Header>
@@ -274,14 +281,14 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureVolume}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard ContentAlignment="Left" CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" Header="{strings:Resources Key=SettingsGestureTap}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
