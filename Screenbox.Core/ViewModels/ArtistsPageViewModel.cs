@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Models;
@@ -11,7 +10,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed class ArtistsPageViewModel : ObservableRecipient
+    public sealed class ArtistsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, ArtistViewModel> GroupedArtists { get; }
 
@@ -40,12 +39,9 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
+            Songs = musicLibrary.Songs;
 
-            IEnumerable<IGrouping<string, ArtistViewModel>> groupings = musicLibrary.Artists
-                .OrderBy(a => a.Name, StringComparer.CurrentCulture)
-                .GroupBy(artist => artist == musicLibrary.UnknownArtist
-                    ? "\u2026"
-                    : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name));
+            var groupings = GetDefaultGrouping(musicLibrary);
             GroupedArtists.SyncObservableGroups(groupings);
 
             // Progressively update when it's still loading
@@ -57,6 +53,32 @@ namespace Screenbox.Core.ViewModels
             {
                 _refreshTimer.Stop();
             }
+        }
+
+        private List<IGrouping<string, ArtistViewModel>> GetDefaultGrouping(MusicLibraryFetchResult fetchResult)
+        {
+            var groups = fetchResult.Artists
+                .OrderBy(a => a.Name, StringComparer.CurrentCulture)
+                .GroupBy(artist => artist == fetchResult.UnknownArtist
+                    ? MediaGroupingHelpers.OtherGroupSymbol
+                    : MediaGroupingHelpers.GetFirstLetterGroup(artist.Name))
+                .ToList();
+
+            var sortedGroup = new List<IGrouping<string, ArtistViewModel>>();
+            foreach (char header in MediaGroupingHelpers.GroupHeaders)
+            {
+                string groupHeader = header.ToString();
+                if (groups.Find(g => g.Key == groupHeader) is { } group)
+                {
+                    sortedGroup.Add(group);
+                }
+                else
+                {
+                    sortedGroup.Add(new ListGrouping<string, ArtistViewModel>(groupHeader));
+                }
+            }
+
+            return sortedGroup;
         }
 
         private void PopulateGroups()

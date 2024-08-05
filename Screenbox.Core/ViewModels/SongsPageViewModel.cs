@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Collections;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.WinUI;
@@ -7,30 +9,32 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class SongsPageViewModel : ObservableRecipient
+    public sealed partial class SongsPageViewModel : BaseMusicContentViewModel
     {
         public ObservableGroupedCollection<string, MediaViewModel> GroupedSongs { get; }
+
+        [ObservableProperty]
+        private string _sortBy = string.Empty;
 
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
-        private IReadOnlyList<MediaViewModel> _songs;
 
         public SongsPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
-            _songs = Array.Empty<MediaViewModel>();
             GroupedSongs = new ObservableGroupedCollection<string, MediaViewModel>();
-            PopulateGroups();
 
             libraryService.MusicLibraryContentChanged += OnMusicLibraryContentChanged;
+            PropertyChanged += OnPropertyChanged;
         }
 
         public void OnNavigatedFrom()
@@ -43,23 +47,23 @@ namespace Screenbox.Core.ViewModels
         {
             // No need to run fetch async. HomePageViewModel should already called the method.
             MusicLibraryFetchResult musicLibrary = _libraryService.GetMusicFetchResult();
-            _songs = musicLibrary.Songs;
+            IsLoading = _libraryService.IsLoadingMusic;
+            Songs = musicLibrary.Songs;
 
             // Populate song groups with fetched result
-            IEnumerable<IGrouping<string, MediaViewModel>> groupings =
-                _songs.GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name));
-            if (_songs.Count < 5000)
+            var groups = GetCurrentGrouping(musicLibrary);
+            if (Songs.Count < 5000)
             {
                 // Only sync when the number of items is low enough
                 // Sync on too many items can cause UI hang
-                GroupedSongs.SyncObservableGroups(groupings);
+                GroupedSongs.SyncObservableGroups(groups);
             }
             else
             {
                 GroupedSongs.Clear();
-                foreach (IGrouping<string, MediaViewModel> grouping in groupings)
+                foreach (IGrouping<string, MediaViewModel> group in groups)
                 {
-                    GroupedSongs.AddGroup(grouping);
+                    GroupedSongs.AddGroup(group);
                 }
             }
 
@@ -74,12 +78,83 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private void PopulateGroups()
+        private List<IGrouping<string, MediaViewModel>> GetAlbumGrouping(MusicLibraryFetchResult fetchResult)
         {
-            foreach (string key in MediaGroupingHelpers.GroupHeaders.Select(letter => letter.ToString()))
+            var groups = Songs.GroupBy(m => m.Album?.Name ?? fetchResult.UnknownAlbum.Name)
+                .OrderBy(g => g.Key)
+                .ToList();
+
+            var index = groups.FindIndex(g => g.Key == fetchResult.UnknownAlbum.Name);
+            if (index >= 0)
             {
-                GroupedSongs.AddGroup(key);
+                var firstGroup = groups[index];
+                groups.RemoveAt(index);
+                groups.Insert(0, firstGroup);
             }
+
+            return groups;
+        }
+
+        private List<IGrouping<string, MediaViewModel>> GetArtistGrouping(MusicLibraryFetchResult fetchResult)
+        {
+            var groups = Songs.GroupBy(m => m.MainArtist?.Name ?? fetchResult.UnknownArtist.Name)
+                .OrderBy(g => g.Key)
+                .ToList();
+
+            var index = groups.FindIndex(g => g.Key == fetchResult.UnknownArtist.Name);
+            if (index >= 0)
+            {
+                var firstGroup = groups[index];
+                groups.RemoveAt(index);
+                groups.Insert(0, firstGroup);
+            }
+
+            return groups;
+        }
+
+        private List<IGrouping<string, MediaViewModel>> GetYearGrouping()
+        {
+            var groups = Songs.GroupBy(m =>
+                    m.MediaInfo.MusicProperties.Year > 0
+                        ? m.MediaInfo.MusicProperties.Year.ToString()
+                        : MediaGroupingHelpers.OtherGroupSymbol)
+                .OrderByDescending(g => g.Key == MediaGroupingHelpers.OtherGroupSymbol ? 0 : uint.Parse(g.Key))
+                .ToList();
+            return groups;
+        }
+
+        private List<IGrouping<string, MediaViewModel>> GetDefaultGrouping()
+        {
+            var groups = Songs
+                .GroupBy(m => MediaGroupingHelpers.GetFirstLetterGroup(m.Name))
+                .ToList();
+
+            var sortedGroup = new List<IGrouping<string, MediaViewModel>>();
+            foreach (char header in MediaGroupingHelpers.GroupHeaders)
+            {
+                string groupHeader = header.ToString();
+                if (groups.Find(g => g.Key == groupHeader) is { } group)
+                {
+                    sortedGroup.Add(group);
+                }
+                else
+                {
+                    sortedGroup.Add(new ListGrouping<string, MediaViewModel>(groupHeader));
+                }
+            }
+
+            return sortedGroup;
+        }
+
+        private List<IGrouping<string, MediaViewModel>> GetCurrentGrouping(MusicLibraryFetchResult musicLibrary)
+        {
+            return SortBy switch
+            {
+                "album" => GetAlbumGrouping(musicLibrary),
+                "artist" => GetArtistGrouping(musicLibrary),
+                "year" => GetYearGrouping(),
+                _ => GetDefaultGrouping()
+            };
         }
 
         private void OnMusicLibraryContentChanged(ILibraryService sender, object args)
@@ -87,11 +162,30 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(FetchSongs);
         }
 
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SortBy))
+            {
+                var groups = GetCurrentGrouping(_libraryService.GetMusicFetchResult());
+                GroupedSongs.Clear();
+                foreach (IGrouping<string, MediaViewModel> group in groups)
+                {
+                    GroupedSongs.AddGroup(group);
+                }
+            }
+        }
+
+        [RelayCommand]
+        private void SetSortBy(string tag)
+        {
+            SortBy = tag;
+        }
+
         [RelayCommand]
         private void Play(MediaViewModel media)
         {
-            if (_songs.Count == 0) return;
-            Messenger.SendQueueAndPlay(media, _songs);
+            if (Songs.Count == 0) return;
+            Messenger.SendQueueAndPlay(media, Songs);
         }
 
         [RelayCommand]

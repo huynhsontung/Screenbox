@@ -171,6 +171,7 @@
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
     <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\GroupingOverviewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />

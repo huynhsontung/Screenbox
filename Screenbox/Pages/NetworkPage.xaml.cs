@@ -46,6 +46,15 @@ namespace Screenbox.Pages
                 new SuppressNavigationTransitionInfo());
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (FolderViewFrame.Content is FolderListViewPage page)
+            {
+                page.ViewModel.PropertyChanged -= FolderViewModel_PropertyChanged;
+            }
+        }
+
         public void GoBack()
         {
             FolderViewFrame.GoBack(new SuppressNavigationTransitionInfo());

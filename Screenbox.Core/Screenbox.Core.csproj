@@ -150,6 +150,7 @@
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\LastPositionTracker.cs" />
+    <Compile Include="Helpers\ListGrouping.cs" />
     <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
+    <Compile Include="ViewModels\BaseMusicContentViewModel.cs" />
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="ViewModels\CommonViewModel.cs" />
