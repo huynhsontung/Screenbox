@@ -78,6 +78,7 @@
             x:Name="ShufflePlayButton"
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
+            AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
             AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
@@ -92,8 +93,14 @@
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
+            AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
             Background="Transparent"
             BorderBrush="Transparent">
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
+                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+            </StackPanel>
             <muxc:DropDownButton.Flyout>
                 <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
                     <muxc:RadioMenuFlyoutItem
@@ -123,11 +130,6 @@
                         Text="{strings:Resources Key=ReleasedYear}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
-                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
-                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </StackPanel>
         </muxc:DropDownButton>
 
         <muxc:ProgressBar

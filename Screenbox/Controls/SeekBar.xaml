@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -40,6 +41,7 @@
             x:Name="SeekBarSlider"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
+            AccessKey="{strings:KeyboardResources Key=PlayerSeekBarKey}"
             Background="{x:Bind Background, Mode=OneWay}"
             Foreground="{x:Bind Foreground, Mode=OneWay}"
             IsEnabled="{x:Bind ViewModel.IsSeekable, Mode=OneWay, FallbackValue=False}"
