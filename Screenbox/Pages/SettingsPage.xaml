@@ -285,6 +285,12 @@
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Powered by Lively Wallpaper"
+                    Header="Show visualizer on audio playback">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseLivelyAudioVisualizer, Mode=TwoWay}" />
+                </ctc:SettingsCard>
 
                 <!--  Advanced section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAdvanced}" />
