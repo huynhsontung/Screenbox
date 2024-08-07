@@ -249,7 +249,7 @@ namespace Screenbox.Pages
 
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
-                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
+                    UpdateContentState();
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
@@ -271,6 +271,7 @@ namespace Screenbox.Pages
                             throw new ArgumentOutOfRangeException();
                     }
 
+                    UpdateContentState();
                     UpdatePreviewType();
                     UpdateMiniPlayerMargin();
                     break;
@@ -295,6 +296,15 @@ namespace Screenbox.Pages
                         BackgroundArtAnimation.Pause();
                     }
 
+                    break;
+                case nameof(PlayerPageViewModel.ShowVisualizer):
+                    if (ViewModel.ShowVisualizer)
+                    {
+                        // Load the visualizer if not already
+                        FindName("LivelyWallpaperPlayer");
+                    }
+
+                    UpdateContentState();
                     break;
             }
         }
@@ -342,6 +352,16 @@ namespace Screenbox.Pages
             {
                 titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
             }
+        }
+
+        private void UpdateContentState()
+        {
+            var contentVisualStateName = ViewModel.AudioOnly
+                ? (ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible }
+                    ? "AudioWithVisualizer"
+                    : "AudioOnly")
+                : "Video";
+            VisualStateManager.GoToState(this, contentVisualStateName, true);
         }
 
         private void UpdatePreviewType()
