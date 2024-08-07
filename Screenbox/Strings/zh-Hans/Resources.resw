@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>显示最近播放</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>暂停时显示控制界面</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>视频资料库位置</value>
   </data>
