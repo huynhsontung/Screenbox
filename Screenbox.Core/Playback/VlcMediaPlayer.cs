@@ -2,11 +2,17 @@
 
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
+using Screenbox.Core.Helpers;
 using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
+using Windows.Media;
+using Windows.Media.Audio;
 using Windows.Media.Core;
 using Windows.Media.Devices;
+using Windows.Media.MediaProperties;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -92,26 +98,32 @@ namespace Screenbox.Core.Playback
 
         public bool IsMuted
         {
-            get => VlcPlayer.Mute;
+            get => _isMuted;
             set
             {
+                _isMuted = value;
                 if (VlcPlayer.Mute != value)
                 {
                     VlcPlayer.Mute = value;
                 }
+
+                UpdateOutputNodeGain();
             }
         }
 
         public double Volume
         {
-            get => VlcPlayer.Volume / 100d;
+            get => _volume;
             set
             {
+                _volume = value;
                 int iVal = (int)(value * 100);
                 if (VlcPlayer.Volume != iVal && VlcPlayer.Volume >= 0)
                 {
                     VlcPlayer.Volume = iVal;
                 }
+
+                UpdateOutputNodeGain();
             }
         }
 
@@ -242,17 +254,34 @@ namespace Screenbox.Core.Playback
         private readonly Rect _defaultSourceRect;
         private ChapterCue? _chapter;
         private Rect _normalizedSourceRect;
+        private bool _isMuted;
+        private double _volume;
         private bool _readyToPlay;
         private bool _updateMediaProperties;
         private TimeSpan _naturalDuration;
         private TimeSpan _position;
         private MediaPlaybackState _playbackState;
         private PlaybackItem? _playbackItem;
+        private AudioGraph? _audioGraph;
+        private AudioFrameInputNode? _inputNode;
+        private AudioDeviceOutputNode? _outputNode;
+        private CircularBuffer<short>? _audioBuffer;
+        private readonly object _audioBufferLock;
+
+        [ComImport]
+        [Guid("5B0D3235-4DBA-4D44-865E-8F1D0E4FD04D")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        unsafe interface IMemoryBufferByteAccess
+        {
+            void GetBuffer(out byte* buffer, out uint capacity);
+        }
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
             LibVlc = libVlc;
             VlcPlayer = new MediaPlayer(libVlc);
+            _volume = VlcPlayer.Volume / 100d;
+            _audioBufferLock = new object();
             _defaultSourceRect = new Rect(0, 0, 1, 1);
             _normalizedSourceRect = _defaultSourceRect;
 
@@ -275,6 +304,154 @@ namespace Screenbox.Core.Playback
 
             // Notify VLC to auto detect new audio device on device changed
             MediaDevice.DefaultAudioRenderDeviceChanged += MediaDevice_DefaultAudioRenderDeviceChanged;
+        }
+
+        public async Task InitAudioGraphAsync()
+        {
+            AudioGraphSettings settings = new(Windows.Media.Render.AudioRenderCategory.Media);
+            CreateAudioGraphResult result = await AudioGraph.CreateAsync(settings);
+            if (result.Status != AudioGraphCreationStatus.Success) return;
+            AudioGraph audioGraph = _audioGraph = result.Graph;
+            var outputNodeResult = await audioGraph.CreateDeviceOutputNodeAsync();
+            if (outputNodeResult.Status != AudioDeviceNodeCreationStatus.Success) return;
+            _outputNode = outputNodeResult.DeviceOutputNode;
+
+            // VLC callbacks
+            VlcPlayer.SetAudioFormatCallback(SetupCb, CleanupCb);
+            VlcPlayer.SetAudioCallbacks(PlayCb, PauseCb, ResumeCb, FlushCb, DrainCb);
+            VlcPlayer.SetVolumeCallback(VolumeCb);
+
+            // VLC setup callback starts the audio graph
+            audioGraph.Stop();
+        }
+
+        private void CleanupCb(IntPtr opaque)
+        {
+            if (_inputNode == null) return;
+            _audioGraph?.Stop();
+            _audioGraph?.ResetAllNodes();
+
+            _inputNode.RemoveOutgoingConnection(_outputNode);
+            _inputNode.Dispose();
+        }
+
+        private int SetupCb(ref IntPtr opaque, ref IntPtr format, ref uint rate, ref uint channels)
+        {
+            // Format is always "S16N"
+            if (_audioGraph == null) return 0;
+
+            lock (_audioBufferLock)
+            {
+                // Create an audio buffer for 500ms of audio
+                _audioBuffer = new CircularBuffer<short>((int)(rate * channels / 2));
+            }
+
+            // Create input node that has 16-bit integer PCM encoding to match VLC
+            var inputEncoding = AudioEncodingProperties.CreatePcm(rate, channels, 16);
+            var inputNode = _inputNode = _audioGraph.CreateFrameInputNode(inputEncoding);
+            inputNode.AddOutgoingConnection(_outputNode);
+            inputNode.QuantumStarted += InputNodeOnQuantumStarted;
+
+            UpdateOutputNodeGain();
+
+            _audioGraph.Start();
+
+            return 0;
+        }
+
+        private void UpdateOutputNodeGain()
+        {
+            if (_outputNode == null) return;
+            _outputNode.OutgoingGain = IsMuted ? 0 : Volume;
+        }
+
+        private void VolumeCb(IntPtr data, float volume, bool mute)
+        {
+            UpdateOutputNodeGain();
+        }
+
+        private void InputNodeOnQuantumStarted(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
+        {
+            if (_audioBuffer == null) return;
+            AudioFrame frame;
+            lock (_audioBufferLock)
+            {
+                if (_audioBuffer.Size < args.RequiredSamples * sender.EncodingProperties.ChannelCount) return;
+                frame = GenerateAudioFrame(_audioBuffer, (uint)args.RequiredSamples,
+                    sender.EncodingProperties.ChannelCount, sender.EncodingProperties.SampleRate);
+            }
+
+            sender.AddFrame(frame);
+        }
+
+        private unsafe AudioFrame GenerateAudioFrame(CircularBuffer<short> audioBuffer, uint sampleCountPerChannel, uint channelCount, uint sampleRate)
+        {
+            uint totalSampleCount = sampleCountPerChannel * channelCount;
+            uint bufferSize = totalSampleCount * sizeof(short);
+            AudioFrame frame = new(bufferSize)
+            {
+                Duration = TimeSpan.FromSeconds((double)sampleCountPerChannel / sampleRate)
+            };
+
+            using AudioBuffer buffer = frame.LockBuffer(AudioBufferAccessMode.Write);
+            using IMemoryBufferReference reference = buffer.CreateReference();
+
+            // Get the buffer from the AudioFrame
+            ((IMemoryBufferByteAccess)reference).GetBuffer(out byte* dataInBytes, out _);
+
+            // Then create a span for easy access
+            Span<short> dest = new(dataInBytes, (int)totalSampleCount);
+
+            for (int i = 0; i < totalSampleCount; i++)
+            {
+                dest[i] = audioBuffer.Front();
+                audioBuffer.PopFront();
+            }
+
+            return frame;
+        }
+
+        private void DrainCb(IntPtr data)
+        {
+
+        }
+
+        private void FlushCb(IntPtr data, long pts)
+        {
+            _inputNode?.DiscardQueuedFrames();
+            if (_audioBuffer == null) return;
+            lock (_audioBufferLock)
+            {
+                _audioBuffer.Clear();
+            }
+        }
+
+        private void ResumeCb(IntPtr data, long pts)
+        {
+            _audioGraph?.Start();
+        }
+
+        private void PauseCb(IntPtr data, long pts)
+        {
+            _audioGraph?.Stop();
+        }
+
+        private unsafe void PlayCb(IntPtr data, IntPtr samplesPtr, uint countPerChannel, long pts)
+        {
+            if (_audioGraph == null || _inputNode == null || _audioBuffer == null) return;
+            // Assume VLC has the same number of channels as the audio graph input node
+            // as the input node is created by VLC set up callback
+            uint channelCount = _inputNode.EncodingProperties.ChannelCount;
+            uint sampleCount = countPerChannel * channelCount;
+
+            ReadOnlySpan<short> src = new((void*)samplesPtr, (int)sampleCount);
+            lock (_audioBufferLock)
+            {
+                for (int i = 0; i < sampleCount; i++)
+                {
+                    _audioBuffer.PushBack(src[i]);
+                }
+            }
         }
 
         private void VlcPlayer_SeekableChanged(object sender, MediaPlayerSeekableChangedEventArgs e)

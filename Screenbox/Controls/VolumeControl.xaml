@@ -66,6 +66,7 @@
             VerticalAlignment="Center"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
+            Minimum="0"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
         <TextBlock
