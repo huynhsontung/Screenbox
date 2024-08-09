@@ -1,6 +1,5 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Events;
 using System;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
@@ -17,17 +16,17 @@ namespace Screenbox.Core.Playback
         event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
         event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackItemChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
         event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalDurationChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
         event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
-        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? PositionChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? ChapterChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackStateChanged;
+        event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackRateChanged;
 
         bool CanPause { get; }
         bool CanSeek { get; }
@@ -44,7 +43,7 @@ namespace Screenbox.Core.Playback
         double PlaybackRate { get; set; }
         Rect NormalizedSourceRect { get; set; }
         double Volume { get; set; }
-        public PlaybackItem? PlaybackItem { get; set; }
+        public IPlaybackItem? PlaybackItem { get; set; }
 
         void Close();
         void Play();

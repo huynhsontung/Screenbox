@@ -11,7 +11,6 @@ using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -19,7 +18,6 @@ using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using MediaPlayer = LibVLCSharp.Shared.MediaPlayer;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -28,7 +26,9 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
-        public MediaPlayer? VlcPlayer { get; private set; }
+        public LibVLCSharp.Shared.MediaPlayer? VlcPlayer { get; private set; }
+
+        public Windows.Media.Playback.MediaPlayer? WindowsPlayer { get; private set; }
 
         private readonly LibVlcService _libVlcService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -39,11 +39,14 @@ namespace Screenbox.Core.ViewModels
         private readonly DisplayRequestTracker _requestTracker;
         private Size _viewSize;
         private Size _aspectRatio;
-        private VlcMediaPlayer? _mediaPlayer;
+        private IMediaPlayer? _mediaPlayer;
+        private WindowsMediaPlayer? _windowsMediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
         private bool _playerSeekGesture;
         private bool _playerVolumeGesture;
+
+        [ObservableProperty] private bool _isFfmpeg;
 
         public PlayerElementViewModel(
             LibVlcService libVlcService,
@@ -60,8 +63,14 @@ namespace Screenbox.Core.ViewModels
             _requestTracker = new DisplayRequestTracker();
             LoadSettings();
 
+            if (IsFfmpeg)
+            {
+                InitializeFfmpeg();
+            }
+
             transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
-            transportControlsService.TransportControls.PlaybackPositionChangeRequested += TransportControlsOnPlaybackPositionChangeRequested;
+            transportControlsService.TransportControls.PlaybackPositionChangeRequested +=
+                TransportControlsOnPlaybackPositionChangeRequested;
 
             // View model does not receive any message
             IsActive = true;
@@ -83,34 +92,54 @@ namespace Screenbox.Core.ViewModels
             message.Reply(_mediaPlayer);
         }
 
-        public void Initialize(string[] swapChainOptions)
+        public void InitializeLibVlc(string[] swapChainOptions)
         {
-            Task.Run(() =>
+            string[] args = _settingsService.GlobalArguments.Length > 0
+                ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                    .Concat(swapChainOptions).ToArray()
+                : swapChainOptions;
+
+            VlcMediaPlayer player;
+            try
             {
-                string[] args = _settingsService.GlobalArguments.Length > 0
-                    ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                        .Concat(swapChainOptions).ToArray()
-                    : swapChainOptions;
+                player = _libVlcService.Initialize(args);
+            }
+            catch (VLCException e)
+            {
+                player = _libVlcService.Initialize(swapChainOptions);
+                Messenger.Send(new ErrorMessage(
+                    _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
+            }
 
-                VlcMediaPlayer player;
-                try
-                {
-                    player = _libVlcService.Initialize(args);
-                }
-                catch (VLCException e)
-                {
-                    player = _libVlcService.Initialize(swapChainOptions);
-                    Messenger.Send(new ErrorMessage(
-                        _resourceService.GetString(ResourceName.FailedToInitializeNotificationTitle), e.Message));
-                }
+            _mediaPlayer = player;
+            VlcPlayer = player.VlcPlayer;
+            player.PlaybackStateChanged += OnPlaybackStateChanged;
+            player.PositionChanged += OnPositionChanged;
+            player.MediaFailed += OnMediaFailed;
+            Messenger.Send(new MediaPlayerChangedMessage(player));
+        }
 
-                _mediaPlayer = player;
-                VlcPlayer = player.VlcPlayer;
-                player.PlaybackStateChanged += OnPlaybackStateChanged;
-                player.PositionChanged += OnPositionChanged;
-                player.MediaFailed += OnMediaFailed;
-                Messenger.Send(new MediaPlayerChangedMessage(player));
-            });
+        public void InitializeFfmpeg()
+        {
+            WindowsPlayer ??= new Windows.Media.Playback.MediaPlayer();
+            if (_windowsMediaPlayer == null)
+            {
+                _mediaPlayer = _windowsMediaPlayer = new WindowsMediaPlayer(WindowsPlayer);
+                _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+                _mediaPlayer.PositionChanged += OnPositionChanged;
+                _mediaPlayer.MediaFailed += OnMediaFailed;
+            }
+            else
+            {
+                _mediaPlayer = _windowsMediaPlayer;
+            }
+
+            Messenger.Send(new MediaPlayerChangedMessage(_mediaPlayer));
+        }
+
+        partial void OnIsFfmpegChanged(bool value)
+        {
+            Messenger.Send(new ClearPlaylistMessage());
         }
 
         public void OnClick()
@@ -271,12 +300,14 @@ namespace Screenbox.Core.ViewModels
         {
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            IsFfmpeg = _settingsService.PlaybackBackend == PlaybackBackendType.Ffmpeg;
         }
 
         private void DisposeMediaPlayer()
         {
             _mediaPlayer?.Close();
-            _mediaPlayer?.LibVlc.Dispose();
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
+                vlcMediaPlayer.LibVlc.Dispose();
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)

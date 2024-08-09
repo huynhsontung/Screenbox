@@ -30,6 +30,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private bool _useMultipleInstances;
+        [ObservableProperty] private int _playbackBackend;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
 
@@ -76,6 +77,7 @@ namespace Screenbox.Core.ViewModels
             _showRecent = _settingsService.ShowRecent;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
+            _playbackBackend = (int)_settingsService.PlaybackBackend;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
@@ -162,6 +164,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.UseMultipleInstances = value;
             Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances)));
+        }
+
+        partial void OnPlaybackBackendChanged(int value)
+        {
+            _settingsService.PlaybackBackend = (PlaybackBackendType)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlaybackBackend)));
         }
 
         partial void OnGlobalArgumentsChanged(string value)

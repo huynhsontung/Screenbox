@@ -70,7 +70,7 @@ namespace Screenbox.Core.ViewModels
             foreach (StorageFile subtitleFile in subtitles)
             {
                 // Preload subtitle but don't select it
-                media.Item.Value?.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
+                media.Item?.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
             }
         }
 

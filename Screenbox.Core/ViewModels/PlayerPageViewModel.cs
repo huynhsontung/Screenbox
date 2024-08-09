@@ -94,6 +94,11 @@ namespace Screenbox.Core.ViewModels
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
+            if (Messenger.Send(new MediaPlayerRequestMessage()).Response is { } mediaPlayer)
+            {
+                Receive(new MediaPlayerChangedMessage(mediaPlayer));
+            }
+
             // Activate the view model's messenger
             IsActive = true;
         }
@@ -194,9 +199,9 @@ namespace Screenbox.Core.ViewModels
                     if (items.Count > 0)
                     {
                         if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
-                            _mediaPlayer is VlcMediaPlayer player && Media?.Item.Value != null)
+                            _mediaPlayer is VlcMediaPlayer player && Media?.Item != null)
                         {
-                            Media.Item.Value.SubtitleTracks.AddExternalSubtitle(player, file, true);
+                            Media.Item.SubtitleTracks.AddExternalSubtitle(player, file, true);
                             Messenger.Send(new SubtitleAddedNotificationMessage(file));
                         }
                         else
@@ -582,9 +587,13 @@ namespace Screenbox.Core.ViewModels
             Media = current;
             if (current != null)
             {
+                // If media type is known. Update layout right away.
+                if (current.MediaType != MediaPlaybackType.Unknown)
+                    AudioOnly = current.MediaType == MediaPlaybackType.Music;
+
                 await current.LoadDetailsAsync(_filesService);
-                await current.LoadThumbnailAsync(_filesService);
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                await current.LoadThumbnailAsync(_filesService);
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {

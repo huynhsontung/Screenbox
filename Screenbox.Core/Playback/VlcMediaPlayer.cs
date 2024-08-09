@@ -21,17 +21,17 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, EventArgs>? MediaOpened;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? IsMutedChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? VolumeChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<PlaybackItem?>>? PlaybackItemChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackItemChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingProgressChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingStarted;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? BufferingEnded;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? NaturalDurationChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalDurationChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? NaturalVideoSizeChanged;
         public event TypedEventHandler<IMediaPlayer, EventArgs>? CanSeekChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<TimeSpan>>? PositionChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? PositionChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? ChapterChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackStateChanged;
+        public event TypedEventHandler<IMediaPlayer, EventArgs>? PlaybackRateChanged;
 
         public ChapterCue? Chapter
         {
@@ -198,13 +198,13 @@ namespace Screenbox.Core.Playback
             }
         }
 
-        public PlaybackItem? PlaybackItem
+        public IPlaybackItem? PlaybackItem
         {
             get => _playbackItem;
             set
             {
                 if (_playbackItem == value) return;
-                PlaybackItem? oldValue = _playbackItem;
+                IPlaybackItem? oldValue = _playbackItem;
                 if (value == null)
                 {
                     VlcPlayer.Stop();
@@ -219,7 +219,7 @@ namespace Screenbox.Core.Playback
                     _updateMediaProperties = true;
                 }
 
-                PlaybackItemChanged?.Invoke(this, new ValueChangedEventArgs<PlaybackItem?>(value, oldValue));
+                PlaybackItemChanged?.Invoke(this, new ValueChangedEventArgs<IPlaybackItem?>(value, oldValue));
             }
         }
 
@@ -247,7 +247,7 @@ namespace Screenbox.Core.Playback
         private TimeSpan _naturalDuration;
         private TimeSpan _position;
         private MediaPlaybackState _playbackState;
-        private PlaybackItem? _playbackItem;
+        private IPlaybackItem? _playbackItem;
 
         public VlcMediaPlayer(LibVLC libVlc)
         {
@@ -395,13 +395,13 @@ namespace Screenbox.Core.Playback
             }
         }
 
-        private void RemoveItemHandlers(PlaybackItem item)
+        private void RemoveItemHandlers(IPlaybackItem item)
         {
             item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
             item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
         }
 
-        private void RegisterItemHandlers(PlaybackItem item)
+        private void RegisterItemHandlers(IPlaybackItem item)
         {
             RemoveItemHandlers(item);
             item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
@@ -440,11 +440,11 @@ namespace Screenbox.Core.Playback
 
         public void Play()
         {
-            if (PlaybackItem?.Media == null) return;
+            if (PlaybackItem is not VlcPlaybackItem item) return;
             if (_readyToPlay)
             {
                 _readyToPlay = false;
-                VlcPlayer.Play(PlaybackItem.Media);
+                VlcPlayer.Play(item.Media);
             }
             else
             {

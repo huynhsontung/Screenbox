@@ -5,7 +5,7 @@ using System;
 
 namespace Screenbox.Core.Playback
 {
-    public class PlaybackItem
+    public class VlcPlaybackItem : IPlaybackItem
     {
         internal Media Media { get; }
 
@@ -25,7 +25,7 @@ namespace Screenbox.Core.Playback
 
         public TimeSpan? Duration => Media.Duration > 0 ? TimeSpan.FromMilliseconds(Media.Duration) : null;
 
-        internal PlaybackItem(object source, Media media)
+        internal VlcPlaybackItem(object source, Media media)
         {
             OriginalSource = source;
             Media = media;
