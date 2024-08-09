@@ -247,6 +247,7 @@ namespace Screenbox.Pages
                             throw new ArgumentOutOfRangeException();
                     }
 
+                    UpdateContentState();
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     UpdateContentState();
@@ -357,7 +358,7 @@ namespace Screenbox.Pages
         private void UpdateContentState()
         {
             var contentVisualStateName = ViewModel.AudioOnly
-                ? (ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible }
+                ? (ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible, ViewMode: not WindowViewMode.Compact }
                     ? "AudioWithVisualizer"
                     : "AudioOnly")
                 : "Video";
