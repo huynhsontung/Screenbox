@@ -93,7 +93,7 @@ namespace Screenbox.Core.ViewModels
             _lastPositionTracker = new LastPositionTracker(filesService);
             _lastUpdated = DateTimeOffset.MinValue;
             _showVisualizer = _settingsService.LivelyIsEnabled &&
-                              !string.IsNullOrEmpty(_settingsService.LivelyWallpaperPath);
+                              !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
@@ -104,10 +104,10 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(SettingsChangedMessage message)
         {
-            if (message.SettingsName == "UseLivelyAudioVisualizer")
+            if (message.SettingsName == nameof(SettingsPageViewModel.UseLivelyAudioVisualizer))
             {
                 ShowVisualizer = _settingsService.LivelyIsEnabled &&
-                                 !string.IsNullOrEmpty(_settingsService.LivelyWallpaperPath);
+                                 !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
             }
         }
 
