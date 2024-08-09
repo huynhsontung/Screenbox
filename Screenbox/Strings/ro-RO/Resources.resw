@@ -776,4 +776,13 @@
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Deschideți întotdeauna fișierele media într-o instanță nouă</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortare după</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Anul lansării</value>
+  </data>
 </root>

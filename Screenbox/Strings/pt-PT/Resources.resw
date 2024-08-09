@@ -776,4 +776,13 @@
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Abrir sempre os ficheiros multimédia numa nova instância</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordenar por</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artista</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Ano de lançamento</value>
+  </data>
 </root>
