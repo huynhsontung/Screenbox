@@ -1,0 +1,15 @@
+{
+  "AppVersion": "2.0.7.0",
+  "Title": "Music Tunnel",
+  "Thumbnail": "thumbnail.jpg",
+  "Preview": "preview.gif",
+  "Desc": "Mesmerizing infinite music tunnel",
+  "Author": "rocksdanister",
+  "License": "See License.txt",
+  "Contact": "https://github.com/rocksdanister/audio-visualizer-wallpaper",
+  "Type": 1,
+  "FileName": "index.html",
+  "Arguments": "--pause-event true --system-nowplaying",
+  "Tags": ["shader"],
+  "IsAbsolutePath": false
+}
