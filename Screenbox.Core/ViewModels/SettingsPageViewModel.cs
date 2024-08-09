@@ -18,7 +18,8 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class SettingsPageViewModel : ObservableRecipient
+    public sealed partial class SettingsPageViewModel : ObservableRecipient,
+        IRecipient<SettingsChangedMessage>
     {
         [ObservableProperty] private int _playerAutoResize;
         [ObservableProperty] private bool _playerVolumeGesture;
@@ -94,46 +95,76 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
+        public void Receive(SettingsChangedMessage message)
+        {
+            // When settings are changed externally
+            if (message.Origin == typeof(SettingsPageViewModel)) return;
+            LoadValues();
+        }
+
+        private void LoadValues()
+        {
+            PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
+            PlayerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            PlayerSeekGesture = _settingsService.PlayerSeekGesture;
+            PlayerTapGesture = _settingsService.PlayerTapGesture;
+            UseIndexer = _settingsService.UseIndexer;
+            ShowRecent = _settingsService.ShowRecent;
+            SearchRemovableStorage = _settingsService.SearchRemovableStorage;
+            UseLivelyAudioVisualizer = _settingsService.LivelyIsEnabled;
+            AdvancedMode = _settingsService.AdvancedMode;
+            GlobalArguments = _settingsService.GlobalArguments;
+            IsRelaunchRequired = CheckForRelaunch();
+            int maxVolume = _settingsService.MaxVolume;
+            VolumeBoost = maxVolume switch
+            {
+                >= 200 => 3,
+                >= 150 => 2,
+                >= 125 => 1,
+                _ => 0
+            };
+        }
+
         partial void OnPlayerAutoResizeChanged(int value)
         {
             _settingsService.PlayerAutoResize = (PlayerAutoResizeOption)value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoResize), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerVolumeGestureChanged(bool value)
         {
             _settingsService.PlayerVolumeGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerVolumeGesture), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerSeekGestureChanged(bool value)
         {
             _settingsService.PlayerSeekGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerSeekGesture), typeof(SettingsPageViewModel)));
         }
 
         partial void OnPlayerTapGestureChanged(bool value)
         {
             _settingsService.PlayerTapGesture = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)
         {
             _settingsService.UseIndexer = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer)));
+            Messenger.Send(new SettingsChangedMessage(nameof(UseIndexer), typeof(SettingsPageViewModel)));
         }
 
         partial void OnShowRecentChanged(bool value)
         {
             _settingsService.ShowRecent = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent)));
+            Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
         }
 
         async partial void OnSearchRemovableStorageChanged(bool value)
         {
             _settingsService.SearchRemovableStorage = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage)));
+            Messenger.Send(new SettingsChangedMessage(nameof(SearchRemovableStorage), typeof(SettingsPageViewModel)));
 
             if (SystemInformation.IsXbox && RemovableStorageFolders.Count > 0)
             {
@@ -150,26 +181,26 @@ namespace Screenbox.Core.ViewModels
                 1 => 125,
                 _ => 100
             };
-            Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost)));
+            Messenger.Send(new SettingsChangedMessage(nameof(VolumeBoost), typeof(SettingsPageViewModel)));
         }
 
         partial void OnAdvancedModeChanged(bool value)
         {
             _settingsService.AdvancedMode = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode)));
+            Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
             IsRelaunchRequired = CheckForRelaunch();
         }
 
         partial void OnUseMultipleInstancesChanged(bool value)
         {
             _settingsService.UseMultipleInstances = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances)));
+            Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseLivelyAudioVisualizerChanged(bool value)
         {
             _settingsService.LivelyIsEnabled = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(UseLivelyAudioVisualizer)));
+            Messenger.Send(new SettingsChangedMessage(nameof(UseLivelyAudioVisualizer), typeof(SettingsPageViewModel)));
         }
 
         partial void OnGlobalArgumentsChanged(string value)

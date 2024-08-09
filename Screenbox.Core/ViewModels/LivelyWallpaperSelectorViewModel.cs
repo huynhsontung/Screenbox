@@ -2,7 +2,9 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Helpers;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -14,7 +16,8 @@ using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
-public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipient
+public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipient,
+    IRecipient<SettingsChangedMessage>
 {
     public ObservableCollection<LivelyWallpaperModel> Visualizers { get; } = new();
 
@@ -22,13 +25,19 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     [NotifyPropertyChangedRecipients]
     private LivelyWallpaperModel? _selectedVisualizer;
 
+    [ObservableProperty] private bool _showVisualizer;
+
     private readonly ILivelyWallpaperService _wallpaperService;
     private readonly IFilesService _filesService;
+    private readonly ISettingsService _settingsService;
 
-    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService)
+    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService)
     {
         _wallpaperService = wallpaperService;
         _filesService = filesService;
+        _settingsService = settingsService;
+
+        ShowVisualizer = settingsService.LivelyIsEnabled;
     }
 
     public async Task InitializeVisualizers()
@@ -52,6 +61,21 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
             // Optional: Prompt user to install WebView2 and display error message.
             // await WebView2Util.DownloadWebView();
         }
+    }
+
+    public void Receive(SettingsChangedMessage message)
+    {
+        if (message.SettingsName == nameof(SettingsPageViewModel.UseLivelyAudioVisualizer))
+        {
+            ShowVisualizer = _settingsService.LivelyIsEnabled;
+        }
+    }
+
+    partial void OnShowVisualizerChanged(bool value)
+    {
+        _settingsService.LivelyIsEnabled = value;
+        Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.UseLivelyAudioVisualizer),
+            typeof(LivelyWallpaperSelectorViewModel)));
     }
 
     [RelayCommand]

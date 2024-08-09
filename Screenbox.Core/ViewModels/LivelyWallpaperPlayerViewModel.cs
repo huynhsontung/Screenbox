@@ -33,7 +33,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     public async Task LoadAsync()
     {
         var allVisualizers = await _livelyService.GetAvailableVisualizersAsync();
-        var activeVisualizerPath = _settingsService.LivelyWallpaperPath;
+        var activeVisualizerPath = _settingsService.LivelyActivePath;
 
         var selectedVisualizer =
             allVisualizers.FirstOrDefault(visualizer =>
@@ -42,7 +42,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
         if (selectedVisualizer != null)
         {
-            _settingsService.LivelyWallpaperPath = selectedVisualizer.Path;
+            _settingsService.LivelyActivePath = selectedVisualizer.Path;
         }
 
         Source = selectedVisualizer;

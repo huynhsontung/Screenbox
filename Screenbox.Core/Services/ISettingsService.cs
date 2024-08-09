@@ -18,7 +18,7 @@ namespace Screenbox.Core.Services
         bool AdvancedMode { get; set; }
         bool UseMultipleInstances { get; set; }
         bool LivelyIsEnabled { get; set; }
-        string LivelyWallpaperPath { get; set; }
+        string LivelyActivePath { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
 }

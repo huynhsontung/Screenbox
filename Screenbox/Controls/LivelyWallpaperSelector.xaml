@@ -24,7 +24,12 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <StackPanel Spacing="5">
+        <StackPanel Spacing="6">
+            <ToggleSwitch
+                Margin="11,10,0,0"
+                Header="Show visualizer"
+                IsOn="{x:Bind ViewModel.ShowVisualizer, Mode=TwoWay}" />
+            <TextBlock Margin="11,0,0,0" Text="Visualizers" />
             <ListView ItemsSource="{x:Bind ViewModel.Visualizers}" SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

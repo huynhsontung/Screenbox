@@ -285,10 +285,18 @@
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="Powered by Lively Wallpaper"
-                    Header="Show visualizer on audio playback">
+                <ctc:SettingsCard Margin="{StaticResource SettingsCardMargin}" Header="Show visualizer on audio playback">
+                    <ctc:SettingsCard.Description>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="Powered by" />
+                            <Image
+                                Width="13"
+                                Height="13"
+                                VerticalAlignment="Center"
+                                Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
+                            <TextBlock><Hyperlink NavigateUri="https://www.rocksdanister.com/lively">Lively Wallpaper</Hyperlink></TextBlock>
+                        </StackPanel>
+                    </ctc:SettingsCard.Description>
                     <ToggleSwitch IsOn="{x:Bind ViewModel.UseLivelyAudioVisualizer, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 

@@ -114,7 +114,7 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerLivelyEnabledKey, value);
         }
 
-        public string LivelyWallpaperPath
+        public string LivelyActivePath
         {
             get => GetValue<string>(PlayerLivelyPathKey) ?? string.Empty;
             set => SetValue(PlayerLivelyPathKey, value);
