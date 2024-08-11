@@ -1,5 +1,4 @@
 ﻿using Screenbox.Core.Enums;
-using System.Collections.Generic;
 
 namespace Screenbox.Core.Models;
 
@@ -7,7 +6,7 @@ namespace Screenbox.Core.Models;
 // Licensed under the GNU General Public License v3.0.
 // See the LICENSE file in the project root for more information.
 // Source: https://github.com/rocksdanister/lively
-public class LivelyInfoModel
+public record LivelyInfoModel
 {
     public string AppVersion { get; set; }
     public string Title { get; set; }
@@ -22,6 +21,6 @@ public class LivelyInfoModel
     public string Arguments { get; set; }
     public bool IsAbsolutePath { get; set; }
     public string Id { get; set; }
-    public List<string> Tags { get; set; }
+    // public List<string> Tags { get; set; }
     public int Version { get; set; }
 }

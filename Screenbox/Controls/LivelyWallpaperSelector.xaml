@@ -4,18 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     Loaded="LivelyWallpaperSelector_OnLoaded"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
-
-        <StandardUICommand
+        <!--<StandardUICommand
             x:Key="OpenVisualizerCommand"
             Command="{x:Bind ViewModel.OpenWallpaperLocationCommand}"
-            Kind="Open" />
+            Kind="Open" />-->
 
         <StandardUICommand
             x:Key="DeleteVisualizerCommand"
@@ -24,91 +22,44 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <StackPanel Spacing="6">
-            <ToggleSwitch
-                Margin="11,10,0,0"
-                Header="Show visualizer"
-                IsOn="{x:Bind ViewModel.ShowVisualizer, Mode=TwoWay}" />
-            <TextBlock Margin="11,0,0,0" Text="Visualizers" />
-            <ListView ItemsSource="{x:Bind ViewModel.Visualizers}" SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Height="90" Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="75" />
-                                <ColumnDefinition Width="200" />
-                            </Grid.ColumnDefinitions>
-                            <!--  Preview  -->
-                            <Grid Grid.Column="0" CornerRadius="5">
+        <StackPanel>
+            <GridView
+                IsItemClickEnabled="True"
+                ItemsSource="{x:Bind ViewModel.Visualizers}"
+                SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}"
+                SelectionMode="Single">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="models:LivelyWallpaperModel">
+                        <Grid
+                            Width="100"
+                            Height="80"
+                            Margin="2"
+                            Background="Transparent"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="2"
+                            ToolTipService.ToolTip="{x:Bind Model.Title}">
+                            <Grid.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Command="{StaticResource DeleteVisualizerCommand}" CommandParameter="{x:Bind}" />
+                                </MenuFlyout>
+                            </Grid.ContextFlyout>
+                            <Border CornerRadius="2">
                                 <Image
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Source="{Binding PreviewPath, Mode=OneWay}"
+                                    Source="{Binding PreviewPath}"
                                     Stretch="UniformToFill" />
-                                <Border
-                                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="5" />
-                            </Grid>
-                            <!--  Description  -->
-                            <StackPanel
-                                Grid.Column="1"
-                                Margin="5,0,0,5"
-                                Spacing="2.5">
-                                <TextBlock
-                                    Style="{StaticResource BodyStrongTextBlockStyle}"
-                                    Text="{Binding Model.Title, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="NoWrap" />
-                                <Line Stroke="{ThemeResource SystemBaseMediumLowColor}" X2="400" />
-                                <TextBlock
-                                    MaxLines="2"
-                                    Opacity="0.75"
-                                    Style="{StaticResource CaptionTextBlockStyle}"
-                                    Text="{Binding Model.Desc, Mode=OneWay}"
-                                    TextTrimming="CharacterEllipsis"
-                                    TextWrapping="Wrap"
-                                    ToolTipService.ToolTip="{Binding Model.Desc, Mode=OneWay}" />
-                            </StackPanel>
-                            <!--  Actions  -->
-                            <StackPanel
-                                Grid.Column="1"
-                                Margin="5,0,0,0"
-                                VerticalAlignment="Bottom"
-                                Orientation="Horizontal"
-                                Spacing="5">
-                                <HyperlinkButton
-                                    NavigateUri="{Binding AuthorUrl}"
-                                    ToolTipService.ToolTip="{Binding AuthorUrl.OriginalString}"
-                                    Visibility="{Binding AuthorUrl, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}">
-                                    <HyperlinkButton.Content>
-                                        <FontIcon FontSize="14" Glyph="&#xE774;" />
-                                    </HyperlinkButton.Content>
-                                </HyperlinkButton>
-                                <!--  Open wallpaper location  -->
-                                <Button
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{StaticResource OpenVisualizerCommand}"
-                                    CommandParameter="{Binding}"
-                                    Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
-                                    <FontIcon FontSize="14" Glyph="&#xE838;" />
-                                </Button>
-                                <!--  Delete wallpaper  -->
-                                <Button
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{StaticResource DeleteVisualizerCommand}"
-                                    CommandParameter="{Binding}"
-                                    Visibility="{Binding IsPreset, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}">
-                                    <FontIcon FontSize="14" Glyph="&#xE947;" />
-                                </Button>
-                            </StackPanel>
+                            </Border>
                         </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <HyperlinkButton HorizontalAlignment="Left" NavigateUri="https://www.rocksdanister.com/lively">
+                </GridView.ItemTemplate>
+            </GridView>
+            <HyperlinkButton
+                Margin="-11,0,0,0"
+                HorizontalAlignment="Left"
+                NavigateUri="https://www.rocksdanister.com/lively"
+                Visibility="{x:Bind ShowCredit}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock FontSize="12" Opacity="0.75">
                         Powered by
@@ -122,10 +73,13 @@
                 </StackPanel>
             </HyperlinkButton>
             <!--  Let user select new wallpaper to install  -->
-            <Button HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.OpenVisualizerCommand}">
-                <StackPanel Orientation="Horizontal" Spacing="5">
-                    <FontIcon Glyph="&#xE838;" />
-                    <TextBlock VerticalAlignment="Center" Text="{strings:Resources Key=OpenFiles}" />
+            <Button
+                Margin="0,6,0,0"
+                Command="{x:Bind ViewModel.BrowseVisualizerCommand}"
+                Visibility="{x:Bind ShowAddButton}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon Margin="0,0,8,0" Glyph="&#xE838;" />
+                    <TextBlock VerticalAlignment="Center" Text="Browse visual file(s)" />
                 </StackPanel>
             </Button>
         </StackPanel>

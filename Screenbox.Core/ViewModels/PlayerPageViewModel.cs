@@ -36,7 +36,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
-        IRecipient<SettingsChangedMessage>,
+        IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool _controlsHidden;
@@ -92,8 +92,7 @@ namespace Screenbox.Core.ViewModels
             _playerVisibility = PlayerVisibilityState.Hidden;
             _lastPositionTracker = new LastPositionTracker(filesService);
             _lastUpdated = DateTimeOffset.MinValue;
-            _showVisualizer = _settingsService.LivelyIsEnabled &&
-                              !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
+            _showVisualizer = !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
@@ -102,13 +101,10 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        public void Receive(SettingsChangedMessage message)
+        public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
         {
-            if (message.SettingsName == nameof(SettingsPageViewModel.UseLivelyAudioVisualizer))
-            {
-                ShowVisualizer = _settingsService.LivelyIsEnabled &&
-                                 !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
-            }
+            if (message.NewValue == null) return;
+            ShowVisualizer = !string.IsNullOrEmpty(message.NewValue.Path);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -285,20 +286,34 @@
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
-                <ctc:SettingsCard Margin="{StaticResource SettingsCardMargin}" Header="Show visualizer on audio playback">
-                    <ctc:SettingsCard.Description>
-                        <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="Powered by" />
-                            <Image
-                                Width="13"
-                                Height="13"
-                                VerticalAlignment="Center"
-                                Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
-                            <TextBlock><Hyperlink NavigateUri="https://www.rocksdanister.com/lively">Lively Wallpaper</Hyperlink></TextBlock>
-                        </StackPanel>
-                    </ctc:SettingsCard.Description>
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.UseLivelyAudioVisualizer, Mode=TwoWay}" />
-                </ctc:SettingsCard>
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Choose an imagery style to be displayed on audio playback"
+                    Header="Audio visual">
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard ContentAlignment="Left">
+                            <controls:LivelyWallpaperSelector
+                                x:Name="AudioVisualSelector"
+                                ShowAddButton="False"
+                                ShowCredit="False" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" Header="Install more visuals">
+                            <ctc:SettingsCard.Description>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="Powered by" />
+                                    <Image
+                                        Width="13"
+                                        Height="13"
+                                        VerticalAlignment="Center"
+                                        Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
+                                    <TextBlock><Hyperlink NavigateUri="https://www.rocksdanister.com/lively">Lively Wallpaper</Hyperlink></TextBlock>
+                                </StackPanel>
+                            </ctc:SettingsCard.Description>
+                            <Button Command="{x:Bind AudioVisualSelector.ViewModel.BrowseVisualizerCommand}" Content="Browse visual file(s)" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <!--  Advanced section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAdvanced}" />

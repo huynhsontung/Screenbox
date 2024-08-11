@@ -11,16 +11,23 @@ namespace Screenbox.Controls;
 // Source: https://github.com/rocksdanister/lively
 public sealed partial class LivelyWallpaperSelector : UserControl
 {
+    public bool ShowCredit { get; set; } = true;
+
+    public bool ShowAddButton { get; set; } = true;
+
     internal LivelyWallpaperSelectorViewModel ViewModel => (LivelyWallpaperSelectorViewModel)DataContext;
 
     public LivelyWallpaperSelector()
     {
-        this.InitializeComponent();
-        this.DataContext = Ioc.Default.GetRequiredService<LivelyWallpaperSelectorViewModel>();
+        InitializeComponent();
+        DataContext = Ioc.Default.GetRequiredService<LivelyWallpaperSelectorViewModel>();
     }
 
     private async void LivelyWallpaperSelector_OnLoaded(object sender, RoutedEventArgs e)
     {
+        // Set preview image for default style
+        LivelyWallpaperSelectorViewModel.Default.PreviewPath = "ms-appx:///Assets/DefaultAudioVisual.png";
+
         await ViewModel.InitializeVisualizers();
     }
 }

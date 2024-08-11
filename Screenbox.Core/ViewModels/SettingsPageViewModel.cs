@@ -18,8 +18,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class SettingsPageViewModel : ObservableRecipient,
-        IRecipient<SettingsChangedMessage>
+    public sealed partial class SettingsPageViewModel : ObservableRecipient
     {
         [ObservableProperty] private int _playerAutoResize;
         [ObservableProperty] private bool _playerVolumeGesture;
@@ -31,7 +30,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private bool _useMultipleInstances;
-        [ObservableProperty] private bool _useLivelyAudioVisualizer;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
 
@@ -77,7 +75,6 @@ namespace Screenbox.Core.ViewModels
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
-            _useLivelyAudioVisualizer = _settingsService.LivelyIsEnabled;
             _advancedMode = _settingsService.AdvancedMode;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
@@ -93,36 +90,6 @@ namespace Screenbox.Core.ViewModels
             };
 
             IsActive = true;
-        }
-
-        public void Receive(SettingsChangedMessage message)
-        {
-            // When settings are changed externally
-            if (message.Origin == typeof(SettingsPageViewModel)) return;
-            LoadValues();
-        }
-
-        private void LoadValues()
-        {
-            PlayerAutoResize = (int)_settingsService.PlayerAutoResize;
-            PlayerVolumeGesture = _settingsService.PlayerVolumeGesture;
-            PlayerSeekGesture = _settingsService.PlayerSeekGesture;
-            PlayerTapGesture = _settingsService.PlayerTapGesture;
-            UseIndexer = _settingsService.UseIndexer;
-            ShowRecent = _settingsService.ShowRecent;
-            SearchRemovableStorage = _settingsService.SearchRemovableStorage;
-            UseLivelyAudioVisualizer = _settingsService.LivelyIsEnabled;
-            AdvancedMode = _settingsService.AdvancedMode;
-            GlobalArguments = _settingsService.GlobalArguments;
-            IsRelaunchRequired = CheckForRelaunch();
-            int maxVolume = _settingsService.MaxVolume;
-            VolumeBoost = maxVolume switch
-            {
-                >= 200 => 3,
-                >= 150 => 2,
-                >= 125 => 1,
-                _ => 0
-            };
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -195,12 +162,6 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.UseMultipleInstances = value;
             Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances), typeof(SettingsPageViewModel)));
-        }
-
-        partial void OnUseLivelyAudioVisualizerChanged(bool value)
-        {
-            _settingsService.LivelyIsEnabled = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(UseLivelyAudioVisualizer), typeof(SettingsPageViewModel)));
         }
 
         partial void OnGlobalArgumentsChanged(string value)

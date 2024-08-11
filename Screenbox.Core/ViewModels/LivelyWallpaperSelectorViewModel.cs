@@ -3,8 +3,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -16,8 +16,13 @@ using Windows.Storage;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels;
+
+// Copyright (c) Dani John
+// Licensed under the GNU General Public License v3.0.
+// See the LICENSE file in the project root for more information.
+// Source: https://github.com/rocksdanister/lively
 public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipient,
-    IRecipient<SettingsChangedMessage>
+    IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>
 {
     public ObservableCollection<LivelyWallpaperModel> Visualizers { get; } = new();
 
@@ -25,7 +30,12 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     [NotifyPropertyChangedRecipients]
     private LivelyWallpaperModel? _selectedVisualizer;
 
-    [ObservableProperty] private bool _showVisualizer;
+    public static readonly LivelyWallpaperModel Default = new()
+    {
+        IsPreset = true,
+        Path = string.Empty,
+        Model = new LivelyInfoModel { Title = "Default" }
+    };
 
     private readonly ILivelyWallpaperService _wallpaperService;
     private readonly IFilesService _filesService;
@@ -37,24 +47,23 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         _filesService = filesService;
         _settingsService = settingsService;
 
-        ShowVisualizer = settingsService.LivelyIsEnabled;
+        _selectedVisualizer = Default;
     }
 
     public async Task InitializeVisualizers()
     {
         var availableVisualizers = await _wallpaperService.GetAvailableVisualizersAsync();
-
-        Visualizers.Clear();
-        foreach (var wallpaper in availableVisualizers)
-        {
-            Visualizers.Add(wallpaper);
-        }
+        availableVisualizers.Insert(0, Default);
+        Visualizers.SyncItems(availableVisualizers);
 
         if (WebView2Util.IsWebViewAvailable())
         {
             // Optional: Load previously selected visualizer from save by using the unique Path.
-            // If NULL wallpaper visibility will be hidden but WebView process state will be based on on x:Load=AudioOnly property.
-            SelectedVisualizer = Visualizers.FirstOrDefault();
+            // If NULL wallpaper visibility will be hidden but WebView process state will be based on x:Load=AudioOnly property.
+            SelectedVisualizer =
+                Visualizers.FirstOrDefault(visualizer => string.Equals(visualizer.Path,
+                    _settingsService.LivelyActivePath, StringComparison.OrdinalIgnoreCase)) ??
+                Visualizers[0];
         }
         else
         {
@@ -63,19 +72,16 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         }
     }
 
-    public void Receive(SettingsChangedMessage message)
+    public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
     {
-        if (message.SettingsName == nameof(SettingsPageViewModel.UseLivelyAudioVisualizer))
-        {
-            ShowVisualizer = _settingsService.LivelyIsEnabled;
-        }
+        SelectedVisualizer = message.NewValue;
     }
 
-    partial void OnShowVisualizerChanged(bool value)
+    partial void OnSelectedVisualizerChanged(LivelyWallpaperModel? value)
     {
-        _settingsService.LivelyIsEnabled = value;
-        Messenger.Send(new SettingsChangedMessage(nameof(SettingsPageViewModel.UseLivelyAudioVisualizer),
-            typeof(LivelyWallpaperSelectorViewModel)));
+        // Ignore null value. Null is only a temporary value
+        if (value == null) return;
+        _settingsService.LivelyActivePath = value.Path;
     }
 
     [RelayCommand]
@@ -94,7 +100,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     }
 
     [RelayCommand]
-    private async Task OpenVisualizer()
+    private async Task BrowseVisualizer()
     {
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync(".zip");
         if (files is null || files.Count == 0)
