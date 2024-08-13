@@ -851,7 +851,6 @@
     <Content Include="Assets\Visualizers\Music Tunnel\LivelyProperties.json" />
     <Content Include="Assets\Visualizers\Music Tunnel\media\background.jpg" />
     <Content Include="Assets\Visualizers\Music Tunnel\preview.gif" />
-    <Content Include="Assets\Visualizers\Music Tunnel\shaders\test.html" />
     <Content Include="Assets\Visualizers\Music Tunnel\shaders\tunnel.frag" />
     <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
     <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
