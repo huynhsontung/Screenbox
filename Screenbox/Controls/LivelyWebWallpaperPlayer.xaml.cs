@@ -203,7 +203,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
                 break;
         }
 
-        // await UpdatePauseState();
+        await UpdatePauseState();
     }
 
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-IV-:-Interaction#controls
@@ -247,7 +247,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
                     await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, valueToken.ToString());
                     break;
                 case "folderDropdown":
-                    var relativePath = Path.Combine(item.Value["folder"].ToString(), valueToken.ToString());
+                    var relativePath = Path.Combine(item.Value?["folder"]?.ToString() ?? string.Empty, valueToken.ToString());
                     var filePath = Path.Combine(ViewModel.Source.Path, relativePath);
                     await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, File.Exists(filePath) ? relativePath : null);
                     break;
@@ -298,11 +298,11 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         if (ViewModel.Source is null || _webView is null || !ViewModel.Source.IsPauseNotify)
             return;
 
-        // var obj = new LivelyPlaybackStateModel()
-        // {
-        //     IsPaused = _currentVisibility == Visibility.Collapsed
-        // };
-        // await _webView.ExecuteScriptFunctionAsync("livelyWallpaperPlaybackChanged", obj);
+        var obj = new LivelyPlaybackStateModel()
+        {
+            IsPaused = Visibility == Visibility.Collapsed
+        };
+        await _webView.ExecuteScriptFunctionAsync("livelyWallpaperPlaybackChanged", obj);
     }
 
     private static async Task<string> StorageItemToBase64(StorageItemThumbnail? item)
