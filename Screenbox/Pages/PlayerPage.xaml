@@ -336,11 +336,12 @@
             Grid.ColumnSpan="2"
             Width="44"
             Height="44"
-            Margin="0,-8,4,0"
+            Margin="4,-16,4,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            Canvas.ZIndex="1"
-            Style="{StaticResource SubtleButtonStyle}">
+            Canvas.ZIndex="4"
+            Style="{StaticResource SubtleButtonStyle}"
+            ToolTipService.ToolTip="Audio visual options">
             <FontIcon Glyph="&#xE91B;" />
             <Button.Flyout>
                 <Flyout>
@@ -748,6 +749,7 @@
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="20,-16,20,0" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,70,0,104" />
                     </VisualState.Setters>
