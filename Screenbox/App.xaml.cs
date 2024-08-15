@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
@@ -118,6 +117,14 @@ namespace Screenbox
         {
             ServiceCollection services = new();
             ServiceHelpers.PopulateCoreServices(services);
+
+            // View models
+            services.AddTransient<LivelyWallpaperSelectorViewModel>(provider =>
+                new LivelyWallpaperSelectorViewModel(
+                    provider.GetRequiredService<ILivelyWallpaperService>(),
+                    provider.GetRequiredService<IFilesService>(),
+                    provider.GetRequiredService<ISettingsService>(),
+                    "Default", "ms-appx:///Assets/DefaultAudioVisual.png"));
 
             // Factories
             services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());

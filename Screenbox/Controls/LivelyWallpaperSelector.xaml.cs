@@ -25,9 +25,6 @@ public sealed partial class LivelyWallpaperSelector : UserControl
 
     private async void LivelyWallpaperSelector_OnLoaded(object sender, RoutedEventArgs e)
     {
-        // Set preview image for default style
-        LivelyWallpaperSelectorViewModel.Default.PreviewPath = "ms-appx:///Assets/DefaultAudioVisual.png";
-
         await ViewModel.InitializeVisualizers();
     }
 }

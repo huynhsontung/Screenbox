@@ -30,7 +30,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     [NotifyPropertyChangedRecipients]
     private LivelyWallpaperModel? _selectedVisualizer;
 
-    public static readonly LivelyWallpaperModel Default = new()
+    private readonly LivelyWallpaperModel _default = new()
     {
         IsPreset = true,
         Path = string.Empty,
@@ -41,35 +41,38 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
 
+    public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService,
+        string defaultTitle, string defaultPreviewPath) : this(wallpaperService, filesService, settingsService)
+    {
+        _default.PreviewPath = defaultPreviewPath;
+        _default.Model.Title = defaultTitle;
+    }
+
     public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService)
     {
         _wallpaperService = wallpaperService;
         _filesService = filesService;
         _settingsService = settingsService;
 
-        _selectedVisualizer = Default;
+        _selectedVisualizer = _default;
     }
 
     public async Task InitializeVisualizers()
     {
+        if (Visualizers.Count > 0) return;
+        await LoadVisualizers();
+    }
+
+    public async Task LoadVisualizers()
+    {
         var availableVisualizers = await _wallpaperService.GetAvailableVisualizersAsync();
-        availableVisualizers.Insert(0, Default);
+        availableVisualizers.Insert(0, _default);
         Visualizers.SyncItems(availableVisualizers);
 
-        if (WebView2Util.IsWebViewAvailable())
-        {
-            // Optional: Load previously selected visualizer from save by using the unique Path.
-            // If NULL wallpaper visibility will be hidden but WebView process state will be based on x:Load=AudioOnly property.
-            SelectedVisualizer =
-                Visualizers.FirstOrDefault(visualizer => string.Equals(visualizer.Path,
-                    _settingsService.LivelyActivePath, StringComparison.OrdinalIgnoreCase)) ??
-                Visualizers[0];
-        }
-        else
-        {
-            // Optional: Prompt user to install WebView2 and display error message.
-            // await WebView2Util.DownloadWebView();
-        }
+        SelectedVisualizer =
+            Visualizers.FirstOrDefault(visualizer => string.Equals(visualizer.Path,
+                _settingsService.LivelyActivePath, StringComparison.OrdinalIgnoreCase)) ??
+            Visualizers[0];
     }
 
     public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
