@@ -39,6 +39,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             await ViewModel.LoadLibraryLocations();
+            await AudioVisualSelector.ViewModel.InitializeVisualizers();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
