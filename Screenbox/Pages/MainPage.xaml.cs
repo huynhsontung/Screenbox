@@ -361,5 +361,23 @@ namespace Screenbox.Pages
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
         }
+
+        /// <summary>
+        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the keyboard shortcut combination.
+        /// </summary>
+        private void NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
+                NavViewSearchBox.Focus(FocusState.Keyboard);
+        }
+
+        /// <summary>
+        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the access key combination.
+        /// </summary>
+        private void NavViewSearchBoxAccessKeyFocus_OnInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
+        {
+            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
+                NavViewSearchBox.Focus(FocusState.Keyboard);
+        }
     }
 }
