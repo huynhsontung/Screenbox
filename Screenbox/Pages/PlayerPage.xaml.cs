@@ -363,6 +363,13 @@ namespace Screenbox.Pages
                     : "AudioOnly")
                 : "Video";
             VisualStateManager.GoToState(this, contentVisualStateName, true);
+
+            // Update lively options button visibility
+            // TODO: Use XAML visual state to encode this logic
+            LivelyOptionsButton.Visibility = ViewModel.PlayerVisibility == PlayerVisibilityState.Visible &&
+                                             ViewModel.ViewMode != WindowViewMode.Compact
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void UpdatePreviewType()

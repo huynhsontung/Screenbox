@@ -588,7 +588,6 @@
                         <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="1" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
-                        <Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
@@ -600,7 +599,6 @@
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
-                        <Setter Target="LivelyOptionsButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                     <Storyboard x:Name="BackgroundArtAnimation">
                         <DoubleAnimationUsingKeyFrames
@@ -652,7 +650,6 @@
                         <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
-                        <Setter Target="LivelyOptionsButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -765,7 +762,6 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="12,0,0,0" />
                         <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
                         <Setter Target="TitleText.Style" Value="{StaticResource CaptionTextBlockStyle}" />
