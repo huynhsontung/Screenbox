@@ -5,16 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Screenbox.Core.Models"
-    xmlns:strings="using:Screenbox.Strings"
     Loaded="LivelyWallpaperSelector_OnLoaded"
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <!--<StandardUICommand
-            x:Key="OpenVisualizerCommand"
-            Command="{x:Bind ViewModel.OpenWallpaperLocationCommand}"
-            Kind="Open" />-->
-
         <StandardUICommand
             x:Key="DeleteVisualizerCommand"
             Command="{x:Bind ViewModel.DeleteVisualizerCommand}"
@@ -51,37 +45,32 @@
                                     Source="{Binding PreviewPath}"
                                     Stretch="UniformToFill" />
                             </Border>
+                            <HyperlinkButton
+                                Margin="2"
+                                Padding="2"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                NavigateUri="https://www.rocksdanister.com/lively"
+                                ToolTipService.ToolTip="Powered by Lively Wallpaper"
+                                Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
+                                <Image
+                                    Width="15"
+                                    Height="15"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
+                            </HyperlinkButton>
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-            <HyperlinkButton
-                Margin="-11,0,0,0"
-                HorizontalAlignment="Left"
-                NavigateUri="https://www.rocksdanister.com/lively"
-                Visibility="{x:Bind ShowCredit}">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock FontSize="12" Opacity="0.75">
-                        Powered by
-                    </TextBlock>
-                    <Image
-                        Width="15"
-                        Height="15"
-                        Margin="2.5,0,2.5,0"
-                        Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
-                    <TextBlock FontSize="12" Opacity="0.75">Lively Wallpaper</TextBlock>
-                </StackPanel>
-            </HyperlinkButton>
             <!--  Let user select new wallpaper to install  -->
             <Button
                 Margin="0,6,0,0"
+                HorizontalAlignment="Stretch"
                 Command="{x:Bind ViewModel.BrowseVisualizerCommand}"
-                Visibility="{x:Bind ShowAddButton}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="0,0,8,0" Glyph="&#xE838;" />
-                    <TextBlock VerticalAlignment="Center" Text="Browse visual file(s)" />
-                </StackPanel>
-            </Button>
+                Content="Browse file(s)"
+                Visibility="{x:Bind ShowAddButton}" />
         </StackPanel>
     </Grid>
 </UserControl>
