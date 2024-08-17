@@ -36,6 +36,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
+        IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool _controlsHidden;
@@ -49,6 +50,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
         [ObservableProperty] private ElementTheme _actualTheme;
+        [ObservableProperty] private bool _showVisualizer;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -90,12 +92,19 @@ namespace Screenbox.Core.ViewModels
             _playerVisibility = PlayerVisibilityState.Hidden;
             _lastPositionTracker = new LastPositionTracker(filesService);
             _lastUpdated = DateTimeOffset.MinValue;
+            _showVisualizer = !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
+        {
+            if (message.NewValue == null) return;
+            ShowVisualizer = !string.IsNullOrEmpty(message.NewValue.Path);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)

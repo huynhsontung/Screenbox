@@ -524,6 +524,7 @@
           "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.3, )",
           "Microsoft.AppCenter.Crashes": "[5.0.3, )",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.0, )",
           "Microsoft.NETCore.UniversalWindowsPlatform": "[6.2.14, )",
           "Microsoft.UI.Xaml": "[2.8.6, )",
           "Sentry": "[4.7.0, )",

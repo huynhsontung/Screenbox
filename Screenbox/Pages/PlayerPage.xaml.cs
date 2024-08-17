@@ -247,9 +247,10 @@ namespace Screenbox.Pages
                             throw new ArgumentOutOfRangeException();
                     }
 
+                    UpdateContentState();
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
-                    VisualStateManager.GoToState(this, ViewModel.AudioOnly ? "AudioOnly" : "Video", true);
+                    UpdateContentState();
                     UpdateSystemCaptionButtonForeground();
                     UpdatePreviewType();
                     break;
@@ -271,6 +272,7 @@ namespace Screenbox.Pages
                             throw new ArgumentOutOfRangeException();
                     }
 
+                    UpdateContentState();
                     UpdatePreviewType();
                     UpdateMiniPlayerMargin();
                     break;
@@ -295,6 +297,15 @@ namespace Screenbox.Pages
                         BackgroundArtAnimation.Pause();
                     }
 
+                    break;
+                case nameof(PlayerPageViewModel.ShowVisualizer):
+                    if (ViewModel.ShowVisualizer)
+                    {
+                        // Load the visualizer if not already
+                        FindName("LivelyWallpaperPlayer");
+                    }
+
+                    UpdateContentState();
                     break;
             }
         }
@@ -342,6 +353,23 @@ namespace Screenbox.Pages
             {
                 titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
             }
+        }
+
+        private void UpdateContentState()
+        {
+            var contentVisualStateName = ViewModel.AudioOnly
+                ? (ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible, ViewMode: not WindowViewMode.Compact }
+                    ? "AudioWithVisualizer"
+                    : "AudioOnly")
+                : "Video";
+            VisualStateManager.GoToState(this, contentVisualStateName, true);
+
+            // Update lively options button visibility
+            // TODO: Use XAML visual state to encode this logic
+            LivelyOptionsButton.Visibility = ViewModel.PlayerVisibility == PlayerVisibilityState.Visible &&
+                                             ViewModel.ViewMode != WindowViewMode.Compact
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
         private void UpdatePreviewType()
