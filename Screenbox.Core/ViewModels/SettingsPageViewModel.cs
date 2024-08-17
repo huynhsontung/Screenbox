@@ -121,7 +121,7 @@ namespace Screenbox.Core.ViewModels
         partial void OnPlayerShowControlsChanged(bool value)
         {
             _settingsService.PlayerShowControls = value;
-            Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowControls)));
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowControls), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)
