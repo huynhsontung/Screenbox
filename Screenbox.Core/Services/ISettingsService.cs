@@ -10,6 +10,7 @@ namespace Screenbox.Core.Services
         bool PlayerVolumeGesture { get; set; }
         bool PlayerSeekGesture { get; set; }
         bool PlayerTapGesture { get; set; }
+        bool PlayerShowControls { get; set; }
         int PersistentVolume { get; set; }
         bool ShowRecent { get; set; }
         bool SearchRemovableStorage { get; set; }

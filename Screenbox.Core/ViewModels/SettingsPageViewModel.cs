@@ -24,6 +24,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerVolumeGesture;
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
+        [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
@@ -72,6 +73,7 @@ namespace Screenbox.Core.ViewModels
             _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
+            _playerShowControls = _settingsService.PlayerShowControls;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
@@ -114,6 +116,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerTapGesture = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerTapGesture), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerShowControlsChanged(bool value)
+        {
+            _settingsService.PlayerShowControls = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowControls), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)
