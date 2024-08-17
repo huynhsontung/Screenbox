@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 #if !DEBUG
+using CommunityToolkit.WinUI.Helpers;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;
 #endif
