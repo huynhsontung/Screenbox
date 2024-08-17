@@ -125,7 +125,7 @@ namespace Screenbox
                     provider.GetRequiredService<ILivelyWallpaperService>(),
                     provider.GetRequiredService<IFilesService>(),
                     provider.GetRequiredService<ISettingsService>(),
-                    "Default", "ms-appx:///Assets/DefaultAudioVisual.png"));
+                    Strings.Resources.Default, "ms-appx:///Assets/DefaultAudioVisual.png"));
 
             // Factories
             services.AddSingleton<Func<IVlcLoginDialog>>(_ => () => new VLCLoginDialog());

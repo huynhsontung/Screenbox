@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Screenbox.Core.Models"
+    xmlns:strings="using:Screenbox.Strings"
     Loaded="LivelyWallpaperSelector_OnLoaded"
     mc:Ignorable="d">
 
@@ -51,7 +52,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
                                 NavigateUri="https://www.rocksdanister.com/lively"
-                                ToolTipService.ToolTip="Powered by Lively Wallpaper"
+                                ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
                                 Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
                                 <Image
                                     Width="15"
@@ -69,7 +70,7 @@
                 Margin="0,6,0,0"
                 HorizontalAlignment="Stretch"
                 Command="{x:Bind ViewModel.BrowseVisualizerCommand}"
-                Content="Browse file(s)"
+                Content="{strings:Resources Key=BrowseFiles}"
                 Visibility="{x:Bind ShowAddButton}" />
         </StackPanel>
     </Grid>

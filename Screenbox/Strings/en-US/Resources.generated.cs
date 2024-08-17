@@ -2624,6 +2624,123 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsAudioVisualHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio visual
+        /// </summary>
+        public static string SettingsAudioVisualHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAudioVisualHeader");
+            }
+        }
+        #endregion
+
+        #region GetLivelyApp
+        /// <summary>
+        ///   Looks up a localized string similar to: Get Lively Wallpaper
+        /// </summary>
+        public static string GetLivelyApp
+        {
+            get
+            {
+                return _resourceLoader.GetString("GetLivelyApp");
+            }
+        }
+        #endregion
+
+        #region GetLivelyVisuals
+        /// <summary>
+        ///   Looks up a localized string similar to: Download visuals on GitHub
+        /// </summary>
+        public static string GetLivelyVisuals
+        {
+            get
+            {
+                return _resourceLoader.GetString("GetLivelyVisuals");
+            }
+        }
+        #endregion
+
+        #region BrowseFiles
+        /// <summary>
+        ///   Looks up a localized string similar to: Browse file(s)
+        /// </summary>
+        public static string BrowseFiles
+        {
+            get
+            {
+                return _resourceLoader.GetString("BrowseFiles");
+            }
+        }
+        #endregion
+
+        #region Default
+        /// <summary>
+        ///   Looks up a localized string similar to: Default
+        /// </summary>
+        public static string Default
+        {
+            get
+            {
+                return _resourceLoader.GetString("Default");
+            }
+        }
+        #endregion
+
+        #region SettingsAudioVisualDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Choose an imagery style to be displayed on audio playback
+        /// </summary>
+        public static string SettingsAudioVisualDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAudioVisualDescription");
+            }
+        }
+        #endregion
+
+        #region PoweredByLivelyWallpaper
+        /// <summary>
+        ///   Looks up a localized string similar to: Powered by Lively Wallpaper
+        /// </summary>
+        public static string PoweredByLivelyWallpaper
+        {
+            get
+            {
+                return _resourceLoader.GetString("PoweredByLivelyWallpaper");
+            }
+        }
+        #endregion
+
+        #region SettingsImportVisualsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Import visuals
+        /// </summary>
+        public static string SettingsImportVisualsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsImportVisualsHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsImportVisualsDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Get more visuals via the Lively Wallpaper app or download them from GitHub
+        /// </summary>
+        public static string SettingsImportVisualsDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsImportVisualsDescription");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2835,6 +2952,15 @@ namespace Screenbox.Strings{
             SortBy,
             Artist,
             ReleasedYear,
+            SettingsAudioVisualHeader,
+            GetLivelyApp,
+            GetLivelyVisuals,
+            BrowseFiles,
+            Default,
+            SettingsAudioVisualDescription,
+            PoweredByLivelyWallpaper,
+            SettingsImportVisualsHeader,
+            SettingsImportVisualsDescription,
         }
 
         private static ResourceLoader _resourceLoader;
