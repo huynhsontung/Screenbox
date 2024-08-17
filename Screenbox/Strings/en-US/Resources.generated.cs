@@ -1769,9 +1769,9 @@ namespace Screenbox.Strings{
 
         #region SettingsShowControlsHeader
         /// <summary>
-        ///   Looks up a localized string similar to: Show controls
+        ///   Looks up a localized string similar to: Display controls on pause
         /// </summary>
-        public static string SettingsControlsHeader
+        public static string SettingsShowControlsHeader
         {
             get
             {
