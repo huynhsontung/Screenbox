@@ -295,27 +295,29 @@
                         <ctc:SettingsCard ContentAlignment="Left">
                             <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" ShowAddButton="False" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" Header="Import visuals">
-                            <ctc:SettingsCard.Description>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock
-                                        Margin="0,0,0,8"
-                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                        Style="{StaticResource CaptionTextBlockStyle}"
-                                        Text="The visual engine is powered by Lively Wallpaper. Export more visuals via the Lively app or download them from GitHub." />
-                                    <HyperlinkButton
-                                        Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                                        Content="Get Lively Wallpaper"
-                                        NavigateUri="https://www.rocksdanister.com/lively"
-                                        Style="{StaticResource DefaultHyperlinkButtonStyle}" />
-                                    <HyperlinkButton
-                                        Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                                        Content="Download visuals on GitHub"
-                                        NavigateUri="https://github.com/rocksdanister/audio-visualizer-wallpaper"
-                                        Style="{StaticResource DefaultHyperlinkButtonStyle}" />
-                                </StackPanel>
-                            </ctc:SettingsCard.Description>
+                        <ctc:SettingsCard Description="Get more visuals via the Lively app or download them from GitHub" Header="Import visuals">
                             <Button Command="{x:Bind AudioVisualSelector.ViewModel.BrowseVisualizerCommand}" Content="Browse file(s)" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard
+                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                            ContentAlignment="Left"
+                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
+                            <Grid Margin="-42,0,0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Padding="0,5,11,0"
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                                    Text="{strings:Resources Key=RelatedLinks}" />
+                                <ctc:WrapPanel Grid.Column="1" Orientation="Horizontal">
+                                    <HyperlinkButton Content="Get Lively Wallpaper" NavigateUri="https://www.rocksdanister.com/lively" />
+                                    <HyperlinkButton Content="Download visuals on GitHub" NavigateUri="https://github.com/rocksdanister/audio-visualizer-wallpaper" />
+                                </ctc:WrapPanel>
+                            </Grid>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
