@@ -586,7 +586,7 @@
     <value>Zuletzt verwendete Medien anzeigen</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Steuerelemente beim Pausieren anzeigen</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Speicherorte der Videobibliotheken</value>
@@ -789,30 +789,30 @@
     <value>Veröffentlichungsjahr</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Audio-Grafik</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Hole dir Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Grafiken auf GitHub herunterladen</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Datei(en) durchsuchen</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Voreinstellung</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Wählen Sie einen Bildstil für die Audiowiedergabe aus</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Unterstützt von Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Grafiken importieren</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Erhalte mehr Grafiken über die Lively Wallpaper App oder lade sie von GitHub herunter</value>
   </data>
 </root>
