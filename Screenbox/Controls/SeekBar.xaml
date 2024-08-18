@@ -52,6 +52,7 @@
             PointerCanceled="SeekBarSlider_OnPointerExited"
             PointerEntered="SeekBarSlider_OnPointerEntered"
             PointerExited="SeekBarSlider_OnPointerExited"
+            PointerWheelChanged="SeekBarSlider_OnPointerWheelChanged"
             SizeChanged="SeekBarSlider_OnSizeChanged"
             SmallChange="5000"
             Style="{StaticResource DefaultSliderStyle}"
