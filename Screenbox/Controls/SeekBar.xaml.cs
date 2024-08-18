@@ -140,9 +140,10 @@ namespace Screenbox.Controls
 
         private void SeekBarSlider_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
+            if (e.IsGenerated) return;
+            PointerPoint pointer = e.GetCurrentPoint((UIElement)sender);
             int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            SeekBarSlider.Value += mouseWheelDelta > 0 ? 10000 : -10000;
+            ViewModel.OnSeekBarPointerWheelChanged(mouseWheelDelta);
         }
 
         private void ResetPreviewToolTip()

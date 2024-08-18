@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
@@ -13,6 +14,8 @@ using System.Collections.ObjectModel;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.System;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Screenbox.Core.ViewModels
@@ -97,17 +100,8 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ChangeTimeRequestMessage message)
         {
-            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
-            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
-
-            // Assume UI thread
-            Time = message.IsOffset
-                ? Math.Clamp(Time + message.Value.TotalMilliseconds, 0, Length)
-                : message.Value.TotalMilliseconds;
-            SetPlayerPosition(TimeSpan.FromMilliseconds(Time), message.Debounce);
-
-            message.Reply(new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
-                _originalPosition, TimeSpan.FromMilliseconds(Length)));
+            var result = UpdatePosition(message.Value, message.IsOffset, message.Debounce);
+            message.Reply(result);
         }
 
         public void OnSeekBarPointerEvent(bool pressed)
@@ -119,6 +113,20 @@ namespace Screenbox.Core.ViewModels
         {
             normalizedPosition = Math.Clamp(normalizedPosition, 0, 1);
             PreviewTime = (long)(normalizedPosition * Length);
+        }
+
+        public void OnSeekBarPointerWheelChanged(double pointerWheelDelta)
+        {
+            if (!IsSeekable || _mediaPlayer == null) return;
+            var controlPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control) == CoreVirtualKeyStates.Down;
+            var shiftPressed = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift) == CoreVirtualKeyStates.Down;
+            var delta = 5000;
+            if (controlPressed) delta = 10000;
+            if (shiftPressed) delta = 2000;
+            var result = UpdatePosition(TimeSpan.FromMilliseconds(pointerWheelDelta > 0 ? delta : -delta), true, true);
+            TimeSpan offset = result.NewPosition - result.OriginalPosition;
+            string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
+            Messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
         }
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
@@ -141,6 +149,19 @@ namespace Screenbox.Core.ViewModels
                     SetPlayerPosition(TimeSpan.FromMilliseconds(args.NewValue), true);
                 }
             }
+        }
+
+        private PositionChangedResult UpdatePosition(TimeSpan position, bool isOffset, bool debounce)
+        {
+            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
+            _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
+
+            // Assume UI thread
+            Time = isOffset ? Math.Clamp(Time + position.TotalMilliseconds, 0, Length) : position.TotalMilliseconds;
+            SetPlayerPosition(TimeSpan.FromMilliseconds(Time), debounce);
+
+            return new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
+                _originalPosition, TimeSpan.FromMilliseconds(Length));
         }
 
         private void SetPlayerPosition(TimeSpan position, bool debounce)
