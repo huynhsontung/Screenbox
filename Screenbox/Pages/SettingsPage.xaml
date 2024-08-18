@@ -276,6 +276,12 @@
                         <x:String>#200%</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
+                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                </ctc:SettingsCard>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
@@ -293,12 +299,6 @@
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
-                </ctc:SettingsCard>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"
@@ -356,16 +356,10 @@
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
-                            <ctc:SettingsCard.Description>
-                                <TextBlock>
-                                    <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
-                                    <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
-                                        <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
-                                    </Hyperlink>
-                                    <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
-                                </TextBlock>
-                            </ctc:SettingsCard.Description>
+                        <ctc:SettingsCard
+                            Description="{strings:Resources Key=SettingsGlobalArgumentsDescription}"
+                            Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}"
+                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <Button CommandParameter="{x:Bind ViewModel}" Content="{strings:Resources Key=SetArguments}">
                                 <Button.Command>
                                     <commands:SetPlaybackOptionsCommand />
@@ -374,7 +368,7 @@
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
                             CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                            Header="Active arguments"
+                            Header="{strings:Resources Key=ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>
