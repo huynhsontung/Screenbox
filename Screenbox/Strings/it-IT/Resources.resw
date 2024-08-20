@@ -121,7 +121,7 @@
     <value>Frame salvato</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picutre-in-picture</value>
+    <value>Picture in picture</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Salva frame corrente</value>
@@ -159,7 +159,7 @@
     <value>Schermo intero</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>Audio &amp; sottotitoli</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
     <value>Interrompi modalità schermo intero</value>
@@ -168,7 +168,7 @@
     <value>Volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Cerca</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Interrompi picture-in-picture</value>
@@ -192,20 +192,20 @@
     <value>Riproduci coda</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>Ripeti: Off</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>Ripeti: Tutto</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>Ripeti: Uno</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} elemento selezionato</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} elementi selezionati</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
@@ -237,11 +237,11 @@
     <value>La cartella è vuota</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} elemento</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} elementi</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
@@ -290,7 +290,7 @@
     <value>Home</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>Selezione multipla</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>Non è stata trovata alcuna musica</value>
@@ -332,7 +332,7 @@
     <value>Bit rate</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Tipo di contenuto</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
     <value>Artisti partecipanti</value>
@@ -362,7 +362,7 @@
     <value>Dimensione</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Sottotitolo</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
     <value>Titolo</value>
@@ -398,11 +398,11 @@
     <value>Apri</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} posizione specificata</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} posizioni specificate</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
@@ -412,7 +412,7 @@
     <value>Riproduzione casuale: on</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>Riprendi da dove hai lasciato</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
     <value>Vai a {0}</value>
