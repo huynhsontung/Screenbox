@@ -248,7 +248,7 @@
     <value>Vuoto</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>Ripristina visualizzazione video</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Trasmetti</value>
@@ -257,7 +257,7 @@
     <value>Interrompi trasmissione</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>Trasmetti a</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
     <value>Trasmetti a dispositivo</value>
@@ -269,7 +269,7 @@
     <value>Musica</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>Casuale e riproduzione</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
     <value>Artista sconosciuto</value>
@@ -311,7 +311,7 @@
     <value>Screenbox ti dà il benvenuto</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>Inizia a riprodurre alcuni contenuti multimediali per cominciare.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Proprietà</value>
@@ -377,7 +377,7 @@
     <value>Anno</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Personalizzato</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Rete</value>
@@ -386,10 +386,10 @@
     <value>Nessun dispositivo di rete disponibile</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Impossibile trovare i tuoi supporti? Assicurati che il tuo dispositivo di rete sia accoppiato nelle Impostazioni di Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>Recenti</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
     <value>Impostazioni video</value>
@@ -434,7 +434,7 @@
     <value>Aggiungi file</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Browse for file(s) to add to the play queue</value>
+    <value>Sfoglia i file da aggiungere alla coda di riproduzione</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Aggiungi cartella alla tua libreria musicale</value>
@@ -452,10 +452,10 @@
     <value>Apri URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Vuoto</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} brano</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
@@ -467,11 +467,11 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} tempo di esecuzione</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -481,26 +481,26 @@
     <value>Cartelle video</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>Risultati ricerca per "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
     <value>Mostra tutto</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>Risultati artista per "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>Risultati album per "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Risultati brano per "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Risultati video per "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -508,16 +508,16 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>Accesso negato. Verifica le tue impostazioni privacy per assicurarti che Screenbox abbia permessi sufficienti.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>Impossibile accedere alla libreria musicale</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Impossibile accedere alla libreria immagini</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>Impossibile accedere alla libreria video</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>Non è stato trovato alcun video</value>
@@ -532,7 +532,7 @@
     <value>Impossibile caricare media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Rapporto d'aspetto</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Adatta</value>
@@ -541,7 +541,7 @@
     <value>Riempi</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Rapporto d'aspetto personalizzato</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
     <value>Velocità di riproduzione personalizzata</value>
@@ -580,16 +580,16 @@
     <value>Player</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>Posizione libreria musicale</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Mostra recenti</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Mostra controlli in pausa</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>Posizione libreria video</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Sottotitoli</value>
@@ -604,7 +604,7 @@
     <value>Ridimensiona automaticamente</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>Ridimensiona la finestra dell'app per adattarla meglio alla risoluzione nativa del video durante la riproduzione</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Amplificazione volume</value>
@@ -656,7 +656,7 @@
     <value>Errore critico</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>Nessun renderer compatibile disponibile. Assicurati che Direct3D 11 è disponibile sul tuo dispositivo.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Impossibile aprire il/i file</value>
@@ -765,54 +765,54 @@
     <value>Imposta parametri</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Ricerca memoria rimovibile</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Includi supporti da dispositivi di memorizzazione come le chiavette USB nelle tue librerie</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argomenti attivi</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Permetti istanze multiple</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Apri sempre i file multimediali in una nuova istanza</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Ordina per</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artista</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Anno pubblicazione</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Visuale audio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Ottieni Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Scarica visuali da GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Sfoglia file</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Predefinito</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Scegli uno stile di immagini da visualizzare nella riproduzione audio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Alimentato da Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Importa visuali</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Ottieni più visuali tramite l'app Lively Wallpaper o scaricale da GitHub</value>
   </data>
 </root>
