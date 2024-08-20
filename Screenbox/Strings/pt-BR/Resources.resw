@@ -586,7 +586,7 @@
     <value>Mostrar mídia recente</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Exibir controles em pausa</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Locais na biblioteca de vídeos</value>
@@ -789,10 +789,10 @@
     <value>Ano de lançamento</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Áudio visual</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Obter Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Baixar visuais no GitHub</value>
@@ -804,7 +804,7 @@
     <value>Padrão</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Escolha um estilo de imagem a ser exibido na reprodução de áudio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Desenvolvido por Lively Wallpaper</value>
