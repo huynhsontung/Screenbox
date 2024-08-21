@@ -586,7 +586,7 @@
     <value>Mostrar Recientes</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Mostrar controles al pausar</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Ubicaciones de la biblioteca de video</value>
@@ -783,7 +783,7 @@
     <value>Sort by</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artista</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
     <value>Released year</value>
