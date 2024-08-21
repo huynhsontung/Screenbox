@@ -586,7 +586,7 @@
     <value>顯示最近的媒體</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>暫停時顯示控制項</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>影片媒體櫃位置</value>
@@ -789,7 +789,7 @@
     <value>發行年份</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>音訊視覺</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>Get Lively Wallpaper</value>
@@ -798,10 +798,10 @@
     <value>Download visuals on GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>瀏覽檔案</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>預設</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose an imagery style to be displayed on audio playback</value>
