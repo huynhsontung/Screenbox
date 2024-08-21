@@ -586,7 +586,7 @@
     <value>Pokaż ostatnio używane</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Pokazuj elementy sterowania podczas pauzy</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Lokalizacje biblioteki wideo</value>
@@ -780,39 +780,39 @@
     <value>Zawsze otwieraj media w nowym oknie</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Sortuj wg</value>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Rok wydania</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Wizualizacja dźwięku</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Pobierz Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Pobierz wizualizacje z GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Przeglądaj plik(i)</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Default</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Wybierz styl obrazu, który będzie wyświetlany podczas odtwarzania dźwięku</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Importuj efekty wizualne</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Uzyskaj więcej wizualizacji za pośrednictwem aplikacji Lively Wallpaper lub pobierz je z GitHub</value>
   </data>
 </root>
