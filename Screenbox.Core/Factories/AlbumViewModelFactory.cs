@@ -45,6 +45,7 @@ namespace Screenbox.Core.Factories
             if (string.IsNullOrEmpty(albumName))
             {
                 UnknownAlbum.RelatedSongs.Add(song);
+                UpdateAlbumDateAdded(UnknownAlbum, song);
                 return UnknownAlbum;
             }
 
@@ -53,6 +54,7 @@ namespace Screenbox.Core.Factories
             {
                 album.Year ??= year;
                 album.RelatedSongs.Add(song);
+                UpdateAlbumDateAdded(album, song);
                 return album;
             }
 
@@ -65,6 +67,7 @@ namespace Screenbox.Core.Factories
             };
 
             album.RelatedSongs.Add(song);
+            UpdateAlbumDateAdded(album, song);
             return _allAlbums[key] = album;
         }
 
@@ -101,6 +104,7 @@ namespace Screenbox.Core.Factories
             }
 
             UnknownAlbum.RelatedSongs.Clear();
+            UnknownAlbum.DateAdded = default;
 
             foreach ((string _, AlbumViewModel album) in _allAlbums)
             {
@@ -111,6 +115,12 @@ namespace Screenbox.Core.Factories
             }
 
             _allAlbums.Clear();
+        }
+
+        private static void UpdateAlbumDateAdded(AlbumViewModel album, MediaViewModel song)
+        {
+            if (song.DateAdded == default) return;
+            if (album.DateAdded > song.DateAdded || album.DateAdded == default) album.DateAdded = song.DateAdded;
         }
 
         private static string GetAlbumKey(string albumName, string artistName)
