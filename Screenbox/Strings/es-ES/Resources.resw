@@ -815,4 +815,7 @@
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Obtén más visualizaciones a través de la aplicación Lively Wallpaper o descárgalas de GitHub</value>
   </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
+  </data>
 </root>
