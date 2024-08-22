@@ -101,7 +101,7 @@
                         CommandParameter="dateAdded"
                         GroupName="SortOrder"
                         Tag="dateAdded"
-                        Text="Date added" />
+                        Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">

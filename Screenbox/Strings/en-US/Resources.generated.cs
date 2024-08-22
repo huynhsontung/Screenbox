@@ -2237,7 +2237,7 @@ namespace Screenbox.Strings{
 
         #region SettingsAdvancedModeDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments.
+        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments
         /// </summary>
         public static string SettingsAdvancedModeDescription
         {
@@ -2263,7 +2263,7 @@ namespace Screenbox.Strings{
 
         #region SettingsGlobalArgumentsDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback.
+        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback
         /// </summary>
         public static string SettingsGlobalArgumentsDescription
         {
@@ -2754,6 +2754,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region DateAdded
+        /// <summary>
+        ///   Looks up a localized string similar to: Date added
+        /// </summary>
+        public static string DateAdded
+        {
+            get
+            {
+                return _resourceLoader.GetString("DateAdded");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2975,6 +2988,7 @@ namespace Screenbox.Strings{
             PoweredByLivelyWallpaper,
             SettingsImportVisualsHeader,
             SettingsImportVisualsDescription,
+            DateAdded,
         }
 
         private static ResourceLoader _resourceLoader;
