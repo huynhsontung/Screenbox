@@ -10,4 +10,9 @@ internal sealed class ListGrouping<TKey, TValue> : List<TValue>, IGrouping<TKey,
     {
         Key = key;
     }
+
+    public ListGrouping(TKey key, IEnumerable<TValue> list) : base(list)
+    {
+        Key = key;
+    }
 }

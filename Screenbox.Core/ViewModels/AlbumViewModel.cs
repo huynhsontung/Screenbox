@@ -39,6 +39,8 @@ namespace Screenbox.Core.ViewModels
 
         public BitmapImage? AlbumArt => _albumArt;
 
+        public DateTimeOffset DateAdded { get; set; }
+
         public ObservableCollection<MediaViewModel> RelatedSongs { get; }
 
         [ObservableProperty] private bool _isPlaying;

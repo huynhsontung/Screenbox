@@ -96,6 +96,12 @@
                         GroupName="SortOrder"
                         Tag="year"
                         Text="{strings:Resources Key=ReleasedYear}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="dateAdded"
+                        GroupName="SortOrder"
+                        Tag="dateAdded"
+                        Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">

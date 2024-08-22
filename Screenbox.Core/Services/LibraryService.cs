@@ -189,7 +189,7 @@ namespace Screenbox.Core.Services
         {
             var folderPaths = MusicLibrary!.Folders.Select(f => f.Path).ToList();
             var records = _songs.Select(song =>
-                new PersistentSongRecord(song.Name, song.Location, song.MediaInfo.MusicProperties)).ToList();
+                new PersistentSongRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
             var libraryCache = new PersistentMusicLibrary
             {
                 FolderPaths = folderPaths,
@@ -210,7 +210,7 @@ namespace Screenbox.Core.Services
         {
             var folderPaths = VideosLibrary!.Folders.Select(f => f.Path).ToList();
             List<PersistentVideoRecord> records = _videos.Select(video =>
-                           new PersistentVideoRecord(video.Name, video.Location, video.MediaInfo.VideoProperties)).ToList();
+                           new PersistentVideoRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
             var libraryCache = new PersistentVideoLibrary()
             {
                 FolderPaths = folderPaths,
@@ -253,6 +253,11 @@ namespace Screenbox.Core.Services
                 media.IsFromLibrary = true;
                 if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
                 media.MediaInfo = new MediaInfo(record.Properties);
+                if (record.DateAdded != default)
+                {
+                    DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
+                    media.DateAdded = utcTime.ToLocalTime();
+                }
                 return media;
             }).ToList();
             return songs;
@@ -284,6 +289,11 @@ namespace Screenbox.Core.Services
                 media.IsFromLibrary = true;
                 if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
                 media.MediaInfo = new MediaInfo(record.Properties);
+                if (record.DateAdded != default)
+                {
+                    DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
+                    media.DateAdded = utcTime.ToLocalTime();
+                }
                 return media;
             }).ToList();
             return videos;

@@ -10,6 +10,7 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using Windows.System;
 
@@ -123,6 +124,18 @@ namespace Screenbox.Core.ViewModels
             return groups;
         }
 
+        private List<IGrouping<string, MediaViewModel>> GetDateAddedGrouping()
+        {
+            var groups = Songs.GroupBy(m => m.DateAdded.Date)
+                .OrderByDescending(g => g.Key)
+                .Select(g =>
+                    new ListGrouping<string, MediaViewModel>(
+                        g.Key == default ? MediaGroupingHelpers.OtherGroupSymbol : g.Key.ToString("d", CultureInfo.CurrentCulture), g))
+                .OfType<IGrouping<string, MediaViewModel>>()
+                .ToList();
+            return groups;
+        }
+
         private List<IGrouping<string, MediaViewModel>> GetDefaultGrouping()
         {
             var groups = Songs
@@ -153,6 +166,7 @@ namespace Screenbox.Core.ViewModels
                 "album" => GetAlbumGrouping(musicLibrary),
                 "artist" => GetArtistGrouping(musicLibrary),
                 "year" => GetYearGrouping(),
+                "dateAdded" => GetDateAddedGrouping(),
                 _ => GetDefaultGrouping()
             };
         }
