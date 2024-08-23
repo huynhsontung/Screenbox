@@ -32,6 +32,8 @@ namespace Screenbox.Core.Playback
             }
         }
 
+        private int _delaySpu = -1;
+
         public PlaybackSubtitleTrackList(Media media)
         {
             _pendingSubtitleTracks = new List<LazySubtitleTrack>();
@@ -46,6 +48,31 @@ namespace Screenbox.Core.Playback
             }
 
             SelectedIndexChanged += OnSelectedIndexChanged;
+        }
+
+        internal void SelectVlcSpu(int spu)
+        {
+            if (spu < 0)
+            {
+                SelectedIndex = -1;
+                return;
+            }
+
+            // Spu may be set before tracks are populated. Delay select.
+            if (Count == 0)
+            {
+                _delaySpu = spu;
+                return;
+            }
+
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i].VlcSpu == spu)
+                {
+                    SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object args)
@@ -85,6 +112,8 @@ namespace Screenbox.Core.Playback
             if (e.ParsedStatus != MediaParsedStatus.Done) return;
             _media.ParsedChanged -= Media_ParsedChanged;
             AddVlcMediaTracks(_media.Tracks);
+            if (_delaySpu >= 0)
+                SelectVlcSpu(_delaySpu);
         }
 
         private void AddVlcMediaTracks(LibVLCSharp.Shared.MediaTrack[] tracks)
