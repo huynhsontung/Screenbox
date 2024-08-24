@@ -284,13 +284,13 @@
     <value>Add folder</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>נקה</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>הוסף תיקיה</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>We couldn't find any music</value>
@@ -305,34 +305,34 @@
     <value>Search</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>הגדרות</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>ברוך הבא אל Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
     <value>Let's start playing some of your media content to get things going.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>תכונות</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>סגור</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Open file location</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
-    <value>Album</value>
+    <value>אלבום</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>אמן האלבום</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>קצב סיביות</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>סוג תוכן</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
     <value>Contributing artists</value>
@@ -341,31 +341,31 @@
     <value>File location</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>סוג קובץ</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
-    <value>Genre</value>
+    <value>ז'אנר</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>עודכן לאחרונה</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>אורך</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>מפיקים</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
     <value>Resolution</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>גודל</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>כתובית</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>כותרת</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
     <value>Track</value>
