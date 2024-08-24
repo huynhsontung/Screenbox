@@ -46,6 +46,8 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     {
         _default.PreviewPath = defaultPreviewPath;
         _default.Model.Title = defaultTitle;
+
+        IsActive = true;
     }
 
     public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService)
