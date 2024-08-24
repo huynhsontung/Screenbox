@@ -1089,28 +1089,28 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>8.0.0</Version>
@@ -1131,7 +1131,7 @@
       <Version>3.0.20-2405070635</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>4.7.0</Version>
+      <Version>4.10.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
