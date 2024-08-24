@@ -173,11 +173,18 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
 
     private void UpdatePage()
     {
-        if (!_isWebViewInitialized || ViewModel.Source is null)
+        if (!_isWebViewInitialized || _webView == null || ViewModel.Source is null)
             return;
 
-        var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
-        _webView.NavigateToLocalPath(htmlPath);
+        if (string.IsNullOrEmpty(ViewModel.Source.Path) || string.IsNullOrEmpty(ViewModel.Source.Model.FileName))
+        {
+            _webView.CoreWebView2.Navigate("about:blank");
+        }
+        else
+        {
+            var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
+            _webView.NavigateToLocalPath(htmlPath);
+        }
     }
 
     private async Task UpdateVisibility(Visibility visibility)
