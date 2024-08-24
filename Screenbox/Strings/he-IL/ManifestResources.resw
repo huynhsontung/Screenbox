@@ -124,22 +124,22 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>נגן וידאו מודרני עם התמקדות בביצועים וקלות שימוש במגוון רחב של מכשירי Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>קובץ מולטימדיה 3GPP</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>קובץ מולטימדיה 3GPP2</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>אודיו בסיומת AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>וידאו בסיומת AVI</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>אודיו בסיומת FLAC</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
     <value>Flash Video</value>
@@ -157,16 +157,16 @@
     <value>MP3 Audio</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>ווידאו בסיומת MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>אודיו בסיומת MPEG-4</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
     <value>iTunes Video</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>ווידאו בסיומת MPEG</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
     <value>Ogg Vorbis Audio</value>
@@ -178,13 +178,13 @@
     <value>QuickTime Movie</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>אודיו בסיומת WAVE</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>אודיו בסיומת WebM</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM Video</value>
+    <value>ווידאו בסיומת WebM</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
     <value>Windows Media Audio</value>
@@ -202,6 +202,6 @@
     <value>WavPack Audio</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>אודיו בסיומת AIFF</value>
   </data>
 </root>
