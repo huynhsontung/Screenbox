@@ -90,7 +90,7 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityState.Hidden;
-            _lastPositionTracker = new LastPositionTracker(filesService);
+            _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
             _showVisualizer = !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
 
@@ -135,7 +135,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(SuspendingMessage message)
         {
-            message.Reply(_lastPositionTracker.SaveToDiskAsync());
+            message.Reply(_lastPositionTracker.SaveToDiskAsync(_filesService));
         }
 
         public async void Receive(MediaPlayerChangedMessage message)
@@ -145,7 +145,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
 
-            await _lastPositionTracker.LoadFromDiskAsync();
+            await _lastPositionTracker.LoadFromDiskAsync(_filesService);
         }
 
         public void Receive(UpdateVolumeStatusMessage message)
@@ -542,7 +542,7 @@ namespace Screenbox.Core.ViewModels
 
         public bool TryHideControls(bool skipFocusCheck = false)
         {
-            bool shouldCheckPlaying = _settingsService.PlayerShowControls ? !IsPlaying : false;
+            bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
             if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
                 SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
