@@ -121,10 +121,10 @@
     <value>Frame saved</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>תמונה בתוך תמונה</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>שמור מסגרת נוכחית</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
@@ -189,13 +189,13 @@
     <value>More</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>רשימת השמעה</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Repeat: Off</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value/>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
     <value>Repeat: One</value>
