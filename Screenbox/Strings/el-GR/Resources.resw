@@ -314,88 +314,88 @@
     <value>Ας αρχίσουμε να παίζουμε κάποιο από τα περιεχόμενα πολυμέσων σας για να ξεκινήσουμε.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>Ιδιότητες</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Κλείσιμο</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>Άνοιγμα θέσης αρχείου</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
-    <value>Album</value>
+    <value>Άλμπουμ</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Καλλιτέχνης άλμπουμ</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>Ρυθμός μετάδοσης</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Τύπος περιεχομένου</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>Συνεισφέροντες καλλιτέχνες</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>Θέση αρχείου</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>Τύπος αρχείου</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
-    <value>Genre</value>
+    <value>Είδος</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>Τελευταία τροποποίηση</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>Διάρκεια</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Παραγωγοί</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Ανάλυση</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>Μέγεθος</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Υπότιτλος</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Τίτλος</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>Κομμάτι</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>Συγγραφείς</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>Έτος</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Προσαρμογή</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Δίκτυο</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Δεν υπάρχει διαθέσιμη συσκευή δικτύου</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>Αδυναμία εύρεσης των πολυμέσων σας; Βεβαιωθείτε ότι η συσκευή δικτύου σας είναι συνδεδεμένη, στις ρυθμίσεις των Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>Πρόσφατα</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>Ρυθμίσεις βίντεο</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Άνοιγμα</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
     <value>{0} location specified</value>
@@ -419,19 +419,19 @@
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Άλμπουμ</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>Καλλιτέχνες</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>Τραγούδια</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>Περιήγηση για αναπαραγωγή αρχείων</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>Προσθήκη αρχείου(ων)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Browse for file(s) to add to the play queue</value>
@@ -446,28 +446,28 @@
     <value>Add a folder to your video library</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>Άνοιγμα φακέλου</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
-    <value>Open URL</value>
+    <value>Άνοιγμα URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Κενό</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} τραγούδι</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} τραγούδια</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
-    <value>{0} album</value>
+    <value>{0} άλμπουμ</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} άλμπουμ</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
