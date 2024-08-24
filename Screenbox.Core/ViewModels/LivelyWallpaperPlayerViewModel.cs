@@ -23,6 +23,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     {
         _livelyService = livelyService;
         _settingsService = settingsService;
+
+        IsActive = true;
     }
 
     public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)

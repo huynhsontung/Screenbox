@@ -345,7 +345,7 @@
             <FontIcon Glyph="&#xE91B;" />
             <Button.Flyout>
                 <Flyout>
-                    <controls:LivelyWallpaperSelector />
+                    <controls:LivelyWallpaperSelector MaxWidth="350" />
                 </Flyout>
             </Button.Flyout>
         </Button>
