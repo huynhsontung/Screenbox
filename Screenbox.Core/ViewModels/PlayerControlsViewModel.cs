@@ -81,14 +81,11 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(PlayPauseCommand))]
-        [NotifyCanExecuteChangedFor(nameof(ToggleCompactLayoutCommand))]
-        [NotifyCanExecuteChangedFor(nameof(ToggleFullscreenCommand))]
         private bool _hasActiveItem;
 
 
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly IWindowService _windowService;
-        private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
@@ -96,13 +93,11 @@ namespace Screenbox.Core.ViewModels
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,
-            IFilesService filesService,
             ISettingsService settingsService,
             IWindowService windowService,
             IResourceService resourceService)
         {
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _filesService = filesService;
             _windowService = windowService;
             _resourceService = resourceService;
             _settingsService = settingsService;
@@ -317,7 +312,7 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new ChangeAspectRatioMessage(_aspectRatio));
         }
 
-        [RelayCommand(CanExecute = nameof(HasActiveItem))]
+        [RelayCommand]
         private async Task ToggleCompactLayoutAsync()
         {
             if (IsCompact)
@@ -335,7 +330,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        [RelayCommand(CanExecute = nameof(HasActiveItem))]
+        [RelayCommand]
         private void ToggleFullscreen()
         {
             if (IsCompact) return;
