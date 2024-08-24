@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
@@ -28,6 +29,8 @@ namespace Screenbox.Core.ViewModels
         IRecipient<SettingsChangedMessage>,
         IRecipient<MediaPlayerRequestMessage>
     {
+        public event EventHandler<EventArgs>? ClearViewRequested;
+
         public MediaPlayer? VlcPlayer { get; private set; }
 
         private readonly LibVlcService _libVlcService;
@@ -85,6 +88,16 @@ namespace Screenbox.Core.ViewModels
 
         public void Initialize(string[] swapChainOptions)
         {
+            if (_mediaPlayer != null)
+            {
+                var player = _mediaPlayer;
+                player.PlaybackStateChanged -= OnPlaybackStateChanged;
+                player.PositionChanged -= OnPositionChanged;
+                player.MediaFailed -= OnMediaFailed;
+                player.PlaybackItemChanged -= OnPlaybackItemChanged;
+                DisposeMediaPlayer();
+            }
+
             Task.Run(() =>
             {
                 string[] args = _settingsService.GlobalArguments.Length > 0
@@ -109,8 +122,14 @@ namespace Screenbox.Core.ViewModels
                 player.PlaybackStateChanged += OnPlaybackStateChanged;
                 player.PositionChanged += OnPositionChanged;
                 player.MediaFailed += OnMediaFailed;
+                player.PlaybackItemChanged += OnPlaybackItemChanged;
                 Messenger.Send(new MediaPlayerChangedMessage(player));
             });
+        }
+
+        private void OnPlaybackItemChanged(IMediaPlayer sender, ValueChangedEventArgs<PlaybackItem?> args)
+        {
+            if (args.NewValue == null) ClearViewRequested?.Invoke(this, EventArgs.Empty);
         }
 
         public void OnClick()
@@ -277,6 +296,8 @@ namespace Screenbox.Core.ViewModels
         {
             _mediaPlayer?.Close();
             _mediaPlayer?.LibVlc.Dispose();
+            _mediaPlayer = null;
+            VlcPlayer = null;
         }
 
         private static void UpdateDisplayRequest(MediaPlaybackState state, DisplayRequestTracker tracker)
