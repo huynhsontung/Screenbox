@@ -319,14 +319,13 @@
         </Grid>
 
         <!--  Music visualizer  -->
-        <!--  Final visibility is determined by both binding and the VisualState setters, VisualState takes precedence over binding.  -->
         <controls:LivelyWebWallpaperPlayer
             x:Name="LivelyWallpaperPlayer"
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            x:Load="{x:Bind ViewModel.ShowVisualizer}"
+            x:Load="False"
             Media="{x:Bind ViewModel.Media, Mode=OneWay}" />
 
         <Button

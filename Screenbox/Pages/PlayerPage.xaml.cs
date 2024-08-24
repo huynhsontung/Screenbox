@@ -302,7 +302,7 @@ namespace Screenbox.Pages
                     if (ViewModel.ShowVisualizer)
                     {
                         // Load the visualizer if not already
-                        FindName("LivelyWallpaperPlayer");
+                        FindName(nameof(LivelyWallpaperPlayer));
                     }
 
                     UpdateContentState();

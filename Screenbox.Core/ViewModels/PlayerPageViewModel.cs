@@ -92,7 +92,6 @@ namespace Screenbox.Core.ViewModels
             _playerVisibility = PlayerVisibilityState.Hidden;
             _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
-            _showVisualizer = !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
             _windowService.ViewModeChanged += WindowServiceOnViewModeChanged;
@@ -104,7 +103,7 @@ namespace Screenbox.Core.ViewModels
         public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
         {
             if (message.NewValue == null) return;
-            ShowVisualizer = !string.IsNullOrEmpty(message.NewValue.Path);
+            ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.NewValue.Path);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
@@ -595,6 +594,7 @@ namespace Screenbox.Core.ViewModels
                 await current.LoadDetailsAsync(_filesService);
                 await current.LoadThumbnailAsync(_filesService);
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
