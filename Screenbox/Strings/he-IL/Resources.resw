@@ -144,28 +144,28 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>טעינת הכתוביות נכשלה</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>חזור</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>השתק</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>בטל השתקה</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>מסך מלא</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>אודיו וכיתוביות</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>צא ממסך מלא</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>עוצמת שמע</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -174,78 +174,78 @@
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>הבא</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>הקודם</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>נגן</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>השהה</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>עוד</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
     <value>רשימת השמעה</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>חזרה: כבויה</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
     <value/>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>חזרה: פועלת</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} פריט נבחר</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} פריטים נבחרו</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>הוסף לתור</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>נקה את הבחירה</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>הסר</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>נגן את השיר הבא</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>הזז מעלה</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>הזז למטה</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>Is playing</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>סרטונים</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>This folder is empty</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} פריט</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} פריטים</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>ריק</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restore video view</value>
@@ -263,22 +263,22 @@
     <value>Cast to a device</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>השבת</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>מוסיקה</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>ערבב ונגן</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>אמן לא ידוע</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>אלבום לא ידוע</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>ז'אנר לא ידוע</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
     <value>הוסף תיקיה</value>
@@ -485,7 +485,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>ראה הכל</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
     <value>Artist results for "{0}"</value>
@@ -723,7 +723,7 @@
     <value>Privacy policy</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>רישיון</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Help translate</value>
