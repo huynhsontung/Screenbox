@@ -411,7 +411,9 @@ namespace Screenbox.Core.Playback
         private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
             PlaybackSubtitleTrackList trackList = (PlaybackSubtitleTrackList)sender;
-            VlcPlayer.SetSpu(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcSpu);
+            if (sender.SelectedIndex < 0) VlcPlayer.SetSpu(-1);
+            else if (trackList[sender.SelectedIndex].VlcSpu >= 0)   // VlcSpu < 0 on lazy load
+                VlcPlayer.SetSpu(trackList[sender.SelectedIndex].VlcSpu);
         }
 
         public void AddSubtitle(IStorageFile file, bool select = true)
