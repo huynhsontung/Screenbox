@@ -1,19 +1,19 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox נגן מדיה
 
-**Screenbox is a modern media player for all your devices, with support for a wide range of file formats.**
+**Screenbox הוא נגן מדיה מודרני לכל המכשירים שלך, עם תמיכה במגוון רחב של פורמטי קבצים.**
 
-### Description
+### תיאור
 
-Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
+Screenbox הוא נגן מדיה מודרני השואף להביא מראה חדש ורענן לאפליקציה הקלאסית. הוא מציע ממשק משתמש אלגנטי ואינטואיטיבי שיתאים למערכת שלך. Screenbox תוכנן לחוויה חלקה במגוון רחב של מכשירי Windows וקונסולות Xbox, והוא מהיר, קל ורב עוצמה.
 
-Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
+Screenbox תומך במגוון רחב של פורמטי קבצים וקודקים. הפעל כמעט כל סוג מדיה ללא תוספות נוספות. Screenbox מופעל על ידי LibVLC, ומשלב את המיטב של נגן המדיה VLC עם יכולות אפליקציות Windows מודרניות. אפשרויות השמעה מתקדמות זמינות באמצעות ארגומנטים של VLC בשורת הפקודה.
 
-### Features
+### תכונות
 
-- A modern user experience with gesture support, optimized for all types of Windows devices.
-- Support many audio and video formats.
-- Browse and manage your music and video library on your machine or over the network.
-- Cast your media to a wide range of devices with Chromecast.
-- Work and enjoy your media at the same time using picture-in-picture mode.
+- חווית משתמש מודרנית עם תמיכה במחוות, מותאמת לכל סוגי מכשירי Windows.
+- תמיכה בפורמטים רבים של אודיו ווידאו.
+- צפה ונהל את ספריית המוזיקה והווידאו שלך במחשב שלך או ברשת.
+- העבר את המדיה שלך למגוון רחב של מכשירים עם Chromecast.
+- עבוד ותהנה מהמדיה שלך בו-זמנית באמצעות מצב תמונה בתוך תמונה.
