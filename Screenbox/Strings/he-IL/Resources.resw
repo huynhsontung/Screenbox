@@ -293,10 +293,10 @@
     <value>הוסף תיקיה</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>לא מצאנו שום מוזיקה</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>ספריית המוזיקה שלך אינה מכילה כל מוזיקה.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>פתח קובץ(ים)</value>
@@ -356,7 +356,7 @@
     <value>מפיקים</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>רזולוציה</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
     <value>גודל</value>
@@ -452,7 +452,7 @@
     <value>Open URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>ריק</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
     <value>{0} song</value>
@@ -463,11 +463,11 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
-    <value>{0} album</value>
+    <value>{0} אלבום</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} אלבומים</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
@@ -475,10 +475,10 @@
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>All videos</value>
+    <value>כל הסרטונים</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Video folders</value>
+    <value>תיקיות וידאו</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
     <value>Search results for "{0}"</value>
@@ -520,7 +520,7 @@
     <value>Can't access videos library</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>לא מצאנו שום סרטונים</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
     <value>Your video library doesn't contain any video content.</value>
@@ -547,22 +547,22 @@
     <value>Custom playback speed</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>ללא</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
     <value>Scale: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>כתובית: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>רצועה {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>הוסף כתובית</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>אודיו</value>
@@ -595,25 +595,25 @@
     <value>Subtitles</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>הצג מדיה שהושמעה לאחרונה בדף הבית</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Clear recent media history</value>
+    <value>נקה את היסטוריית המדיה האחרונה</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
-    <value>Auto resize</value>
+    <value>שינוי גודל אוטומטי</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Resize the app window to best match a video's native resolution on playback</value>
+    <value>שנה את גודל חלון האפליקציה כדי להתאים בצורה הטובה ביותר לרזולוציה המקורית של סרטון בעת ​​השמעה</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Volume boost</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Allow the maximum volume to go above 100%</value>
+    <value>אפשר לעוצמת הקול המקסימלית לעלות מעל 100%</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>מחוות</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
     <value>Drag horizontally to seek</value>
@@ -625,7 +625,7 @@
     <value>Tap anywhere to play or pause</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Screenbox Media Player</value>
+    <value>Screenbox נגן מדיה</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
     <value>קוד מקור</value>
@@ -690,10 +690,10 @@
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>מתקדם</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>מצב מתקדם</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
