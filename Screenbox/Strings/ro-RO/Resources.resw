@@ -586,7 +586,7 @@
     <value>Arată recentele</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Afișați controalele când redarea este în pauză</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Locațiile bibliotecii video</value>
@@ -789,33 +789,33 @@
     <value>Anul lansării</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Vizualizare audio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Obțineți Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Descărcați vizualizări de pe GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Răsfoire fișier(e)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Implicit</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Alegeți un stil imagistic pentru a fii afișat în timpul redării audio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Oferit de Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Importare vizualizări</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Obțineți mai multe vizualizări prin intermediul aplicației Lively Wallpaper sau descărcați-le de pe GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Data adăugării</value>
   </data>
 </root>
