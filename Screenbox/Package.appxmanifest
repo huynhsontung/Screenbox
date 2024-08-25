@@ -327,6 +327,16 @@
             <uap:Logo>Assets\Icons\Audio\FileAssociationAIFF.png</uap:Logo>
           </uap:FileTypeAssociation>
         </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="rm">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/vnd.rn-realmedia">.rm</uap:FileType>
+              <uap:FileType ContentType="application/vnd.rn-realmedia-vbr">.rmvb</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:DisplayName>RealMedia</uap:DisplayName>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
        </Extensions>
     </Application>
   </Applications>
