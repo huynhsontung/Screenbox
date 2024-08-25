@@ -792,13 +792,13 @@
     <value>Audio visual</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>עבור אל Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>הורד דגמים ויזואליים מGitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>עיין בקובץ(ים)</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>ברירת מחדל</value>
@@ -807,10 +807,10 @@
     <value>בחר את סגנון תמונה שתוצג בעת השמעת אודיו</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>מופעל על ידי Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>ייבא דגמים ויזואליים</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
