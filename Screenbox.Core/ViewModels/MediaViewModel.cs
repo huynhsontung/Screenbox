@@ -39,6 +39,8 @@ namespace Screenbox.Core.ViewModels
 
         public IReadOnlyList<string> Options { get; }
 
+        public DateTimeOffset DateAdded { get; set; }
+
         public MediaPlaybackType MediaType => MediaInfo.MediaType;
 
         public TimeSpan Duration => MediaInfo.MusicProperties.Duration > TimeSpan.Zero
@@ -87,6 +89,7 @@ namespace Screenbox.Core.ViewModels
             Location = source.Location;
             Source = source.Source;
             Item = source.Item;
+            DateAdded = source.DateAdded;
         }
 
         private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
@@ -94,6 +97,7 @@ namespace Screenbox.Core.ViewModels
             _libVlcService = libVlcService;
             Source = source;
             Location = string.Empty;
+            DateAdded = DateTimeOffset.Now;
             _name = string.Empty;
             _mediaInfo = mediaInfo;
             _artists = Array.Empty<ArtistViewModel>();

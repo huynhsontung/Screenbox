@@ -171,6 +171,7 @@
     <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
     <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
     <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
+    <Compile Include="Controls\Interactions\GroupingOverviewBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
@@ -178,6 +179,12 @@
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
+    <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
+      <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LivelyWebWallpaperPlayer.xaml.cs">
+      <DependentUpon>LivelyWebWallpaperPlayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
@@ -781,7 +788,9 @@
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\LivelyWallpaper100x100Logo.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\DefaultAudioVisual.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
     <Content Include="Assets\SmallTile.scale-125.png" />
     <Content Include="Assets\SmallTile.scale-150.png" />
@@ -829,6 +838,22 @@
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\Fonts\ScreenboxFluentIcons.ttf" />
     <Content Include="Assets\Fonts\ScreenboxMDL2Assets.ttf" />
+    <Content Include="Assets\Visualizers\Music Tunnel\fonts\Montserrat-Regular.otf" />
+    <Content Include="Assets\Visualizers\Music Tunnel\fonts\SIL Open Font License.txt" />
+    <Content Include="Assets\Visualizers\Music Tunnel\index.html" />
+    <Content Include="Assets\Visualizers\Music Tunnel\js\color-thief.umd.js" />
+    <Content Include="Assets\Visualizers\Music Tunnel\js\dat.gui.min.js" />
+    <Content Include="Assets\Visualizers\Music Tunnel\js\jquery.min.js" />
+    <Content Include="Assets\Visualizers\Music Tunnel\js\script.js" />
+    <Content Include="Assets\Visualizers\Music Tunnel\js\three.min.js" />
+    <Content Include="Assets\Visualizers\Music Tunnel\License.txt" />
+    <Content Include="Assets\Visualizers\Music Tunnel\LivelyInfo.json" />
+    <Content Include="Assets\Visualizers\Music Tunnel\LivelyProperties.json" />
+    <Content Include="Assets\Visualizers\Music Tunnel\media\background.jpg" />
+    <Content Include="Assets\Visualizers\Music Tunnel\preview.gif" />
+    <Content Include="Assets\Visualizers\Music Tunnel\shaders\tunnel.frag" />
+    <Content Include="Assets\Visualizers\Music Tunnel\styles\style.css" />
+    <Content Include="Assets\Visualizers\Music Tunnel\thumbnail.jpg" />
     <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
@@ -896,6 +921,14 @@
     <Page Include="Controls\ChapterProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LivelyWallpaperSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LivelyWebWallpaperPlayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MediaListViewItem.xaml">
       <SubType>Designer</SubType>
@@ -1056,28 +1089,28 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>8.0.0</Version>
@@ -1096,6 +1129,9 @@
     </PackageReference>
     <PackageReference Include="LibVLC.UWP">
       <Version>3.0.20-2405070635</Version>
+    </PackageReference>
+    <PackageReference Include="Sentry">
+      <Version>4.10.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

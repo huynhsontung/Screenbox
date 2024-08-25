@@ -5,6 +5,7 @@
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -317,6 +318,37 @@
             </Border>
         </Grid>
 
+        <!--  Music visualizer  -->
+        <controls:LivelyWebWallpaperPlayer
+            x:Name="LivelyWallpaperPlayer"
+            Grid.Row="0"
+            Grid.RowSpan="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            x:Load="False"
+            Media="{x:Bind ViewModel.Media, Mode=OneWay}" />
+
+        <Button
+            x:Name="LivelyOptionsButton"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Width="44"
+            Height="44"
+            Margin="4,-16,4,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Canvas.ZIndex="4"
+            Style="{StaticResource SubtleButtonStyle}"
+            ToolTipService.ToolTip="Audio visual options">
+            <FontIcon Glyph="&#xE91B;" />
+            <Button.Flyout>
+                <Flyout>
+                    <controls:LivelyWallpaperSelector MaxWidth="350" />
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+
         <controls:PlayerElement
             x:Name="VideoView"
             Grid.Row="0"
@@ -554,6 +586,7 @@
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="1" />
+                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
@@ -564,6 +597,7 @@
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                     <Storyboard x:Name="BackgroundArtAnimation">
                         <DoubleAnimationUsingKeyFrames
@@ -606,11 +640,20 @@
                     </Storyboard>
                 </VisualState>
 
+                <VisualState x:Name="AudioWithVisualizer">
+                    <VisualState.Setters>
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
+                        <Setter Target="HeaderBackground.Opacity" Value="1" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
+                        <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+
                 <VisualStateGroup.Transitions>
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.5"
-                        From="AudioOnly"
-                        To="Video">
+                    <VisualTransition GeneratedDuration="0:0:0.5" To="Video">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Dark" />
@@ -635,10 +678,7 @@
                         </Storyboard>
                     </VisualTransition>
 
-                    <VisualTransition
-                        GeneratedDuration="0:0:0.24"
-                        From="Video"
-                        To="AudioOnly">
+                    <VisualTransition GeneratedDuration="0:0:0.24" To="AudioOnly">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
@@ -649,7 +689,36 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
                             <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
+                        </Storyboard>
+                    </VisualTransition>
+
+                    <VisualTransition GeneratedDuration="0:0:0.24" To="AudioWithVisualizer">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundArt" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation
+                                Storyboard.TargetName="LivelyWallpaperPlayer"
+                                Storyboard.TargetProperty="Opacity"
+                                From="0"
+                                To="1"
+                                Duration="0:0:1" />
                         </Storyboard>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
@@ -676,6 +745,7 @@
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="20,-16,20,0" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,70,0,104" />
                     </VisualState.Setters>

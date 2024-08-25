@@ -309,15 +309,7 @@ namespace Screenbox.Core.Playback
             // Update subtitle track index accordingly.
             int spu = e.Id;
             if (spu < 0) return;
-
-            for (int i = 0; i < PlaybackItem.SubtitleTracks.Count; i++)
-            {
-                if (PlaybackItem.SubtitleTracks[i].VlcSpu == spu)
-                {
-                    PlaybackItem.SubtitleTracks.SelectedIndex = i;
-                    break;
-                }
-            }
+            PlaybackItem.SubtitleTracks.SelectVlcSpu(spu);
         }
 
         private void VlcPlayer_ChapterChanged(object sender, MediaPlayerChapterChangedEventArgs e)
@@ -333,6 +325,8 @@ namespace Screenbox.Core.Playback
 
         private void VlcPlayer_ESAdded(object sender, MediaPlayerESAddedEventArgs e)
         {
+            // Cannot use this event to check the track details during media Opening
+            // This event fires before the track entry is added to Media.Tracks array
             if (PlaybackItem == null || PlaybackState == MediaPlaybackState.Opening) return;
             if (e.Type == TrackType.Text)
             {
@@ -417,7 +411,9 @@ namespace Screenbox.Core.Playback
         private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
             PlaybackSubtitleTrackList trackList = (PlaybackSubtitleTrackList)sender;
-            VlcPlayer.SetSpu(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcSpu);
+            if (sender.SelectedIndex < 0) VlcPlayer.SetSpu(-1);
+            else if (trackList[sender.SelectedIndex].VlcSpu >= 0)   // VlcSpu < 0 on lazy load
+                VlcPlayer.SetSpu(trackList[sender.SelectedIndex].VlcSpu);
         }
 
         public void AddSubtitle(IStorageFile file, bool select = true)

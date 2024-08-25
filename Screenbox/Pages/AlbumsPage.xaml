@@ -26,7 +26,7 @@
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
@@ -50,11 +50,78 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <SemanticZoom>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button
+            x:Name="ShufflePlayButton"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPagePadding}"
+            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+            Style="{StaticResource AccentButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Glyph="&#xE8B1;" />
+                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+            </StackPanel>
+        </Button>
+
+        <muxc:DropDownButton
+            x:Name="SortByButton"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPagePadding}"
+            HorizontalAlignment="Right"
+            Background="Transparent"
+            BorderBrush="Transparent">
+            <muxc:DropDownButton.Flyout>
+                <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="title"
+                        GroupName="SortOrder"
+                        IsChecked="True"
+                        Tag="title"
+                        Text="{strings:Resources Key=PropertyTitle}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="artist"
+                        GroupName="SortOrder"
+                        Tag="artist"
+                        Text="{strings:Resources Key=Artist}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="year"
+                        GroupName="SortOrder"
+                        Tag="year"
+                        Text="{strings:Resources Key=ReleasedYear}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="dateAdded"
+                        GroupName="SortOrder"
+                        Tag="dateAdded"
+                        Text="{strings:Resources Key=DateAdded}" />
+                </MenuFlyout>
+            </muxc:DropDownButton.Flyout>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
+                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+            </StackPanel>
+        </muxc:DropDownButton>
+
+        <muxc:ProgressBar
+            Grid.Row="1"
+            Margin="{StaticResource TopMediumMargin}"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
+        <SemanticZoom Grid.Row="1" Margin="{StaticResource TopLargeMargin}">
             <SemanticZoom.ZoomedInView>
                 <GridView
                     x:Name="AlbumGridView"
-                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource GridViewContentPagePadding}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -88,6 +155,7 @@
                     Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind AlbumsSource.View.CollectionGroups}"
                     SelectionMode="None">
@@ -100,6 +168,9 @@
                             <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
+                    </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
@@ -119,6 +190,18 @@
                     <VisualState.Setters>
                         <Setter Target="AlbumGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByText.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SortByStates">
+                <VisualState x:Name="SortByTitle" />
+                <VisualState x:Name="SortByArtist">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

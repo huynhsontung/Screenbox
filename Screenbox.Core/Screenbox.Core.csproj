@@ -124,9 +124,11 @@
     <Compile Include="Common\Humanizer.cs" />
     <Compile Include="Common\IContentFrame.cs" />
     <Compile Include="Common\IDialog.cs" />
+    <Compile Include="Common\ServiceHelpers.cs" />
     <Compile Include="Common\IPropertiesDialog.cs" />
     <Compile Include="Common\IVlcLoginDialog.cs" />
     <Compile Include="Common\NavigationMetadata.cs" />
+    <Compile Include="Enums\LivelyWallpaperType.cs" />
     <Compile Include="Enums\MediaPlaybackType.cs" />
     <Compile Include="Enums\ResourceName.cs" />
     <Compile Include="Enums\ManipulationLock.cs" />
@@ -148,10 +150,13 @@
     <Compile Include="Helpers\FilesHelpers.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\LastPositionTracker.cs" />
+    <Compile Include="Helpers\ListGrouping.cs" />
+    <Compile Include="Helpers\LivelyWallpaperUtil.cs" />
     <Compile Include="Helpers\MediaGroupingHelpers.cs" />
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
+    <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />
     <Compile Include="Messages\ChangeTimeRequestMessage.cs" />
     <Compile Include="Messages\ChangeVolumeRequestMessage.cs" />
@@ -184,6 +189,10 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
+    <Compile Include="Models\LivelyInfoModel.cs" />
+    <Compile Include="Models\LivelyMusicModel.cs" />
+    <Compile Include="Models\LivelyPlaybackStateModel.cs" />
+    <Compile Include="Models\LivelyWallpaperModel.cs" />
     <Compile Include="Models\MediaInfo.cs" />
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
@@ -216,6 +225,7 @@
     <Compile Include="Services\ICastService.cs" />
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
+    <Compile Include="Services\ILivelyWallpaperService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IResourceService.cs" />
@@ -225,6 +235,7 @@
     <Compile Include="Services\IWindowService.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="Services\LibVlcService.cs" />
+    <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
@@ -242,12 +253,15 @@
     <Compile Include="ViewModels\ArtistsPageViewModel.cs" />
     <Compile Include="ViewModels\ArtistViewModel.cs" />
     <Compile Include="ViewModels\AudioTrackSubtitleViewModel.cs" />
+    <Compile Include="ViewModels\BaseMusicContentViewModel.cs" />
     <Compile Include="ViewModels\CastControlViewModel.cs" />
     <Compile Include="ViewModels\ChapterViewModel.cs" />
     <Compile Include="ViewModels\CommonViewModel.cs" />
     <Compile Include="ViewModels\FolderListViewPageViewModel.cs" />
     <Compile Include="ViewModels\FolderViewPageViewModel.cs" />
     <Compile Include="ViewModels\HomePageViewModel.cs" />
+    <Compile Include="ViewModels\LivelyWallpaperPlayerViewModel.cs" />
+    <Compile Include="ViewModels\LivelyWallpaperSelectorViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\MediaListViewModel.cs" />
     <Compile Include="ViewModels\MediaViewModel.cs" />
@@ -273,13 +287,16 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.0.240109</Version>
+      <Version>8.1.240821</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.3</Version>
+      <Version>5.0.5</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <Version>8.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -291,7 +308,7 @@
       <Version>8.2.2</Version>
     </PackageReference>
     <PackageReference Include="LibVLCSharp">
-      <Version>3.7.0</Version>
+      <Version>3.9.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.6</Version>
@@ -299,12 +316,18 @@
     <PackageReference Include="protobuf-net">
       <Version>3.2.30</Version>
     </PackageReference>
+    <PackageReference Include="Sentry">
+      <Version>4.10.2</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Helpers\LanguageCodes.resw">
       <SubType>Designer</SubType>
     </PRIResource>
     <None Include="packages.lock.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

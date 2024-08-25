@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -200,8 +201,15 @@
                         Command="{x:Bind ViewModel.RefreshLibrariesCommand}"
                         Content="{strings:Resources Key=Refresh}" />
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Description="{strings:Resources Key=SettingsUseIndexerDescription}" Header="{strings:Resources Key=SettingsUseIndexerHeader}">
-                            <ToggleSwitch IsOn="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                        <ctc:SettingsCard ContentAlignment="Left">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox Content="{strings:Resources Key=SettingsUseIndexerHeader}" IsChecked="{x:Bind ViewModel.UseIndexer, Mode=TwoWay}" />
+                                <TextBlock
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Text="{strings:Resources Key=SettingsUseIndexerDescription}"
+                                    TextWrapping="Wrap" />
+                            </StackPanel>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
                             <ctc:SettingsCard.Header>
@@ -268,20 +276,61 @@
                         <x:String>#200%</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
+                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                </ctc:SettingsCard>
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureSeek}" IsChecked="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard ContentAlignment="Left">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureVolume}" IsChecked="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureVolume}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerVolumeGesture, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard ContentAlignment="Left" CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
-                            <CheckBox Content="{strings:Resources Key=SettingsGestureTap}" IsChecked="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        <ctc:SettingsCard CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}" Header="{strings:Resources Key=SettingsGestureTap}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerTapGesture, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsAudioVisualDescription}"
+                    Header="{strings:Resources Key=SettingsAudioVisualHeader}">
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard ContentAlignment="Left">
+                            <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" ShowAddButton="False" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Description="{strings:Resources Key=SettingsImportVisualsDescription}" Header="{strings:Resources Key=SettingsImportVisualsHeader}">
+                            <Button Command="{x:Bind AudioVisualSelector.ViewModel.BrowseVisualizerCommand}" Content="{strings:Resources Key=BrowseFiles}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard
+                            Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                            ContentAlignment="Left"
+                            CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}">
+                            <Grid Margin="-42,0,0,2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Padding="0,5,11,0"
+                                    VerticalAlignment="Top"
+                                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                                    Text="{strings:Resources Key=RelatedLinks}" />
+                                <ctc:WrapPanel Grid.Column="1" Orientation="Horizontal">
+                                    <HyperlinkButton Content="{strings:Resources Key=GetLivelyApp}" NavigateUri="https://www.rocksdanister.com/lively" />
+                                    <HyperlinkButton Content="{strings:Resources Key=GetLivelyVisuals}" NavigateUri="https://github.com/rocksdanister/audio-visualizer-wallpaper" />
+                                </ctc:WrapPanel>
+                            </Grid>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
@@ -307,16 +356,10 @@
                     </interactivity:Interaction.Behaviors>
                     <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}" IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
-                            <ctc:SettingsCard.Description>
-                                <TextBlock>
-                                    <Run Text="{strings:Resources Key=SettingsGlobalArgumentsDescription}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
-                                    <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
-                                        <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
-                                    </Hyperlink>
-                                    <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" />
-                                </TextBlock>
-                            </ctc:SettingsCard.Description>
+                        <ctc:SettingsCard
+                            Description="{strings:Resources Key=SettingsGlobalArgumentsDescription}"
+                            Header="{strings:Resources Key=SettingsGlobalArgumentsHeader}"
+                            IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                             <Button CommandParameter="{x:Bind ViewModel}" Content="{strings:Resources Key=SetArguments}">
                                 <Button.Command>
                                     <commands:SetPlaybackOptionsCommand />
@@ -325,7 +368,7 @@
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
                             CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource BottomCornerRadiusFilterConverter}}"
-                            Header="Active arguments"
+                            Header="{strings:Resources Key=ActiveArguments}"
                             IsEnabled="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.GlobalArguments, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
                             <ctc:SettingsCard.Description>

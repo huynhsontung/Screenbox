@@ -36,6 +36,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
+        IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
         [ObservableProperty] private bool _controlsHidden;
@@ -49,6 +50,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
         [ObservableProperty] private ElementTheme _actualTheme;
+        [ObservableProperty] private bool _showVisualizer;
 
         [ObservableProperty]
         [NotifyPropertyChangedRecipients]
@@ -88,7 +90,7 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityState.Hidden;
-            _lastPositionTracker = new LastPositionTracker(filesService);
+            _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
@@ -96,6 +98,12 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
+        {
+            if (message.NewValue == null) return;
+            ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.NewValue.Path);
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
@@ -126,7 +134,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(SuspendingMessage message)
         {
-            message.Reply(_lastPositionTracker.SaveToDiskAsync());
+            message.Reply(_lastPositionTracker.SaveToDiskAsync(_filesService));
         }
 
         public async void Receive(MediaPlayerChangedMessage message)
@@ -136,7 +144,7 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
 
-            await _lastPositionTracker.LoadFromDiskAsync();
+            await _lastPositionTracker.LoadFromDiskAsync(_filesService);
         }
 
         public void Receive(UpdateVolumeStatusMessage message)
@@ -533,7 +541,8 @@ namespace Screenbox.Core.ViewModels
 
         public bool TryHideControls(bool skipFocusCheck = false)
         {
-            if (PlayerVisibility != PlayerVisibilityState.Visible || !IsPlaying ||
+            bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
+            if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
                 SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
 
             if (!skipFocusCheck)
@@ -585,6 +594,7 @@ namespace Screenbox.Core.ViewModels
                 await current.LoadDetailsAsync(_filesService);
                 await current.LoadThumbnailAsync(_filesService);
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
+                ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
                 if (PlayerVisibility != PlayerVisibilityState.Visible)
                 {
@@ -618,9 +628,14 @@ namespace Screenbox.Core.ViewModels
                 IsPlaying = state == MediaPlaybackState.Playing;
                 IsOpening = false;
 
-                if (!IsPlaying)
+                if (!IsPlaying && _settingsService.PlayerShowControls)
                 {
                     ControlsHidden = false;
+                }
+
+                if (!IsPlaying && !_settingsService.PlayerShowControls)
+                {
+                    DelayHideControls();
                 }
 
                 if (!ControlsHidden && IsPlaying)

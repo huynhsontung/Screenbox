@@ -1767,6 +1767,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SettingsShowControlsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Display controls on pause
+        /// </summary>
+        public static string SettingsShowControlsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsShowControlsHeader");
+            }
+        }
+        #endregion
+
         #region SettingsVideoLibraryLocationsHeader
         /// <summary>
         ///   Looks up a localized string similar to: Video library locations
@@ -2224,7 +2237,7 @@ namespace Screenbox.Strings{
 
         #region SettingsAdvancedModeDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments.
+        ///   Looks up a localized string similar to: Advanced mode allows you to customize LibVLC's behavior using command line arguments
         /// </summary>
         public static string SettingsAdvancedModeDescription
         {
@@ -2250,7 +2263,7 @@ namespace Screenbox.Strings{
 
         #region SettingsGlobalArgumentsDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback.
+        ///   Looks up a localized string similar to: Command line arguments that apply to all media playback
         /// </summary>
         public static string SettingsGlobalArgumentsDescription
         {
@@ -2585,6 +2598,175 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SortBy
+        /// <summary>
+        ///   Looks up a localized string similar to: Sort by
+        /// </summary>
+        public static string SortBy
+        {
+            get
+            {
+                return _resourceLoader.GetString("SortBy");
+            }
+        }
+        #endregion
+
+        #region Artist
+        /// <summary>
+        ///   Looks up a localized string similar to: Artist
+        /// </summary>
+        public static string Artist
+        {
+            get
+            {
+                return _resourceLoader.GetString("Artist");
+            }
+        }
+        #endregion
+
+        #region ReleasedYear
+        /// <summary>
+        ///   Looks up a localized string similar to: Released year
+        /// </summary>
+        public static string ReleasedYear
+        {
+            get
+            {
+                return _resourceLoader.GetString("ReleasedYear");
+            }
+        }
+        #endregion
+
+        #region SettingsAudioVisualHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio visual
+        /// </summary>
+        public static string SettingsAudioVisualHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAudioVisualHeader");
+            }
+        }
+        #endregion
+
+        #region GetLivelyApp
+        /// <summary>
+        ///   Looks up a localized string similar to: Get Lively Wallpaper
+        /// </summary>
+        public static string GetLivelyApp
+        {
+            get
+            {
+                return _resourceLoader.GetString("GetLivelyApp");
+            }
+        }
+        #endregion
+
+        #region GetLivelyVisuals
+        /// <summary>
+        ///   Looks up a localized string similar to: Download visuals on GitHub
+        /// </summary>
+        public static string GetLivelyVisuals
+        {
+            get
+            {
+                return _resourceLoader.GetString("GetLivelyVisuals");
+            }
+        }
+        #endregion
+
+        #region BrowseFiles
+        /// <summary>
+        ///   Looks up a localized string similar to: Browse file(s)
+        /// </summary>
+        public static string BrowseFiles
+        {
+            get
+            {
+                return _resourceLoader.GetString("BrowseFiles");
+            }
+        }
+        #endregion
+
+        #region Default
+        /// <summary>
+        ///   Looks up a localized string similar to: Default
+        /// </summary>
+        public static string Default
+        {
+            get
+            {
+                return _resourceLoader.GetString("Default");
+            }
+        }
+        #endregion
+
+        #region SettingsAudioVisualDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Choose an imagery style to be displayed on audio playback
+        /// </summary>
+        public static string SettingsAudioVisualDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsAudioVisualDescription");
+            }
+        }
+        #endregion
+
+        #region PoweredByLivelyWallpaper
+        /// <summary>
+        ///   Looks up a localized string similar to: Powered by Lively Wallpaper
+        /// </summary>
+        public static string PoweredByLivelyWallpaper
+        {
+            get
+            {
+                return _resourceLoader.GetString("PoweredByLivelyWallpaper");
+            }
+        }
+        #endregion
+
+        #region SettingsImportVisualsHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Import visuals
+        /// </summary>
+        public static string SettingsImportVisualsHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsImportVisualsHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsImportVisualsDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Get more visuals via the Lively Wallpaper app or download them from GitHub
+        /// </summary>
+        public static string SettingsImportVisualsDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsImportVisualsDescription");
+            }
+        }
+        #endregion
+
+        #region DateAdded
+        /// <summary>
+        ///   Looks up a localized string similar to: Date added
+        /// </summary>
+        public static string DateAdded
+        {
+            get
+            {
+                return _resourceLoader.GetString("DateAdded");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -2730,6 +2912,7 @@ namespace Screenbox.Strings{
             SettingsCategoryPlayer,
             SettingsMusicLibraryLocationsHeader,
             SettingsShowRecentHeader,
+            SettingsShowControlsHeader,
             SettingsVideoLibraryLocationsHeader,
             Subtitles,
             SettingsShowRecentDescription,
@@ -2793,6 +2976,19 @@ namespace Screenbox.Strings{
             ActiveArguments,
             SettingsUseMultipleInstancesHeader,
             SettingsUseMultipleInstancesDescription,
+            SortBy,
+            Artist,
+            ReleasedYear,
+            SettingsAudioVisualHeader,
+            GetLivelyApp,
+            GetLivelyVisuals,
+            BrowseFiles,
+            Default,
+            SettingsAudioVisualDescription,
+            PoweredByLivelyWallpaper,
+            SettingsImportVisualsHeader,
+            SettingsImportVisualsDescription,
+            DateAdded,
         }
 
         private static ResourceLoader _resourceLoader;

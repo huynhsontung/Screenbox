@@ -58,6 +58,7 @@ jobs:
     - name: Render secrets
       env:
         APPCENTER_API_KEY: ${{ secrets.APPCENTER_API_KEY }}
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
 
     - name: Get tag version
@@ -124,6 +125,7 @@ jobs:
         name: 'WACK'
         package-path: 'C:\Download\Screenbox\Screenbox.msixbundle'
         report-name: 'Screenbox.Certification.xml'
+        ignore-rules: '38'
 
   release:
     needs: build

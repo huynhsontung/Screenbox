@@ -2,7 +2,6 @@
     x:Class="Screenbox.Pages.SongsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,7 +23,7 @@
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <XamlUICommand
@@ -70,11 +69,84 @@
     </interactivity:Interaction.Behaviors>
 
     <Grid>
-        <SemanticZoom>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button
+            x:Name="ShufflePlayButton"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPagePadding}"
+            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+            Style="{StaticResource AccentButtonStyle}">
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Glyph="&#xE8B1;" />
+                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+            </StackPanel>
+        </Button>
+
+        <muxc:DropDownButton
+            x:Name="SortByButton"
+            Grid.Row="0"
+            Margin="{StaticResource ContentPagePadding}"
+            HorizontalAlignment="Right"
+            Background="Transparent"
+            BorderBrush="Transparent">
+            <muxc:DropDownButton.Flyout>
+                <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="title"
+                        GroupName="SortOrder"
+                        IsChecked="True"
+                        Tag="title"
+                        Text="{strings:Resources Key=PropertyTitle}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="album"
+                        GroupName="SortOrder"
+                        Tag="album"
+                        Text="{strings:Resources Key=PropertyAlbum}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="artist"
+                        GroupName="SortOrder"
+                        Tag="artist"
+                        Text="{strings:Resources Key=Artist}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="year"
+                        GroupName="SortOrder"
+                        Tag="year"
+                        Text="{strings:Resources Key=ReleasedYear}" />
+                    <muxc:RadioMenuFlyoutItem
+                        Command="{x:Bind ViewModel.SetSortByCommand}"
+                        CommandParameter="dateAdded"
+                        GroupName="SortOrder"
+                        Tag="dateAdded"
+                        Text="{strings:Resources Key=DateAdded}" />
+                </MenuFlyout>
+            </muxc:DropDownButton.Flyout>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
+                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+            </StackPanel>
+        </muxc:DropDownButton>
+
+        <muxc:ProgressBar
+            Grid.Row="1"
+            Margin="{StaticResource TopMediumMargin}"
+            VerticalAlignment="Top"
+            IsIndeterminate="True"
+            Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
+
+        <SemanticZoom Grid.Row="1" Margin="{StaticResource TopLargeMargin}">
             <SemanticZoom.ZoomedInView>
                 <ListView
                     x:Name="SongListView"
-                    Margin="{StaticResource TopLargeMargin}"
                     Padding="{StaticResource ContentPagePadding}"
                     extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
@@ -118,6 +190,7 @@
                     Padding="{StaticResource ContentPagePadding}"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemTemplate="{StaticResource GroupOverviewLetterItemTemplate}"
                     ItemsSource="{x:Bind SongsSource.View.CollectionGroups}"
                     SelectionMode="None">
@@ -130,6 +203,9 @@
                             <ItemsWrapGrid MaximumRowsOrColumns="8" Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
+                    <interactivity:Interaction.Behaviors>
+                        <interactions:GroupingOverviewBehavior GroupType="{x:Bind ViewModel.SortBy, Mode=OneWay}" />
+                    </interactivity:Interaction.Behaviors>
                 </GridView>
             </SemanticZoom.ZoomedOutView>
         </SemanticZoom>
@@ -149,6 +225,24 @@
                     <VisualState.Setters>
                         <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="SortByText.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            <VisualStateGroup x:Name="SortByStates">
+                <VisualState x:Name="SortByTitle" />
+                <VisualState x:Name="SortByAlbum">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="SortByArtist">
+                    <VisualState.Setters>
+                        <Setter Target="GroupOverview.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="GroupOverview.VerticalAlignment" Value="Stretch" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -10,6 +10,7 @@ namespace Screenbox.Core.Services
         bool PlayerVolumeGesture { get; set; }
         bool PlayerSeekGesture { get; set; }
         bool PlayerTapGesture { get; set; }
+        bool PlayerShowControls { get; set; }
         int PersistentVolume { get; set; }
         bool ShowRecent { get; set; }
         bool SearchRemovableStorage { get; set; }
@@ -17,6 +18,7 @@ namespace Screenbox.Core.Services
         string GlobalArguments { get; set; }
         bool AdvancedMode { get; set; }
         bool UseMultipleInstances { get; set; }
+        string LivelyActivePath { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
 }

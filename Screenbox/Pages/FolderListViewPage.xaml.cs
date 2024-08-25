@@ -41,7 +41,8 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.Back
-                && Common.TryGetScrollingState(nameof(FolderListViewPage), Frame.BackStackDepth, out double verticalOffset))
+                && Common.TryGetPageState(nameof(FolderListViewPage), Frame.BackStackDepth, out var state)
+                && state is double verticalOffset)
             {
                 _contentVerticalOffset = verticalOffset;
             }
@@ -82,7 +83,7 @@ namespace Screenbox.Pages
 
         private void ScrollViewerOnViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
         {
-            Common.SaveScrollingState(e.NextView.VerticalOffset, nameof(FolderListViewPage), Frame.BackStackDepth);
+            Common.SavePageState(e.NextView.VerticalOffset, nameof(FolderListViewPage), Frame.BackStackDepth);
         }
     }
 }
