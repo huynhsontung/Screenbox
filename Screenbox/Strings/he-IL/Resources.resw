@@ -415,7 +415,7 @@
     <value>Resume where you left off</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>עבור אל {0}</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
@@ -443,23 +443,23 @@
     <value>הוסף מדיה מקישור לאינטרנט</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>הוסף תיקיה לספריית הווידאו שלך</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>פתח תיקייה</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
-    <value>Open URL</value>
+    <value>פתח קישור</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
     <value>ריק</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} שיר</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} שירים</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
@@ -481,43 +481,43 @@
     <value>תיקיות וידאו</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>תוצאות חיפוש עבור "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
     <value>ראה הכל</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>תוצאות אמן עבור "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>תוצאות אלבום עבור "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>תוצאות שיר עבור "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>תוצאות וידאו עבור "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>אין אלבום</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>הגישה נדחתה. אנא אמת את הגדרות הפרטיות שלך כדי לוודא שלScreenbox יש הרשאות מספיקות.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>לא ניתן לגשת לספריית המוזיקה</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>לא ניתן לגשת לספריית התמונות</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>לא ניתן לגשת לספריית הווידאו</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>לא מצאנו שום סרטונים</value>
@@ -529,10 +529,10 @@
     <value>פתח את הגדרות הפרטיות</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>לא ניתן לטעון מדיה</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>יחס גובה-רוחב</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>מותאם</value>
@@ -541,10 +541,10 @@
     <value>מלא</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>יחס רוחב-גובה מותאם אישית</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>מהירות השמעה מותאמת אישית</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>ללא</value>
@@ -592,7 +592,7 @@
     <value>מיקומי ספריית הווידאו</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>כתוביות</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
     <value>הצג מדיה שהושמעה לאחרונה בדף הבית</value>
@@ -616,13 +616,13 @@
     <value>מחוות</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
-    <value>Drag horizontally to seek</value>
+    <value>גרור אופקית כדי לחפש</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>גרור אנכית כדי לכוונן את עוצמת הקול</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
-    <value>Tap anywhere to play or pause</value>
+    <value>הקש בכל מקום כדי להפעיל או להשהות</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
     <value>Screenbox נגן מדיה</value>
@@ -705,22 +705,22 @@
     <value>Command line arguments that apply to all media playback</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>הסר תיקיה</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>שינויים ממתינים</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>הפעל מחדש את האפליקציה כדי שהשינויים ייכנסו לתוקף</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>האתחול נכשל</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>קישורים קשורים</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>מדיניות פרטיות</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>רישיון</value>
