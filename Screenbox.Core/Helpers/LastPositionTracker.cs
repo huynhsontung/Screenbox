@@ -33,8 +33,9 @@ namespace Screenbox.Core.Helpers
                     if (index >= 0)
                     {
                         _lastPositions.RemoveAt(index);
-                        _lastPositions.Insert(0, item);
                     }
+
+                    _lastPositions.Insert(0, item);
                 }
             }
             else
