@@ -523,10 +523,10 @@
     <value>לא מצאנו שום סרטונים</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>ספריית הווידאו שלך אינה מכילה כל וידאו.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>פתח את הגדרות הפרטיות</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
     <value>Unable to load media</value>
