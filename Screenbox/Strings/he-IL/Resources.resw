@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Frame saved</value>
+    <value>שמור מסגרת</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>תמונה בתוך תמונה</value>
@@ -127,20 +127,20 @@
     <value>שמור מסגרת נוכחית</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Loop</value>
+    <value>לולאה</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>מהירות השמעה</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>עוצמת שמע: {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Failed to save frame</value>
+    <value>שמירת המסגרת נכשלה</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>פרק {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
@@ -227,7 +227,7 @@
     <value>הזז למטה</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Is playing</value>
+    <value>מנגן</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -251,16 +251,16 @@
     <value>שחזר תצוגת וידאו</value>
   </data>
   <data name="Cast" xml:space="preserve">
-    <value>Cast</value>
+    <value>הזרמת תוכן</value>
   </data>
   <data name="StopCast" xml:space="preserve">
-    <value>Stop casting</value>
+    <value>הפסק שידור</value>
   </data>
   <data name="CastingTo" xml:space="preserve">
-    <value>Casting to</value>
+    <value>משדר אל</value>
   </data>
   <data name="CastToDevice" xml:space="preserve">
-    <value>Cast to a device</value>
+    <value>שדר למכשיר</value>
   </data>
   <data name="Disable" xml:space="preserve">
     <value>השבת</value>
@@ -311,7 +311,7 @@
     <value>ברוך הבא אל Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Let's start playing some of your media content to get things going.</value>
+    <value>בוא נתחיל לנגן חלק מתוכן המדיה שלך כדי להפעיל דברים.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>תכונות</value>
@@ -320,7 +320,7 @@
     <value>סגור</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
-    <value>Open file location</value>
+    <value>פתח את מיקום הקובץ</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
     <value>אלבום</value>
@@ -335,10 +335,10 @@
     <value>סוג תוכן</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
-    <value>Contributing artists</value>
+    <value>אמנים משתתפים</value>
   </data>
   <data name="PropertyFileLocation" xml:space="preserve">
-    <value>File location</value>
+    <value>מיקום הקובץ</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
     <value>סוג קובץ</value>
@@ -398,21 +398,21 @@
     <value>פתח</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
-    <value>{0} location specified</value>
+    <value>{0} מיקום הוגדר</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="LocationSpecified_Other" xml:space="preserve">
-    <value>{0} locations specified</value>
+    <value>{0} מיקומים הוגדרו</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Shuffle: Off</value>
+    <value>ערבוב: כבוי</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Shuffle: On</value>
+    <value>ערבוב: פועל</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>המשך מהמקום שממנו הפסקת</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
     <value>עבור אל {0}</value>
@@ -471,7 +471,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} run time</value>
+    <value>{0} זמן השמעה</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -643,14 +643,14 @@
     <value>לעולם לא</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
-    <value>On launch</value>
+    <value>בעת הפתיחה</value>
   </data>
   <data name="VersionText" xml:space="preserve">
     <value>גרסה {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>נוספה כתובית</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>שגיאה קריטית</value>
@@ -726,7 +726,7 @@
     <value>רישיון</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>עזור בתרגום</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>אפשרויות</value>
@@ -756,25 +756,25 @@
     <value>השתמש באינדקס לסריקה</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>האץ את סריקת הספרייה על ידי שימוש באינדקס המערכת כאשר הוא זמין. כבה זאת אם אינך רואה את כל המדיה ממיקומי הספרייה שלך.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>נהל את הגדרות האינדקס של המערכת</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>הגדר ארגומנטים</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>חפש באחסון נשלף</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>כלול מדיה מהתקני אחסון כמו התקני USB בספריות שלך</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>ארגומנטים פעילים</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>אפשר מספר חלונות</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>פתח תמיד קובצי מדיה בחלון חדש</value>
