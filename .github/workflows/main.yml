@@ -47,7 +47,7 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Fetch Gomplate
-      uses: dsaltares/fetch-gh-release-asset@1.1.1
+      uses: dsaltares/fetch-gh-release-asset@1.1.2
       with:
         repo: hairyhenderson/gomplate
         version: tags/v3.11.3
@@ -145,7 +145,7 @@ jobs:
       run: zip -r sideload.zip download/
 
     - name: Generate GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         draft: true
         generate_release_notes: true
