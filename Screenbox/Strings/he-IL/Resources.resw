@@ -771,13 +771,13 @@
     <value>Include media from storage devices like USB sticks in your libraries</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>ארגומנטים פעילים</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
     <value>Allow multiple instances</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>פתח תמיד קובצי מדיה בחלון חדש</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>מיין לפי</value>
@@ -789,7 +789,7 @@
     <value>שנת יציאה לאור</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>דגמים ויזואליים לאודיו</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>עבור אל Lively Wallpaper</value>
@@ -813,9 +813,9 @@
     <value>ייבא דגמים ויזואליים</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>קבל עוד דגמים ויזואליים באמצעות אפליקציית Lively Wallpaper או הורד אותם מ-GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>תאריך הוספה</value>
   </data>
 </root>
