@@ -277,6 +277,7 @@
             <uap:Logo>Assets\Icons\Video\FileAssociationWMV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-ms-wmv">.wmv</uap:FileType>
+              <uap:FileType ContentType="video/x-ms-asf">.asf</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
@@ -325,6 +326,16 @@
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameAIFF</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\Icons\Audio\FileAssociationAIFF.png</uap:Logo>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="rm">
+            <uap:SupportedFileTypes>
+              <uap:FileType ContentType="application/vnd.rn-realmedia">.rm</uap:FileType>
+              <uap:FileType ContentType="application/vnd.rn-realmedia-vbr">.rmvb</uap:FileType>
+            </uap:SupportedFileTypes>
+            <uap:EditFlags OpenIsSafe="true"/>
+            <uap:DisplayName>RealMedia</uap:DisplayName>
           </uap:FileTypeAssociation>
         </uap:Extension>
        </Extensions>

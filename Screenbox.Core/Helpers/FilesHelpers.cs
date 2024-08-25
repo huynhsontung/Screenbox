@@ -9,7 +9,7 @@ public static class FilesHelpers
         ImmutableArray.Create(".mp3", ".wav", ".wma", ".aac", ".mid", ".midi", ".mpa", ".ogg", ".oga", ".opus", ".weba", ".flac", ".m4a", ".wv", ".wvc", ".aiff", ".aif", ".aifc");
 
     public static ImmutableArray<string> SupportedVideoFormats { get; } =
-        ImmutableArray.Create(".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm");
+        ImmutableArray.Create(".avi", ".mp4", ".wmv", ".mov", ".mkv", ".flv", ".3gp", ".3g2", ".m4v", ".mpg", ".mpeg", ".webm", ".rm", ".rmvb", ".asf");
 
     public static ImmutableArray<string> SupportedPlaylistFormats { get; } =
         ImmutableArray.Create(".m3u8", ".m3u", ".ts", ".mts", ".m2ts", ".m2t");
