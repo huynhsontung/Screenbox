@@ -277,6 +277,7 @@
             <uap:Logo>Assets\Icons\Video\FileAssociationWMV.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/x-ms-wmv">.wmv</uap:FileType>
+              <uap:FileType ContentType="video/x-ms-asf">.asf</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
