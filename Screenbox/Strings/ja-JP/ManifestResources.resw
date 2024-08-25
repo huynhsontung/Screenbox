@@ -124,84 +124,84 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>パフォーマンスと幅広いWindowsデバイスでの使いやすさを重視した近代的なビデオプレーヤー</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>3GPPマルチメディアファイル形式</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>3GPPマルチメディアファイル形式</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>AAC音声フォーマット</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>AVI映像フォーマット</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>FLAC音声フォーマット</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Flashビデオ</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Mastroska音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Mastroska映像フォーマット</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>MIDI音楽データ</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>MP3音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>MPEG-4映像フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>MPEG-4音声フォーマット</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value>iTunesビデオ</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>MPEGビデオ</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbisオーディオ</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg Video</value>
+    <value>Oggビデオ</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>QuickTimeムービー</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>WAVEオーディオ</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>WebMオーディオ</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM Video</value>
+    <value>WebMビデオ</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Windows Media Audio (WMA)</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Windows Media Video (WMV)</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>M3U8形式のプレイリスト</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value>MPEGトランスポートストリーム</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPackオーディオ</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>AIFFオーディオ</value>
   </data>
 </root>

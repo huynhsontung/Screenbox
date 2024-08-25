@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>顯示最近的媒體</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>暫停時顯示控制項</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>影片媒體櫃位置</value>
   </data>
@@ -771,9 +774,48 @@
     <value>使用中的引數</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>允許多個視窗</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>始終以新視窗開啟媒體檔案</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>排序方式</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>演出者</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>發行年份</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>音訊視覺</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>瀏覽檔案</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>預設</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Choose an imagery style to be displayed on audio playback</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Import visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

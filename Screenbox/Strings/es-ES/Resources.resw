@@ -121,7 +121,7 @@
     <value>Fotograma guardado</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Imagen dentro de imagen</value>
+    <value>Imagen en imagen</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>Guardar fotograma actual</value>
@@ -153,7 +153,7 @@
     <value>Silenciar</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Quitar silencio</value>
+    <value>Anular silencio</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
     <value>Pantalla completa</value>
@@ -162,7 +162,7 @@
     <value>Audio y subtítulos</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Salir de la pantalla completa</value>
+    <value>Salir de pantalla completa</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volumen</value>
@@ -171,7 +171,7 @@
     <value>Buscar</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Salir de imagen dentro de imagen</value>
+    <value>Salir de imagen en imagen</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Siguiente</value>
@@ -183,7 +183,7 @@
     <value>Reproducir</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pausa</value>
+    <value>Pausar</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>Más</value>
@@ -192,13 +192,13 @@
     <value>Reproducir cola</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repetir: desactivado</value>
+    <value>Repetir: Desactivado</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repetir: todo</value>
+    <value>Repetir: Todo</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repetir: una</value>
+    <value>Repetir: Una</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} elemento seleccionado</value>
@@ -224,10 +224,10 @@
     <value>Mover arriba</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Mover hacia abajo</value>
+    <value>Mover abajo</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
-    <value>Se está reproduciendo</value>
+    <value>Reproduciendo</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
@@ -326,7 +326,7 @@
     <value>Álbum</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Álbum del artista</value>
+    <value>Artista del álbum</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Tasa de bits</value>
@@ -471,7 +471,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
-    <value>{0} tiempo de ejecución</value>
+    <value>{0} tiempo de reproducción</value>
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
@@ -529,7 +529,7 @@
     <value>Abrir ajustes de privacidad</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>No se puede cargar medios</value>
+    <value>No se pueden cargar medios</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
     <value>Relación de aspecto</value>
@@ -574,7 +574,7 @@
     <value>General</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Librerías</value>
+    <value>Bibliotecas</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
     <value>Reproductor</value>
@@ -583,7 +583,10 @@
     <value>Ubicaciones de la biblioteca de música</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Mostrar Recientes</value>
+    <value>Mostrar recientes</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Mostrar controles al pausar</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Ubicaciones de la biblioteca de video</value>
@@ -595,7 +598,7 @@
     <value>Mostrar medios reproducidos recientemente en la página de inicio</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
-    <value>Borrar historial reciente</value>
+    <value>Borrar historial de medios reciente</value>
   </data>
   <data name="SettingsAutoResizeHeader" xml:space="preserve">
     <value>Redimensionar automáticamente</value>
@@ -604,7 +607,7 @@
     <value>Redimensionar la ventana de la aplicación para que coincida mejor con la resolución nativa del video en reproducción</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Mejora de volumen</value>
+    <value>Amplificar volumen</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permitir que el volumen máximo supere el 100%</value>
@@ -625,7 +628,7 @@
     <value>Screenbox Media Player</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Código Fuente</value>
+    <value>Código fuente</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
@@ -662,7 +665,7 @@
     <value>Introduzca la URL de un archivo o transmisión</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Abrir la configuración de dispositivos conectados</value>
+    <value>Abrir la configuración de Dispositivos Conectados</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
     <value>Establecer opciones de reproducción</value>
@@ -705,7 +708,7 @@
     <value>Eliminar carpeta</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Cambios Pendientes</value>
+    <value>Cambios pendientes</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>Reiniciar la aplicación para que los cambios surtan efecto</value>
@@ -717,7 +720,7 @@
     <value>Enlaces relacionados</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Política de Privacidad</value>
+    <value>Política de privacidad</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Licencia</value>
@@ -759,21 +762,60 @@
     <value>Administrar configuración de la indexación del sistema</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Establecer argumentos</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Buscar almacenamiento extraíble</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Incluir medios en tus bibliotecas desde dispositivos de almacenamiento como una memoria USB</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Argumentos activos</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Permitir múltiples instancias</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Siempre abrir archivos multimedia en una nueva instancia</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordenar por</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artista</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Año</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Visualizaciones</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Consigue Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Descargar visuales en GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Buscar archivo(s)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Predeterminado</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Elige una visualización a mostrar en la reproducción de audio</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Importar visualizaciones</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Obtén más visualizaciones a través de la aplicación Lively Wallpaper o descárgalas de GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

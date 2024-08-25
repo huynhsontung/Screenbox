@@ -779,4 +779,43 @@
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>始终在新实例中打开媒体文件</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Released year</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Audio visual</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Browse file(s)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Choose an imagery style to be displayed on audio playback</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Import visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
+  </data>
 </root>

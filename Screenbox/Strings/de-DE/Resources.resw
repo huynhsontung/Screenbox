@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Zuletzt verwendete Medien anzeigen</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Steuerelemente beim Pausieren anzeigen</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Speicherorte der Videobibliotheken</value>
   </data>
@@ -771,9 +774,48 @@
     <value>Aktive Argumente</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Mehrere Instanzen zulassen</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Mediendateien immer in einer neuen Instanz öffnen</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortieren nach</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Künstler</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Veröffentlichungsjahr</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Audio-Grafik</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Hole dir Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Grafiken auf GitHub herunterladen</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Datei(en) durchsuchen</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Voreinstellung</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Wählen Sie einen Bildstil für die Audiowiedergabe aus</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Unterstützt von Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Grafiken importieren</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Erhalte mehr Grafiken über die Lively Wallpaper App oder lade sie von GitHub herunter</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

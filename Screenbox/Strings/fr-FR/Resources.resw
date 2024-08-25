@@ -302,7 +302,7 @@
     <value>Ouvrir un fichier</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Recherche</value>
+    <value>Rechercher</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -317,7 +317,7 @@
     <value>Propriétés</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Ferme</value>
+    <value>Fermer</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Ouvrir l'emplacement du fichier</value>
@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Afficher les plus récents</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Display controls on pause</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Emplacement des vidéothèques</value>
   </data>
@@ -771,9 +774,48 @@
     <value>Arguments actifs</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Autoriser plusieurs instances</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Toujours ouvrir les fichiers multimédia dans une nouvelle instance</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Trier par</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artiste</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Année de sortie</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Audio visual</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Browse file(s)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Choose an imagery style to be displayed on audio playback</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Import visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

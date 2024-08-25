@@ -311,7 +311,7 @@
     <value>Bem-vindo(a) ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Vamos começar reproduzindo algum do seu conteúdo de multimídia para começar as coisas.</value>
+    <value>Vamos começar reproduzindo alguns dos seus conteúdos de multimídia para começar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
@@ -380,13 +380,13 @@
     <value>Personalizado</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Rede</value>
+    <value>Dispositivos de rede</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>Nenhum dispositivo de rede disponível</value>
+    <value>Nenhum dispositivo disponível</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo de rede esteja emparelhado nas Configurações do Windows.</value>
+    <value>Não consegue encontrar sua mídia? Certifique-se de que seu dispositivo esteja conectado nas Configurações do Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>Mídia recente</value>
@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Mostrar mídia recente</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Exibir controles em pausa</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Locais na biblioteca de vídeos</value>
   </data>
@@ -622,10 +625,10 @@
     <value>Toque em qualquer lugar para reproduzir ou pausar</value>
   </data>
   <data name="AppFriendlyName" xml:space="preserve">
-    <value>Reprodutor de mídia Screenbox</value>
+    <value>Reprodutor de Multimídia Screenbox</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Código-fonte</value>
+    <value>Código fonte</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
@@ -775,5 +778,44 @@
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Sempre abrir arquivos de mídia em uma nova instância</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Ordenar por</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artista</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Ano de lançamento</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Áudio visual</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Obter Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Baixar visuais no GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Procurar arquivo(s)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Padrão</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Escolha um estilo de imagem a ser exibido na reprodução de áudio</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Desenvolvido por Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Importar visuais</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Obtenha mais recursos visuais através do aplicativo Lively Wallpaper ou baixe-os no GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Data de adição</value>
   </data>
 </root>

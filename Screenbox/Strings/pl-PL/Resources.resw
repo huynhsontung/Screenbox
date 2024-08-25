@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Pokaż ostatnio używane</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Pokazuj elementy sterowania podczas pauzy</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Lokalizacje biblioteki wideo</value>
   </data>
@@ -775,5 +778,44 @@
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Zawsze otwieraj media w nowym oknie</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sortuj wg</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Rok wydania</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Wizualizacja dźwięku</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Pobierz Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Pobierz wizualizacje z GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Przeglądaj plik(i)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Wybierz styl obrazu, który będzie wyświetlany podczas odtwarzania dźwięku</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Importuj efekty wizualne</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Uzyskaj więcej wizualizacji za pośrednictwem aplikacji Lively Wallpaper lub pobierz je z GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

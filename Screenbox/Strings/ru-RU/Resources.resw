@@ -585,6 +585,9 @@
   <data name="SettingsShowRecentHeader" xml:space="preserve">
     <value>Показывать недавнее</value>
   </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Display controls on pause</value>
+  </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Расположение музыкальной библиотеки</value>
   </data>
@@ -775,5 +778,44 @@
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
     <value>Always open media files in a new instance</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Упорядочить по</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Исполнитель</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Год выпуска</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Аудио визуал</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Обзор файла(ов)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Choose an imagery style to be displayed on audio playback</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Импортировать визуалы</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>

@@ -121,10 +121,10 @@
     <value>Frame saved</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>תמונה בתוך תמונה</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>שמור מסגרת נוכחית</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
@@ -144,28 +144,28 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>טעינת הכתוביות נכשלה</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>חזור</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>השתק</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>בטל השתקה</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>מסך מלא</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>אודיו וכיתוביות</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>צא ממסך מלא</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>עוצמת שמע</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -174,78 +174,78 @@
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>הבא</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>הקודם</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>נגן</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>השהה</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>עוד</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>רשימת השמעה</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>חזרה: כבויה</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value/>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>חזרה: פועלת</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>{0} item selected</value>
+    <value>{0} פריט נבחר</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
-    <value>{0} items selected</value>
+    <value>{0} פריטים נבחרו</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>הוסף לתור</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
-    <value>Clear selection</value>
+    <value>נקה את הבחירה</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>הסר</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>נגן את השיר הבא</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>הזז מעלה</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>הזז למטה</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>Is playing</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>סרטונים</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>This folder is empty</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
-    <value>{0} item</value>
+    <value>{0} פריט</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_Other" xml:space="preserve">
-    <value>{0} items</value>
+    <value>{0} פריטים</value>
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>ריק</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restore video view</value>
@@ -263,34 +263,34 @@
     <value>Cast to a device</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>השבת</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>מוסיקה</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
-    <value>Shuffle and play</value>
+    <value>ערבב ונגן</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>אמן לא ידוע</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>אלבום לא ידוע</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>ז'אנר לא ידוע</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>הוסף תיקיה</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>נקה</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>בית</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>הוסף תיקיה</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>We couldn't find any music</value>
@@ -299,40 +299,40 @@
     <value>Your music library doesn't contain any music content.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>פתח קובץ(ים)</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>חפש</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>הגדרות</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>ברוך הבא אל Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
     <value>Let's start playing some of your media content to get things going.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>תכונות</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>סגור</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Open file location</value>
   </data>
   <data name="PropertyAlbum" xml:space="preserve">
-    <value>Album</value>
+    <value>אלבום</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>אמן האלבום</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
-    <value>Bit rate</value>
+    <value>קצב סיביות</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>סוג תוכן</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
     <value>Contributing artists</value>
@@ -341,61 +341,61 @@
     <value>File location</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>סוג קובץ</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
-    <value>Genre</value>
+    <value>ז'אנר</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>עודכן לאחרונה</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>אורך</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>מפיקים</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
     <value>Resolution</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>גודל</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>כתובית</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>כותרת</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>רצועה</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
-    <value>Writers</value>
+    <value>כותבים</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>שנה</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>מותאם אישית</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>רשת</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>אין התקן רשת זמין</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
+    <value>לא מוצא את המדיה שלך? ודא שהתקן הרשת שלך מוגדר בהגדרות Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>אחרונים</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>הגדרות וידאו</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>פתח</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
     <value>{0} location specified</value>
@@ -419,28 +419,28 @@
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>אלבומים</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>אמנים</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>שירים</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>חפש קבצים להפעלה</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>הוסף קובץ(ים)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Browse for file(s) to add to the play queue</value>
+    <value>חפש קובץ(ים) להוספה לתור ההשמעה</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>הוסף תיקיה לספריית המוזיקה שלך</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>הוסף מדיה מקישור לאינטרנט</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
     <value>Add a folder to your video library</value>
@@ -485,7 +485,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>ראה הכל</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
     <value>Artist results for "{0}"</value>
@@ -535,10 +535,10 @@
     <value>Aspect ratio</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>מותאם</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>מלא</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
     <value>Custom aspect ratio</value>
@@ -565,28 +565,31 @@
     <value>Add subtitle</value>
   </data>
   <data name="Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>אודיו</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>אודות</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>כללי</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>ספריות</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>נגן</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
-    <value>Music library locations</value>
+    <value>מיקומי ספריית המוזיקה</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>הצג אחרונים</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Display controls on pause</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Video library locations</value>
+    <value>מיקומי ספריית הווידאו</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Subtitles</value>
@@ -625,25 +628,25 @@
     <value>Screenbox Media Player</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>קוד מקור</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development ☕</value>
+    <value>Support the development</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>תמיד</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>לעולם לא</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
     <value>On launch</value>
   </data>
   <data name="VersionText" xml:space="preserve">
-    <value>Version {0}</value>
+    <value>גרסה {0}</value>
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
@@ -693,13 +696,13 @@
     <value>Advanced mode</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments.</value>
+    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Global arguments</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback.</value>
+    <value>Command line arguments that apply to all media playback</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remove folder</value>
@@ -720,34 +723,34 @@
     <value>Privacy policy</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>רישיון</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Help translate</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>אפשרויות</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>מלחינים</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
     <value>Couldn't add folder</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>פתח אלבום</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>פתח אמן</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>רענן ספריות</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>רענן</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
     <value>Use indexer for scanning</value>
@@ -760,5 +763,59 @@
   </data>
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Search removable storage</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Include media from storage devices like USB sticks in your libraries</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Active arguments</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Allow multiple instances</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Always open media files in a new instance</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>מיין לפי</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>אמן</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>שנת יציאה לאור</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Audio visual</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Get Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Download visuals on GitHub</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Browse file(s)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>ברירת מחדל</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>בחר את סגנון תמונה שתוצג בעת השמעת אודיו</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Powered by Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Import visuals</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Date added</value>
   </data>
 </root>
