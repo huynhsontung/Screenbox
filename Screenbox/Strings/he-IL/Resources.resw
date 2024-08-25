@@ -234,7 +234,7 @@
     <value>סרטונים</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>תיקיה זו ריקה</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} פריט</value>
@@ -248,7 +248,7 @@
     <value>ריק</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Restore video view</value>
+    <value>שחזר תצוגת וידאו</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cast</value>
@@ -653,40 +653,40 @@
     <value>Subtitle added</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>שגיאה קריטית</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
-    <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
+    <value>אין מעבד תואם זמין. אנא ודא שDirect3D 11 זמין במכשיר שלך.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>פתיחת הקובץ(ים) נכשלה</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
-    <value>Enter the URL for a file or stream</value>
+    <value>הזן את כתובת האתר של הקובץ או הזרמת השמע</value>
   </data>
   <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
-    <value>Open Connected Devices settings</value>
+    <value>פתח את הגדרות ההתקנים המחוברים</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>הגדר אפשרויות השמעה</value>
   </data>
   <data name="Set" xml:space="preserve">
-    <value>Set</value>
+    <value>הגדר</value>
   </data>
   <data name="SetAndPlay" xml:space="preserve">
-    <value>Set and Play</value>
+    <value>הגדר והפעל</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
     <value>Set VLC options that apply to a stream.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>חלק מהאפשרויות עשויות להיות מוגדרות באופן גלובלי בלבד.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>עזרה בפעולות שורת הפקודה של VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>ראה {0} לרשימה המלאה של האפשרויות הזמינות.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -696,13 +696,13 @@
     <value>מצב מתקדם</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
+    <value>מצב מתקדם מאפשר לך להתאים אישית את ההתנהגות של LibVLC באמצעות ארגומנטים של שורת הפקודה</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>ארגומנטים גלובליים</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback</value>
+    <value>ארגומנטים של שורת הפקודה החלים על כל השמעות המדיה</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>הסר תיקיה</value>
@@ -738,7 +738,7 @@
     <value>מלחינים</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>לא ניתן להוסיף תיקיה</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
     <value>פתח אלבום</value>
@@ -753,7 +753,7 @@
     <value>רענן</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Use indexer for scanning</value>
+    <value>השתמש באינדקס לסריקה</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
     <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
