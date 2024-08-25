@@ -367,7 +367,8 @@ namespace Screenbox.Pages
             // Update lively options button visibility
             // TODO: Use XAML visual state to encode this logic
             LivelyOptionsButton.Visibility = ViewModel.PlayerVisibility == PlayerVisibilityState.Visible &&
-                                             ViewModel.ViewMode != WindowViewMode.Compact
+                                             ViewModel.ViewMode != WindowViewMode.Compact &&
+                                             ViewModel.AudioOnly
                 ? Visibility.Visible
                 : Visibility.Collapsed;
         }

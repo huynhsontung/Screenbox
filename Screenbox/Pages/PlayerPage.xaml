@@ -326,7 +326,8 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             x:Load="False"
-            Media="{x:Bind ViewModel.Media, Mode=OneWay}" />
+            Media="{x:Bind ViewModel.Media, Mode=OneWay}"
+            Visibility="Collapsed" />
 
         <Button
             x:Name="LivelyOptionsButton"
@@ -586,7 +587,6 @@
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                         <Setter Target="VideoView.Opacity" Value="1" />
-                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="AudioOnly">
@@ -597,7 +597,6 @@
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
-                        <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                     <Storyboard x:Name="BackgroundArtAnimation">
                         <DoubleAnimationUsingKeyFrames

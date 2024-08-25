@@ -55,8 +55,6 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         _wallpaperService = wallpaperService;
         _filesService = filesService;
         _settingsService = settingsService;
-
-        _selectedVisualizer = _default;
     }
 
     public async Task InitializeVisualizers()

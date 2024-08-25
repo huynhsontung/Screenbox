@@ -39,13 +39,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
         var selectedVisualizer =
             allVisualizers.FirstOrDefault(visualizer =>
-                visualizer.Path.Equals(activeVisualizerPath, StringComparison.OrdinalIgnoreCase)) ??
-            allVisualizers.FirstOrDefault();
-
-        if (selectedVisualizer != null)
-        {
-            _settingsService.LivelyActivePath = selectedVisualizer.Path;
-        }
+                visualizer.Path.Equals(activeVisualizerPath, StringComparison.OrdinalIgnoreCase));
 
         Source = selectedVisualizer;
     }
