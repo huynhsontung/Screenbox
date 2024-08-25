@@ -46,12 +46,12 @@
                                     Source="{Binding PreviewPath}"
                                     Stretch="UniformToFill" />
                             </Border>
-                            <HyperlinkButton
+                            <Border
                                 Margin="2"
                                 Padding="2"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
-                                NavigateUri="https://www.rocksdanister.com/lively"
+                                Background="Transparent"
                                 ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
                                 Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
                                 <Image
@@ -60,7 +60,7 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
-                            </HyperlinkButton>
+                            </Border>
                         </Grid>
                     </DataTemplate>
                 </GridView.ItemTemplate>
