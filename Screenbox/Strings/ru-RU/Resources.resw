@@ -780,16 +780,16 @@
     <value>Always open media files in a new instance</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Упорядочить по</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Исполнитель</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Год выпуска</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Аудио визуал</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>Get Lively Wallpaper</value>
@@ -798,10 +798,10 @@
     <value>Download visuals on GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Обзор файла(ов)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>По умолчанию</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose an imagery style to be displayed on audio playback</value>
@@ -810,7 +810,7 @@
     <value>Powered by Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Импортировать визуалы</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
