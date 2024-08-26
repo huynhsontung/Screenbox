@@ -586,7 +586,7 @@
     <value>Mostar recentes</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Mostrar controlos ao pausar</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Localizações da biblioteca de vídeos</value>
@@ -789,22 +789,22 @@
     <value>Ano de lançamento</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Visual de áudio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Obter Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Transferir visuais no GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Procurar ficheiro(s)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Predefinição</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Escolher um estilo de imagem a apresentar na reprodução de áudio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Com tecnologia Lively Wallpaper</value>
