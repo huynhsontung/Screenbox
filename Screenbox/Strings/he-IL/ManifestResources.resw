@@ -148,7 +148,7 @@
     <value>Matroska Audio</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Matroska וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
     <value>MIDI Music Data</value>
@@ -157,7 +157,7 @@
     <value>MP3 אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 ווידאו בפורמט</value>
+    <value>MPEG-4 וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
     <value>MPEG-4 אודיו בפורמט</value>
@@ -166,16 +166,16 @@
     <value>iTunes Video</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG ווידאו בפורמט</value>
+    <value>MPEG וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbis אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg ווידאו בפורמט</value>
+    <value>Ogg וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>QuickTime וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
     <value>WAVE אודיו בפורמט</value>
@@ -184,7 +184,7 @@
     <value>WebM אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM ווידאו בפורמט</value>
+    <value>WebM וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
     <value>Windows Media Audio</value>
