@@ -586,7 +586,7 @@
     <value>إظهار الأخيرة</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>عرض عناصر التحكم عند الإيقاف</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>مواقع مكتبة الفيديو</value>
@@ -780,28 +780,28 @@
     <value>فتح ملفات الوسائط دائمًا في نوافذ جديدة</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>ترتيب حسب</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>الفنان</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>سنة الاصدار</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
     <value>Audio visual</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>احصل على خلفية حية</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>تحميل المرئيات على GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>تصفح الملف (الملفات)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>افتراضي</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose an imagery style to be displayed on audio playback</value>
@@ -810,12 +810,12 @@
     <value>Powered by Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>استيراد المرئيات</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>تاريخ الاضافة</value>
   </data>
 </root>
