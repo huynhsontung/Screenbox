@@ -168,7 +168,7 @@
     <value>עוצמת שמע</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>חפש</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>Exit picture in picture</value>
@@ -550,7 +550,7 @@
     <value>ללא</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>קנה מידה: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
@@ -586,7 +586,7 @@
     <value>הצג אחרונים</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>הצג את הפקדים בהשהיה</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>מיקומי ספריית הווידאו</value>
@@ -677,7 +677,7 @@
     <value>הגדר והפעל</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
     <value>חלק מהאפשרויות עשויות להיות מוגדרות באופן גלובלי בלבד.</value>
