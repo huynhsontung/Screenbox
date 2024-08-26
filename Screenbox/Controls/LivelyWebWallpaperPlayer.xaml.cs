@@ -14,8 +14,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.Security.Cryptography;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -312,15 +312,15 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         await _webView.ExecuteScriptFunctionAsync("livelyWallpaperPlaybackChanged", obj);
     }
 
-    private static async Task<string> StorageItemToBase64(StorageItemThumbnail? item)
+    private static async Task<string> StorageItemToBase64(IRandomAccessStream? item)
     {
         if (item == null)
             return string.Empty;
 
         using var stream = item.CloneStream();
 
-        var buffer = new byte[stream.Size];
-        await stream.ReadAsync(buffer.AsBuffer(), (uint)stream.Size, InputStreamOptions.None);
-        return Convert.ToBase64String(buffer);
+        var buffer = WindowsRuntimeBuffer.Create((int)stream.Size);
+        await stream.ReadAsync(buffer, (uint)stream.Size, InputStreamOptions.None);
+        return CryptographicBuffer.EncodeToBase64String(buffer);
     }
 }

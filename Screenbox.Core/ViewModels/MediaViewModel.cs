@@ -16,9 +16,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using TagLib;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels
@@ -31,7 +33,7 @@ namespace Screenbox.Core.ViewModels
 
         public bool IsFromLibrary { get; set; }
 
-        public StorageItemThumbnail? ThumbnailSource { get; set; }
+        public IRandomAccessStream? ThumbnailSource { get; private set; }
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
@@ -185,6 +187,14 @@ namespace Screenbox.Core.ViewModels
 
         public void Clean()
         {
+            if (Thumbnail != null) Thumbnail = null;
+            if (ThumbnailSource != null)
+            {
+                var stream = ThumbnailSource;
+                ThumbnailSource = null;
+                stream.Dispose();
+            }
+
             // If source is Media then there is no way to recreate. Don't clean up.
             if (Source is Media || !Item.IsValueCreated) return;
             PlaybackItem? item = Item.Value;
@@ -272,7 +282,10 @@ namespace Screenbox.Core.ViewModels
 
             if (Source is StorageFile file)
             {
-                StorageItemThumbnail? source = await filesService.GetThumbnailAsync(file);
+                var source = MediaInfo.MediaType == MediaPlaybackType.Music
+                    ? await GetMusicThumbnail(file)
+                    : await filesService.GetThumbnailAsync(file);
+
                 if (source == null) return;
                 ThumbnailSource = source;
                 BitmapImage image = new();
@@ -295,6 +308,20 @@ namespace Screenbox.Core.ViewModels
             {
                 Thumbnail = new BitmapImage(artworkUri);
             }
+        }
+
+        private static async Task<IRandomAccessStream?> GetMusicThumbnail(StorageFile file)
+        {
+            using var stream = await file.OpenStreamForReadAsync();
+            var fileAbstract = new StreamAbstraction(file.Path, stream);
+            using var tagFile = TagLib.File.Create(fileAbstract);
+            var cover = tagFile.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover) ??
+                        tagFile.Tag.Pictures.FirstOrDefault(p => !p.Data.IsEmpty);
+            if (cover == null || cover.Data.IsEmpty) return null;
+            var inMemoryStream = new InMemoryRandomAccessStream();
+            await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
+            inMemoryStream.Seek(0);
+            return inMemoryStream;
         }
 
         public void UpdateAlbum(AlbumViewModelFactory factory)
