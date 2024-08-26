@@ -121,7 +121,7 @@
     <value>שמור מסגרת</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>תמונה בתוך תמונה</value>
+    <value>תצוגת חלון צף</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
     <value>שמור מסגרת נוכחית</value>
@@ -150,7 +150,7 @@
     <value>חזור</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>השתק</value>
+    <value>השתקה</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
     <value>בטל השתקה</value>
@@ -171,7 +171,7 @@
     <value>חפש</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>יציאה מתצוגת חלון צף</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>הבא</value>
@@ -195,10 +195,10 @@
     <value>חזרה: כבויה</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value/>
+    <value>חזרה: הכל</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>חזרה: פועלת</value>
+    <value>חזרה: נוכחי</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} פריט נבחר</value>
@@ -299,7 +299,7 @@
     <value>ספריית המוזיקה שלך אינה מכילה כל מוזיקה.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>פתח קובץ(ים)</value>
+    <value>פתח קובץ/ים</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>חפש</value>
@@ -431,10 +431,10 @@
     <value>חפש קבצים להפעלה</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>הוסף קובץ(ים)</value>
+    <value>הוסף קובץ/ים</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>חפש קובץ(ים) להוספה לתור ההשמעה</value>
+    <value>חפש קובץ/ים להוספה לתור ההשמעה</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>הוסף תיקיה לספריית המוזיקה שלך</value>
@@ -443,7 +443,7 @@
     <value>הוסף מדיה מקישור לאינטרנט</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>הוסף תיקיה לספריית הווידאו שלך</value>
+    <value>הוסף תיקיה לספריית הוידאו שלך</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>פתח תיקייה</value>
@@ -517,13 +517,13 @@
     <value>לא ניתן לגשת לספריית התמונות</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>לא ניתן לגשת לספריית הווידאו</value>
+    <value>לא ניתן לגשת לספריית הוידאו</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
     <value>לא מצאנו שום סרטונים</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>ספריית הווידאו שלך אינה מכילה כל וידאו.</value>
+    <value>ספריית הוידאו שלך אינה מכילה כל וידאו.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>פתח את הגדרות הפרטיות</value>
@@ -589,7 +589,7 @@
     <value>הצג את הפקדים בהשהיה</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>מיקומי ספריית הווידאו</value>
+    <value>מיקומי ספריית הוידאו</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>כתוביות</value>
@@ -607,7 +607,7 @@
     <value>שנה את גודל חלון האפליקציה כדי להתאים בצורה הטובה ביותר לרזולוציה המקורית של סרטון בעת ​​השמעה</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>הגברת עוצמת הקול</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>אפשר לעוצמת הקול המקסימלית לעלות מעל 100%</value>
@@ -659,7 +659,7 @@
     <value>אין מעבד תואם זמין. אנא ודא שDirect3D 11 זמין במכשיר שלך.</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>פתיחת הקובץ(ים) נכשלה</value>
+    <value>פתיחת הקובץ/ים נכשלה</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>הזן את כתובת האתר של הקובץ או הזרמת השמע</value>
@@ -726,13 +726,13 @@
     <value>רישיון</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>עזור בתרגום</value>
+    <value>עזור לתרגם</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>אפשרויות</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>הגדרת דיחוי כתוביות</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
     <value>מלחינים</value>
@@ -795,16 +795,16 @@
     <value>עבור אל Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>הורד דגמים ויזואליים מGitHub</value>
+    <value>הורד דגמים ויזואליים מ-GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>עיין בקובץ(ים)</value>
+    <value>עיין בקובץ/ים</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>ברירת מחדל</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>בחר את סגנון תמונה שתוצג בעת השמעת אודיו</value>
+    <value>בחר את סגנון התמונה שתוצג בעת השמעת אודיו</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>מופעל על ידי Lively Wallpaper</value>
