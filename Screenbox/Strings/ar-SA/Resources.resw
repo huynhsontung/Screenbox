@@ -804,7 +804,7 @@
     <value>افتراضي</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>اختر نمط صور لعرضها على تشغيل الصوت</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
