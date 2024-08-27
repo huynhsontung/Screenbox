@@ -63,7 +63,14 @@ namespace Screenbox.Core.ViewModels
         public async void OnLoaded()
         {
             // Only run once. Assume this class is a singleton.
-            if (_isLoaded) return;
+            if (_isLoaded)
+            {
+                foreach (MediaViewModel media in Recent)
+                {
+                    await media.LoadThumbnailAsync();
+                }
+                return;
+            }
             _isLoaded = true;
             await UpdateContentAsync();
         }
