@@ -190,8 +190,8 @@
       },
       "LibVLCSharp": {
         "type": "Transitive",
-        "resolved": "3.9.0",
-        "contentHash": "wydvN5kotK5y/ZRC04/F6YUqesJCzdixaItRkR8L0/nOLSs2/BJ7rKRbU7BxkxpKIBqlN8EpuXxH/fQEZEHtuw==",
+        "resolved": "3.7.0",
+        "contentHash": "N9NV+BamKr+1YiRktX9JroE4m9C+pEszUNW4qa3A5mychhCWBvvoDolZKWk2yxhZvHewgaXXahBcw5ivCXjKYA==",
         "dependencies": {
           "SharpDX.Direct3D11": "4.2.0",
           "System.Memory": "4.5.4",
@@ -521,7 +521,7 @@
           "CommunityToolkit.Diagnostics": "[8.2.2, )",
           "CommunityToolkit.Mvvm": "[8.2.2, )",
           "CommunityToolkit.Uwp.Extensions": "[8.1.240821, )",
-          "LibVLCSharp": "[3.9.0, )",
+          "LibVLCSharp": "[3.7.0, )",
           "Microsoft.AppCenter.Analytics": "[5.0.5, )",
           "Microsoft.AppCenter.Crashes": "[5.0.5, )",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[8.0.1, )",
