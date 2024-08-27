@@ -14,7 +14,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Security.Cryptography;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
@@ -195,18 +194,14 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         switch (visibility)
         {
             case Visibility.Visible:
-                {
-                    // WebView rendering stops while hidden/minimized but JS can still execute.
-                    // To avoid queuing music change code we don't sent update while the control is hidden and only update one time once visible.
-                    // This does mean there will be a brief duration in which previous albumart will be visible, workaround - change Opacity instead.
-                    await UpdateMusic();
-                }
+                // WebView rendering stops while hidden/minimized but JS can still execute.
+                // To avoid queuing music change code we don't sent update while the control is hidden and only update one time once visible.
+                // This does mean there will be a brief duration in which previous albumart will be visible, workaround - change Opacity instead.
+                await UpdateMusic();
                 break;
             case Visibility.Collapsed:
-                {
-                    // This is not required, ref: https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2.trysuspendasync
-                    // await WebView.CoreWebView2.TrySuspendAsync();
-                }
+                // This is not required, ref: https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2.trysuspendasync
+                // await WebView.CoreWebView2.TrySuspendAsync();
                 break;
         }
 
@@ -276,7 +271,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         LivelyMusicModel? model = null;
         if (Media != null)
         {
-            var base64 = await StorageItemToBase64(Media.ThumbnailSource);
+            var base64 = Media.ThumbnailSource != null ? await ReadToBase64Async(Media.ThumbnailSource) : string.Empty;
             model = new LivelyMusicModel
             {
                 Title = Media.Name,
@@ -312,15 +307,12 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         await _webView.ExecuteScriptFunctionAsync("livelyWallpaperPlaybackChanged", obj);
     }
 
-    private static async Task<string> StorageItemToBase64(IRandomAccessStream? item)
+    private static async Task<string> ReadToBase64Async(IRandomAccessStream source)
     {
-        if (item == null)
-            return string.Empty;
+        using var stream = source.CloneStream();
 
-        using var stream = item.CloneStream();
-
-        var buffer = WindowsRuntimeBuffer.Create((int)stream.Size);
-        await stream.ReadAsync(buffer, (uint)stream.Size, InputStreamOptions.None);
-        return CryptographicBuffer.EncodeToBase64String(buffer);
+        var buffer = new byte[stream.Size];
+        await stream.ReadAsync(buffer.AsBuffer(), (uint)stream.Size, InputStreamOptions.None);
+        return Convert.ToBase64String(buffer);
     }
 }
