@@ -53,12 +53,26 @@ namespace Screenbox.Core.ViewModels
         public string TrackNumberText =>
             MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
+        public BitmapImage? Thumbnail
+        {
+            get
+            {
+                if (_thumbnailRef == null) return null;
+                return _thumbnailRef.TryGetTarget(out BitmapImage image) ? image : null;
+            }
+            set
+            {
+                if (_thumbnailRef == null && value == null) return;
+                if ((_thumbnailRef?.TryGetTarget(out BitmapImage image) ?? false) && image == value) return;
+                SetProperty(ref _thumbnailRef, value == null ? null : new WeakReference<BitmapImage>(value));
+            }
+        }
+
         private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
-        [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
@@ -75,11 +89,13 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         private bool? _isPlaying;
 
+        private WeakReference<BitmapImage>? _thumbnailRef;
+
         public MediaViewModel(MediaViewModel source)
         {
             _libVlcService = source._libVlcService;
             _name = source._name;
-            _thumbnail = source._thumbnail;
+            _thumbnailRef = source._thumbnailRef;
             _mediaInfo = source._mediaInfo;
             _artists = source._artists;
             _album = source._album;
