@@ -20,6 +20,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TagLib;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -264,7 +265,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public async Task LoadThumbnailAsync(IFilesService filesService)
+        public async Task LoadThumbnailAsync()
         {
             if (Thumbnail != null) return;
             if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
@@ -282,10 +283,7 @@ namespace Screenbox.Core.ViewModels
 
             if (Source is StorageFile file)
             {
-                var source = MediaInfo.MediaType == MediaPlaybackType.Music
-                    ? await GetMusicThumbnail(file)
-                    : await filesService.GetThumbnailAsync(file);
-
+                var source = await GetThumbnailFromTag(file) ?? await GetThumbnailAsync(file);
                 if (source == null) return;
                 ThumbnailSource = source;
                 BitmapImage image = new();
@@ -310,18 +308,43 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private static async Task<IRandomAccessStream?> GetMusicThumbnail(StorageFile file)
+        private static async Task<IRandomAccessStream?> GetThumbnailFromTag(StorageFile file)
         {
+            if (!file.IsAvailable) return null;
             using var stream = await file.OpenStreamForReadAsync();
             var fileAbstract = new StreamAbstraction(file.Path, stream);
             using var tagFile = TagLib.File.Create(fileAbstract);
-            var cover = tagFile.Tag.Pictures.FirstOrDefault(p => p.Type == PictureType.FrontCover) ??
-                        tagFile.Tag.Pictures.FirstOrDefault(p => !p.Data.IsEmpty);
+            var cover =
+                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
+                tagFile.Tag.Pictures.FirstOrDefault(p => !p.Data.IsEmpty);
             if (cover == null || cover.Data.IsEmpty) return null;
             var inMemoryStream = new InMemoryRandomAccessStream();
             await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
             inMemoryStream.Seek(0);
             return inMemoryStream;
+        }
+
+        private static async Task<IRandomAccessStream?> GetThumbnailAsync(StorageFile file)
+        {
+            if (!file.IsAvailable) return null;
+            try
+            {
+                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                if (source is { Type: ThumbnailType.Image })
+                {
+                    return source;
+                }
+            }
+            catch (Exception e)
+            {
+                // System.Exception: The data necessary to complete this operation is not yet available.
+                if (e.HResult != unchecked((int)0x8000000A) &&
+                    // System.Exception: The RPC server is unavailable.
+                    e.HResult != unchecked((int)0x800706BA))
+                    LogService.Log(e);
+            }
+
+            return null;
         }
 
         public void UpdateAlbum(AlbumViewModelFactory factory)

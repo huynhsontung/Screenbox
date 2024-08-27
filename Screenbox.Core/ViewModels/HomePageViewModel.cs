@@ -223,7 +223,7 @@ namespace Screenbox.Core.ViewModels
             // Load media details for the remaining items
             if (!loadMediaDetails) return;
             IEnumerable<Task> loadingTasks = Recent.Select(x => x.LoadDetailsAsync(_filesService));
-            loadingTasks = Recent.Select(x => x.LoadThumbnailAsync(_filesService)).Concat(loadingTasks);
+            loadingTasks = Recent.Select(x => x.LoadThumbnailAsync()).Concat(loadingTasks);
             await Task.WhenAll(loadingTasks);
         }
 

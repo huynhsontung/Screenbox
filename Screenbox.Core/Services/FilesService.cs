@@ -63,29 +63,6 @@ namespace Screenbox.Core.Services
             return files.LastOrDefault(x => x.IsSupported());
         }
 
-        public async Task<StorageItemThumbnail?> GetThumbnailAsync(StorageFile file, bool allowIcon = false)
-        {
-            if (!file.IsAvailable) return null;
-            try
-            {
-                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
-                if (source != null && (source.Type == ThumbnailType.Image || allowIcon))
-                {
-                    return source;
-                }
-            }
-            catch (Exception e)
-            {
-                // System.Exception: The data necessary to complete this operation is not yet available.
-                if (e.HResult != unchecked((int)0x8000000A) &&
-                    // System.Exception: The RPC server is unavailable.
-                    e.HResult != unchecked((int)0x800706BA))
-                    LogService.Log(e);
-            }
-
-            return null;
-        }
-
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder)
         {
             // Don't use indexer when querying. Potential incomplete result.
