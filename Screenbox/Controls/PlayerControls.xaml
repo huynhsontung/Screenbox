@@ -322,7 +322,8 @@
         Padding="{x:Bind Padding, Mode=OneWay}"
         Background="{x:Bind Background, Mode=OneWay}"
         BackgroundTransition="{x:Bind BackgroundTransition, Mode=OneWay}"
-        FlowDirection="LeftToRight">
+        FlowDirection="LeftToRight"
+        KeyTipPlacementMode="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -411,6 +412,7 @@
                 x:Name="VolumeButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
+                AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
                 FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -461,7 +463,7 @@
                 x:Name="AudioAndCaptionButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
-                AccessKey="C"
+                AccessKey="{strings:KeyboardResources Key=PlayerAudioAndCaptionsKey}"
                 FlowDirection="{x:Bind FlowDirection}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -523,6 +525,7 @@
             <!--  More  -->
             <Button
                 x:Name="MoreButton"
+                AccessKey="{strings:KeyboardResources Key=PlayerMoreKey}"
                 FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsAccessKeyScope="True"
