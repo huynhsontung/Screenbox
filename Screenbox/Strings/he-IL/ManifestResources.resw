@@ -136,10 +136,10 @@
     <value>אודיו בפורמט AAC</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>וידאו בפורמט AVI</value>
+    <value>AVI וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>אודיו בפורמט FLAC</value>
+    <value>FLAC אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
     <value>Flash Video</value>
@@ -148,43 +148,43 @@
     <value>Matroska Audio</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Matroska וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
     <value>MIDI Music Data</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>אודיו בפורמט MP3</value>
+    <value>MP3 אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>ווידאו בפורמט MPEG-4</value>
+    <value>MPEG-4 וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>אודיו בפורמט MPEG-4</value>
+    <value>MPEG-4 אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
     <value>iTunes Video</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>ווידאו בפורמט MPEG</value>
+    <value>MPEG וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbis אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>ווידאו בפורמט Ogg</value>
+    <value>Ogg וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>QuickTime וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>אודיו בפורמט WAVE</value>
+    <value>WAVE אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>אודיו בפורמט WebM</value>
+    <value>WebM אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>ווידאו בפורמט WebM</value>
+    <value>WebM וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
     <value>Windows Media Audio</value>
@@ -199,9 +199,9 @@
     <value>MPEG Transport Stream</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPack אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>אודיו בפורמט AIFF</value>
+    <value>AIFF אודיו בפורמט</value>
   </data>
 </root>
