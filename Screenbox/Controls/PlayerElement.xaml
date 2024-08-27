@@ -37,6 +37,7 @@
             x:Name="VlcVideoView"
             Margin="0,0,0,-1"
             Canvas.ZIndex="0"
+            FlowDirection="LeftToRight"
             Initialized="VlcVideoView_OnInitialized"
             IsHitTestVisible="False"
             IsTabStop="False"

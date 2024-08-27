@@ -76,6 +76,7 @@
             <Flyout x:Key="SubtitleOptionsFlyout">
                 <StackPanel
                     Width="180"
+                    FlowDirection="LeftToRight"
                     Orientation="Vertical"
                     Spacing="8">
                     <Slider
@@ -303,7 +304,8 @@
     <Grid
         Padding="{x:Bind Padding, Mode=OneWay}"
         Background="{x:Bind Background, Mode=OneWay}"
-        BackgroundTransition="{x:Bind BackgroundTransition, Mode=OneWay}">
+        BackgroundTransition="{x:Bind BackgroundTransition, Mode=OneWay}"
+        FlowDirection="LeftToRight">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -390,6 +392,7 @@
                 x:Name="VolumeButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
+                FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -438,6 +441,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
                 AccessKey="C"
+                FlowDirection="{x:Bind FlowDirection}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xED1F;" />
@@ -497,6 +501,7 @@
             <!--  More  -->
             <Button
                 x:Name="MoreButton"
+                FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
