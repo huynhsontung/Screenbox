@@ -19,7 +19,7 @@ internal class StreamAbstraction : TagLib.File.IFileAbstraction
 
     public void CloseStream(Stream stream)
     {
-        stream.Close();
+        // stream.Close();
     }
 
     public string Name { get; }

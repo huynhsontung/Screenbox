@@ -286,7 +286,12 @@ namespace Screenbox.Core.ViewModels
                 var source = await GetCoverFromTagAsync(file) ?? await GetThumbnailAsync(file);
                 if (source == null) return;
                 ThumbnailSource = source;
-                BitmapImage image = new();
+                BitmapImage image = new()
+                {
+                    DecodePixelType = DecodePixelType.Logical,
+                    DecodePixelHeight = 300,
+                    DecodePixelWidth = 300
+                };
 
                 try
                 {
@@ -304,7 +309,12 @@ namespace Screenbox.Core.ViewModels
                      media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
-                Thumbnail = new BitmapImage(artworkUri);
+                Thumbnail = new BitmapImage(artworkUri)
+                {
+                    DecodePixelType = DecodePixelType.Logical,
+                    DecodePixelHeight = 300,
+                    DecodePixelWidth = 300
+                };
             }
         }
 
@@ -313,11 +323,17 @@ namespace Screenbox.Core.ViewModels
             if (!file.IsAvailable) return null;
             using var stream = await file.OpenStreamForReadAsync();
             var fileAbstract = new StreamAbstraction(file.Path, stream);
-            using var tagFile = TagLib.File.Create(fileAbstract);
+            using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
             var cover =
                 tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                tagFile.Tag.Pictures.FirstOrDefault(p => !p.Data.IsEmpty);
-            if (cover == null || cover.Data.IsEmpty) return null;
+                tagFile.Tag.Pictures.FirstOrDefault();
+            if (cover == null) return null;
+            if (cover.Data.IsEmpty)
+            {
+                if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
+                ((ILazy)cover).Load();
+            }
+
             var inMemoryStream = new InMemoryRandomAccessStream();
             await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
             inMemoryStream.Seek(0);
