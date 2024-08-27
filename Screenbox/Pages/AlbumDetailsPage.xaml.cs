@@ -56,7 +56,7 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedTo(e.Parameter);
         }
 
-        private void AlbumDetailsPage_OnLoaded(object sender, RoutedEventArgs e)
+        private async void AlbumDetailsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
             // Retrieve the ScrollViewer that the GridView is using internally
             ScrollViewer scrollViewer = _scrollViewer = ItemList.FindDescendant<ScrollViewer>() ??
@@ -80,9 +80,11 @@ namespace Screenbox.Pages
 
             if (ViewModel.Source.RelatedSongs.Count == 0) return;
             MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
-            if (firstSong.ThumbnailSource != null)
+            if (firstSong.Thumbnail != null)
             {
-                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, firstSong.ThumbnailSource);
+                var thumbnailSource = await firstSong.GetThumbnailSourceAsync();
+                if (thumbnailSource == null) return;
+                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);
             }
             else
             {
@@ -90,15 +92,17 @@ namespace Screenbox.Pages
             }
         }
 
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_scrollerPropertySet == null) return;
             MediaViewModel media = (MediaViewModel)sender;
-            if (e.PropertyName == nameof(MediaViewModel.Thumbnail) && media.ThumbnailSource != null)
+            if (e.PropertyName == nameof(MediaViewModel.Thumbnail) && media.Thumbnail != null)
             {
                 media.PropertyChanged -= OnPropertyChanged;
+                var thumbnailSource = await media.GetThumbnailSourceAsync();
+                if (thumbnailSource == null) return;
                 ManipulationPropertySetReferenceNode scrollingProperties = _scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
-                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, media.ThumbnailSource);
+                CreateImageBackgroundGradientVisual(scrollingProperties.Translation.Y, thumbnailSource);
             }
         }
 

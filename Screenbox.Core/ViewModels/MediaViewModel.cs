@@ -34,8 +34,6 @@ namespace Screenbox.Core.ViewModels
 
         public bool IsFromLibrary { get; set; }
 
-        public IRandomAccessStream? ThumbnailSource { get; private set; }
-
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
         public Lazy<PlaybackItem?> Item { get; internal set; }
@@ -188,14 +186,6 @@ namespace Screenbox.Core.ViewModels
 
         public void Clean()
         {
-            if (Thumbnail != null) Thumbnail = null;
-            if (ThumbnailSource != null)
-            {
-                var stream = ThumbnailSource;
-                ThumbnailSource = null;
-                stream.Dispose();
-            }
-
             // If source is Media then there is no way to recreate. Don't clean up.
             if (Source is Media || !Item.IsValueCreated) return;
             PlaybackItem? item = Item.Value;
@@ -283,9 +273,8 @@ namespace Screenbox.Core.ViewModels
 
             if (Source is StorageFile file)
             {
-                var source = await GetCoverFromTagAsync(file) ?? await GetThumbnailAsync(file);
+                using var source = await GetThumbnailSourceAsync(file);
                 if (source == null) return;
-                ThumbnailSource = source;
                 BitmapImage image = new()
                 {
                     DecodePixelType = DecodePixelType.Logical,
@@ -295,7 +284,7 @@ namespace Screenbox.Core.ViewModels
 
                 try
                 {
-                    await image.SetSourceAsync(ThumbnailSource);
+                    await image.SetSourceAsync(source);
                 }
                 catch (Exception)
                 {
@@ -316,6 +305,18 @@ namespace Screenbox.Core.ViewModels
                     DecodePixelWidth = 300
                 };
             }
+        }
+
+        public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
+        {
+            return Source is not StorageFile file
+                ? Task.FromResult<IRandomAccessStream?>(null)
+                : GetThumbnailSourceAsync(file);
+        }
+
+        private async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
+        {
+            return await GetCoverFromTagAsync(file) ?? await GetThumbnailAsync(file);
         }
 
         private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)

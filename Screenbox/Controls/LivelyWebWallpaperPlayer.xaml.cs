@@ -269,9 +269,10 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
             return;
 
         LivelyMusicModel? model = null;
-        if (Media != null)
+        if (Media?.Thumbnail != null)
         {
-            var base64 = Media.ThumbnailSource != null ? await ReadToBase64Async(Media.ThumbnailSource) : string.Empty;
+            using var thumbnailSource = await Media.GetThumbnailSourceAsync();
+            var base64 = thumbnailSource != null ? await ReadToBase64Async(thumbnailSource) : string.Empty;
             model = new LivelyMusicModel
             {
                 Title = Media.Name,
