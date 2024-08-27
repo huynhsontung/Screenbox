@@ -3,7 +3,6 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using LibVLCSharp.Platforms.Windows;
 using Screenbox.Core.ViewModels;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -55,19 +54,19 @@ namespace Screenbox.Controls
             Click?.Invoke(sender, e);
         }
 
-        private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ClearViewRequested += ViewModelOnClearViewRequested;
-        }
-
-        private void PlayerElement_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ClearViewRequested -= ViewModelOnClearViewRequested;
-        }
-
-        private void ViewModelOnClearViewRequested(object sender, EventArgs e)
-        {
-            VlcVideoView.Clear();
-        }
+        // private void PlayerElement_OnLoaded(object sender, RoutedEventArgs e)
+        // {
+        //     ViewModel.ClearViewRequested += ViewModelOnClearViewRequested;
+        // }
+        //
+        // private void PlayerElement_OnUnloaded(object sender, RoutedEventArgs e)
+        // {
+        //     ViewModel.ClearViewRequested -= ViewModelOnClearViewRequested;
+        // }
+        //
+        // private void ViewModelOnClearViewRequested(object sender, EventArgs e)
+        // {
+        //     VlcVideoView.Clear();
+        // }
     }
 }
