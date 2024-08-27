@@ -283,7 +283,7 @@ namespace Screenbox.Core.ViewModels
 
             if (Source is StorageFile file)
             {
-                var source = await GetThumbnailFromTag(file) ?? await GetThumbnailAsync(file);
+                var source = await GetCoverFromTagAsync(file) ?? await GetThumbnailAsync(file);
                 if (source == null) return;
                 ThumbnailSource = source;
                 BitmapImage image = new();
@@ -308,7 +308,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private static async Task<IRandomAccessStream?> GetThumbnailFromTag(StorageFile file)
+        private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
         {
             if (!file.IsAvailable) return null;
             using var stream = await file.OpenStreamForReadAsync();
