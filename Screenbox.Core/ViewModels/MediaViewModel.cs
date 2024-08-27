@@ -294,8 +294,7 @@ namespace Screenbox.Core.ViewModels
                 BitmapImage image = new()
                 {
                     DecodePixelType = DecodePixelType.Logical,
-                    DecodePixelHeight = 300,
-                    DecodePixelWidth = 300
+                    DecodePixelHeight = 300
                 };
 
                 try
@@ -317,8 +316,7 @@ namespace Screenbox.Core.ViewModels
                 Thumbnail = new BitmapImage(artworkUri)
                 {
                     DecodePixelType = DecodePixelType.Logical,
-                    DecodePixelHeight = 300,
-                    DecodePixelWidth = 300
+                    DecodePixelHeight = 300
                 };
             }
         }
@@ -340,21 +338,34 @@ namespace Screenbox.Core.ViewModels
             if (!file.IsAvailable) return null;
             using var stream = await file.OpenStreamForReadAsync();
             var fileAbstract = new StreamAbstraction(file.Path, stream);
-            using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
-            var cover =
-                tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                tagFile.Tag.Pictures.FirstOrDefault();
-            if (cover == null) return null;
-            if (cover.Data.IsEmpty)
+            try
             {
-                if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
-                ((ILazy)cover).Load();
+                using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
+                var cover =
+                    tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
+                    tagFile.Tag.Pictures.FirstOrDefault();
+                if (cover == null) return null;
+                if (cover.Data.IsEmpty)
+                {
+                    if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
+                    ((ILazy)cover).Load();
+                }
+
+                var inMemoryStream = new InMemoryRandomAccessStream();
+                await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
+                inMemoryStream.Seek(0);
+                return inMemoryStream;
+            }
+            catch (UnsupportedFormatException)
+            {
+                // pass
+            }
+            catch (CorruptFileException)
+            {
+                // pass
             }
 
-            var inMemoryStream = new InMemoryRandomAccessStream();
-            await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
-            inMemoryStream.Seek(0);
-            return inMemoryStream;
+            return null;
         }
 
         private static async Task<IRandomAccessStream?> GetThumbnailAsync(StorageFile file)
