@@ -328,16 +328,17 @@ namespace Screenbox.Core.ViewModels
                 : GetThumbnailSourceAsync(file);
         }
 
-        private async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
+        private static async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
         {
-            return await GetCoverFromTagAsync(file) ?? await GetThumbnailAsync(file);
+            return await GetCoverFromTagAsync(file) ?? await GetStorageFileThumbnailAsync(file);
         }
 
         private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
         {
             if (!file.IsAvailable) return null;
             using var stream = await file.OpenStreamForReadAsync();
-            var fileAbstract = new StreamAbstraction(file.Path, stream);
+            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
+            var fileAbstract = new StreamAbstraction(name, stream);
             try
             {
                 using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
@@ -368,7 +369,7 @@ namespace Screenbox.Core.ViewModels
             return null;
         }
 
-        private static async Task<IRandomAccessStream?> GetThumbnailAsync(StorageFile file)
+        private static async Task<IRandomAccessStream?> GetStorageFileThumbnailAsync(StorageFile file)
         {
             if (!file.IsAvailable) return null;
             try
