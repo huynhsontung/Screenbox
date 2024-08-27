@@ -342,9 +342,10 @@ namespace Screenbox.Core.ViewModels
             try
             {
                 using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
+                if (tagFile.Tag.Pictures.Length == 0) return null;
                 var cover =
                     tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
-                    tagFile.Tag.Pictures.FirstOrDefault();
+                    tagFile.Tag.Pictures.FirstOrDefault(p => p.Type != PictureType.NotAPicture);
                 if (cover == null) return null;
                 if (cover.Data.IsEmpty)
                 {
