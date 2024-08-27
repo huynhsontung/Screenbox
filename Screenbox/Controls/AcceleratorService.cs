@@ -29,7 +29,8 @@ namespace Screenbox.Controls
             {
                 string shortcut = ToShortcut(accelerator);
                 ToolTipService.SetToolTip(element,
-                    string.IsNullOrEmpty(shortcut) ? value : $"{value} ({shortcut})");
+                    string.IsNullOrEmpty(shortcut) ? value :
+                    App.IsRightToLeftLanguage ? $"({shortcut}) {value}" : $"{value} ({shortcut})");
             }
             else
             {

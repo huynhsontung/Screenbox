@@ -124,6 +124,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
                 CloseWebView2();
 
             _webView = new WebView2();
+            _webView.FlowDirection = FlowDirection.LeftToRight;
             _webView.NavigationStarting += WebView_NavigationStarting;
             _webView.NavigationCompleted += WebView_NavigationCompleted;
             LayoutRoot.Children.Add(_webView);
