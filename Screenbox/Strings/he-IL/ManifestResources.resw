@@ -142,16 +142,16 @@
     <value>FLAC אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value/>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value/>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
     <value>Matroska וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value/>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
     <value>MP3 אודיו בפורמט</value>
@@ -163,7 +163,7 @@
     <value>MPEG-4 אודיו בפורמט</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value/>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
     <value>MPEG וידאו בפורמט</value>
@@ -187,16 +187,16 @@
     <value>WebM וידאו בפורמט</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value/>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value/>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value/>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>MPEG Transport Stream</value>
+    <value/>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
     <value>WavPack אודיו בפורמט</value>
