@@ -783,7 +783,7 @@
     <value>Sortuj wg</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Autor</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
     <value>Rok wydania</value>
@@ -801,13 +801,13 @@
     <value>Przeglądaj plik(i)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Domyślne</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Wybierz styl obrazu, który będzie wyświetlany podczas odtwarzania dźwięku</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Obsługiwane przez Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
     <value>Importuj efekty wizualne</value>
@@ -816,6 +816,6 @@
     <value>Uzyskaj więcej wizualizacji za pośrednictwem aplikacji Lively Wallpaper lub pobierz je z GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Data dodania</value>
   </data>
 </root>
