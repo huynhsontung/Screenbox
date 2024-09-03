@@ -370,7 +370,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             _mediaBuffer = newBuffer;
-            await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync(_filesService)));
+            await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)

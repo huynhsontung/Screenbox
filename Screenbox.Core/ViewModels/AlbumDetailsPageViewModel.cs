@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,11 +29,9 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<MediaViewModel> SortedItems { get; }
 
         private List<MediaViewModel>? _itemList;
-        private readonly IFilesService _filesService;
 
-        public AlbumDetailsPageViewModel(IFilesService filesService)
+        public AlbumDetailsPageViewModel()
         {
-            _filesService = filesService;
             SortedItems = new ObservableCollection<MediaViewModel>();
         }
 
@@ -64,7 +61,7 @@ namespace Screenbox.Core.ViewModels
 
             if (value.AlbumArt == null)
             {
-                await value.LoadAlbumArtAsync(_filesService);
+                await value.LoadAlbumArtAsync();
             }
         }
 

@@ -113,6 +113,12 @@
           "System.Text.Json": "6.0.8"
         }
       },
+      "TagLibSharp": {
+        "type": "Direct",
+        "requested": "[2.3.0, )",
+        "resolved": "2.3.0",
+        "contentHash": "Qo4z6ZjnIfbR3Us1Za5M2vQ97OWZPmODvVmepxZ8XW0UIVLGdO2T63/N3b23kCcyiwuIe0TQvMEQG8wUCCD1mA=="
+      },
       "CommunityToolkit.Common": {
         "type": "Transitive",
         "resolved": "8.2.1",

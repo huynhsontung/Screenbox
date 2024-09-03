@@ -25,14 +25,12 @@ namespace Screenbox.Core.ViewModels
         private string _sortBy = string.Empty;
 
         private readonly ILibraryService _libraryService;
-        private readonly IFilesService _filesService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _refreshTimer;
 
-        public AlbumsPageViewModel(ILibraryService libraryService, IFilesService filesService)
+        public AlbumsPageViewModel(ILibraryService libraryService)
         {
             _libraryService = libraryService;
-            _filesService = filesService;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _refreshTimer = _dispatcherQueue.CreateTimer();
             GroupedAlbums = new ObservableGroupedCollection<string, AlbumViewModel>();
@@ -163,7 +161,7 @@ namespace Screenbox.Core.ViewModels
             if (args.Phase != 0) return;
             if (args.Item is AlbumViewModel album)
             {
-                await album.LoadAlbumArtAsync(_filesService);
+                await album.LoadAlbumArtAsync();
             }
         }
 
