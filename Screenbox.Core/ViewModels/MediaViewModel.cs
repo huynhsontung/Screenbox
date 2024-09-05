@@ -259,6 +259,7 @@ namespace Screenbox.Core.ViewModels
             {
                 if (Source is not IStorageItem &&
                     media.Meta(MetadataType.Title) is { } title &&
+                    !string.IsNullOrEmpty(title) &&
                     !Guid.TryParse(title, out Guid _))
                 {
                     Name = title;
