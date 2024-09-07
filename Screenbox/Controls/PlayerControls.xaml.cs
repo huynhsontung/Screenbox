@@ -43,6 +43,7 @@ namespace Screenbox.Controls
             DataContext = Ioc.Default.GetRequiredService<PlayerControlsViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
             AudioTrackSubtitlePicker.ShowSubtitleOptionsCommand = new RelayCommand(ShowSubtitleOptions);
+            AudioTrackSubtitlePicker.ShowAudioOptionsCommand = new RelayCommand(ShowAudioOptions);
         }
 
         private void ShowSubtitleOptions()
@@ -50,7 +51,13 @@ namespace Screenbox.Controls
             AudioSubtitlePickerFlyout.Hide();
             Flyout flyout = (Flyout)Resources["SubtitleOptionsFlyout"];
             flyout.ShowAt(AudioAndCaptionButton);
-            TimingOffsetSlider.Value = ViewModel.SubtitleTimingOffset;
+        }
+
+        private void ShowAudioOptions()
+        {
+            AudioSubtitlePickerFlyout.Hide();
+            Flyout flyout = (Flyout)Resources["AudioOptionsFlyout"];
+            flyout.ShowAt(AudioAndCaptionButton);
         }
 
         public void FocusFirstButton(FocusState value = FocusState.Programmatic)
@@ -162,11 +169,6 @@ namespace Screenbox.Controls
                 CustomAspectRatioMenuItem.IsChecked = true;
                 ViewModel.SetAspectRatioCommand.Execute(aspectRatio);
             }
-        }
-
-        private void TimingOffsetSlider_OnValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            ViewModel.SubtitleTimingOffset = (long)e.NewValue;
         }
     }
 }

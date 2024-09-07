@@ -32,16 +32,17 @@ namespace Screenbox.Core.ViewModels
 
         public bool ShouldBeAdaptive => !IsCompact && SystemInformation.IsDesktop;
 
-        public long SubtitleTimingOffset
+        public double SubtitleTimingOffset
         {
             // Special access. Consider promote to proper IMediaPlayer property
-            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay / 1000 ?? 0;
+            get => _subtitleTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.SpuDelay / 1000 ?? 0;
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
                 {
                     // LibVLC subtitle delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetSpuDelay(value * 1000);
+                    player.VlcPlayer.SetSpuDelay((long)(value * 1000));
+                    SetProperty(ref _subtitleTimingOffset, value);
                 }
             }
         }
@@ -49,16 +50,17 @@ namespace Screenbox.Core.ViewModels
         /// <summary>
         /// This 64-bit signed integer changes the current audio delay.
         /// </summary>
-        public long AudioTimingOffset
+        public double AudioTimingOffset
         {
             // Special access. Consider promote to proper IMediaPlayer property
-            get => (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay / 1000 ?? 0;
+            get => _audioTimingOffset = (_mediaPlayer as VlcMediaPlayer)?.VlcPlayer.AudioDelay / 1000 ?? 0;
             set
             {
                 if (_mediaPlayer is VlcMediaPlayer player)
                 {
                     // LibVLC audio delay is in microseconds, convert to milliseconds with multiplication by 1000
-                    player.VlcPlayer.SetAudioDelay(value * 1000);
+                    player.VlcPlayer.SetAudioDelay((long)(value * 1000));
+                    SetProperty(ref _audioTimingOffset, value);
                 }
             }
         }
@@ -90,6 +92,8 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
         private Size _aspectRatio;
+        private double _subtitleTimingOffset;
+        private double _audioTimingOffset;
 
         public PlayerControlsViewModel(
             MediaListViewModel playlist,

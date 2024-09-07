@@ -80,16 +80,34 @@
                     Orientation="Vertical"
                     Spacing="8">
                     <Slider
-                        x:Name="TimingOffsetSlider"
+                        x:Name="SubtitleTimingOffsetSlider"
                         Header="{strings:Resources Key=TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
                         SmallChange="50"
                         StepFrequency="100"
-                        ValueChanged="TimingOffsetSlider_OnValueChanged"
-                        Value="0" />
-                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=TimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                        Value="{Binding SubtitleTimingOffset, Mode=TwoWay}" />
+                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SubtitleTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
+                </StackPanel>
+            </Flyout>
+
+            <Flyout x:Key="AudioOptionsFlyout">
+                <StackPanel
+                    Width="180"
+                    FlowDirection="LeftToRight"
+                    Orientation="Vertical"
+                    Spacing="8">
+                    <Slider
+                        x:Name="AudioTimingOffsetSlider"
+                        Header="{strings:Resources Key=TimingOffset}"
+                        IsThumbToolTipEnabled="False"
+                        Maximum="3000"
+                        Minimum="-3000"
+                        SmallChange="50"
+                        StepFrequency="100"
+                        Value="{Binding AudioTimingOffset, Mode=TwoWay}" />
+                    <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                 </StackPanel>
             </Flyout>
 

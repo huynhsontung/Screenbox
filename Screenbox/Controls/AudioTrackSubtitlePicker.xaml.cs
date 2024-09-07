@@ -10,6 +10,7 @@ namespace Screenbox.Controls
     public sealed partial class AudioTrackSubtitlePicker : UserControl
     {
         public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
+        public IRelayCommand? ShowAudioOptionsCommand { get; set; }
 
         internal AudioTrackSubtitleViewModel ViewModel => (AudioTrackSubtitleViewModel)DataContext;
 
