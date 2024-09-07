@@ -731,6 +731,9 @@
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Help translate</value>
   </data>

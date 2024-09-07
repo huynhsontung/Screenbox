@@ -2391,6 +2391,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region ThirdPartyNotices
+        /// <summary>
+        ///   Looks up a localized string similar to: Third-party software acknowledgments
+        /// </summary>
+        public static string ThirdPartyNotices
+        {
+            get
+            {
+                return _resourceLoader.GetString("ThirdPartyNotices");
+            }
+        }
+        #endregion
+
         #region HyperlinkTranslate
         /// <summary>
         ///   Looks up a localized string similar to: Help translate
@@ -2986,6 +2999,7 @@ namespace Screenbox.Strings{
             RelatedLinks,
             PrivacyPolicy,
             License,
+            ThirdPartyNotices,
             HyperlinkTranslate,
             Options,
             TimingOffset,

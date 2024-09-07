@@ -447,9 +447,9 @@
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Vertical">
                             <StackPanel Margin="{StaticResource HyperlinkButtonInlineMargin}" Orientation="Vertical">
-                                <!--  TODO: Add third-party license notice  -->
                                 <HyperlinkButton Content="{strings:Resources Key=PrivacyPolicy}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/PRIVACY.md" />
                                 <HyperlinkButton Content="{strings:Resources Key=License}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/LICENSE" />
+                                <HyperlinkButton Content="{strings:Resources Key=ThirdPartyNotices}" NavigateUri="https://github.com/huynhsontung/Screenbox/blob/main/NOTICE.md" />
                                 <HyperlinkButton Content="{strings:Resources Key=HyperlinkSourceCode}" NavigateUri="https://github.com/huynhsontung/Screenbox" />
                             </StackPanel>
                         </ctc:SettingsCard>
