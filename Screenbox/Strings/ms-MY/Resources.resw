@@ -430,11 +430,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Semak imbas fail untuk bermain</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Tambah fail</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Semak imbas fail untuk menambah ke baris gilir main</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Tambah folder pada pustaka muzik anda</value>
