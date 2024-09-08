@@ -430,11 +430,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>浏览文件以进行播放</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>添加文件</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>浏览文件以添加至播放队列</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>将文件夹添加到音乐资料库</value>
