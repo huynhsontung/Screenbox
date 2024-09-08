@@ -37,7 +37,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
-            Style="{StaticResource PageHeaderTextBlockStyle}"
+            Style="{StaticResource TitleMediumTextBlockStyle}"
             Text="{x:Bind strings:Resources.SearchResultAlbumHeader(ViewModel.SearchQuery), FallbackValue={}}">
             <interactivity:Interaction.Behaviors>
                 <interactions:OverflowTextToolTipBehavior />

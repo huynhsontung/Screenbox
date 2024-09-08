@@ -105,7 +105,7 @@
             Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="HeaderText"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Settings}" />
         </Grid>
 

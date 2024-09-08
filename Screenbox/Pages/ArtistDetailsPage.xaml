@@ -178,7 +178,7 @@
                     Orientation="Vertical">
                     <TextBlock
                         x:Name="TitleText"
-                        Style="{StaticResource TitleTextBlockStyle}"
+                        Style="{StaticResource TitleMediumTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Name}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>

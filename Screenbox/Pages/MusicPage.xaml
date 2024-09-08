@@ -32,7 +32,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             Visibility="Collapsed">
-            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Music}" />
+            <TextBlock Style="{StaticResource TitleMediumTextBlockStyle}" Text="{strings:Resources Key=Music}" />
         </Grid>
 
         <Grid
@@ -57,7 +57,7 @@
             <FontIcon
                 x:Name="NoMusicPanelIcon"
                 Grid.Column="0"
-                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
+                FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xE8D6;" />
 
@@ -115,7 +115,7 @@
                 <TextBlock
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
-                    Style="{StaticResource PageHeaderTextBlockStyle}"
+                    Style="{StaticResource TitleMediumTextBlockStyle}"
                     Text="{strings:Resources Key=Music}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
@@ -196,7 +196,7 @@
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoMusicPanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoMusicPanel.ColumnSpacing" Value="16" />
-                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
+                        <Setter Target="NoMusicPanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                         <Setter Target="HeaderNavView.Margin" Value="16,0" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
