@@ -19,7 +19,7 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ThemeShadow x:Key="SharedShadow" />
+            <ThemeShadow x:Name="SharedShadow" />
 
             <CollectionViewSource
                 x:Name="AlbumSource"
@@ -108,147 +108,24 @@
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
         <!--<Grid
             x:Name="BackgroundHost"
             Grid.Row="0"
             Grid.RowSpan="2"
-            Margin="0,-100,0,0"
+            Margin="0,-136,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />-->
-
-        <Grid
-            x:Name="Header"
-            Grid.Row="0"
-            Height="200"
-            Margin="0,0,0,-108"
-            Padding="{StaticResource ContentPagePadding}"
-            Canvas.ZIndex="1">
-
-            <Border
-                x:Name="BackgroundAcrylic"
-                VerticalAlignment="Top"
-                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                BorderThickness="1"
-                CornerRadius="{StaticResource OverlayCornerRadius}"
-                Shadow="{StaticResource SharedShadow}"
-                Translation="0,0,8" />
-
-            <Grid VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Grid
-                    x:Name="ProfilePicture"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="0"
-                    Width="180"
-                    Height="180"
-                    Margin="0,0,20,0"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CircularCornerRadius}"
-                    SizeChanged="ProfilePicture_OnSizeChanged">
-                    <FontIcon
-                        x:Name="ProfilePictureIcon"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="64"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xE77B;" />
-                </Grid>
-
-                <StackPanel
-                    x:Name="TitlePanel"
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Orientation="Vertical">
-                    <TextBlock
-                        x:Name="TitleText"
-                        Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name}"
-                        TextWrapping="NoWrap">
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </TextBlock>
-                    <TextBlock
-                        x:Name="Subtext"
-                        FontWeight="Normal"
-                        MaxLines="2"
-                        Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}">
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:OverflowTextToolTipBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </TextBlock>
-                </StackPanel>
-
-                <StackPanel
-                    x:Name="ButtonPanel"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="0,0,0,32"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal"
-                    Spacing="16">
-                    <Button
-                        x:Name="PlayButton"
-                        AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
-                        AutomationProperties.Name="{strings:Resources Key=Play}"
-                        Command="{x:Bind ViewModel.PlayCommand}"
-                        Style="{StaticResource AccentButtonStyle}"
-                        XYFocusDown="{x:Bind ItemList}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE768;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
-                        </StackPanel>
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:AutoFocusBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </Button>
-
-                    <Button
-                        AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-                        AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
-                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                        XYFocusDown="{x:Bind ItemList}"
-                        XYFocusLeft="{x:Bind PlayButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8B1;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </Grid>
-        </Grid>
 
         <ListView
             x:Name="ItemList"
-            Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind AlbumSource.View}"
-            SelectionMode="None"
-            XYFocusUp="{x:Bind PlayButton}">
+            SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
@@ -292,7 +169,111 @@
                 </GroupStyle>
             </ListView.GroupStyle>
             <ListView.Header>
-                <Border x:Name="ListHeaderPadding" Height="140" />
+                <Grid x:Name="Header" Margin="0,0,0,32">
+
+                    <Border
+                        x:Name="BackgroundAcrylic"
+                        Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        Shadow="{StaticResource SharedShadow}"
+                        Translation="0,0,8" />
+
+                    <Grid x:Name="ContentContainer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid
+                            x:Name="CoverArt"
+                            Width="192"
+                            Height="192"
+                            Margin="0,0,20,0"
+                            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CircularCornerRadius}"
+                            SizeChanged="ProfilePicture_OnSizeChanged">
+                            <FontIcon
+                                x:Name="CoverArtIcon"
+                                FontSize="64"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Glyph="&#xE77B;" />
+                        </Grid>
+
+                        <StackPanel
+                            x:Name="TextPanel"
+                            Grid.Column="1"
+                            Orientation="Vertical">
+                            <TextBlock
+                                x:Name="TitleText"
+                                Style="{StaticResource TitleMediumTextBlockStyle}"
+                                Text="{x:Bind ViewModel.Source.Name}"
+                                TextWrapping="NoWrap">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:OverflowTextToolTipBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
+
+                            <TextBlock
+                                x:Name="SubtitleText"
+                                Margin="0,8,0,0"
+                                FontWeight="Normal"
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                                TextWrapping="NoWrap">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:OverflowTextToolTipBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
+
+                            <TextBlock
+                                x:Name="CaptionText"
+                                Margin="0,12,0,0"
+                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                Style="{StaticResource BodyTextBlockStyle}"
+                                Text="{strings:Resources Key=Artist}"
+                                TextWrapping="NoWrap">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:OverflowTextToolTipBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </TextBlock>
+
+                            <StackPanel
+                                x:Name="ButtonPanel"
+                                Margin="{StaticResource TopLargeMargin}"
+                                Orientation="Horizontal"
+                                Spacing="16">
+                                <Button
+                                    x:Name="PlayButton"
+                                    AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
+                                    AutomationProperties.Name="{strings:Resources Key=Play}"
+                                    Command="{x:Bind ViewModel.PlayCommand}"
+                                    Style="{StaticResource AccentButtonStyle}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon Glyph="&#xE768;" />
+                                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
+                                    </StackPanel>
+                                    <interactivity:Interaction.Behaviors>
+                                        <interactions:AutoFocusBehavior />
+                                    </interactivity:Interaction.Behaviors>
+                                </Button>
+
+                                <Button
+                                    AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
+                                    AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+                                    Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon Glyph="&#xE8B1;" />
+                                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </ListView.Header>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -320,19 +301,14 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <!--<Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />-->
-                        <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="Header.Margin" Value="0,0,0,-68" />
-                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="ProfilePicture.Width" Value="140" />
-                        <Setter Target="ProfilePicture.Height" Value="140" />
-                        <Setter Target="ProfilePictureIcon.FontSize" Value="52" />
-                        <Setter Target="Subtext.Style" Value="{StaticResource BodyTextBlockStyle}" />
-                        <Setter Target="Subtext.TextWrapping" Value="NoWrap" />
-                        <Setter Target="ButtonPanel.Margin" Value="0" />
+                        <!--<Setter Target="BackgroundHost.Margin" Value="0,-136,0,0" />-->
+                        <Setter Target="Header.Margin" Value="0,0,0,24" />
+                        <Setter Target="CoverArt.Width" Value="160" />
+                        <Setter Target="CoverArt.Height" Value="160" />
+                        <Setter Target="CoverArtIcon.FontSize" Value="52" />
+                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
-                        <Setter Target="ListHeaderPadding.Height" Value="100" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
