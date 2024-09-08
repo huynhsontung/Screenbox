@@ -20,15 +20,21 @@
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
+                AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon Glyph=&#xE838;}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
+                AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph=&#xF2CE;}"
                 Text="{strings:Resources Key=AddFolder}" />
-            <MenuFlyoutItem Icon="{ui:SymbolIcon Symbol=Globe}" Text="{strings:Resources Key=AddUrl}">
+            <MenuFlyoutItem
+                AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
+                Icon="{ui:SymbolIcon Symbol=Globe}"
+                KeyTipPlacementMode="Left"
+                Text="{strings:Resources Key=AddUrl}">
                 <MenuFlyoutItem.Command>
                     <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.AddUrlCommand}" />
                 </MenuFlyoutItem.Command>
@@ -60,10 +66,11 @@
                 x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
+                AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
-                Flyout="{StaticResource AddToPlayQueueFlyout}"
-                ToolTipService.ToolTip="{strings:Resources Key=AddFilesToPlayQueueToolTip}">
+                Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE838;" />
                     <TextBlock
@@ -72,7 +79,10 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonXYNavigationBehavior />
+                    <interactions:SplitButtonAccessibilityBehavior
+                        PrimaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
+                        SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
+                        SecondaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>

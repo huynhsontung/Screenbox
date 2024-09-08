@@ -1261,6 +1261,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region OpenFilesSecondaryToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: More options for opening media
+        /// </summary>
+        public static string OpenFilesSecondaryToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("OpenFilesSecondaryToolTip");
+            }
+        }
+        #endregion
+
         #region AddFiles
         /// <summary>
         ///   Looks up a localized string similar to: Add file(s)
@@ -1283,6 +1296,19 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("AddFilesToPlayQueueToolTip");
+            }
+        }
+        #endregion
+
+        #region AddFilesToPlayQueueSecondaryToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: More options for adding media to the play queue
+        /// </summary>
+        public static string AddFilesToPlayQueueSecondaryToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddFilesToPlayQueueSecondaryToolTip");
             }
         }
         #endregion
@@ -2871,8 +2897,10 @@ namespace Screenbox.Strings{
             Artists,
             Songs,
             OpenFilesToolTip,
+            OpenFilesSecondaryToolTip,
             AddFiles,
             AddFilesToPlayQueueToolTip,
+            AddFilesToPlayQueueSecondaryToolTip,
             AddMusicFolderToolTip,
             AddUrl,
             AddVideoFolderToolTip,

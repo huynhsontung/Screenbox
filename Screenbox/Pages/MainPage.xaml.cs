@@ -250,7 +250,7 @@ namespace Screenbox.Pages
             // Don't go back if the nav pane is overlayed.
             if (NavView.IsPaneOpen &&
                 NavView.DisplayMode is muxc.NavigationViewDisplayMode.Compact or muxc.NavigationViewDisplayMode.Minimal)
-                return false;
+                NavView.IsPaneOpen = false;
 
             if (ViewModel.PlayerVisible && PlayerFrame.Content is PlayerPage { ViewModel: { } vm })
             {
@@ -360,6 +360,24 @@ namespace Screenbox.Pages
                 muxc.NavigationViewDisplayMode.Compact => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
                 _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
             };
+        }
+
+        /// <summary>
+        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the keyboard shortcut combination.
+        /// </summary>
+        private void NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
+                NavViewSearchBox.Focus(FocusState.Keyboard);
+        }
+
+        /// <summary>
+        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the access key combination.
+        /// </summary>
+        private void NavViewSearchBoxAccessKeyFocus_OnInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
+        {
+            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
+                NavViewSearchBox.Focus(FocusState.Keyboard);
         }
     }
 }

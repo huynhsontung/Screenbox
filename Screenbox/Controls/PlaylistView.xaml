@@ -88,10 +88,12 @@
             Grid.Row="0"
             MinHeight="50"
             Padding="{x:Bind Padding, Mode=OneWay}"
+            KeyTipPlacementMode="Bottom"
             Orientation="Horizontal">
             <Button
                 x:Name="AddFilesButton"
                 Margin="0,0,12,0"
+                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
@@ -105,8 +107,10 @@
                 Height="32"
                 Margin="0,0,12,0"
                 VerticalAlignment="Center"
+                AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
-                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}">
+                IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
+                KeyTipPlacementMode="Bottom">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE74D;" />
                     <TextBlock
@@ -120,8 +124,10 @@
                 x:Name="MultiSelectToggle"
                 Height="32"
                 VerticalAlignment="Center"
+                AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
                 IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
+                KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon Glyph="&#xE762;" />
