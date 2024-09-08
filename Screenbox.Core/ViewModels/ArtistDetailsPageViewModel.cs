@@ -5,7 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
-using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +30,9 @@ namespace Screenbox.Core.ViewModels
         public int SongsCount => Source.RelatedSongs.Count;
 
         private List<MediaViewModel>? _itemList;
-        private readonly IFilesService _filesService;
 
-        public ArtistDetailsPageViewModel(IFilesService filesService)
+        public ArtistDetailsPageViewModel()
         {
-            _filesService = filesService;
             _source = new ArtistViewModel();
             _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
         }
@@ -59,7 +56,7 @@ namespace Screenbox.Core.ViewModels
                 .OrderByDescending(g => g.Key?.Year ?? 0).ToList();
 
             IEnumerable<Task> loadingTasks = Albums.Where(g => g.Key is { AlbumArt: null })
-                .Select(g => g.Key?.LoadAlbumArtAsync(_filesService))
+                .Select(g => g.Key?.LoadAlbumArtAsync())
                 .OfType<Task>();
             await Task.WhenAll(loadingTasks);
         }

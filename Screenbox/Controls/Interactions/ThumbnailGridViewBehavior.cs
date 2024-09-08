@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xaml.Interactivity;
-using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 
@@ -7,9 +6,6 @@ namespace Screenbox.Controls.Interactions
 {
     internal class ThumbnailGridViewBehavior : Behavior<GridView>
     {
-        private readonly IFilesService _filesService =
-            CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<IFilesService>();
-
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -28,16 +24,16 @@ namespace Screenbox.Controls.Interactions
             switch (args.Item)
             {
                 case AlbumViewModel album:
-                    await album.LoadAlbumArtAsync(_filesService);
+                    await album.LoadAlbumArtAsync();
                     break;
                 case MediaViewModel media:
-                    await media.LoadThumbnailAsync(_filesService);
+                    await media.LoadThumbnailAsync();
                     break;
                 case StorageItemViewModel storageItem:
                     await storageItem.UpdateCaptionAsync();
                     if (storageItem.Media != null)
                     {
-                        await storageItem.Media.LoadThumbnailAsync(_filesService);
+                        await storageItem.Media.LoadThumbnailAsync();
                     }
                     break;
             }

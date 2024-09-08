@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services
@@ -17,7 +16,6 @@ namespace Screenbox.Core.Services
             StorageFileQueryResult neighboringFilesQuery);
         public Task<StorageFile?> GetPreviousFileAsync(IStorageFile currentFile,
             StorageFileQueryResult neighboringFilesQuery);
-        public Task<StorageItemThumbnail?> GetThumbnailAsync(StorageFile file, bool allowIcon = false);
         public StorageItemQueryResult GetSupportedItems(StorageFolder folder);
         public IAsyncOperation<uint> GetSupportedItemCountAsync(StorageFolder folder);
         public IAsyncOperation<StorageFile> PickFileAsync(params string[] formats);

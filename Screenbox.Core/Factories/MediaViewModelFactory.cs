@@ -41,7 +41,7 @@ namespace Screenbox.Core.Factories
                 Item = new Lazy<PlaybackItem>(new PlaybackItem(media, media))
             };
 
-            if (media.Meta(MetadataType.Title) is { } name)
+            if (media.Meta(MetadataType.Title) is { } name && !string.IsNullOrEmpty(name))
                 vm.Name = name;
 
             return vm;

@@ -592,7 +592,7 @@ namespace Screenbox.Core.ViewModels
             if (current != null)
             {
                 await current.LoadDetailsAsync(_filesService);
-                await current.LoadThumbnailAsync(_filesService);
+                await current.LoadThumbnailAsync();
                 AudioOnly = current.MediaType == MediaPlaybackType.Music;
                 ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
                 bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;

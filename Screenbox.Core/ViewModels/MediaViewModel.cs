@@ -16,9 +16,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using TagLib;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Screenbox.Core.ViewModels
@@ -30,8 +33,6 @@ namespace Screenbox.Core.ViewModels
         public object Source { get; private set; }
 
         public bool IsFromLibrary { get; set; }
-
-        public StorageItemThumbnail? ThumbnailSource { get; set; }
 
         public ArtistViewModel? MainArtist => Artists.FirstOrDefault();
 
@@ -52,12 +53,26 @@ namespace Screenbox.Core.ViewModels
         public string TrackNumberText =>
             MediaInfo.MusicProperties.TrackNumber > 0 ? MediaInfo.MusicProperties.TrackNumber.ToString() : string.Empty;    // Helper for binding
 
+        public BitmapImage? Thumbnail
+        {
+            get
+            {
+                if (_thumbnailRef == null) return null;
+                return _thumbnailRef.TryGetTarget(out BitmapImage image) ? image : null;
+            }
+            set
+            {
+                if (_thumbnailRef == null && value == null) return;
+                if ((_thumbnailRef?.TryGetTarget(out BitmapImage image) ?? false) && image == value) return;
+                SetProperty(ref _thumbnailRef, value == null ? null : new WeakReference<BitmapImage>(value));
+            }
+        }
+
         private readonly LibVlcService _libVlcService;
         private readonly List<string> _options;
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
-        [ObservableProperty] private BitmapImage? _thumbnail;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
@@ -74,11 +89,13 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         private bool? _isPlaying;
 
+        private WeakReference<BitmapImage>? _thumbnailRef;
+
         public MediaViewModel(MediaViewModel source)
         {
             _libVlcService = source._libVlcService;
             _name = source._name;
-            _thumbnail = source._thumbnail;
+            _thumbnailRef = source._thumbnailRef;
             _mediaInfo = source._mediaInfo;
             _artists = source._artists;
             _album = source._album;
@@ -242,6 +259,7 @@ namespace Screenbox.Core.ViewModels
             {
                 if (Source is not IStorageItem &&
                     media.Meta(MetadataType.Title) is { } title &&
+                    !string.IsNullOrEmpty(title) &&
                     !Guid.TryParse(title, out Guid _))
                 {
                     Name = title;
@@ -254,7 +272,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public async Task LoadThumbnailAsync(IFilesService filesService)
+        public async Task LoadThumbnailAsync()
         {
             if (Thumbnail != null) return;
             if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
@@ -272,14 +290,17 @@ namespace Screenbox.Core.ViewModels
 
             if (Source is StorageFile file)
             {
-                StorageItemThumbnail? source = await filesService.GetThumbnailAsync(file);
+                using var source = await GetThumbnailSourceAsync(file);
                 if (source == null) return;
-                ThumbnailSource = source;
-                BitmapImage image = new();
+                BitmapImage image = new()
+                {
+                    DecodePixelType = DecodePixelType.Logical,
+                    DecodePixelHeight = 300
+                };
 
                 try
                 {
-                    await image.SetSourceAsync(ThumbnailSource);
+                    await image.SetSourceAsync(source);
                 }
                 catch (Exception)
                 {
@@ -293,8 +314,84 @@ namespace Screenbox.Core.ViewModels
                      media.Meta(MetadataType.ArtworkURL) is { } artworkUrl &&
                      Uri.TryCreate(artworkUrl, UriKind.Absolute, out Uri artworkUri))
             {
-                Thumbnail = new BitmapImage(artworkUri);
+                Thumbnail = new BitmapImage(artworkUri)
+                {
+                    DecodePixelType = DecodePixelType.Logical,
+                    DecodePixelHeight = 300
+                };
             }
+        }
+
+        public Task<IRandomAccessStream?> GetThumbnailSourceAsync()
+        {
+            return Source is not StorageFile file
+                ? Task.FromResult<IRandomAccessStream?>(null)
+                : GetThumbnailSourceAsync(file);
+        }
+
+        private static async Task<IRandomAccessStream?> GetThumbnailSourceAsync(StorageFile file)
+        {
+            return await GetCoverFromTagAsync(file) ?? await GetStorageFileThumbnailAsync(file);
+        }
+
+        private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
+        {
+            if (!file.IsAvailable) return null;
+            using var stream = await file.OpenStreamForReadAsync();
+            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
+            var fileAbstract = new StreamAbstraction(name, stream);
+            try
+            {
+                using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
+                if (tagFile.Tag.Pictures.Length == 0) return null;
+                var cover =
+                    tagFile.Tag.Pictures.FirstOrDefault(p => p.Type is PictureType.FrontCover or PictureType.Media) ??
+                    tagFile.Tag.Pictures.FirstOrDefault(p => p.Type != PictureType.NotAPicture);
+                if (cover == null) return null;
+                if (cover.Data.IsEmpty)
+                {
+                    if (cover is not ILazy or ILazy { IsLoaded: true }) return null;
+                    ((ILazy)cover).Load();
+                }
+
+                var inMemoryStream = new InMemoryRandomAccessStream();
+                await inMemoryStream.WriteAsync(cover.Data.Data.AsBuffer());
+                inMemoryStream.Seek(0);
+                return inMemoryStream;
+            }
+            catch (UnsupportedFormatException)
+            {
+                // pass
+            }
+            catch (CorruptFileException)
+            {
+                // pass
+            }
+
+            return null;
+        }
+
+        private static async Task<IRandomAccessStream?> GetStorageFileThumbnailAsync(StorageFile file)
+        {
+            if (!file.IsAvailable) return null;
+            try
+            {
+                StorageItemThumbnail? source = await file.GetThumbnailAsync(ThumbnailMode.SingleItem);
+                if (source is { Type: ThumbnailType.Image })
+                {
+                    return source;
+                }
+            }
+            catch (Exception e)
+            {
+                // System.Exception: The data necessary to complete this operation is not yet available.
+                if (e.HResult != unchecked((int)0x8000000A) &&
+                    // System.Exception: The RPC server is unavailable.
+                    e.HResult != unchecked((int)0x800706BA))
+                    LogService.Log(e);
+            }
+
+            return null;
         }
 
         public void UpdateAlbum(AlbumViewModelFactory factory)
