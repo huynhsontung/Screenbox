@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="NavigationBackButtonKey" xml:space="preserve">
+    <value>B</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="NavigationCloseButtonKey" xml:space="preserve">
+    <value>B</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="NavigationTogglePaneButtonKey" xml:space="preserve">
+    <value>NE</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationPaneAutoSuggestButtonKey" xml:space="preserve">
+    <value>NF</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemHomeKey" xml:space="preserve">
+    <value>NH</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemMusicKey" xml:space="preserve">
+    <value>NM</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemVideosKey" xml:space="preserve">
+    <value>NV</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemNetworkKey" xml:space="preserve">
+    <value>NN</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemQueueKey" xml:space="preserve">
+    <value>NQ</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="NavigationItemSettingsKey" xml:space="preserve">
+    <value>NS</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+  </data>
+  <data name="TopNavigationItemFoldersKey" xml:space="preserve">
+    <value>TO</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+  </data>
+  <data name="TopNavigationItemVideosKey" xml:space="preserve">
+    <value>TV</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+  </data>
+  <data name="TopNavigationItemSongsKey" xml:space="preserve">
+    <value>TS</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+  </data>
+  <data name="TopNavigationItemAlbumsKey" xml:space="preserve">
+    <value>TA</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+  </data>
+  <data name="TopNavigationItemArtistsKey" xml:space="preserve">
+    <value>TP</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+  </data>
+  <data name="CommandAddOpenFilesKey" xml:space="preserve">
+    <value>CF</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandMoreOptionsKey" xml:space="preserve">
+    <value>CM</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandAddFolderKey" xml:space="preserve">
+    <value>CO</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandShuffleAndPlayKey" xml:space="preserve">
+    <value>CH</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandSortByKey" xml:space="preserve">
+    <value>CS</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandPlayKey" xml:space="preserve">
+    <value>CP</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandClearKey" xml:space="preserve">
+    <value>CC</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandMultiSelectKey" xml:space="preserve">
+    <value>CE</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="CommandBreadcrumbBarKey" xml:space="preserve">
+    <value>CB</value>
+    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+  </data>
+  <data name="PlayerQueueKey" xml:space="preserve">
+    <value>Q</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerRestoreKey" xml:space="preserve">
+    <value>I</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerSeekBarKey" xml:space="preserve">
+    <value>S</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerPlayPauseKey" xml:space="preserve">
+    <value>P</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerPreviousKey" xml:space="preserve">
+    <value>E</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerNextKey" xml:space="preserve">
+    <value>X</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerVolumeButtonSliderKey" xml:space="preserve">
+    <value>V</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerMuteKey" xml:space="preserve">
+    <value>M</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerShuffleKey" xml:space="preserve">
+    <value>H</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerRepeatKey" xml:space="preserve">
+    <value>R</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerAudioAndCaptionsKey" xml:space="preserve">
+    <value>A</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerCompactOverlayKey" xml:space="preserve">
+    <value>Y</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerFullscreenKey" xml:space="preserve">
+    <value>F</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="PlayerMoreKey" xml:space="preserve">
+    <value>O</value>
+    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+  </data>
+  <data name="MenuItemFileKey" xml:space="preserve">
+    <value>F</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemFolderKey" xml:space="preserve">
+    <value>O</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemUrlKey" xml:space="preserve">
+    <value>U</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemPropertiesKey" xml:space="preserve">
+    <value>P</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemSpeedKey" xml:space="preserve">
+    <value>S</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemSaveSnapshotKey" xml:space="preserve">
+    <value>N</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemCastKey" xml:space="preserve">
+    <value>C</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemAspectRatioKey" xml:space="preserve">
+    <value>R</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemAdvancedKey" xml:space="preserve">
+    <value>A</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemCompactOverlayKey" xml:space="preserve">
+    <value>Y</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+  <data name="MenuItemFullscreenKey" xml:space="preserve">
+    <value>U</value>
+    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+  </data>
+</root>
