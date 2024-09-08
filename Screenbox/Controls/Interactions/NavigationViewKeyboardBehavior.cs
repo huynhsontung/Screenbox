@@ -197,12 +197,12 @@ namespace Screenbox.Controls.Interactions
         private readonly string _togglePaneButtonAccessKey = Strings.KeyboardResources.NavigationTogglePaneButtonKey;
         private readonly string _paneAutoSuggestButtonAccessKey = Strings.KeyboardResources.NavigationPaneAutoSuggestButtonKey;
 
-        private readonly KeyTipPlacementMode _rightAccessKeyPlacement = KeyTipPlacementMode.Right;
-        private readonly KeyTipPlacementMode _bottomAccessKeyPlacement = KeyTipPlacementMode.Bottom;
+        private const KeyTipPlacementMode RightAccessKeyPlacement = KeyTipPlacementMode.Right;
+        private const KeyTipPlacementMode BottomAccessKeyPlacement = KeyTipPlacementMode.Bottom;
 
-        private readonly VirtualKey _togglePaneKeyboardAcceleratorKey = VirtualKey.E;
-        private readonly VirtualKey _paneAutoSuggestKeyboardAcceleratorKey = VirtualKey.F;
-        private readonly VirtualKeyModifiers _ctrlKeyboardAcceleratorModifier = VirtualKeyModifiers.Control;
+        private const VirtualKey TogglePaneKeyboardAcceleratorKey = VirtualKey.E;
+        private const VirtualKey PaneAutoSuggestKeyboardAcceleratorKey = VirtualKey.F;
+        private const VirtualKeyModifiers CtrlKeyboardAcceleratorModifier = VirtualKeyModifiers.Control;
 
         protected override void OnAssociatedObjectLoaded()
         {
@@ -211,36 +211,36 @@ namespace Screenbox.Controls.Interactions
             if (AssociatedObject.FindDescendant<Button>(bb => bb.Name == "NavigationViewBackButton") is { } navigationViewBackButton)
             {
                 navigationViewBackButton.AccessKey = _backButtonAccessKey;
-                navigationViewBackButton.KeyTipPlacementMode = _rightAccessKeyPlacement;
+                navigationViewBackButton.KeyTipPlacementMode = RightAccessKeyPlacement;
             }
 
             if (AssociatedObject.FindDescendant<Button>(cb => cb.Name == "NavigationViewCloseButton") is { } navigationViewCloseButton)
             {
                 navigationViewCloseButton.AccessKey = _closeButtonAccessKey;
-                navigationViewCloseButton.KeyTipPlacementMode = _bottomAccessKeyPlacement;
+                navigationViewCloseButton.KeyTipPlacementMode = BottomAccessKeyPlacement;
             }
 
             if (AssociatedObject.FindDescendant<Button>(pb => pb.Name == "TogglePaneButton") is { } togglePaneButton)
             {
                 togglePaneButton.AccessKey = _togglePaneButtonAccessKey;
-                togglePaneButton.KeyTipPlacementMode = _rightAccessKeyPlacement;
+                togglePaneButton.KeyTipPlacementMode = RightAccessKeyPlacement;
 
                 togglePaneButton.KeyboardAccelerators.Add(new KeyboardAccelerator()
                 {
-                    Modifiers = _ctrlKeyboardAcceleratorModifier,
-                    Key = _togglePaneKeyboardAcceleratorKey
+                    Modifiers = CtrlKeyboardAcceleratorModifier,
+                    Key = TogglePaneKeyboardAcceleratorKey
                 });
             }
 
             if (AssociatedObject.FindDescendant<Button>(sb => sb.Name == "PaneAutoSuggestButton") is { } paneAutoSuggestButton)
             {
                 paneAutoSuggestButton.AccessKey = _paneAutoSuggestButtonAccessKey;
-                paneAutoSuggestButton.KeyTipPlacementMode = _rightAccessKeyPlacement;
+                paneAutoSuggestButton.KeyTipPlacementMode = RightAccessKeyPlacement;
 
                 paneAutoSuggestButton.KeyboardAccelerators.Add(new KeyboardAccelerator()
                 {
-                    Modifiers = _ctrlKeyboardAcceleratorModifier,
-                    Key = _paneAutoSuggestKeyboardAcceleratorKey
+                    Modifiers = CtrlKeyboardAcceleratorModifier,
+                    Key = PaneAutoSuggestKeyboardAcceleratorKey
                 });
 
                 // Disable button glyph text scaling
