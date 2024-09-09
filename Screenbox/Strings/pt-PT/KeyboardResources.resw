@@ -130,11 +130,11 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationPaneAutoSuggestButtonKey" xml:space="preserve">
-    <value>NF</value>
+    <value>NL</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationItemHomeKey" xml:space="preserve">
-    <value>NH</value>
+    <value>NI</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationItemMusicKey" xml:space="preserve">
@@ -146,27 +146,27 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationItemNetworkKey" xml:space="preserve">
-    <value>NN</value>
+    <value>NR</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationItemQueueKey" xml:space="preserve">
-    <value>NQ</value>
+    <value>NF</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="NavigationItemSettingsKey" xml:space="preserve">
-    <value>NS</value>
+    <value>ND</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
   </data>
   <data name="TopNavigationItemFoldersKey" xml:space="preserve">
-    <value>TO</value>
+    <value>TP</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
   </data>
   <data name="TopNavigationItemVideosKey" xml:space="preserve">
-    <value>TV</value>
+    <value>TT</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
   </data>
   <data name="TopNavigationItemSongsKey" xml:space="preserve">
-    <value>TS</value>
+    <value>TM</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
   </data>
   <data name="TopNavigationItemAlbumsKey" xml:space="preserve">
@@ -186,7 +186,7 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandAddFolderKey" xml:space="preserve">
-    <value>CO</value>
+    <value>CA</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandShuffleAndPlayKey" xml:space="preserve">
@@ -194,7 +194,7 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandSortByKey" xml:space="preserve">
-    <value>CS</value>
+    <value>CO</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandPlayKey" xml:space="preserve">
@@ -206,7 +206,7 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandMultiSelectKey" xml:space="preserve">
-    <value>CE</value>
+    <value>CS</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandBreadcrumbBarKey" xml:space="preserve">
@@ -274,11 +274,11 @@
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemFolderKey" xml:space="preserve">
-    <value>O</value>
+    <value>P</value>
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemUrlKey" xml:space="preserve">
-    <value>U</value>
+    <value>L</value>
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemPropertiesKey" xml:space="preserve">
