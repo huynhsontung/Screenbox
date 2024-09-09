@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NavigationBackButtonKey" xml:space="preserve">
-    <value>B</value>
+    <value>A</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="NavigationCloseButtonKey" xml:space="preserve">
-    <value>B</value>
+    <value>A</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="NavigationTogglePaneButtonKey" xml:space="preserve">
@@ -174,11 +174,11 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
   </data>
   <data name="TopNavigationItemArtistsKey" xml:space="preserve">
-    <value>TP</value>
+    <value>TI</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
   </data>
   <data name="CommandAddOpenFilesKey" xml:space="preserve">
-    <value>CF</value>
+    <value>CA</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandMoreOptionsKey" xml:space="preserve">
@@ -190,7 +190,7 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandShuffleAndPlayKey" xml:space="preserve">
-    <value>CH</value>
+    <value>CD</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandSortByKey" xml:space="preserve">
@@ -202,7 +202,7 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandClearKey" xml:space="preserve">
-    <value>CC</value>
+    <value>CE</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandMultiSelectKey" xml:space="preserve">
@@ -210,19 +210,19 @@
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="CommandBreadcrumbBarKey" xml:space="preserve">
-    <value>CB</value>
+    <value>CL</value>
     <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
   </data>
   <data name="PlayerQueueKey" xml:space="preserve">
-    <value>Q</value>
+    <value>F</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerRestoreKey" xml:space="preserve">
-    <value>I</value>
+    <value>U</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerSeekBarKey" xml:space="preserve">
-    <value>S</value>
+    <value>B</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerPlayPauseKey" xml:space="preserve">
@@ -230,11 +230,11 @@
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerPreviousKey" xml:space="preserve">
-    <value>E</value>
+    <value>T</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerNextKey" xml:space="preserve">
-    <value>X</value>
+    <value>G</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerVolumeButtonSliderKey" xml:space="preserve">
@@ -242,11 +242,11 @@
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerMuteKey" xml:space="preserve">
-    <value>M</value>
+    <value>S</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerShuffleKey" xml:space="preserve">
-    <value>H</value>
+    <value>D</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerRepeatKey" xml:space="preserve">
@@ -254,7 +254,7 @@
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerAudioAndCaptionsKey" xml:space="preserve">
-    <value>A</value>
+    <value>L</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerCompactOverlayKey" xml:space="preserve">
@@ -262,7 +262,7 @@
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerFullscreenKey" xml:space="preserve">
-    <value>F</value>
+    <value>I</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="PlayerMoreKey" xml:space="preserve">
@@ -286,11 +286,11 @@
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemSpeedKey" xml:space="preserve">
-    <value>S</value>
+    <value>V</value>
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemSaveSnapshotKey" xml:space="preserve">
-    <value>N</value>
+    <value>G</value>
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemCastKey" xml:space="preserve">
@@ -310,7 +310,7 @@
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
   <data name="MenuItemFullscreenKey" xml:space="preserve">
-    <value>U</value>
+    <value>I</value>
     <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
   </data>
 </root>
