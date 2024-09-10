@@ -431,7 +431,7 @@
     <value>Răsfoiți fișierele care vor fi redate</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Mai multe opțiuni pentru deschiderea fișierelor media</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Adăugați fișiere</value>
@@ -440,7 +440,7 @@
     <value>Răsfoiți pentru fișiere pentru coada de redare</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Mai multe opțiuni pentru adăugarea fișierelor media la coada de redare</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Adăugați un folder la biblioteca dvs. de muzică</value>
