@@ -431,7 +431,7 @@
     <value>Procure arquivos para reproduzir</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Mais opções para abrir a mídia</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Adicionar arquivo(s)</value>
@@ -440,7 +440,7 @@
     <value>Procure arquivo(s) para adicionar à fila de reprodução</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Mais opções para adicionar mídia à fila de reprodução</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Adicionar pasta a sua biblioteca de músicas</value>
