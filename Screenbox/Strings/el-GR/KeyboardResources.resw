@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NavigationBackButtonKey" xml:space="preserve">
-    <value>B</value>
+    <value>Β</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="NavigationCloseButtonKey" xml:space="preserve">
-    <value>B</value>
+    <value>Β</value>
     <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
   </data>
   <data name="NavigationTogglePaneButtonKey" xml:space="preserve">
