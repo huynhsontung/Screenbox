@@ -19,6 +19,10 @@
 
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
@@ -130,37 +134,44 @@
                                 </interactivity:Interaction.Behaviors>
                             </TextBlock>
 
-                            <StackPanel
-                                x:Name="ButtonPanel"
-                                Margin="{StaticResource TopLargeMargin}"
-                                Orientation="Horizontal"
-                                Spacing="16">
-                                <Button
-                                    x:Name="PlayButton"
-                                    AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
-                                    AutomationProperties.Name="{strings:Resources Key=Play}"
-                                    Command="{x:Bind ViewModel.PlayCommand}"
-                                    CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
-                                    Style="{StaticResource AccentButtonStyle}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <FontIcon Glyph="&#xE768;" />
-                                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
-                                    </StackPanel>
-                                    <interactivity:Interaction.Behaviors>
-                                        <interactions:AutoFocusBehavior />
-                                    </interactivity:Interaction.Behaviors>
-                                </Button>
+                            <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that clicking the more button won't break the animation.  -->
+                            <Grid x:Name="ButtonPanel">
+                                <CommandBar Margin="-4,10,0,0" DefaultLabelPosition="Right">
+                                    <CommandBar.Resources>
+                                        <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="CommandBar">
+                                            <Setter Property="Padding" Value="0,0,0,0" />
+                                            <Setter Property="HorizontalAlignment" Value="Left" />
+                                        </Style>
 
-                                <Button
-                                    AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-                                    AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
-                                    Command="{x:Bind ViewModel.ShuffleAndPlayCommand}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <FontIcon Glyph="&#xE8B1;" />
-                                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
-                                    </StackPanel>
-                                </Button>
-                            </StackPanel>
+                                        <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                        <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+
+                                        <!--  Try to match the dimensions to those of the default button  -->
+                                        <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
+                                        <Thickness x:Key="AppBarButtonContentViewboxMargin">15,12,0,13</Thickness>
+                                        <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
+                                        <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
+                                    </CommandBar.Resources>
+
+                                    <AppBarButton
+                                        BackgroundSizing="OuterBorderEdge"
+                                        BorderBrush="{StaticResource AccentButtonBorderBrush}"
+                                        Command="{x:Bind ViewModel.PlayCommand}"
+                                        CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
+                                        Icon="{ui:FontIcon Glyph=&#xE768;}"
+                                        Label="{strings:Resources Key=Play}"
+                                        Style="{StaticResource AppBarButtonAccentButtonStyle}" />
+
+                                    <AppBarButton
+                                        BorderBrush="{ThemeResource ButtonBorderBrush}"
+                                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                                        Icon="{ui:FontIcon Glyph=&#xE8B1;}"
+                                        Label="{strings:Resources Key=ShuffleAndPlay}"
+                                        Style="{StaticResource AppBarButtonDefaultButtonStyle}" />
+                                </CommandBar>
+                            </Grid>
                         </StackPanel>
                     </Grid>
                 </Grid>
