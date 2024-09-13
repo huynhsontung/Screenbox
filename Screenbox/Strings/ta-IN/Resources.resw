@@ -133,39 +133,39 @@
     <value>Playback speed</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>ஒலியளவு {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Failed to save frame</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>இயல் {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
     <value>Failed to load subtitle</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>பின் செல்</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>ஒலியடக்கு</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Unmute</value>
+    <value>ஒலிதடைநீக்கு</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>முழுத்திரை</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>Audio &amp; captions</value>
+    <value>கேட்பொலி மற்றும் படவிளக்கம்</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
     <value>Exit fullscreen</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>ஒலியளவு</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -174,13 +174,13 @@
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>அடுத்தது</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>முந்தையது</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>இயக்குக</value>
   </data>
   <data name="Pause" xml:space="preserve">
     <value>Pause</value>
@@ -293,7 +293,7 @@
     <value>Select multiple</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>We couldn't find any music</value>
+    <value>எந்த இசையையும் எங்களால் கண்டுபிடிக்க முடியவில்லை</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>Your music library doesn't contain any music content.</value>
