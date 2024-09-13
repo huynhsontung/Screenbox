@@ -127,61 +127,61 @@
     <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP மல்டிமீடியா கோப்பு</value>
+    <value>3GPP பல்லூடக கோப்பு</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 மல்டிமீடியா கோப்பு</value>
+    <value>3GPP2 பல்லூடக கோப்பு</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC ஆடியோ</value>
+    <value>AAC கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI வீடியோ</value>
+    <value>AVI காணொளி</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC ஆடியோ</value>
+    <value>FLAC கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash வீடியோ</value>
+    <value>Flash காணொளி</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska ஆடியோ</value>
+    <value>Matroska கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska வீடியோ</value>
+    <value>Matroska காணொளி</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
     <value>MIDI இசை தரவு</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 ஆடியோ</value>
+    <value>MP3 கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 வீடியோ</value>
+    <value>MPEG-4 காணொளி</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 ஆடியோ</value>
+    <value>MPEG-4 கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes வீடியோ</value>
+    <value>iTunes காணொளி</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG வீடியோ</value>
+    <value>MPEG காணொளி</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogh Vorbis ஆடியோ</value>
+    <value>Ogh Vorbis கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg வீடியோ</value>
+    <value>Ogg காணொளி</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
     <value>QuickTime படம்</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE ஆடியோ</value>
+    <value>WAVE கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM ஆடியோ</value>
+    <value>WebM கேட்பொலி</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
     <value>WebM காணொளி</value>
