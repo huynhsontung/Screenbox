@@ -798,10 +798,10 @@
     <value>Áudio visual</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Obter Lively Wallpaper</value>
+    <value>Obter o Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Baixar visuais no GitHub</value>
+    <value>Baixe visuais no GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Procurar arquivo(s)</value>
@@ -819,7 +819,7 @@
     <value>Importar visuais</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Obtenha mais recursos visuais através do aplicativo Lively Wallpaper ou baixe-os no GitHub</value>
+    <value>Obter mais recursos visuais através do aplicativo Lively Wallpaper ou baixe-os no GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Data de adição</value>
