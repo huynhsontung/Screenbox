@@ -54,15 +54,16 @@
             </ListView.ItemTemplate>
             <ListView.Header>
                 <Grid x:Name="Header" Margin="0,0,0,32">
-
-                    <Border
+                    <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
+                    <Rectangle
                         x:Name="BackgroundAcrylic"
-                        Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                        RadiusX="8"
+                        RadiusY="12"
                         Shadow="{StaticResource SharedShadow}"
-                        Translation="0,0,8" />
+                        Stroke="{ThemeResource ControlElevationBorderBrush}"
+                        StrokeThickness="1"
+                        Translation="0,0,32" />
 
                     <Grid x:Name="ContentContainer">
                         <Grid.ColumnDefinitions>
@@ -80,7 +81,7 @@
                             CornerRadius="{StaticResource OverlayCornerRadius}"
                             Shadow="{StaticResource SharedShadow}"
                             SizeChanged="AlbumArt_OnSizeChanged"
-                            Translation="0,0,8">
+                            Translation="0,0,16">
                             <Grid.Background>
                                 <ImageBrush ImageSource="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}" Stretch="UniformToFill" />
                             </Grid.Background>

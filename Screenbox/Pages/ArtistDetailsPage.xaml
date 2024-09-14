@@ -41,20 +41,23 @@
                             x:Name="AlbumArtGrid"
                             Width="160"
                             Height="160"
-                            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource ControlCornerRadius}">
-                            <FontIcon
-                                x:Name="AlbumArtIcon"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Glyph="&#xE93C;"
-                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
-                            <Border CornerRadius="{StaticResource ControlCornerRadius}">
-                                <Image Source="{Binding Key.AlbumArt}" Stretch="UniformToFill" />
+                            CornerRadius="{StaticResource ControlCornerRadius}"
+                            Shadow="{StaticResource SharedShadow}"
+                            Translation="0,0,8">
+                            <Grid.Background>
+                                <ImageBrush ImageSource="{Binding Key.AlbumArt}" Stretch="UniformToFill" />
+                            </Grid.Background>
+                            <Border
+                                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                                CornerRadius="{StaticResource ControlCornerRadius}"
+                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                                <FontIcon
+                                    x:Name="AlbumArtIcon"
+                                    FontSize="{StaticResource GridItemPlaceholderIconFontSize}"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Glyph="&#xE93C;" />
                             </Border>
                         </Grid>
 
@@ -100,7 +103,7 @@
                                         <Setter Target="AlbumArtIcon.FontSize" Value="32" />
                                         <Setter Target="TextPanel.Margin" Value="8,0,0,0" />
                                         <Setter Target="TextPanel.Padding" Value="0,0" />
-                                        <!--<Setter Target="AlbumTitle.Style" Value="{StaticResource SubtitleTextBlockStyle}" />-->
+                                        <!--<Setter Target="AlbumTitle.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />-->
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -174,15 +177,16 @@
             </ListView.GroupStyle>
             <ListView.Header>
                 <Grid x:Name="Header" Margin="0,0,0,32">
-
-                    <Border
+                    <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
+                    <Rectangle
                         x:Name="BackgroundAcrylic"
-                        Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                        BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource OverlayCornerRadius}"
+                        Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                        RadiusX="8"
+                        RadiusY="12"
                         Shadow="{StaticResource SharedShadow}"
-                        Translation="0,0,8" />
+                        Stroke="{ThemeResource ControlElevationBorderBrush}"
+                        StrokeThickness="1"
+                        Translation="0,0,32" />
 
                     <Grid x:Name="ContentContainer">
                         <Grid.ColumnDefinitions>
@@ -199,7 +203,9 @@
                             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource CircularCornerRadius}"
-                            SizeChanged="ProfilePicture_OnSizeChanged">
+                            Shadow="{StaticResource SharedShadow}"
+                            SizeChanged="ProfilePicture_OnSizeChanged"
+                            Translation="0,0,16">
                             <FontIcon
                                 x:Name="CoverArtIcon"
                                 FontSize="64"
