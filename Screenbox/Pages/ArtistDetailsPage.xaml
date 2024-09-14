@@ -115,6 +115,11 @@
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <!--<Grid
             x:Name="BackgroundHost"
             Grid.Row="0"
@@ -122,17 +127,146 @@
             Margin="0,-136,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />-->
 
+        <Grid
+            x:Name="Header"
+            Margin="0,0,0,-64"
+            Padding="{StaticResource ContentPagePadding}"
+            Canvas.ZIndex="1">
+            <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
+            <Rectangle
+                x:Name="BackgroundAcrylic"
+                Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                RadiusX="8"
+                RadiusY="12"
+                Shadow="{StaticResource SharedShadow}"
+                Stroke="{ThemeResource ControlElevationBorderBrush}"
+                StrokeThickness="1"
+                Translation="0,0,32" />
+
+            <Grid x:Name="ContentContainer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid
+                    x:Name="CoverArt"
+                    Width="192"
+                    Height="192"
+                    Margin="0,0,20,0"
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CircularCornerRadius}"
+                    Shadow="{StaticResource SharedShadow}"
+                    SizeChanged="ProfilePicture_OnSizeChanged"
+                    Translation="0,0,16">
+                    <FontIcon
+                        x:Name="CoverArtIcon"
+                        FontSize="64"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Glyph="&#xE77B;" />
+                </Grid>
+
+                <StackPanel
+                    x:Name="TextPanel"
+                    Grid.Column="1"
+                    Orientation="Vertical">
+                    <TextBlock
+                        x:Name="TitleText"
+                        Style="{StaticResource TitleMediumTextBlockStyle}"
+                        Text="{x:Bind ViewModel.Source.Name}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+
+                    <TextBlock
+                        x:Name="SubtitleText"
+                        Margin="0,8,0,0"
+                        FontWeight="Normal"
+                        Style="{StaticResource SubtitleTextBlockStyle}"
+                        Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+
+                    <TextBlock
+                        x:Name="CaptionText"
+                        Margin="0,12,0,0"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Style="{StaticResource BodyTextBlockStyle}"
+                        Text="{strings:Resources Key=Artist}"
+                        TextWrapping="NoWrap">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+
+                    <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that clicking the more button won't break the animation.  -->
+                    <Grid x:Name="ButtonPanel">
+                        <CommandBar
+                            Margin="-4,10,0,0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            DefaultLabelPosition="Right">
+                            <CommandBar.Resources>
+                                <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+
+                                <!--  Try to match the dimensions to those of the default button  -->
+                                <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
+                                <Thickness x:Key="AppBarButtonContentViewboxMargin">15,12,0,13</Thickness>
+                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
+                                <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
+                            </CommandBar.Resources>
+
+                            <AppBarButton
+                                x:Name="PlayButton"
+                                BackgroundSizing="OuterBorderEdge"
+                                BorderBrush="{ThemeResource AccentButtonBorderBrush}"
+                                Command="{x:Bind ViewModel.PlayCommand}"
+                                Icon="{ui:FontIcon Glyph=&#xE768;}"
+                                Label="{strings:Resources Key=Play}"
+                                Style="{StaticResource AppBarButtonAccentButtonStyle}"
+                                XYFocusDown="{x:Bind ItemList}">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:AutoFocusBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </AppBarButton>
+
+                            <AppBarButton
+                                BorderBrush="{ThemeResource ButtonBorderBrush}"
+                                Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                                Icon="{ui:FontIcon Glyph=&#xE8B1;}"
+                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Style="{StaticResource AppBarButtonDefaultButtonStyle}"
+                                XYFocusDown="{x:Bind ItemList}"
+                                XYFocusLeft="{x:Bind PlayButton}" />
+                        </CommandBar>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
         <ListView
             x:Name="ItemList"
+            Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
+            ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind AlbumSource.View}"
-            SelectionMode="None">
+            SelectionMode="None"
+            XYFocusUp="{x:Bind PlayButton}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
@@ -143,10 +277,13 @@
             </ListView.ItemTemplate>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
+                    <!--  Due to layout issue, GroupHeaderPlacement=Left does not work well with MediaListViewItem  -->
+                    <!--  ItemContainerStretchDirection does not work well with ItemsStackPanel, long title texts can cause issues  -->
+                    <!--  Potential layout cycle trigger  -->
                     <ItemsStackPanel
                         x:Name="ItemsStackPanel"
-                        AreStickyGroupHeadersEnabled="False"
-                        GroupHeaderPlacement="Left" />
+                        AreStickyGroupHeadersEnabled="True"
+                        GroupHeaderPlacement="Top" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.GroupStyle>
@@ -176,121 +313,7 @@
                 </GroupStyle>
             </ListView.GroupStyle>
             <ListView.Header>
-                <Grid x:Name="Header" Margin="0,0,0,32">
-                    <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
-                    <Rectangle
-                        x:Name="BackgroundAcrylic"
-                        Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                        RadiusX="8"
-                        RadiusY="12"
-                        Shadow="{StaticResource SharedShadow}"
-                        Stroke="{ThemeResource ControlElevationBorderBrush}"
-                        StrokeThickness="1"
-                        Translation="0,0,32" />
-
-                    <Grid x:Name="ContentContainer">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid
-                            x:Name="CoverArt"
-                            Width="192"
-                            Height="192"
-                            Margin="0,0,20,0"
-                            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
-                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="{StaticResource CircularCornerRadius}"
-                            Shadow="{StaticResource SharedShadow}"
-                            SizeChanged="ProfilePicture_OnSizeChanged"
-                            Translation="0,0,16">
-                            <FontIcon
-                                x:Name="CoverArtIcon"
-                                FontSize="64"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Glyph="&#xE77B;" />
-                        </Grid>
-
-                        <StackPanel
-                            x:Name="TextPanel"
-                            Grid.Column="1"
-                            Orientation="Vertical">
-                            <TextBlock
-                                x:Name="TitleText"
-                                Style="{StaticResource TitleMediumTextBlockStyle}"
-                                Text="{x:Bind ViewModel.Source.Name}"
-                                TextWrapping="NoWrap">
-                                <interactivity:Interaction.Behaviors>
-                                    <interactions:OverflowTextToolTipBehavior />
-                                </interactivity:Interaction.Behaviors>
-                            </TextBlock>
-
-                            <TextBlock
-                                x:Name="SubtitleText"
-                                Margin="0,8,0,0"
-                                FontWeight="Normal"
-                                Style="{StaticResource SubtitleTextBlockStyle}"
-                                Text="{x:Bind local:ArtistDetailsPage.GetSubtext(ViewModel.AlbumsCount, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
-                                TextWrapping="NoWrap">
-                                <interactivity:Interaction.Behaviors>
-                                    <interactions:OverflowTextToolTipBehavior />
-                                </interactivity:Interaction.Behaviors>
-                            </TextBlock>
-
-                            <TextBlock
-                                x:Name="CaptionText"
-                                Margin="0,12,0,0"
-                                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                Style="{StaticResource BodyTextBlockStyle}"
-                                Text="{strings:Resources Key=Artist}"
-                                TextWrapping="NoWrap">
-                                <interactivity:Interaction.Behaviors>
-                                    <interactions:OverflowTextToolTipBehavior />
-                                </interactivity:Interaction.Behaviors>
-                            </TextBlock>
-
-                            <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that clicking the more button won't break the animation.  -->
-                            <Grid x:Name="ButtonPanel">
-                                <CommandBar Margin="-4,10,0,0" DefaultLabelPosition="Right">
-                                    <CommandBar.Resources>
-                                        <Style BasedOn="{StaticResource DefaultCommandBarStyle}" TargetType="CommandBar">
-                                            <Setter Property="Padding" Value="0,0,0,0" />
-                                            <Setter Property="HorizontalAlignment" Value="Left" />
-                                        </Style>
-
-                                        <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
-                                        <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                                        <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
-                                        <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
-
-                                        <!--  Try to match the dimensions to those of the default button  -->
-                                        <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
-                                        <Thickness x:Key="AppBarButtonContentViewboxMargin">15,12,0,13</Thickness>
-                                        <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
-                                        <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
-                                    </CommandBar.Resources>
-
-                                    <AppBarButton
-                                        BackgroundSizing="OuterBorderEdge"
-                                        BorderBrush="{ThemeResource AccentButtonBorderBrush}"
-                                        Command="{x:Bind ViewModel.PlayCommand}"
-                                        Icon="{ui:FontIcon Glyph=&#xE768;}"
-                                        Label="{strings:Resources Key=Play}"
-                                        Style="{StaticResource AppBarButtonAccentButtonStyle}" />
-
-                                    <AppBarButton
-                                        BorderBrush="{ThemeResource ButtonBorderBrush}"
-                                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                                        Icon="{ui:FontIcon Glyph=&#xE8B1;}"
-                                        Label="{strings:Resources Key=ShuffleAndPlay}"
-                                        Style="{StaticResource AppBarButtonDefaultButtonStyle}" />
-                                </CommandBar>
-                            </Grid>
-                        </StackPanel>
-                    </Grid>
-                </Grid>
+                <Border x:Name="ListHeaderPadding" Height="96" />
             </ListView.Header>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -319,13 +342,15 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <!--<Setter Target="BackgroundHost.Margin" Value="0,-136,0,0" />-->
-                        <Setter Target="Header.Margin" Value="0,0,0,24" />
+                        <Setter Target="Header.Margin" Value="0,0,0,-32" />
+                        <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="CoverArt.Width" Value="160" />
                         <Setter Target="CoverArt.Height" Value="160" />
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
                         <Setter Target="SubtitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />
+                        <!--<Setter Target="ItemsStackPanel.GroupHeaderPlacement" Value="Top" />-->
+                        <Setter Target="ListHeaderPadding.Height" Value="56" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

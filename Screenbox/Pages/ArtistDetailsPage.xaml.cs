@@ -8,7 +8,6 @@ using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using EF = CommunityToolkit.WinUI.Animations.Expressions.ExpressionFunctions;
 using NavigationViewDisplayMode = Windows.UI.Xaml.Controls.NavigationViewDisplayMode;
@@ -61,11 +60,6 @@ namespace Screenbox.Pages
             ScrollViewer scrollViewer = _scrollViewer = ItemList.FindDescendant<ScrollViewer>() ??
                                                         throw new Exception("Cannot find ScrollViewer in ListView");
 
-            // Update the ZIndex of the header container so that the header is above the items when scrolling
-            UIElement headerPresenter = (UIElement)VisualTreeHelper.GetParent((UIElement)ItemList.Header);
-            UIElement headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
-            Canvas.SetZIndex(headerContainer, 1);
-
             // Get the PropertySet that contains the scroll values from the ScrollViewer
             _scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(scrollViewer);
             _compositor = _scrollerPropertySet.Compositor;
@@ -86,7 +80,7 @@ namespace Screenbox.Pages
         }
 
         /// <summary>
-        /// Create the animations that will drive the sticky header behavior.
+        /// Create the animations that will drive the header animation.
         /// </summary>  
         /// <param name="propSet">A collection of properties values that are referenced to drive portions of the composition animations.</param>
         /// <param name="scrollVerticalOffset">A property set who has Translation.Y specified, the return from ElementCompositionPreview.GetScrollViewerManipulationPropertySet(...).</param>
@@ -104,24 +98,8 @@ namespace Screenbox.Pages
             ExpressionNode progressAnimation = EF.Clamp(-scrollVerticalOffset / clampSizeNode, 0, 1);
             propSet.StartAnimation("progress", progressAnimation);
 
-            // Get the backing visual for the header so that its properties can be animated
-            Visual headerVisual = ElementCompositionPreview.GetElementVisual(Header);
-
-            // Create and start an ExpressionAnimation to clamp the header's offset to keep it onscreen
-            ExpressionNode headerOffsetAnimation = EF.Conditional(progressNode < 1, 0, -scrollVerticalOffset - clampSizeNode);
-            headerVisual.StartAnimation("Offset.Y", headerOffsetAnimation);
-
-            //// Create and start an ExpressionAnimation to scale the header during overpan
-            //ExpressionNode headerScaleAnimation = EF.Lerp(1, 1.125f, EF.Clamp(scrollVerticalOffset / 50, 0, 1));
-            //headerVisual.StartAnimation("Scale.X", headerScaleAnimation);
-            //headerVisual.StartAnimation("Scale.Y", headerScaleAnimation);
-
-            ////Set the header's CenterPoint to ensure the overpan scale looks as desired
-            //headerVisual.CenterPoint = new Vector3((float)(Header.ActualWidth / 2), (float)Header.ActualHeight, 0);
-
             // Get the backing visual for the background in the header so that its properties can be animated
             Visual backgroundVisual = ElementCompositionPreview.GetElementVisual(BackgroundAcrylic);
-            ElementCompositionPreview.SetIsTranslationEnabled(BackgroundAcrylic, true);
 
             // Create and start an ExpressionAnimation to scale and opacity fade in the backgound behind the header
             ExpressionNode backgroundScaleAnimation = EF.Lerp(1, backgroundScaleFactorNode, progressNode);
@@ -129,10 +107,13 @@ namespace Screenbox.Pages
             backgroundVisual.StartAnimation("Scale.Y", backgroundScaleAnimation);
             backgroundVisual.StartAnimation("Opacity", backgroundOpacityAnimation);
 
-            // When the header stops scrolling it is positioned 96 (64 in minimal visual state) pixels offscreen.
-            // We want the background in the header to stay in view as we traverse through the scrollable region
-            ExpressionNode backgroundTranslationAnimation = progressNode * clampSizeNode;
-            backgroundVisual.StartAnimation("Translation.Y", backgroundTranslationAnimation);
+            // Get the backing visuals for the content container so that its properties can be animated
+            Visual contentVisual = ElementCompositionPreview.GetElementVisual(ContentContainer);
+            ElementCompositionPreview.SetIsTranslationEnabled(ContentContainer, true);
+
+            // Create and start an ExpressionAnimation to move the content container with scroll position
+            ExpressionNode contentTranslationAnimation = progressNode * headerPaddingNode;
+            contentVisual.StartAnimation("Translation.Y", contentTranslationAnimation);
 
             // Get the backing visual for the cover art visual so that its properties can be animated
             Visual coverArtVisual = ElementCompositionPreview.GetElementVisual(CoverArt);
@@ -173,15 +154,6 @@ namespace Screenbox.Pages
             // Create and start an ExpressionAnimation to move the button panel with scroll position
             ExpressionNode buttonTranslationAnimation = progressNode * (-buttonPanelOffsetNode);
             buttonVisual.StartAnimation("Translation.Y", buttonTranslationAnimation);
-
-            // Get the backing visuals for the content container so that its properties can be animated
-            Visual contentVisual = ElementCompositionPreview.GetElementVisual(ContentContainer);
-            ElementCompositionPreview.SetIsTranslationEnabled(ContentContainer, true);
-
-            // When the header stops scrolling it is positioned 96 (64 in minimal visual state) pixels offscreen.
-            // We want the container to stay in view, and to insert a 12 size padding, as we traverse through the scrollable region
-            ExpressionNode contentTranslationAnimation = progressNode * (clampSizeNode + headerPaddingNode);
-            contentVisual.StartAnimation("Translation.Y", contentTranslationAnimation);
         }
 
         private void ProfilePicture_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -190,6 +162,12 @@ namespace Screenbox.Pages
             _props?.InsertScalar("backgroundScaleFactor", BackgroundScaleFactor);
             _props?.InsertScalar("coverScaleFactor", CoverScaleFactor);
             _props?.InsertScalar("buttonPanelOffset", ButtonPanelOffset);
+        }
+
+        private Thickness GetScrollbarVerticalMargin(Thickness value)
+        {
+            double headerHeight = CoverArt.Height + Header.Margin.Bottom;
+            return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
         }
 
         private static string GetSubtext(int albumsCount, int songsCount, TimeSpan duration)
