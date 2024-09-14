@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="128" align="center" src="https://user-images.githubusercontent.com/31434093/157200320-19a6a26e-c466-4d62-baae-6e2ff9fa4593.png">
+  <img width="128" align="center" src="Screenbox/Assets/StoreLogo.scale-400.png">
 </p>
 <h1 align="center">
   Screenbox
