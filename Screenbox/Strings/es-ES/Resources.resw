@@ -144,7 +144,7 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Error al cargar el subtítulo</value>
+    <value>Error al cargar los subtítulos</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Atrás</value>
@@ -293,7 +293,7 @@
     <value>Selección múltiple</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
-    <value>No se pudo encontrar ninguna música</value>
+    <value>No pudimos encontrar música</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
     <value>Tu biblioteca de música no contiene ningún contenido de música.</value>
@@ -431,7 +431,7 @@
     <value>Buscar archivos para reproducir</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Más opciones para abrir archivos multimedia</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Añadir archivo(s)</value>
@@ -440,7 +440,7 @@
     <value>Buscar archivo(s) para añadir a la cola de reproducción</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Más opciones para añadir archivos multimedia a la cola</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Añadir una carpeta a tu biblioteca de música</value>
