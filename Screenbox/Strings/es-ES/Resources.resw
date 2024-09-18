@@ -153,7 +153,7 @@
     <value>Silenciar</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
-    <value>Anular silencio</value>
+    <value>Activar audio</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
     <value>Pantalla completa</value>
