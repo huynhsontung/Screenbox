@@ -431,7 +431,7 @@
     <value>Sélectionner les fichiers à lire</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Plus d'options pour l'ouverture du média</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Ajouter un fichier</value>
@@ -440,7 +440,7 @@
     <value>Sélectionner les fichiers à ajouter à la liste de lecture</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Plus d'options pour l'ajout d'un média à la file d'attente de lecture</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Ajouter un dossier à la librairie de musique</value>
