@@ -431,7 +431,7 @@
     <value>Пошук файлів для відтворення</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Більше параметрів для відкриття медіа</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Додати файл(и)</value>
@@ -440,7 +440,7 @@
     <value>Пошук файлів для додавання у чергу</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Більше параметрів для додавання медіа в чергу відтворення</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Додати папку до бібліотеки музики</value>
@@ -592,7 +592,7 @@
     <value>Показувати останнє</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Показати елементи керування на паузі</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Розташування бібліотеки відео</value>
@@ -786,42 +786,42 @@
     <value>Завжди відкривати медіафайли в новому вікні</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Сортувати за</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Виконавець</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Рік випуску</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Візуалізація аудіо</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Отримати Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Завантажити візуалізацію на GitHub</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Переглянути файл(и)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>За замовчуванням</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Виберіть стиль зображення, який буде показуватися під час відтворення аудіо</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>На основі Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Імпорт візуалізацій</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Отримайте більше візуалізацій за допомогою застосунку Lively Wallpaper або завантажте їх на GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Дата додавання</value>
   </data>
 </root>
