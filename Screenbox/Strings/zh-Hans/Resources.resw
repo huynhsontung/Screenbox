@@ -431,7 +431,7 @@
     <value>浏览文件以进行播放</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>打开媒体的更多选项</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>添加文件</value>
@@ -440,7 +440,7 @@
     <value>浏览文件以添加至播放队列</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>将媒体添加到播放队列的更多选项</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>将文件夹添加到音乐资料库</value>
@@ -674,7 +674,7 @@
     <value>打开已连接的设备设置</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>设置播放选项</value>
+    <value>设置回放选项</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>设置</value>
@@ -686,7 +686,7 @@
     <value>设置适用于流的 VLC 选项。</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>某些选项可能只能在全局设置。</value>
+    <value>某些选项可能只能全局设置。</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
     <value>VLC 命令行帮助</value>
