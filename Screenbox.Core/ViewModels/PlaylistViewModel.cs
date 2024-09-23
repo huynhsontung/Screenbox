@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -41,6 +42,7 @@ namespace Screenbox.Core.ViewModels
 
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
+        private readonly DispatcherQueue _dispatcherQueue;
 
         public PlaylistViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
         {
@@ -48,6 +50,7 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _resourceService = resourceService;
             _hasItems = playlist.Items.Count > 0;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
 
@@ -82,12 +85,11 @@ namespace Screenbox.Core.ViewModels
         {
             if (selectedItems == null) return;
             List<object> copy = selectedItems.ToList();
+            selectedItems.Clear();
             foreach (MediaViewModel item in copy)
             {
                 Remove(item);
             }
-
-            selectedItems.Clear();
         }
 
         [RelayCommand]
@@ -118,13 +120,12 @@ namespace Screenbox.Core.ViewModels
         private void PlaySelectedNext(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
-            IEnumerable<object> reverse = selectedItems.Reverse();
+            List<object> reverse = selectedItems.Reverse().ToList();
+            selectedItems.Clear();
             foreach (MediaViewModel item in reverse)
             {
                 PlayNext(item);
             }
-
-            selectedItems.Clear();
         }
 
         [RelayCommand]
@@ -139,7 +140,11 @@ namespace Screenbox.Core.ViewModels
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
             MoveItemUp(item);
-            selectedItems.Add(item);
+
+            // Selected items will be empty after move
+            // Delay adding the items back to selected so the items have the chance to update first
+            // If this order is not followed, the whole listview will reload
+            _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
         }
 
         [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
@@ -147,7 +152,7 @@ namespace Screenbox.Core.ViewModels
         {
             int index = Playlist.Items.IndexOf(item);
             if (index <= 0) return;
-            Playlist.Items.Remove(item);    // Cannot use RemoveAt because it resets tracking
+            Playlist.Items.RemoveAt(index);
             Playlist.Items.Insert(index - 1, item);
         }
 
@@ -157,7 +162,11 @@ namespace Screenbox.Core.ViewModels
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
             MoveItemDown(item);
-            selectedItems.Add(item);
+
+            // Selected items will be empty after move
+            // Delay adding the items back to selected so the items have the chance to update first
+            // If this order is not followed, the whole listview will reload
+            _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
         }
 
         [RelayCommand(CanExecute = nameof(IsItemNotLast))]
@@ -165,7 +174,7 @@ namespace Screenbox.Core.ViewModels
         {
             int index = Playlist.Items.IndexOf(item);
             if (index == -1 || index >= Playlist.Items.Count - 1) return;
-            Playlist.Items.Remove(item);    // Cannot use RemoveAt because it resets tracking
+            Playlist.Items.RemoveAt(index);
             Playlist.Items.Insert(index + 1, item);
         }
 
