@@ -19,16 +19,25 @@ namespace Screenbox.Core.ViewModels
     {
         public MediaListViewModel Playlist { get; }
 
-        [ObservableProperty] private bool _hasItems;
-        [ObservableProperty] private bool _enableMultiSelect;
-        [ObservableProperty] private object? _selectedItem;
+        public bool HasItems
+        {
+            get => _hasItems;
+            private set
+            {
+                SetProperty(ref _hasItems, value);
+            }
+        }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
         [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
         [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
         [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
         private int _selectionCount;
+
+        [ObservableProperty] private bool _enableMultiSelect;
+
+        private bool _hasItems;
 
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
@@ -59,7 +68,7 @@ namespace Screenbox.Core.ViewModels
         partial void OnEnableMultiSelectChanged(bool value)
         {
             if (!value)
-                SelectedItem = null;
+                SelectionCount = 0;
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
@@ -77,6 +86,8 @@ namespace Screenbox.Core.ViewModels
             {
                 Remove(item);
             }
+
+            selectedItems.Clear();
         }
 
         [RelayCommand]
@@ -112,6 +123,8 @@ namespace Screenbox.Core.ViewModels
             {
                 PlayNext(item);
             }
+
+            selectedItems.Clear();
         }
 
         [RelayCommand]
@@ -134,7 +147,7 @@ namespace Screenbox.Core.ViewModels
         {
             int index = Playlist.Items.IndexOf(item);
             if (index <= 0) return;
-            Playlist.Items.RemoveAt(index);
+            Playlist.Items.Remove(item);    // Cannot use RemoveAt because it resets tracking
             Playlist.Items.Insert(index - 1, item);
         }
 
@@ -152,7 +165,7 @@ namespace Screenbox.Core.ViewModels
         {
             int index = Playlist.Items.IndexOf(item);
             if (index == -1 || index >= Playlist.Items.Count - 1) return;
-            Playlist.Items.RemoveAt(index);
+            Playlist.Items.Remove(item);    // Cannot use RemoveAt because it resets tracking
             Playlist.Items.Insert(index + 1, item);
         }
 
@@ -160,7 +173,7 @@ namespace Screenbox.Core.ViewModels
         private void ClearSelection()
         {
             EnableMultiSelect = false;
-            SelectedItem = null;
+            SelectionCount = 0;
         }
 
         [RelayCommand]

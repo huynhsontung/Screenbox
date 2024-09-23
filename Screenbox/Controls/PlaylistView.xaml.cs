@@ -5,6 +5,7 @@ using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
@@ -118,10 +119,23 @@ namespace Screenbox.Controls
             }
         }
 
+        private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(PlaylistViewModel.SelectionCount)) return;
+            if (ViewModel.SelectionCount == 0) PlaylistListView.SelectedItems.Clear();
+        }
+
         private void PlaylistView_OnLoaded(object sender, RoutedEventArgs e)
         {
             UpdateLayoutState();
             GoToCurrentItem();
+
+            ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        }
+
+        private void PlaylistView_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
     }
 }
