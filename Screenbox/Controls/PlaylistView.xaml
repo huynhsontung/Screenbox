@@ -15,6 +15,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     Loaded="PlaylistView_OnLoaded"
+    Unloaded="PlaylistView_OnUnloaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -162,16 +163,7 @@
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF5EB;}"
-                    Label="{x:Bind strings:Resources.PlayNext}">
-                    <interactivity:Interaction.Behaviors>
-                        <core:EventTriggerBehavior EventName="Click">
-                            <core:ChangePropertyAction
-                                PropertyName="SelectedItem"
-                                TargetObject="{x:Bind PlaylistListView}"
-                                Value="{x:Null}" />
-                        </core:EventTriggerBehavior>
-                    </interactivity:Interaction.Behaviors>
-                </AppBarButton>
+                    Label="{x:Bind strings:Resources.PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"

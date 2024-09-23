@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -19,19 +20,29 @@ namespace Screenbox.Core.ViewModels
     {
         public MediaListViewModel Playlist { get; }
 
-        [ObservableProperty] private bool _hasItems;
-        [ObservableProperty] private bool _enableMultiSelect;
-        [ObservableProperty] private object? _selectedItem;
+        public bool HasItems
+        {
+            get => _hasItems;
+            private set
+            {
+                SetProperty(ref _hasItems, value);
+            }
+        }
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(PlayNextCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PlaySelectedNextCommand))]
         [NotifyCanExecuteChangedFor(nameof(RemoveSelectedCommand))]
         [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemUpCommand))]
         [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
         private int _selectionCount;
 
+        [ObservableProperty] private bool _enableMultiSelect;
+
+        private bool _hasItems;
+
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
+        private readonly DispatcherQueue _dispatcherQueue;
 
         public PlaylistViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
         {
@@ -39,6 +50,7 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _resourceService = resourceService;
             _hasItems = playlist.Items.Count > 0;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
         }
 
@@ -59,7 +71,7 @@ namespace Screenbox.Core.ViewModels
         partial void OnEnableMultiSelectChanged(bool value)
         {
             if (!value)
-                SelectedItem = null;
+                SelectionCount = 0;
         }
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
@@ -73,6 +85,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (selectedItems == null) return;
             List<object> copy = selectedItems.ToList();
+            selectedItems.Clear();
             foreach (MediaViewModel item in copy)
             {
                 Remove(item);
@@ -107,7 +120,8 @@ namespace Screenbox.Core.ViewModels
         private void PlaySelectedNext(IList<object>? selectedItems)
         {
             if (selectedItems == null) return;
-            IEnumerable<object> reverse = selectedItems.Reverse();
+            List<object> reverse = selectedItems.Reverse().ToList();
+            selectedItems.Clear();
             foreach (MediaViewModel item in reverse)
             {
                 PlayNext(item);
@@ -126,7 +140,11 @@ namespace Screenbox.Core.ViewModels
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
             MoveItemUp(item);
-            selectedItems.Add(item);
+
+            // Selected items will be empty after move
+            // Delay adding the items back to selected so the items have the chance to update first
+            // If this order is not followed, the whole listview will reload
+            _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
         }
 
         [RelayCommand(CanExecute = nameof(IsItemNotFirst))]
@@ -144,7 +162,11 @@ namespace Screenbox.Core.ViewModels
             if (selectedItems == null || selectedItems.Count != 1) return;
             MediaViewModel item = (MediaViewModel)selectedItems[0];
             MoveItemDown(item);
-            selectedItems.Add(item);
+
+            // Selected items will be empty after move
+            // Delay adding the items back to selected so the items have the chance to update first
+            // If this order is not followed, the whole listview will reload
+            _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => selectedItems.Add(item));
         }
 
         [RelayCommand(CanExecute = nameof(IsItemNotLast))]
@@ -160,7 +182,7 @@ namespace Screenbox.Core.ViewModels
         private void ClearSelection()
         {
             EnableMultiSelect = false;
-            SelectedItem = null;
+            SelectionCount = 0;
         }
 
         [RelayCommand]
