@@ -160,14 +160,14 @@
                 <AppBarButton
                     x:Name="PlayNextButton"
                     Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems, Mode=OneWay}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF5EB;}"
                     Label="{x:Bind strings:Resources.PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems, Mode=OneWay}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="Delete"
                     Label="{x:Bind strings:Resources.Remove}">
                     <AppBarButton.KeyboardAccelerators>
@@ -177,7 +177,7 @@
                 <AppBarButton
                     x:Name="MoveUpButton"
                     Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems, Mode=OneWay}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Label="{x:Bind strings:Resources.MoveUp}"
                     Visibility="Collapsed">
                     <AppBarButton.Icon>
@@ -187,7 +187,7 @@
                 <AppBarButton
                     x:Name="MoveDownButton"
                     Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems, Mode=OneWay}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Label="{x:Bind strings:Resources.MoveDown}"
                     Visibility="Collapsed">
                     <AppBarButton.Icon>
