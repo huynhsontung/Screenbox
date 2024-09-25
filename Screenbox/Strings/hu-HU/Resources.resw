@@ -491,69 +491,69 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>Összes megtekintése</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>Keresési eremények a(z) "{0}" elóadóra(re)</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>Keresési eremények a(z) "{0}" albumra(re)</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Keresési eremények a(z) "{0}" számra(re)</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Keresési eremények a(z) "{0}" videóra(re)</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>Nincs album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
-    <value>Access denied. Please verify your privacy settings to ensure Screenbox has sufficient permissions.</value>
+    <value>Hozzáférés megtagadva. Kérlek erősítsd meg az adatvédelmi beállitásaidat hogy meggyőződj róla hogy a Screenbox-nak meglegyen a szükséges engedélye.</value>
   </data>
   <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
-    <value>Can't access music library</value>
+    <value>Nem lehet hozzáférni a zenei könyvtárhoz</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Nem lehet hozzáférni a képek könyvtárhoz</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
-    <value>Can't access videos library</value>
+    <value>Nem lehet hozzáférni a videó könyvtárhoz</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Nem találtunk videót</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>A zene könyvtárad nem tartalmaz semmilyen videót.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
-    <value>Open privacy settings</value>
+    <value>Adatvédelmi beállítások megnyitása</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Nem sikerült a média betöltése</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Képarány</value>
   </data>
   <data name="Fit" xml:space="preserve">
-    <value>Fit</value>
+    <value>Illesztés</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Kitöltés</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Egyedi képarány</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Egyedi lejátszási sebesség</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Egyik sem</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
     <value>Scale: {0}</value>
