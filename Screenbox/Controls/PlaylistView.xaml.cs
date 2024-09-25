@@ -137,5 +137,16 @@ namespace Screenbox.Controls
         {
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
+
+        private void PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (MultiSelectToggle.IsEnabled)
+            {
+                MultiSelectToggle.IsChecked = true;
+            }
+
+            PlaylistListView.SelectAll();
+            args.Handled = true;
+        }
     }
 }

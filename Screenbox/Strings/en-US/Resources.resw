@@ -211,6 +211,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Add to queue</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Clear selection</value>
   </data>

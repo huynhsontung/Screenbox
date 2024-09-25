@@ -5,6 +5,8 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
@@ -12,8 +14,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="752"
+    d:DesignWidth="848"
     Loaded="PlaylistView_OnLoaded"
     Unloaded="PlaylistView_OnUnloaded"
     mc:Ignorable="d">
@@ -22,51 +24,44 @@
         <Grid.Resources>
             <ThemeShadow x:Name="SharedShadow" />
 
-            <XamlUICommand
-                x:Key="PlayCommand"
-                Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
-                IconSource="{ui:SymbolIconSource Symbol=Play}"
-                Label="{strings:Resources Key=Play}" />
-
-            <XamlUICommand
-                x:Key="PlayNextCommand"
-                Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                               Glyph=&#xF5EB;}"
-                Label="{strings:Resources Key=PlayNext}" />
-
-            <XamlUICommand
-                x:Key="RemoveCommand"
-                Command="{x:Bind ViewModel.RemoveCommand}"
-                IconSource="{ui:SymbolIconSource Symbol=Delete}"
-                Label="{strings:Resources Key=Remove}" />
-
-            <XamlUICommand
-                x:Key="MoveUpCommand"
-                Command="{x:Bind ViewModel.MoveItemUpCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xE74A;}"
-                Label="{strings:Resources Key=MoveUp}" />
-
-            <XamlUICommand
-                x:Key="MoveDownCommand"
-                Command="{x:Bind ViewModel.MoveItemDownCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xE74B;}"
-                Label="{strings:Resources Key=MoveDown}" />
-
-            <XamlUICommand
-                x:Key="PropertiesCommand"
-                Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
-                Label="{strings:Resources Key=Properties}" />
+            <ctConverters:BoolToObjectConverter
+                x:Key="BoolToSelectAllNoneToolTipTextConverter"
+                FalseValue="{strings:Resources Key=SelectAllToolTip}"
+                TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
 
             <MenuFlyout x:Name="ItemFlyout">
-                <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE768;}"
+                    Text="{strings:Resources Key=Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF5EB;}"
+                    Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource MoveUpCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource MoveDownCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.RemoveCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                    Text="{strings:Resources Key=Remove}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.MoveItemUpCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE74A;}"
+                    Text="{strings:Resources Key=MoveUp}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.MoveItemDownCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE74B;}"
+                    Text="{strings:Resources Key=MoveDown}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowPropertiesCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{strings:Resources Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
@@ -80,21 +75,47 @@
             </MenuFlyout>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MinHeight="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel
             x:Name="ActionButtonRow"
             Grid.Row="0"
-            MinHeight="50"
+            Margin="0,8,0,8"
             Padding="{x:Bind Padding, Mode=OneWay}"
             KeyTipPlacementMode="Bottom"
             Orientation="Horizontal">
+            <!--<ctAnimations:Implicit.ShowAnimations>
+                <ctAnimations:OpacityAnimation
+                    Delay="{StaticResource ControlFastAnimationAfterDuration}"
+                    EasingMode="EaseOut"
+                    From="0"
+                    To="1"
+                    Duration="{StaticResource ControlFasterAnimationDuration}" />
+                <ctAnimations:TranslationAnimation
+                    Delay="{StaticResource ControlFastAnimationAfterDuration}"
+                    From="0,16,0"
+                    To="0,0,0"
+                    Duration="{StaticResource ControlFasterAnimationDuration}" />
+            </ctAnimations:Implicit.ShowAnimations>
+            <ctAnimations:Implicit.HideAnimations>
+                <ctAnimations:OpacityAnimation
+                    EasingMode="EaseOut"
+                    From="1"
+                    To="0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+                <ctAnimations:TranslationAnimation
+                    From="0,0,0"
+                    To="0,-28,0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+            </ctAnimations:Implicit.HideAnimations>-->
+
             <Button
                 x:Name="AddFilesButton"
                 Margin="0,0,12,0"
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
+                AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
@@ -105,10 +126,9 @@
 
             <Button
                 x:Name="ClearButton"
-                Height="32"
                 Margin="0,0,12,0"
-                VerticalAlignment="Center"
                 AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
+                AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom">
@@ -117,15 +137,14 @@
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
-                        Text="{x:Bind strings:Resources.Clear}" />
+                        Text="{strings:Resources Key=Clear}" />
                 </StackPanel>
             </Button>
 
             <ToggleButton
                 x:Name="MultiSelectToggle"
-                Height="32"
-                VerticalAlignment="Center"
                 AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
+                AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
                 IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom"
@@ -135,87 +154,169 @@
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
-                        Text="{x:Bind strings:Resources.Multiselect}" />
+                        Text="{strings:Resources Key=Multiselect}" />
                 </StackPanel>
             </ToggleButton>
         </StackPanel>
 
-        <Border
+        <Grid
             x:Name="SelectionCommandRow"
             Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
-            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CommandBarBorderBrushOpen}"
-            BorderThickness="1"
-            CornerRadius="{StaticResource OverlayCornerRadius}"
-            Shadow="{StaticResource SharedShadow}"
-            Translation="0,0,32"
             Visibility="Collapsed">
+            <ctAnimations:Implicit.ShowAnimations>
+                <ctAnimations:OpacityAnimation
+                    EasingMode="EaseOut"
+                    From="0"
+                    To="1"
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
+                <ctAnimations:TranslationAnimation
+                    From="0,28,0"
+                    To="0,0,0"
+                    Duration="{StaticResource ControlNormalAnimationDuration}" />
+            </ctAnimations:Implicit.ShowAnimations>
+            <ctAnimations:Implicit.HideAnimations>
+                <ctAnimations:OpacityAnimation
+                    EasingMode="EaseOut"
+                    From="1"
+                    To="0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+                <ctAnimations:TranslationAnimation
+                    From="0,0,0"
+                    To="0,-16,0"
+                    Duration="{StaticResource ControlFastAnimationDuration}" />
+            </ctAnimations:Implicit.HideAnimations>
+
+            <Border
+                Background="{ThemeResource CommandBarFlyoutBackground}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
+                CornerRadius="{StaticResource OverlayCornerRadius}"
+                Shadow="{StaticResource SharedShadow}"
+                Translation="0,0,32" />
+
             <CommandBar
                 x:Name="SelectionCommandBar"
                 VerticalContentAlignment="Center"
                 DefaultLabelPosition="Right"
-                IsDynamicOverflowEnabled="False"
                 SizeChanged="CommandBar_OnSizeChanged">
+                <CommandBar.Resources>
+                    <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                    <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
+
+                    <!--  Reduce the width of the AppBarButton to 40 pixels when it is collapsed  -->
+                    <Style BasedOn="{StaticResource DefaultAppBarButtonStyle}" TargetType="AppBarButton">
+                        <Setter Property="Width" Value="44" />
+                    </Style>
+                </CommandBar.Resources>
+
                 <AppBarButton
                     x:Name="PlayNextButton"
                     Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF5EB;}"
-                    Label="{x:Bind strings:Resources.PlayNext}" />
+                    Label="{strings:Resources Key=PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="Delete"
-                    Label="{x:Bind strings:Resources.Remove}">
+                    Label="{strings:Resources Key=Remove}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
                     </AppBarButton.KeyboardAccelerators>
                 </AppBarButton>
-                <AppBarButton
-                    x:Name="MoveUpButton"
-                    Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Label="{x:Bind strings:Resources.MoveUp}"
-                    Visibility="Collapsed">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE74A;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    x:Name="MoveDownButton"
-                    Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
-                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Label="{x:Bind strings:Resources.MoveDown}"
-                    Visibility="Collapsed">
-                    <AppBarButton.Icon>
-                        <FontIcon Glyph="&#xE74B;" />
-                    </AppBarButton.Icon>
-                </AppBarButton>
-                <AppBarButton
-                    Width="40"
-                    Command="{x:Bind ViewModel.ClearSelectionCommand}"
-                    Icon="Clear"
-                    Label="{x:Bind strings:Resources.ClearSelection}"
-                    LabelPosition="Collapsed" />
+
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton
+                        x:Name="MoveUpButton"
+                        Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
+                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                        Icon="{ui:FontIcon Glyph=&#xE74A;}"
+                        IsEnabled="False"
+                        Label="{strings:Resources Key=MoveUp}" />
+                    <AppBarButton
+                        x:Name="MoveDownButton"
+                        Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
+                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                        Icon="{ui:FontIcon Glyph=&#xE74B;}"
+                        IsEnabled="False"
+                        Label="{strings:Resources Key=MoveDown}" />
+                </CommandBar.SecondaryCommands>
+
                 <CommandBar.Content>
-                    <StackPanel Margin="8,0" Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
                         <CheckBox
                             x:Name="SelectionCheckBox"
+                            Margin="10,0,0,0"
                             VerticalAlignment="Center"
+                            d:Content="11 items selected"
+                            AutomationProperties.HelpText="{Binding ElementName=SelectionCheckBox, Path=Content, Mode=OneWay}"
+                            AutomationProperties.Name="{strings:Resources Key=SelectAll}"
                             Click="SelectionCheckBox_OnClick"
-                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}" />
+                            Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                            ToolTipService.ToolTip="{Binding ElementName=SelectionCheckBox, Path=IsChecked, Converter={StaticResource BoolToSelectAllNoneToolTipTextConverter}}" />
+                        <TextBlock
+                            Margin="0,5,0,0"
+                            VerticalAlignment="Top"
+                            Text=" •" />
+                        <Button
+                            Padding="4,5,4,5"
+                            VerticalAlignment="Top"
+                            AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
+                            BorderThickness="0"
+                            Command="{x:Bind ViewModel.ClearSelectionCommand}"
+                            Content="{strings:Resources Key=Clear}">
+                            <Button.Resources>
+                                <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
+                                <ResourceDictionary>
+                                    <ResourceDictionary.ThemeDictionaries>
+                                        <ResourceDictionary x:Key="Default">
+                                            <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                        </ResourceDictionary>
+                                        <ResourceDictionary x:Key="Light">
+                                            <StaticResource x:Key="ButtonBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="ControlFillColorTransparentBrush" />
+                                            <StaticResource x:Key="ButtonForeground" ResourceKey="AccentTextFillColorPrimaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
+                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="AccentTextFillColorDisabledBrush" />
+                                        </ResourceDictionary>
+                                        <ResourceDictionary x:Key="HighContrast">
+                                            <StaticResource x:Key="ButtonBackground" ResourceKey="SystemControlTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
+                                            <StaticResource x:Key="ButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
+                                            <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorHighlightColorBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="SystemColorButtonTextColorBrush" />
+                                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
+                                            <StaticResource x:Key="ButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
+                                        </ResourceDictionary>
+                                    </ResourceDictionary.ThemeDictionaries>
+                                </ResourceDictionary>
+                            </Button.Resources>
+                        </Button>
                     </StackPanel>
                 </CommandBar.Content>
             </CommandBar>
-        </Border>
+        </Grid>
 
         <ListView
             x:Name="PlaylistListView"
             Grid.Row="1"
-            Margin="0,8,0,0"
+            Margin="{StaticResource TopMediumMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
             extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
@@ -229,6 +330,7 @@
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
+            KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
             <ListView.ItemTemplate>
@@ -239,6 +341,12 @@
             <ListView.Footer>
                 <Border x:Name="Footer" Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </ListView.Footer>
+            <ListView.KeyboardAccelerators>
+                <KeyboardAccelerator
+                    Key="A"
+                    Invoked="PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked"
+                    Modifiers="Control" />
+            </ListView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
                 <interactions:AlternatingListViewBehavior
                     AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -262,50 +370,39 @@
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
                     </VisualState.Setters>
                 </VisualState>
+
                 <VisualState x:Name="MultipleSingleSelected">
                     <VisualState.Setters>
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
                         <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
-                        <Setter Target="MoveUpButton.Visibility" Value="Visible" />
-                        <Setter Target="MoveDownButton.Visibility" Value="Visible" />
+                        <Setter Target="MoveUpButton.IsEnabled" Value="True" />
+                        <Setter Target="MoveDownButton.IsEnabled" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+
             <VisualStateGroup x:Name="LayoutGroup">
                 <VisualState x:Name="Normal" />
-                <VisualState x:Name="Compact">
-                    <VisualState.Setters>
-                        <Setter Target="MoveUpButton.Width" Value="40" />
-                        <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />
-                        <Setter Target="MoveDownButton.Width" Value="40" />
-                        <Setter Target="MoveDownButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="MoveDownButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveDown}" />
-                    </VisualState.Setters>
-                </VisualState>
+                <VisualState x:Name="Compact" />
+
                 <VisualState x:Name="Minimal">
                     <VisualState.StateTriggers>
                         <StateTrigger IsActive="{x:Bind IsFlyout, Mode=OneWay}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Footer.Visibility" Value="Collapsed" />
-                        <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
-                        <Setter Target="MoveUpButton.Width" Value="40" />
-                        <Setter Target="MoveUpButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="MoveUpButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveUp}" />
-                        <Setter Target="MoveDownButton.Width" Value="40" />
-                        <Setter Target="MoveDownButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="MoveDownButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.MoveDown}" />
-                        <Setter Target="RemoveSelectedButton.Width" Value="40" />
-                        <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="RemoveSelectedButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.Remove}" />
-                        <Setter Target="PlayNextButton.Width" Value="40" />
-                        <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
-                        <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind strings:Resources.PlayNext}" />
                         <Setter Target="AddFilesButton.Visibility" Value="Visible" />
+                        <Setter Target="ClearButton.Padding" Value="10.5,6.5,11,7" />
+                        <Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
                         <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="MultiSelectToggle.Padding" Value="10.5,6.5,11,7" />
+                        <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
                         <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="PlayNextButton.(ToolTipService.ToolTip)" Value="{x:Bind PlayNextButton.Label}" />
+                        <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
+                        <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
+                        <Setter Target="Footer.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

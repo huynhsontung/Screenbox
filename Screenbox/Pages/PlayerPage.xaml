@@ -228,11 +228,17 @@
                         Opened="PlayQueueFlyout_OnOpened"
                         Opening="PlayQueueFlyout_OnOpening"
                         Placement="BottomEdgeAlignedLeft">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="0,15,0,0" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
                         <controls:PlaylistView
                             x:Name="PlaylistView"
-                            Width="420"
+                            Width="432"
                             MinHeight="200"
-                            MaxHeight="500"
+                            MaxHeight="512"
+                            Padding="12,0"
                             x:Load="False"
                             IsAccessKeyScope="True"
                             IsFlyout="True" />

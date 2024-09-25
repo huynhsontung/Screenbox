@@ -432,6 +432,58 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SelectAll
+        /// <summary>
+        ///   Looks up a localized string similar to: Select all
+        /// </summary>
+        public static string SelectAll
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectAll");
+            }
+        }
+        #endregion
+
+        #region SelectAllToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Select all items in this view
+        /// </summary>
+        public static string SelectAllToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectAllToolTip");
+            }
+        }
+        #endregion
+
+        #region SelectNone
+        /// <summary>
+        ///   Looks up a localized string similar to: Select none
+        /// </summary>
+        public static string SelectNone
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectNone");
+            }
+        }
+        #endregion
+
+        #region SelectNoneToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Clear your selection
+        /// </summary>
+        public static string SelectNoneToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectNoneToolTip");
+            }
+        }
+        #endregion
+
         #region ClearSelection
         /// <summary>
         ///   Looks up a localized string similar to: Clear selection
@@ -2846,6 +2898,10 @@ namespace Screenbox.Strings{
             More,
             PlayQueue,
             AddToQueue,
+            SelectAll,
+            SelectAllToolTip,
+            SelectNone,
+            SelectNoneToolTip,
             ClearSelection,
             Remove,
             PlayNext,
