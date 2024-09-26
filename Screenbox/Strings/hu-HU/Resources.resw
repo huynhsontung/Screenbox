@@ -711,52 +711,52 @@
     <value>Parancssori változók amik minden média lejátszásnál érvényesek</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Mappa eltávolítása</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Függő változtatások</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
-    <value>Relaunch the app for changes to take effect</value>
+    <value>Indítsd újra az appot hogy a változások életbe lépjenek</value>
   </data>
   <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
-    <value>Failed to initialize</value>
+    <value>Nem sikerült elindítani</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Kapcsolódó linkek</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
-    <value>Privacy policy</value>
+    <value>Adatvédelmi irányelvek</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Licensz</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Segíts fordítani</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Beállítások</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Timing offset</value>
+    <value>Időzítés kompenzálás</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
-    <value>Composers</value>
+    <value>Zeneszerzők</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Nem lehet a mappát hozzáadni</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Album megnyitása</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Előadó megnyitása</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Könyvtár frissítése</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Frissítés</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
     <value>Indexelő használata scaneléshez</value>
@@ -771,57 +771,57 @@
     <value>Változók beállitása</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Cserélhető meghajtók keresése</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Tartalmazza a médiát könyvtáradban az olyan tárolóeszközökről mint az USB meghajtók</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>Aktív változók</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Többszörös futtatás engedélyezése</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Mindenig új alkalmazásban futtassa a megnyitott média fájlokat</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Rendezés</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Előadó</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Kiadás éve</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Audió vizualizáció</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Szerezd be a Lively Wallpaper appot</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Tölts le vizualizációkat GitHubról</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Fájl(ok) böngészése</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Alapértelmezett</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Válassz ki vizualizációs stílust a zene lejátszáshoz</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Vizualizáció importálása</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Szerezz be több vizualizációt a Lively Wallpaper appon keresztül vagy töltsd le őket GitHubról</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Hozzáadás dátuma</value>
   </data>
 </root>
