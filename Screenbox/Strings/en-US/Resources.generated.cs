@@ -2793,6 +2793,45 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region Media
+        /// <summary>
+        ///   Looks up a localized string similar to: Media
+        /// </summary>
+        public static string Media
+        {
+            get
+            {
+                return _resourceLoader.GetString("Media");
+            }
+        }
+        #endregion
+
+        #region Video
+        /// <summary>
+        ///   Looks up a localized string similar to: Video
+        /// </summary>
+        public static string Video
+        {
+            get
+            {
+                return _resourceLoader.GetString("Video");
+            }
+        }
+        #endregion
+
+        #region File
+        /// <summary>
+        ///   Looks up a localized string similar to: File
+        /// </summary>
+        public static string File
+        {
+            get
+            {
+                return _resourceLoader.GetString("File");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -3017,6 +3056,9 @@ namespace Screenbox.Strings{
             SettingsImportVisualsHeader,
             SettingsImportVisualsDescription,
             DateAdded,
+            Media,
+            Video,
+            File,
         }
 
         private static ResourceLoader _resourceLoader;
