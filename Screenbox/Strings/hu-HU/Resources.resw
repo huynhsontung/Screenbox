@@ -683,7 +683,7 @@
     <value>Beállit és lejátszás</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
-    <value>Set VLC options that apply to a stream.</value>
+    <value>Streamre vonatkozó VLC beállitások megadása.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
     <value>Some options may only be set globally.</value>
@@ -762,10 +762,10 @@
     <value>Indexelő használata scaneléshez</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
-    <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
+    <value>Felgyorsithatod a könyvtárak scanelését a rendszer indexelő használatával, amikor az elérhető. Ezt a funkciót kikapcsolhatod ha nem látod az összes média fájlt ami a könyvtáraidban van.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Rendszer indexelő beállítások</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
