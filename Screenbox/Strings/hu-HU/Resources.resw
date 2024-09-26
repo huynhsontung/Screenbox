@@ -686,29 +686,29 @@
     <value>Streamre vonatkozó VLC beállitások megadása.</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>Some options may only be set globally.</value>
+    <value>Néhány beállitást csak teljeskörűen lehet beállitani.</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
-    <value>VLC command-line help</value>
+    <value>VLC parancssori segitség</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>See {0} for the full list of available options.</value>
+    <value>{0} alatt megtalálható az összes elérhető opció.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Haladó</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Haladó mód</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
+    <value>A haladó módban testreszabható a LibVLC viselkedése parancssori változókkal</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Globális változók</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Command line arguments that apply to all media playback</value>
+    <value>Parancssori változók amik minden média lejátszásnál érvényesek</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Remove folder</value>
@@ -768,7 +768,7 @@
     <value>Rendszer indexelő beállítások</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Változók beállitása</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
     <value>Search removable storage</value>
@@ -777,7 +777,7 @@
     <value>Include media from storage devices like USB sticks in your libraries</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Aktív változók</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
     <value>Allow multiple instances</value>
