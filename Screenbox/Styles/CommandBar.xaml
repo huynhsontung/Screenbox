@@ -7,7 +7,7 @@
     xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
 
-    <!--  Make the LabelOnRight visual state resemble the Button style, remove the fixed width, add border thickness, and increase the font size  -->
+    <!--  Make the LabelOnRight visual state resemble the default button style, removed the fixed width at the top level and adjusted the horizontal alignment to address overflow states  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
     <Style
         x:Key="AppBarButtonDefaultButtonStyle"
@@ -16,7 +16,7 @@
         <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}" />
-        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <!--<Setter Property="VerticalAlignment" Value="Top" />-->
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontWeight" Value="Normal" />-->
@@ -50,7 +50,6 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Control.IsTemplateFocusTarget="True">
-
                             <contract7Present:Border.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Border.BackgroundTransition>
@@ -150,9 +149,17 @@
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ApplicationViewStates">
-                                <VisualState x:Name="FullSize" />
+                                <VisualState x:Name="FullSize">
+                                    <VisualState.Setters>
+                                        <!--  Work around the fixed width's removal  -->
+                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
+                                        <!--  Work around the fixed width's removal  -->
+                                        <Setter Target="ContentRoot.Width" Value="68" />
                                         <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
@@ -199,6 +206,10 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <Storyboard>
+                                        <!--  Work around the fixed width's removal and decrease its size slightly  -->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="Width">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="48" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="MinHeight">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarThemeCompactHeight}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -305,6 +316,10 @@
 
                                 <VisualState x:Name="OverflowNormal">
                                     <VisualState.Setters>
+                                        <!--  Add InnerBorder background and Content, OverflowTextLabel foreground brushes to counteract the button brushes  -->
+                                        <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
+                                        <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
+                                        <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
                                         <Setter Target="OverflowSubItemChevron.Visibility" Value="Visible" />
                                     </VisualState.Setters>
@@ -317,7 +332,7 @@
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
-                                        <Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundPointerOver}" />
+                                        <contract6Present:Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundPointerOver}" />
                                         <Setter Target="SubItemChevron.Foreground" Value="{ThemeResource AppBarButtonSubItemChevronForegroundPointerOver}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
                                         <Setter Target="OverflowSubItemChevron.Visibility" Value="Visible" />
@@ -331,7 +346,7 @@
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
-                                        <Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundPressed}" />
+                                        <contract6Present:Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundPressed}" />
                                         <Setter Target="SubItemChevron.Foreground" Value="{ThemeResource AppBarButtonSubItemChevronForegroundPressed}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
                                         <Setter Target="OverflowSubItemChevron.Visibility" Value="Visible" />
@@ -345,14 +360,14 @@
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
-                                        <Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundSubMenuOpened}" />
+                                        <contract6Present:Setter Target="KeyboardAcceleratorTextLabel.Foreground" Value="{ThemeResource AppBarButtonKeyboardAcceleratorTextForegroundSubMenuOpened}" />
                                         <Setter Target="SubItemChevron.Foreground" Value="{ThemeResource AppBarButtonSubItemChevronForegroundSubMenuOpened}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
                                         <Setter Target="OverflowSubItemChevron.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
-
                             </VisualStateGroup>
+
                             <VisualStateGroup x:Name="InputModeStates">
                                 <VisualState x:Name="InputModeDefault" />
 
@@ -395,7 +410,7 @@
         </Setter>
     </Style>
 
-    <!--  Make the LabelOnRight visual state resemble the Accent Button style, remove the fixed width, add border thickness, and increase the font size  -->
+    <!--  Make the LabelOnRight visual state resemble the accent button style, removed the fixed width at the top level and adjusted the horizontal alignment to address overflow states  -->
     <Style
         x:Key="AppBarButtonAccentButtonStyle"
         BasedOn="{StaticResource DefaultAppBarButtonStyle}"
@@ -403,7 +418,7 @@
         <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource AccentButtonBorderBrush}" />
-        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <!--<Setter Property="VerticalAlignment" Value="Top" />-->
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontWeight" Value="Normal" />-->
@@ -437,7 +452,6 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Control.IsTemplateFocusTarget="True">
-
                             <contract7Present:Border.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
                             </contract7Present:Border.BackgroundTransition>
@@ -537,10 +551,17 @@
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ApplicationViewStates">
-                                <VisualState x:Name="FullSize" />
+                                <VisualState x:Name="FullSize">
+                                    <VisualState.Setters>
+                                        <!--  Work around the fixed width's removal  -->
+                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                    </VisualState.Setters>
+                                </VisualState>
 
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
+                                        <!--  Work around the fixed width's removal  -->
+                                        <Setter Target="ContentRoot.Width" Value="68" />
                                         <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
@@ -587,6 +608,10 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <Storyboard>
+                                        <!--  Work around the fixed width's removal and decrease its size slightly  -->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="Width">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="48" />
+                                        </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="MinHeight">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarThemeCompactHeight}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -693,10 +718,9 @@
 
                                 <VisualState x:Name="OverflowNormal">
                                     <VisualState.Setters>
-                                        <!--  Add InnerBorder background and Content, TextLabel, OverflowTextLabel foreground brushes to counteract accent brushes  -->
+                                        <!--  Add InnerBorder background and Content, OverflowTextLabel foreground brushes to counteract the accent brushes  -->
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
-                                        <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
                                         <Setter Target="OverflowSubItemChevron.Visibility" Value="Visible" />
