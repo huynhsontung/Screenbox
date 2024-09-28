@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
   </data>

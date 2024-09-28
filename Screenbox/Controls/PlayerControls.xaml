@@ -13,8 +13,8 @@
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="128"
+    d:DesignWidth="1200"
     mc:Ignorable="d">
 
     <UserControl.Resources>
@@ -40,8 +40,13 @@
                 TrueValue="&#xE8B1;" />
 
             <Flyout x:Key="VolumeControlFlyout">
+                <Flyout.FlyoutPresenterStyle>
+                    <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                        <Setter Property="Padding" Value="6,7,6,9" />
+                    </Style>
+                </Flyout.FlyoutPresenterStyle>
                 <controls:VolumeControl
-                    Width="200"
+                    Width="212"
                     IsAccessKeyScope="True"
                     ToggleButtonStyle="{StaticResource SmallPlayerToggleButtonStyle}" />
             </Flyout>
@@ -373,6 +378,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
+                AutomationProperties.Name="{x:Bind PlayPauseButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="{x:Bind ViewModel.IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
@@ -387,6 +393,7 @@
                 x:Name="PreviousButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
                 AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
+                AutomationProperties.Name="{x:Bind PreviousButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                 CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -399,6 +406,7 @@
                 x:Name="NextButton"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
                 AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
+                AutomationProperties.Name="{x:Bind NextButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.Playlist.NextCommand}"
                 CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -431,6 +439,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
                 AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
+                AutomationProperties.Name="{x:Bind VolumeButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -453,6 +462,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerShuffleKey}"
+                AutomationProperties.Name="{x:Bind ShuffleButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
@@ -467,6 +477,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerRepeatKey}"
+                AutomationProperties.Name="{x:Bind RepeatButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
@@ -482,6 +493,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
                 AccessKey="{strings:KeyboardResources Key=PlayerAudioAndCaptionsKey}"
+                AutomationProperties.Name="{x:Bind AudioAndCaptionButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 FlowDirection="{x:Bind FlowDirection}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -513,6 +525,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerCompactOverlayKey}"
+                AutomationProperties.Name="{x:Bind CompactOverlayButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -531,6 +544,7 @@
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
                 AccessKey="{strings:KeyboardResources Key=PlayerFullscreenKey}"
+                AutomationProperties.Name="{x:Bind FullscreenButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -544,12 +558,13 @@
             <Button
                 x:Name="MoreButton"
                 AccessKey="{strings:KeyboardResources Key=PlayerMoreKey}"
+                AutomationProperties.Name="{x:Bind MoreButton.(ToolTipService.ToolTip)}"
                 FlowDirection="{x:Bind FlowDirection}"
                 Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsAccessKeyScope="True"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
-                ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
+                ToolTipService.ToolTip="{strings:Resources Key=More}">
                 <FontIcon Glyph="&#xE712;" />
             </Button>
         </StackPanel>

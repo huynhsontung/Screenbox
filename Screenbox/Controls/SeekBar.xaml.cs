@@ -46,7 +46,7 @@ namespace Screenbox.Controls
             RegisterSeekBarPointerHandlers();
             DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _previewToolTipTimer = dispatcherQueue.CreateTimer();
-            _previewToolTip = new ToolTip { Padding = new Thickness(8, 3, 8, 5), FontSize = 15, VerticalOffset = 13 };
+            _previewToolTip = new ToolTip { Padding = new Thickness(8, 3, 8, 5), FontSize = 15, VerticalOffset = 8 };
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }

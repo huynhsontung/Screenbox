@@ -7,6 +7,8 @@
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -15,9 +17,9 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls"
-    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
+    d:DesignHeight="720"
+    d:DesignWidth="1280"
     extensions:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     AllowDrop="True"
     DragOver="OnDragOver"
@@ -67,7 +69,7 @@
                 </LinearGradientBrush.GradientStops>
             </LinearGradientBrush>
 
-            <toolkitConverters:BoolToObjectConverter
+            <ctConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
                 FalseValue="&#xE62E;"
                 TrueValue="&#xF5B0;" />
@@ -81,9 +83,11 @@
         KeyboardAcceleratorPlacementMode="Hidden"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
         PreviewKeyDown="{x:Bind ViewModel.OnPreviewSpaceKeyDown}"
-        Translation="0,0,8">
+        Translation="0,0,32">
         <Grid.Transitions>
-            <PaneThemeTransition Edge="Bottom" />
+            <TransitionCollection>
+                <PaneThemeTransition Edge="Bottom" />
+            </TransitionCollection>
         </Grid.Transitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -155,10 +159,8 @@
             x:Name="HeaderBackground"
             Grid.Row="0"
             Grid.Column="0"
-            Height="70"
+            Height="72"
             MinHeight="32"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
             Background="{ThemeResource HeaderBackgroundGradientBrush}"
             Canvas.ZIndex="3" />
 
@@ -173,14 +175,14 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
             </Grid.ColumnDefinitions>
+
             <Border
                 x:Name="TitleBarElement"
-                Grid.Column="0"
+                Grid.Column="1"
                 Grid.ColumnSpan="5"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
                 Background="Transparent" />
 
             <Button
@@ -191,6 +193,7 @@
                 Margin="4,6,4,2"
                 VerticalAlignment="Top"
                 AccessKey="{strings:KeyboardResources Key=NavigationBackButtonKey}"
+                AutomationProperties.Name="{x:Bind BackButton.(ToolTipService.ToolTip)}"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=Back}">
@@ -214,6 +217,7 @@
                 VerticalAlignment="Top"
                 AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
                 AllowDrop="True"
+                AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
                 Style="{StaticResource SubtleButtonStyle}"
@@ -230,14 +234,18 @@
                         Placement="BottomEdgeAlignedLeft">
                         <Flyout.FlyoutPresenterStyle>
                             <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
-                                <Setter Property="Padding" Value="0,15,0,0" />
+                                <!--  Remove side and bottom padding, allowing the content to set these values  -->
+                                <Setter Property="Padding" Value="0,12,0,0" />
+                                <!--  Turn off vertical scroll to prevent a second scrollbar on smaller pages  -->
+                                <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
                         <controls:PlaylistView
                             x:Name="PlaylistView"
                             Width="432"
                             MinHeight="200"
-                            MaxHeight="512"
+                            MaxHeight="500"
                             Padding="12,0"
                             x:Load="False"
                             IsAccessKeyScope="True"
@@ -254,10 +262,13 @@
                 IsHitTestVisible="False"
                 Orientation="Vertical">
                 <StackPanel.Transitions>
-                    <RepositionThemeTransition />
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
                 </StackPanel.Transitions>
                 <TextBlock
                     x:Name="TitleText"
+                    d:Text="Lorem ipsum dolor sit amet"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
                     TextWrapping="NoWrap" />
@@ -271,6 +282,7 @@
 
                 <TextBlock
                     x:Name="SubtitleText"
+                    d:Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
                     Opacity="{ThemeResource TextFillColorSecondaryOpacity}"
                     OpticalMarginAlignment="TrimSideBearings"
                     Style="{StaticResource BodyTextBlockStyle}"
@@ -278,6 +290,24 @@
                     TextWrapping="NoWrap"
                     Visibility="{x:Bind ViewModel.Media.AltCaption, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}, FallbackValue=Collapsed}" />
             </StackPanel>
+
+            <Button
+                x:Name="LivelyOptionsButton"
+                Grid.Column="4"
+                Width="44"
+                Height="44"
+                Margin="4,6,4,2"
+                VerticalAlignment="Top"
+                AutomationProperties.Name="{x:Bind LivelyOptionsButton.(ToolTipService.ToolTip)}"
+                Style="{StaticResource SubtleButtonStyle}"
+                ToolTipService.ToolTip="Audio visual options">
+                <FontIcon FontSize="20" Glyph="&#xE91B;" />
+                <Button.Flyout>
+                    <Flyout>
+                        <controls:LivelyWallpaperSelector MaxWidth="352" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
         </Grid>
 
         <Grid
@@ -296,7 +326,7 @@
                 </Grid.RenderTransform>
                 <Image
                     x:Name="BackgroundImageNext"
-                    Source="{x:Bind AlbumArtImage.Source, Mode=OneWay}"
+                    Source="{x:Bind AlbumArtImage.ImageSource, Mode=OneWay}"
                     Stretch="UniformToFill" />
                 <Image x:Name="BackgroundImage" Stretch="UniformToFill">
                     <animations:Explicit.Animations>
@@ -315,7 +345,8 @@
                     </animations:Explicit.Animations>
                 </Image>
             </Grid>
-            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <Border>
                 <Border.Background>
                     <media:AcrylicBrush
                         x:Name="BackgroundAcrylicBrush"
@@ -337,27 +368,6 @@
             x:Load="False"
             Media="{x:Bind ViewModel.Media, Mode=OneWay}"
             Visibility="Collapsed" />
-
-        <Button
-            x:Name="LivelyOptionsButton"
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Width="44"
-            Height="44"
-            Margin="4,-16,4,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Canvas.ZIndex="4"
-            Style="{StaticResource SubtleButtonStyle}"
-            ToolTipService.ToolTip="Audio visual options">
-            <FontIcon Glyph="&#xE91B;" />
-            <Button.Flyout>
-                <Flyout>
-                    <controls:LivelyWallpaperSelector MaxWidth="350" />
-                </Flyout>
-            </Button.Flyout>
-        </Button>
 
         <controls:PlayerElement
             x:Name="VideoView"
@@ -386,12 +396,12 @@
             Style="{x:Null}"
             Visibility="Collapsed" />
 
-        <toolkit:ConstrainedBox
+        <ctc:ConstrainedBox
             x:Name="AlbumArtPanel"
             Grid.Row="1"
             Grid.Column="0"
             MinWidth="64"
-            MaxWidth="300"
+            MaxWidth="320"
             Margin="32,0,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
@@ -400,27 +410,29 @@
             Visibility="Collapsed">
             <Grid
                 x:Name="AlbumArt"
-                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32">
-                <FontIcon
-                    x:Name="AlbumArtGlyph"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="80"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
-                <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
-                    <Image
+                <Grid.Background>
+                    <ImageBrush
                         x:Name="AlbumArtImage"
-                        Source="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
+                        ImageSource="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, FallbackValue={x:Null}}"
                         Stretch="UniformToFill" />
+                </Grid.Background>
+                <Border
+                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                    CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                    <FontIcon
+                        x:Name="AlbumArtGlyph"
+                        FontSize="80"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
                 </Border>
             </Grid>
-        </toolkit:ConstrainedBox>
+        </ctc:ConstrainedBox>
 
         <Button
             x:Name="RestorePlayerButton"
@@ -432,6 +444,7 @@
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
             AccessKey="{strings:KeyboardResources Key=PlayerRestoreKey}"
+            AutomationProperties.Name="{strings:Resources Key=RestoreView}"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             KeyTipPlacementMode="Center"
             Visibility="Collapsed">
@@ -476,24 +489,26 @@
             x:Name="StatusMessage"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="22,4"
-            Padding="11,8,11,9"
-            HorizontalAlignment="Left"
+            Margin="24,4"
+            Padding="11,7,11,8"
+            HorizontalAlignment="Center"
             VerticalAlignment="Top"
+            d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
             BorderThickness="1"
-            CornerRadius="{StaticResource OverlayCornerRadius}"
+            CornerRadius="{StaticResource ControlCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
             <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation To="1.0" Duration="0:0:0.1" />
+                <animations:OpacityAnimation To="1" Duration="{StaticResource ControlFastAnimationDuration}" />
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation To="0.0" Duration="0:0:0.24" />
+                <animations:OpacityAnimation To="0" Duration="{StaticResource ControlFasterAnimationDuration}" />
             </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
+                d:Text="Volume 100%"
                 Style="{StaticResource SubtitleTextBlockStyle}"
                 Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" />
         </Border>
@@ -503,10 +518,8 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="72"
-            Height="72"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            Width="96"
+            Height="96"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             CornerRadius="{StaticResource CircularCornerRadius}"
@@ -517,14 +530,14 @@
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
-                <animations:ScaleAnimation To="1.2" Duration="0:0:0.6" />
+                <!--  1.25 is relative scale from 96px to 120px  -->
+                <animations:ScaleAnimation To="1.25" Duration="0:0:0.6" />
             </animations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
+                d:Glyph="&#xF5B0;"
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                FontSize="{StaticResource TitleTextBlockFontSize}"
+                FontSize="32"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                 Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
@@ -533,10 +546,9 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="52"
-            Height="52"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+            Width="64"
+            Height="64"
+            d:Visibility="Collapsed"
             IsActive="True"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.IsOpening, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
@@ -565,6 +577,18 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">
+                <VisualState x:Name="ControlsVisible" />
+
+                <VisualState x:Name="ControlsHidden">
+                    <VisualState.Setters>
+                        <Setter Target="HeaderBackground.Opacity" Value="0" />
+                        <Setter Target="TitleBarArea.Opacity" Value="0" />
+                        <Setter Target="PlayerControls.Opacity" Value="0" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
+                        <Setter Target="HiddenButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+
                 <VisualStateGroup.Transitions>
                     <VisualTransition GeneratedDuration="0:0:0.167" From="ControlsHidden">
                         <VisualTransition.GeneratedEasingFunction>
@@ -577,22 +601,13 @@
                         </VisualTransition.GeneratedEasingFunction>
                     </VisualTransition>
                 </VisualStateGroup.Transitions>
-                <VisualState x:Name="ControlsVisible" />
-                <VisualState x:Name="ControlsHidden">
-                    <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Opacity" Value="0" />
-                        <Setter Target="TitleBarArea.Opacity" Value="0" />
-                        <Setter Target="PlayerControls.Opacity" Value="0" />
-                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
-                        <Setter Target="HiddenButton.Visibility" Value="Visible" />
-                    </VisualState.Setters>
-                </VisualState>
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
+                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
@@ -600,6 +615,7 @@
                         <Setter Target="VideoView.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
+
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
@@ -738,7 +754,7 @@
                 <VisualState x:Name="NoPreview" />
                 <VisualState x:Name="VideoPreview">
                     <VisualState.Setters>
-                        <Setter Target="FirstColumn.Width" Value="162" />
+                        <Setter Target="FirstColumn.Width" Value="160" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="AudioPreview">
@@ -750,41 +766,47 @@
 
             <VisualStateGroup x:Name="LayoutGroup" CurrentStateChanged="OnLayoutVisualStateChanged">
                 <VisualState x:Name="Normal" />
+
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
+                        <Setter Target="TitleBarElement.(Grid.Column)" Value="2" />
+                        <Setter Target="TitleBarElement.(Grid.ColumnSpan)" Value="4" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="20,-16,20,0" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="6,20,6,20" />
                         <Setter Target="PlayerControls.Padding" Value="20" />
-                        <Setter Target="VideoView.ButtonMargin" Value="0,70,0,104" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,104" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="PlayerControls" />
                     </Storyboard>
                 </VisualState>
+
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="TitleBarElement.Height" Value="32" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleBarElement.(Grid.Column)" Value="3" />
+                        <Setter Target="TitleBarElement.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.Margin" Value="12,0,0,0" />
+                        <Setter Target="TitleTextStackPanel.Margin" Value="12,8,0,8" />
                         <Setter Target="TitleTextStackPanel.Orientation" Value="Horizontal" />
-                        <Setter Target="TitleText.Style" Value="{StaticResource CaptionTextBlockStyle}" />
+                        <Setter Target="TitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
                         <Setter Target="TitleTextSeparator.Visibility" Value="Visible" />
                         <Setter Target="SubtitleText.FontSize" Value="{StaticResource CaptionTextBlockFontSize}" />
+                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
-                        <Setter Target="AlbumArtPanel.Margin" Value="16,10" />
+                        <Setter Target="AlbumArtPanel.Margin" Value="16,12" />
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
-                        <Setter Target="StatusMessageText.FontSize" Value="16" />
-                        <Setter Target="StatusMessage.Margin" Value="8,4" />
-                        <Setter Target="PlayerStateBadge.Width" Value="50" />
-                        <Setter Target="PlayerStateBadge.Height" Value="50" />
+                        <Setter Target="StatusMessage.Margin" Value="12,4" />
+                        <Setter Target="StatusMessage.Padding" Value="9,5,9,6" />
+                        <Setter Target="StatusMessageText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
+                        <Setter Target="PlayerStateBadge.Width" Value="48" />
+                        <Setter Target="PlayerStateBadge.Height" Value="48" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
                         <Setter Target="NotificationView.Margin" Value="4" />
                     </VisualState.Setters>
@@ -793,12 +815,13 @@
                         <RepositionThemeAnimation FromVerticalOffset="30" TargetName="AlbumArtPanel" />
                     </Storyboard>
                 </VisualState>
+
                 <VisualState x:Name="MiniPlayer">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
-                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
+                        <Setter Target="LayoutRoot.CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                         <Setter Target="LayoutRoot.Height" Value="128" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
@@ -810,34 +833,39 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
                         <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
+                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
-                        <Setter Target="VideoView.CornerRadius" Value="4" />
+                        <Setter Target="VideoView.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
                         <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtGlyph.FontSize" Value="32" />
                         <Setter Target="AlbumArt.BorderThickness" Value="0" />
-                        <Setter Target="AlbumArt.CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+                        <Setter Target="AlbumArt.CornerRadius" Value="{StaticResource ControlCornerRadius}" />
                         <Setter Target="RestorePlayerButton.Visibility" Value="Visible" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerStateBadge.Width" Value="48" />
+                        <Setter Target="PlayerStateBadge.Height" Value="48" />
+                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <Setter Target="PlayerControls.Margin" Value="6,0,0,0" />
                         <Setter Target="PlayerControls.Padding" Value="0" />
                         <Setter Target="PlayerControls.VerticalAlignment" Value="Center" />
                     </VisualState.Setters>
                 </VisualState>
+
                 <VisualState x:Name="Hidden">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Background" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                         <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ControlElevationBorderBrush}" />
                         <Setter Target="LayoutRoot.BorderThickness" Value="1" />
-                        <Setter Target="LayoutRoot.CornerRadius" Value="8" />
+                        <Setter Target="LayoutRoot.CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
                         <Setter Target="LayoutRoot.Height" Value="0" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
@@ -849,9 +877,10 @@
                         <Setter Target="TitleBarElement.Margin" Value="0" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
-                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="16,0,10,0" />
-                        <Setter Target="TitleText.Style" Value="{StaticResource BodyStrongTextBlockStyle}" />
+                        <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
+                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
                         <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
@@ -860,8 +889,8 @@
                         <Setter Target="AlbumArtPanel.Margin" Value="0" />
                         <Setter Target="AlbumArtPanel.Opacity" Value="0" />
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
                         <Setter Target="PlayerControls.IsEnabled" Value="False" />
                         <Setter Target="PlayerControls.Padding" Value="0" />

@@ -317,7 +317,7 @@ namespace Screenbox.Pages
             if (BackgroundElement.Visibility == Visibility.Collapsed ||
             BackgroundArt.Visibility == Visibility.Collapsed)
             {
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 return;
             }
 
@@ -331,14 +331,14 @@ namespace Screenbox.Pages
             {
                 BackgroundImageNext.Visibility = Visibility.Collapsed;
                 BackgroundImage.GetVisual().Opacity = 0;
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
             }
             else
             {
                 BackgroundImageNext.Visibility = Visibility.Visible;
                 await BackgroundArtFadeOutAnimation.StartAsync(cts.Token);
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
                 BackgroundImageNext.Visibility = Visibility.Collapsed;
             }

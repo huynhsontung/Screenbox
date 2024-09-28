@@ -328,6 +328,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region VolumeSliderTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Adjust volume
+        /// </summary>
+        public static string VolumeSliderTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("VolumeSliderTooltip");
+            }
+        }
+        #endregion
+
         #region Seek
         /// <summary>
         ///   Looks up a localized string similar to: Seek
@@ -2890,6 +2903,7 @@ namespace Screenbox.Strings{
             Back,
             AudioAndCaption,
             Volume,
+            VolumeSliderTooltip,
             Seek,
             Next,
             Previous,
