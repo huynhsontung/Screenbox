@@ -6,9 +6,9 @@
 
 ### Beschreibung
 
-Screenbox ist ein moderner Mediaplayer, der danach strebt, die klassische Anwendung neu zu gestalten. Screenbox bietet eine schlanke und intuitive Benutzeroberfläche, die sich an die Leistungsfähigkeit Ihres Systems anpassen kann. Entworfen für eine nahtlose Erfahrung auf verschiedenen Windows-Geräten und Xbox-Konsolen, ist Screenbox schnell, leicht und leistungsstark.
+Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
 
-Screenbox unterstützt viele gängige Dateiformate und Codecs, was sicherstellt, dass Sie fast alle Medien ohne zusätzliche Add-ons abspielen können. Egal, ob Sie Inhalte online streamen oder lokal gespeicherte Dateien abspielen, Screenbox kann's. Unterstützt von LibVLC, kombiniert Screenbox das Beste von VLC media player mit modernen Windows-App-Funktionen. Erweiterte Wiedergabeoptionen sind unter Verwendung von VLC-Befehlszeilenargumenten verfügbar.
+Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
 ### Funktionen
 
