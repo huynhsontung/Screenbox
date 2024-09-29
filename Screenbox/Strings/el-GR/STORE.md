@@ -6,9 +6,9 @@
 
 ### Περιγραφή
 
-Το Screenbox είναι ένα σύγχρονο πρόγραμμα αναπαραγωγής που προσπαθεί να φέρει μια νέα οπτική στην κλασική εφαρμογή. Προσφέρει μια κομψή και διαισθητική διεπαφή χρήστη που μπορεί να προσαρμοστεί στις δυνατότητες του συστήματός σας. Σχεδιασμένο για μια απρόσκοπτη εμπειρία σε ένα ευρύ φάσμα συσκευών των Windows και κονσόλες Xbox, το Screenbox είναι γρήγορο, ελαφρύ και ισχυρό.
+Screenbox is a modern media player that strives to bring a fresh new take on the classic application. It offers a sleek and intuitive user interface that can adapt to your system's capabilities. Designed for a seamless experience across a wide range of Windows devices and Xbox consoles, Screenbox is fast, lightweight, and powerful.
 
-Το Screenbox υποστηρίζει ένα ευρύ φάσμα μορφών αρχείων και κωδικοποιήσεων. Αναπαραγωγή σχεδόν οποιουδήποτε τύπου πολυμέσων χωρίς επιπλέον πρόσθετα. Τροφοδοτούμενο από το LibVLC, το Screenbox συνδυάζει όλα τα καλύτερα του προγράμματος αναπαραωγής VLC και τις σύγχρονες δυνατότητες των εφαρμογών των Windows. Οι προηγμένες επιλογές αναπαραγωγής είναι διαθέσιμες χρησιμοποιώντας παραμέτρους γραμμής εντολών VLC.
+Screenbox supports a wide range of file formats and codecs. Play almost any media type without additional add-ons. Powered by LibVLC, Screenbox combines all the best of VLC media player and modern Windows app capabilities. Advanced playback options are available using VLC command-line arguments.
 
 ### Δυνατότητες
 
