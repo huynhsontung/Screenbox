@@ -144,7 +144,7 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>فشل في تحميل الترجمة</value>
+    <value>أخفق تحميل التَّرْجَمَة</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>عودة</value>
