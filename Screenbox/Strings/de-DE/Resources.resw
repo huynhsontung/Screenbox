@@ -824,4 +824,13 @@
   <data name="DateAdded" xml:space="preserve">
     <value>Hinzugefügt am</value>
   </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
 </root>
