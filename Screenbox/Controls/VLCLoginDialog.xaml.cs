@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
+using Screenbox.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Screenbox.Core;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -43,6 +43,7 @@ namespace Screenbox.Controls
         public VLCLoginDialog()
         {
             this.InitializeComponent();
+            FlowDirection = App.GetFlowDirection();
         }
     }
 }

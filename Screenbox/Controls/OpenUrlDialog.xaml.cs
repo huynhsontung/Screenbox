@@ -14,6 +14,7 @@ namespace Screenbox.Controls
         {
             this.DefaultStyleKey = typeof(ContentDialog);
             this.InitializeComponent();
+            FlowDirection = App.GetFlowDirection();
         }
 
         public static async Task<Uri?> GetUrlAsync()
