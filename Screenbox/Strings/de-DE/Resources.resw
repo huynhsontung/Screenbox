@@ -825,12 +825,12 @@
     <value>Hinzugefügt am</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Medien</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Datei</value>
   </data>
 </root>
