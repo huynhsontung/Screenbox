@@ -87,6 +87,11 @@ namespace Screenbox
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
         }
 
+        public static FlowDirection GetFlowDirection()
+        {
+            return IsRightToLeftLanguage ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        }
+
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         private static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
