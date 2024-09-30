@@ -123,7 +123,7 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
-                    Text="{strings:Resources Key=Videos}" />
+                    Text="{strings:Resources Key=VideoLibrary}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem

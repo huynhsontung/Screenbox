@@ -116,7 +116,7 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
-                    Text="{strings:Resources Key=Music}" />
+                    Text="{strings:Resources Key=MusicLibrary}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
