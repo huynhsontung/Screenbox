@@ -834,7 +834,7 @@
     <value>Datei</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Musik</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
     <value>Videos</value>
