@@ -319,6 +319,9 @@
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>

@@ -86,31 +86,6 @@
             Padding="{x:Bind Padding, Mode=OneWay}"
             KeyTipPlacementMode="Bottom"
             Orientation="Horizontal">
-            <!--<ctAnimations:Implicit.ShowAnimations>
-                <ctAnimations:OpacityAnimation
-                    Delay="{StaticResource ControlFastAnimationAfterDuration}"
-                    EasingMode="EaseOut"
-                    From="0"
-                    To="1"
-                    Duration="{StaticResource ControlFasterAnimationDuration}" />
-                <ctAnimations:TranslationAnimation
-                    Delay="{StaticResource ControlFastAnimationAfterDuration}"
-                    From="0,16,0"
-                    To="0,0,0"
-                    Duration="{StaticResource ControlFasterAnimationDuration}" />
-            </ctAnimations:Implicit.ShowAnimations>
-            <ctAnimations:Implicit.HideAnimations>
-                <ctAnimations:OpacityAnimation
-                    EasingMode="EaseOut"
-                    From="1"
-                    To="0"
-                    Duration="{StaticResource ControlFastAnimationDuration}" />
-                <ctAnimations:TranslationAnimation
-                    From="0,0,0"
-                    To="0,-28,0"
-                    Duration="{StaticResource ControlFastAnimationDuration}" />
-            </ctAnimations:Implicit.HideAnimations>-->
-
             <Button
                 x:Name="AddFilesButton"
                 Margin="0,0,12,0"
@@ -171,19 +146,21 @@
                     To="1"
                     Duration="{StaticResource ControlNormalAnimationDuration}" />
                 <ctAnimations:TranslationAnimation
-                    From="0,28,0"
+                    EasingMode="EaseOut"
+                    From="0,48,0"
                     To="0,0,0"
                     Duration="{StaticResource ControlNormalAnimationDuration}" />
             </ctAnimations:Implicit.ShowAnimations>
             <ctAnimations:Implicit.HideAnimations>
                 <ctAnimations:OpacityAnimation
-                    EasingMode="EaseOut"
+                    EasingMode="EaseIn"
                     From="1"
                     To="0"
                     Duration="{StaticResource ControlFastAnimationDuration}" />
                 <ctAnimations:TranslationAnimation
+                    EasingMode="EaseIn"
                     From="0,0,0"
-                    To="0,-16,0"
+                    To="0,-48,0"
                     Duration="{StaticResource ControlFastAnimationDuration}" />
             </ctAnimations:Implicit.HideAnimations>
 
@@ -266,6 +243,7 @@
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
+                            controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                             AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
                             BorderThickness="0"
                             Command="{x:Bind ViewModel.ClearSelectionCommand}"
@@ -307,6 +285,9 @@
                                     </ResourceDictionary.ThemeDictionaries>
                                 </ResourceDictionary>
                             </Button.Resources>
+                            <Button.KeyboardAccelerators>
+                                <KeyboardAccelerator Key="Escape" />
+                            </Button.KeyboardAccelerators>
                         </Button>
                     </StackPanel>
                 </CommandBar.Content>

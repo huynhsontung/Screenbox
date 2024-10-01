@@ -848,6 +848,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SearchBoxToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Search videos, songs, albums, and more
+        /// </summary>
+        public static string SearchBoxToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SearchBoxToolTip");
+            }
+        }
+        #endregion
+
         #region Settings
         /// <summary>
         ///   Looks up a localized string similar to: Settings
@@ -2943,6 +2956,7 @@ namespace Screenbox.Strings{
             NoMusicPanelSubtext,
             OpenFiles,
             SearchBoxPlaceholderText,
+            SearchBoxToolTip,
             Settings,
             WelcomePanelHeader,
             WelcomePanelSubtext,

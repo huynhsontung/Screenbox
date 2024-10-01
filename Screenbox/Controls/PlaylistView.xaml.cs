@@ -140,13 +140,12 @@ namespace Screenbox.Controls
 
         private void PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (MultiSelectToggle.IsEnabled)
+            if (PlaylistListView.Items.Count > 0)
             {
                 MultiSelectToggle.IsChecked = true;
+                PlaylistListView.SelectAll();
+                args.Handled = true;
             }
-
-            PlaylistListView.SelectAll();
-            args.Handled = true;
         }
     }
 }
