@@ -40,7 +40,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             Visibility="Collapsed">
-            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Videos}" />
+            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=VideoLibrary}" />
         </Grid>
 
         <Grid
