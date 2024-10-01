@@ -266,7 +266,7 @@
     <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Biblioteca de músicas</value>
+    <value>Música</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Ordem aleatória e reproduzir</value>
@@ -834,9 +834,9 @@
     <value>Arquivo</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Biblioteca de músicas</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Biblioteca de vídeos</value>
   </data>
 </root>
