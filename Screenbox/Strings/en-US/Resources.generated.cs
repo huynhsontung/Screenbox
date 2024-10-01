@@ -2832,6 +2832,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region MusicLibrary
+        /// <summary>
+        ///   Looks up a localized string similar to: Music
+        /// </summary>
+        public static string MusicLibrary
+        {
+            get
+            {
+                return _resourceLoader.GetString("MusicLibrary");
+            }
+        }
+        #endregion
+
+        #region VideoLibrary
+        /// <summary>
+        ///   Looks up a localized string similar to: Videos
+        /// </summary>
+        public static string VideoLibrary
+        {
+            get
+            {
+                return _resourceLoader.GetString("VideoLibrary");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -3059,6 +3085,8 @@ namespace Screenbox.Strings{
             Media,
             Video,
             File,
+            MusicLibrary,
+            VideoLibrary,
         }
 
         private static ResourceLoader _resourceLoader;
