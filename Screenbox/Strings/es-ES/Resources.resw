@@ -833,4 +833,10 @@
   <data name="File" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Music</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videos</value>
+  </data>
 </root>
