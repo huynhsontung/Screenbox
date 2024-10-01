@@ -431,7 +431,7 @@
     <value>חפש קבצים להפעלה</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>אפשרויות נוספות לפתיחת מדיה</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>הוסף קובץ/ים</value>
@@ -440,7 +440,7 @@
     <value>חפש קובץ/ים להוספה לתור ההשמעה</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>אפשרויות נוספות להוספת מדיה לתור ההפעלה</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>הוסף תיקיה לספריית המוזיקה שלך</value>
@@ -825,18 +825,18 @@
     <value>תאריך הוספה</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>מדיה</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>וידאו</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>קובץ</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>מוסיקה</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>סרטונים</value>
   </data>
 </root>
