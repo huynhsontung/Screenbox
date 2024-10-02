@@ -231,7 +231,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Biblioteca de vídeos</value>
+    <value>Vídeos</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>Esta pasta está vazia</value>
@@ -392,7 +392,7 @@
     <value>Mídia recente</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Ajustes de vídeo</value>
+    <value>Configurações de vídeo</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Abrir</value>
