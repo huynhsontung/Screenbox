@@ -198,7 +198,7 @@
     <value>Wiederholen: Alle</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Wiederholen: Einmalig</value>
+    <value>Wiederholen: Einzeln</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} Eintrag ausgewählt</value>
