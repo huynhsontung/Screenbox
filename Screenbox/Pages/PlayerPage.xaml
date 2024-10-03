@@ -376,6 +376,7 @@
             Grid.Column="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            Background="Black"
             ButtonMargin="0,52,0,84"
             Click="VideoView_OnClick"
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"

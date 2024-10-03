@@ -155,7 +155,7 @@
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="D" Modifiers="Control" />
                     </muxc:NavigationViewItem.KeyboardAccelerators>
-                    <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
+                    <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
@@ -166,7 +166,7 @@
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="U" Modifiers="Control" />
                     </muxc:NavigationViewItem.KeyboardAccelerators>
-                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=Music}" />
+                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"

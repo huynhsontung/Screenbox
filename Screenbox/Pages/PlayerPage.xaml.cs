@@ -166,8 +166,11 @@ namespace Screenbox.Pages
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
             // Get the size of the caption controls and set padding.
-            LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(sender.SystemOverlayRightInset);
+            // In RTL languages, Grid is flipped automatically.
+            // Left is always the side without the system controls.
+            // Left padding should only be set if we pin flow direction on the title bar.
+            // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
         }
 
         private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)

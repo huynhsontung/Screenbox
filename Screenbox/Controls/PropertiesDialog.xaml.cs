@@ -1,10 +1,9 @@
 ﻿#nullable enable
 
-
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Screenbox.Core.Common;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -15,7 +14,7 @@ namespace Screenbox.Controls
         public static readonly DependencyProperty MediaProperty = DependencyProperty.Register(
             nameof(Media),
             typeof(MediaViewModel),
-            typeof(PropertiesView),
+            typeof(PropertiesDialog),
             new PropertyMetadata(null));
 
         public MediaViewModel? Media
@@ -27,6 +26,7 @@ namespace Screenbox.Controls
         public PropertiesDialog()
         {
             this.InitializeComponent();
+            FlowDirection = App.GetFlowDirection();
         }
     }
 }
