@@ -6,6 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Screenbox.Core.Models"
     xmlns:strings="using:Screenbox.Strings"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
     Loaded="LivelyWallpaperSelector_OnLoaded"
     mc:Ignorable="d">
 
@@ -17,61 +19,80 @@
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-        <StackPanel>
-            <GridView
-                IsItemClickEnabled="True"
-                ItemsSource="{x:Bind ViewModel.Visualizers}"
-                SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}"
-                SelectionMode="Single">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="models:LivelyWallpaperModel">
-                        <Grid
-                            Width="100"
-                            Height="80"
-                            Margin="2"
-                            Background="Transparent"
-                            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="2"
-                            ToolTipService.ToolTip="{x:Bind Model.Title}">
-                            <Grid.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Command="{StaticResource DeleteVisualizerCommand}" CommandParameter="{x:Bind}" />
-                                </MenuFlyout>
-                            </Grid.ContextFlyout>
-                            <Border CornerRadius="2">
-                                <Image
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Source="{Binding PreviewPath}"
-                                    Stretch="UniformToFill" />
-                            </Border>
-                            <Border
-                                Margin="2"
-                                Padding="2"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                Background="Transparent"
-                                ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
-                                Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
-                                <Image
-                                    Width="15"
-                                    Height="15"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            MinHeight="48"
+            BorderBrush="{ThemeResource SystemControlForegroundTransparentBrush}"
+            BorderThickness="{StaticResource CommandBarOverflowPresenterBorderDownThickness}"
+            Visibility="{x:Bind HeaderVisibility}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                x:Name="HeaderText"
+                Padding="16,0,4,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="{strings:Resources Key=Visualizers}" />
             <!--  Let user select new wallpaper to install  -->
             <Button
-                Margin="0,6,0,0"
-                HorizontalAlignment="Stretch"
+                Grid.Column="1"
+                Margin="0,0,16,0"
+                Padding="8,2,8,3"
                 Command="{x:Bind ViewModel.BrowseVisualizerCommand}"
                 Content="{strings:Resources Key=BrowseFiles}"
-                Visibility="{x:Bind ShowAddButton}" />
-        </StackPanel>
+                FontSize="{StaticResource CaptionTextBlockFontSize}" />
+        </Grid>
+
+        <GridView
+            Grid.Row="1"
+            Padding="{x:Bind Padding, Mode=OneWay}"
+            IsItemClickEnabled="True"
+            ItemsSource="{x:Bind ViewModel.Visualizers}"
+            SelectedItem="{x:Bind ViewModel.SelectedVisualizer, Mode=TwoWay}"
+            SelectionMode="Single">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="models:LivelyWallpaperModel">
+                    <Grid
+                        Width="112"
+                        Height="96"
+                        CornerRadius="{StaticResource GridViewItemCornerRadius}"
+                        ToolTipService.ToolTip="{x:Bind Model.Title}">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="{Binding PreviewPath}" Stretch="UniformToFill" />
+                        </Grid.Background>
+                        <Grid.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Command="{StaticResource DeleteVisualizerCommand}" CommandParameter="{x:Bind}" />
+                            </MenuFlyout>
+                        </Grid.ContextFlyout>
+
+                        <Border
+                            Width="24"
+                            Height="24"
+                            Margin="0,4,4,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImageBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource GridViewItemCornerRadius}"
+                            ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
+                            Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
+                            <Image
+                                Width="16"
+                                Height="16"
+                                Source="ms-appx:///Assets/LivelyWallpaper100x100Logo.png" />
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </UserControl>

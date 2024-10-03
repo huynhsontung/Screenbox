@@ -297,14 +297,28 @@
                 Width="44"
                 Height="44"
                 Margin="4,6,4,2"
+                Padding="0"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{x:Bind LivelyOptionsButton.(ToolTipService.ToolTip)}"
                 Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="Audio visual options">
-                <FontIcon FontSize="20" Glyph="&#xE91B;" />
+                ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
+                <FontIcon
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    FontSize="20"
+                    Glyph="&#xF0003;" />
                 <Button.Flyout>
                     <Flyout>
-                        <controls:LivelyWallpaperSelector MaxWidth="352" />
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                <Setter Property="Background" Value="{ThemeResource AcrylicInAppFillColorBaseBrush}" />
+                                <Setter Property="BorderBrush" Value="{ThemeResource SurfaceStrokeColorDefaultBrush}" />
+                                <Setter Property="Padding" Value="0,0,0,0" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <controls:LivelyWallpaperSelector
+                            MaxWidth="288"
+                            Padding="16,4,16,17"
+                            HeaderVisibility="Visible" />
                     </Flyout>
                 </Button.Flyout>
             </Button>

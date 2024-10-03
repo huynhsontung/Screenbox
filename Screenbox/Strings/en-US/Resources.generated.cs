@@ -603,7 +603,7 @@ namespace Screenbox.Strings{
 
         #region RestoreView
         /// <summary>
-        ///   Looks up a localized string similar to: Restore video view
+        ///   Looks up a localized string similar to: Restore immersive view
         /// </summary>
         public static string RestoreView
         {
@@ -2794,9 +2794,35 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region VisualizerOptionsToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio visual options
+        /// </summary>
+        public static string VisualizerOptionsToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("VisualizerOptionsToolTip");
+            }
+        }
+        #endregion
+
+        #region Visualizers
+        /// <summary>
+        ///   Looks up a localized string similar to: Visuals
+        /// </summary>
+        public static string Visuals
+        {
+            get
+            {
+                return _resourceLoader.GetString("Visuals");
+            }
+        }
+        #endregion
+
         #region BrowseFiles
         /// <summary>
-        ///   Looks up a localized string similar to: Browse file(s)
+        ///   Looks up a localized string similar to: Browse files
         /// </summary>
         public static string BrowseFiles
         {
@@ -2822,7 +2848,7 @@ namespace Screenbox.Strings{
 
         #region SettingsAudioVisualDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Choose an imagery style to be displayed on audio playback
+        ///   Looks up a localized string similar to: Choose a backdrop to give your audio playback a visual flair in the immersive view
         /// </summary>
         public static string SettingsAudioVisualDescription
         {
@@ -2848,7 +2874,7 @@ namespace Screenbox.Strings{
 
         #region SettingsImportVisualsHeader
         /// <summary>
-        ///   Looks up a localized string similar to: Import visuals
+        ///   Looks up a localized string similar to: Import a visual
         /// </summary>
         public static string SettingsImportVisualsHeader
         {
@@ -3173,6 +3199,8 @@ namespace Screenbox.Strings{
             SettingsAudioVisualHeader,
             GetLivelyApp,
             GetLivelyVisuals,
+            VisualizerOptionsToolTip,
+            Visualizers,
             BrowseFiles,
             Default,
             SettingsAudioVisualDescription,

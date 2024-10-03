@@ -2,11 +2,11 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
@@ -244,7 +244,7 @@
                             IsClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
                                 <core:EventTriggerBehavior EventName="Click">
-                                    <behaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
+                                    <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
                                 </core:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ctc:SettingsCard>
@@ -341,12 +341,14 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph=&#xF0003;}"
                     XYFocusDownNavigationStrategy="NavigationDirectionDistance"
                     XYFocusUpNavigationStrategy="NavigationDirectionDistance">
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
-                            <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" ShowAddButton="False" />
+                            <controls:LivelyWallpaperSelector x:Name="AudioVisualSelector" />
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
                             x:Name="SettingsImportVisualsCard"
