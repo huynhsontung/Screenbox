@@ -40,7 +40,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             Visibility="Collapsed">
-            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=VideoLibrary}" />
+            <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="{strings:Resources Key=Videos}" />
         </Grid>
 
         <Grid
@@ -123,7 +123,7 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource PageHeaderTextBlockStyle}"
-                    Text="{strings:Resources Key=VideoLibrary}" />
+                    Text="{strings:Resources Key=Videos}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
