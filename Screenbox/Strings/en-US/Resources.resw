@@ -827,7 +827,7 @@
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
     <value>Audio visual options</value>
   </data>
-  <data name="Visualizers" xml:space="preserve">
+  <data name="Visuals" xml:space="preserve">
     <value>Visuals</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
@@ -843,7 +843,7 @@
     <value>Powered by Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import a visual</value>
+    <value>Import visuals</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>

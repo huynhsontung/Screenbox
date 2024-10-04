@@ -506,7 +506,7 @@
             Grid.Column="0"
             Margin="24,4"
             Padding="11,7,11,8"
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
             d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"

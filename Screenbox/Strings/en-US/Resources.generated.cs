@@ -2807,7 +2807,7 @@ namespace Screenbox.Strings{
         }
         #endregion
 
-        #region Visualizers
+        #region Visuals
         /// <summary>
         ///   Looks up a localized string similar to: Visuals
         /// </summary>
@@ -2874,7 +2874,7 @@ namespace Screenbox.Strings{
 
         #region SettingsImportVisualsHeader
         /// <summary>
-        ///   Looks up a localized string similar to: Import a visual
+        ///   Looks up a localized string similar to: Import visuals
         /// </summary>
         public static string SettingsImportVisualsHeader
         {
@@ -3200,7 +3200,7 @@ namespace Screenbox.Strings{
             GetLivelyApp,
             GetLivelyVisuals,
             VisualizerOptionsToolTip,
-            Visualizers,
+            Visuals,
             BrowseFiles,
             Default,
             SettingsAudioVisualDescription,

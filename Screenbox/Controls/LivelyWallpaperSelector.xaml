@@ -39,7 +39,7 @@
                 Padding="16,0,4,0"
                 VerticalAlignment="Center"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{strings:Resources Key=Visualizers}" />
+                Text="{strings:Resources Key=Visuals}" />
             <!--  Let user select new wallpaper to install  -->
             <Button
                 Grid.Column="1"
