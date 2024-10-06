@@ -531,8 +531,8 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="96"
-            Height="96"
+            Width="64"
+            Height="64"
             ui:VisualExtensions.NormalizedCenterPoint="0.5"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             CornerRadius="{StaticResource CircularCornerRadius}"
@@ -543,14 +543,14 @@
             </animations:Implicit.ShowAnimations>
             <animations:Implicit.HideAnimations>
                 <animations:OpacityAnimation To="0.0" Duration="0:0:0.6" />
-                <!--  1.25 is relative scale from 96px to 120px  -->
+                <!--  1.25 is relative scale from 64px to 80px  -->
                 <animations:ScaleAnimation To="1.25" Duration="0:0:0.6" />
             </animations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
                 d:Glyph="&#xF5B0;"
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                FontSize="32"
+                FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
                 Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
         </Border>
@@ -586,7 +586,7 @@
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
-            Padding="6,28,6,12" />
+            Padding="6,20,6,12" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">
@@ -596,9 +596,9 @@
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="TitleBarArea.Opacity" Value="0" />
+                        <Setter Target="HiddenButton.Visibility" Value="Visible" />
                         <Setter Target="PlayerControls.Opacity" Value="0" />
                         <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
-                        <Setter Target="HiddenButton.Visibility" Value="Visible" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -620,23 +620,23 @@
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
-                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
-                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
-                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
-                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
+                        <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
+                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="VideoView.Opacity" Value="1" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
-                        <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
-                        <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
-                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Visible" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="0" />
                     </VisualState.Setters>
                     <Storyboard x:Name="BackgroundArtAnimation">
                         <DoubleAnimationUsingKeyFrames
@@ -682,12 +682,12 @@
                 <VisualState x:Name="AudioWithVisualizer">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
-                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
-                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
-                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
-                        <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
+                        <Setter Target="VideoView.Opacity" Value="0" />
+                        <Setter Target="AlbumArtPanel.Visibility" Value="Collapsed" />
+                        <Setter Target="PlayerControlsBackground.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -784,14 +784,14 @@
 
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="TitleBarElement.(Grid.Column)" Value="2" />
-                        <Setter Target="TitleBarElement.(Grid.ColumnSpan)" Value="4" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
-                        <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
-                        <Setter Target="LivelyOptionsButton.Margin" Value="6,20,6,20" />
-                        <Setter Target="PlayerControls.Padding" Value="20,40,20,20" />
-                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,112" />
+                        <Setter Target="PlayQueueButton.Margin" Value="20,20,0,20" />
+                        <Setter Target="LivelyOptionsButton.Margin" Value="0,20,0,20" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,104" />
+                        <Setter Target="PlayerStateBadge.Width" Value="80" />
+                        <Setter Target="PlayerStateBadge.Height" Value="80" />
+                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="32" />
+                        <Setter Target="PlayerControls.Padding" Value="20" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
@@ -813,15 +813,15 @@
                         <Setter Target="AlbumArtPanel.HorizontalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.VerticalAlignment" Value="Center" />
                         <Setter Target="AlbumArtPanel.Margin" Value="16,12" />
-                        <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
                         <Setter Target="StatusMessage.Margin" Value="12,4" />
                         <Setter Target="StatusMessage.Padding" Value="5,2,5,3" />
                         <Setter Target="StatusMessageText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="PlayerStateBadge.Width" Value="48" />
                         <Setter Target="PlayerStateBadge.Height" Value="48" />
-                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
+                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
                         <Setter Target="NotificationView.Margin" Value="4" />
+                        <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="40" TargetName="PlayerControls" />
@@ -862,7 +862,7 @@
                         <Setter Target="StatusMessage.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerStateBadge.Width" Value="48" />
                         <Setter Target="PlayerStateBadge.Height" Value="48" />
-                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="20" />
+                        <Setter Target="PlayerStateBadgeIcon.FontSize" Value="{StaticResource SubtitleTextBlockFontSize}" />
                         <Setter Target="NotificationView.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControlsBackground.Visibility" Value="Collapsed" />
                         <Setter Target="PlayerControls.(Grid.Column)" Value="1" />
@@ -883,7 +883,6 @@
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
                         <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
