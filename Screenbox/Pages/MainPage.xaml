@@ -147,14 +147,14 @@
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8B2;" />
                     </muxc:NavigationViewItem.Icon>
-                    <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=Videos}" />
+                    <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
                     Icon="Audio"
                     KeyTipPlacementMode="Right"
                     Tag="music">
-                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=Music}" />
+                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     AccessKey="{strings:KeyboardResources Key=NavigationItemNetworkKey}"
