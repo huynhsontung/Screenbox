@@ -227,10 +227,12 @@
                                 <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
                                 <!--<Thickness x:Key="AppBarButtonInnerBorderCompactMargin">4,6,4,26</Thickness>-->
+                                <!--<StaticResource x:Key="AppBarButtonDefaultWidth" ResourceKey="AppBarButtonCompactWidth" />-->
                             </CommandBar.Resources>
 
                             <AppBarButton
                                 x:Name="PlayButton"
+                                HorizontalAlignment="Stretch"
                                 BackgroundSizing="OuterBorderEdge"
                                 BorderBrush="{ThemeResource AccentButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
@@ -244,6 +246,7 @@
                             </AppBarButton>
 
                             <AppBarButton
+                                HorizontalAlignment="Stretch"
                                 BorderBrush="{ThemeResource ButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                                 Icon="{ui:FontIcon Glyph=&#xE8B1;}"

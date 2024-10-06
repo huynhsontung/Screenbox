@@ -7,7 +7,10 @@
     xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
     xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
 
-    <!--  Make the LabelOnRight visual state resemble the default button style, removed the fixed width at the top level and adjusted the horizontal alignment to address overflow states  -->
+    <x:Double x:Key="AppBarButtonDefaultWidth">68</x:Double>
+    <x:Double x:Key="AppBarButtonCompactWidth">48</x:Double>
+
+    <!--  Make the AppBarButton look like the default button, add width at the visual state level, not the top, to fix overflow command bar issues  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/AppBarButton_themeresources.xaml  -->
     <Style
         x:Key="AppBarButtonDefaultButtonStyle"
@@ -16,7 +19,7 @@
         <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
         <!--<Setter Property="VerticalAlignment" Value="Top" />-->
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontWeight" Value="Normal" />-->
@@ -151,15 +154,15 @@
                             <VisualStateGroup x:Name="ApplicationViewStates">
                                 <VisualState x:Name="FullSize">
                                     <VisualState.Setters>
-                                        <!--  Work around the fixed width's removal  -->
-                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
-                                        <!--  Work around the fixed width's removal  -->
-                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                         <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
@@ -172,7 +175,7 @@
 
                                 <VisualState x:Name="LabelOnRight">
                                     <Storyboard>
-                                        <!--  Use the same border thickness as the button  -->
+                                        <!--  Add the same button border thickness  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppBarButtonInnerBorder" Storyboard.TargetProperty="BorderThickness">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderThemeThickness}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -194,7 +197,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Margin">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonTextLabelOnRightMargin}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Use the same font size as the button  -->
+                                        <!--  Add the font size to match the default button style, to be used alongside margin overrides  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="FontSize">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlContentThemeFontSize}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -206,9 +209,13 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <Storyboard>
-                                        <!--  Work around the fixed width's removal and decrease its size slightly  -->
+                                        <!--  Add the same button border thickness  -->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppBarButtonInnerBorder" Storyboard.TargetProperty="BorderThickness">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderThemeThickness}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="Width">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="48" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="MinHeight">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarThemeCompactHeight}" />
@@ -410,7 +417,7 @@
         </Setter>
     </Style>
 
-    <!--  Make the LabelOnRight visual state resemble the accent button style, removed the fixed width at the top level and adjusted the horizontal alignment to address overflow states  -->
+    <!--  Make the AppBarButton look like the accent button, add width at the visual state level, not the top, to fix overflow command bar issues  -->
     <Style
         x:Key="AppBarButtonAccentButtonStyle"
         BasedOn="{StaticResource DefaultAppBarButtonStyle}"
@@ -418,7 +425,7 @@
         <Setter Property="Background" Value="{ThemeResource AccentButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource AccentButtonForeground}" />
         <Setter Property="BorderBrush" Value="{ThemeResource AccentButtonBorderBrush}" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <!--<Setter Property="HorizontalAlignment" Value="Left" />-->
         <!--<Setter Property="VerticalAlignment" Value="Top" />-->
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontWeight" Value="Normal" />-->
@@ -553,15 +560,15 @@
                             <VisualStateGroup x:Name="ApplicationViewStates">
                                 <VisualState x:Name="FullSize">
                                     <VisualState.Setters>
-                                        <!--  Work around the fixed width's removal  -->
-                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Compact">
                                     <VisualState.Setters>
-                                        <!--  Work around the fixed width's removal  -->
-                                        <Setter Target="ContentRoot.Width" Value="68" />
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
+                                        <Setter Target="ContentRoot.Width" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                         <!--  Change StaticResource to ThemeResource to enable overriding  -->
                                         <Setter Target="AppBarButtonInnerBorder.Margin" Value="{ThemeResource AppBarButtonInnerBorderCompactMargin}" />
                                     </VisualState.Setters>
@@ -574,7 +581,7 @@
 
                                 <VisualState x:Name="LabelOnRight">
                                     <Storyboard>
-                                        <!--  Use the same border thickness as the button  -->
+                                        <!--  Add the same button border thickness  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppBarButtonInnerBorder" Storyboard.TargetProperty="BorderThickness">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderThemeThickness}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -596,7 +603,7 @@
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="Margin">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonTextLabelOnRightMargin}" />
                                         </ObjectAnimationUsingKeyFrames>
-                                        <!--  Use the same font size as the button  -->
+                                        <!--  Add the font size to match the default button style, to be used alongside margin overrides  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TextLabel" Storyboard.TargetProperty="FontSize">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlContentThemeFontSize}" />
                                         </ObjectAnimationUsingKeyFrames>
@@ -608,9 +615,13 @@
 
                                 <VisualState x:Name="LabelCollapsed">
                                     <Storyboard>
-                                        <!--  Work around the fixed width's removal and decrease its size slightly  -->
+                                        <!--  Add the same button border thickness  -->
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppBarButtonInnerBorder" Storyboard.TargetProperty="BorderThickness">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderThemeThickness}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <!--  Add width to compensate for the removal of the fixed width  -->
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="Width">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="48" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarButtonDefaultWidth}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentRoot" Storyboard.TargetProperty="MinHeight">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AppBarThemeCompactHeight}" />
