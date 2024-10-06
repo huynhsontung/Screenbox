@@ -131,7 +131,7 @@ namespace Screenbox.Pages
 
         private void SetTitleBar()
         {
-            Window.Current.SetTitleBar(TitleBarElement);
+            Window.Current.SetTitleBar(TitleBarDragRegion);
             UpdateSystemCaptionButtonForeground();
         }
 

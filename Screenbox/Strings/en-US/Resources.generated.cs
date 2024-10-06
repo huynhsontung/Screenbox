@@ -614,6 +614,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region MinimizeImmersiveView
+        /// <summary>
+        ///   Looks up a localized string similar to: Minimize immersive view
+        /// </summary>
+        public static string MinimizeImmersiveView
+        {
+            get
+            {
+                return _resourceLoader.GetString("MinimizeImmersiveView");
+            }
+        }
+        #endregion
+
         #region Cast
         /// <summary>
         ///   Looks up a localized string similar to: Cast
@@ -3029,6 +3042,7 @@ namespace Screenbox.Strings{
             Videos,
             EmptyFolder,
             RestoreView,
+            MinimizeImmersiveView,
             Cast,
             StopCast,
             CastingTo,

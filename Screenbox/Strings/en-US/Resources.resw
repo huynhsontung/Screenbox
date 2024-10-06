@@ -265,6 +265,9 @@
   <data name="RestoreView" xml:space="preserve">
     <value>Restore immersive view</value>
   </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
+  </data>
   <data name="Cast" xml:space="preserve">
     <value>Cast</value>
   </data>

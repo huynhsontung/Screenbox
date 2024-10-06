@@ -180,9 +180,8 @@
             </Grid.ColumnDefinitions>
 
             <Border
-                x:Name="TitleBarElement"
-                Grid.Column="1"
-                Grid.ColumnSpan="5"
+                x:Name="TitleBarDragRegion"
+                Grid.ColumnSpan="6"
                 Background="Transparent" />
 
             <Button
@@ -196,10 +195,10 @@
                 AutomationProperties.Name="{x:Bind BackButton.(ToolTipService.ToolTip)}"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=Back}">
+                ToolTipService.ToolTip="{strings:Resources Key=MinimizeImmersiveView}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
-                        <animatedvisuals:AnimatedBackVisualSource />
+                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
                     </muxc:AnimatedIcon.Source>
                     <muxc:AnimatedIcon.FallbackIconSource>
                         <muxc:FontIconSource Glyph="&#xE70D;" />
@@ -378,7 +377,6 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
             x:Load="False"
             Media="{x:Bind ViewModel.Media, Mode=OneWay}"
             Visibility="Collapsed" />
@@ -505,7 +503,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Margin="24,4"
-            Padding="11,7,11,8"
+            Padding="9,5,9,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             d:Visibility="Visible"
@@ -588,7 +586,7 @@
             x:Name="PlayerControls"
             Grid.Row="2"
             Grid.Column="0"
-            Padding="6,20,6,12" />
+            Padding="6,28,6,12" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ControlsVisibilityStates" CurrentStateChanged="ControlsVisibilityStates_OnCurrentStateChanged">
@@ -767,11 +765,13 @@
 
             <VisualStateGroup x:Name="PreviewWindowGroup">
                 <VisualState x:Name="NoPreview" />
+
                 <VisualState x:Name="VideoPreview">
                     <VisualState.Setters>
                         <Setter Target="FirstColumn.Width" Value="160" />
                     </VisualState.Setters>
                 </VisualState>
+
                 <VisualState x:Name="AudioPreview">
                     <VisualState.Setters>
                         <Setter Target="FirstColumn.Width" Value="109" />
@@ -790,8 +790,8 @@
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,6,20" />
                         <Setter Target="LivelyOptionsButton.Margin" Value="6,20,6,20" />
-                        <Setter Target="PlayerControls.Padding" Value="20" />
-                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,104" />
+                        <Setter Target="PlayerControls.Padding" Value="20,40,20,20" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,112" />
                     </VisualState.Setters>
                     <Storyboard>
                         <RepositionThemeAnimation FromVerticalOffset="-120" TargetName="AlbumArtPanel" />
@@ -802,8 +802,6 @@
                 <VisualState x:Name="CompactOverlay">
                     <VisualState.Setters>
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
-                        <Setter Target="TitleBarElement.(Grid.Column)" Value="3" />
-                        <Setter Target="TitleBarElement.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.Margin" Value="12,8,0,8" />
@@ -818,7 +816,7 @@
                         <Setter Target="PlayerControls.Padding" Value="0,4,0,0" />
                         <Setter Target="VideoView.ButtonMargin" Value="0,0,0,40" />
                         <Setter Target="StatusMessage.Margin" Value="12,4" />
-                        <Setter Target="StatusMessage.Padding" Value="9,5,9,6" />
+                        <Setter Target="StatusMessage.Padding" Value="5,2,5,3" />
                         <Setter Target="StatusMessageText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="PlayerStateBadge.Width" Value="48" />
                         <Setter Target="PlayerStateBadge.Height" Value="48" />
@@ -842,10 +840,9 @@
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
                         <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
-                        <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
@@ -889,7 +886,7 @@
                         <Setter Target="HeaderBackground.Height" Value="NaN" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
-                        <Setter Target="TitleBarElement.Margin" Value="0" />
+                        <Setter Target="TitleBarDragRegion.Visibility" Value="Collapsed" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Visibility" Value="Collapsed" />
                         <Setter Target="TitleTextStackPanel.(Grid.ColumnSpan)" Value="3" />
