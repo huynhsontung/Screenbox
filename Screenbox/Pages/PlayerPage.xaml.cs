@@ -21,6 +21,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -66,7 +67,7 @@ namespace Screenbox.Pages
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
-            AlbumArtImage.RegisterPropertyChangedCallback(Image.SourceProperty, AlbumArtImageOnSourceChanged);
+            AlbumArtImage.RegisterPropertyChangedCallback(ImageBrush.ImageSourceProperty, AlbumArtImageOnSourceChanged);
             LayoutRoot.ActualThemeChanged += OnActualThemeChanged;
 
             INavigationService navigationService = Ioc.Default.GetRequiredService<INavigationService>();   // For navigation events
@@ -130,7 +131,7 @@ namespace Screenbox.Pages
 
         private void SetTitleBar()
         {
-            Window.Current.SetTitleBar(TitleBarElement);
+            Window.Current.SetTitleBar(TitleBarDragRegion);
             UpdateSystemCaptionButtonForeground();
         }
 
@@ -320,7 +321,7 @@ namespace Screenbox.Pages
             if (BackgroundElement.Visibility == Visibility.Collapsed ||
             BackgroundArt.Visibility == Visibility.Collapsed)
             {
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 return;
             }
 
@@ -334,14 +335,14 @@ namespace Screenbox.Pages
             {
                 BackgroundImageNext.Visibility = Visibility.Collapsed;
                 BackgroundImage.GetVisual().Opacity = 0;
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
             }
             else
             {
                 BackgroundImageNext.Visibility = Visibility.Visible;
                 await BackgroundArtFadeOutAnimation.StartAsync(cts.Token);
-                BackgroundImage.Source = AlbumArtImage.Source;
+                BackgroundImage.Source = AlbumArtImage.ImageSource;
                 await BackgroundArtFadeInAnimation.StartAsync(cts.Token);
                 BackgroundImageNext.Visibility = Visibility.Collapsed;
             }

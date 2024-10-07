@@ -11,7 +11,7 @@ namespace Screenbox.Controls;
 // Source: https://github.com/rocksdanister/lively
 public sealed partial class LivelyWallpaperSelector : UserControl
 {
-    public bool ShowAddButton { get; set; } = true;
+    public Visibility HeaderVisibility { get; set; } = Visibility.Collapsed;
 
     internal LivelyWallpaperSelectorViewModel ViewModel => (LivelyWallpaperSelectorViewModel)DataContext;
 

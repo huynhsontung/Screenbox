@@ -12,9 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		crowdin.yml = crowdin.yml
 		LICENSE = LICENSE
 		nuget.config = nuget.config
+		NOTICE.md = NOTICE.md
 		PRIVACY.md = PRIVACY.md
 		README.md = README.md
-		ThirdPartyNotices.md = ThirdPartyNotices.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screenbox.Core", "Screenbox.Core\Screenbox.Core.csproj", "{46D79C78-F483-4319-A3D1-9D837A135BEF}"

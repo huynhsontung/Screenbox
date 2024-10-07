@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="40"
+    d:DesignWidth="256"
     SizeChanged="VolumeControl_OnSizeChanged"
     mc:Ignorable="d">
 
@@ -39,18 +39,23 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+
         <ToggleButton
+            x:Name="VolumeToggleButton"
             Grid.Column="0"
             Margin="0,0,4,0"
             controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
+            d:Style="{StaticResource SmallPlayerToggleButtonStyle}"
             AccessKey="{strings:KeyboardResources Key=PlayerMuteKey}"
+            AutomationProperties.Name="{Binding ElementName=VolumeToggleButton, Path=(ToolTipService.ToolTip), Mode=OneWay}"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
             Style="{x:Bind ToggleButtonStyle, Mode=OneWay}">
-            <FontIcon Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
+            <FontIcon d:Glyph="&#xE994;" Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
             </ToggleButton.KeyboardAccelerators>
         </ToggleButton>
+
         <Border
             x:Name="BoostIndicator"
             Grid.Column="1"
@@ -60,21 +65,27 @@
             VerticalAlignment="Center"
             Background="{ThemeResource BoostIndicatorFillColorBrush}"
             Canvas.ZIndex="{ThemeResource BoostIndicatorZIndex}"
-            CornerRadius="{Binding Source={StaticResource SliderTrackCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}" />
+            CornerRadius="{Binding Source={StaticResource SliderTrackCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
+            IsHitTestVisible="False" />
         <Slider
             x:Name="VolumeSlider"
             Grid.Column="1"
             VerticalAlignment="Center"
+            d:Value="60"
             AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
+            AutomationProperties.Name="{strings:Resources Key=VolumeSliderTooltip}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
             PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
+
         <TextBlock
             Grid.Column="2"
-            Width="28"
+            MinWidth="28"
             Margin="12,0,0,2"
             VerticalAlignment="Center"
+            d:Text="{Binding ElementName=VolumeSlider, Path=Value}"
+            AutomationProperties.AccessibilityView="Raw"
             Text="{x:Bind VolumeSlider.Value, Mode=OneWay}"
             Visibility="{x:Bind ShowValueText, Mode=OneWay}" />
     </Grid>

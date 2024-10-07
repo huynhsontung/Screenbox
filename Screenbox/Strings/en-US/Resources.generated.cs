@@ -328,6 +328,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region VolumeSliderTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Adjust volume
+        /// </summary>
+        public static string VolumeSliderTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("VolumeSliderTooltip");
+            }
+        }
+        #endregion
+
         #region Seek
         /// <summary>
         ///   Looks up a localized string similar to: Seek
@@ -428,6 +441,58 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("AddToQueue");
+            }
+        }
+        #endregion
+
+        #region SelectAll
+        /// <summary>
+        ///   Looks up a localized string similar to: Select all
+        /// </summary>
+        public static string SelectAll
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectAll");
+            }
+        }
+        #endregion
+
+        #region SelectAllToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Select all items in this view
+        /// </summary>
+        public static string SelectAllToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectAllToolTip");
+            }
+        }
+        #endregion
+
+        #region SelectNone
+        /// <summary>
+        ///   Looks up a localized string similar to: Select none
+        /// </summary>
+        public static string SelectNone
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectNone");
+            }
+        }
+        #endregion
+
+        #region SelectNoneToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Clear your selection
+        /// </summary>
+        public static string SelectNoneToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SelectNoneToolTip");
             }
         }
         #endregion
@@ -538,13 +603,26 @@ namespace Screenbox.Strings{
 
         #region RestoreView
         /// <summary>
-        ///   Looks up a localized string similar to: Restore video view
+        ///   Looks up a localized string similar to: Restore immersive view
         /// </summary>
         public static string RestoreView
         {
             get
             {
                 return _resourceLoader.GetString("RestoreView");
+            }
+        }
+        #endregion
+
+        #region MinimizeImmersiveView
+        /// <summary>
+        ///   Looks up a localized string similar to: Minimize immersive view
+        /// </summary>
+        public static string MinimizeImmersiveView
+        {
+            get
+            {
+                return _resourceLoader.GetString("MinimizeImmersiveView");
             }
         }
         #endregion
@@ -779,6 +857,19 @@ namespace Screenbox.Strings{
             get
             {
                 return _resourceLoader.GetString("SearchBoxPlaceholderText");
+            }
+        }
+        #endregion
+
+        #region SearchBoxToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Search videos, songs, albums, and more
+        /// </summary>
+        public static string SearchBoxToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("SearchBoxToolTip");
             }
         }
         #endregion
@@ -2391,6 +2482,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region ThirdPartyNotices
+        /// <summary>
+        ///   Looks up a localized string similar to: Third-party software acknowledgments
+        /// </summary>
+        public static string ThirdPartyNotices
+        {
+            get
+            {
+                return _resourceLoader.GetString("ThirdPartyNotices");
+            }
+        }
+        #endregion
+
         #region HyperlinkTranslate
         /// <summary>
         ///   Looks up a localized string similar to: Help translate
@@ -2703,9 +2807,35 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region VisualizerOptionsToolTip
+        /// <summary>
+        ///   Looks up a localized string similar to: Audio visual options
+        /// </summary>
+        public static string VisualizerOptionsToolTip
+        {
+            get
+            {
+                return _resourceLoader.GetString("VisualizerOptionsToolTip");
+            }
+        }
+        #endregion
+
+        #region Visuals
+        /// <summary>
+        ///   Looks up a localized string similar to: Visuals
+        /// </summary>
+        public static string Visuals
+        {
+            get
+            {
+                return _resourceLoader.GetString("Visuals");
+            }
+        }
+        #endregion
+
         #region BrowseFiles
         /// <summary>
-        ///   Looks up a localized string similar to: Browse file(s)
+        ///   Looks up a localized string similar to: Browse files
         /// </summary>
         public static string BrowseFiles
         {
@@ -2731,7 +2861,7 @@ namespace Screenbox.Strings{
 
         #region SettingsAudioVisualDescription
         /// <summary>
-        ///   Looks up a localized string similar to: Choose an imagery style to be displayed on audio playback
+        ///   Looks up a localized string similar to: Choose a backdrop to give your audio playback a visual flair in the immersive view
         /// </summary>
         public static string SettingsAudioVisualDescription
         {
@@ -2890,6 +3020,7 @@ namespace Screenbox.Strings{
             Back,
             AudioAndCaption,
             Volume,
+            VolumeSliderTooltip,
             Seek,
             Next,
             Previous,
@@ -2898,6 +3029,10 @@ namespace Screenbox.Strings{
             More,
             PlayQueue,
             AddToQueue,
+            SelectAll,
+            SelectAllToolTip,
+            SelectNone,
+            SelectNoneToolTip,
             ClearSelection,
             Remove,
             PlayNext,
@@ -2907,6 +3042,7 @@ namespace Screenbox.Strings{
             Videos,
             EmptyFolder,
             RestoreView,
+            MinimizeImmersiveView,
             Cast,
             StopCast,
             CastingTo,
@@ -2925,6 +3061,7 @@ namespace Screenbox.Strings{
             NoMusicPanelSubtext,
             OpenFiles,
             SearchBoxPlaceholderText,
+            SearchBoxToolTip,
             Settings,
             WelcomePanelHeader,
             WelcomePanelSubtext,
@@ -3051,6 +3188,7 @@ namespace Screenbox.Strings{
             RelatedLinks,
             PrivacyPolicy,
             License,
+            ThirdPartyNotices,
             HyperlinkTranslate,
             Options,
             TimingOffset,
@@ -3075,6 +3213,8 @@ namespace Screenbox.Strings{
             SettingsAudioVisualHeader,
             GetLivelyApp,
             GetLivelyVisuals,
+            VisualizerOptionsToolTip,
+            Visuals,
             BrowseFiles,
             Default,
             SettingsAudioVisualDescription,

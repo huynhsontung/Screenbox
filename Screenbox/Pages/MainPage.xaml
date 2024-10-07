@@ -134,49 +134,70 @@
             SelectionChanged="NavView_SelectionChanged">
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemHomeKey}"
                     Icon="Home"
                     KeyTipPlacementMode="Right"
                     Tag="home">
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="H" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemVideosKey}"
                     KeyTipPlacementMode="Right"
                     Tag="videos">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8B2;" />
                     </muxc:NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="D" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
                     Icon="Audio"
                     KeyTipPlacementMode="Right"
                     Tag="music">
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="U" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemNetworkKey}"
                     Icon="MapDrive"
                     KeyTipPlacementMode="Right"
                     Tag="network">
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="N" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="NetworkNavItemText" Text="{strings:Resources Key=Network}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind PlayQueueNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemQueueKey}"
                     KeyTipPlacementMode="Right"
                     Tag="queue">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="&#xE93F;" />
                     </muxc:NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Q" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="PlayQueueNavItemText" Text="{strings:Resources Key=PlayQueue}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.FooterMenuItems>
                 <!--  Reimplement settings nav item to allow transition  -->
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind SettingsNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemSettingsKey}"
                     KeyTipPlacementMode="Right"
                     Tag="settings">
@@ -188,17 +209,21 @@
                             </muxc:AnimatedIcon.FallbackIconSource>
                         </muxc:AnimatedIcon>
                     </muxc:NavigationViewItem.Icon>
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="G" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="SettingsNavItemText" Text="{strings:Resources Key=Settings}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="NavViewSearchBox"
+                    controls:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
                     AccessKey="{strings:KeyboardResources Key=NavigationPaneAutoSuggestButtonKey}"
                     AccessKeyInvoked="NavViewSearchBoxAccessKeyFocus_OnInvoked"
+                    AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
                     KeyTipPlacementMode="Right"
-                    KeyboardAcceleratorPlacementMode="Hidden"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
