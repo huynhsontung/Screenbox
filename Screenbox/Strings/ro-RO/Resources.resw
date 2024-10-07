@@ -168,7 +168,7 @@
     <value>Volum</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Ajustare volum</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Caută</value>
@@ -215,16 +215,16 @@
     <value>Adăugare la coadă</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Selectați tot</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Selectați toate elementele din această vizualizare</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Selectați nici unul</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Ștergeți selecția</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Ștergere selecție</value>
@@ -266,7 +266,7 @@
     <value>Restabilește vizualizarea videoclipului</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Minimizare vizualizarea imersivă</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Proiectare</value>
@@ -323,7 +323,7 @@
     <value>Căutare</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Căutare videoclipuri, melodii, albume și altele</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Setări</value>
@@ -753,7 +753,7 @@
     <value>Licență</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Confirmare software terță parte</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ajută la traducere</value>
@@ -828,10 +828,10 @@
     <value>Descărcați vizualizări de pe GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Opțiuni vizuale audio</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Vizuale</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Răsfoire fișier(e)</value>
@@ -858,15 +858,15 @@
     <value>Media</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Videoclip</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Fișier</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Muzică</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videoclipuri</value>
   </data>
 </root>
