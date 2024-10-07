@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>音量</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>定位</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>添加到队列</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>清除选择</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>恢复视频视图</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>投放</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>搜索</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
@@ -731,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>许可证</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>帮助我们翻译</value>
   </data>
@@ -802,6 +826,12 @@
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>在 GitHub 上下载视觉文件</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Audio visual options</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>浏览文件</value>
