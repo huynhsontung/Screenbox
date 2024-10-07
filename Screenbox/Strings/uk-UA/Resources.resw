@@ -168,7 +168,7 @@
     <value>Гучність</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Регулювання гучності</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Перехід</value>
@@ -215,16 +215,16 @@
     <value>Додати у чергу</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Вибрати все</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Вибрати всі елементи цього перегляду</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Вибрати нема чого</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Очистити свій вибір</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Скасувати вибір</value>
@@ -266,7 +266,7 @@
     <value>Відновити перегляд</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Мінімізувати перегляд з ефектом занурення</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Транслювати</value>
@@ -323,7 +323,7 @@
     <value>Пошук</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Шукати відео, пісні, альбоми та багато іншого</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Налаштування</value>
@@ -753,7 +753,7 @@
     <value>Ліцензія</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Подяки за стороннє програмне забезпечення</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Допомогти з перекладом</value>
@@ -828,10 +828,10 @@
     <value>Завантажити візуалізацію на GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Аудіо візуальні параметри</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Візуалізація</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Переглянути файл(и)</value>
@@ -855,18 +855,18 @@
     <value>Дата додавання</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Медіа</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Відео</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Музика</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Відео</value>
   </data>
 </root>
