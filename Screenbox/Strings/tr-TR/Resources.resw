@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Ses</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Ara</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Sıraya ekle</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Seçimi Temizle</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Video görünümünü geri yükle</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cihazda yayınla</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Ara</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Ayarlar</value>
@@ -731,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Lisans</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Çeviriye yardım et</value>
   </data>
@@ -802,6 +826,12 @@
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Ses görsellerini Githubdan indirin</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Audio visual options</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Dosyalara göz at</value>
