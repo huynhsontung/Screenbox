@@ -168,7 +168,7 @@
     <value>עוצמת שמע</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>התאמת עוצמת הקול</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>חפש</value>
@@ -215,16 +215,16 @@
     <value>הוסף לתור</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>בחר הכל</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>בחר את כל הפריטים שבתצוגה זו</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>בטל בחירת הכל</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>נקה את כל הבחירות</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>נקה את הבחירה</value>
@@ -323,7 +323,7 @@
     <value>חפש</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>חפש סרטונים, שירים, אלבומים ועוד</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>הגדרות</value>
@@ -753,7 +753,7 @@
     <value>רישיון</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>אישורי תוכנה של צד שלישי</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>עזור לתרגם</value>
@@ -828,10 +828,10 @@
     <value>הורד דגמים ויזואליים מ-GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>אפשרויות אודיו ויזואליות</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>חזותיים</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>עיין בקובץ/ים</value>
