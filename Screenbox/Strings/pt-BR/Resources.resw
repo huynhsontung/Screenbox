@@ -168,7 +168,7 @@
     <value>Volume</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Ajustar volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Procurar</value>
@@ -215,7 +215,7 @@
     <value>Adicionar a fila</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Selecionar todos</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
     <value>Select all items in this view</value>
@@ -224,7 +224,7 @@
     <value>Select none</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Limpar sua seleção</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Limpar seleção</value>
@@ -266,7 +266,7 @@
     <value>Restaurar visualização de vídeo</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Minimizar visualização imersiva</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Transmitir</value>
@@ -323,7 +323,7 @@
     <value>Pesquisar</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Pesquisar vídeos, músicas, álbuns e muito mais</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configurações</value>
