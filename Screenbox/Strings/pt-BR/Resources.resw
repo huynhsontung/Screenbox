@@ -218,10 +218,10 @@
     <value>Selecionar todos</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Selecionar todos os itens nesta visualização</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Selecionar nenhum</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>Limpar sua seleção</value>
@@ -753,7 +753,7 @@
     <value>Licença</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Reconhecimento de software de terceiros</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ajude a traduzir</value>
@@ -828,10 +828,10 @@
     <value>Baixe visuais no GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Opções de áudio visual</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visuais</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Procurar arquivo(s)</value>
