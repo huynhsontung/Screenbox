@@ -158,7 +158,8 @@
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
-                    CornerRadius="{StaticResource CircularCornerRadius}"
+                    CornerRadius="96"
+                    Shadow="{StaticResource SharedShadow}"
                     SizeChanged="ProfilePicture_OnSizeChanged"
                     Translation="0,0,16">
                     <FontIcon
@@ -352,6 +353,7 @@
                         <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="CoverArt.Width" Value="160" />
                         <Setter Target="CoverArt.Height" Value="160" />
+                        <Setter Target="CoverArt.CornerRadius" Value="80" />
                         <Setter Target="CoverArtIcon.FontSize" Value="52" />
                         <Setter Target="SubtitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />

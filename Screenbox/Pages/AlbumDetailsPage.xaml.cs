@@ -115,7 +115,8 @@ namespace Screenbox.Pages
         }
 
         /// <summary>
-        /// Create the animations that will drive the header animation.
+        /// Create the animations that, during vertical scrolling, will gradually shrink the cover art, narrow the Y axis and fade in the background,
+        /// include padding around the content, fade out the additional text blocks and fill the empty space left with the button panel.
         /// </summary>  
         /// <param name="propSet">A collection of properties values that are referenced to drive portions of the composition animations.</param>
         /// <param name="scrollVerticalOffset">A property set who has Translation.Y specified, the return from ElementCompositionPreview.GetScrollViewerManipulationPropertySet(...).</param>

@@ -69,6 +69,7 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
+                    Shadow="{StaticResource SharedShadow}"
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,16">
                     <Grid.Background>
