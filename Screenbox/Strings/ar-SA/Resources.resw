@@ -137,7 +137,7 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>فشل في حفظ الإطار</value>
+    <value>أخفق حفظ الإطار</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>الفصل {0}</value>
@@ -168,7 +168,7 @@
     <value>مستوى الصوت</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>ضبط مستوى الصوت</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>سحب</value>
@@ -215,16 +215,16 @@
     <value>إضافة إلى قائمة الانتظار</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>حدد الكل</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>حدد كافة العناصر في هذا العرض</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>عدم التحديد</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>امسح اختيارك</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>مسح التحديد</value>
@@ -266,7 +266,7 @@
     <value>استعادة عرض الفيديو</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>تصغير العرض الغامر</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>بث</value>
@@ -323,7 +323,7 @@
     <value>بحث</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>ابحث عن مقاطع الفيديو والأغاني والألبومات والمزيد</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>الإعدادات</value>
@@ -452,7 +452,7 @@
     <value>تصفح ملفات لتشغيلها</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>المزيد من الخيارات لفتح الوسائط</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>اضف ملفات</value>
@@ -461,7 +461,7 @@
     <value>تصفح الملفات للإضافة إلى قائمة انتظار التشغيل</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>المزيد من الخيارات لإضافة الوسائط إلى قائمة انتظار التشغيل</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>إضافة مجلد إلى مكتبة الموسيقى الخاصة بك</value>
@@ -753,7 +753,7 @@
     <value>الترخيص</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>إقرارات برامج الطرف الثالث</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>مساعدة في الترجمة</value>
@@ -819,7 +819,7 @@
     <value>سنة الاصدار</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>السمعي البصري</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>احصل على خلفية حية</value>
@@ -828,10 +828,10 @@
     <value>تحميل المرئيات على GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>خيارات سمعية وبصرية</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>مرئيات</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>تصفح الملف (الملفات)</value>
@@ -843,25 +843,25 @@
     <value>اختر نمط صور لعرضها على تشغيل الصوت</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>مدعوم من Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
     <value>استيراد المرئيات</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>احصل على المزيد من العناصر المرئية عبر تطبيق Lively Wallpaper أو قم بتنزيلها من GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>تاريخ الاضافة</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>الوسائط</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>فيديو</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>مِلَف</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>الموسيقى</value>
