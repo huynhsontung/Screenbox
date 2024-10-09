@@ -864,9 +864,9 @@
     <value>File</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Muzyka</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Filmy</value>
   </data>
 </root>
