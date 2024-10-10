@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Volum</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Ajustare volum</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Caută</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Adăugare la coadă</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Selectați tot</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Selectați toate elementele din această vizualizare</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Selectați nici unul</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Ștergeți selecția</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Ștergere selecție</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restabilește vizualizarea videoclipului</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimizare vizualizarea imersivă</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Proiectare</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Căutare</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Căutare videoclipuri, melodii, albume și altele</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Setări</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Răsfoiți fișierele care vor fi redate</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Mai multe opțiuni pentru deschiderea fișierelor media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Adăugați fișiere</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Răsfoiți pentru fișiere pentru coada de redare</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Mai multe opțiuni pentru adăugarea fișierelor media la coada de redare</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Adăugați un folder la biblioteca dvs. de muzică</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Licență</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Confirmare software terță parte</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ajută la traducere</value>
   </data>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Descărcați vizualizări de pe GitHub</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Opțiuni vizuale audio</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Vizuale</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Răsfoire fișier(e)</value>
   </data>
@@ -817,5 +853,20 @@
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Data adăugării</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Videoclip</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Fișier</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Muzică</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videoclipuri</value>
   </data>
 </root>

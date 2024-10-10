@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Lautstärke</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Lautstärke anpassen</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Suchen</value>
   </data>
@@ -198,7 +201,7 @@
     <value>Wiederholen: Alle</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Wiederholen: Einmalig</value>
+    <value>Wiederholen: Einzeln</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} Eintrag ausgewählt</value>
@@ -210,6 +213,18 @@
   </data>
   <data name="AddToQueue" xml:space="preserve">
     <value>Zur Wiedergabeliste hinzufügen</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Alles auswählen</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Alle Elemente in dieser Ansicht auswählen</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Nichts auswählen</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Auswahl aufheben</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Auswahl aufheben</value>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Videoansicht wiederherstellen</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Immersive Ansicht minimieren</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Übertragen</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Suchen</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Suche nach Videos, Liedern, Alben und mehr</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Dateien zum Abspielen suchen</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Weitere Optionen zum Öffnen von Medien</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Datei(en) hinzufügen</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Suche nach Datei(en) zum Hinzufügen zur Wiedergabeliste</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Weitere Optionen zum Hinzufügen von Medien zur Warteschlange</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Ordner zur Musikbibliothek hinzufügen</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Lizenz</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Danksagungen an Drittanbieter-Software</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Hilf beim Übersetzen</value>
   </data>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Grafiken auf GitHub herunterladen</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Optionen für Audio-Grafik</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Grafiken</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Datei(en) durchsuchen</value>
   </data>
@@ -816,6 +852,21 @@
     <value>Erhalte mehr Grafiken über die Lively Wallpaper App oder lade sie von GitHub herunter</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Hinzugefügt am</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Medien</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Musik</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Videos</value>
   </data>
 </root>

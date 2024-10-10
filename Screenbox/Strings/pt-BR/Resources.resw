@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Ajustar volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Procurar</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Adicionar a fila</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Selecionar todos</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Selecionar todos os itens nesta visualização</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Selecionar nenhum</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Limpar sua seleção</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Limpar seleção</value>
   </data>
@@ -231,7 +246,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Biblioteca de vídeos</value>
+    <value>Vídeos</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>Esta pasta está vazia</value>
@@ -250,6 +265,9 @@
   <data name="RestoreView" xml:space="preserve">
     <value>Restaurar visualização de vídeo</value>
   </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimizar visualização imersiva</value>
+  </data>
   <data name="Cast" xml:space="preserve">
     <value>Transmitir</value>
   </data>
@@ -266,7 +284,7 @@
     <value>Desativar</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Biblioteca de músicas</value>
+    <value>Música</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Ordem aleatória e reproduzir</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Pesquisar</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Pesquisar vídeos, músicas, álbuns e muito mais</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configurações</value>
@@ -392,7 +413,7 @@
     <value>Mídia recente</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Ajustes de vídeo</value>
+    <value>Configurações de vídeo</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Abrir</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Procure arquivos para reproduzir</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Mais opções para abrir a mídia</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Adicionar arquivo(s)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Procure arquivo(s) para adicionar à fila de reprodução</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Mais opções para adicionar mídia à fila de reprodução</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Adicionar pasta a sua biblioteca de músicas</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Licença</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Reconhecimento de software de terceiros</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ajude a traduzir</value>
   </data>
@@ -792,10 +822,16 @@
     <value>Áudio visual</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Obter Lively Wallpaper</value>
+    <value>Obter o Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Baixar visuais no GitHub</value>
+    <value>Baixe visuais no GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Opções de áudio visual</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuais</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Procurar arquivo(s)</value>
@@ -813,9 +849,24 @@
     <value>Importar visuais</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Obtenha mais recursos visuais através do aplicativo Lively Wallpaper ou baixe-os no GitHub</value>
+    <value>Obter mais recursos visuais através do aplicativo Lively Wallpaper ou baixe-os no GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Data de adição</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Mídia</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Vídeo</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Arquivo</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Biblioteca de músicas</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Biblioteca de vídeos</value>
   </data>
 </root>
