@@ -23,37 +23,29 @@
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <XamlUICommand
-                x:Key="PlayCommand"
-                Command="{x:Bind ViewModel.PlayCommand}"
-                IconSource="{ui:SymbolIconSource Symbol=Play}"
-                Label="{strings:Resources Key=Play}" />
-
-            <XamlUICommand
-                x:Key="PlayNextCommand"
-                Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                               Glyph=&#xF5EB;}"
-                Label="{strings:Resources Key=PlayNext}" />
-
-            <XamlUICommand
-                x:Key="RemoveCommand"
-                Command="{x:Bind ViewModel.RemoveCommand}"
-                IconSource="{ui:SymbolIconSource Symbol=Clear}"
-                Label="{strings:Resources Key=Remove}" />
-
-            <XamlUICommand
-                x:Key="PropertiesCommand"
-                Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
-                Label="{strings:Resources Key=Properties}" />
-
             <MenuFlyout x:Name="ItemFlyout">
-                <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Play}"
+                    Text="{strings:Resources Key=Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF5EB;}"
+                    Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{StaticResource RemoveCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.RemoveCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Clear}"
+                    Text="{strings:Resources Key=Remove}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowPropertiesCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{strings:Resources Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
