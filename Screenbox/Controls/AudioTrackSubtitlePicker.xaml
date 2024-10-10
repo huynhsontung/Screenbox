@@ -36,7 +36,7 @@
                         TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
-                        Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
+                        Padding="{StaticResource HyperlinkButtonUniformPadding}"
                         Command="{x:Bind ShowAudioOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
@@ -81,7 +81,7 @@
                         TextWrapping="NoWrap" />
                     <HyperlinkButton
                         Grid.Column="1"
-                        Padding="{StaticResource HyperlinkButtonMediaItemPadding}"
+                        Padding="{StaticResource HyperlinkButtonUniformPadding}"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"

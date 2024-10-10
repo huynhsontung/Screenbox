@@ -64,12 +64,13 @@
                     <contract13Present:FontFamily x:Key="ScreenboxSymbolThemeFontFamily">ms-appx:///Assets/Fonts/ScreenboxFluentIcons.ttf#Screenbox Fluent Icons</contract13Present:FontFamily>
                     <!--  Font sizes  -->
                     <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>
+                    <x:Double x:Key="TitleMediumTextBlockFontSize">32</x:Double>
                     <!--  Icon font sizes  -->
                     <x:Double x:Key="DefaultIconFontSize">16</x:Double>
-                    <x:Double x:Key="GridItemPlaceholderIconFontSize">52</x:Double>
-                    <x:Double x:Key="WideGridItemPlaceholderIconFontSize">42</x:Double>
-                    <x:Double x:Key="NoContentPanelGlyphFontSize">126</x:Double>
-                    <x:Double x:Key="NoContentPanelMinimalGlyphFontSize">88</x:Double>
+                    <x:Double x:Key="GridItemPlaceholderIconFontSize">56</x:Double>
+                    <x:Double x:Key="WideGridItemPlaceholderIconFontSize">44</x:Double>
+                    <x:Double x:Key="NoContentPanelIconFontSize">128</x:Double>
+                    <x:Double x:Key="NoContentPanelMinimalIconFontSize">96</x:Double>
 
                     <!--  Standardize header height with or without top nav  -->
                     <x:Double x:Key="PageHeaderMinHeight">48</x:Double>
@@ -97,17 +98,16 @@
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
 
                     <Style TargetType="FontIcon">
-                        <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
                         <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />
                     </Style>
 
                     <!--  Header style  -->
                     <Style
-                        x:Key="PageHeaderTextBlockStyle"
+                        x:Key="TitleMediumTextBlockStyle"
                         BasedOn="{StaticResource BaseTextBlockStyle}"
                         TargetType="TextBlock">
                         <Setter Property="AutomationProperties.HeadingLevel" Value="Level1" />
-                        <Setter Property="FontSize" Value="34" />
+                        <Setter Property="FontSize" Value="{StaticResource TitleMediumTextBlockFontSize}" />
                         <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
                     </Style>
 

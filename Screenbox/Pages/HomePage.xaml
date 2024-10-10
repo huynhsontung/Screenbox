@@ -109,7 +109,7 @@
             Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 x:Name="HeaderText"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=Home}" />
             <muxc:SplitButton
                 x:Name="HeaderOpenButton"
@@ -161,7 +161,7 @@
                 x:Name="WelcomePanelIcon"
                 Grid.Column="0"
                 Margin="0,-16,0,0"
-                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
+                FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Text="👋" />
 
             <StackPanel
@@ -265,7 +265,7 @@
                         <Setter Target="WelcomePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="WelcomePanel.ColumnSpacing" Value="4" />
                         <Setter Target="WelcomePanelIcon.Margin" Value="0,0" />
-                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
+                        <Setter Target="WelcomePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                         <Setter Target="GridViewHeaderText.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="RecentFilesGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                     </VisualState.Setters>

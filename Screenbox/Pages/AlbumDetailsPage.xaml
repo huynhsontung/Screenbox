@@ -2,7 +2,6 @@
     x:Class="Screenbox.Pages.AlbumDetailsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
@@ -19,7 +18,11 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ThemeShadow x:Key="SharedShadow" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -31,87 +34,76 @@
 
         <Grid
             x:Name="BackgroundHost"
-            Grid.Row="0"
-            Grid.RowSpan="2"
-            Margin="0,-100,0,0"
+            Margin="0,-136,0,0"
             SizeChanged="BackgroundHost_OnSizeChanged" />
 
         <Grid
             x:Name="Header"
             Grid.Row="0"
-            Height="200"
-            Margin="0,0,0,-108"
+            Margin="0,0,0,-80"
             Padding="{StaticResource ContentPagePadding}"
             Canvas.ZIndex="1">
-
-            <Border
+            <!--  To prevent the background border from appearing squashed after scaling, use a rectangle instead of a border to increase the Y radius.  -->
+            <Rectangle
                 x:Name="BackgroundAcrylic"
-                VerticalAlignment="Top"
-                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
-                BorderThickness="1"
-                CornerRadius="{StaticResource OverlayCornerRadius}"
+                Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                RadiusX="8"
+                RadiusY="12"
                 Shadow="{StaticResource SharedShadow}"
-                Translation="0,0,8" />
+                Stroke="{ThemeResource ControlElevationBorderBrush}"
+                StrokeThickness="1"
+                Translation="0,0,32" />
 
-            <Grid VerticalAlignment="Center">
+            <Grid x:Name="ContentContainer">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
 
                 <Grid
-                    x:Name="AlbumArt"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
+                    x:Name="CoverArt"
                     Grid.Column="0"
-                    Width="180"
-                    Height="180"
+                    Width="192"
+                    Height="192"
                     Margin="0,0,20,0"
-                    VerticalAlignment="Top"
-                    Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
                     Shadow="{StaticResource SharedShadow}"
                     SizeChanged="AlbumArt_OnSizeChanged"
-                    Translation="0,0,8">
-                    <FontIcon
-                        x:Name="AlbumArtIcon"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="64"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="&#xE93C;"
-                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}" />
-                    <Border CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}">
-                        <Image
-                            HorizontalAlignment="Center"
-                            Source="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}"
-                            Stretch="UniformToFill" />
+                    Translation="0,0,16">
+                    <Grid.Background>
+                        <ImageBrush ImageSource="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}" Stretch="UniformToFill" />
+                    </Grid.Background>
+                    <Border
+                        Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                        CornerRadius="{x:Bind CoverArt.CornerRadius, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                        <FontIcon
+                            x:Name="CoverArtIcon"
+                            FontSize="64"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Glyph="&#xE93C;" />
                     </Border>
                 </Grid>
 
                 <StackPanel
-                    x:Name="TitlePanel"
-                    Grid.Row="0"
+                    x:Name="TextPanel"
                     Grid.Column="1"
                     Orientation="Vertical">
                     <TextBlock
-                        x:Name="AlbumTitleText"
-                        Style="{StaticResource TitleTextBlockStyle}"
+                        x:Name="TitleText"
+                        Style="{StaticResource TitleMediumTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.Name}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
+
                     <TextBlock
-                        x:Name="ArtistNameText"
+                        x:Name="SubtitleText"
+                        Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
                         Text="{x:Bind ViewModel.Source.ArtistName}"
@@ -120,9 +112,10 @@
                             <interactions:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
+
                     <TextBlock
-                        x:Name="Subtext"
-                        Margin="0,8,0,0"
+                        x:Name="CaptionText"
+                        Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
                         Text="{x:Bind local:AlbumDetailsPage.GetSubtext(ViewModel.Year, ViewModel.SongsCount, ViewModel.TotalDuration), Mode=OneWay}"
@@ -131,43 +124,58 @@
                             <interactions:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
-                </StackPanel>
 
-                <StackPanel
-                    x:Name="ButtonPanel"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="0,0,0,32"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal"
-                    Spacing="16">
-                    <Button
-                        x:Name="PlayButton"
-                        AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
-                        AutomationProperties.Name="{strings:Resources Key=Play}"
-                        Command="{x:Bind ViewModel.PlayCommand}"
-                        CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
-                        Style="{StaticResource AccentButtonStyle}"
-                        XYFocusDown="{x:Bind ItemList}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE768;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=Play}" />
-                        </StackPanel>
-                        <interactivity:Interaction.Behaviors>
-                            <interactions:AutoFocusBehavior />
-                        </interactivity:Interaction.Behaviors>
-                    </Button>
+                    <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that clicking the more button won't break the animation.  -->
+                    <Grid x:Name="ButtonPanel">
+                        <CommandBar
+                            Margin="-4,10,0,0"
+                            Padding="0"
+                            HorizontalAlignment="Left"
+                            DefaultLabelPosition="Right">
+                            <CommandBar.Resources>
+                                <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarBackgroundOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
+                                <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
 
-                    <Button
-                        AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-                        AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
-                        Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                        XYFocusDown="{x:Bind ItemList}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE8B1;" />
-                            <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
-                        </StackPanel>
-                    </Button>
+                                <!--  Try to match the dimensions to those of the default button  -->
+                                <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
+                                <Thickness x:Key="AppBarButtonContentViewboxMargin">15,12,0,13</Thickness>
+                                <Thickness x:Key="AppBarButtonContentViewboxCollapsedMargin">0,14,0,2</Thickness>
+                                <!--<Thickness x:Key="AppBarButtonTextLabelMargin">6,0,6,8</Thickness>-->
+                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
+                                <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
+                                <!--<Thickness x:Key="AppBarButtonInnerBorderCompactMargin">4,6,4,26</Thickness>-->
+                                <!--<StaticResource x:Key="AppBarButtonDefaultWidth" ResourceKey="AppBarButtonCompactWidth" />-->
+                            </CommandBar.Resources>
+
+                            <AppBarButton
+                                x:Name="PlayButton"
+                                HorizontalAlignment="Stretch"
+                                BackgroundSizing="OuterBorderEdge"
+                                BorderBrush="{StaticResource AccentButtonBorderBrush}"
+                                Command="{x:Bind ViewModel.PlayCommand}"
+                                CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
+                                Icon="{ui:FontIcon Glyph=&#xE768;}"
+                                Label="{strings:Resources Key=Play}"
+                                Style="{StaticResource AppBarButtonAccentButtonStyle}"
+                                XYFocusDown="{x:Bind ItemList}">
+                                <interactivity:Interaction.Behaviors>
+                                    <interactions:AutoFocusBehavior />
+                                </interactivity:Interaction.Behaviors>
+                            </AppBarButton>
+
+                            <AppBarButton
+                                HorizontalAlignment="Stretch"
+                                BorderBrush="{ThemeResource ButtonBorderBrush}"
+                                Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
+                                Icon="{ui:FontIcon Glyph=&#xE8B1;}"
+                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Style="{StaticResource AppBarButtonDefaultButtonStyle}"
+                                XYFocusDown="{x:Bind ItemList}"
+                                XYFocusLeft="{x:Bind PlayButton}" />
+                        </CommandBar>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>
@@ -194,7 +202,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
-                <Border x:Name="ListHeaderPadding" Height="140" />
+                <Border x:Name="ListHeaderPadding" Height="112" />
             </ListView.Header>
             <ListView.Footer>
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
@@ -222,16 +230,15 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="BackgroundHost.Margin" Value="0,-100,0,0" />
-                        <Setter Target="Header.Height" Value="160" />
-                        <Setter Target="Header.Margin" Value="0,0,0,-68" />
+                        <!--<Setter Target="BackgroundHost.Margin" Value="0,-136,0,0" />-->
+                        <Setter Target="Header.Margin" Value="0,0,0,-48" />
                         <Setter Target="Header.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="AlbumArt.Width" Value="140" />
-                        <Setter Target="AlbumArt.Height" Value="140" />
-                        <Setter Target="AlbumArtIcon.FontSize" Value="52" />
-                        <Setter Target="ButtonPanel.Margin" Value="0" />
+                        <Setter Target="CoverArt.Width" Value="160" />
+                        <Setter Target="CoverArt.Height" Value="160" />
+                        <Setter Target="CoverArtIcon.FontSize" Value="52" />
+                        <Setter Target="SubtitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <Setter Target="ItemList.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="ListHeaderPadding.Height" Value="100" />
+                        <Setter Target="ListHeaderPadding.Height" Value="72" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

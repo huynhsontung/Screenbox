@@ -69,7 +69,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             MaxLines="2"
-            Style="{StaticResource PageHeaderTextBlockStyle}"
+            Style="{StaticResource TitleMediumTextBlockStyle}"
             Text="{x:Bind ViewModel.TitleText}">
             <interactivity:Interaction.Behaviors>
                 <interactions:OverflowTextToolTipBehavior />

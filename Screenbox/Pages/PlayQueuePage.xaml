@@ -60,7 +60,7 @@
             Padding="{StaticResource ContentPagePadding}">
             <TextBlock
                 HorizontalAlignment="Left"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
+                Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="{strings:Resources Key=PlayQueue}" />
             <muxc:SplitButton
                 x:Name="HeaderAddButton"

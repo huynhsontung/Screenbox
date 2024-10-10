@@ -69,8 +69,8 @@
     <CornerRadius x:Key="MediaViewItemCornerRadius">8,8,8,8</CornerRadius>
     <x:Double x:Key="GridViewItemPressedScale">0.95</x:Double>
 
-    <!--  GridViewItem with and Pressed ScaleTransform animation  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/winui2/main/dev/CommonStyles/GridViewItem_themeresources.xaml  -->
+    <!--  GridViewItem featuring a Pressed ScaleTransform animation and a custom PointerOver foreground brush  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/GridViewItem_themeresources.xaml  -->
     <contract13NotPresent:Style
         x:Key="GridViewItemMediaCardStyle"
         BasedOn="{StaticResource DefaultGridViewItemStyle}"
@@ -200,8 +200,8 @@
             </Setter.Value>
         </Setter>
     </contract13NotPresent:Style>
-    <!--  GridViewItem with Pressed ScaleTransform animation, increased corner radius and custom PointerOver/Pressed BorderBrush/Background brushes  -->
-    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/winui2/main/dev/CommonStyles/GridViewItem_themeresources_21h1.xaml  -->
+    <!--  GridViewItem featuring a Pressed ScaleTransform animation, increased corner radius, custom PointerOver Border/Foreground/Background brush and custom Pressed Background brush  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/GridViewItem_themeresources_21h1.xaml  -->
     <contract13Present:Style
         x:Key="GridViewItemMediaCardStyle"
         BasedOn="{StaticResource DefaultGridViewItemStyle}"
@@ -373,7 +373,7 @@
         <Setter Property="IsFocusEngagementEnabled" Value="True" />
     </contract13Present:Style>
 
-    <!--  GridViewHeaderItem with thicker font, PointerOver/Pressed states and inline margin  -->
+    <!--  GridViewHeaderItem with thicker font weight, PointerOver/Pressed states and inline margin  -->
     <Style x:Key="GridViewHeaderItemSubtleButtonStyle" TargetType="GridViewHeaderItem">
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontSize" Value="{ThemeResource GridViewHeaderItemThemeFontSize}" />-->
@@ -448,7 +448,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!--  ListViewHeaderItem with thicker font and PointerOver/Pressed states  -->
+    <!--  ListViewHeaderItem with thicker font weight and PointerOver/Pressed states  -->
     <Style x:Key="ListViewHeaderItemSubtleButtonStyle" TargetType="ListViewHeaderItem">
         <!--<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />-->
         <!--<Setter Property="FontSize" Value="{ThemeResource ListViewHeaderItemThemeFontSize}" />-->
