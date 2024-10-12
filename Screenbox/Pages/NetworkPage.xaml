@@ -27,16 +27,7 @@
             MinHeight="{StaticResource PageHeaderMinHeight}"
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock
-                Grid.Column="0"
-                Style="{StaticResource PageHeaderTextBlockStyle}"
-                Text="{x:Bind ViewModel.TitleText, Converter={StaticResource DefaultTitleTextConverter}, Mode=OneWay}" />
+            <TextBlock Style="{StaticResource TitleMediumTextBlockStyle}" Text="{x:Bind ViewModel.TitleText, Converter={StaticResource DefaultTitleTextConverter}, Mode=OneWay}" />
         </Grid>
 
         <muxc:BreadcrumbBar
@@ -77,7 +68,7 @@
             <FontIcon
                 x:Name="NoNetworkDrivePanelIcon"
                 Grid.Column="0"
-                FontSize="{StaticResource NoContentPanelGlyphFontSize}"
+                FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                 Glyph="&#xE8CD;" />
 
@@ -121,7 +112,7 @@
                         <Setter Target="BreadcrumbBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoNetworkDrivePanel.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="NoNetworkDrivePanel.ColumnSpacing" Value="16" />
-                        <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalGlyphFontSize}" />
+                        <Setter Target="NoNetworkDrivePanelIcon.FontSize" Value="{StaticResource NoContentPanelMinimalIconFontSize}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
