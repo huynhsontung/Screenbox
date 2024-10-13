@@ -168,7 +168,7 @@
     <value>音量</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>调整音量</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>定位</value>
@@ -215,16 +215,16 @@
     <value>添加到队列</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>全选</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>选择此视图中的所有项目</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>无选择</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>清除选择</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>清除选择</value>
@@ -266,7 +266,7 @@
     <value>恢复视频视图</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>最小化沉浸视图</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>投放</value>
@@ -323,7 +323,7 @@
     <value>搜索</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>搜索视频、歌曲、专辑及更多</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
@@ -753,7 +753,7 @@
     <value>许可证</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>第三方软件确认</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>帮助我们翻译</value>
@@ -828,10 +828,10 @@
     <value>在 GitHub 上下载视觉文件</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>音频显示选项</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>显示</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>浏览文件</value>
@@ -855,13 +855,13 @@
     <value>日期已添加</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>媒体</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>视频</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>文件</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>音乐</value>
