@@ -290,6 +290,16 @@
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowActivationStates">
+                <VisualState x:Name="Activated" />
+
+                <VisualState x:Name="Deactivated">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
             <VisualStateGroup x:Name="CriticalErrorStates">
                 <VisualState x:Name="CriticalErrorVisible">
                     <VisualState.StateTriggers>
