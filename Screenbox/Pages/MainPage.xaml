@@ -50,7 +50,7 @@
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="{StaticResource DefaultIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
+                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
                     <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
                 </StackPanel>
             </DataTemplate>

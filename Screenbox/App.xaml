@@ -66,7 +66,7 @@
                     <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>
                     <x:Double x:Key="TitleMediumTextBlockFontSize">32</x:Double>
                     <!--  Icon font sizes  -->
-                    <x:Double x:Key="DefaultIconFontSize">16</x:Double>
+                    <x:Double x:Key="StandardIconFontSize">16</x:Double>
                     <x:Double x:Key="GridItemPlaceholderIconFontSize">56</x:Double>
                     <x:Double x:Key="WideGridItemPlaceholderIconFontSize">44</x:Double>
                     <x:Double x:Key="NoContentPanelIconFontSize">128</x:Double>
@@ -97,11 +97,11 @@
 
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
 
+                    <!--  Styles  -->
                     <Style TargetType="FontIcon">
-                        <Setter Property="FontSize" Value="{StaticResource DefaultIconFontSize}" />
+                        <Setter Property="FontSize" Value="{StaticResource StandardIconFontSize}" />
                     </Style>
 
-                    <!--  Header style  -->
                     <Style
                         x:Key="TitleMediumTextBlockStyle"
                         BasedOn="{StaticResource BaseTextBlockStyle}"
