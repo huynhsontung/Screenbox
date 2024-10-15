@@ -828,7 +828,7 @@
     <value>在 GitHub 上下载视觉文件</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>音频显示选项</value>
+    <value>音频可视化选项</value>
   </data>
   <data name="Visuals" xml:space="preserve">
     <value>显示</value>
