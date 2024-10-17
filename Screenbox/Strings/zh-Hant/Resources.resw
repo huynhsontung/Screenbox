@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>音量</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>跳轉</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>已新增至佇列</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>取消選取</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>回到影片</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>投放</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>搜尋</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>設定</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>瀏覽媒體檔案</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>新增檔案</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>瀏覽要新增至播放佇列的檔案</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>將檔案夾新增至您的音樂庫</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>授權條款</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>協助翻譯</value>
   </data>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Download visuals on GitHub</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Audio visual options</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>瀏覽檔案</value>
   </data>
@@ -804,7 +840,7 @@
     <value>預設</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
@@ -817,5 +853,20 @@
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Date added</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>音樂</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>影片庫</value>
   </data>
 </root>

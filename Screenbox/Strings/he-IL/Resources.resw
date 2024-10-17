@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>עוצמת שמע</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>התאמת עוצמת הקול</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>חפש</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>הוסף לתור</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>בחר הכל</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>בחר את כל הפריטים שבתצוגה זו</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>בטל בחירת הכל</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>נקה את כל הבחירות</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>נקה את הבחירה</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>שחזר תצוגת וידאו</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>הזרמת תוכן</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>חפש</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>חפש סרטונים, שירים, אלבומים ועוד</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>הגדרות</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>חפש קבצים להפעלה</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>אפשרויות נוספות לפתיחת מדיה</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>הוסף קובץ/ים</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>חפש קובץ/ים להוספה לתור ההשמעה</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>אפשרויות נוספות להוספת מדיה לתור ההפעלה</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>הוסף תיקיה לספריית המוזיקה שלך</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>רישיון</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>אישורי תוכנה של צד שלישי</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>עזור לתרגם</value>
   </data>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>הורד דגמים ויזואליים מ-GitHub</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>אפשרויות אודיו ויזואליות</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>חזותיים</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>עיין בקובץ/ים</value>
   </data>
@@ -817,5 +853,20 @@
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>תאריך הוספה</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>מדיה</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>וידאו</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>קובץ</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>מוסיקה</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>סרטונים</value>
   </data>
 </root>

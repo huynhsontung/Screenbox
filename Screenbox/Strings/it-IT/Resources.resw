@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Volume</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Adjust volume</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Cerca</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Aggiungi alla coda</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Select all items in this view</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Select none</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Clear your selection</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Pulisci selezione</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Ripristina visualizzazione video</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Minimize immersive view</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Trasmetti</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Cerca</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Search videos, songs, albums, and more</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Impostazioni</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Trova file da riprodurre</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>More options for opening media</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Aggiungi file</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Sfoglia i file da aggiungere alla coda di riproduzione</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>More options for adding media to the play queue</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Aggiungi cartella alla tua libreria musicale</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Licenza</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Third-party software acknowledgments</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Aiuta a tradurre</value>
   </data>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>Scarica visuali da GitHub</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Audio visual options</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Visuals</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Sfoglia file</value>
   </data>
@@ -817,5 +853,20 @@
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Data di aggiunta</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Musica</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Video</value>
   </data>
 </root>

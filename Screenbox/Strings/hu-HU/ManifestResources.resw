@@ -124,84 +124,84 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>A modern video player with a focus on performance and ease of use on a wide range of Windows devices.</value>
+    <value>Egy modern videólejátszó ami a teljesítményre és a könnyű használhatóságra fókuszál különböző Windows alapú eszközökön.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
-    <value>3GPP Multimedia File</value>
+    <value>3GPP multimédia fájl</value>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
-    <value>3GPP2 Multimedia File</value>
+    <value>3GPP2 multimédia fájl</value>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
-    <value>AAC Audio</value>
+    <value>ACC audió</value>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>AVI Video</value>
+    <value>AVI videó</value>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>FLAC Audio</value>
+    <value>FLAC audió</value>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Flash videó</value>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Matroska Audio</value>
+    <value>Matroska audió</value>
   </data>
   <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Matroska Video</value>
+    <value>Matroska videó</value>
   </data>
   <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>MIDI Music Data</value>
+    <value>MIDI zenei adat</value>
   </data>
   <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>MP3 Audio</value>
+    <value>MP3 audió</value>
   </data>
   <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>MPEG-4 Video</value>
+    <value>MPEG-4 videó</value>
   </data>
   <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>MPEG-4 Audio</value>
+    <value>MPEG-4 audió</value>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>iTunes Video</value>
+    <value>iTunes videó</value>
   </data>
   <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>MPEG Video</value>
+    <value>MPEG videó</value>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Ogg Vorbis Audio</value>
+    <value>Ogg Vorbis audió</value>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Ogg Video</value>
+    <value>Ogg videó</value>
   </data>
   <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>QuickTime Movie</value>
+    <value>QuickTime videó</value>
   </data>
   <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>WAVE Audio</value>
+    <value>WAVE audió</value>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>WebM Audio</value>
+    <value>WebM audió</value>
   </data>
   <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>WebM Video</value>
+    <value>WebM videó</value>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>Windows Média Audió</value>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>Windows Média Videó</value>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>M3U8 Playlist</value>
+    <value>M3U8 lejátszási lista</value>
   </data>
   <data name="FileDisplayNameMPEGTS" xml:space="preserve">
     <value>MPEG Transport Stream</value>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>WavPack audió</value>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>AIFF audió</value>
   </data>
 </root>

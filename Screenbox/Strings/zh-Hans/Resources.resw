@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>音量</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>调整音量</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>定位</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>添加到队列</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>选择此视图中的所有项目</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>无选择</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>清除选择</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>清除选择</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>恢复视频视图</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>最小化沉浸视图</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>投放</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>搜索</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>搜索视频、歌曲、专辑及更多</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>设置</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>浏览文件以进行播放</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>打开媒体的更多选项</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>添加文件</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>浏览文件以添加至播放队列</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>将媒体添加到播放队列的更多选项</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>将文件夹添加到音乐资料库</value>
@@ -668,7 +695,7 @@
     <value>打开已连接的设备设置</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>设置播放选项</value>
+    <value>设置回放选项</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>设置</value>
@@ -680,7 +707,7 @@
     <value>设置适用于流的 VLC 选项。</value>
   </data>
   <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
-    <value>某些选项可能只能在全局设置。</value>
+    <value>某些选项可能只能全局设置。</value>
   </data>
   <data name="VlcCommandLineHelpLink" xml:space="preserve">
     <value>VLC 命令行帮助</value>
@@ -724,6 +751,9 @@
   </data>
   <data name="License" xml:space="preserve">
     <value>许可证</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>第三方软件确认</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>帮助我们翻译</value>
@@ -797,6 +827,12 @@
   <data name="GetLivelyVisuals" xml:space="preserve">
     <value>在 GitHub 上下载视觉文件</value>
   </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>音频可视化选项</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>显示</value>
+  </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>浏览文件</value>
   </data>
@@ -817,5 +853,20 @@
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>日期已添加</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>媒体</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>音乐</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>视频</value>
   </data>
 </root>

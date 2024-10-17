@@ -167,6 +167,9 @@
   <data name="Volume" xml:space="preserve">
     <value>Гучність</value>
   </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Регулювання гучності</value>
+  </data>
   <data name="Seek" xml:space="preserve">
     <value>Перехід</value>
   </data>
@@ -211,6 +214,18 @@
   <data name="AddToQueue" xml:space="preserve">
     <value>Додати у чергу</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Вибрати все</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Вибрати всі елементи цього перегляду</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Вибрати нема чого</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Очистити свій вибір</value>
+  </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Скасувати вибір</value>
   </data>
@@ -249,6 +264,9 @@
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Відновити перегляд</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Мінімізувати перегляд з ефектом занурення</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Транслювати</value>
@@ -303,6 +321,9 @@
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
     <value>Пошук</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Шукати відео, пісні, альбоми та багато іншого</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Налаштування</value>
@@ -430,11 +451,17 @@
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Пошук файлів для відтворення</value>
   </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Більше параметрів для відкриття медіа</value>
+  </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Додати файл(и)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Пошук файлів для додавання у чергу</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Більше параметрів для додавання медіа в чергу відтворення</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Додати папку до бібліотеки музики</value>
@@ -586,7 +613,7 @@
     <value>Показувати останнє</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Показати елементи керування на паузі</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Розташування бібліотеки відео</value>
@@ -725,6 +752,9 @@
   <data name="License" xml:space="preserve">
     <value>Ліцензія</value>
   </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Подяки за стороннє програмне забезпечення</value>
+  </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Допомогти з перекладом</value>
   </data>
@@ -780,42 +810,63 @@
     <value>Завжди відкривати медіафайли в новому вікні</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Сортувати за</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Виконавець</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Рік випуску</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Візуалізація аудіо</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Отримати Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Завантажити візуалізацію на GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Аудіо візуальні параметри</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Візуалізація</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse file(s)</value>
+    <value>Переглянути файл(и)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>За замовчуванням</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose an imagery style to be displayed on audio playback</value>
+    <value>Виберіть стиль зображення, який буде показуватися під час відтворення аудіо</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>На основі Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Імпорт візуалізацій</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Отримайте більше візуалізацій за допомогою застосунку Lively Wallpaper або завантажте їх на GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Дата додавання</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Медіа</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Відео</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Музика</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Відео</value>
   </data>
 </root>
