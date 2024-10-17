@@ -77,10 +77,12 @@ namespace Screenbox.Core.ViewModels
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
         private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
-            selectedItems?.Count == 1 && Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
+            selectedItems?.Count == 1 &&
+            Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
 
         private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
-            selectedItems?.Count == 1 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
+            selectedItems?.Count == 1 &&
+            Playlist.Items.Count > 0 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
 
         private bool IsItemNotFirst(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[0] != item;
 
