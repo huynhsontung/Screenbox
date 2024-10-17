@@ -76,7 +76,11 @@ namespace Screenbox.Core.ViewModels
 
         private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;
 
-        private static bool HasSingleSelection(IList<object>? selectedItems) => selectedItems?.Count == 1;
+        private bool IsSelectedItemNotFirst(IList<object>? selectedItems) =>
+            selectedItems?.Count == 1 && Playlist.Items.Count > 0 && Playlist.Items[0] != selectedItems[0];
+
+        private bool IsSelectedItemNotLast(IList<object>? selectedItems) =>
+            selectedItems?.Count == 1 && Playlist.Items[Playlist.Items.Count - 1] != selectedItems[0];
 
         private bool IsItemNotFirst(MediaViewModel item) => Playlist.Items.Count > 0 && Playlist.Items[0] != item;
 
@@ -136,7 +140,7 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.Insert(Playlist.CurrentIndex + 1, new MediaViewModel(item));
         }
 
-        [RelayCommand(CanExecute = nameof(HasSingleSelection))]
+        [RelayCommand(CanExecute = nameof(IsSelectedItemNotFirst))]
         private void MoveSelectedItemUp(IList<object>? selectedItems)
         {
             if (selectedItems is not { Count: 1 }) return;
@@ -158,7 +162,7 @@ namespace Screenbox.Core.ViewModels
             Playlist.Items.Insert(index - 1, item);
         }
 
-        [RelayCommand(CanExecute = nameof(HasSingleSelection))]
+        [RelayCommand(CanExecute = nameof(IsSelectedItemNotLast))]
         private void MoveSelectedItemDown(IList<object>? selectedItems)
         {
             if (selectedItems is not { Count: 1 }) return;
