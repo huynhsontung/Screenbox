@@ -47,8 +47,7 @@
         <!--  Network-Drive-is-empty content  -->
         <Grid
             x:Name="NoNetworkDrivePanel"
-            Grid.Row="1"
-            Grid.RowSpan="2"
+            Grid.Row="2"
             Margin="{x:Bind Common.FooterBottomPaddingMargin, Mode=OneWay}"
             Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"

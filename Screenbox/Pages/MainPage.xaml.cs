@@ -81,19 +81,18 @@ namespace Screenbox.Pages
             RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
         }
 
-        // Update the TitleBar based on the inactive/active state of the app
+        /// <summary>
+        /// Change the <see cref="VisualState"/> depending on whether the app is active or inactive.
+        /// </summary>
         private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
         {
-            SolidColorBrush defaultForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorPrimaryBrush"];
-            SolidColorBrush inactiveForegroundBrush = (SolidColorBrush)Application.Current.Resources["TextFillColorDisabledBrush"];
-
             if (args.WindowActivationState == CoreWindowActivationState.Deactivated)
             {
-                AppTitleText.Foreground = inactiveForegroundBrush;
+                VisualStateManager.GoToState(this, "Deactivated", true);
             }
-            else
+            else if (args.WindowActivationState == CoreWindowActivationState.PointerActivated || args.WindowActivationState == CoreWindowActivationState.CodeActivated)
             {
-                AppTitleText.Foreground = defaultForegroundBrush;
+                VisualStateManager.GoToState(this, "Activated", true);
             }
         }
 
