@@ -220,12 +220,12 @@
                                 <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
 
-                                <!--  Try to match the dimensions to those of the default button  -->
+                                <!--  Values modified to align with the dimensions and layout of the default button  -->
                                 <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
-                                <Thickness x:Key="AppBarButtonContentViewboxMargin">15,12,0,13</Thickness>
+                                <Thickness x:Key="AppBarButtonContentViewboxMargin">16,14,0,14</Thickness>
                                 <Thickness x:Key="AppBarButtonContentViewboxCollapsedMargin">0,14,0,2</Thickness>
                                 <!--<Thickness x:Key="AppBarButtonTextLabelMargin">6,0,6,8</Thickness>-->
-                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,15,13</Thickness>
+                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,16,13</Thickness>
                                 <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
                                 <!--<Thickness x:Key="AppBarButtonInnerBorderCompactMargin">4,6,4,26</Thickness>-->
                                 <!--<StaticResource x:Key="AppBarButtonDefaultWidth" ResourceKey="AppBarButtonCompactWidth" />-->

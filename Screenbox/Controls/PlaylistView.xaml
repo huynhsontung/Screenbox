@@ -93,7 +93,7 @@
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE838;" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
                     <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
             </Button>
@@ -107,7 +107,7 @@
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE74D;" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE74D;" />
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
@@ -124,7 +124,7 @@
                 KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE762;" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE762;" />
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
@@ -357,10 +357,8 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AddFilesButton.Visibility" Value="Visible" />
-                        <Setter Target="ClearButton.Padding" Value="10.5,6.5,11,7" />
                         <Setter Target="ClearButton.(ToolTipService.ToolTip)" Value="{x:Bind ClearButtonLabel.Text}" />
                         <Setter Target="ClearButtonLabel.Visibility" Value="Collapsed" />
-                        <Setter Target="MultiSelectToggle.Padding" Value="10.5,6.5,11,7" />
                         <Setter Target="MultiSelectToggle.(ToolTipService.ToolTip)" Value="{x:Bind MultiSelectToggleLabel.Text}" />
                         <Setter Target="MultiSelectToggleLabel.Visibility" Value="Collapsed" />
                         <Setter Target="PlayNextButton.LabelPosition" Value="Collapsed" />
