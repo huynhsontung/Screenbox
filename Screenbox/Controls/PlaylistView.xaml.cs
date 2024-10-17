@@ -64,8 +64,7 @@ namespace Screenbox.Controls
             SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
             if (ViewModel.EnableMultiSelect)
             {
-                VisualStateManager.GoToState(this,
-                    PlaylistListView.SelectedItems.Count == 1 ? "MultipleSingleSelected" : "Multiple", true);
+                VisualStateManager.GoToState(this, "Multiple", true);
             }
 
             ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;

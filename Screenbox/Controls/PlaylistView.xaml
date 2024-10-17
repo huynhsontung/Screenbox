@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -206,23 +205,18 @@
                         <KeyboardAccelerator Key="Delete" />
                     </AppBarButton.KeyboardAccelerators>
                 </AppBarButton>
-
-                <CommandBar.SecondaryCommands>
-                    <AppBarButton
-                        x:Name="MoveUpButton"
-                        Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
-                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                        Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                        IsEnabled="False"
-                        Label="{strings:Resources Key=MoveUp}" />
-                    <AppBarButton
-                        x:Name="MoveDownButton"
-                        Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
-                        CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                        Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                        IsEnabled="False"
-                        Label="{strings:Resources Key=MoveDown}" />
-                </CommandBar.SecondaryCommands>
+                <AppBarButton
+                    x:Name="MoveUpButton"
+                    Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Icon="{ui:FontIcon Glyph=&#xE74A;}"
+                    Label="{strings:Resources Key=MoveUp}" />
+                <AppBarButton
+                    x:Name="MoveDownButton"
+                    Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
+                    CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
+                    Icon="{ui:FontIcon Glyph=&#xE74B;}"
+                    Label="{strings:Resources Key=MoveDown}" />
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
@@ -349,16 +343,6 @@
                         <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
                         <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="MultipleSingleSelected">
-                    <VisualState.Setters>
-                        <Setter Target="SelectionCommandRow.Visibility" Value="Visible" />
-                        <Setter Target="ActionButtonRow.Visibility" Value="Collapsed" />
-                        <Setter Target="PlaylistListView.SelectionMode" Value="Multiple" />
-                        <Setter Target="MoveUpButton.IsEnabled" Value="True" />
-                        <Setter Target="MoveDownButton.IsEnabled" Value="True" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
