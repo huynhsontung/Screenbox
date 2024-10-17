@@ -145,6 +145,17 @@
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
+                    controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
+                    AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
+                    Icon="Audio"
+                    KeyTipPlacementMode="Right"
+                    Tag="music">
+                    <muxc:NavigationViewItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="U" Modifiers="Control" />
+                    </muxc:NavigationViewItem.KeyboardAccelerators>
+                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
+                </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemVideosKey}"
                     KeyTipPlacementMode="Right"
@@ -156,17 +167,6 @@
                         <KeyboardAccelerator Key="D" Modifiers="Control" />
                     </muxc:NavigationViewItem.KeyboardAccelerators>
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
-                </muxc:NavigationViewItem>
-                <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
-                    AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
-                    Icon="Audio"
-                    KeyTipPlacementMode="Right"
-                    Tag="music">
-                    <muxc:NavigationViewItem.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="U" Modifiers="Control" />
-                    </muxc:NavigationViewItem.KeyboardAccelerators>
-                    <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
