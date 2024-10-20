@@ -168,7 +168,7 @@
     <value>Volume</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Ajuster le volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Chercher</value>
@@ -215,16 +215,16 @@
     <value>Ajouter à la file d'attente</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Tout sélectionner</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Sélectionner tous les éléments dans cette vue</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Ne rien sélectionner</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Effacer la sélection</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Effacer la sélection</value>
@@ -266,7 +266,7 @@
     <value>Restaurer la vue vidéo</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Réduire la vue immersive</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Diffuser</value>
@@ -323,7 +323,7 @@
     <value>Rechercher</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Rechercher des vidéos, des chansons, des albums et plus encore</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -753,7 +753,7 @@
     <value>Licence</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Reconnaissances de logiciels tiers</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Contribuer à la traduction</value>
@@ -828,10 +828,10 @@
     <value>Télécharger les visuels sur GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Options visuelles audio</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visuels</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Parcourir</value>
@@ -855,13 +855,13 @@
     <value>Date d'ajout</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Média</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Vidéo</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Fichier</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>Musique</value>
