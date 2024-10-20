@@ -168,7 +168,7 @@
     <value>හඬපරිමාව</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>හඬ පරිමාව සකස් කරන්න</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>සොයන්න</value>
@@ -215,16 +215,16 @@
     <value>පෝලිමට ඇතුළත් කරන්න</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>සියල්ල තෝරන්න</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>මෙම දර්ශනයේ ඇති සියලුම අයිතම තෝරන්න</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>කිසිවක් තෝරා නොගන්න</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>ඔබේ තේරීම ඉවත් කරන්න</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>තේරීම් ඉවත් කරන්න</value>
@@ -266,7 +266,7 @@
     <value>වීඩියෝ දර්ශනය ප්‍රතිසාධනය කරන්න</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Immersive දර්ශනය අවම කරන්න</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>විකාශනය කරන්න</value>
@@ -323,7 +323,7 @@
     <value>සොයන්න</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>වීඩියෝ, ගීත, ඇල්බම සහ වෙනස් ඒවා සඳහා සොයන්න</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>සැකසීම්</value>
@@ -753,7 +753,7 @@
     <value>බලපත්රය</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>තෙවන පාර්ශ්වයේ මෘදුකාංග පිළිගැනීම්</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>පරිවර්තනයට උදව් කරන්න</value>
@@ -828,10 +828,10 @@
     <value>GitHub හි දර්ශන බාගන්න</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>ශ්‍රව්‍ය දෘශ්‍ය‍ය දෘෂ්‍ය විකල්ප</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>දර්ශන</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>ගොනු(ය) පිරික්සන්න</value>
@@ -855,13 +855,13 @@
     <value>එකතු කළ දිනය</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>මාධ්ය</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>වීඩියෝ</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>ගොනුව</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>සංගීතය</value>
