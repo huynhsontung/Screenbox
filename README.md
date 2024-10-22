@@ -8,7 +8,7 @@
   The modern media player for Windows
 </p>
 <p align="center">
-  <a href='//www.microsoft.com/store/apps/9NTSNMSVCB5L?cid=storebadge&ocid=badge'>
+  <a href='https://apps.microsoft.com/detail/9NTSNMSVCB5L?cid=storebadge&mode=mini'>
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://get.microsoft.com/images/en-us%20light.svg">
       <source media="(prefers-color-scheme: light)" srcset="https://get.microsoft.com/images/en-us%20dark.svg">
