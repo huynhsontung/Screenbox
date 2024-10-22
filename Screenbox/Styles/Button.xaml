@@ -55,6 +55,9 @@
     <!--  Uniform padding to ensure the text baseline aligns with TextBlocks (Caption) that have centered vertical alignment  -->
     <Thickness x:Key="HyperlinkButtonUniformPadding">11,6.75,11,6.75</Thickness>
 
+    <!--  Margin to vertically center an icon within a button with default padding, ensures the height remains consistent even when it contains only an icon  -->
+    <Thickness x:Key="IconButtonStandardIconMargin">0,1.95,0,0.9</Thickness>
+
     <Thickness x:Key="SplitButtonPadding">12,6,12,7.05</Thickness>
 
     <!--  Subtle Button according to the Windows UI 3 design guidelines  -->
