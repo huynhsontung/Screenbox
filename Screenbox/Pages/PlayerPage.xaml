@@ -426,6 +426,7 @@
                 BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
+                FlowDirection="LeftToRight"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32">
                 <Grid.Background>
