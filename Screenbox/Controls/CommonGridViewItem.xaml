@@ -19,23 +19,24 @@
         <Grid
             Grid.Row="0"
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
-            Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
             BorderThickness="1"
-            CornerRadius="{x:Bind CornerRadius}">
-            <IconSourceElement
-                x:Name="PlaceholderIcon"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}"
-                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, Mode=OneWay}" />
-            <Border CornerRadius="{x:Bind CornerRadius}">
-                <Image
+            CornerRadius="{x:Bind CornerRadius}"
+            FlowDirection="LeftToRight">
+            <Grid.Background>
+                <ImageBrush
                     x:Name="ThumbnailImage"
-                    HorizontalAlignment="Center"
-                    Source="{x:Bind ThumbnailSource, Mode=OneWay}"
+                    ImageSource="{x:Bind ThumbnailSource, Mode=OneWay}"
                     Stretch="UniformToFill" />
+            </Grid.Background>
+            <Border
+                Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
+                CornerRadius="{x:Bind CornerRadius}"
+                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, Mode=OneWay}">
+                <IconSourceElement
+                    x:Name="PlaceholderIcon"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    IconSource="{x:Bind PlaceholderIconSource, Mode=OneWay}" />
             </Border>
         </Grid>
 
