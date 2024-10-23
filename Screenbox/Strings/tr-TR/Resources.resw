@@ -168,7 +168,7 @@
     <value>Ses</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Ses seviyesini ayarla</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Ara</value>
@@ -215,16 +215,16 @@
     <value>Sıraya ekle</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Hepsini seç</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Bu görünümdeki tüm öğeleri seç</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Hiçbirini seçme</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Seçimi Temizle</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Seçimi Temizle</value>
@@ -266,7 +266,7 @@
     <value>Video görünümünü geri yükle</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Gerçekçi görünümü en aza indir</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Cihazda yayınla</value>
