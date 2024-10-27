@@ -34,7 +34,9 @@
 
         <Grid
             x:Name="BackgroundHost"
+            Grid.Row="0"
             Margin="0,-136,0,0"
+            FlowDirection="LeftToRight"
             SizeChanged="BackgroundHost_OnSizeChanged" />
 
         <Grid

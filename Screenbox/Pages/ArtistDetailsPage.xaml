@@ -125,6 +125,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="0,-136,0,0"
+            FlowDirection="LeftToRight"
             SizeChanged="BackgroundHost_OnSizeChanged" />-->
 
         <Grid
