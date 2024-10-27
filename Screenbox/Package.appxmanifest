@@ -121,6 +121,7 @@
             <uap:Logo>Assets\Icons\FileAssociation.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="audio/mp4">.m4a</uap:FileType>
+              <uap:FileType ContentType="audio/mp4">.m4b</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
         </uap:Extension>
