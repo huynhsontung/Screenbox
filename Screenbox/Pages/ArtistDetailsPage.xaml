@@ -43,6 +43,7 @@
                             BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource ControlCornerRadius}"
+                            FlowDirection="LeftToRight"
                             Shadow="{StaticResource SharedShadow}"
                             Translation="0,0,8">
                             <Grid.Background>
@@ -124,6 +125,7 @@
             Grid.Row="0"
             Grid.RowSpan="2"
             Margin="0,-136,0,0"
+            FlowDirection="LeftToRight"
             SizeChanged="BackgroundHost_OnSizeChanged" />-->
 
         <Grid

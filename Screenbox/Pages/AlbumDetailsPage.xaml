@@ -34,7 +34,9 @@
 
         <Grid
             x:Name="BackgroundHost"
+            Grid.Row="0"
             Margin="0,-136,0,0"
+            FlowDirection="LeftToRight"
             SizeChanged="BackgroundHost_OnSizeChanged" />
 
         <Grid
@@ -69,6 +71,7 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
+                    FlowDirection="LeftToRight"
                     Shadow="{StaticResource SharedShadow}"
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,16">

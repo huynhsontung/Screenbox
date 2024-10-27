@@ -63,6 +63,7 @@
                         Width="112"
                         Height="96"
                         CornerRadius="{StaticResource GridViewItemCornerRadius}"
+                        FlowDirection="LeftToRight"
                         ToolTipService.ToolTip="{x:Bind Model.Title}">
                         <Grid.Background>
                             <ImageBrush ImageSource="{Binding PreviewPath}" Stretch="UniformToFill" />
