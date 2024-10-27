@@ -215,16 +215,16 @@
     <value>Thêm vào hàng đợi</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Chọn tất cả</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Chọn tất cả các mục trong chế độ xem này</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Không chọn</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Xóa lựa chọn của bạn</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Bỏ chọn</value>
@@ -266,7 +266,7 @@
     <value>Khôi phục chế độ xem video</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Giảm thiểu chế độ xem phong phú</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Truyền</value>
@@ -323,7 +323,7 @@
     <value>Tìm kiếm</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Tìm kiếm video, bài hát, album và hơn thế nữa</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Cài đặt</value>
@@ -452,7 +452,7 @@
     <value>Duyệt tìm tập tin để phát</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Nhiều tùy chọn hơn để mở phương tiện</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Thêm tệp</value>
@@ -461,7 +461,7 @@
     <value>Duyệt tìm tệp để thêm vào hàng đợi phát</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Nhiều tùy chọn hơn để thêm phương tiện vào hàng đợi phát</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Thêm thư mục vào thư viện nhạc của bạn</value>
@@ -613,7 +613,7 @@
     <value>Hiển thị gần đây</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Hiển thị điều khiển khi tạm dừng</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Vị trí thư viện video</value>
@@ -753,7 +753,7 @@
     <value>Giấy phép</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Xác nhận phần mềm của bên thứ ba</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Hỗ trợ phiên dịch</value>
@@ -792,13 +792,13 @@
     <value>Quản lý cài đặt lập chỉ mục hệ thống</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
-    <value>Set arguments</value>
+    <value>Đặt đối số</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
     <value>Search removable storage</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
-    <value>Include media from storage devices like USB sticks in your libraries</value>
+    <value>Đưa phương tiện từ các thiết bị lưu trữ như thẻ nhớ USB vào thư viện của bạn</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
     <value>Active arguments</value>
@@ -810,13 +810,13 @@
     <value>Always open media files in a new instance</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Xếp theo</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Nghệ sĩ</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Năm phát hành</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
     <value>Audio visual</value>
@@ -834,10 +834,10 @@
     <value>Visuals</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse files</value>
+    <value>Duyệt tập tin</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Mặc định</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
@@ -849,10 +849,10 @@
     <value>Import visuals</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Nhận thêm ảnh qua ứng dụng Lively Wallpaper hoặc tải xuống từ GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Ngày thêm</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>
@@ -861,7 +861,7 @@
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Tệp</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>Nhạc</value>
