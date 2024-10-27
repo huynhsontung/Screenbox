@@ -840,7 +840,7 @@
     <value>Mặc định</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>Chọn phông nền để mang đến cho âm thanh của bạn sự tinh tế về mặt hình ảnh trong chế độ xem sống động</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Powered by Lively Wallpaper</value>
@@ -855,7 +855,7 @@
     <value>Ngày thêm</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Phương tiện</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
