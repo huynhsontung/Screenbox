@@ -337,11 +337,11 @@ namespace Screenbox.Core.ViewModels
         private static async Task<IRandomAccessStream?> GetCoverFromTagAsync(StorageFile file)
         {
             if (!file.IsAvailable) return null;
-            using var stream = await file.OpenStreamForReadAsync();
-            var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
-            var fileAbstract = new StreamAbstraction(name, stream);
             try
             {
+                using var stream = await file.OpenStreamForReadAsync(); // Throwable: FileNotFoundException
+                var name = string.IsNullOrEmpty(file.Path) ? file.Name : file.Path;
+                var fileAbstract = new StreamAbstraction(name, stream);
                 using var tagFile = TagLib.File.Create(fileAbstract, ReadStyle.PictureLazy);
                 if (tagFile.Tag.Pictures.Length == 0) return null;
                 var cover =
@@ -359,12 +359,11 @@ namespace Screenbox.Core.ViewModels
                 inMemoryStream.Seek(0);
                 return inMemoryStream;
             }
-            catch (UnsupportedFormatException)
+            catch (Exception)
             {
-                // pass
-            }
-            catch (CorruptFileException)
-            {
+                // FileNotFoundException
+                // UnsupportedFormatException
+                // CorruptFileException
                 // pass
             }
 
