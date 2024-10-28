@@ -93,7 +93,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xE8F4;" />
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
@@ -152,7 +152,7 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xE8F4;" />
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"

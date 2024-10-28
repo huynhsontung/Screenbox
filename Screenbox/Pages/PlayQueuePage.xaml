@@ -72,7 +72,7 @@
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE838;" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
                     <TextBlock
                         x:Name="HeaderAddButtonText"
                         Margin="8,0,0,0"

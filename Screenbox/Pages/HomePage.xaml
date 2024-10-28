@@ -121,7 +121,7 @@
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Glyph="&#xE838;" />
+                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
                     <TextBlock
                         x:Name="HeaderOpenButtonText"
                         Margin="8,0,0,0"
@@ -188,7 +188,7 @@
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Flyout="{StaticResource OpenFlyout}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xE838;" />
+                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>
