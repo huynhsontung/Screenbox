@@ -168,7 +168,7 @@
     <value>Âm lượng</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Điều chỉnh âm lượng</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Tua</value>
