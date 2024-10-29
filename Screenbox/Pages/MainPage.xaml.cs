@@ -90,7 +90,7 @@ namespace Screenbox.Pages
             {
                 VisualStateManager.GoToState(this, "Deactivated", true);
             }
-            else if (args.WindowActivationState == CoreWindowActivationState.PointerActivated || args.WindowActivationState == CoreWindowActivationState.CodeActivated)
+            else
             {
                 VisualStateManager.GoToState(this, "Activated", true);
             }

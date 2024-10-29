@@ -91,11 +91,6 @@
             AutomationProperties.Name="{x:Bind SortByText.Text}"
             Background="Transparent"
             BorderBrush="Transparent">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
-                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
-                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
-            </StackPanel>
             <muxc:DropDownButton.Flyout>
                 <MenuFlyout x:Name="SortByFlyout" Placement="BottomEdgeAlignedRight">
                     <muxc:RadioMenuFlyoutItem
@@ -131,6 +126,11 @@
                         Text="{strings:Resources Key=DateAdded}" />
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
+            <StackPanel Orientation="Horizontal">
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
+                <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
+                <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
+            </StackPanel>
         </muxc:DropDownButton>
 
         <muxc:ProgressBar
