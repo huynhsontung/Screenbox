@@ -218,13 +218,13 @@
     <value>Выбрать все</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Выбрать все элементы в этом режиме</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Снять выделение</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Очистить выбор</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Отменить выбор</value>
@@ -266,7 +266,7 @@
     <value>Восстановить просмотр</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Свернуть полноэкранный режим</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Трансляция</value>
@@ -452,7 +452,7 @@
     <value>Просмотр файлов для воспроизведения</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Больше опций для открытия медиа</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Добавить файл(ы)</value>
@@ -461,7 +461,7 @@
     <value>Просмотр файла(ов) для добавления в очередь воспроизведения</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Больше опций для добавления медиа в очередь</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Добавить папку в вашу музыкальную библиотеку</value>
@@ -753,7 +753,7 @@
     <value>Лицензия</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Благодарности стороннему программному обеспечению</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Помочь с переводом</value>
@@ -804,10 +804,10 @@
     <value>Включенные аргументы</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Разрешить несколько окон</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Всегда открывать медиа файлы в новом окне</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Упорядочить по</value>
@@ -828,7 +828,7 @@
     <value>Скачать визуальные эффекты через GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Опции визуальных эффектов аудио</value>
   </data>
   <data name="Visuals" xml:space="preserve">
     <value>Визуальные эффекты</value>
@@ -840,16 +840,16 @@
     <value>По умолчанию</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>Выберите фон для воспроизведения звука в полноэкранном режиме</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Работает на Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
     <value>Импортировать визуалы</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Получите больше визуальных эффектов через приложение Lively Wallpaper или скачайте из GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>Дата добавления</value>
