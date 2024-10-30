@@ -168,7 +168,7 @@
     <value>Громкость</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Изменить громкость</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Перемотать</value>
@@ -215,16 +215,16 @@
     <value>Добавить в очередь</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Выбрать все</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Выбрать все элементы в этом режиме</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Снять выделение</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Очистить выбор</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Отменить выбор</value>
@@ -266,7 +266,7 @@
     <value>Восстановить просмотр</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Свернуть полноэкранный режим</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Трансляция</value>
@@ -323,7 +323,7 @@
     <value>Поиск</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Искать видео, песни, альбомы и другое</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Настройки</value>
@@ -452,7 +452,7 @@
     <value>Просмотр файлов для воспроизведения</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Больше опций для открытия медиа</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Добавить файл(ы)</value>
@@ -461,7 +461,7 @@
     <value>Просмотр файла(ов) для добавления в очередь воспроизведения</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Больше опций для добавления медиа в очередь</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Добавить папку в вашу музыкальную библиотеку</value>
@@ -613,10 +613,10 @@
     <value>Показывать недавнее</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Показывать кнопки управления на паузе</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
-    <value>Расположение музыкальной библиотеки</value>
+    <value>Расположение видео библиотеки</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
     <value>Субтитры</value>
@@ -753,7 +753,7 @@
     <value>Лицензия</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Благодарности стороннему программному обеспечению</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Помочь с переводом</value>
@@ -804,10 +804,10 @@
     <value>Включенные аргументы</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Разрешить несколько окон</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Всегда открывать медиа файлы в новом окне</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Упорядочить по</value>
@@ -822,16 +822,16 @@
     <value>Аудио визуал</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Получить Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Скачать визуальные эффекты через GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Опции визуальных эффектов аудио</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Визуальные эффекты</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Обзор файла(ов)</value>
@@ -840,28 +840,28 @@
     <value>По умолчанию</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>Выберите фон для воспроизведения звука в полноэкранном режиме</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Работает на Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
     <value>Импортировать визуалы</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Получите больше визуальных эффектов через приложение Lively Wallpaper или скачайте из GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Дата добавления</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Медиа</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Видео</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Файл</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>Музыка</value>

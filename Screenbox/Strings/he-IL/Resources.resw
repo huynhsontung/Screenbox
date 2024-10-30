@@ -266,7 +266,7 @@
     <value>שחזר תצוגת וידאו</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>צמצם תצוגה מורחבת</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>הזרמת תוכן</value>
