@@ -18,10 +18,10 @@
                     <!--  Brushes  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight3" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight2" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark2" />
+                            <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark1" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemColorHighlightColor" />
