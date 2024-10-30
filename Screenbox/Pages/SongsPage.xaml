@@ -26,30 +26,24 @@
                 <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
-            <XamlUICommand
-                x:Key="PlayCommand"
-                Command="{x:Bind ViewModel.PlayCommand}"
-                IconSource="{ui:SymbolIconSource Symbol=Play}"
-                Label="{strings:Resources Key=Play}" />
-
-            <XamlUICommand
-                x:Key="PlayNextCommand"
-                Command="{x:Bind ViewModel.PlayNextCommand}"
-                IconSource="{ui:FontIconSource FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                               Glyph=&#xF5EB;}"
-                Label="{strings:Resources Key=PlayNext}" />
-
-            <XamlUICommand
-                x:Key="PropertiesCommand"
-                Command="{StaticResource ShowPropertiesCommand}"
-                IconSource="{ui:FontIconSource Glyph=&#xE946;}"
-                Label="{strings:Resources Key=Properties}" />
-
             <MenuFlyout x:Name="ItemFlyout">
-                <MenuFlyoutItem Command="{StaticResource PlayCommand}" CommandParameter="{Binding}" />
-                <MenuFlyoutItem Command="{StaticResource PlayNextCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Play}"
+                    Text="{strings:Resources Key=Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF5EB;}"
+                    Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
-                <MenuFlyoutItem Command="{StaticResource PropertiesCommand}" CommandParameter="{Binding}" />
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowPropertiesCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{strings:Resources Key=Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
@@ -94,6 +88,7 @@
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
             AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
+            AutomationProperties.Name="{x:Bind SortByText.Text}"
             Background="Transparent"
             BorderBrush="Transparent">
             <muxc:DropDownButton.Flyout>
@@ -132,7 +127,7 @@
                 </MenuFlyout>
             </muxc:DropDownButton.Flyout>
             <StackPanel Orientation="Horizontal">
-                <FontIcon Margin="0,0,8,0" Glyph="&#xE8cb;" />
+                <FontIcon Margin="0,0,8,0" Glyph="&#xE8CB;" />
                 <TextBlock x:Name="SortByText"><Run Text="{strings:Resources Key=SortBy}" /><Run Text=":&#160;" /></TextBlock>
                 <TextBlock Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" Text="{x:Bind GetSortByText(ViewModel.SortBy), Mode=OneWay}" />
             </StackPanel>
@@ -158,6 +153,7 @@
                     ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     Loaded="SongListView_OnLoaded"
+                    ScrollViewer.IsVerticalScrollChainingEnabled="False"
                     SelectionMode="None">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -225,11 +221,11 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="SortByText.Visibility" Value="Collapsed" />
+                        <Setter Target="SongListView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

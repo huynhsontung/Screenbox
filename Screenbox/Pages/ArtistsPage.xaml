@@ -81,6 +81,7 @@
                     ItemTemplate="{StaticResource ArtistGridViewItemTemplate}"
                     ItemsSource="{x:Bind ArtistsSource.View}"
                     Loaded="ArtistGridView_OnLoaded"
+                    ScrollViewer.IsHorizontalScrollChainingEnabled="False"
                     SelectionMode="None">
                     <GridView.GroupStyle>
                         <GroupStyle
@@ -134,10 +135,10 @@
                         </triggers:IsEqualStateTrigger>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <Setter Target="ShufflePlayButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                        <!--<Setter Target="SortByButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />-->
                         <Setter Target="ArtistGridView.Padding" Value="{StaticResource GridViewContentPageMinimalPadding}" />
                         <Setter Target="GroupOverview.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="ShufflePlayButton.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
-                        <Setter Target="SortByButton.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

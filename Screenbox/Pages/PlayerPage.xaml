@@ -35,39 +35,52 @@
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
-                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="HeaderBackgroundLinearGradient" />
-                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="ControlsBackgroundLinearGradient" />
+
+                    <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="0" Color="{StaticResource SystemAltMediumColor}" />
+                            <GradientStop Offset="0.5" Color="{StaticResource SystemAltLowColor}" />
+                            <GradientStop Offset="1" Color="#00000000" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="PlayerControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="0" Color="#00000000" />
+                            <GradientStop Offset="1" Color="{StaticResource SystemAltMediumColor}" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
                     <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
-                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="HeaderBackgroundLinearGradient" />
-                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="ControlsBackgroundLinearGradient" />
+
+                    <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="0" Color="{StaticResource SystemAltMediumColor}" />
+                            <GradientStop Offset="0.5" Color="{StaticResource SystemAltLowColor}" />
+                            <GradientStop Offset="1" Color="#00FFFFFF" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="PlayerControlsBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                        <LinearGradientBrush.GradientStops>
+                            <GradientStop Offset="0" Color="#00FFFFFF" />
+                            <GradientStop Offset="1" Color="{StaticResource SystemAltMediumColor}" />
+                        </LinearGradientBrush.GradientStops>
+                    </LinearGradientBrush>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <StaticResource x:Key="BackgroundAcrylicTintColor" ResourceKey="SystemColorWindowColor" />
                     <StaticResource x:Key="BackgroundAcrylicTintFallbackColor" ResourceKey="SystemColorWindowColor" />
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">1</x:Double>
-                    <StaticResource x:Key="HeaderBackgroundGradientBrush" ResourceKey="SystemColorWindowColorBrush" />
-                    <StaticResource x:Key="ControlsBackgroundGradientBrush" ResourceKey="SystemColorWindowColorBrush" />
+
                     <StaticResource x:Key="ProgressBarBackground" ResourceKey="SystemColorButtonTextColorBrush" />
                     <Thickness x:Key="ProgressBarBorderThemeThickness">0</Thickness>
+
+                    <StaticResource x:Key="HeaderBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
+                    <StaticResource x:Key="PlayerControlsBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-
-            <LinearGradientBrush x:Key="HeaderBackgroundLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStop Offset="0" Color="{StaticResource SystemChromeBlackMediumLowColor}" />
-                    <GradientStop Offset="1" Color="#00000000" />
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
-            <LinearGradientBrush x:Name="ControlsBackgroundLinearGradient" StartPoint="0.5,0" EndPoint="0.5,1">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStop Offset="0" Color="#00000000" />
-                    <GradientStop Offset="1" Color="{StaticResource SystemChromeBlackMediumLowColor}" />
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
 
             <ctConverters:BoolToObjectConverter
                 x:Key="FilledPlayPauseGlyphConverter"
@@ -161,7 +174,7 @@
             Grid.Column="0"
             Height="72"
             MinHeight="32"
-            Background="{ThemeResource HeaderBackgroundGradientBrush}"
+            Background="{ThemeResource HeaderBackgroundBrush}"
             Canvas.ZIndex="3" />
 
         <Grid
@@ -580,7 +593,7 @@
             x:Name="PlayerControlsBackground"
             Grid.Row="2"
             Grid.Column="0"
-            Background="{ThemeResource ControlsBackgroundGradientBrush}"
+            Background="{ThemeResource PlayerControlsBackgroundBrush}"
             Tapped="PlayerControlsBackground_OnTapped" />
 
         <controls:PlayerControls
