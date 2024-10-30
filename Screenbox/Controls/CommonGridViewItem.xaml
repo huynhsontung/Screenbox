@@ -19,7 +19,7 @@
         <Grid
             Grid.Row="0"
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
-            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
             CornerRadius="{x:Bind CornerRadius}"
             FlowDirection="LeftToRight">

@@ -68,7 +68,7 @@
                     Width="192"
                     Height="192"
                     Margin="0,0,20,0"
-                    BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                    BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
                     FlowDirection="LeftToRight"

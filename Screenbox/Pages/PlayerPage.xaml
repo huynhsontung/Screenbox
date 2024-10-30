@@ -436,7 +436,7 @@
             Visibility="Collapsed">
             <Grid
                 x:Name="AlbumArt"
-                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 FlowDirection="LeftToRight"
