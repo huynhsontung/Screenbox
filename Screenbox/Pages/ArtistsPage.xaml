@@ -24,7 +24,7 @@
                 Source="{x:Bind ViewModel.GroupedArtists}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock FontWeight="SemiBold" Text="{Binding Key}" />
             </DataTemplate>
 
             <MenuFlyout x:Key="ArtistFlyout">
@@ -85,7 +85,7 @@
                     SelectionMode="None">
                     <GridView.GroupStyle>
                         <GroupStyle
-                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderContainerStyle="{StaticResource MediaGridViewHeaderItemStyle}"
                             HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                             HidesIfEmpty="True" />
                     </GridView.GroupStyle>

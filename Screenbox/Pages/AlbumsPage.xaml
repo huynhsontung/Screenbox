@@ -26,7 +26,10 @@
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="{Binding Key}"
+                    TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
@@ -138,7 +141,7 @@
                     SelectionMode="None">
                     <GridView.GroupStyle>
                         <GroupStyle
-                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderContainerStyle="{StaticResource MediaGridViewHeaderItemStyle}"
                             HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                             HidesIfEmpty="True" />
                     </GridView.GroupStyle>
