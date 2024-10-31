@@ -14,8 +14,8 @@
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:viewModels="using:Screenbox.Core.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewModels:MediaViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="44"
+    d:DesignWidth="736"
     DataContextChanged="OnDataContextChanged"
     mc:Ignorable="d">
 
@@ -25,7 +25,7 @@
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
 
-    <Grid XYFocusKeyboardNavigation="Disabled">
+    <Grid XYFocusKeyboardNavigation="Enabled">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="IndicatorColumn" Width="32" />
             <ColumnDefinition Width="32" />
@@ -44,8 +44,6 @@
             Grid.Column="0"
             Width="16"
             Height="16"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
             AutoPlay="False"
             IsHitTestVisible="False"
             Source="{StaticResource AnimatedPlayingVisualSource}"
@@ -67,64 +65,23 @@
         <FontIcon
             x:Name="ItemMediaTypeIcon"
             Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
             Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
-        <Button
+        <HyperlinkButton
             x:Name="PlayButton"
             Grid.Column="1"
             Width="32"
             Height="32"
             Padding="0"
-            VerticalAlignment="Center"
-            BackgroundSizing="OuterBorderEdge"
+            AutomationProperties.AutomationControlType="Button"
             Command="{x:Bind PlayCommand, Mode=OneWay}"
             CommandParameter="{Binding}"
+            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
             ToolTipService.ToolTip="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}"
             Visibility="Collapsed">
             <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
-            <Button.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.ThemeDictionaries>
-                        <ResourceDictionary x:Key="Default">
-                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
-                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
-                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                            <StaticResource x:Key="ButtonForeground" ResourceKey="HyperlinkButtonForeground" />
-                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
-                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
-                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
-                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
-                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="Light">
-                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
-                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
-                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                            <StaticResource x:Key="ButtonForeground" ResourceKey="HyperlinkButtonForeground" />
-                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
-                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
-                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
-                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
-                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
-                        </ResourceDictionary>
-                        <ResourceDictionary x:Key="HighContrast">
-                            <StaticResource x:Key="ButtonBackground" ResourceKey="HyperlinkButtonBackground" />
-                            <StaticResource x:Key="ButtonBackgroundPointerOver" ResourceKey="HyperlinkButtonBackgroundPointerOver" />
-                            <StaticResource x:Key="ButtonBackgroundPressed" ResourceKey="HyperlinkButtonBackgroundPressed" />
-                            <StaticResource x:Key="ButtonForeground" ResourceKey="SystemColorButtonTextColorBrush" />
-                            <StaticResource x:Key="ButtonForegroundPointerOver" ResourceKey="HyperlinkButtonForegroundPointerOver" />
-                            <StaticResource x:Key="ButtonForegroundPressed" ResourceKey="HyperlinkButtonForegroundPressed" />
-                            <StaticResource x:Key="ButtonBorderBrush" ResourceKey="HyperlinkButtonBorderBrush" />
-                            <StaticResource x:Key="ButtonBorderBrushPointerOver" ResourceKey="HyperlinkButtonBorderBrushPointerOver" />
-                            <StaticResource x:Key="ButtonBorderBrushPressed" ResourceKey="HyperlinkButtonBorderBrushPressed" />
-                        </ResourceDictionary>
-                    </ResourceDictionary.ThemeDictionaries>
-                </ResourceDictionary>
-            </Button.Resources>
-        </Button>
+        </HyperlinkButton>
 
         <TextBlock
             x:Name="TitleText"
@@ -142,9 +99,8 @@
         <HyperlinkButton
             x:Name="ArtistButton"
             Grid.Column="3"
-            Margin="4,0"
+            Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
-            VerticalAlignment="Center"
             Command="{x:Bind Common.OpenArtistCommand}"
             CommandParameter="{Binding MainArtist, FallbackValue={x:Null}}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
@@ -163,9 +119,8 @@
         <HyperlinkButton
             x:Name="AlbumButton"
             Grid.Column="4"
-            Margin="4,0"
+            Margin="2,0"
             Padding="{StaticResource HyperlinkButtonUniformPadding}"
-            VerticalAlignment="Center"
             Command="{x:Bind Common.OpenAlbumCommand}"
             CommandParameter="{Binding Album}"
             Foreground="{ThemeResource TextFillColorPrimaryBrush}"
@@ -184,7 +139,7 @@
         <TextBlock
             x:Name="GenreText"
             Grid.Column="5"
-            Margin="4,0"
+            Margin="2,0"
             VerticalAlignment="Center"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
             Style="{StaticResource CaptionTextBlockStyle}"
@@ -199,7 +154,7 @@
         <TextBlock
             x:Name="DurationText"
             Grid.Column="6"
-            Margin="0,0,16,0"
+            Margin="0,0,12,0"
             HorizontalAlignment="Right"
             VerticalAlignment="Center"
             Opacity="{ThemeResource TextFillColorTertiaryOpacity}"
@@ -271,7 +226,7 @@
                 </VisualState>
                 <VisualState x:Name="MultiSelectEnabled">
                     <VisualState.Setters>
-                        <Setter Target="RootGridTranslateTransform.X" Value="-32" />
+                        <Setter Target="RootGridTranslateTransform.X" Value="-28" />
                         <Setter Target="PlayingIndicator.Opacity" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
