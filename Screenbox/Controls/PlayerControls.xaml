@@ -48,7 +48,7 @@
                 <controls:VolumeControl
                     Width="212"
                     IsAccessKeyScope="True"
-                    ToggleButtonStyle="{StaticResource SmallPlayerToggleButtonStyle}" />
+                    VolumeToggleButtonStyle="{StaticResource SmallPlayerToggleButtonStyle}" />
             </Flyout>
 
             <Flyout x:Key="CustomPlaybackSpeedFlyout" ShouldConstrainToRootBounds="True">
@@ -93,8 +93,8 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
-                        SmallChange="50"
-                        StepFrequency="100"
+                        SmallChange="25"
+                        StepFrequency="50"
                         Value="{Binding SubtitleTimingOffset, Mode=TwoWay}" />
                     <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=SubtitleTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                 </StackPanel>
@@ -112,8 +112,8 @@
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
-                        SmallChange="50"
-                        StepFrequency="100"
+                        SmallChange="25"
+                        StepFrequency="50"
                         Value="{Binding AudioTimingOffset, Mode=TwoWay}" />
                     <TextBlock HorizontalAlignment="Center"><Run Text="{Binding ElementName=AudioTimingOffsetSlider, Path=Value, FallbackValue=0}" /> <Run Text="ms" /></TextBlock>
                 </StackPanel>
@@ -455,7 +455,7 @@
                 Width="140"
                 Margin="0,0,8,0"
                 ShowValueText="False"
-                ToggleButtonStyle="{StaticResource PlayerToggleButtonStyle}" />
+                VolumeToggleButtonStyle="{StaticResource PlayerToggleButtonStyle}" />
             <!--  Shuffle  -->
             <ToggleButton
                 x:Name="ShuffleButton"
@@ -651,7 +651,7 @@
                         <Setter Target="PreviousButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="NextButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
                         <Setter Target="VolumeButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="VolumeControl.ToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
+                        <Setter Target="VolumeControl.VolumeToggleButtonStyle" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="ShuffleButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="RepeatButton.Style" Value="{StaticResource SmallPlayerToggleButtonStyle}" />
                         <Setter Target="AudioAndCaptionButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
