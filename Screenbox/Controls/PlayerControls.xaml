@@ -20,7 +20,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/CustomFlyoutPresenter.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/Flyout.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!--  Preset values for playback speed options  -->
@@ -512,7 +512,7 @@
                 <Button.Flyout>
                     <Flyout
                         x:Name="AudioSubtitlePickerFlyout"
-                        FlyoutPresenterStyle="{StaticResource TightFlyoutPresenterStyle}"
+                        FlyoutPresenterStyle="{StaticResource FlyoutPresenterMenuFlyoutStyle}"
                         Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnAudioCaptionFlyoutOpening}"
                         ShouldConstrainToRootBounds="False">
                         <controls:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" IsAccessKeyScope="True" />

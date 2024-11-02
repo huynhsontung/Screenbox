@@ -8,11 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:system="using:System"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    d:DesignHeight="364"
+    d:DesignWidth="224"
     mc:Ignorable="d">
 
-    <StackPanel Width="220" Orientation="Vertical">
+    <StackPanel Width="224" Orientation="Vertical">
+        <!--  Audio tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.AudioTracks}"
@@ -21,7 +22,7 @@
             SelectionMode="Single"
             SingleSelectionFollowsFocus="False">
             <ListView.Header>
-                <Grid MinHeight="40" Padding="4,0">
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -37,6 +38,7 @@
                     <HyperlinkButton
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
+                        AutomationProperties.AutomationControlType="Button"
                         Command="{x:Bind ShowAudioOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
@@ -45,8 +47,15 @@
                     </HyperlinkButton>
                 </Grid>
             </ListView.Header>
+            <d:ListView.Items>
+                <ListViewItem Content="Track 1 (Surround Sound 5.1)" IsSelected="True" />
+                <ListViewItem Content="Commentary Track (Stereo 2.0)" />
+            </d:ListView.Items>
         </ListView>
-        <MenuFlyoutSeparator Margin="-4,4,-4,2" IsTabStop="False" />
+
+        <MenuFlyoutSeparator IsTabStop="False" />
+
+        <!--  Subtitle tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
             ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
@@ -59,7 +68,7 @@
                     <TextBlock
                         x:Name="TrackNameText"
                         Text="{x:Bind}"
-                        TextTrimming="Clip">
+                        TextTrimming="{StaticResource MenuFlyoutItemTextTrimming}">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
                         </interactivity:Interaction.Behaviors>
@@ -67,11 +76,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.Header>
-                <Grid MinHeight="40" Padding="4,0">
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
                     <TextBlock
                         Padding="12,0,0,0"
                         VerticalAlignment="Center"
@@ -82,6 +92,7 @@
                     <HyperlinkButton
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
+                        AutomationProperties.AutomationControlType="Button"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
@@ -94,18 +105,36 @@
                 <!--  Imitate the look of ListViewItem  -->
                 <Button
                     MinHeight="36"
-                    Margin="4,2"
+                    Margin="{StaticResource MenuFlyoutItemMargin}"
                     Padding="12,4"
                     HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
                     Command="{x:Bind ViewModel.AddSubtitleCommand}"
                     Content="{strings:Resources Key=AddSubtitle}"
                     Style="{StaticResource SubtleButtonStyle}">
                     <Button.Resources>
-                        <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="ListViewItemForegroundPressed" />
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Default">
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource TextFillColorPrimary}" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource TextFillColorPrimary}" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="HighContrast">
+                                    <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
                     </Button.Resources>
                 </Button>
             </ListView.Footer>
+            <d:ListView.Items>
+                <ListViewItem Content="{strings:Resources Key=Disable}" />
+                <ListViewItem Content="English" IsSelected="True" />
+                <ListViewItem Content="French (Français)" />
+                <ListViewItem Content="Spanish (Latin America) (Castellano)" />
+            </d:ListView.Items>
         </ListView>
     </StackPanel>
 </UserControl>

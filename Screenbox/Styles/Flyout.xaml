@@ -1,0 +1,32 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
+    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
+
+    <!--  FlyoutPresenter with the same padding as the MenuFlyout  -->
+    <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/FlyoutPresenter_themeresources.xaml  -->
+    <Style
+        x:Key="FlyoutPresenterMenuFlyoutStyle"
+        BasedOn="{StaticResource DefaultFlyoutPresenterStyle}"
+        TargetType="FlyoutPresenter">
+        <!--<Setter Property="HorizontalContentAlignment" Value="Stretch" />-->
+        <!--<Setter Property="VerticalContentAlignment" Value="Stretch" />-->
+        <!--<Setter Property="IsTabStop" Value="False" />-->
+        <!--<Setter Property="Background" Value="{ThemeResource FlyoutPresenterBackground}" />-->
+        <!--<Setter Property="BorderBrush" Value="{ThemeResource FlyoutBorderThemeBrush}" />-->
+        <!--<Setter Property="BorderThickness" Value="{ThemeResource FlyoutBorderThemeThickness}" />-->
+        <!--<Setter Property="Padding" Value="{StaticResource FlyoutContentPadding}" />-->
+        <Setter Property="Padding" Value="{StaticResource MenuFlyoutPresenterThemePadding}" />
+        <!--<Setter Property="MinWidth" Value="{ThemeResource FlyoutThemeMinWidth}" />-->
+        <!--<Setter Property="MaxWidth" Value="{ThemeResource FlyoutThemeMaxWidth}" />-->
+        <!--<Setter Property="MinHeight" Value="{ThemeResource FlyoutThemeMinHeight}" />-->
+        <!--<Setter Property="MaxHeight" Value="{ThemeResource FlyoutThemeMaxHeight}" />-->
+        <!--<Setter Property="ScrollViewer.HorizontalScrollMode" Value="Auto" />-->
+        <!--<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />-->
+        <!--<Setter Property="ScrollViewer.VerticalScrollMode" Value="Auto" />-->
+        <!--<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />-->
+        <!--<Setter Property="ScrollViewer.ZoomMode" Value="Disabled" />-->
+        <!--<contract7Present:Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />-->
+    </Style>
+</ResourceDictionary>
