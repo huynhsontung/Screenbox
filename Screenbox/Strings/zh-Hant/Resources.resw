@@ -168,7 +168,7 @@
     <value>音量</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>調整音量</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>跳轉</value>
@@ -215,16 +215,16 @@
     <value>已新增至佇列</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>全選</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>選取這個畫面中的所有項目</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>取消全選</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>清除選取項目</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>取消選取</value>
@@ -266,7 +266,7 @@
     <value>回到影片</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>最小化</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>投放</value>
@@ -323,7 +323,7 @@
     <value>搜尋</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>搜尋影片、歌曲、專輯等等</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>設定</value>
@@ -753,7 +753,7 @@
     <value>授權條款</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>第三方軟體</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>協助翻譯</value>
@@ -819,19 +819,19 @@
     <value>發行年份</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>音訊視覺</value>
+    <value>音訊視覺效果</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>下載 Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>至 GitHub 下載視覺效果</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>音訊視覺效果選項</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>視覺效果</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>瀏覽檔案</value>
@@ -843,25 +843,25 @@
     <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>由 Lively Wallpaper 提供</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>匯入視覺效果</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>新增日期</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>媒體</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>影片</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>檔案</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>音樂</value>
