@@ -33,7 +33,7 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
-                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#2C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
 
                     <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
@@ -52,8 +52,8 @@
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
-                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
-                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#F9F9F9</Color>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.15</x:Double>
 
                     <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
@@ -172,7 +172,7 @@
             x:Name="HeaderBackground"
             Grid.Row="0"
             Grid.Column="0"
-            Height="72"
+            Height="80"
             MinHeight="32"
             VerticalAlignment="Top"
             Background="{ThemeResource HeaderBackgroundBrush}"
@@ -799,10 +799,11 @@
 
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
+                        <Setter Target="HeaderBackground.Height" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,0,20" />
                         <Setter Target="LivelyOptionsButton.Margin" Value="0,20,0,20" />
-                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,104" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="32" />
