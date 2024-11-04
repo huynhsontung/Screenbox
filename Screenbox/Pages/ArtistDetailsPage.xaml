@@ -52,7 +52,7 @@
                             <Border
                                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                                 CornerRadius="{StaticResource ControlCornerRadius}"
-                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                                Visibility="{Binding Key.AlbumArt, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
                                 <FontIcon
                                     x:Name="AlbumArtIcon"
                                     FontSize="{StaticResource GridItemPlaceholderIconFontSize}"

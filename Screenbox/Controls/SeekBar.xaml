@@ -61,7 +61,7 @@
             Style="{StaticResource DefaultSliderStyle}"
             ThumbToolTipValueConverter="{StaticResource HumanizedDurationConverter}"
             ValueChanged="{x:Bind ViewModel.OnSeekBarValueChanged}"
-            Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource InverseBoolToVisibilityConverter}}"
+            Visibility="{x:Bind ProgressOnly, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}"
             Value="{x:Bind ViewModel.Time, Mode=OneWay}" />
     </Grid>
 </UserControl>

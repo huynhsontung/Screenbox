@@ -323,7 +323,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />

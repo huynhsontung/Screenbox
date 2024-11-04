@@ -38,15 +38,11 @@
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-                    <toolkitConverters:BoolToObjectConverter
-                        x:Key="InverseBoolToVisibilityConverter"
-                        FalseValue="Visible"
-                        TrueValue="Collapsed" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
                     <toolkitConverters:EmptyObjectToObjectConverter
-                        x:Key="InverseEmptyObjectToVisibilityConverter"
-                        EmptyValue="Visible"
-                        NotEmptyValue="Collapsed" />
+                        x:Key="EmptyObjectToVisibilityConverter"
+                        EmptyValue="Collapsed"
+                        NotEmptyValue="Visible" />
                     <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
                     <toolkitConverters:DoubleToObjectConverter
                         x:Key="DoubleToBoolConverter"

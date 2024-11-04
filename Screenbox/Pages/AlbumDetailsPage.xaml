@@ -81,7 +81,7 @@
                     <Border
                         Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                         CornerRadius="{x:Bind CoverArt.CornerRadius, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
                         <FontIcon
                             x:Name="CoverArtIcon"
                             FontSize="64"
