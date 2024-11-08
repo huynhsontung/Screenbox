@@ -1,0 +1,872 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FrameSavedNotificationTitle" xml:space="preserve">
+    <value>Кадр захаваны</value>
+  </data>
+  <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
+    <value>Карцінка ў малюнку</value>
+  </data>
+  <data name="SaveCurrentFrame" xml:space="preserve">
+    <value>Захаваць бягучы кадр</value>
+  </data>
+  <data name="Loop" xml:space="preserve">
+    <value>Паўтор</value>
+  </data>
+  <data name="PlaybackSpeed" xml:space="preserve">
+    <value>Хуткасць прайгравання</value>
+  </data>
+  <data name="VolumeChangeStatusMessage" xml:space="preserve">
+    <value>Гучнасць {0:F0}%</value>
+    <comment>#Format[Double volume]</comment>
+  </data>
+  <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
+    <value>Не ўдалося захаваць кадр</value>
+  </data>
+  <data name="ChapterName" xml:space="preserve">
+    <value>Глава {0}</value>
+    <comment>#Format[Int32 chapter]</comment>
+  </data>
+  <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
+    <value>Не атрымалася загрузіць субтытры</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="MuteToggle_Variant0" xml:space="preserve">
+    <value>Выключыць гук</value>
+  </data>
+  <data name="MuteToggle_Variant1" xml:space="preserve">
+    <value>Уключыць гук</value>
+  </data>
+  <data name="FullscreenToggle_Variant0" xml:space="preserve">
+    <value>Поўнаэкранны рэжым</value>
+  </data>
+  <data name="AudioAndCaption" xml:space="preserve">
+    <value>Аўдыё і субтытры</value>
+  </data>
+  <data name="FullscreenToggle_Variant1" xml:space="preserve">
+    <value>Выйсці з поўнаэкраннага рэжыму</value>
+  </data>
+  <data name="Volume" xml:space="preserve">
+    <value>Гучнасць</value>
+  </data>
+  <data name="VolumeSliderTooltip" xml:space="preserve">
+    <value>Змяніць гучнасць</value>
+  </data>
+  <data name="Seek" xml:space="preserve">
+    <value>Пераматаць</value>
+  </data>
+  <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
+    <value>Выйсці з рэжыму "Карцінка ў малюнку"</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Наступнае</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Папярэдняе</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Прайграць</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Прыпыніць</value>
+  </data>
+  <data name="More" xml:space="preserve">
+    <value>Больш</value>
+  </data>
+  <data name="PlayQueue" xml:space="preserve">
+    <value>Чарга прайгравання</value>
+  </data>
+  <data name="RepeatMode_Variant0" xml:space="preserve">
+    <value>Паўтор: выкл</value>
+  </data>
+  <data name="RepeatMode_Variant2" xml:space="preserve">
+    <value>Паўтор: усё</value>
+  </data>
+  <data name="RepeatMode_Variant1" xml:space="preserve">
+    <value>Паўтор: адзін раз</value>
+  </data>
+  <data name="ItemsSelected_One" xml:space="preserve">
+    <value>Выбрана элементаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ItemsSelected_Other" xml:space="preserve">
+    <value>Выбрана элементаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AddToQueue" xml:space="preserve">
+    <value>Дадаць у чаргу</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Выбраць усе</value>
+  </data>
+  <data name="SelectAllToolTip" xml:space="preserve">
+    <value>Выбраць усе элементы ў гэтым рэжыме</value>
+  </data>
+  <data name="SelectNone" xml:space="preserve">
+    <value>Зняць вылучэнне</value>
+  </data>
+  <data name="SelectNoneToolTip" xml:space="preserve">
+    <value>Ачысціць выбар</value>
+  </data>
+  <data name="ClearSelection" xml:space="preserve">
+    <value>Адмяніць выбар</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Выдаліць</value>
+  </data>
+  <data name="PlayNext" xml:space="preserve">
+    <value>Прайграць наступным</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Перамясціць уверх</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Перасунуць уніз</value>
+  </data>
+  <data name="IsPlaying" xml:space="preserve">
+    <value>Цяпер гуляе</value>
+    <comment>Tool tip on which item is currently playing</comment>
+  </data>
+  <data name="Videos" xml:space="preserve">
+    <value>Відэа</value>
+  </data>
+  <data name="EmptyFolder" xml:space="preserve">
+    <value>Гэтая папка пустая</value>
+  </data>
+  <data name="ItemsCount_One" xml:space="preserve">
+    <value>Элементаў: {0}</value>
+    <comment>#Format[Plural]</comment>
+  </data>
+  <data name="ItemsCount_Other" xml:space="preserve">
+    <value>Элементаў: {0}</value>
+    <comment>#Format[Plural]</comment>
+  </data>
+  <data name="ItemsCount_None" xml:space="preserve">
+    <value>Пуста</value>
+  </data>
+  <data name="RestoreView" xml:space="preserve">
+    <value>Аднавіць прагляд</value>
+  </data>
+  <data name="MinimizeImmersiveView" xml:space="preserve">
+    <value>Згарнуць поўнаэкранны рэжым</value>
+  </data>
+  <data name="Cast" xml:space="preserve">
+    <value>Трансляцыя</value>
+  </data>
+  <data name="StopCast" xml:space="preserve">
+    <value>Спыніць трансляцыю</value>
+  </data>
+  <data name="CastingTo" xml:space="preserve">
+    <value>Трансляваць на</value>
+  </data>
+  <data name="CastToDevice" xml:space="preserve">
+    <value>Трансляваць на прыладу</value>
+  </data>
+  <data name="Disable" xml:space="preserve">
+    <value>Адключыць</value>
+  </data>
+  <data name="Music" xml:space="preserve">
+    <value>Музыка</value>
+  </data>
+  <data name="ShuffleAndPlay" xml:space="preserve">
+    <value>Змяшаць і прайграць</value>
+  </data>
+  <data name="UnknownArtist" xml:space="preserve">
+    <value>Невядомы выканаўца</value>
+  </data>
+  <data name="UnknownAlbum" xml:space="preserve">
+    <value>Невядомы альбом</value>
+  </data>
+  <data name="UnknownGenre" xml:space="preserve">
+    <value>Невядомы жанр</value>
+  </data>
+  <data name="AddFolder" xml:space="preserve">
+    <value>Дадаць папку</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Ачысціць</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Галоўная</value>
+  </data>
+  <data name="Multiselect" xml:space="preserve">
+    <value>Выбраць некалькі</value>
+  </data>
+  <data name="NoMusicPanelHeader" xml:space="preserve">
+    <value>Мы не змаглі знайсці музыку</value>
+  </data>
+  <data name="NoMusicPanelSubtext" xml:space="preserve">
+    <value>Ваша бібліятэка не змяшчае музычнага кантэнту.</value>
+  </data>
+  <data name="OpenFiles" xml:space="preserve">
+    <value>Адкрыць файл(ы)</value>
+  </data>
+  <data name="SearchBoxPlaceholderText" xml:space="preserve">
+    <value>Пошук</value>
+  </data>
+  <data name="SearchBoxToolTip" xml:space="preserve">
+    <value>Шукаць відэа, песні, альбомы і іншае</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Налады</value>
+  </data>
+  <data name="WelcomePanelHeader" xml:space="preserve">
+    <value>Сардэчна запрашаем у Screenbox</value>
+  </data>
+  <data name="WelcomePanelSubtext" xml:space="preserve">
+    <value>Каб пачаць працу, абярыце, які медыякантэнт вы хочаце прайграць.</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Уласцівасці</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыць</value>
+  </data>
+  <data name="OpenFileLocation" xml:space="preserve">
+    <value>Адкрыць размяшчэнне файла</value>
+  </data>
+  <data name="PropertyAlbum" xml:space="preserve">
+    <value>Альбом</value>
+  </data>
+  <data name="PropertyAlbumArtist" xml:space="preserve">
+    <value>Выканаўца альбома</value>
+  </data>
+  <data name="PropertyBitRate" xml:space="preserve">
+    <value>Бітрэйт</value>
+  </data>
+  <data name="PropertyContentType" xml:space="preserve">
+    <value>Тып кантэнту</value>
+  </data>
+  <data name="PropertyContributingArtists" xml:space="preserve">
+    <value>Удзельныя выканаўцы</value>
+  </data>
+  <data name="PropertyFileLocation" xml:space="preserve">
+    <value>Размяшчэнне файла</value>
+  </data>
+  <data name="PropertyFileType" xml:space="preserve">
+    <value>Тып файла</value>
+  </data>
+  <data name="PropertyGenre" xml:space="preserve">
+    <value>Жанр</value>
+  </data>
+  <data name="PropertyLastModified" xml:space="preserve">
+    <value>Апошняя змена</value>
+  </data>
+  <data name="PropertyLength" xml:space="preserve">
+    <value>Працягласць</value>
+  </data>
+  <data name="PropertyProducers" xml:space="preserve">
+    <value>Прадзюсары</value>
+  </data>
+  <data name="PropertyResolution" xml:space="preserve">
+    <value>Дазвол</value>
+  </data>
+  <data name="PropertySize" xml:space="preserve">
+    <value>Памер</value>
+  </data>
+  <data name="PropertySubtitle" xml:space="preserve">
+    <value>Субтытры</value>
+  </data>
+  <data name="PropertyTitle" xml:space="preserve">
+    <value>Загаловак</value>
+  </data>
+  <data name="PropertyTrack" xml:space="preserve">
+    <value>Трэк</value>
+  </data>
+  <data name="PropertyWriters" xml:space="preserve">
+    <value>Кампазітары</value>
+  </data>
+  <data name="PropertyYear" xml:space="preserve">
+    <value>Год</value>
+  </data>
+  <data name="Custom" xml:space="preserve">
+    <value>Карыстальніцкае</value>
+  </data>
+  <data name="Network" xml:space="preserve">
+    <value>Сетка</value>
+  </data>
+  <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
+    <value>Няма даступных сеткавых прылад</value>
+  </data>
+  <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
+    <value>Не можаце знайсці медыяфайл? Пераканайцеся, што сеткавая прылада падключана ў настройках Windows.</value>
+  </data>
+  <data name="Recent" xml:space="preserve">
+    <value>Нядаўнія</value>
+  </data>
+  <data name="VideoSettings" xml:space="preserve">
+    <value>Налады відэа</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Адкрыць</value>
+  </data>
+  <data name="LocationSpecified_One" xml:space="preserve">
+    <value>Указана месцаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="LocationSpecified_Other" xml:space="preserve">
+    <value>Указана месцаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="ShuffleMode_Variant0" xml:space="preserve">
+    <value>Змяшаць: выкл</value>
+  </data>
+  <data name="ShuffleMode_Variant1" xml:space="preserve">
+    <value>Змяшаць: вкл</value>
+  </data>
+  <data name="ResumePositionNotificationTitle" xml:space="preserve">
+    <value>Працягнуць, дзе вы спыніліся</value>
+  </data>
+  <data name="GoToPosition" xml:space="preserve">
+    <value>Перайсці да {0}</value>
+    <comment>#Format[String position]</comment>
+  </data>
+  <data name="Albums" xml:space="preserve">
+    <value>Альбомы</value>
+  </data>
+  <data name="Artists" xml:space="preserve">
+    <value>Выканаўцы</value>
+  </data>
+  <data name="Songs" xml:space="preserve">
+    <value>Песні</value>
+  </data>
+  <data name="OpenFilesToolTip" xml:space="preserve">
+    <value>Прагляд файлаў для прайгравання</value>
+  </data>
+  <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
+    <value>Больш опцый для адкрыцця медыя</value>
+  </data>
+  <data name="AddFiles" xml:space="preserve">
+    <value>Дадаць файл(ы)</value>
+  </data>
+  <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
+    <value>Прагляд файла(аў) для дадання ў чаргу прайгравання</value>
+  </data>
+  <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
+    <value>Больш опцый для дадання медыя ў чаргу</value>
+  </data>
+  <data name="AddMusicFolderToolTip" xml:space="preserve">
+    <value>Дадаць папку ў вашую музычную бібліятэку</value>
+  </data>
+  <data name="AddUrl" xml:space="preserve">
+    <value>Дадаць медыя па URL</value>
+  </data>
+  <data name="AddVideoFolderToolTip" xml:space="preserve">
+    <value>Дадаць папку ў вашу бібліятэку відэа</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>Адкрыць папку</value>
+  </data>
+  <data name="OpenUrl" xml:space="preserve">
+    <value>Адкрыць URL</value>
+  </data>
+  <data name="SongsCount_None" xml:space="preserve">
+    <value>Пуста</value>
+  </data>
+  <data name="SongsCount_One" xml:space="preserve">
+    <value>Песень: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SongsCount_Other" xml:space="preserve">
+    <value>Песень: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AlbumsCount_One" xml:space="preserve">
+    <value>Альбомаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AlbumsCount_Other" xml:space="preserve">
+    <value>Альбомаў: {0}</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="RunTime" xml:space="preserve">
+    <value>Час запуску: {0}</value>
+    <comment>#Format[String runtime]</comment>
+  </data>
+  <data name="AllVideos" xml:space="preserve">
+    <value>Усе відэа</value>
+  </data>
+  <data name="VideoFolders" xml:space="preserve">
+    <value>Папкі з відэа</value>
+  </data>
+  <data name="SearchResultHeader" xml:space="preserve">
+    <value>Вынікі пошуку для "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SeeAll" xml:space="preserve">
+    <value>Паказаць усё</value>
+  </data>
+  <data name="SearchResultArtistHeader" xml:space="preserve">
+    <value>Вынікі пошуку выканаўцы "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultAlbumHeader" xml:space="preserve">
+    <value>Вынікі пошуку альбома "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultSongHeader" xml:space="preserve">
+    <value>Вынікі пошуку песні "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="SearchResultVideoHeader" xml:space="preserve">
+    <value>Вынікі пошуку відэа "{0}"</value>
+    <comment>#Format[String query]</comment>
+  </data>
+  <data name="AlbumsCount_None" xml:space="preserve">
+    <value>Няма альбомаў</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="AccessDeniedMessage" xml:space="preserve">
+    <value>Доступ забаронены. Калі ласка, праверце налады канфідэнцыяльнасці, каб пераканацца, што Screenbox мае дастаткова правоў.</value>
+  </data>
+  <data name="AccessDeniedMusicLibraryTitle" xml:space="preserve">
+    <value>Няма доступу да музычнай бібліятэкі</value>
+  </data>
+  <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
+    <value>Няма доступу да бібліятэкі малюнкаў</value>
+  </data>
+  <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
+    <value>Няма доступу да бібліятэкі відэа</value>
+  </data>
+  <data name="NoVideosPanelHeader" xml:space="preserve">
+    <value>Мы не змаглі знайсці відэа</value>
+  </data>
+  <data name="NoVideosPanelSubtext" xml:space="preserve">
+    <value>Ваша бібліятэка не змяшчае ніводнага відэа.</value>
+  </data>
+  <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
+    <value>Адкрыць налады канфідэнцыяльнасці</value>
+  </data>
+  <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
+    <value>Не ўдаецца загрузіць медыя</value>
+  </data>
+  <data name="AspectRatio" xml:space="preserve">
+    <value>Суадносіны бакоў</value>
+  </data>
+  <data name="Fit" xml:space="preserve">
+    <value>Па памеры</value>
+  </data>
+  <data name="Fill" xml:space="preserve">
+    <value>Запаўненне</value>
+  </data>
+  <data name="CustomAspectRatio" xml:space="preserve">
+    <value>Уласныя суадносіны бакоў</value>
+  </data>
+  <data name="CustomPlaybackSpeed" xml:space="preserve">
+    <value>Карыстацкая хуткасць прайгравання</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Адключана</value>
+  </data>
+  <data name="ScaleStatus" xml:space="preserve">
+    <value>Маштаб: {0}</value>
+    <comment>#Format[String scale]</comment>
+  </data>
+  <data name="SubtitleStatus" xml:space="preserve">
+    <value>Субтытры: {0}</value>
+    <comment>#Format[String name]</comment>
+  </data>
+  <data name="TrackIndex" xml:space="preserve">
+    <value>Трэк {0}</value>
+    <comment>#Format[Int index]</comment>
+  </data>
+  <data name="AddSubtitle" xml:space="preserve">
+    <value>Дадаць субтытры</value>
+  </data>
+  <data name="Audio" xml:space="preserve">
+    <value>Аўдыё</value>
+  </data>
+  <data name="SettingsCategoryAbout" xml:space="preserve">
+    <value>Аб дадатку</value>
+  </data>
+  <data name="SettingsCategoryGeneral" xml:space="preserve">
+    <value>Асноўныя</value>
+  </data>
+  <data name="SettingsCategoryLibraries" xml:space="preserve">
+    <value>Бібліятэкі</value>
+  </data>
+  <data name="SettingsCategoryPlayer" xml:space="preserve">
+    <value>Плэер</value>
+  </data>
+  <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
+    <value>Размяшчэнне музычнай бібліятэкі</value>
+  </data>
+  <data name="SettingsShowRecentHeader" xml:space="preserve">
+    <value>Паказваць нядаўняе</value>
+  </data>
+  <data name="SettingsShowControlsHeader" xml:space="preserve">
+    <value>Паказваць кнопкі кіравання на паўзе</value>
+  </data>
+  <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
+    <value>Размяшчэнне відэа бібліятэкі</value>
+  </data>
+  <data name="Subtitles" xml:space="preserve">
+    <value>Субтытры</value>
+  </data>
+  <data name="SettingsShowRecentDescription" xml:space="preserve">
+    <value>Адлюстраванне нядаўна прайгранага медыя на галоўнай старонцы</value>
+  </data>
+  <data name="SettingsClearRecentHeader" xml:space="preserve">
+    <value>Ачысціць гісторыю нядаўніх медыя</value>
+  </data>
+  <data name="SettingsAutoResizeHeader" xml:space="preserve">
+    <value>Аўтаматычнае змяненне памеру</value>
+  </data>
+  <data name="SettingsAutoResizeDescription" xml:space="preserve">
+    <value>Змяніць памер акна прыкладання, каб найлепшым чынам адпавядаць роднаму дазволу відэа пры прайграванні</value>
+  </data>
+  <data name="SettingsVolumeBoostHeader" xml:space="preserve">
+    <value>Узмацненне гучнасці</value>
+  </data>
+  <data name="SettingsVolumeBoostDescription" xml:space="preserve">
+    <value>Дазволіць максімальны ўзровень гучнасці вышэй за 100%</value>
+  </data>
+  <data name="SettingsGesturesHeader" xml:space="preserve">
+    <value>Жэсты</value>
+  </data>
+  <data name="SettingsGestureSeek" xml:space="preserve">
+    <value>Перацягнуць гарызантальна для перамоткі</value>
+  </data>
+  <data name="SettingsGestureVolume" xml:space="preserve">
+    <value>Перацягнуць вертыкальна для рэгулявання гучнасці</value>
+  </data>
+  <data name="SettingsGestureTap" xml:space="preserve">
+    <value>Націсніце ў любым месцы, каб прайграць ці спыніць</value>
+  </data>
+  <data name="AppFriendlyName" xml:space="preserve">
+    <value>Мультымедыйны плэер Screenbox</value>
+  </data>
+  <data name="HyperlinkSourceCode" xml:space="preserve">
+    <value>Зыходны код</value>
+  </data>
+  <data name="HyperlinkDiscord" xml:space="preserve">
+    <value>Discord</value>
+  </data>
+  <data name="HyperlinkSponsor" xml:space="preserve">
+    <value>Падтрымаць распрацоўніка</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>Заўсёды</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Ніколі</value>
+  </data>
+  <data name="OnLaunch" xml:space="preserve">
+    <value>Пры запуску</value>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Версія {0}</value>
+    <comment>#Format[VERSION]</comment>
+  </data>
+  <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
+    <value>Субтытры дададзены</value>
+  </data>
+  <data name="CriticalError" xml:space="preserve">
+    <value>Крытычная памылка</value>
+  </data>
+  <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
+    <value>Няма даступных сумяшчальных прылад. Пераканайцеся, што Direct3D 11 даступны на вашым прыладзе.</value>
+  </data>
+  <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
+    <value>Не атрымалася адкрыць файл(ы)</value>
+  </data>
+  <data name="OpenUrlPlaceholder" xml:space="preserve">
+    <value>Увядзіце URL файла або патоку</value>
+  </data>
+  <data name="OpenConnectedDevicesSettingsButtonText" xml:space="preserve">
+    <value>Адкрыць налады падлучаных прылад</value>
+  </data>
+  <data name="SetPlaybackOptions" xml:space="preserve">
+    <value>Задаць параметры прайгравання</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Задаць</value>
+  </data>
+  <data name="SetAndPlay" xml:space="preserve">
+    <value>Задаць і пачаць прайграванне</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine1" xml:space="preserve">
+    <value>Задаць параметры VLC, якія прымяняюцца да патоку.</value>
+  </data>
+  <data name="SetPlaybackOptionsHelpTextLine2" xml:space="preserve">
+    <value>Некаторыя опцыі могуць быць зададзены толькі глабальна.</value>
+  </data>
+  <data name="VlcCommandLineHelpLink" xml:space="preserve">
+    <value>Даведка каманднага радка VLC</value>
+  </data>
+  <data name="VlcCommandLineHelpText" xml:space="preserve">
+    <value>Глядзіце {0} для поўнага спісу даступных опцый.</value>
+    <comment>{0} = VLC command-line help</comment>
+  </data>
+  <data name="SettingsCategoryAdvanced" xml:space="preserve">
+    <value>Пашыраныя</value>
+  </data>
+  <data name="SettingsAdvancedModeHeader" xml:space="preserve">
+    <value>Пашыраны рэжым</value>
+  </data>
+  <data name="SettingsAdvancedModeDescription" xml:space="preserve">
+    <value>Пашыраны рэжым дазваляе наладзіць паводзіны LibVLC з дапамогай аргументаў каманднага радка.</value>
+  </data>
+  <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
+    <value>Глабальныя аргументы</value>
+  </data>
+  <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
+    <value>Аргументы каманднага радка, дастасавальныя да ўсіх прайграных медыя.</value>
+  </data>
+  <data name="RemoveFolder" xml:space="preserve">
+    <value>Выдаліць папку</value>
+  </data>
+  <data name="PendingChanges" xml:space="preserve">
+    <value>Чаканыя змяненні</value>
+  </data>
+  <data name="RelaunchForChangesMessage" xml:space="preserve">
+    <value>Перазапусціць прыкладанне, каб змены ўступілі ў сілу</value>
+  </data>
+  <data name="FailedToInitializeNotificationTitle" xml:space="preserve">
+    <value>Памылка ініцыялізацыі</value>
+  </data>
+  <data name="RelatedLinks" xml:space="preserve">
+    <value>Карысныя спасылкі</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Палітыка прыватнасці</value>
+  </data>
+  <data name="License" xml:space="preserve">
+    <value>Ліцэнзія</value>
+  </data>
+  <data name="ThirdPartyNotices" xml:space="preserve">
+    <value>Падзякі іншаму праграмнаму забеспячэнню</value>
+  </data>
+  <data name="HyperlinkTranslate" xml:space="preserve">
+    <value>Дапамагчы з перакладам</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="TimingOffset" xml:space="preserve">
+    <value>Зрушэнне часу</value>
+  </data>
+  <data name="PropertyComposers" xml:space="preserve">
+    <value>Кампазітары</value>
+  </data>
+  <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
+    <value>Не ўдалося дадаць папку</value>
+  </data>
+  <data name="OpenAlbum" xml:space="preserve">
+    <value>Адкрыць альбом</value>
+  </data>
+  <data name="OpenArtist" xml:space="preserve">
+    <value>Адкрыць выканаўцу</value>
+  </data>
+  <data name="RefreshLibraries" xml:space="preserve">
+    <value>Абнавіць бібліятэкі</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Абнавіць</value>
+  </data>
+  <data name="SettingsUseIndexerHeader" xml:space="preserve">
+    <value>Выкарыстоўваць індэксатар для сканавання</value>
+  </data>
+  <data name="SettingsUseIndexerDescription" xml:space="preserve">
+    <value>Паскорце сканіраванне бібліятэкі з дапамогай сістэмнага індэкса. Выключыце гэта, калі вы не бачыце ўсіх медыяфайлаў з вашай бібліятэкі.</value>
+  </data>
+  <data name="ManageSystemIndexingLink" xml:space="preserve">
+    <value>Кіраванне параметрамі індэксацыі сістэмы</value>
+  </data>
+  <data name="SetArguments" xml:space="preserve">
+    <value>Устанавіць аргументы</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
+    <value>Пошук здымных назапашвальнікаў</value>
+  </data>
+  <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
+    <value>Уключыць медыя з назапашвальнікаў, такіх як USB-флэшкі ў вашыя бібліятэкі</value>
+  </data>
+  <data name="ActiveArguments" xml:space="preserve">
+    <value>Уключаныя аргументы</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
+    <value>Дазволіць некалькі вокнаў</value>
+  </data>
+  <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
+    <value>Заўсёды адчыняць медыяфайлы ў новым акне</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Упарадкаваць па</value>
+  </data>
+  <data name="Artist" xml:space="preserve">
+    <value>Выканаўца</value>
+  </data>
+  <data name="ReleasedYear" xml:space="preserve">
+    <value>Год выпуску</value>
+  </data>
+  <data name="SettingsAudioVisualHeader" xml:space="preserve">
+    <value>Аўдыёвізуал</value>
+  </data>
+  <data name="GetLivelyApp" xml:space="preserve">
+    <value>Атрымаць Lively Wallpaper</value>
+  </data>
+  <data name="GetLivelyVisuals" xml:space="preserve">
+    <value>Спампаваць візуальныя эфекты праз GitHub</value>
+  </data>
+  <data name="VisualizerOptionsToolTip" xml:space="preserve">
+    <value>Опцыі візуальных эфектаў аўдыё</value>
+  </data>
+  <data name="Visuals" xml:space="preserve">
+    <value>Візуальныя эфекты</value>
+  </data>
+  <data name="BrowseFiles" xml:space="preserve">
+    <value>Агляд файла(аў)</value>
+  </data>
+  <data name="Default" xml:space="preserve">
+    <value>Па змаўчанні</value>
+  </data>
+  <data name="SettingsAudioVisualDescription" xml:space="preserve">
+    <value>Абярыце фон для прайгравання гуку ў поўнаэкранным рэжыме</value>
+  </data>
+  <data name="PoweredByLivelyWallpaper" xml:space="preserve">
+    <value>Працуе на Lively Wallpaper</value>
+  </data>
+  <data name="SettingsImportVisualsHeader" xml:space="preserve">
+    <value>Імпартаваць візуалы</value>
+  </data>
+  <data name="SettingsImportVisualsDescription" xml:space="preserve">
+    <value>Атрымаеце больш візуальных эфектаў праз прыкладанне Lively Wallpaper або запампуйце з GitHub</value>
+  </data>
+  <data name="DateAdded" xml:space="preserve">
+    <value>Дата дадання</value>
+  </data>
+  <data name="Media" xml:space="preserve">
+    <value>Медыя</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Відэа</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>Файл</value>
+  </data>
+  <data name="MusicLibrary" xml:space="preserve">
+    <value>Музыка</value>
+  </data>
+  <data name="VideoLibrary" xml:space="preserve">
+    <value>Відэа</value>
+  </data>
+</root>

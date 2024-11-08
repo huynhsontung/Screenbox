@@ -428,6 +428,8 @@
     </PRIResource>
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
+    <PRIResource Include="Strings\be-BY\ManifestResources.resw" />
+    <PRIResource Include="Strings\be-BY\Resources.resw" />
     <PRIResource Include="Strings\de-DE\ManifestResources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\el-GR\ManifestResources.resw" />
@@ -729,7 +731,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
