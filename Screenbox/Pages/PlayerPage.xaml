@@ -467,6 +467,7 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
+            Padding="8"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
@@ -521,6 +522,8 @@
             Padding="9,5,9,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
+            animations:Implicit.HideAnimations="{StaticResource SimpleHideAnimations}"
+            animations:Implicit.ShowAnimations="{StaticResource SimpleShowAnimations}"
             d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
@@ -528,12 +531,6 @@
             CornerRadius="{StaticResource ControlCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
-            <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation To="1" Duration="{StaticResource ControlFastAnimationDuration}" />
-            </animations:Implicit.ShowAnimations>
-            <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation To="0" Duration="{StaticResource ControlFasterAnimationDuration}" />
-            </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
                 d:Text="Volume 100%"

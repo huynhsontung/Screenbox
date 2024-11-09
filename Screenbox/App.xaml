@@ -6,6 +6,7 @@
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters">
@@ -96,6 +97,20 @@
                     <x:Double x:Key="ContentPageBottomPaddingHeight">106</x:Double>
 
                     <CornerRadius x:Key="CircularCornerRadius">99</CornerRadius>
+
+                    <!--  Animations  -->
+                    <ctAnimations:ImplicitAnimationSet x:Key="SimpleShowAnimations">
+                        <ctAnimations:OpacityAnimation
+                            EasingType="Linear"
+                            To="1"
+                            Duration="{StaticResource ControlFastAnimationDuration}" />
+                    </ctAnimations:ImplicitAnimationSet>
+                    <ctAnimations:ImplicitAnimationSet x:Key="SimpleHideAnimations">
+                        <ctAnimations:OpacityAnimation
+                            EasingType="Linear"
+                            To="0"
+                            Duration="{StaticResource ControlFasterAnimationDuration}" />
+                    </ctAnimations:ImplicitAnimationSet>
 
                     <!--  Styles  -->
                     <Style TargetType="FontIcon">

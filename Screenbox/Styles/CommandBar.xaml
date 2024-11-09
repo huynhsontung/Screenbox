@@ -5,10 +5,34 @@
     xmlns:contract6NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,6)"
     xmlns:contract6Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,6)"
     xmlns:contract7NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,7)"
-    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
+    xmlns:contract7Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations">
 
     <x:Double x:Key="AppBarButtonDefaultWidth">68</x:Double>
     <x:Double x:Key="AppBarButtonCompactWidth">48</x:Double>
+
+    <ctAnimations:ImplicitAnimationSet x:Key="SelectionCommandBarShowAnimations">
+        <ctAnimations:TranslationAnimation
+            EasingMode="EaseOut"
+            From="0,48,0"
+            To="0,0,0"
+            Duration="{StaticResource ControlNormalAnimationDuration}" />
+        <ctAnimations:OpacityAnimation
+            EasingMode="EaseOut"
+            To="1"
+            Duration="{StaticResource ControlNormalAnimationDuration}" />
+    </ctAnimations:ImplicitAnimationSet>
+    <ctAnimations:ImplicitAnimationSet x:Key="SelectionCommandBarHideAnimations">
+        <ctAnimations:TranslationAnimation
+            EasingMode="EaseIn"
+            From="0,0,0"
+            To="0,-48,0"
+            Duration="{StaticResource ControlFastAnimationDuration}" />
+        <ctAnimations:OpacityAnimation
+            EasingMode="EaseIn"
+            To="0"
+            Duration="{StaticResource ControlFastAnimationDuration}" />
+    </ctAnimations:ImplicitAnimationSet>
 
     <!--  Make the AppBarButton look like the default button, add width at the visual state level, not the top, to fix overflow command bar issues  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.6/dev/CommonStyles/AppBarButton_themeresources.xaml  -->

@@ -36,16 +36,16 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <StaticResource x:Key="SubtleButtonBackground" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
-            <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="SubtleButtonBackgroundPointerOver" ResourceKey="SystemColorHighlightColorBrush" />
+            <StaticResource x:Key="SubtleButtonBackgroundPressed" ResourceKey="SystemColorHighlightColorBrush" />
             <StaticResource x:Key="SubtleButtonBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
-            <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="SubtleButtonForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+            <StaticResource x:Key="SubtleButtonForeground" ResourceKey="SystemColorButtonTextColorBrush" />
+            <StaticResource x:Key="SubtleButtonForegroundPointerOver" ResourceKey="SystemColorHighlightTextColorBrush" />
+            <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
+            <StaticResource x:Key="SubtleButtonForegroundDisabled" ResourceKey="SystemColorGrayTextColorBrush" />
             <StaticResource x:Key="SubtleButtonBorderBrush" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="SubtleButtonBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="SubtleButtonBorderBrushPointerOver" ResourceKey="SystemColorHighlightColorBrush" />
+            <StaticResource x:Key="SubtleButtonBorderBrushPressed" ResourceKey="SystemColorHighlightColorBrush" />
             <StaticResource x:Key="SubtleButtonBorderBrushDisabled" ResourceKey="SystemControlTransparentBrush" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
