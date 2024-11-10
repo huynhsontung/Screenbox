@@ -171,6 +171,7 @@
                     <VisualState.Setters>
                         <Setter Target="PlayingIndicator.Visibility" Value="Visible" />
                         <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="TrackNumberText.Opacity" Value="1" />
                         <Setter Target="ItemMediaTypeIcon.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="TitleText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="ArtistButton.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />

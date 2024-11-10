@@ -148,7 +148,7 @@
             Visibility="Collapsed">
 
             <Border
-                Background="{ThemeResource CommandBarFlyoutBackground}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
