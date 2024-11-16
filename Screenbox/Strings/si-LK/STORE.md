@@ -1,6 +1,6 @@
 <!-- Markdown version of store listing for localization. -->
 <!-- Feel free to adapt or modify key points if necessary. -->
-## Screenbox Media Player
+## Screenbox මාධ්‍ය ධාවකය
 
 **Screenbox යනු පුළුල් පරාසයක ගොනු ආකෘති සඳහා සහය ඇති ඔබගේ සියලු උපාංග සඳහා නවීන මාධ්‍ය ධාවකයකි.**
 
