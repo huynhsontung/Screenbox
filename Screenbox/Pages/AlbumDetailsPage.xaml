@@ -32,7 +32,7 @@
                     Icon="{ui:SymbolIcon Symbol=Play}"
                     Text="{strings:Resources Key=Play}" />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF5EB;}"
