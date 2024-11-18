@@ -40,7 +40,7 @@
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=OpenAlbum}" />
+                    Text="{strings:Resources Key=ShowAlbum}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
