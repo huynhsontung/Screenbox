@@ -869,4 +869,10 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>Biblioteca de vídeos</value>
   </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Show album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Show artist</value>
+  </data>
 </root>
