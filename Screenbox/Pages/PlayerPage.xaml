@@ -452,7 +452,7 @@
                 <Border
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
                     <FontIcon
                         x:Name="AlbumArtGlyph"
                         FontSize="80"

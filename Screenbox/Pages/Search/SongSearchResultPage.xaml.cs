@@ -14,7 +14,7 @@ namespace Screenbox.Pages
     /// </summary>
     public sealed partial class SongSearchResultPage : Page
     {
-        internal SearchResultPageViewModel? ViewModel { get; set; }
+        internal SearchResultPageViewModel? ViewModel { get; private set; }
 
         internal CommonViewModel Common { get; }
 

@@ -32,7 +32,7 @@
             <Border
                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 CornerRadius="{x:Bind CornerRadius}"
-                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
                 <IconSourceElement
                     x:Name="PlaceholderIcon"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"

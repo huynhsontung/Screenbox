@@ -276,12 +276,6 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private void PlayNext(MediaViewModel media)
-        {
-            Messenger.SendPlayNext(media);
-        }
-
-        [RelayCommand]
         private void Remove(MediaViewModel media)
         {
             Recent.Remove(media);

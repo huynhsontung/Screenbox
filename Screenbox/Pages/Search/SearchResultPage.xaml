@@ -21,6 +21,48 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <MenuFlyout x:Name="ItemFlyout">
+                <MenuFlyoutItem
+                    Command="{x:Bind ViewModel.PlayCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Play}"
+                    Text="{strings:Resources Key=Play}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.PlayNextCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph=&#xF5EB;}"
+                    Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    Command="{StaticResource ShowPropertiesCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon Glyph=&#xE946;}"
+                    Text="{strings:Resources Key=Properties}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenAlbumCommand}"
+                    CommandParameter="{Binding Album}"
+                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                    Text="{strings:Resources Key=ShowAlbum}"
+                    Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenArtistCommand}"
+                    CommandParameter="{Binding MainArtist}"
+                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                    Text="{strings:Resources Key=ShowArtist}"
+                    Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
+                <MenuFlyoutItem
+                    CommandParameter="{Binding}"
+                    Icon="{ui:SymbolIcon Symbol=Setting}"
+                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
+                    <MenuFlyoutItem.Command>
+                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
+                    </MenuFlyoutItem.Command>
+                </MenuFlyoutItem>
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -156,7 +198,7 @@
                                 AlternateBackground="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 AlternateBorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                 AlternateBorderThickness="1" />
-                            <!-- <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" /> -->
+                            <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
                         </interactivity:Interaction.Behaviors>
                     </ListView>
                 </StackPanel>

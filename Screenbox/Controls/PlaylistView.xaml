@@ -66,6 +66,18 @@
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE946;}"
                         Text="{strings:Resources Key=Properties}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenAlbumCommand}"
+                        CommandParameter="{Binding Album}"
+                        Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                        Text="Open album"
+                        Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenArtistCommand}"
+                        CommandParameter="{Binding MainArtist}"
+                        Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                        Text="Open artist"
+                        Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                     <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                     <MenuFlyoutItem
                         CommandParameter="{Binding}"
