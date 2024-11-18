@@ -69,6 +69,12 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
+        private void PlayNext(MediaViewModel media)
+        {
+            Messenger.SendPlayNext(media);
+        }
+
+        [RelayCommand]
         private void ShuffleAndPlay()
         {
             if (Source.RelatedSongs.Count == 0) return;
