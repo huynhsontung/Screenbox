@@ -64,9 +64,9 @@
                         Height="96"
                         CornerRadius="{StaticResource GridViewItemCornerRadius}"
                         FlowDirection="LeftToRight"
-                        ToolTipService.ToolTip="{x:Bind Model.Title}">
+                        ToolTipService.ToolTip="{x:Bind Model.Title, FallbackValue={x:Null}}">
                         <Grid.Background>
-                            <ImageBrush ImageSource="{Binding PreviewPath}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{Binding PreviewPath, FallbackValue={x:Null}}" Stretch="UniformToFill" />
                         </Grid.Background>
                         <Grid.ContextFlyout>
                             <MenuFlyout>
