@@ -17,7 +17,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
@@ -144,6 +143,7 @@ namespace Screenbox.Pages
             {
                 SetTitleBar();
                 NavView.SelectedItem = NavView.MenuItems[0];
+                _ = ViewModel.FetchLibraries();
             }
 
             if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
@@ -164,6 +164,7 @@ namespace Screenbox.Pages
                     if (ContentFrame.Content == null)
                     {
                         NavView.SelectedItem = NavView.MenuItems[0];
+                        _ = ViewModel.FetchLibraries();
                     }
                 }
 

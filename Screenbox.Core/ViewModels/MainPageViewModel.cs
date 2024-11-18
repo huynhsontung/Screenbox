@@ -11,6 +11,8 @@ using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -35,11 +37,14 @@ namespace Screenbox.Core.ViewModels
 
         private readonly ISearchService _searchService;
         private readonly INavigationService _navigationService;
+        private readonly ILibraryService _libraryService;
 
-        public MainPageViewModel(ISearchService searchService, INavigationService navigationService)
+        public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
+            ILibraryService libraryService)
         {
             _searchService = searchService;
             _navigationService = navigationService;
+            _libraryService = libraryService;
             _searchQuery = string.Empty;
             _criticalErrorMessage = string.Empty;
             IsActive = true;
@@ -194,7 +199,46 @@ namespace Screenbox.Core.ViewModels
                 .Where(i => i >= 0)
                 .Average();
             return index * 0.1 + wordRank;
+        }
 
+        public Task FetchLibraries()
+        {
+            List<Task> tasks = new() { FetchMusicLibraryAsync(), FetchVideosLibraryAsync() };
+            return Task.WhenAll(tasks);
+        }
+
+        private async Task FetchMusicLibraryAsync()
+        {
+            try
+            {
+                await _libraryService.FetchMusicAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
+            }
+        }
+
+        private async Task FetchVideosLibraryAsync()
+        {
+            try
+            {
+                await _libraryService.FetchVideosAsync();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
+            }
+            catch (Exception e)
+            {
+                Messenger.Send(new ErrorMessage(null, e.Message));
+                LogService.Log(e);
+            }
         }
     }
 }
