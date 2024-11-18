@@ -870,9 +870,9 @@
     <value>Vídeo</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Mostrar álbum</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Mostrar artista</value>
   </data>
 </root>
