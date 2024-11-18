@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
@@ -80,6 +81,12 @@ namespace Screenbox.Core.ViewModels
         public bool TryGetPageState(string pageTypeName, int backStackDepth, out object state)
         {
             return _pageStates.TryGetValue(pageTypeName + backStackDepth, out state);
+        }
+
+        [RelayCommand]
+        private void PlayNext(MediaViewModel media)
+        {
+            Messenger.SendPlayNext(media);
         }
 
         [RelayCommand]
