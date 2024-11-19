@@ -795,13 +795,13 @@
     <value>Đặt đối số</value>
   </data>
   <data name="SettingsSearchRemovableStorageHeader" xml:space="preserve">
-    <value>Search removable storage</value>
+    <value>Tìm kiếm bộ nhớ di động</value>
   </data>
   <data name="SettingsSearchRemovableStorageDescription" xml:space="preserve">
     <value>Đưa phương tiện từ các thiết bị lưu trữ như thẻ nhớ USB vào thư viện của bạn</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Đối số hoạt động</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
     <value>Allow multiple instances</value>
