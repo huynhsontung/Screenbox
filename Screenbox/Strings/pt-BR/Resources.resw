@@ -233,7 +233,7 @@
     <value>Remover</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Reproduzir próximo</value>
+    <value>Reproduzir em seguida</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Mover para cima</value>
@@ -870,9 +870,9 @@
     <value>Biblioteca de vídeos</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Mostrar o álbuns</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Mostrar o artista</value>
   </data>
 </root>
