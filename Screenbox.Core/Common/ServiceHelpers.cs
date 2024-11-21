@@ -36,9 +36,9 @@ public static class ServiceHelpers
         services.AddTransient<NotificationViewModel>();
         services.AddTransient<LivelyWallpaperPlayerViewModel>();
         services.AddTransient<LivelyWallpaperSelectorViewModel>();
+        services.AddTransient<HomePageViewModel>();
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
-        services.AddSingleton<HomePageViewModel>(); // Prevent recent media reload on every page navigation
         services.AddSingleton<MediaListViewModel>(); // Global playlist
 
         // Factories
