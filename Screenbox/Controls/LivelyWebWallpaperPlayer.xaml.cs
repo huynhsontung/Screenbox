@@ -182,8 +182,15 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         }
         else
         {
-            var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
-            _webView.NavigateToLocalPath(htmlPath);
+            try
+            {
+                var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
+                _webView.NavigateToLocalPath(htmlPath);
+            }
+            catch (Exception e)
+            {
+                ViewModel.SendError(Strings.Resources.FailedToLoadVisualNotificationTitle, e.Message);
+            }
         }
     }
 

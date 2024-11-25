@@ -3,6 +3,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -30,6 +31,11 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
     {
         Source = message.NewValue;
+    }
+
+    public void SendError(string title, string message)
+    {
+        Messenger.Send(new ErrorMessage(title, message));
     }
 
     public async Task LoadAsync()
