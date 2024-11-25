@@ -3,11 +3,9 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,15 +18,6 @@ namespace Screenbox.Controls;
 // Source: https://github.com/rocksdanister/lively
 public sealed partial class LivelyWebWallpaperPlayer : UserControl
 {
-    public MediaViewModel? Media
-    {
-        get => (MediaViewModel?)GetValue(MediaProperty);
-        set => SetValue(MediaProperty, value);
-    }
-
-    public static readonly DependencyProperty MediaProperty =
-        DependencyProperty.Register("Media", typeof(MediaViewModel), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(null, OnMediaChanged));
-
     // public double[] Audio
     // {
     //     get { return (double[])GetValue(AudioProperty); }
@@ -57,47 +46,39 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         DataContext = Ioc.Default.GetRequiredService<LivelyWallpaperPlayerViewModel>();
     }
 
-    private static async void OnMediaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var control = (LivelyWebWallpaperPlayer)d;
-        if (e.OldValue is MediaViewModel oldMedia) oldMedia.PropertyChanged -= control.MediaOnPropertyChanged;
-        if (e.NewValue is MediaViewModel newValue) newValue.PropertyChanged += control.MediaOnPropertyChanged;
-        await control.UpdateCurrentTrack();
-    }
-
-    private async void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(MediaViewModel.Name) or nameof(MediaViewModel.MainArtist))
-        {
-            await UpdateCurrentTrack();
-        }
-    }
-
     private async void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         _propertyChangedToken = RegisterPropertyChangedCallback(VisibilityProperty, OnVisibilityChanged);
 
         await InitializeWebView2();
         await ViewModel.LoadAsync();
-        UpdatePage();
+        await UpdatePage();
 
         ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
+        ViewModel.TrackUpdateRequested += ViewModelOnTrackUpdateRequested;
     }
 
     // x:Load xaml can be used to close and or restart WebView process.
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
         UnregisterPropertyChangedCallback(VisibilityProperty, _propertyChangedToken);
-        if (Media != null) Media.PropertyChanged -= MediaOnPropertyChanged;
         ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
+        ViewModel.TrackUpdateRequested -= ViewModelOnTrackUpdateRequested;
         CloseWebView2();
     }
 
-    private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private async void ViewModelOnTrackUpdateRequested(object sender, EventArgs e)
     {
-        if (e.PropertyName == nameof(ViewModel.Source))
+        await UpdateCurrentTrack();
+    }
+
+    private async void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            UpdatePage();
+            case nameof(ViewModel.Source):
+                await UpdatePage();
+                break;
         }
     }
 
@@ -162,26 +143,18 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         ViewModel.IsLoading = false;
     }
 
-    private void UpdatePage()
+    private async Task UpdatePage()
     {
-        if (!_isWebViewInitialized || _webView == null || ViewModel.Source is null)
+        if (!_isWebViewInitialized || _webView == null)
             return;
 
-        if (string.IsNullOrEmpty(ViewModel.Source.Path) || string.IsNullOrEmpty(ViewModel.Source.Model.FileName))
+        try
         {
-            _webView.CoreWebView2.Navigate("about:blank");
+            await ViewModel.NavigatePage(_webView);
         }
-        else
+        catch (Exception e)
         {
-            try
-            {
-                var htmlPath = Path.Combine(ViewModel.Source.Path, ViewModel.Source.Model.FileName);
-                _webView.NavigateToLocalPath(htmlPath);
-            }
-            catch (Exception e)
-            {
-                ViewModel.SendError(Strings.Resources.FailedToLoadVisualNotificationTitle, e.Message);
-            }
+            ViewModel.SendError(Strings.Resources.FailedToLoadVisualNotificationTitle, e.Message);
         }
     }
 
@@ -211,10 +184,10 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     private async Task UpdateCurrentTrack()
     {
         // WebView rendering process pauses when visibility is hidden.
-        if (_webView == null || Media == null || Visibility == Visibility.Collapsed)
+        if (_webView == null || Visibility == Visibility.Collapsed)
             return;
 
-        await ViewModel.UpdateCurrentTrack(_webView, Media);
+        await ViewModel.UpdateCurrentTrack(_webView);
     }
 
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--audio

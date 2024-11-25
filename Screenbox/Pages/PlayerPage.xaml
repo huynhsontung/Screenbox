@@ -391,7 +391,6 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             x:Load="False"
-            Media="{x:Bind ViewModel.Media, Mode=OneWay}"
             Visibility="Collapsed" />
 
         <controls:PlayerElement
