@@ -3,19 +3,12 @@
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -36,20 +29,18 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
     public static readonly DependencyProperty MediaProperty =
         DependencyProperty.Register("Media", typeof(MediaViewModel), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(null, OnMediaChanged));
 
-    public double[] Audio
-    {
-        get { return (double[])GetValue(AudioProperty); }
-        set
-        {
-            SetValue(AudioProperty, value);
-            _ = UpdateAudio();
-        }
-    }
-
-    public static readonly DependencyProperty AudioProperty =
-        DependencyProperty.Register("Audio", typeof(double[]), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(Array.Empty<double>()));
-
-    public event EventHandler<Exception>? WallpaperError;
+    // public double[] Audio
+    // {
+    //     get { return (double[])GetValue(AudioProperty); }
+    //     set
+    //     {
+    //         SetValue(AudioProperty, value);
+    //         _ = UpdateAudio();
+    //     }
+    // }
+    //
+    // public static readonly DependencyProperty AudioProperty =
+    //     DependencyProperty.Register("Audio", typeof(double[]), typeof(LivelyWebWallpaperPlayer), new PropertyMetadata(Array.Empty<double>()));
 
     internal LivelyWallpaperPlayerViewModel ViewModel => (LivelyWallpaperPlayerViewModel)DataContext;
 
@@ -71,14 +62,14 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         var control = (LivelyWebWallpaperPlayer)d;
         if (e.OldValue is MediaViewModel oldMedia) oldMedia.PropertyChanged -= control.MediaOnPropertyChanged;
         if (e.NewValue is MediaViewModel newValue) newValue.PropertyChanged += control.MediaOnPropertyChanged;
-        await control.UpdateMusic();
+        await control.UpdateCurrentTrack();
     }
 
     private async void MediaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(MediaViewModel.Name) or nameof(MediaViewModel.MainArtist))
         {
-            await UpdateMusic();
+            await UpdateCurrentTrack();
         }
     }
 
@@ -143,7 +134,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         }
         catch (Exception ex)
         {
-            WallpaperError?.Invoke(this, ex);
+            ViewModel.SendError(Strings.Resources.FailedToLoadVisualNotificationTitle, ex.Message);
         }
     }
 
@@ -166,8 +157,8 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         if (args.NavigationId != _currentNavigationId)
             return;
 
-        await UpdateLivelyProperties();
-        await UpdateMusic();
+        await ViewModel.UpdateLivelyProperties(sender);
+        await UpdateCurrentTrack();
         ViewModel.IsLoading = false;
     }
 
@@ -205,7 +196,7 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
                 // WebView rendering stops while hidden/minimized but JS can still execute.
                 // To avoid queuing music change code we don't sent update while the control is hidden and only update one time once visible.
                 // This does mean there will be a brief duration in which previous albumart will be visible, workaround - change Opacity instead.
-                await UpdateMusic();
+                await UpdateCurrentTrack();
                 break;
             case Visibility.Collapsed:
                 // This is not required, ref: https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2.trysuspendasync
@@ -216,112 +207,30 @@ public sealed partial class LivelyWebWallpaperPlayer : UserControl
         await UpdatePauseState();
     }
 
-    // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-IV-:-Interaction#controls
-    private async Task UpdateLivelyProperties()
-    {
-        if (ViewModel.Source is null || _webView is null)
-            return;
-
-        var functionName = "livelyPropertyListener";
-        var propertyPath = Path.Combine(ViewModel.Source.Path, "LivelyProperties.json");
-
-        string jsonString;
-        try
-        {
-            var file = await StorageFile.GetFileFromPathAsync(propertyPath);
-            jsonString = await FileIO.ReadTextAsync(file);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-
-        var jsonObject = JObject.Parse(jsonString);
-        foreach (KeyValuePair<string, JToken?> item in jsonObject)
-        {
-            var typeToken = item.Value?["type"];
-            var valueToken = item.Value?["value"];
-            if (typeToken == null || valueToken == null) continue;
-            switch (typeToken.ToString())
-            {
-                case "slider":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (double)valueToken);
-                    break;
-                case "dropdown":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (int)valueToken);
-                    break;
-                case "checkbox":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, (bool)valueToken);
-                    break;
-                case "color":
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, valueToken.ToString());
-                    break;
-                case "folderDropdown":
-                    var relativePath = Path.Combine(item.Value?["folder"]?.ToString() ?? string.Empty, valueToken.ToString());
-                    var filePath = Path.Combine(ViewModel.Source.Path, relativePath);
-                    await _webView.ExecuteScriptFunctionAsync(functionName, item.Key, File.Exists(filePath) ? relativePath : null);
-                    break;
-                case "button":
-                case "label":
-                    // Ignore, user action only.
-                    break;
-            }
-        }
-    }
-
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--system-nowplaying
-    private async Task UpdateMusic()
+    private async Task UpdateCurrentTrack()
     {
         // WebView rendering process pauses when visibility is hidden.
-        if (ViewModel.Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !ViewModel.Source.IsMusic || Visibility == Visibility.Collapsed)
+        if (_webView == null || Media == null || Visibility == Visibility.Collapsed)
             return;
 
-        LivelyMusicModel? model = null;
-        if (Media?.Thumbnail != null)
-        {
-            using var thumbnailSource = await Media.GetThumbnailSourceAsync();
-            var base64 = thumbnailSource != null ? await ReadToBase64Async(thumbnailSource) : string.Empty;
-            model = new LivelyMusicModel
-            {
-                Title = Media.Name,
-                Artist = Media.MainArtist?.Name,
-                Thumbnail = base64,
-                // Optional: Complete the mapping.
-            };
-        }
-
-        await _webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonConvert.SerializeObject(model));
+        await ViewModel.UpdateCurrentTrack(_webView, Media);
     }
 
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--audio
-    private async Task UpdateAudio()
-    {
-        // WebView rendering process pauses when visibility is hidden.
-        if (ViewModel.Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !ViewModel.Source.IsMusic)
-            return;
-
-        await _webView.ExecuteScriptFunctionAsync("livelyAudioListener", Audio);
-    }
+    // private async Task UpdateAudio()
+    // {
+    //     // WebView rendering process pauses when visibility is hidden.
+    //     if (ViewModel.Source == null || (_webView?.CoreWebView2.IsSuspended ?? true) || !ViewModel.Source.IsMusic)
+    //         return;
+    //
+    //     await _webView.ExecuteScriptFunctionAsync("livelyAudioListener", Audio);
+    // }
 
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--pause-event
     private async Task UpdatePauseState()
     {
-        if (ViewModel.Source is null || _webView is null || !ViewModel.Source.IsPauseNotify)
-            return;
-
-        var obj = new LivelyPlaybackStateModel()
-        {
-            IsPaused = Visibility == Visibility.Collapsed
-        };
-        await _webView.ExecuteScriptFunctionAsync("livelyWallpaperPlaybackChanged", obj);
-    }
-
-    private static async Task<string> ReadToBase64Async(IRandomAccessStream source)
-    {
-        using var stream = source.CloneStream();
-
-        var buffer = new byte[stream.Size];
-        await stream.ReadAsync(buffer.AsBuffer(), (uint)stream.Size, InputStreamOptions.None);
-        return Convert.ToBase64String(buffer);
+        if (_webView is null) return;
+        await ViewModel.UpdatePauseState(_webView, Visibility == Visibility.Collapsed);
     }
 }
