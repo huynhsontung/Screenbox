@@ -36,8 +36,10 @@ public class LivelyWallpaperService : ILivelyWallpaperService
 
     public async Task<LivelyWallpaperModel?> InstallVisualizerAsync(StorageFile wallpaperFile)
     {
-        var model = await TryGetWallpaperMetadata(wallpaperFile);
-        if (model != null)
+        using var zipStream = await wallpaperFile.OpenStreamForReadAsync();
+        using var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+        var result = await TryGetWallpaperMetadata(zipArchive);
+        if (result is { } model)
         {
             // We are skipping wallpapers without albumart.
             // Optionally can allow this and just display the albumart in-app instead.
@@ -48,10 +50,13 @@ public class LivelyWallpaperService : ILivelyWallpaperService
             }
 
             var localFolder = ApplicationData.Current.LocalFolder;
-            var visualizersFolder = await localFolder.CreateFolderAsync("Visualizers", CreationCollisionOption.OpenIfExists);
-            var destinationFolder = await visualizersFolder.CreateFolderAsync(Path.GetRandomFileName(), CreationCollisionOption.FailIfExists);
+            var visualizersFolder =
+                await localFolder.CreateFolderAsync("Visualizers", CreationCollisionOption.OpenIfExists);
+            var destinationFolder =
+                await visualizersFolder.CreateFolderAsync(Path.GetRandomFileName(),
+                    CreationCollisionOption.FailIfExists);
 
-            await LivelyWallpaperUtil.InstallWallpaper(wallpaperFile, destinationFolder);
+            zipArchive.ExtractToDirectory(destinationFolder.Path);
             var wallpaperModel = await TryGetWallpaper(destinationFolder, false);
             if (wallpaperModel == null)
             {
@@ -70,8 +75,8 @@ public class LivelyWallpaperService : ILivelyWallpaperService
 
     public async Task<LivelyWallpaperModel?> TryGetWallpaper(StorageFolder wallpaperFolder, bool isPreset)
     {
-        var model = await TryGetWallpaperMetadata(wallpaperFolder);
-        if (model != null)
+        var result = await TryGetWallpaperMetadata(wallpaperFolder);
+        if (result is { } model)
         {
             var obj = new LivelyWallpaperModel
             {
@@ -93,13 +98,11 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         return null;
     }
 
-    public async Task<LivelyInfoModel?> TryGetWallpaperMetadata(StorageFile wallpaperFile)
+    private async Task<LivelyInfoModel?> TryGetWallpaperMetadata(ZipArchive wallpaperFile)
     {
         try
         {
-            using var zipStream = await wallpaperFile.OpenStreamForReadAsync();
-            using var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-            var livelyInfoEntry = zipArchive.GetEntry("LivelyInfo.json");
+            var livelyInfoEntry = wallpaperFile.GetEntry("LivelyInfo.json");
             if (livelyInfoEntry == null)
                 return null;
 
@@ -115,7 +118,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         }
     }
 
-    public async Task<LivelyInfoModel?> TryGetWallpaperMetadata(StorageFolder wallpaperFolder)
+    private async Task<LivelyInfoModel?> TryGetWallpaperMetadata(StorageFolder wallpaperFolder)
     {
         try
         {

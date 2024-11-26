@@ -34,7 +34,7 @@ public static class WebView2Util
 
         var fileName = Path.GetFileName(filePath);
         // Use unique hostname to avoid webview cache issues.
-        var hostName = new DirectoryInfo(filePath).Parent.Name;
+        var hostName = filePath.ToLower().GetHashCode().ToString("x8");
         var directoryPath = Path.GetDirectoryName(filePath);
         webView.CoreWebView2.SetVirtualHostNameToFolderMapping(
             hostName,

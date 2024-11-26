@@ -3014,6 +3014,19 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region FailedToLoadVisualNotificationTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Failed to load visual
+        /// </summary>
+        public static string FailedToLoadVisualNotificationTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("FailedToLoadVisualNotificationTitle");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -3255,6 +3268,7 @@ namespace Screenbox.Strings{
             VideoLibrary,
             ShowAlbum,
             ShowArtist,
+            FailedToLoadVisualNotificationTitle,
         }
 
         private static ResourceLoader _resourceLoader;
