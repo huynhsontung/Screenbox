@@ -83,11 +83,11 @@
             Grid.Row="1"
             Margin="{StaticResource TopLargeMargin}"
             Padding="{StaticResource ContentPagePadding}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
-            ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
+            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.SearchResult.Songs, FallbackValue={x:Null}}"
             SelectionMode="None">
             <ListView.ItemTemplate>

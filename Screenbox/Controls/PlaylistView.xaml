@@ -21,69 +21,75 @@
 
     <Grid>
         <Grid.Resources>
-            <ThemeShadow x:Name="SharedShadow" />
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
+                </ResourceDictionary.MergedDictionaries>
 
-            <ctConverters:BoolToObjectConverter
-                x:Key="BoolToSelectAllNoneToolTipTextConverter"
-                FalseValue="{strings:Resources Key=SelectAllToolTip}"
-                TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
+                <ThemeShadow x:Name="SharedShadow" />
 
-            <MenuFlyout x:Name="ItemFlyout">
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE768;}"
-                    Text="{strings:Resources Key=Play}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayNextCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xF5EB;}"
-                    Text="{strings:Resources Key=PlayNext}" />
-                <MenuFlyoutSeparator />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.RemoveCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE74D;}"
-                    Text="{strings:Resources Key=Remove}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.MoveItemUpCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                    Text="{strings:Resources Key=MoveUp}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.MoveItemDownCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                    Text="{strings:Resources Key=MoveDown}" />
-                <MenuFlyoutItem
-                    Command="{StaticResource ShowPropertiesCommand}"
-                    CommandParameter="{Binding}"
-                    Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenAlbumCommand}"
-                    CommandParameter="{Binding Album}"
-                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
-                    Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
-                <MenuFlyoutItem
-                    Command="{x:Bind Common.OpenArtistCommand}"
-                    CommandParameter="{Binding MainArtist}"
-                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}"
-                    Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
-                <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
-                <MenuFlyoutItem
-                    CommandParameter="{Binding}"
-                    Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
-                    Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
-                    <MenuFlyoutItem.Command>
-                        <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
-                    </MenuFlyoutItem.Command>
-                </MenuFlyoutItem>
-            </MenuFlyout>
+                <ctConverters:BoolToObjectConverter
+                    x:Key="BoolToSelectAllNoneToolTipTextConverter"
+                    FalseValue="{strings:Resources Key=SelectAllToolTip}"
+                    TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
+
+                <MenuFlyout x:Name="ItemFlyout">
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE768;}"
+                        Text="{strings:Resources Key=Play}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.PlayNextCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph=&#xF5EB;}"
+                        Text="{strings:Resources Key=PlayNext}" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.RemoveCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                        Text="{strings:Resources Key=Remove}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.MoveItemUpCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE74A;}"
+                        Text="{strings:Resources Key=MoveUp}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind ViewModel.MoveItemDownCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE74B;}"
+                        Text="{strings:Resources Key=MoveDown}" />
+                    <MenuFlyoutItem
+                        Command="{StaticResource ShowPropertiesCommand}"
+                        CommandParameter="{Binding}"
+                        Icon="{ui:FontIcon Glyph=&#xE946;}"
+                        Text="{strings:Resources Key=Properties}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenAlbumCommand}"
+                        CommandParameter="{Binding Album}"
+                        Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                        Text="{strings:Resources Key=ShowAlbum}"
+                        Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                    <MenuFlyoutItem
+                        Command="{x:Bind Common.OpenArtistCommand}"
+                        CommandParameter="{Binding MainArtist}"
+                        Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                        Text="{strings:Resources Key=ShowArtist}"
+                        Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                    <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
+                    <MenuFlyoutItem
+                        CommandParameter="{Binding}"
+                        Icon="{ui:SymbolIcon Symbol=Setting}"
+                        Text="{strings:Resources Key=SetPlaybackOptions}"
+                        Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
+                        <MenuFlyoutItem.Command>
+                            <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
+                        </MenuFlyoutItem.Command>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" MinHeight="48" />
@@ -149,34 +155,12 @@
             x:Name="SelectionCommandRow"
             Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionCommandBarHideAnimations}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionCommandBarShowAnimations}"
             Visibility="Collapsed">
-            <ctAnimations:Implicit.ShowAnimations>
-                <ctAnimations:OpacityAnimation
-                    EasingMode="EaseOut"
-                    From="0"
-                    To="1"
-                    Duration="{StaticResource ControlNormalAnimationDuration}" />
-                <ctAnimations:TranslationAnimation
-                    EasingMode="EaseOut"
-                    From="0,48,0"
-                    To="0,0,0"
-                    Duration="{StaticResource ControlNormalAnimationDuration}" />
-            </ctAnimations:Implicit.ShowAnimations>
-            <ctAnimations:Implicit.HideAnimations>
-                <ctAnimations:OpacityAnimation
-                    EasingMode="EaseIn"
-                    From="1"
-                    To="0"
-                    Duration="{StaticResource ControlFastAnimationDuration}" />
-                <ctAnimations:TranslationAnimation
-                    EasingMode="EaseIn"
-                    From="0,0,0"
-                    To="0,-48,0"
-                    Duration="{StaticResource ControlFastAnimationDuration}" />
-            </ctAnimations:Implicit.HideAnimations>
 
             <Border
-                Background="{ThemeResource CommandBarFlyoutBackground}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
@@ -305,7 +289,7 @@
             Grid.Row="1"
             Margin="{StaticResource TopMediumMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
+            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
             extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
@@ -315,7 +299,7 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
+            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
