@@ -182,7 +182,7 @@ namespace Screenbox.Core.ViewModels
             _lastUpdated = message.Value;
             bool canInsert = CurrentIndex + 1 < Items.Count;
             int counter = 0;
-            foreach (MediaViewModel media in message.Value)
+            foreach (MediaViewModel media in message.Value.ToList()) // ToList() to avoid modifying the collection while iterating
             {
                 var result = await CreatePlaylistAsync(media);
                 foreach (MediaViewModel subMedia in result.Playlist)
@@ -454,7 +454,7 @@ namespace Screenbox.Core.ViewModels
         private async Task<PlaylistCreateResult?> CreatePlaylistAsync(IReadOnlyList<IStorageItem> files)
         {
             List<MediaViewModel> queue = new();
-            foreach (IStorageItem item in files)
+            foreach (IStorageItem item in files.ToList()) // ToList() to avoid modifying the collection while iterating
             {
                 if (item is not StorageFile storageFile) continue;
                 MediaViewModel vm = _mediaFactory.GetSingleton(storageFile);

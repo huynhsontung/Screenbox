@@ -19,7 +19,7 @@
         <Grid
             Grid.Row="0"
             Height="{x:Bind ThumbnailHeight, Mode=OneWay}"
-            BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
             BorderThickness="1"
             CornerRadius="{x:Bind CornerRadius}"
             FlowDirection="LeftToRight">
@@ -32,7 +32,7 @@
             <Border
                 Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                 CornerRadius="{x:Bind CornerRadius}"
-                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{x:Bind ThumbnailSource, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, Mode=OneWay}">
                 <IconSourceElement
                     x:Name="PlaceholderIcon"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"

@@ -29,21 +29,16 @@ namespace Screenbox.Core.ViewModels
 
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly IFilesService _filesService;
-        private readonly ILibraryService _libraryService;
         private readonly ISettingsService _settingsService;
         private readonly CoreDispatcher _dispatcher;
         private readonly Dictionary<string, string> _pathToMruMappings;
-        private bool _isLoaded; // Assume this class is a singleton
 
-        public HomePageViewModel(MediaViewModelFactory mediaFactory,
-            IFilesService filesService,
-            ISettingsService settingsService,
-            ILibraryService libraryService)
+        public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService,
+            ISettingsService settingsService)
         {
             _mediaFactory = mediaFactory;
             _filesService = filesService;
             _settingsService = settingsService;
-            _libraryService = libraryService;
             _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
             _pathToMruMappings = new Dictionary<string, string>();
             Recent = new ObservableCollection<MediaViewModel>();
@@ -62,16 +57,6 @@ namespace Screenbox.Core.ViewModels
 
         public async void OnLoaded()
         {
-            // Only run once. Assume this class is a singleton.
-            if (_isLoaded)
-            {
-                foreach (MediaViewModel media in Recent)
-                {
-                    await media.LoadThumbnailAsync();
-                }
-                return;
-            }
-            _isLoaded = true;
             await UpdateContentAsync();
         }
 
@@ -113,54 +98,14 @@ namespace Screenbox.Core.ViewModels
 
         private async Task UpdateContentAsync()
         {
-            // Pre-fetch libraries
-            List<Task> tasks = new(3) { PrefetchMusicLibraryAsync(), PrefetchVideosLibraryAsync() };
-
             // Update recent media
             if (_settingsService.ShowRecent)
             {
-                tasks.Add(UpdateRecentMediaListAsync(true));
+                await UpdateRecentMediaListAsync(true);
             }
             else
             {
                 Recent.Clear();
-            }
-
-            // Await for all of them
-            await Task.WhenAll(tasks);
-        }
-
-        private async Task PrefetchMusicLibraryAsync()
-        {
-            try
-            {
-                await _libraryService.FetchMusicAsync();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Music));
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(null, e.Message));
-                LogService.Log(e);
-            }
-        }
-
-        private async Task PrefetchVideosLibraryAsync()
-        {
-            try
-            {
-                await _libraryService.FetchVideosAsync();
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Messenger.Send(new RaiseLibraryAccessDeniedNotificationMessage(KnownLibraryId.Videos));
-            }
-            catch (Exception e)
-            {
-                Messenger.Send(new ErrorMessage(null, e.Message));
-                LogService.Log(e);
             }
         }
 
@@ -273,12 +218,6 @@ namespace Screenbox.Core.ViewModels
             {
                 Messenger.Send(new PlayMediaMessage(media, false));
             }
-        }
-
-        [RelayCommand]
-        private void PlayNext(MediaViewModel media)
-        {
-            Messenger.SendPlayNext(media);
         }
 
         [RelayCommand]

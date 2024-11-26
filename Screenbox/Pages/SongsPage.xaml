@@ -23,7 +23,10 @@
                 Source="{x:Bind ViewModel.GroupedSongs}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="{Binding Key}"
+                    TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <MenuFlyout x:Name="ItemFlyout">
@@ -33,7 +36,7 @@
                     Icon="{ui:SymbolIcon Symbol=Play}"
                     Text="{strings:Resources Key=Play}" />
                 <MenuFlyoutItem
-                    Command="{x:Bind ViewModel.PlayNextCommand}"
+                    Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph=&#xF5EB;}"
@@ -44,6 +47,18 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
                     Text="{strings:Resources Key=Properties}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenAlbumCommand}"
+                    CommandParameter="{Binding Album}"
+                    Icon="{ui:FontIcon Glyph=&#xE93C;}"
+                    Text="{strings:Resources Key=ShowAlbum}"
+                    Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.OpenArtistCommand}"
+                    CommandParameter="{Binding MainArtist}"
+                    Icon="{ui:FontIcon Glyph=&#xE77B;}"
+                    Text="{strings:Resources Key=ShowArtist}"
+                    Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
@@ -145,12 +160,12 @@
                 <ListView
                     x:Name="SongListView"
                     Padding="{StaticResource ContentPagePadding}"
-                    extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaViewItemCornerRadius}"
+                    extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
                     extensions:ListViewExtensions.ItemMargin="0,2,0,2"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     IsItemClickEnabled="True"
-                    ItemContainerStyle="{StaticResource ListViewItemFocusEngagementStyle}"
+                    ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
                     ItemsSource="{x:Bind SongsSource.View, Mode=OneWay}"
                     Loaded="SongListView_OnLoaded"
                     ScrollViewer.IsVerticalScrollChainingEnabled="False"
@@ -162,7 +177,7 @@
                     </ListView.ItemTemplate>
                     <ListView.GroupStyle>
                         <GroupStyle
-                            HeaderContainerStyle="{StaticResource ListViewHeaderItemSubtleButtonStyle}"
+                            HeaderContainerStyle="{StaticResource MediaListViewHeaderItemStyle}"
                             HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                             HidesIfEmpty="True" />
                     </ListView.GroupStyle>

@@ -49,7 +49,7 @@
             AccessKey="{strings:KeyboardResources Key=PlayerMuteKey}"
             AutomationProperties.Name="{Binding ElementName=VolumeToggleButton, Path=(ToolTipService.ToolTip), Mode=OneWay}"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
-            Style="{x:Bind ToggleButtonStyle, Mode=OneWay}">
+            Style="{x:Bind VolumeToggleButtonStyle, Mode=OneWay}">
             <FontIcon d:Glyph="&#xE994;" Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />

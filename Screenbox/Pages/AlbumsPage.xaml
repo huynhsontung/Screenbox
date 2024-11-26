@@ -26,7 +26,10 @@
                 Source="{x:Bind ViewModel.GroupedAlbums}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    FontWeight="SemiBold"
+                    Text="{Binding Key}"
+                    TextTrimming="CharacterEllipsis" />
             </DataTemplate>
 
             <MenuFlyout x:Key="AlbumFlyout">
@@ -40,7 +43,7 @@
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=OpenAlbum}" />
+                    Text="{strings:Resources Key=ShowAlbum}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -138,7 +141,7 @@
                     SelectionMode="None">
                     <GridView.GroupStyle>
                         <GroupStyle
-                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderContainerStyle="{StaticResource MediaGridViewHeaderItemStyle}"
                             HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                             HidesIfEmpty="True" />
                     </GridView.GroupStyle>

@@ -33,7 +33,7 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
                     <Color x:Key="BackgroundAcrylicTintColor">#202020</Color>
-                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C92C2C2C</Color>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#2C2C2C</Color>
                     <x:Double x:Key="BackgroundAcrylicTintOpacity">0.5</x:Double>
 
                     <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
@@ -52,8 +52,8 @@
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <Color x:Key="BackgroundAcrylicTintColor">#FCFCFC</Color>
-                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#C9F9F9F9</Color>
-                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.45</x:Double>
+                    <Color x:Key="BackgroundAcrylicTintFallbackColor">#F9F9F9</Color>
+                    <x:Double x:Key="BackgroundAcrylicTintOpacity">0.15</x:Double>
 
                     <LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
                         <LinearGradientBrush.GradientStops>
@@ -172,8 +172,9 @@
             x:Name="HeaderBackground"
             Grid.Row="0"
             Grid.Column="0"
-            Height="72"
+            Height="80"
             MinHeight="32"
+            VerticalAlignment="Top"
             Background="{ThemeResource HeaderBackgroundBrush}"
             Canvas.ZIndex="3" />
 
@@ -391,7 +392,6 @@
             Grid.RowSpan="3"
             Grid.Column="0"
             x:Load="False"
-            Media="{x:Bind ViewModel.Media, Mode=OneWay}"
             Visibility="Collapsed" />
 
         <controls:PlayerElement
@@ -436,7 +436,7 @@
             Visibility="Collapsed">
             <Grid
                 x:Name="AlbumArt"
-                BorderBrush="{ThemeResource ControlElevationBorderBrush}"
+                BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 FlowDirection="LeftToRight"
@@ -451,7 +451,7 @@
                 <Border
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource InverseEmptyObjectToVisibilityConverter}}">
+                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
                     <FontIcon
                         x:Name="AlbumArtGlyph"
                         FontSize="80"
@@ -466,6 +466,7 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
+            Padding="8"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
@@ -520,6 +521,8 @@
             Padding="9,5,9,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
+            animations:Implicit.HideAnimations="{StaticResource SimpleHideAnimations}"
+            animations:Implicit.ShowAnimations="{StaticResource SimpleShowAnimations}"
             d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
@@ -527,12 +530,6 @@
             CornerRadius="{StaticResource ControlCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{x:Bind ViewModel.StatusMessage, Mode=OneWay, Converter={StaticResource StringVisibilityConverter}}">
-            <animations:Implicit.ShowAnimations>
-                <animations:OpacityAnimation To="1" Duration="{StaticResource ControlFastAnimationDuration}" />
-            </animations:Implicit.ShowAnimations>
-            <animations:Implicit.HideAnimations>
-                <animations:OpacityAnimation To="0" Duration="{StaticResource ControlFasterAnimationDuration}" />
-            </animations:Implicit.HideAnimations>
             <TextBlock
                 x:Name="StatusMessageText"
                 d:Text="Volume 100%"
@@ -798,10 +795,11 @@
 
                 <VisualState x:Name="Fullscreen">
                     <VisualState.Setters>
+                        <Setter Target="HeaderBackground.Height" Value="128" />
                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
                         <Setter Target="PlayQueueButton.Margin" Value="20,20,0,20" />
                         <Setter Target="LivelyOptionsButton.Margin" Value="0,20,0,20" />
-                        <Setter Target="VideoView.ButtonMargin" Value="0,72,0,104" />
+                        <Setter Target="VideoView.ButtonMargin" Value="0,80,0,112" />
                         <Setter Target="PlayerStateBadge.Width" Value="80" />
                         <Setter Target="PlayerStateBadge.Height" Value="80" />
                         <Setter Target="PlayerStateBadgeIcon.FontSize" Value="32" />

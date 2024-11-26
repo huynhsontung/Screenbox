@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-using Screenbox.Core.Enums;
+﻿using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
-using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace Screenbox.Core.Helpers;
 
@@ -14,23 +11,11 @@ namespace Screenbox.Core.Helpers;
 // Source: https://github.com/rocksdanister/lively
 public static class LivelyWallpaperUtil
 {
-    public static async Task InstallWallpaper(StorageFile wallpaperFile, StorageFolder destinationFolder, bool verify = false)
-    {
-        if (verify && !await IsWallpaperFile(wallpaperFile))
-            return;
-
-        using var zipStream = await wallpaperFile.OpenStreamForReadAsync();
-        using var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-        zipArchive.ExtractToDirectory(destinationFolder.Path);
-    }
-
-    public static async Task<bool> IsWallpaperFile(StorageFile wallpaperFile)
+    public static async Task<bool> IsWallpaperFile(ZipArchive wallpaperFile)
     {
         try
         {
-            using var zipStream = await wallpaperFile.OpenStreamForReadAsync();
-            using var zipArchive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-            var livelyInfoEntry = zipArchive.GetEntry("LivelyInfo.json");
+            var livelyInfoEntry = wallpaperFile.GetEntry("LivelyInfo.json");
             if (livelyInfoEntry != null)
                 return true;
         }

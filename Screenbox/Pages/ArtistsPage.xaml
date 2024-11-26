@@ -24,7 +24,7 @@
                 Source="{x:Bind ViewModel.GroupedArtists}" />
 
             <DataTemplate x:Key="GroupHeaderTemplate">
-                <TextBlock Text="{Binding Key}" />
+                <TextBlock FontWeight="SemiBold" Text="{Binding Key}" />
             </DataTemplate>
 
             <MenuFlyout x:Key="ArtistFlyout">
@@ -38,7 +38,7 @@
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=OpenArtist}" />
+                    Text="{strings:Resources Key=ShowArtist}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -85,7 +85,7 @@
                     SelectionMode="None">
                     <GridView.GroupStyle>
                         <GroupStyle
-                            HeaderContainerStyle="{StaticResource GridViewHeaderItemSubtleButtonStyle}"
+                            HeaderContainerStyle="{StaticResource MediaGridViewHeaderItemStyle}"
                             HeaderTemplate="{StaticResource GroupHeaderTemplate}"
                             HidesIfEmpty="True" />
                     </GridView.GroupStyle>

@@ -201,11 +201,5 @@ namespace Screenbox.Core.ViewModels
             if (Songs.Count == 0) return;
             Messenger.SendQueueAndPlay(media, Songs);
         }
-
-        [RelayCommand]
-        private void PlayNext(MediaViewModel media)
-        {
-            Messenger.SendPlayNext(media);
-        }
     }
 }
