@@ -825,10 +825,10 @@
     <value>Obter o Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Baixe visuais no GitHub</value>
+    <value>Baixar visuais no GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Opções de áudio visual</value>
+    <value>Opções audiovisuais</value>
   </data>
   <data name="Visuals" xml:space="preserve">
     <value>Visuais</value>
@@ -876,6 +876,6 @@
     <value>Mostrar o artista</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Falha ao carregar o visual</value>
   </data>
 </root>
