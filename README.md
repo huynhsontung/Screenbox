@@ -22,9 +22,9 @@ Screenbox is a modern video player that cares about performance and ease of use 
 Screenbox is built on top of [LibVLCSharp](https://github.com/videolan/libvlcsharp) and the Universal Windows Platform (UWP).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="../../../Screenbox/blob/assets/assets/images/docs/PC-HeroHomePage-Dark.png?raw=true">
-  <source media="(prefers-color-scheme: light)" srcset="../../../Screenbox/blob/assets/assets/images/docs/PC-HeroHomePage-Light.png?raw=true">
-  <img alt="Screenshot of the Screenbox home page." src="../../../Screenbox/blob/assets/assets/images/docs/PC-HeroHomePage-Dark.png?raw=true" width="1248">
+  <source media="(prefers-color-scheme: dark)" srcset="/assets/images/docs/PC-HeroHomePage-Dark.png?raw=true">
+  <source media="(prefers-color-scheme: light)" srcset="/assets/images/docs/PC-HeroHomePage-Light.png?raw=true">
+  <img alt="Screenshot of the Screenbox home page." src="/assets/images/docs/PC-HeroHomePage-Dark.png?raw=true" width="1248">
 </picture>
 
 ![Screenshot of the Screenbox video player](/assets/images/docs/PC-HeroPlayerPageVideo_Dark.png)
