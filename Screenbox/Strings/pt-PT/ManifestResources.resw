@@ -128,80 +128,186 @@
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>Ficheiro de multimédia 3GPP</value>
+    <comment>Display name for the file type ".3gp" and ".3gpp" (3rd Generation Partnership Project)</comment>
   </data>
   <data name="FileDisplayName3GPP2" xml:space="preserve">
     <value>Ficheiro de multimédia 3GPP2</value>
+    <comment>Display name for the file type ".3g2" and ".3gp2" (3rd Generation Partnership Project 2)</comment>
   </data>
   <data name="FileDisplayNameAAC" xml:space="preserve">
     <value>Áudio AAC</value>
+    <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
-  <data name="FileDisplayNameAVI" xml:space="preserve">
-    <value>Vídeo AVI</value>
-  </data>
-  <data name="FileDisplayNameFLAC" xml:space="preserve">
-    <value>Áudio FLAC</value>
-  </data>
-  <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Vídeo Flash</value>
-  </data>
-  <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
-    <value>Áudio Matroska</value>
-  </data>
-  <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
-    <value>Vídeo Matroska</value>
-  </data>
-  <data name="FileDisplayNameMIDI" xml:space="preserve">
-    <value>Dados de música MIDI</value>
-  </data>
-  <data name="FileDisplayNameMP3" xml:space="preserve">
-    <value>Áudio MP3</value>
-  </data>
-  <data name="FileDisplayNameMP4" xml:space="preserve">
-    <value>Vídeo MPEG-4</value>
-  </data>
-  <data name="FileDisplayNameMP4Audio" xml:space="preserve">
-    <value>Áudio MPEG-4</value>
-  </data>
-  <data name="FileDisplayNameMP4Video" xml:space="preserve">
-    <value>Vídeo do iTunes</value>
-  </data>
-  <data name="FileDisplayNameMPEG" xml:space="preserve">
-    <value>Vídeo MPEG</value>
-  </data>
-  <data name="FileDisplayNameOggAudio" xml:space="preserve">
-    <value>Áudio Ogg Vorbis</value>
-  </data>
-  <data name="FileDisplayNameOggVideo" xml:space="preserve">
-    <value>Vídeo Ogg</value>
-  </data>
-  <data name="FileDisplayNameQuickTime" xml:space="preserve">
-    <value>Vídeo QuickTime</value>
-  </data>
-  <data name="FileDisplayNameWave" xml:space="preserve">
-    <value>Áudio WAVE</value>
-  </data>
-  <data name="FileDisplayNameWebAudio" xml:space="preserve">
-    <value>Áudio WebM</value>
-  </data>
-  <data name="FileDisplayNameWebMedia" xml:space="preserve">
-    <value>Vídeo WebM</value>
-  </data>
-  <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Áudio do Windows Media</value>
-  </data>
-  <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Vídeo do Windows Media</value>
-  </data>
-  <data name="FileDisplayNameM3U8" xml:space="preserve">
-    <value>Lista de reprodução M3U8</value>
-  </data>
-  <data name="FileDisplayNameMPEGTS" xml:space="preserve">
-    <value>Fluxo de transporte MPEG</value>
-  </data>
-  <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>Áudio WavPack</value>
+  <data name="FileDisplayNameAC3" xml:space="preserve">
+    <value>Dolby AC-3 Audio</value>
+    <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
     <value>Áudio AIFF</value>
+    <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
+  </data>
+  <data name="FileDisplayNameAIFC" xml:space="preserve">
+    <value>Compressed AIFF Audio</value>
+    <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
+  </data>
+  <data name="FileDisplayNameAPE" xml:space="preserve">
+    <value>Monkey's Audio</value>
+    <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
+  </data>
+  <data name="FileDisplayNameAVI" xml:space="preserve">
+    <value>Vídeo AVI</value>
+    <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
+  </data>
+  <data name="FileDisplayNameDTS" xml:space="preserve">
+    <value>DTS Audio</value>
+    <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
+  </data>
+  <data name="FileDisplayNameFLAC" xml:space="preserve">
+    <value>Áudio FLAC</value>
+    <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
+  </data>
+  <data name="FileDisplayNameFlashMP4" xml:space="preserve">
+    <value>Flash MP4 Video</value>
+    <comment>Display name for the file type ".f4v"</comment>
+  </data>
+  <data name="FileDisplayNameFlash" xml:space="preserve">
+    <value>Vídeo Flash</value>
+    <comment>Display name for the file type ".flv"</comment>
+  </data>
+  <data name="FileDisplayNameShockwave" xml:space="preserve">
+    <value>Shockwave Flash Movie</value>
+    <comment>Display name for the file type ".swf" (Small Web Format)</comment>
+  </data>
+  <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
+    <value>Áudio Matroska</value>
+    <comment>Display name for the file type ".mka"</comment>
+  </data>
+  <data name="FileDisplayNameMatroskaVideo" xml:space="preserve">
+    <value>Vídeo Matroska</value>
+    <comment>Display name for the file type ".mkv"</comment>
+  </data>
+  <data name="FileDisplayNameMIDI" xml:space="preserve">
+    <value>Dados de música MIDI</value>
+    <comment>Display name for the file type ".midi" and ".mid" (Musical Instrument Digital Interface)</comment>
+  </data>
+  <data name="FileDisplayNameMPEG" xml:space="preserve">
+    <value>Vídeo MPEG</value>
+    <comment>Display name for the file type ".mpg" and ".mpeg" (Moving Picture Experts Group 1/2)</comment>
+  </data>
+  <data name="FileDisplayNameMP3" xml:space="preserve">
+    <value>Áudio MP3</value>
+    <comment>Display name for the file type ".mp3"</comment>
+  </data>
+  <data name="FileDisplayNameMP4" xml:space="preserve">
+    <value>Vídeo MPEG-4</value>
+    <comment>Display name for the file type ".mp4" and ".mpg4" (MPEG-4)</comment>
+  </data>
+  <data name="FileDisplayNameMP4Audio" xml:space="preserve">
+    <value>Áudio MPEG-4</value>
+    <comment>Display name for the file type ".m4a"</comment>
+  </data>
+  <data name="FileDisplayNameMP4Audiobook" xml:space="preserve">
+    <value>MPEG-4 Audiobook</value>
+    <comment>Display name for the file type ".m4b"</comment>
+  </data>
+  <data name="FileDisplayNameMP4Video" xml:space="preserve">
+    <value>Vídeo do iTunes</value>
+    <comment>Display name for the file type ".m4v"</comment>
+  </data>
+  <data name="FileDisplayNameMXF" xml:space="preserve">
+    <value>MXF Video</value>
+    <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
+  </data>
+  <data name="FileDisplayNameNIST" xml:space="preserve">
+    <value>NIST SPHERE Audio</value>
+    <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
+  </data>
+  <data name="FileDisplayNameOggAudio" xml:space="preserve">
+    <value>Áudio Ogg Vorbis</value>
+    <comment>Display name for the file type ".ogg" and ".oga"</comment>
+  </data>
+  <data name="FileDisplayNameOggSpeex" xml:space="preserve">
+    <value>Ogg Speex Audio</value>
+    <comment>Display name for the file type ".spx"</comment>
+  </data>
+  <data name="FileDisplayNameOggOpus" xml:space="preserve">
+    <value>Opus Audio</value>
+    <comment>Display name for the file type ".opus"</comment>
+  </data>
+  <data name="FileDisplayNameOggVideo" xml:space="preserve">
+    <value>Vídeo Ogg</value>
+    <comment>Display name for the file type ".ogv"</comment>
+  </data>
+  <data name="FileDisplayNameQuickTime" xml:space="preserve">
+    <value>Vídeo QuickTime</value>
+    <comment>Display name for the file type ".mov" and ".qt"</comment>
+  </data>
+  <data name="FileDisplayNameRealAudio" xml:space="preserve">
+    <value>RealAudio File</value>
+    <comment>Display name for the file type ".ra"</comment>
+  </data>
+  <data name="FileDisplayNameRealMedia" xml:space="preserve">
+    <value>RealMedia File</value>
+    <comment>Display name for the file type ".rm"</comment>
+  </data>
+  <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
+    <value>RealMedia Variable Bit Rate File</value>
+    <comment>Display name for the file type ".rmvb"</comment>
+  </data>
+  <data name="FileDisplayNameVOB" xml:space="preserve">
+    <value>DVD Video Object File</value>
+    <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
+  </data>
+  <data name="FileDisplayNameWebAudio" xml:space="preserve">
+    <value>Áudio WebM</value>
+    <comment>Display name for the file type ".weba"</comment>
+  </data>
+  <data name="FileDisplayNameWebMedia" xml:space="preserve">
+    <value>Vídeo WebM</value>
+    <comment>Display name for the file type ".webm"</comment>
+  </data>
+  <data name="FileDisplayNameWave" xml:space="preserve">
+    <value>Áudio WAVE</value>
+    <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
+  </data>
+  <data name="FileDisplayNameASF" xml:space="preserve">
+    <value>ASF File</value>
+    <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
+  </data>
+  <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
+    <value>Windows Media File</value>
+    <comment>Display name for the file type ".wm"</comment>
+  </data>
+  <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
+    <value>Áudio do Windows Media</value>
+    <comment>Display name for the file type ".wma"</comment>
+  </data>
+  <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
+    <value>Vídeo do Windows Media</value>
+    <comment>Display name for the file type ".wmv"</comment>
+  </data>
+  <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
+    <value>Windows Recorded TV Show File</value>
+    <comment>Display name for the file type ".wtv"</comment>
+  </data>
+  <data name="FileDisplayNameM3U8" xml:space="preserve">
+    <value>Lista de reprodução M3U8</value>
+    <comment>Display name for the file type ".m3u8" and ".m3u (Moving Picture Experts Group Audio Layer 3 Uniform Resource Locator)</comment>
+  </data>
+  <data name="FileDisplayNameMPEGTS" xml:space="preserve">
+    <value>Fluxo de transporte MPEG</value>
+    <comment>Display name for the file type ".m2t" and ".ts"</comment>
+  </data>
+  <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
+    <value>BDAV MPEG-2 Transport Stream</value>
+    <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
+  </data>
+  <data name="FileDisplayNameWavPack" xml:space="preserve">
+    <value>Áudio WavPack</value>
+    <comment>Display name for the file type ".wv"</comment>
+  </data>
+  <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
+    <value>WavPack Correction File</value>
+    <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>

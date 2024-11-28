@@ -233,7 +233,7 @@
     <value>Remover</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Reproduzir próximo</value>
+    <value>Reproduzir em seguida</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
     <value>Mover para cima</value>
@@ -825,10 +825,10 @@
     <value>Obter o Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Baixe visuais no GitHub</value>
+    <value>Baixar visuais no GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Opções de áudio visual</value>
+    <value>Opções audiovisuais</value>
   </data>
   <data name="Visuals" xml:space="preserve">
     <value>Visuais</value>
@@ -868,5 +868,14 @@
   </data>
   <data name="VideoLibrary" xml:space="preserve">
     <value>Biblioteca de vídeos</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Mostrar o álbuns</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Mostrar o artista</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Falha ao carregar o visual</value>
   </data>
 </root>

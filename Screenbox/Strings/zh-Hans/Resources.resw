@@ -869,4 +869,13 @@
   <data name="VideoLibrary" xml:space="preserve">
     <value>视频</value>
   </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>显示专辑</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>显示艺术家</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Failed to load visual</value>
+  </data>
 </root>

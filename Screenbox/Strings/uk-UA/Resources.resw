@@ -215,13 +215,13 @@
     <value>Додати у чергу</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Вибрати все</value>
+    <value>Обрати все</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Вибрати всі елементи цього перегляду</value>
+    <value>Обрати всі елементи цього перегляду</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Вибрати нема чого</value>
+    <value>Обрати нічого</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>Очистити свій вибір</value>
@@ -613,7 +613,7 @@
     <value>Показувати останнє</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Показати елементи керування на паузі</value>
+    <value>Показувати елементи керування під час паузи</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Розташування бібліотеки відео</value>
@@ -825,10 +825,10 @@
     <value>Отримати Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Завантажити візуалізацію на GitHub</value>
+    <value>Завантажити візуалізації з GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Аудіо візуальні параметри</value>
+    <value>Параметри візуалізації аудіо</value>
   </data>
   <data name="Visuals" xml:space="preserve">
     <value>Візуалізація</value>
@@ -837,10 +837,10 @@
     <value>Переглянути файл(и)</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>За замовчуванням</value>
+    <value>Стандартна</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Виберіть стиль зображення, який буде показуватися під час відтворення аудіо</value>
+    <value>Оберіть тло, яке буде показуватися під час відтворення аудіо для повного занурення</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>На основі Lively Wallpaper</value>
@@ -868,5 +868,14 @@
   </data>
   <data name="VideoLibrary" xml:space="preserve">
     <value>Відео</value>
+  </data>
+  <data name="ShowAlbum" xml:space="preserve">
+    <value>Show album</value>
+  </data>
+  <data name="ShowArtist" xml:space="preserve">
+    <value>Show artist</value>
+  </data>
+  <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
+    <value>Failed to load visual</value>
   </data>
 </root>
