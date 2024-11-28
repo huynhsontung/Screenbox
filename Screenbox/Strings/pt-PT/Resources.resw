@@ -876,6 +876,6 @@
     <value>Mostrar artista</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Falha ao carregar o visual</value>
   </data>
 </root>
