@@ -40,6 +40,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
     private readonly ILivelyWallpaperService _wallpaperService;
     private readonly IFilesService _filesService;
     private readonly ISettingsService _settingsService;
+    private readonly DispatcherQueue _dispatcherQueue;
 
     public LivelyWallpaperSelectorViewModel(ILivelyWallpaperService wallpaperService, IFilesService filesService, ISettingsService settingsService,
         string defaultTitle, string defaultPreviewPath) : this(wallpaperService, filesService, settingsService)
@@ -55,6 +56,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
         _wallpaperService = wallpaperService;
         _filesService = filesService;
         _settingsService = settingsService;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
     }
 
     public async Task InitializeVisualizers()
@@ -77,7 +79,7 @@ public sealed partial class LivelyWallpaperSelectorViewModel : ObservableRecipie
 
     public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
     {
-        SelectedVisualizer = message.NewValue;
+        _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => SelectedVisualizer = message.NewValue);
     }
 
     partial void OnSelectedVisualizerChanged(LivelyWallpaperModel? value)

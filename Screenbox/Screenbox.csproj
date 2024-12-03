@@ -445,6 +445,7 @@
     <None Include="Controls\Animations\AnimatedPlayingVisualSource.json" />
     <None Include="Package.StoreAssociation.xml" />
     <None Include="packages.lock.json" />
+    <None Include="InvaidXamlResources.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <None Include="Secrets.cs.template" />
   </ItemGroup>
