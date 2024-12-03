@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.AudioTrackSubtitlePicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -38,7 +39,7 @@
                     <HyperlinkButton
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
-                        AutomationProperties.AutomationControlType="Button"
+                        contract14Present:AutomationProperties.AutomationControlType="Button"
                         Command="{x:Bind ShowAudioOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"
@@ -92,7 +93,7 @@
                     <HyperlinkButton
                         Grid.Column="1"
                         Padding="{StaticResource HyperlinkButtonUniformPadding}"
-                        AutomationProperties.AutomationControlType="Button"
+                        contract14Present:AutomationProperties.AutomationControlType="Button"
                         Command="{x:Bind ShowSubtitleOptionsCommand}">
                         <TextBlock
                             Style="{StaticResource CaptionTextBlockStyle}"

@@ -135,7 +135,6 @@ public class LivelyWallpaperService : ILivelyWallpaperService
 
     private static bool TrySanitizeUrl(string address, out Uri uri)
     {
-        uri = null;
         try
         {
             try
@@ -154,6 +153,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         }
         catch
         {
+            uri = new Uri("about:blank");
             return false;
         }
         return true;
