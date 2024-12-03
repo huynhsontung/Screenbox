@@ -62,7 +62,6 @@
                     <Grid
                         Width="112"
                         Height="96"
-                        CornerRadius="{StaticResource GridViewItemCornerRadius}"
                         FlowDirection="LeftToRight"
                         ToolTipService.ToolTip="{x:Bind Model.Title, FallbackValue={x:Null}}">
                         <Grid.Background>
@@ -83,7 +82,7 @@
                             Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImageBrush}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource GridViewItemCornerRadius}"
+                            CornerRadius="4"
                             ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
                             Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
                             <Image
