@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>Dolby AC-3 Sesi</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -147,7 +147,7 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>Sıkıştırılmış AIFF Sesi</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>DTS Sesi</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -167,7 +167,7 @@
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>Flaş MP4 Videosu</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -175,7 +175,7 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value>Shockwave Flash Movie</value>
+    <value>Shockwave Flash Filmi</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
@@ -231,7 +231,7 @@
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>Opus Sesi</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -271,7 +271,7 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>ASF Dosyası</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
@@ -287,7 +287,7 @@
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>Windows Kaydedilen TV Programı Dosyası</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
@@ -299,7 +299,7 @@
     <comment>Display name for the file type ".m2t" and ".ts"</comment>
   </data>
   <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
-    <value>BDAV MPEG-2 Transport Stream</value>
+    <value>BDAV MPEG-2 Yayın Akışı</value>
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
@@ -307,7 +307,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>WavPack Düzeltme Dosyası</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>
