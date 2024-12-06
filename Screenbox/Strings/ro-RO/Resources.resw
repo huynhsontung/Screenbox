@@ -249,7 +249,7 @@
     <value>Videoclipuri</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>Acest folder este gol</value>
+    <value>Acest dosar este gol</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} element</value>
@@ -299,7 +299,7 @@
     <value>Gen necunoscut</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Adăugare folder</value>
+    <value>Adăugare dosar</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Curățare</value>
@@ -464,16 +464,16 @@
     <value>Mai multe opțiuni pentru adăugarea fișierelor media la coada de redare</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Adăugați un folder la biblioteca dvs. de muzică</value>
+    <value>Adăugați un dosar la biblioteca dvs. de muzică</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Adăugați media din URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Adăugați un folder la biblioteca dvs. de videoclipuri</value>
+    <value>Adăugați un dosar la biblioteca dvs. de videoclipuri</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Deschidere folder</value>
+    <value>Deschidere dosar</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
     <value>Deschidere URL</value>
@@ -505,7 +505,7 @@
     <value>Toate videoclipurile</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Foldere video</value>
+    <value>Dosare video</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
     <value>Rezultatele căutării pentru "{0}"</value>
@@ -876,6 +876,6 @@
     <value>Afișare artist</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Încărcarea vizualelor a eșuat</value>
   </data>
 </root>
