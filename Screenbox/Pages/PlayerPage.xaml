@@ -318,7 +318,7 @@
                 <FontIcon
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xF0003;" />
+                    Glyph="&#xF010D;" />
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>

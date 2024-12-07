@@ -36,7 +36,7 @@
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
             <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
-                FalseValue="&#xF83D;"
+                FalseValue="&#xF002A;"
                 TrueValue="&#xE8B1;" />
 
             <Flyout x:Key="VolumeControlFlyout">
@@ -224,7 +224,8 @@
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemCastKey}"
                     Click="CastMenuFlyoutItem_OnClick"
-                    Icon="{ui:FontIcon Glyph=&#xEC15;}"
+                    Icon="{ui:FontIcon Glyph=&#xEC15;,
+                                       MirroredWhenRightToLeft=True}"
                     IsEnabled="{x:Bind IsCastButtonEnabled(ViewModel.HasActiveItem), Mode=OneWay}"
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.Cast}">
@@ -445,7 +446,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
-                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" />
+                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
@@ -482,7 +483,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon contract13NotPresent:FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetRepeatModeGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -497,7 +498,7 @@
                 FlowDirection="{x:Bind FlowDirection}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon Glyph="&#xED1F;" />
+                <FontIcon Glyph="&#xED1F;" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="C" Invoked="{x:Bind ViewModel.ToggleSubtitle}" />
                     <KeyboardAccelerator
@@ -531,8 +532,9 @@
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                 <FontIcon
                     x:Name="CompactOverlayButtonIcon"
-                    contract13NotPresent:FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                    Glyph="&#xEE49;" />
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    Glyph="&#xEE49;"
+                    MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" Modifiers="Control" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsCompact, Mode=OneWay}" />
@@ -548,7 +550,10 @@
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                <FontIcon x:Name="FullscreenButtonIcon" Glyph="&#xE740;" />
+                <FontIcon
+                    x:Name="FullscreenButtonIcon"
+                    Glyph="&#xE740;"
+                    MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="F" />
                     <KeyboardAccelerator Key="Escape" IsEnabled="{x:Bind ViewModel.IsFullscreen, Mode=OneWay}" />

@@ -136,11 +136,11 @@ namespace Screenbox.Controls
         {
             return playbackSpeed switch
             {
-                >= 1.75 => "\ueb24",
-                > 1.01 => "\uec4a",
-                <= 0.25 => "\uec48",
-                < 0.99 => "\uf823",
-                _ => "\uec49"
+                >= 1.75 => "\uEB24",
+                > 1.01 => "\uEC4A",
+                <= 0.25 => "\uEC48",
+                < 0.99 => "\U000F00A4",
+                _ => "\uEC49"
             };
         }
 
