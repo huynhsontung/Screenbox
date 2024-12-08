@@ -92,6 +92,8 @@ namespace Screenbox.Pages
             // Default content state
             VisualStateManager.GoToState(this, "Video", false);
 
+            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
+
             if (e.Parameter is true)
             {
                 LayoutRoot.Transitions.Clear();

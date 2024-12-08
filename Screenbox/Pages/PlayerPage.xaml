@@ -236,6 +236,7 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <FontIcon
+                    x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
                     Glyph="&#xE93F;" />
@@ -316,6 +317,7 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
                 <FontIcon
+                    x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
                     Glyph="&#xF010D;" />
@@ -946,6 +948,17 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.Setters>
+                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="&#xF006F;" />
+                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="&#xF010E;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

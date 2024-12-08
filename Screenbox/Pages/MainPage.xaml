@@ -176,7 +176,10 @@
                     KeyTipPlacementMode="Right"
                     Tag="queue">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="&#xE93F;" />
+                        <FontIcon
+                            x:Name="NavItemPlayQueueIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="&#xE93F;" />
                     </muxc:NavigationViewItem.Icon>
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
@@ -425,6 +428,16 @@
                     <VisualState.Setters>
                         <Setter Target="ContentFrame.Margin" Value="0,0,0,42" />
                         <Setter Target="NotificationView.Margin" Value="10,0,10,148" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.Setters>
+                        <Setter Target="NavItemPlayQueueIcon.Glyph" Value="&#xF006F;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -142,7 +142,10 @@
                 KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE762;" />
+                    <FontIcon
+                        x:Name="MultiSelectToggleIcon"
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        Glyph="&#xE762;" />
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
@@ -362,6 +365,16 @@
                         <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
                         <Setter Target="Footer.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.Setters>
+                        <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
