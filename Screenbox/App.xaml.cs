@@ -226,6 +226,18 @@ namespace Screenbox
 
             // Ensure the current window is active
             Window.Current.Activate();
+
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                //DebugSettings.EnableFrameRateCounter = true;
+                //DebugSettings.EnableRedrawRegions = true;
+                //DebugSettings.FailFastOnErrors = true;
+                //DebugSettings.IsBindingTracingEnabled = true;
+                //DebugSettings.IsOverdrawHeatMapEnabled = true;
+                //DebugSettings.IsTextPerformanceVisualizationEnabled = true;
+            }
+#endif
         }
 
         /// <summary>
