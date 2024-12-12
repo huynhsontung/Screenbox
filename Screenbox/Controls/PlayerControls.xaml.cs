@@ -102,11 +102,11 @@ namespace Screenbox.Controls
             switch (repeatMode)
             {
                 case MediaPlaybackAutoRepeatMode.None:
-                    return "\uf5e7";
+                    return App.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7";
                 case MediaPlaybackAutoRepeatMode.List:
-                    return "\ue8ee";
+                    return App.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE";
                 case MediaPlaybackAutoRepeatMode.Track:
-                    return "\ue8ed";
+                    return App.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
             }
