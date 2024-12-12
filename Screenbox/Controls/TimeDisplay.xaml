@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
@@ -16,17 +17,22 @@
             <TextBlock
                 x:Name="TimeText"
                 Margin="0,0,4,0"
-                Style="{x:Bind TextBlockStyle, Mode=OneWay}">
+                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+                ToolTipService.ToolTip="{strings:Resources Key=TimeElapsed}">
                 <Run Text="{x:Bind Time, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" /><Run Text=" /" />
             </TextBlock>
             <TextBlock
                 x:Name="RemainingText"
                 Margin="0,0,4,0"
                 Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+                ToolTipService.ToolTip="{strings:Resources Key=TimeRemaining}"
                 Visibility="Collapsed">
                 <Run Text="{x:Bind GetRemainingTime(Time), Mode=OneWay}" /><Run Text=" /" />
             </TextBlock>
-            <TextBlock Style="{x:Bind TextBlockStyle, Mode=OneWay}" Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}" />
+            <TextBlock
+                Style="{x:Bind TextBlockStyle, Mode=OneWay}"
+                Text="{x:Bind Length, Mode=OneWay, Converter={StaticResource HumanizedDurationConverter}}"
+                ToolTipService.ToolTip="{strings:Resources Key=TimeLength}" />
         </StackPanel>
         <TextBlock
             x:Name="NameText"
