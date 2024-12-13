@@ -126,6 +126,7 @@ namespace Screenbox.Controls
 
         private void PlaylistView_OnLoaded(object sender, RoutedEventArgs e)
         {
+            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
             UpdateLayoutState();
             GoToCurrentItem();
 

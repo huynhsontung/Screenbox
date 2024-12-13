@@ -266,6 +266,45 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region TimeElapsed
+        /// <summary>
+        ///   Looks up a localized string similar to: Time elapsed
+        /// </summary>
+        public static string TimeElapsed
+        {
+            get
+            {
+                return _resourceLoader.GetString("TimeElapsed");
+            }
+        }
+        #endregion
+
+        #region TimeRemaining
+        /// <summary>
+        ///   Looks up a localized string similar to: Time remaining
+        /// </summary>
+        public static string TimeRemaining
+        {
+            get
+            {
+                return _resourceLoader.GetString("TimeRemaining");
+            }
+        }
+        #endregion
+
+        #region TimeLength
+        /// <summary>
+        ///   Looks up a localized string similar to: Total duration
+        /// </summary>
+        public static string TimeLength
+        {
+            get
+            {
+                return _resourceLoader.GetString("TimeLength");
+            }
+        }
+        #endregion
+
         #region ChapterName
         /// <summary>
         ///   Looks up a localized string similar to: Chapter {0}
@@ -3054,6 +3093,9 @@ namespace Screenbox.Strings{
             PlaybackSpeed,
             VolumeChangeStatusMessage,
             FailedToSaveFrameNotificationTitle,
+            TimeElapsed,
+            TimeRemaining,
+            TimeLength,
             ChapterName,
             FailedToLoadSubtitleNotificationTitle,
             Back,

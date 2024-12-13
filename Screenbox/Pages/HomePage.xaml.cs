@@ -31,6 +31,7 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
+            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
         }
 
         private void HomePage_OnDragOver(object sender, DragEventArgs e)

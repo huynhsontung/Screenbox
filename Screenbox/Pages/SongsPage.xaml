@@ -92,7 +92,10 @@
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
             <StackPanel Orientation="Horizontal">
-                <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8B1;" />
+                <FontIcon
+                    Margin="{StaticResource IconButtonStandardIconMargin}"
+                    Glyph="&#xE8B1;"
+                    MirroredWhenRightToLeft="True" />
                 <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
             </StackPanel>
         </Button>
