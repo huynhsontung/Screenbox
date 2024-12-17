@@ -219,7 +219,7 @@
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value/>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
