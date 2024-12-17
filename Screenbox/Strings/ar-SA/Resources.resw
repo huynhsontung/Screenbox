@@ -137,7 +137,7 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>أخفق حفظ الإطار</value>
+    <value>فشل حفظ الإطار</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>الفصل {0}</value>
@@ -159,10 +159,10 @@
     <value>ملء الشاشة</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>الصوت و التسميات التوضيحية</value>
+    <value>الصوت والترجمة</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>الخروج من ملء الشاشة</value>
+    <value>الخروج من وضع ملء الشاشة</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>مستوى الصوت</value>
@@ -171,7 +171,7 @@
     <value>ضبط مستوى الصوت</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>سحب</value>
+    <value>تمرير</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>الخروج من وضع صورة في صورة</value>
@@ -186,13 +186,13 @@
     <value>تشغيل</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>ايقاف مؤقت</value>
+    <value>إيقاف مؤقت</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>المزيد</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>قائمة انتظار التشغيل</value>
+    <value>تشغيل قائمة الانتظار</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>التكرار: إيقاف</value>
@@ -204,7 +204,7 @@
     <value>التكرار: مرة واحدة</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>تم تحديد {0} عناصر</value>
+    <value>تم تحديد {0} عنصر</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
@@ -215,31 +215,31 @@
     <value>إضافة إلى قائمة الانتظار</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>حدد الكل</value>
+    <value>تحديد الكل</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>حدد كافة العناصر في هذا العرض</value>
+    <value>تحديد جميع العناصر في هذا العرض</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
     <value>عدم التحديد</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>امسح اختيارك</value>
+    <value>مسح التحديد الخاص بك</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>مسح التحديد</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>ازالة</value>
+    <value>إزالة</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
     <value>تشغيل التالي</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>اذهب للأعلى</value>
+    <value>إلى الأعلى</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>اذهب للأسفل</value>
+    <value>إلى الأسفل</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>يتم تشغيله حالياً</value>
@@ -407,7 +407,7 @@
     <value>لا يوجد جهاز متاح على الشبكة</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>تعذر العثور على الوسائط الخاصة بك؟ تأكد من اقتران جهاز الشبكة الخاص بك في إعدادات Windows.</value>
+    <value>لم تتمكن من العثور على الوسائط الخاصة بك؟ تأكد من اقتران جهاز الشبكة الخاص بك في إعدادات Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>الأخيرة</value>
@@ -870,12 +870,12 @@
     <value>مقاطع الفيديو</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>عرض الألبوم</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>عرض الفنان</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>فشل تحميل الصورة</value>
   </data>
 </root>
