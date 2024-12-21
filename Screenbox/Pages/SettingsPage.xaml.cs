@@ -3,7 +3,6 @@ using Screenbox.Core.ViewModels;
 using System;
 using System.Linq;
 using System.Numerics;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -39,8 +38,6 @@ namespace Screenbox.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
-
             await ViewModel.LoadLibraryLocations();
             await AudioVisualSelector.ViewModel.InitializeVisualizers();
         }

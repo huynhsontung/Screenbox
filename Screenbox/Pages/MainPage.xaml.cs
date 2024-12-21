@@ -97,8 +97,6 @@ namespace Screenbox.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
-
             PlayerFrame.Navigate(typeof(PlayerPage), e.Parameter);
             if (e.Parameter is true)
             {

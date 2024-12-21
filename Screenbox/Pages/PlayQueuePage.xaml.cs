@@ -2,7 +2,6 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Controls;
-using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,7 +30,6 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
         }
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)

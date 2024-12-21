@@ -2,6 +2,7 @@
     x:Class="Screenbox.Controls.PlaylistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
@@ -373,6 +374,9 @@
                 <VisualState x:Name="LeftToRight" />
 
                 <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>

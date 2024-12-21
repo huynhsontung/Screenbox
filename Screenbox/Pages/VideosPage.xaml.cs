@@ -6,7 +6,6 @@ using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -50,8 +49,6 @@ namespace Screenbox.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            VisualStateManager.GoToState(this, App.IsRightToLeftLanguage ? "RightToLeft" : "LeftToRight", false);
-
             if (Common.NavigationStates.TryGetValue(typeof(VideosPage), out string navigationState))
             {
                 ContentFrame.SetNavigationState(navigationState);

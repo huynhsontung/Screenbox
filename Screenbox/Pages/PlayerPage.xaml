@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:class="using:Screenbox"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -956,6 +957,9 @@
                 <VisualState x:Name="LeftToRight" />
 
                 <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayQueueButtonIcon.Glyph" Value="&#xF006F;" />
                         <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="&#xF010E;" />

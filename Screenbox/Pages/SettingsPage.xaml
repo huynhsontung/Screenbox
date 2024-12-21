@@ -2,6 +2,7 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
@@ -527,6 +528,9 @@
                 <VisualState x:Name="LeftToRight" />
 
                 <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="&#xF003F;" />
                         <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="&#xF003F;" />
