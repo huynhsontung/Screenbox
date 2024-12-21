@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>אודיו בפורמט Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -147,7 +147,7 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>אודיו דחוס בפורמט AIFF</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>אודיו בפורמט DTS</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -167,7 +167,7 @@
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>ווידאו בפורמט Flash MP4</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -219,7 +219,7 @@
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value>אודיו בפורמט NIST SPHERE</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
@@ -287,7 +287,7 @@
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>קובץ תוכנית TV מוקלטת של Windows</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
