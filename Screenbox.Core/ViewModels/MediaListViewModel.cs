@@ -124,6 +124,7 @@ namespace Screenbox.Core.ViewModels
         public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
+            _mediaPlayer.MediaFailed += OnMediaFailed;
             _mediaPlayer.MediaEnded += OnEndReached;
             _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
 
@@ -139,13 +140,31 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
+        private void OnMediaFailed(IMediaPlayer sender, EventArgs args)
+        {
+            _dispatcherQueue.TryEnqueue(() =>
+            {
+                if (CurrentItem != null)
+                {
+                    CurrentItem.IsPlaying = false;
+                    CurrentItem.IsAvailable = false;
+                }
+            });
+        }
+
         private void OnPlaybackStateChanged(IMediaPlayer sender, object args)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
                 if (CurrentItem != null)
                 {
-                    CurrentItem.IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                    bool isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                    if (isPlaying)
+                    {
+                        CurrentItem.IsAvailable = true;
+                    }
+
+                    CurrentItem.IsPlaying = isPlaying;
                 }
             });
         }

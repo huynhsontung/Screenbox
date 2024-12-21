@@ -63,12 +63,14 @@
             Text="{Binding TrackNumberText, FallbackValue=''}"
             TextWrapping="NoWrap"
             Visibility="{x:Bind IsTrackNumberVisible}" />
+
         <FontIcon
             x:Name="ItemMediaTypeIcon"
             Grid.Column="1"
             Glyph="{Binding Converter={StaticResource MediaGlyphConverter}}"
             IsHitTestVisible="False"
             Visibility="{x:Bind IsIconVisible}" />
+
         <HyperlinkButton
             x:Name="PlayButton"
             Grid.Column="1"
@@ -180,6 +182,23 @@
                         <Setter Target="GenreText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
                         <Setter Target="GenreText.Opacity" Value="1" />
                         <Setter Target="DurationText.Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        <Setter Target="DurationText.Opacity" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Unavailable">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{Binding IsAvailable, Mode=OneWay, Converter={StaticResource BoolNegationConverter}, FallbackValue=False}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackNumberText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="TrackNumberText.Opacity" Value="1" />
+                        <Setter Target="ItemMediaTypeIcon.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="TitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="ArtistButton.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="AlbumButton.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="GenreText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="GenreText.Opacity" Value="1" />
+                        <Setter Target="DurationText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
                         <Setter Target="DurationText.Opacity" Value="1" />
                     </VisualState.Setters>
                 </VisualState>

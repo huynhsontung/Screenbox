@@ -73,6 +73,7 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
+        [ObservableProperty] private bool _isAvailable = true;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
