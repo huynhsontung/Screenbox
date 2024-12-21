@@ -89,6 +89,7 @@
                     <Thickness x:Key="TopMediumMargin">0,12,0,0</Thickness>
                     <Thickness x:Key="TopLargeMargin">0,16,0,0</Thickness>
                     <Thickness x:Key="BottomMediumMargin">0,0,0,12</Thickness>
+                    <Thickness x:Key="BottomLargeMargin">0,0,0,16</Thickness>
 
                     <Thickness x:Key="ContentPageScrollBarMargin">0,0,0,100</Thickness>
                     <Thickness x:Key="ContentPageBottomMargin">0,0,0,106</Thickness>
