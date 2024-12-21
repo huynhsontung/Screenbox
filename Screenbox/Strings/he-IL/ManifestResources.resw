@@ -215,7 +215,7 @@
     <comment>Display name for the file type ".m4v"</comment>
   </data>
   <data name="FileDisplayNameMXF" xml:space="preserve">
-    <value>MXF Video</value>
+    <value>וידאו בפורמט MXF</value>
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
