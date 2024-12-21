@@ -105,9 +105,9 @@
       },
       "Sentry": {
         "type": "Direct",
-        "requested": "[4.13.0, )",
-        "resolved": "4.13.0",
-        "contentHash": "Wfw3M1WpFcrYaGzPm7QyUTfIOYkVXQ1ry6p4WYjhbLz9fPwV23SGQZTFDpdox67NHM0V0g1aoQ4YKLm4ANtEEg==",
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "VCqGv7bE8rnEI4m8+lrxLFFGMrOMvOTArz51gj+1MID5Zzhi9KNoDIjJb1qLY2ys90Cr2YH5HSXcTg5mCG2beQ==",
         "dependencies": {
           "System.Reflection.Metadata": "5.0.0",
           "System.Text.Json": "6.0.10"
