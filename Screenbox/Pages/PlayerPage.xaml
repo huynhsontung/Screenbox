@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:class="using:Screenbox"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -236,6 +237,7 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <FontIcon
+                    x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
                     Glyph="&#xE93F;" />
@@ -316,9 +318,10 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
                 <FontIcon
+                    x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xF0003;" />
+                    Glyph="&#xF010D;" />
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
@@ -946,6 +949,20 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="&#xF006F;" />
+                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="&#xF010E;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

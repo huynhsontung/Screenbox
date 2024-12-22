@@ -2,7 +2,9 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
+    xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -183,7 +185,11 @@
                         Command="{x:Bind ViewModel.AddMusicFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
+                            <FontIcon
+                                x:Name="SettingsExpanderAddMusicFolderButtonIcon"
+                                Margin="{StaticResource IconButtonStandardIconMargin}"
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                Glyph="&#xE8F4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -207,7 +213,11 @@
                         Command="{x:Bind ViewModel.AddVideosFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
                         <StackPanel Orientation="Horizontal">
-                            <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
+                            <FontIcon
+                                x:Name="SettingsExpanderAddVideoFolderButtonIcon"
+                                Margin="{StaticResource IconButtonStandardIconMargin}"
+                                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                                Glyph="&#xE8F4;" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -240,8 +250,8 @@
                             </StackPanel>
                         </ctc:SettingsCard>
                         <ctc:SettingsCard
-                            x:Name="SettingsManageSystemIndexingCard"
-                            ActionIcon="{ui:FontIcon Glyph=&#xE8A7;}"
+                            ActionIcon="{ui:FontIcon Glyph=&#xE8A7;,
+                                                     MirroredWhenRightToLeft=True}"
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
                             IsClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
@@ -300,7 +310,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE767;}">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE767;,
+                                             MirroredWhenRightToLeft=True}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
@@ -340,11 +351,12 @@
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
+                    x:Name="SettingsAudioVisualExpander"
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph=&#xF0003;}">
+                                             Glyph=&#xF010D;}">
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
@@ -395,7 +407,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
                     Header="{strings:Resources Key=SettingsUseMultipleInstancesHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;,
+                                             MirroredWhenRightToLeft=True}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
@@ -507,6 +520,21 @@
                         <Setter Target="ContentRoot.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="PendingChangesInfoBar.MaxWidth" Value="360" />
                         <Setter Target="PendingChangesInfoBar.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="&#xF003F;" />
+                        <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="&#xF003F;" />
+                        <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph=&#xF010E;}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

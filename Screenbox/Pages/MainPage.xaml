@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
+    xmlns:class="using:Screenbox"
     xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
@@ -176,7 +177,10 @@
                     KeyTipPlacementMode="Right"
                     Tag="queue">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="&#xE93F;" />
+                        <FontIcon
+                            x:Name="NavItemPlayQueueIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="&#xE93F;" />
                     </muxc:NavigationViewItem.Icon>
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
@@ -425,6 +429,19 @@
                     <VisualState.Setters>
                         <Setter Target="ContentFrame.Margin" Value="0,0,0,42" />
                         <Setter Target="NotificationView.Margin" Value="10,0,10,148" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="NavItemPlayQueueIcon.Glyph" Value="&#xF006F;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

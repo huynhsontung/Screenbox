@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uniF5EB" format="2">
+  <advance width="2048"/>
+  <unicode hex="F5EB"/>
+  <outline>
+    <contour>
+      <point x="640" y="1920" type="line"/>
+      <point x="1920" y="1024" type="line"/>
+      <point x="1152" y="487" type="line"/>
+      <point x="1152" y="640" type="line"/>
+      <point x="1148" y="640" type="line"/>
+      <point x="1697" y="1024" type="line"/>
+      <point x="768" y="1674" type="line"/>
+      <point x="768" y="1024" type="line"/>
+      <point x="640" y="1024" type="line"/>
+    </contour>
+    <contour>
+      <point x="512" y="896" type="line"/>
+      <point x="640" y="896" type="line"/>
+      <point x="640" y="512" type="line"/>
+      <point x="1024" y="512" type="line"/>
+      <point x="1024" y="384" type="line"/>
+      <point x="640" y="384" type="line"/>
+      <point x="640" y="0" type="line"/>
+      <point x="512" y="0" type="line"/>
+      <point x="512" y="384" type="line"/>
+      <point x="128" y="384" type="line"/>
+      <point x="128" y="512" type="line"/>
+      <point x="512" y="512" type="line"/>
+    </contour>
+  </outline>
+</glyph>

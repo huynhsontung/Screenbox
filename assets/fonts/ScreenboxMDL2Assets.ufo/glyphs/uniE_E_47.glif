@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uniEE47" format="2">
+  <advance width="2048"/>
+  <unicode hex="EE47"/>
+  <outline>
+    <contour>
+      <point x="128" y="1920" type="line"/>
+      <point x="1920" y="1920" type="line"/>
+      <point x="1920" y="128" type="line"/>
+      <point x="1152" y="128" type="line"/>
+      <point x="1152" y="256" type="line"/>
+      <point x="1792" y="256" type="line"/>
+      <point x="1792" y="1024" type="line"/>
+      <point x="1024" y="1024" type="line"/>
+      <point x="1024" y="1792" type="line"/>
+      <point x="256" y="1792" type="line"/>
+      <point x="256" y="1152" type="line"/>
+      <point x="128" y="1152" type="line"/>
+    </contour>
+    <contour>
+      <point x="1152" y="1152" type="line"/>
+      <point x="1792" y="1152" type="line"/>
+      <point x="1792" y="1792" type="line"/>
+      <point x="1152" y="1792" type="line"/>
+    </contour>
+    <contour>
+      <point x="805" y="896" type="line"/>
+      <point x="896" y="805" type="line"/>
+      <point x="347" y="256" type="line"/>
+      <point x="768" y="256" type="line"/>
+      <point x="768" y="128" type="line"/>
+      <point x="128" y="128" type="line"/>
+      <point x="128" y="768" type="line"/>
+      <point x="256" y="768" type="line"/>
+      <point x="256" y="347" type="line"/>
+    </contour>
+  </outline>
+</glyph>

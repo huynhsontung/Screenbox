@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -25,6 +26,7 @@
                 Icon="{ui:FontIcon Glyph=&#xE838;}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
+                x:Name="AddToPlayQueueMenuFlyoutFolderItem"
                 AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
@@ -113,6 +115,19 @@
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddToPlayQueueMenuFlyoutFolderItem.Icon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph=&#xF00FC;}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

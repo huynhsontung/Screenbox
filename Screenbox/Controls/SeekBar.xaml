@@ -21,7 +21,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid FlowDirection="LeftToRight">
         <controls:ChapterProgressBar
             x:Name="PlayerProgressBar"
             HorizontalAlignment="Stretch"
