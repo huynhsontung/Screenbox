@@ -451,20 +451,34 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private async Task<PlaylistCreateResult?> CreatePlaylistAsync(IReadOnlyList<IStorageItem> files)
+        private async Task<PlaylistCreateResult?> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems)
         {
             List<MediaViewModel> queue = new();
-            foreach (IStorageItem item in files.ToList()) // ToList() to avoid modifying the collection while iterating
+            List<IStorageItem> storageItemQueue = storageItems.ToList();
+            // Max number of items in queue is 10k. Reevaluate if needed.
+            for (int i = 0; i < storageItemQueue.Count && queue.Count < 10000; i++)
             {
-                if (item is not StorageFile storageFile) continue;
-                MediaViewModel vm = _mediaFactory.GetSingleton(storageFile);
-                if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm) is { Count: > 0 } playlist)
+                IStorageItem item = storageItemQueue[i];
+                switch (item)
                 {
-                    queue.AddRange(playlist);
-                }
-                else
-                {
-                    queue.Add(vm);
+                    case StorageFile storageFile when storageFile.IsSupported():
+                        MediaViewModel vm = _mediaFactory.GetSingleton(storageFile);
+                        if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm) is
+                            { Count: > 0 } playlist)
+                        {
+                            queue.AddRange(playlist);
+                        }
+                        else
+                        {
+                            queue.Add(vm);
+                        }
+                        break;
+
+                    case StorageFolder storageFolder:
+                        // Max number of items in a folder is 10k. Reevaluate if needed.
+                        var subItems = await storageFolder.GetItemsAsync(0, 10000);
+                        storageItemQueue.AddRange(subItems);
+                        break;
                 }
             }
 
