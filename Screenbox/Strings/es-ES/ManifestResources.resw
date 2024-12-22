@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value/>
+    <value>Audio Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
