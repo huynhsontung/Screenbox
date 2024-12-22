@@ -126,7 +126,10 @@
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="songs">
                     <muxc:NavigationViewItem.InfoBadge>
-                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.SongsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.SongsCount, Mode=OneWay}" />
+                        <muxc:InfoBadge
+                            Style="{StaticResource InformationalValueInfoBadgeStyle}"
+                            Visibility="{x:Bind ViewModel.SongsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.SongsCount, Mode=OneWay}" />
                     </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
@@ -136,7 +139,10 @@
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="albums">
                     <muxc:NavigationViewItem.InfoBadge>
-                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.AlbumsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.AlbumsCount, Mode=OneWay}" />
+                        <muxc:InfoBadge
+                            Style="{StaticResource InformationalValueInfoBadgeStyle}"
+                            Visibility="{x:Bind ViewModel.AlbumsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.AlbumsCount, Mode=OneWay}" />
                     </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
@@ -146,7 +152,10 @@
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="artists">
                     <muxc:NavigationViewItem.InfoBadge>
-                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.ArtistsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.ArtistsCount, Mode=OneWay}" />
+                        <muxc:InfoBadge
+                            Style="{StaticResource InformationalValueInfoBadgeStyle}"
+                            Visibility="{x:Bind ViewModel.ArtistsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
+                            Value="{x:Bind ViewModel.ArtistsCount, Mode=OneWay}" />
                     </muxc:NavigationViewItem.InfoBadge>
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
