@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>無法儲存影格</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Total duration</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章節</value>
     <comment>#Format[Int32 chapter]</comment>
