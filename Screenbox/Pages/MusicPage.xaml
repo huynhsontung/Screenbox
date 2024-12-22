@@ -124,19 +124,31 @@
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Songs}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
-                    Tag="songs" />
+                    Tag="songs">
+                    <muxc:NavigationViewItem.InfoBadge>
+                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.SongsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.SongsCount, Mode=OneWay}" />
+                    </muxc:NavigationViewItem.InfoBadge>
+                </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemAlbumsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Albums}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
-                    Tag="albums" />
+                    Tag="albums">
+                    <muxc:NavigationViewItem.InfoBadge>
+                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.AlbumsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.AlbumsCount, Mode=OneWay}" />
+                    </muxc:NavigationViewItem.InfoBadge>
+                </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
                     AccessKey="{strings:KeyboardResources Key=TopNavigationItemArtistsKey}"
                     AutomationProperties.HeadingLevel="Level2"
                     Content="{strings:Resources Key=Artists}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
-                    Tag="artists" />
+                    Tag="artists">
+                    <muxc:NavigationViewItem.InfoBadge>
+                        <muxc:InfoBadge Visibility="{x:Bind ViewModel.ArtistsCount, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}" Value="{x:Bind ViewModel.ArtistsCount, Mode=OneWay}" />
+                    </muxc:NavigationViewItem.InfoBadge>
+                </muxc:NavigationViewItem>
             </muxc:NavigationView.MenuItems>
             <muxc:NavigationView.PaneFooter>
                 <Button

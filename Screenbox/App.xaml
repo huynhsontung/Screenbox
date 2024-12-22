@@ -46,6 +46,12 @@
                         NotEmptyValue="Visible" />
                     <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
                     <toolkitConverters:DoubleToObjectConverter
+                        x:Key="DoubleToVisibilityConverter"
+                        FalseValue="Collapsed"
+                        GreaterThan="0"
+                        NullValue="Collapsed"
+                        TrueValue="Visible" />
+                    <toolkitConverters:DoubleToObjectConverter
                         x:Key="DoubleToBoolConverter"
                         FalseValue="False"
                         GreaterThan="0"
