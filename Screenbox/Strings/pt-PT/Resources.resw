@@ -140,13 +140,13 @@
     <value>Erro ao guardar fotograma</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Tempo decorrido</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Tempo restante</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Duração total</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
