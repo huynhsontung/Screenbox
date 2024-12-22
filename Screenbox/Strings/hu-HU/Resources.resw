@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Nem sikerült menteni a képkockát</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Total duration</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>{0}. fejezet</value>
     <comment>#Format[Int32 chapter]</comment>
