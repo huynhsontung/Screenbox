@@ -140,13 +140,13 @@
     <value>שמירת המסגרת נכשלה</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>זמן שחלף</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>זמן שנותר</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>משך זמן הכולל</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>פרק {0}</value>
@@ -885,6 +885,6 @@
     <value>הצג אמן</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>טעינת דגם וויזואלי נכשלה</value>
   </data>
 </root>
