@@ -140,13 +140,13 @@
     <value>Nu s-a reușit salvarea cadrului</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Timp scurs</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Timp rămas</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Durată totală</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capitol {0}</value>
