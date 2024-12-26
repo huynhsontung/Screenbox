@@ -230,18 +230,10 @@ internal class NavigationViewKeyboardBehavior : BehaviorBase<Microsoft.UI.Xaml.C
 
         if (AssociatedObject.FindDescendant<Button>(sb => sb.Name == "PaneAutoSuggestButton") is { } paneAutoSuggestButton)
         {
-            // Ensures the button icon is centered and matches the size of the other navigation buttons
-            paneAutoSuggestButton.Padding = (Thickness)Application.Current.Resources["NavigationViewItemButtonMargin"];
-            paneAutoSuggestButton.FontSize = 16;
-
             paneAutoSuggestButton.AccessKey = _paneAutoSuggestButtonAccessKey;
             paneAutoSuggestButton.KeyTipPlacementMode = RightAccessKeyPlacement;
 
             paneAutoSuggestButton.KeyboardAccelerators.Add(new KeyboardAccelerator() { Modifiers = CtrlKeyboardAcceleratorModifier, Key = PaneAutoSuggestKeyboardAcceleratorKey });
-
-            // Disable button glyph text scaling
-            // https://learn.microsoft.com/en-us/windows/apps/design/input/text-scaling#dont-scale-font-based-icons-or-symbols
-            paneAutoSuggestButton.IsTextScaleFactorEnabled = false;
         }
     }
 }
