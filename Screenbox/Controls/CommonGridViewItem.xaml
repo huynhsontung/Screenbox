@@ -53,7 +53,7 @@
                 Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 Stroke="{ThemeResource ControlElevationBorderBrush}"
                 StrokeThickness="0.8" />
-            <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="&#xE769;" />
+            <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource PauseGlyph}" />
         </Grid>
         <Button
             x:Name="PlayButton"
@@ -70,7 +70,7 @@
             Opacity="0"
             Style="{StaticResource AccentButtonStyle}"
             Visibility="{x:Bind CanPlay, Mode=OneWay}">
-            <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
+            <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}, Mode=OneWay}" />
         </Button>
 
         <!--

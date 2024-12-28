@@ -171,7 +171,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D6;}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource AudioGlyph}}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -189,7 +190,7 @@
                                 x:Name="SettingsExpanderAddMusicFolderButtonIcon"
                                 Margin="{StaticResource IconButtonStandardIconMargin}"
                                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                                Glyph="&#xE8F4;" />
+                                Glyph="{StaticResource NewFolderGlyph}" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -199,7 +200,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8B2;}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource MoviesGlyph}}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
@@ -217,7 +219,7 @@
                                 x:Name="SettingsExpanderAddVideoFolderButtonIcon"
                                 Margin="{StaticResource IconButtonStandardIconMargin}"
                                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                                Glyph="&#xE8F4;" />
+                                Glyph="{StaticResource NewFolderGlyph}" />
                             <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                         </StackPanel>
                     </Button>
@@ -270,7 +272,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
                     Header="{strings:Resources Key=SettingsShowRecentHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8B7;}">
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource FolderGlyph}}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
                     </interactivity:Interaction.Behaviors>
@@ -356,7 +359,7 @@
                     Description="{strings:Resources Key=SettingsAudioVisualDescription}"
                     Header="{strings:Resources Key=SettingsAudioVisualHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph=&#xF010D;}">
+                                             Glyph={StaticResource MusicVisualizerGlyph}}">
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind AudioVisualSelector.ViewModel.SelectedVisualizer.Model.Title, Mode=OneWay, FallbackValue={x:Null}}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard ContentAlignment="Left">
@@ -532,9 +535,9 @@
                         <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="&#xF003F;" />
-                        <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="&#xF003F;" />
-                        <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph=&#xF010E;}" />
+                        <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource MusicVisualizerMirroredGlyph}}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

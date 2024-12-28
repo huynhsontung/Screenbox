@@ -38,19 +38,20 @@
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
                         CommandParameter="{Binding}"
-                        Icon="{ui:FontIcon Glyph=&#xE768;}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlayGlyph}}"
                         Text="{strings:Resources Key=Play}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.PlayNextCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                           Glyph=&#xF5EB;}"
+                                           Glyph={StaticResource PlayAddGlyph}}"
                         Text="{strings:Resources Key=PlayNext}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{Binding}"
-                        Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                        Icon="{ui:FontIcon Glyph=&#xE894;}"
                         Text="{strings:Resources Key=Remove}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemUpCommand}"
@@ -112,7 +113,10 @@
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource FolderOpenGlyph}" />
                     <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
             </Button>
@@ -126,7 +130,10 @@
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE74D;" />
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource DeleteGlyph}" />
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
@@ -193,13 +200,13 @@
                     Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xF5EB;}"
+                                       Glyph={StaticResource PlayAddGlyph}}"
                     Label="{strings:Resources Key=PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="Delete"
+                    Icon="{ui:FontIcon Glyph=&#xE894;}"
                     Label="{strings:Resources Key=Remove}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
