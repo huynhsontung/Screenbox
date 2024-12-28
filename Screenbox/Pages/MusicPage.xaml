@@ -59,9 +59,10 @@
             <FontIcon
                 x:Name="NoMusicPanelIcon"
                 Grid.Column="0"
+                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8D6;" />
+                Glyph="&#xF0036;" />
 
             <StackPanel
                 Grid.Column="1"
