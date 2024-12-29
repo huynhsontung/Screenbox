@@ -287,8 +287,8 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Automatically add all media files in the folder to the play queue when opening a single file"
-                    Header="Enqueue all media files in a folder">
+                    Description="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}"
+                    Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
