@@ -288,7 +288,9 @@
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}"
-                    Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}">
+                    Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph=&#xF2CE;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
