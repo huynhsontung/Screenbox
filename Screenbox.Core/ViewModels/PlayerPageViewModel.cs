@@ -434,7 +434,7 @@ namespace Screenbox.Core.ViewModels
                     ResizeWindow(videoSize, 1);
                     break;
                 case VirtualKey.Number3 when sender.Modifiers == VirtualKeyModifiers.None:
-                    ResizeWindow(videoSize, 2);
+                    ResizeWindow(videoSize, 1.5);
                     break;
                 case VirtualKey.Number4 when sender.Modifiers == VirtualKeyModifiers.None:
                     ResizeWindow(videoSize, 0);
