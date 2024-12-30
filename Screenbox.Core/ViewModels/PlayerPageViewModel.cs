@@ -425,6 +425,12 @@ namespace Screenbox.Core.ViewModels
             var view = ApplicationView.GetForCurrentView();
             // Visible bounds always have 1 pixel less than actual window height?
             var currentSize = new Size(view.VisibleBounds.Width, view.VisibleBounds.Height + 1);
+            // Desired step is 10% of the current window size
+            // However, 10% step doesn't always give a round number for resizing and rounding error will accumulate
+            // We want to maintain the original aspect ratio as long as possible
+            var stepHeight = Math.Round(currentSize.Height * 0.1);
+            var stepWidth = Math.Round(currentSize.Width * 0.1);
+            var desiredStepSize = Math.Min(stepWidth / currentSize.Width, stepHeight / currentSize.Height);
             switch (sender.Key)
             {
                 case VirtualKey.Number1 when sender.Modifiers == VirtualKeyModifiers.None:
@@ -440,10 +446,10 @@ namespace Screenbox.Core.ViewModels
                     ResizeWindow(videoSize, 0);
                     break;
                 case (VirtualKey)0xBB when sender.Modifiers == VirtualKeyModifiers.Control:  // Plus ("+")
-                    ResizeWindow(currentSize, 1.1);
+                    ResizeWindow(currentSize, 1 + desiredStepSize);
                     break;
                 case (VirtualKey)0xBD when sender.Modifiers == VirtualKeyModifiers.Control:  // Minus ("-")
-                    ResizeWindow(currentSize, 0.9);
+                    ResizeWindow(currentSize, 1 - desiredStepSize);
                     break;
                 default:
                     args.Handled = false;
