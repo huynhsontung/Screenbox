@@ -122,9 +122,9 @@ namespace Screenbox.Core.Services
             return new Size(maxWidth, maxHeight);
         }
 
-        public double ResizeWindow(Size videoDimension, double scalar = 0)
+        public double ResizeWindow(Size desiredSize, double scalar = 0)
         {
-            if (scalar < 0 || videoDimension.IsEmpty) return -1;
+            if (scalar < 0 || desiredSize.IsEmpty) return -1;
             ApplicationView view = ApplicationView.GetForCurrentView();
             DisplayInformation displayInformation = DisplayInformation.GetForCurrentView();
             Size maxWindowSize = GetMaxWindowSize(view, displayInformation);
@@ -133,16 +133,16 @@ namespace Screenbox.Core.Services
 
             if (scalar == 0)
             {
-                double widthRatio = maxWidth / videoDimension.Width;
-                double heightRatio = maxHeight / videoDimension.Height;
+                double widthRatio = maxWidth / desiredSize.Width;
+                double heightRatio = maxHeight / desiredSize.Height;
                 scalar = Math.Min(widthRatio, heightRatio);
             }
 
-            double aspectRatio = videoDimension.Width / videoDimension.Height;
-            double newWidth = videoDimension.Width * scalar;
+            double aspectRatio = desiredSize.Width / desiredSize.Height;
+            double newWidth = desiredSize.Width * scalar;
             if (newWidth > maxWidth) newWidth = maxWidth;
             double newHeight = newWidth / aspectRatio;
-            scalar = newWidth / videoDimension.Width;
+            scalar = newWidth / desiredSize.Width;
             if (view.TryResizeView(new Size(newWidth, newHeight)))
             {
                 return scalar;

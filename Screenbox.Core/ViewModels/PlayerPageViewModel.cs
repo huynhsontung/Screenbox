@@ -21,6 +21,7 @@ using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -418,21 +419,34 @@ namespace Screenbox.Core.ViewModels
 
         public void OnResizeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (sender.Modifiers != VirtualKeyModifiers.None) return;
+            if (_mediaPlayer == null) return;
             args.Handled = true;
+            Size videoSize = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
+            var view = ApplicationView.GetForCurrentView();
+            // Visible bounds always have 1 pixel less than actual window height?
+            var currentSize = new Size(view.VisibleBounds.Width, view.VisibleBounds.Height + 1);
             switch (sender.Key)
             {
-                case VirtualKey.Number1:
-                    ResizeWindow(0.5);
+                case VirtualKey.Number1 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 0.5);
                     break;
-                case VirtualKey.Number2:
-                    ResizeWindow(1);
+                case VirtualKey.Number2 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 1);
                     break;
-                case VirtualKey.Number3:
-                    ResizeWindow(2);
+                case VirtualKey.Number3 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 2);
                     break;
-                case VirtualKey.Number4:
-                    ResizeWindow(0);
+                case VirtualKey.Number4 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 0);
+                    break;
+                case (VirtualKey)0xBB when sender.Modifiers == VirtualKeyModifiers.Control:  // Plus ("+")
+                    ResizeWindow(currentSize, 1.1);
+                    break;
+                case (VirtualKey)0xBD when sender.Modifiers == VirtualKeyModifiers.Control:  // Minus ("-")
+                    ResizeWindow(currentSize, 0.9);
+                    break;
+                default:
+                    args.Handled = false;
                     break;
             }
         }
@@ -673,21 +687,21 @@ namespace Screenbox.Core.ViewModels
 
             _dispatcherQueue.TryEnqueue(() =>
             {
-                if (ResizeWindow(1)) return;
+                Size desiredSize = new(sender.NaturalVideoWidth, sender.NaturalVideoHeight);
+                if (ResizeWindow(desiredSize, 1)) return;
 
                 // Resize to fill the screen only when video size is bigger than max window size
                 Size maxWindowSize = _windowService.GetMaxWindowSize();
                 if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
                     sender.NaturalVideoHeight >= maxWindowSize.Height)
-                    ResizeWindow();
+                    ResizeWindow(desiredSize);
             });
         }
 
-        private bool ResizeWindow(double scalar = 0)
+        private bool ResizeWindow(Size desiredSize, double scalar = 0)
         {
-            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
-            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
-            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
+            if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);
             if (actualScalar > 0)
             {
                 string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");
