@@ -3,7 +3,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -88,7 +87,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     using var cts = new CancellationTokenSource();
                     _cts = cts;
-                    await WaitForMediaParsed(playbackItem, cts.Token);
+                    await playbackItem.Media.WaitForParsed(TimeSpan.FromSeconds(5), cts.Token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -129,29 +128,6 @@ namespace Screenbox.Core.ViewModels
                             break;
                         }
                     }
-                }
-            }
-        }
-
-        private static async Task WaitForMediaParsed(PlaybackItem item, CancellationToken cancellationToken = default)
-        {
-            if (item.Media.IsParsed || item.Media.ParsedStatus != 0) return;
-            TaskCompletionSource<bool> tcs = new();
-            using (cancellationToken.Register(token => tcs.TrySetCanceled((CancellationToken)token), cancellationToken))
-            {
-                void OnMediaOnParsedChanged(object sender, MediaParsedChangedEventArgs args)
-                {
-                    tcs.TrySetResult(args.ParsedStatus == MediaParsedStatus.Done);
-                }
-
-                item.Media.ParsedChanged += OnMediaOnParsedChanged;
-                try
-                {
-                    await tcs.Task;
-                }
-                finally
-                {
-                    item.Media.ParsedChanged -= OnMediaOnParsedChanged;
                 }
             }
         }
