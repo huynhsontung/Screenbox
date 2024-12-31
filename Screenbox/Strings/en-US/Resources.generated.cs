@@ -3066,6 +3066,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsEnqueueAllFilesInFolderDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: When opening a single file, automatically add all other files in the folder to the play queue.
+        /// </summary>
+        public static string SettingsEnqueueAllFilesInFolderDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsEnqueueAllFilesInFolderDescription");
+            }
+        }
+        #endregion
+
+        #region SettingsEnqueueAllFilesInFolderHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Add all files in folder to queue
+        /// </summary>
+        public static string SettingsEnqueueAllFilesInFolderHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsEnqueueAllFilesInFolderHeader");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -3311,6 +3337,8 @@ namespace Screenbox.Strings{
             ShowAlbum,
             ShowArtist,
             FailedToLoadVisualNotificationTitle,
+            SettingsEnqueueAllFilesInFolderDescription,
+            SettingsEnqueueAllFilesInFolderHeader,
         }
 
         private static ResourceLoader _resourceLoader;

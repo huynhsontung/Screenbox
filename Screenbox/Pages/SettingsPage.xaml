@@ -285,6 +285,15 @@
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}"
+                    Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph=&#xF2CE;}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
 
