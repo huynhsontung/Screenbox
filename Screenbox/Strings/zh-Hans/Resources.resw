@@ -888,9 +888,9 @@
     <value>无法加载视觉效果</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>打开单个文件时，自动将文件夹中的所有其他文件添加到播放队列。</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>将文件夹中的所有文件添加到队列</value>
   </data>
 </root>
