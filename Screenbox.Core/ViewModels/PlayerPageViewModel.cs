@@ -700,11 +700,11 @@ namespace Screenbox.Core.ViewModels
                 Size maxWindowSize = _windowService.GetMaxWindowSize();
                 if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
                     sender.NaturalVideoHeight >= maxWindowSize.Height)
-                    ResizeWindow(desiredSize);
+                    ResizeWindow(desiredSize, 0);
             });
         }
 
-        private bool ResizeWindow(Size desiredSize, double scalar = 0)
+        private bool ResizeWindow(Size desiredSize, double scalar = 1)
         {
             if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
             double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);

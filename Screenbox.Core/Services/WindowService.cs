@@ -122,7 +122,7 @@ namespace Screenbox.Core.Services
             return new Size(maxWidth, maxHeight);
         }
 
-        public double ResizeWindow(Size desiredSize, double scalar = 0)
+        public double ResizeWindow(Size desiredSize, double scalar = 1)
         {
             if (scalar < 0 || desiredSize.IsEmpty) return -1;
             ApplicationView view = ApplicationView.GetForCurrentView();
