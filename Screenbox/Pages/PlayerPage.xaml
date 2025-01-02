@@ -150,6 +150,14 @@
                 Modifiers="Shift" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.PlusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.MinusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
             <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
