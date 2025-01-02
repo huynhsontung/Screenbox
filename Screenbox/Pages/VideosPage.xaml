@@ -67,9 +67,10 @@
             <FontIcon
                 x:Name="NoVideosPanelIcon"
                 Grid.Column="0"
+                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8B2;" />
+                Glyph="&#xF0022;" />
 
             <StackPanel
                 Grid.Column="1"

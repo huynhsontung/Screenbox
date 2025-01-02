@@ -22,8 +22,12 @@
     <string>uniE_838.glif</string>
     <key>uniE8B1</key>
     <string>uniE_8B_1.glif</string>
+    <key>uniE8B2</key>
+    <string>uniE_8B_2.glif</string>
     <key>uniE8B7</key>
     <string>uniE_8B_7.glif</string>
+    <key>uniE8D6</key>
+    <string>uniE_8D_6.glif</string>
     <key>uniE8ED</key>
     <string>uniE_8E_D_.glif</string>
     <key>uniE8EE</key>
@@ -58,10 +62,14 @@
     <string>uniF_5E_B_.glif</string>
     <key>uF0021</key>
     <string>uF_0021.glif</string>
+    <key>uF0022</key>
+    <string>uF_0022.glif</string>
     <key>uF002A</key>
     <string>uF_002A_.glif</string>
     <key>uF002B</key>
     <string>uF_002B_.glif</string>
+    <key>uF0036</key>
+    <string>uF_0036.glif</string>
     <key>uF003F</key>
     <string>uF_003F_.glif</string>
     <key>uF004D</key>
