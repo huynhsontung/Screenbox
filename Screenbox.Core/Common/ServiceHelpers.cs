@@ -12,7 +12,7 @@ public static class ServiceHelpers
         services.AddTransient<PlayerElementViewModel>();
         services.AddTransient<PropertyViewModel>();
         services.AddTransient<ChapterViewModel>();
-        services.AddTransient<AudioTrackSubtitleViewModel>();
+        services.AddTransient<CompositeTrackPickerViewModel>();
         services.AddTransient<SeekBarViewModel>();
         services.AddTransient<VideosPageViewModel>();
         services.AddTransient<NetworkPageViewModel>();

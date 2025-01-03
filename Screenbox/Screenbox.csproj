@@ -149,8 +149,8 @@
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
-    <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
-      <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
+    <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
+      <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CastControl.xaml.cs">
       <DependentUpon>CastControl.xaml</DependentUpon>
@@ -514,7 +514,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\AudioTrackSubtitlePicker.xaml">
+    <Page Include="Controls\CompositeTrackPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,17 +7,17 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls
 {
-    public sealed partial class AudioTrackSubtitlePicker : UserControl
+    public sealed partial class CompositeTrackPicker : UserControl
     {
         public IRelayCommand? ShowSubtitleOptionsCommand { get; set; }
         public IRelayCommand? ShowAudioOptionsCommand { get; set; }
 
-        internal AudioTrackSubtitleViewModel ViewModel => (AudioTrackSubtitleViewModel)DataContext;
+        internal CompositeTrackPickerViewModel ViewModel => (CompositeTrackPickerViewModel)DataContext;
 
-        public AudioTrackSubtitlePicker()
+        public CompositeTrackPicker()
         {
             this.InitializeComponent();
-            DataContext = Ioc.Default.GetRequiredService<AudioTrackSubtitleViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<CompositeTrackPickerViewModel>();
         }
     }
 }

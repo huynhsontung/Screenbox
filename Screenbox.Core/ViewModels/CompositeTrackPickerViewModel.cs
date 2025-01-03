@@ -22,7 +22,7 @@ using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient,
+    public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
@@ -43,7 +43,7 @@ namespace Screenbox.Core.ViewModels
         private bool _flyoutOpened;
         private CancellationTokenSource? _cts;
 
-        public AudioTrackSubtitleViewModel(IFilesService filesService, IResourceService resourceService, ISettingsService settingsService)
+        public CompositeTrackPickerViewModel(IFilesService filesService, IResourceService resourceService, ISettingsService settingsService)
         {
             _filesService = filesService;
             _resourceService = resourceService;

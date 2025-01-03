@@ -515,7 +515,7 @@
                         FlyoutPresenterStyle="{StaticResource FlyoutPresenterMenuFlyoutStyle}"
                         Opening="{x:Bind AudioTrackSubtitlePicker.ViewModel.OnFlyoutOpening}"
                         ShouldConstrainToRootBounds="False">
-                        <controls:AudioTrackSubtitlePicker x:Name="AudioTrackSubtitlePicker" IsAccessKeyScope="True" />
+                        <controls:CompositeTrackPicker x:Name="AudioTrackSubtitlePicker" IsAccessKeyScope="True" />
                     </Flyout>
                 </Button.Flyout>
             </Button>
