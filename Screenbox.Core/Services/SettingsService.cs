@@ -30,6 +30,7 @@ namespace Screenbox.Core.Services
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
+        private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
 
         public bool UseIndexer
         {
@@ -65,6 +66,12 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<int>(PersistentVolumeKey);
             set => SetValue(PersistentVolumeKey, value);
+        }
+
+        public string PersistentSubtitleLanguage
+        {
+            get => GetValue<string>(PersistentSubtitleLanguageKey) ?? string.Empty;
+            set => SetValue(PersistentSubtitleLanguageKey, value);
         }
 
         public int MaxVolume
