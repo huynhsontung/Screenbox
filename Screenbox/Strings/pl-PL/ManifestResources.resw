@@ -227,11 +227,11 @@
     <comment>Display name for the file type ".ogg" and ".oga"</comment>
   </data>
   <data name="FileDisplayNameOggSpeex" xml:space="preserve">
-    <value>Ogg Speex Audio</value>
+    <value>Dźwięk Ogg Speex</value>
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>Dźwięk Opus</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -243,11 +243,11 @@
     <comment>Display name for the file type ".mov" and ".qt"</comment>
   </data>
   <data name="FileDisplayNameRealAudio" xml:space="preserve">
-    <value>RealAudio File</value>
+    <value>Plik RealAudio</value>
     <comment>Display name for the file type ".ra"</comment>
   </data>
   <data name="FileDisplayNameRealMedia" xml:space="preserve">
-    <value>RealMedia File</value>
+    <value>Plik RealMedia</value>
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
@@ -255,7 +255,7 @@
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
-    <value>DVD Video Object File</value>
+    <value>Plik obiektu DVD Video</value>
     <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
@@ -271,11 +271,11 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>Plik ASF</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
-    <value>Windows Media File</value>
+    <value>Plik Windows Media</value>
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
@@ -287,7 +287,7 @@
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>Plik nagrania telewizyjnego systemu Windows</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
@@ -299,7 +299,7 @@
     <comment>Display name for the file type ".m2t" and ".ts"</comment>
   </data>
   <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
-    <value>BDAV MPEG-2 Transport Stream</value>
+    <value>Strumień transportowy BDAV MPEG-2</value>
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
@@ -307,7 +307,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>Plik korekcji WavPack</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>
