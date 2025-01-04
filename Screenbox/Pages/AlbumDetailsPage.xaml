@@ -192,15 +192,12 @@
 
                             <AppBarButton
                                 x:Name="PlayButton"
-                                HorizontalAlignment="Stretch"
-                                BackgroundSizing="OuterBorderEdge"
-                                BorderBrush="{StaticResource AccentButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 CommandParameter="{x:Bind ViewModel.SortedItems, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{strings:Resources Key=Play}"
-                                Style="{StaticResource AppBarButtonAccentButtonStyle}"
+                                Style="{StaticResource AccentButtonAppBarButtonStyle}"
                                 XYFocusDown="{x:Bind ItemList}">
                                 <interactivity:Interaction.Behaviors>
                                     <interactions:AutoFocusBehavior />
@@ -208,14 +205,12 @@
                             </AppBarButton>
 
                             <AppBarButton
-                                HorizontalAlignment="Stretch"
-                                BorderBrush="{ThemeResource ButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
-                                Style="{StaticResource AppBarButtonDefaultButtonStyle}"
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}"
                                 XYFocusDown="{x:Bind ItemList}"
                                 XYFocusLeft="{x:Bind PlayButton}" />
                         </CommandBar>
