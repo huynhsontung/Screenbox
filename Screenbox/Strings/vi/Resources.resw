@@ -140,13 +140,13 @@
     <value>Không lưu được khung</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Thời gian trôi qua</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Thời gian còn lại</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Tổng thời lượng</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chương {0}</value>
@@ -882,15 +882,15 @@
     <value>Show album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Hiển thị nghệ sĩ</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
     <value>Failed to load visual</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Khi mở một tệp, tự động thêm tất cả các tệp khác trong thư mục vào hàng đợi phát.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Thêm tất cả các tập tin trong thư mục vào hàng đợi</value>
   </data>
 </root>
