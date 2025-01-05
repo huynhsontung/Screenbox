@@ -113,12 +113,12 @@
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,16">
                     <Grid.Background>
-                        <ImageBrush ImageSource="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay}" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, FallbackValue={x:Null}}" Stretch="UniformToFill" />
                     </Grid.Background>
                     <Border
                         Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                         CornerRadius="{x:Bind CoverArt.CornerRadius, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
+                        Visibility="{x:Bind ViewModel.Source.AlbumArt, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, FallbackValue=Visible}">
                         <FontIcon
                             x:Name="CoverArtIcon"
                             FontSize="64"
@@ -134,7 +134,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name}"
+                        Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
@@ -146,7 +146,7 @@
                         Margin="0,8,0,0"
                         FontWeight="Normal"
                         Style="{StaticResource SubtitleTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.ArtistName}"
+                        Text="{x:Bind ViewModel.Source.ArtistName, FallbackValue={x:Null}}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
