@@ -315,6 +315,13 @@
                     <ToggleSwitch AutomationProperties.HelpText="{x:Bind SettingsEnqueueAllFilesInFolderCard.Description}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Continue playing from where you last stopped when opening a file"
+                    Header="Always resume from last position">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
 

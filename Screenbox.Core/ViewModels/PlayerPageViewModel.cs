@@ -177,7 +177,16 @@ namespace Screenbox.Core.ViewModels
             if (message.Value != null)
             {
                 TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
-                Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+                if (lastPosition <= TimeSpan.Zero) return;
+                if (_settingsService.RestorePlaybackPosition)
+                {
+                    // TODO: Wait until playback starts then send time change message
+                    Messenger.Send(new ChangeTimeRequestMessage(lastPosition, debounce: false));
+                }
+                else
+                {
+                    Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+                }
             }
         }
 

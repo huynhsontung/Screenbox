@@ -30,6 +30,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _showRecent;
         [ObservableProperty] private int _theme;
         [ObservableProperty] private bool _enqueueAllFilesInFolder;
+        [ObservableProperty] private bool _restorePlaybackPosition;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private bool _useMultipleInstances;
@@ -80,6 +81,7 @@ namespace Screenbox.Core.ViewModels
             _showRecent = _settingsService.ShowRecent;
             _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
+            _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
@@ -152,6 +154,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.EnqueueAllFilesInFolder = value;
             Messenger.Send(new SettingsChangedMessage(nameof(EnqueueAllFilesInFolder), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnRestorePlaybackPositionChanged(bool value)
+        {
+            _settingsService.RestorePlaybackPosition = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(RestorePlaybackPosition), typeof(SettingsPageViewModel)));
         }
 
         async partial void OnSearchRemovableStorageChanged(bool value)
