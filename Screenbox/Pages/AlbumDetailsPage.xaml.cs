@@ -86,7 +86,7 @@ namespace Screenbox.Pages
 
             CreateHeaderAnimation(_props, scrollingProperties.Translation.Y);
 
-            if (ViewModel.Source.RelatedSongs.Count == 0) return;
+            if (ViewModel.Source == null || ViewModel.Source.RelatedSongs.Count == 0) return;
             MediaViewModel firstSong = ViewModel.Source.RelatedSongs[0];
             if (firstSong.Thumbnail != null)
             {
