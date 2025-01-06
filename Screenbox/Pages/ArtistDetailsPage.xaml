@@ -117,13 +117,14 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:SymbolIcon Symbol=Play}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayGlyph}}"
                     Text="{strings:Resources Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xF5EB;}"
+                                       Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
@@ -276,7 +277,8 @@
                                 BackgroundSizing="OuterBorderEdge"
                                 BorderBrush="{ThemeResource AccentButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
-                                Icon="{ui:FontIcon Glyph=&#xE768;}"
+                                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                                   Glyph={StaticResource PlayGlyph}}"
                                 Label="{strings:Resources Key=Play}"
                                 Style="{StaticResource AppBarButtonAccentButtonStyle}"
                                 XYFocusDown="{x:Bind ItemList}">
@@ -289,7 +291,8 @@
                                 HorizontalAlignment="Stretch"
                                 BorderBrush="{ThemeResource ButtonBorderBrush}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
-                                Icon="{ui:FontIcon Glyph=&#xE8B1;,
+                                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                                   Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
                                 Style="{StaticResource AppBarButtonDefaultButtonStyle}"

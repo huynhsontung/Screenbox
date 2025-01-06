@@ -35,7 +35,7 @@
             <MenuFlyout x:Key="AlbumFlyout">
                 <MenuFlyoutItem Command="{Binding PlayAlbumCommand}" Text="{Binding IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}}">
                     <MenuFlyoutItem.Icon>
-                        <FontIcon Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
@@ -69,7 +69,8 @@
             <StackPanel Orientation="Horizontal">
                 <FontIcon
                     Margin="{StaticResource IconButtonStandardIconMargin}"
-                    Glyph="&#xE8B1;"
+                    FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                    Glyph="{StaticResource ShuffleGlyph}"
                     MirroredWhenRightToLeft="True" />
                 <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
             </StackPanel>

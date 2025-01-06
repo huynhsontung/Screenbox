@@ -35,8 +35,8 @@
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
             <toolkitConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
-                FalseValue="&#xF002A;"
-                TrueValue="&#xE8B1;" />
+                FalseValue="{StaticResource ShuffleOffGlyph}"
+                TrueValue="{StaticResource ShuffleGlyph}" />
 
             <Flyout x:Key="VolumeControlFlyout">
                 <Flyout.FlyoutPresenterStyle>
@@ -122,7 +122,8 @@
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
-                    Icon="{ui:FontIcon Glyph=&#xE838;}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource FolderOpenGlyph}}"
                     KeyTipPlacementMode="Left"
                     Text="{strings:Resources Key=OpenFiles}">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -217,7 +218,7 @@
                     AccessKey="{strings:KeyboardResources Key=MenuItemSaveSnapshotKey}"
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xEE71;}"
+                                       Glyph={StaticResource ImageExportGlyph}}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
@@ -311,7 +312,7 @@
                     AccessKey="{strings:KeyboardResources Key=MenuItemCompactOverlayKey}"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xEE49;}"
+                                       Glyph={StaticResource MiniContract2MirroredGlyph}}"
                     Text="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
                     Visibility="Collapsed">
                     <MenuFlyoutItem.KeyboardAccelerators>
@@ -532,7 +533,7 @@
                 <FontIcon
                     x:Name="CompactOverlayButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                    Glyph="&#xEE49;"
+                    Glyph="{StaticResource MiniContract2MirroredGlyph}"
                     MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" Modifiers="Control" />
@@ -637,7 +638,7 @@
                         <Setter Target="RepeatButton.Visibility" Value="Collapsed" />
                         <Setter Target="ShuffleButton.Visibility" Value="Collapsed" />
                         <Setter Target="CompactOverlayButton.Style" Value="{StaticResource SmallPlayerButtonStyle}" />
-                        <Setter Target="CompactOverlayButtonIcon.Glyph" Value="&#xEE47;" />
+                        <Setter Target="CompactOverlayButtonIcon.Glyph" Value="{StaticResource MiniExpand2MirroredGlyph}" />
                         <Setter Target="MoreButton.Visibility" Value="Collapsed" />
                         <Setter Target="SeekBar.(Grid.Row)" Value="2" />
                         <Setter Target="SeekBar.Margin" Value="0" />

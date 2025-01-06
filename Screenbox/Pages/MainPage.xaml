@@ -227,7 +227,7 @@
                     KeyTipPlacementMode="Right"
                     Tag="videos">
                     <muxc:NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8B2;" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{StaticResource MoviesGlyph}" />
                     </muxc:NavigationViewItem.Icon>
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="D" Modifiers="Control" />
@@ -255,7 +255,7 @@
                         <FontIcon
                             x:Name="NavItemPlayQueueIcon"
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="&#xE93F;" />
+                            Glyph="{StaticResource PlaylistMusicGlyph}" />
                     </muxc:NavigationViewItem.Icon>
                     <muxc:NavigationViewItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Q" Modifiers="Control" />
@@ -516,7 +516,7 @@
                         <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="NavItemPlayQueueIcon.Glyph" Value="&#xF006F;" />
+                        <Setter Target="NavItemPlayQueueIcon.Glyph" Value="{StaticResource PlaylistMusicMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

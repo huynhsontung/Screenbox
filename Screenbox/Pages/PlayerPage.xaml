@@ -84,9 +84,9 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <ctConverters:BoolToObjectConverter
-                x:Key="FilledPlayPauseGlyphConverter"
-                FalseValue="&#xE62E;"
-                TrueValue="&#xF5B0;" />
+                x:Key="PlayPauseSolidGlyphConverter"
+                FalseValue="{StaticResource PauseSolidGlyph}"
+                TrueValue="{StaticResource PlaySolidGlyph}" />
 
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
@@ -248,7 +248,7 @@
                     x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xE93F;" />
+                    Glyph="{StaticResource PlaylistMusicGlyph}" />
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
@@ -329,7 +329,7 @@
                     x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xF010D;" />
+                    Glyph="{StaticResource MusicVisualizerGlyph}" />
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
@@ -570,11 +570,11 @@
             </animations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
-                d:Glyph="&#xF5B0;"
+                d:Glyph="{StaticResource PlaySolidGlyph}"
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource PlayPauseSolidGlyphConverter}, Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
@@ -969,8 +969,8 @@
                         <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="&#xF006F;" />
-                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="&#xF010E;" />
+                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="{StaticResource PlaylistMusicMirroredGlyph}" />
+                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="{StaticResource MusicVisualizerMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -23,13 +23,14 @@
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
                     CommandParameter="{Binding}"
-                    Icon="{ui:SymbolIcon Symbol=Play}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayGlyph}}"
                     Text="{strings:Resources Key=Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xF5EB;}"
+                                       Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem

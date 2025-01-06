@@ -67,9 +67,10 @@
             <FontIcon
                 x:Name="NoVideosPanelIcon"
                 Grid.Column="0"
+                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8B2;" />
+                Glyph="{StaticResource MoviesOffGlyph}" />
 
             <StackPanel
                 Grid.Column="1"
@@ -99,7 +100,7 @@
                             x:Name="NoVideoPanelAddFolderButtonIcon"
                             Margin="{StaticResource IconButtonStandardIconMargin}"
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="&#xE8F4;" />
+                            Glyph="{StaticResource NewFolderGlyph}" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
@@ -162,7 +163,7 @@
                             x:Name="HeaderAddFolderButtonIcon"
                             Margin="{StaticResource IconButtonStandardIconMargin}"
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="&#xE8F4;" />
+                            Glyph="{StaticResource NewFolderGlyph}" />
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
@@ -250,8 +251,8 @@
                         <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <contract13Present:Setter Target="NoVideoPanelAddFolderButtonIcon.Glyph" Value="&#xF003F;" />
-                        <contract13Present:Setter Target="HeaderAddFolderButtonIcon.Glyph" Value="&#xF003F;" />
+                        <contract13Present:Setter Target="NoVideoPanelAddFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract13Present:Setter Target="HeaderAddFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
