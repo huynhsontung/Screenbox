@@ -103,7 +103,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     public async Task NavigatePage(WebView2 webView)
     {
-        if (Source is null)
+        if (Source is null || webView.CoreWebView2 == null)
             return;
 
         if (string.IsNullOrEmpty(Source.Path) || string.IsNullOrEmpty(Source.Model.FileName))
@@ -189,7 +189,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
     // Ref: https://github.com/rocksdanister/lively/wiki/Web-Guide-V-:-System-Data#--system-nowplaying
     public async Task UpdateCurrentTrack(WebView2 webView)
     {
-        if (Source is null || Media == null || webView.CoreWebView2.IsSuspended || !Source.IsMusic)
+        if (Source is null || Media == null || webView.CoreWebView2 == null ||
+            webView.CoreWebView2.IsSuspended || !Source.IsMusic)
             return;
 
         var model = new LivelyMusicModel

@@ -17,23 +17,22 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(TotalDuration))]
         [NotifyPropertyChangedFor(nameof(SongsCount))]
-        private ArtistViewModel _source;
+        private ArtistViewModel? _source;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AlbumsCount))]
         private List<IGrouping<AlbumViewModel?, MediaViewModel>> _albums;
 
-        public TimeSpan TotalDuration => GetTotalDuration(Source.RelatedSongs);
+        public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.RelatedSongs) : TimeSpan.Zero;
 
         public int AlbumsCount => Albums.Count;
 
-        public int SongsCount => Source.RelatedSongs.Count;
+        public int SongsCount => Source?.RelatedSongs.Count ?? 0;
 
         private List<MediaViewModel>? _itemList;
 
         public ArtistDetailsPageViewModel()
         {
-            _source = new ArtistViewModel();
             _albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
         }
 
@@ -47,8 +46,14 @@ namespace Screenbox.Core.ViewModels
             };
         }
 
-        async partial void OnSourceChanged(ArtistViewModel value)
+        async partial void OnSourceChanged(ArtistViewModel? value)
         {
+            if (value == null)
+            {
+                Albums = new List<IGrouping<AlbumViewModel?, MediaViewModel>>();
+                return;
+            }
+
             Albums = value.RelatedSongs
                 .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
                 .ThenBy(m => m.Name, StringComparer.CurrentCulture)
@@ -71,7 +76,7 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void ShuffleAndPlay()
         {
-            if (Source.RelatedSongs.Count == 0) return;
+            if (Source == null || Source.RelatedSongs.Count == 0) return;
             Random rnd = new();
             List<MediaViewModel> shuffledList = Source.RelatedSongs.OrderBy(_ => rnd.Next()).ToList();
             Messenger.Send(new ClearPlaylistMessage());

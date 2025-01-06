@@ -215,7 +215,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.Source.Name}"
+                        Text="{x:Bind ViewModel.Source.Name, FallbackValue={x:Null}}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
