@@ -888,9 +888,9 @@
     <value>Falha ao carregar o visual</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Quando abrir um ficheiro, adicionar todos os ficheiros na pasta à fila de reprodução</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Adicionar todos os ficheiros na pasta à fila</value>
   </data>
 </root>
