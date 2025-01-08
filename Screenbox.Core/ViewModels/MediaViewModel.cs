@@ -208,7 +208,7 @@ namespace Screenbox.Core.ViewModels
             PlaybackItem? item = Item.Value;
             Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
             if (item == null) return;
-            LibVlcService.DisposeMedia(item.Media);
+            _libVlcService.DisposeMedia(item.Media);
         }
 
         public void UpdateSource(StorageFile file)
