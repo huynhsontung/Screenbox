@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Erro ao guardar fotograma</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tempo decorrido</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tempo restante</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Duração total</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -876,6 +885,12 @@
     <value>Mostrar artista</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Falha ao carregar o visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Quando abrir um ficheiro, adicionar todos os ficheiros na pasta à fila de reprodução</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Adicionar todos os ficheiros na pasta à fila</value>
   </data>
 </root>

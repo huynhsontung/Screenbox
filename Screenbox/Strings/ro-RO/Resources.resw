@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Nu s-a reușit salvarea cadrului</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Timp scurs</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Timp rămas</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Durată totală</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capitol {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -876,6 +885,12 @@
     <value>Afișare artist</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Încărcarea vizualelor a eșuat</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>La deschiderea unui singur fișier, adăugați automat toate celelalte fișiere din folder în coada de redare.</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Adăugați toate fișierele din folder în coadă</value>
   </data>
 </root>

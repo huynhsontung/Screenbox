@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>مربع الشاشة "سكرين بوكس"</value>
+    <value>Screenbox</value>
   </data>
   <data name="AppShortName" xml:space="preserve">
-    <value>سكرين بوكس</value>
+    <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
     <value>مشغل فيديو حديث يركز على الأداء وسهولة الاستخدام على مجموعة واسعة من أجهزة Windows.</value>
@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>صوت Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -147,11 +147,11 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>صوت Compressed AIFF</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
-    <value>Monkey's Audio</value>
+    <value>صوت Monkey</value>
     <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>صوت DTS</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -167,7 +167,7 @@
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>فيديو Flash MP4</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -175,7 +175,7 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value>Shockwave Flash Movie</value>
+    <value>فيلم Shockwave Flash</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
@@ -207,7 +207,7 @@
     <comment>Display name for the file type ".m4a"</comment>
   </data>
   <data name="FileDisplayNameMP4Audiobook" xml:space="preserve">
-    <value>MPEG-4 Audiobook</value>
+    <value>كتاب صوتي MPEG-4</value>
     <comment>Display name for the file type ".m4b"</comment>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
@@ -215,11 +215,11 @@
     <comment>Display name for the file type ".m4v"</comment>
   </data>
   <data name="FileDisplayNameMXF" xml:space="preserve">
-    <value>MXF Video</value>
+    <value>فيديو MXF</value>
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value>صوت NIST SPHERE</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
@@ -227,11 +227,11 @@
     <comment>Display name for the file type ".ogg" and ".oga"</comment>
   </data>
   <data name="FileDisplayNameOggSpeex" xml:space="preserve">
-    <value>Ogg Speex Audio</value>
+    <value>صوت Ogg Speex</value>
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>صوت Opus</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -243,19 +243,19 @@
     <comment>Display name for the file type ".mov" and ".qt"</comment>
   </data>
   <data name="FileDisplayNameRealAudio" xml:space="preserve">
-    <value>RealAudio File</value>
+    <value>ملف RealAudio</value>
     <comment>Display name for the file type ".ra"</comment>
   </data>
   <data name="FileDisplayNameRealMedia" xml:space="preserve">
-    <value>RealMedia File</value>
+    <value>ملف RealMedia</value>
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
-    <value>RealMedia Variable Bit Rate File</value>
+    <value>ملف RealMedia بمعدل بت متغير</value>
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
-    <value>DVD Video Object File</value>
+    <value>ملف DVD Video Object</value>
     <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
@@ -271,23 +271,23 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>ملف ASF</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
-    <value>Windows Media File</value>
+    <value>ملف Windows Media</value>
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
-    <value>Windows Media Audio</value>
+    <value>صوت Windows Media</value>
     <comment>Display name for the file type ".wma"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaVideo" xml:space="preserve">
-    <value>Windows Media Video</value>
+    <value>فيديو Windows Media</value>
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>ملف Windows Recorded TV Show</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
@@ -299,7 +299,7 @@
     <comment>Display name for the file type ".m2t" and ".ts"</comment>
   </data>
   <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
-    <value>BDAV MPEG-2 Transport Stream</value>
+    <value>بث نقل BDAV MPEG-2</value>
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
@@ -307,7 +307,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>ملف تصحيح WavPack</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>
