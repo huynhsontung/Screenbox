@@ -133,8 +133,16 @@ namespace Screenbox.Core.ViewModels
             {
                 async void SetPlayQueue()
                 {
-                    ClearPlaylist();
-                    await EnqueueAndPlay(_delayPlay);
+                    if (_delayPlay is MediaViewModel media && Items.Contains(media))
+                    {
+                        PlaySingle(media);
+                        await TryEnqueueAndPlayPlaylistAsync(media);
+                    }
+                    else
+                    {
+                        ClearPlaylist();
+                        await EnqueueAndPlay(_delayPlay);
+                    }
                 }
 
                 _dispatcherQueue.TryEnqueue(SetPlayQueue);
@@ -187,7 +195,15 @@ namespace Screenbox.Core.ViewModels
                 // If there is only 1 file, play it immediately
                 // Avoid waiting to get all the neighboring files then play, which may cause delay
                 ClearPlaylist();
-                await EnqueueAndPlay(file);
+                if (_mediaPlayer == null)
+                {
+                    _delayPlay = media;
+                }
+                else
+                {
+                    await EnqueueAndPlay(file);
+                }
+
                 // If there are more than one item in the queue, file is already a playlist, no need to check for neighboring files
                 if (Items.Count > 1) return;
 
@@ -642,6 +658,12 @@ namespace Screenbox.Core.ViewModels
             }
 
             // If playNext is a playlist file, recursively parse the playlist and enqueue the items
+            await TryEnqueueAndPlayPlaylistAsync(playNext ?? value);
+        }
+
+        private async Task TryEnqueueAndPlayPlaylistAsync(object value)
+        {
+            MediaViewModel? playNext = GetMedia(value);
             PlaylistCreateResult? result = (value as PlaylistCreateResult) ?? await CreatePlaylistAsync(playNext ?? value);
             if (result != null && !result.PlayNext.Source.Equals(playNext?.Source))
             {
