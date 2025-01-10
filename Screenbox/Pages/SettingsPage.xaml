@@ -279,11 +279,12 @@
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsCard
+                    x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}"
                     Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph=&#xF2CE;}">
+                                             Glyph={StaticResource FolderListGlyph}}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
@@ -536,6 +537,7 @@
                     <VisualState.Setters>
                         <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                         <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <Setter Target="SettingsEnqueueAllFilesInFolderCard.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
                         <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource MusicVisualizerMirroredGlyph}}" />
                     </VisualState.Setters>
                 </VisualState>
