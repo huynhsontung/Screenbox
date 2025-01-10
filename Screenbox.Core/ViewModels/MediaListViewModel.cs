@@ -136,6 +136,7 @@ namespace Screenbox.Core.ViewModels
                     if (_delayPlay is MediaViewModel media && Items.Contains(media))
                     {
                         PlaySingle(media);
+                        await TryEnqueueAndPlayPlaylistAsync(media);
                     }
                     else
                     {
@@ -657,6 +658,12 @@ namespace Screenbox.Core.ViewModels
             }
 
             // If playNext is a playlist file, recursively parse the playlist and enqueue the items
+            await TryEnqueueAndPlayPlaylistAsync(playNext ?? value);
+        }
+
+        private async Task TryEnqueueAndPlayPlaylistAsync(object value)
+        {
+            MediaViewModel? playNext = GetMedia(value);
             PlaylistCreateResult? result = (value as PlaylistCreateResult) ?? await CreatePlaylistAsync(playNext ?? value);
             if (result != null && !result.PlayNext.Source.Equals(playNext?.Source))
             {
