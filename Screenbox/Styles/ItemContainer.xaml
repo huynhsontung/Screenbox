@@ -42,8 +42,8 @@
             <StaticResource x:Key="MediaListViewHeaderItemForegroundPointerOver" ResourceKey="AccentTextFillColorSecondaryBrush" />
             <StaticResource x:Key="MediaListViewHeaderItemForegroundPressed" ResourceKey="AccentTextFillColorTertiaryBrush" />
             <StaticResource x:Key="MediaListViewHeaderItemBorderBrush" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="MediaListViewHeaderItemBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="MediaListViewHeaderItemBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="MediaListViewHeaderItemBorderBrushPointerOver" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="MediaListViewHeaderItemBorderBrushPressed" ResourceKey="SubtleFillColorTertiaryBrush" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <x:Double x:Key="TextFillColorSecondaryOpacity">1</x:Double>
