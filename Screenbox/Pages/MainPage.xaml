@@ -164,8 +164,8 @@
                 Grid.Column="1"
                 Margin="{StaticResource AppTitleMarginExpanded}"
                 VerticalAlignment="Center"
-                ctAnimations:Implicit.HideAnimations="{StaticResource SimpleHideAnimations}"
-                ctAnimations:Implicit.ShowAnimations="{StaticResource SimpleShowAnimations}"
+                ctAnimations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
+                ctAnimations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
                 IsHitTestVisible="False"
                 Orientation="Horizontal">
                 <Image

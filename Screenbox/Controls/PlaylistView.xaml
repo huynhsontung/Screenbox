@@ -166,8 +166,8 @@
             x:Name="SelectionCommandRow"
             Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
-            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionCommandBarHideAnimations}"
-            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionCommandBarShowAnimations}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
             Visibility="Collapsed">
 
             <Border
