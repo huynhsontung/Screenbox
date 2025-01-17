@@ -140,13 +140,13 @@
     <value>Не удалось сохранить кадр</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Времени прошло</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Времени осталось</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Общая продолжительность</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Глава {0}</value>
@@ -879,18 +879,18 @@
     <value>Видео</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Показать альбом</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Показать артиста</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Не удалось загрузить визуальные эффекты</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>При открытии одного файла, автоматически добавлять все остальные файлы из папки в очередь воспроизведения.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Добавлять все файлы из папки в очередь</value>
   </data>
 </root>
