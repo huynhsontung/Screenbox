@@ -275,7 +275,7 @@
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
-    <value>Windows Media File</value>
+    <value>Файл Windows Media</value>
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
@@ -303,7 +303,7 @@
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack аудио</value>
+    <value>Аудио WavPack</value>
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
