@@ -207,7 +207,7 @@
     <comment>Display name for the file type ".m4a"</comment>
   </data>
   <data name="FileDisplayNameMP4Audiobook" xml:space="preserve">
-    <value>MPEG-4 Audiobook</value>
+    <value>Audiolibro-MPEG4</value>
     <comment>Display name for the file type ".m4b"</comment>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
