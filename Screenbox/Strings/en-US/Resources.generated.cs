@@ -1988,6 +1988,71 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region SettingsThemeSelectionHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Theme Selection
+        /// </summary>
+        public static string SettingsThemeSelectionHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsThemeSelectionHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsThemeSelectionDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Theme Selection
+        /// </summary>
+        public static string SettingsThemeSelectionDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsThemeSelectionDescription");
+            }
+        }
+        #endregion
+
+        #region Auto
+        /// <summary>
+        ///   Looks up a localized string similar to: Theme Selection - Auto
+        /// </summary>
+        public static string Auto
+        {
+            get
+            {
+                return _resourceLoader.GetString("Auto");
+            }
+        }
+        #endregion
+
+        #region Light
+        /// <summary>
+        ///   Looks up a localized string similar to: Theme Selection - Light
+        /// </summary>
+        public static string Light
+        {
+            get
+            {
+                return _resourceLoader.GetString("Light");
+            }
+        }
+        #endregion
+
+        #region Dark
+        /// <summary>
+        ///   Looks up a localized string similar to: Theme Selection - Dark
+        /// </summary>
+        public static string Dark
+        {
+            get
+            {
+                return _resourceLoader.GetString("Dark");
+            }
+        }
+        #endregion
+
         #region SettingsAutoResizeHeader
         /// <summary>
         ///   Looks up a localized string similar to: Auto resize
@@ -3339,6 +3404,8 @@ namespace Screenbox.Strings{
             FailedToLoadVisualNotificationTitle,
             SettingsEnqueueAllFilesInFolderDescription,
             SettingsEnqueueAllFilesInFolderHeader,
+            SettingsThemeSelectionDescription,
+            SettingsThemeSelectionHeader,
         }
 
         private static ResourceLoader _resourceLoader;

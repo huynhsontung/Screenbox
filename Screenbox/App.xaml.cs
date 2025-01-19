@@ -25,6 +25,8 @@ using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Screenbox.Core.Enums;
+
 
 #if !DEBUG
 using CommunityToolkit.WinUI.Helpers;
@@ -34,6 +36,7 @@ using Microsoft.AppCenter.Crashes;
 
 namespace Screenbox
 {
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -85,6 +88,26 @@ namespace Screenbox
 
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
+
+            // Theme Storage Test
+            int theme;
+
+            try
+            {
+                theme = int.Parse(Windows.Storage.ApplicationData.Current.LocalSettings.Values["AppTheme"].ToString());
+                if (theme == (int)ThemeOption.Light)
+                {
+                    this.RequestedTheme = ApplicationTheme.Light;
+                }
+                else if (theme == (int)ThemeOption.Dark)
+                {
+                    this.RequestedTheme = ApplicationTheme.Dark;
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                //theme = 0;
+            }
         }
 
         public static FlowDirection GetFlowDirection()

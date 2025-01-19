@@ -297,6 +297,23 @@
                     <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsThemeSelectionDescription}"
+                    Header="{strings:Resources Key=SettingsThemeSelectionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;}">
+                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SetTheme, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <x:String>Auto</x:String>
+                        <x:String>Light</x:String>
+                        <x:String>Dark</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
 

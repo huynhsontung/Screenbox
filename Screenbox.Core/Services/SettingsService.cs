@@ -14,6 +14,7 @@ namespace Screenbox.Core.Services
     {
         private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
+        private const string SetThemeKey = "General/SetTheme";
         private const string PlayerAutoResizeKey = "Player/AutoResize";
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
@@ -36,6 +37,12 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<bool>(LibrariesUseIndexerKey);
             set => SetValue(LibrariesUseIndexerKey, value);
+        }
+
+        public ThemeOption SetTheme
+        {
+            get => (ThemeOption)GetValue<int>(SetThemeKey);
+            set => SetValue(SetThemeKey, (int)value);
         }
 
         public PlayerAutoResizeOption PlayerAutoResize
