@@ -79,7 +79,7 @@
       <Version>3.0.20-2405070635</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>4.13.0</Version>
+      <Version>5.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

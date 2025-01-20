@@ -15,6 +15,8 @@ public abstract class MediaTrack : IMediaTrack
 
     public string Language => _language?.DisplayName ?? _languageStr;
 
+    public string LanguageTag => _language?.LanguageTag ?? string.Empty;
+
     private readonly Language? _language;
     private readonly string _languageStr;
 

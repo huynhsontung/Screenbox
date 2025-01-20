@@ -207,7 +207,7 @@ namespace Screenbox.Core.Services
             FileOpenPicker picker = new()
             {
                 ViewMode = PickerViewMode.Thumbnail,
-                SuggestedStartLocation = PickerLocationId.VideosLibrary
+                SuggestedStartLocation = PickerLocationId.ComputerFolder
             };
 
             IEnumerable<string> fileTypes = formats;

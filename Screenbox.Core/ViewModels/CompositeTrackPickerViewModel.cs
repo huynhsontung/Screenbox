@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -21,7 +22,7 @@ using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class AudioTrackSubtitleViewModel : ObservableRecipient,
+    public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<MediaPlayerChangedMessage>
     {
@@ -37,12 +38,16 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _audioTrackIndex;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
+        private readonly ISettingsService _settingsService;
         private IMediaPlayer? _mediaPlayer;
+        private bool _flyoutOpened;
+        private CancellationTokenSource? _cts;
 
-        public AudioTrackSubtitleViewModel(IFilesService filesService, IResourceService resourceService)
+        public CompositeTrackPickerViewModel(IFilesService filesService, IResourceService resourceService, ISettingsService settingsService)
         {
             _filesService = filesService;
             _resourceService = resourceService;
+            _settingsService = settingsService;
             SubtitleTracks = new ObservableCollection<string>();
             AudioTracks = new ObservableCollection<string>();
             _mediaPlayer = Messenger.Send(new MediaPlayerRequestMessage()).Response;
@@ -60,17 +65,70 @@ namespace Screenbox.Core.ViewModels
         /// </summary>
         public async void Receive(PlaylistCurrentItemChangedMessage message)
         {
+            _cts?.Cancel();
             if (_mediaPlayer is not VlcMediaPlayer player) return;
             if (message.Value is not { Source: StorageFile file, MediaType: MediaPlaybackType.Video } media)
                 return;
 
+            bool subtitleInitialized = false;
+            var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
+            if (playbackSubtitleTrackList == null) return;
+            if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
             IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
-
-            if (subtitles.Count <= 0) return;
             foreach (StorageFile subtitleFile in subtitles)
             {
                 // Preload subtitle but don't select it
-                media.Item.Value?.SubtitleTracks.AddExternalSubtitle(player, subtitleFile, false);
+                playbackSubtitleTrackList.AddExternalSubtitle(player, subtitleFile, false);
+            }
+
+            if (!subtitleInitialized && media.Item.Value is { } playbackItem)
+            {
+                try
+                {
+                    using var cts = new CancellationTokenSource();
+                    _cts = cts;
+                    await playbackItem.Media.WaitForParsed(TimeSpan.FromSeconds(5), cts.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    // pass
+                }
+                finally
+                {
+                    _cts = null;
+                }
+            }
+
+            TrySetSubtitleFromLanguage(playbackSubtitleTrackList, _settingsService.PersistentSubtitleLanguage);
+        }
+
+        private static void TrySetSubtitleFromLanguage(PlaybackSubtitleTrackList subtitleTrackList, string persistentLanguage)
+        {
+            // Check persistent subtitle value to try and select a subtitle
+            if (!string.IsNullOrEmpty(persistentLanguage))
+            {
+                // If there is only one subtitle then select it
+                if (subtitleTrackList.Count == 1)
+                {
+                    subtitleTrackList.SelectedIndex = 0;
+                    return;
+                }
+
+                // Try to select the subtitle with the same language as the persistent value
+                var langPreferences = persistentLanguage.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (string language in langPreferences)
+                {
+                    for (int i = 0; i < subtitleTrackList.Count; i++)
+                    {
+                        var subtitleTrack = subtitleTrackList[i];
+                        // Try to match language tag first, then language name
+                        if (language == subtitleTrack.LanguageTag || language.Equals(subtitleTrack.Language, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            subtitleTrackList.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -114,7 +172,24 @@ namespace Screenbox.Core.ViewModels
         partial void OnSubtitleTrackIndexChanged(int value)
         {
             if (ItemSubtitleTrackList != null && value >= 0 && value < SubtitleTracks.Count)
+            {
                 ItemSubtitleTrackList.SelectedIndex = value - 1;
+
+                if (_flyoutOpened)
+                {
+                    if (value == 0)
+                    {
+                        _settingsService.PersistentSubtitleLanguage = string.Empty;
+                    }
+                    else
+                    {
+                        var subtitle = ItemSubtitleTrackList[ItemSubtitleTrackList.SelectedIndex];
+                        _settingsService.PersistentSubtitleLanguage =
+                            $"{subtitle.LanguageTag},{subtitle.Language},{LanguageHelper.GetPreferredLanguage().Substring(0, 2)}";
+                    }
+                }
+            }
+
         }
 
         partial void OnAudioTrackIndexChanged(int value)
@@ -142,12 +217,19 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void OnAudioCaptionFlyoutOpening()
+        public void OnFlyoutOpening()
         {
             UpdateSubtitleTrackList();
             UpdateAudioTrackList();
             SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? 0;
             AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
+
+            _flyoutOpened = true;
+        }
+
+        public void OnFlyoutClosed()
+        {
+            _flyoutOpened = false;
         }
 
         private void UpdateAudioTrackList()

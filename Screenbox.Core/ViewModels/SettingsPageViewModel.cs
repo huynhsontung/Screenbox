@@ -28,6 +28,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
+        [ObservableProperty] private bool _enqueueAllFilesInFolder;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private bool _useMultipleInstances;
@@ -76,6 +77,7 @@ namespace Screenbox.Core.ViewModels
             _playerShowControls = _settingsService.PlayerShowControls;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
+            _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
@@ -135,6 +137,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.ShowRecent = value;
             Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnEnqueueAllFilesInFolderChanged(bool value)
+        {
+            _settingsService.EnqueueAllFilesInFolder = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(EnqueueAllFilesInFolder), typeof(SettingsPageViewModel)));
         }
 
         async partial void OnSearchRemovableStorageChanged(bool value)

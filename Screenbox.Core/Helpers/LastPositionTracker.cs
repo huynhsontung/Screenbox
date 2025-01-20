@@ -75,7 +75,7 @@ namespace Screenbox.Core.Helpers
         {
             try
             {
-                await filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
+                await filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions.ToList());
             }
             catch (FileLoadException)
             {

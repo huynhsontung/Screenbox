@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Gagal menyimpan frame</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Waktu Tersisa</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Durasi total</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Bab {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -168,7 +177,7 @@
     <value>Volume</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Atur Volume</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Cari</value>
@@ -215,7 +224,7 @@
     <value>Tambahkan ke antrian</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Pilih semua</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
     <value>Select all items in this view</value>
@@ -816,16 +825,16 @@
     <value>Artist</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
-    <value>Released year</value>
+    <value>Tahun Rilis</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Visualisasi Audio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
     <value>Get Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Unduh visual di GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
     <value>Audio visual options</value>
@@ -843,16 +852,16 @@
     <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Didukung oleh Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Impor visual</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Dapatkan visual lebih banyak melalui aplikasi Lively Wallpaper atau unduh dari GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Tanggal ditambahkan</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>
@@ -870,12 +879,18 @@
     <value>Video</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Tampilkan Album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Tampilkan artis</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Gagal memuat visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Add all files in folder to queue</value>
   </data>
 </root>

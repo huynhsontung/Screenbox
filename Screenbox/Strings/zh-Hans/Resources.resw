@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>无法保存帧</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>已用时间</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>剩余时间</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>总持续时间</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -876,6 +885,12 @@
     <value>显示艺术家</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>无法加载视觉效果</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>打开单个文件时，自动将文件夹中的所有其他文件添加到播放队列。</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>将文件夹中的所有文件添加到队列</value>
   </data>
 </root>

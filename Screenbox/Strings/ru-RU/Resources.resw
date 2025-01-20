@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Не удалось сохранить кадр</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Time elapsed</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Time remaining</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Total duration</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Глава {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -877,5 +886,11 @@
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
     <value>Failed to load visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Add all files in folder to queue</value>
   </data>
 </root>

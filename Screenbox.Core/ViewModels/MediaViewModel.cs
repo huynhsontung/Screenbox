@@ -73,6 +73,7 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private string _name;
         [ObservableProperty] private bool _isMediaActive;
+        [ObservableProperty] private bool _isAvailable = true;
         [ObservableProperty] private AlbumViewModel? _album;
         [ObservableProperty] private string? _caption;  // For list item subtitle
         [ObservableProperty] private string? _altCaption;   // For player page subtitle
@@ -207,7 +208,7 @@ namespace Screenbox.Core.ViewModels
             PlaybackItem? item = Item.Value;
             Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
             if (item == null) return;
-            LibVlcService.DisposeMedia(item.Media);
+            _libVlcService.DisposeMedia(item.Media);
         }
 
         public void UpdateSource(StorageFile file)
@@ -224,17 +225,7 @@ namespace Screenbox.Core.ViewModels
                 case StorageFile file:
                     MediaInfo = await filesService.GetMediaInfoAsync(file);
                     break;
-                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                    StorageFile uriFile;
-                    try
-                    {
-                        uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    }
-                    catch (IOException)
-                    {
-                        return;
-                    }
-
+                case Uri uri when await TryGetStorageFileFromUri(uri) is { } uriFile:
                     UpdateSource(uriFile);
                     MediaInfo = await filesService.GetMediaInfoAsync(uriFile);
                     break;
@@ -275,17 +266,9 @@ namespace Screenbox.Core.ViewModels
         public async Task LoadThumbnailAsync()
         {
             if (Thumbnail != null) return;
-            if (Source is Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri)
+            if (Source is Uri uri && await TryGetStorageFileFromUri(uri) is { } storageFile)
             {
-                try
-                {
-                    StorageFile uriFile = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    UpdateSource(uriFile);
-                }
-                catch (IOException)
-                {
-                    return;
-                }
+                UpdateSource(storageFile);
             }
 
             if (Source is StorageFile file)
@@ -454,6 +437,23 @@ namespace Screenbox.Core.ViewModels
                     AltCaption = string.IsNullOrEmpty(artist) ? album : $"{artist} – {album}";
                 }
             }
+        }
+
+        private static async Task<StorageFile?> TryGetStorageFileFromUri(Uri uri)
+        {
+            if (uri is { IsFile: true, IsLoopback: true, IsAbsoluteUri: true })
+            {
+                try
+                {
+                    return await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            return null;
         }
     }
 }

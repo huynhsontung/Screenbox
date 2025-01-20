@@ -260,6 +260,11 @@ namespace Screenbox.Core.ViewModels
             {
                 return null;
             }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+                return null;
+            }
         }
     }
 }

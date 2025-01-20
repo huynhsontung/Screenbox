@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:class="using:Screenbox"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
@@ -83,9 +84,9 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <ctConverters:BoolToObjectConverter
-                x:Key="FilledPlayPauseGlyphConverter"
-                FalseValue="&#xE62E;"
-                TrueValue="&#xF5B0;" />
+                x:Key="PlayPauseSolidGlyphConverter"
+                FalseValue="{StaticResource PauseSolidGlyph}"
+                TrueValue="{StaticResource PlaySolidGlyph}" />
 
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
@@ -149,6 +150,14 @@
                 Modifiers="Shift" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.PlusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.MinusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
             <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
@@ -236,9 +245,10 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <FontIcon
+                    x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xE93F;" />
+                    Glyph="{StaticResource PlaylistMusicGlyph}" />
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
@@ -316,9 +326,10 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
                 <FontIcon
+                    x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xF0003;" />
+                    Glyph="{StaticResource MusicVisualizerGlyph}" />
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
@@ -559,11 +570,11 @@
             </animations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
-                d:Glyph="&#xF5B0;"
+                d:Glyph="{StaticResource PlaySolidGlyph}"
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource PlayPauseSolidGlyphConverter}, Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
@@ -946,6 +957,20 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="{StaticResource PlaylistMusicMirroredGlyph}" />
+                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="{StaticResource MusicVisualizerMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

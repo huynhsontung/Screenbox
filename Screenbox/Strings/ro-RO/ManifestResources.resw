@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>Fișier Audio Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -147,11 +147,11 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>Fișier Audio AIFF comprimat</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
-    <value>Monkey's Audio</value>
+    <value>Fișier Audio Monkey</value>
     <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>Fișier Audio DTS</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -167,7 +167,7 @@
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>Fișier Video MP4 Flash</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -175,7 +175,7 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value>Shockwave Flash Movie</value>
+    <value>Fișier Film Flash Shockwave</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
@@ -207,7 +207,7 @@
     <comment>Display name for the file type ".m4a"</comment>
   </data>
   <data name="FileDisplayNameMP4Audiobook" xml:space="preserve">
-    <value>MPEG-4 Audiobook</value>
+    <value>Fișier MPEG-4 Audiobook</value>
     <comment>Display name for the file type ".m4b"</comment>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
@@ -215,11 +215,11 @@
     <comment>Display name for the file type ".m4v"</comment>
   </data>
   <data name="FileDisplayNameMXF" xml:space="preserve">
-    <value>MXF Video</value>
+    <value>Fișier Video MXF</value>
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value>Fișier Audio NIST SPHERE</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
@@ -227,11 +227,11 @@
     <comment>Display name for the file type ".ogg" and ".oga"</comment>
   </data>
   <data name="FileDisplayNameOggSpeex" xml:space="preserve">
-    <value>Ogg Speex Audio</value>
+    <value>Fișier Audio Ogg Speex</value>
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>Fișier Audio Opus</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -243,19 +243,19 @@
     <comment>Display name for the file type ".mov" and ".qt"</comment>
   </data>
   <data name="FileDisplayNameRealAudio" xml:space="preserve">
-    <value>RealAudio File</value>
+    <value>Fișier RealAudio</value>
     <comment>Display name for the file type ".ra"</comment>
   </data>
   <data name="FileDisplayNameRealMedia" xml:space="preserve">
-    <value>RealMedia File</value>
+    <value>Fișier RealMedia</value>
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
-    <value>RealMedia Variable Bit Rate File</value>
+    <value>Fișier RealMedia cu Rată de Biți Variabilă</value>
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
-    <value>DVD Video Object File</value>
+    <value>Fișier Obiect Video DVD</value>
     <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
@@ -271,11 +271,11 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>Fișier ASF</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
-    <value>Windows Media File</value>
+    <value>Fișier Windows Media</value>
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
@@ -287,7 +287,7 @@
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>Fișier Emisiune TV Înregistrat Windows</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
@@ -299,7 +299,7 @@
     <comment>Display name for the file type ".m2t" and ".ts"</comment>
   </data>
   <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
-    <value>BDAV MPEG-2 Transport Stream</value>
+    <value>Fișier Flux de transport BDAV MPEG-2</value>
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
@@ -307,7 +307,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>Fișier Corecție WavPack</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>

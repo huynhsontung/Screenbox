@@ -23,12 +23,14 @@ namespace Screenbox.Core.Services
         private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
+        private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
+        private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
 
         public bool UseIndexer
         {
@@ -66,6 +68,12 @@ namespace Screenbox.Core.Services
             set => SetValue(PersistentVolumeKey, value);
         }
 
+        public string PersistentSubtitleLanguage
+        {
+            get => GetValue<string>(PersistentSubtitleLanguageKey) ?? string.Empty;
+            set => SetValue(PersistentSubtitleLanguageKey, value);
+        }
+
         public int MaxVolume
         {
             get => GetValue<int>(MaxVolumeKey);
@@ -76,6 +84,12 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<bool>(GeneralShowRecent);
             set => SetValue(GeneralShowRecent, value);
+        }
+
+        public bool EnqueueAllFilesInFolder
+        {
+            get => GetValue<bool>(GeneralEnqueueAllInFolder);
+            set => SetValue(GeneralEnqueueAllInFolder, value);
         }
 
         public bool PlayerShowControls

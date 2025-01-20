@@ -3,6 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:class="using:Screenbox"
+    xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
@@ -57,9 +59,10 @@
             <FontIcon
                 x:Name="NoMusicPanelIcon"
                 Grid.Column="0"
+                FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource NoContentPanelIconFontSize}"
                 Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
-                Glyph="&#xE8D6;" />
+                Glyph="{StaticResource AudioOffGlyph}" />
 
             <StackPanel
                 Grid.Column="1"
@@ -85,7 +88,11 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
+                        <FontIcon
+                            x:Name="NoMusicPanelAddFolderButtonIcon"
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource NewFolderGlyph}" />
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
                     </StackPanel>
                 </Button>
@@ -149,7 +156,11 @@
                     ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
-                        <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE8F4;" />
+                        <FontIcon
+                            x:Name="HeaderAddFolderButtonIcon"
+                            Margin="{StaticResource IconButtonStandardIconMargin}"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource NewFolderGlyph}" />
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
@@ -200,6 +211,20 @@
                         <Setter Target="HeaderNavView.Margin" Value="16,0" />
                         <Setter Target="HeaderAddFolderButton.Margin" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddFolderButtonText.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <contract13Present:Setter Target="NoMusicPanelAddFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract13Present:Setter Target="HeaderAddFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

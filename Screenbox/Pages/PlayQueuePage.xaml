@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -22,13 +23,15 @@
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
-                Icon="{ui:FontIcon Glyph=&#xE838;}"
+                Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                   Glyph={StaticResource FolderOpenGlyph}}"
                 Text="{strings:Resources Key=AddFiles}" />
             <MenuFlyoutItem
+                x:Name="AddToPlayQueueMenuFlyoutFolderItem"
                 AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                   Glyph=&#xF2CE;}"
+                                   Glyph={StaticResource FolderListGlyph}}"
                 Text="{strings:Resources Key=AddFolder}" />
             <MenuFlyoutItem
                 AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
@@ -72,7 +75,10 @@
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource FolderOpenGlyph}" />
                     <TextBlock
                         x:Name="HeaderAddButtonText"
                         Margin="8,0,0,0"
@@ -113,6 +119,19 @@
                         <Setter Target="HeaderGrid.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
                         <Setter Target="HeaderAddButtonText.Visibility" Value="Collapsed" />
                         <Setter Target="PlaylistView.Padding" Value="{StaticResource ContentPageMinimalPadding}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="AddToPlayQueueMenuFlyoutFolderItem.Icon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

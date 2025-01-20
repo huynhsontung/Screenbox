@@ -12,7 +12,9 @@ namespace Screenbox.Core.Services
         bool PlayerTapGesture { get; set; }
         bool PlayerShowControls { get; set; }
         int PersistentVolume { get; set; }
+        string PersistentSubtitleLanguage { get; set; }
         bool ShowRecent { get; set; }
+        bool EnqueueAllFilesInFolder { get; set; }
         bool SearchRemovableStorage { get; set; }
         int MaxVolume { get; set; }
         string GlobalArguments { get; set; }
