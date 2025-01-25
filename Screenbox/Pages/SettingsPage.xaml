@@ -154,7 +154,10 @@
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="SearchRemovableStorageToggle" IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="SearchRemovableStorageToggle"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsSearchRemovableStorageDescription}"
+                        IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
@@ -267,7 +270,10 @@
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="ShowRecentToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsClearRecentCard"
@@ -285,7 +291,7 @@
                     Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderListGlyph}}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind SettingsEnqueueAllFilesInFolderCard.Description}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <!--  Player section  -->
@@ -297,7 +303,10 @@
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE799;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsAutoResizeDescription}"
+                        SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
@@ -315,7 +324,10 @@
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE767;,
                                              MirroredWhenRightToLeft=True}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsVolumeBoostDescription}"
+                        SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
@@ -413,7 +425,10 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;,
                                              MirroredWhenRightToLeft=True}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                    <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="UseMultipleInstancesToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
+                        IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <ctc:SettingsExpander
@@ -425,7 +440,10 @@
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="AdvancedModeToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsAdvancedModeDescription}"
+                        IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsGlobalArgumentsCard"
@@ -477,7 +495,8 @@
                 <StackPanel
                     Margin="0,8,0,28"
                     Padding="{StaticResource HyperlinkButtonInlineMargin}"
-                    Orientation="Vertical">
+                    Orientation="Vertical"
+                    XYFocusKeyboardNavigation="Enabled">
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
