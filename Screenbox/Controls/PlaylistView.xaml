@@ -326,7 +326,7 @@
             <ListView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="A"
-                    Invoked="PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked"
+                    Invoked="SelectDeselectAllKeyboardAccelerator_OnInvoked"
                     Modifiers="Control" />
             </ListView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
