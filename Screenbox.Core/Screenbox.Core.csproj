@@ -10,14 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.Uwp.Extensions" Version="8.2.241112-preview1" />
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="5.0.6" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="5.0.6" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="LibVLCSharp" Version="3.7.0" />
+	<PackageReference Include="LibVLCSharp" Version="3.9.1" />
     <PackageReference Include="protobuf-net" Version="3.2.30" />
-    <PackageReference Include="Sentry" Version="5.0.0" />
+    <PackageReference Include="Sentry" Version="5.0.1" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
+	<PackageReference Include="Microsoft.UI.Xaml" Version="2.8.7-prerelease.241119001" />
   </ItemGroup>
 </Project>
