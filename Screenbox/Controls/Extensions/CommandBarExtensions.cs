@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.WinUI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls.Extensions;
 
@@ -10,29 +9,6 @@ namespace Screenbox.Controls.Extensions;
 /// </summary>
 internal class CommandBarExtensions
 {
-    /// <summary>
-    /// Attached <see cref="DependencyProperty"/> for binding a <see cref="KeyboardAccelerator"/> to the more <see cref="Button"/> of the associated <see cref="CommandBar"/>
-    /// </summary>
-    public static readonly DependencyProperty MoreButtonKeyboardAcceleratorsProperty = DependencyProperty.RegisterAttached(
-        "MoreButtonKeyboardAccelerators", typeof(KeyboardAccelerator), typeof(CommandBarExtensions), new PropertyMetadata(null, OnMoreButtonKeyboardAcceleratorsPropertyChanged));
-
-    /// <summary>
-    /// Gets the <see cref="KeyboardAccelerator"/> for the more <see cref="Button"/> of the associated <see cref="CommandBar"/>
-    /// </summary>
-    /// <returns>The <see cref="KeyboardAccelerator"/> associated with the <see cref="CommandBar"/> more <see cref="Button"/>.</returns>
-    public static KeyboardAccelerator GetMoreButtonKeyboardAccelerators(CommandBar obj)
-    {
-        return (KeyboardAccelerator)obj.GetValue(MoreButtonKeyboardAcceleratorsProperty);
-    }
-
-    /// <summary>
-    /// Sets the <see cref="KeyboardAccelerator"/> to the more <see cref="Button"/> of the associated <see cref="CommandBar"/>
-    /// </summary>
-    public static void SetMoreButtonKeyboardAccelerators(CommandBar obj, KeyboardAccelerator value)
-    {
-        obj.SetValue(MoreButtonKeyboardAcceleratorsProperty, value);
-    }
-
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for binding a <see cref="Style"/> to the more <see cref="Button"/> of the associated <see cref="CommandBar"/>
     /// </summary>
@@ -60,36 +36,8 @@ internal class CommandBarExtensions
     {
         if (sender is CommandBar commandBar)
         {
-            commandBar.Loaded -= ChangeCommandBarMoreButtonKeyboardAccelerators;
             commandBar.Loaded -= ChangeCommandBarMoreButtonStyle;
             commandBar.Unloaded -= OnCommandBarUnloaded;
-        }
-    }
-
-    private static void OnMoreButtonKeyboardAcceleratorsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        if (sender is CommandBar commandBar)
-        {
-            commandBar.Loaded -= ChangeCommandBarMoreButtonKeyboardAccelerators;
-            commandBar.Unloaded -= OnCommandBarUnloaded;
-
-            if (MoreButtonKeyboardAcceleratorsProperty != null)
-            {
-                commandBar.Loaded += ChangeCommandBarMoreButtonKeyboardAccelerators;
-                commandBar.Unloaded += OnCommandBarUnloaded;
-            }
-        }
-    }
-
-    private static void ChangeCommandBarMoreButtonKeyboardAccelerators(object sender, RoutedEventArgs args)
-    {
-        if (sender is CommandBar commandBar)
-        {
-            Button moreButton = commandBar.FindDescendant<Button>(b => b.Name == "MoreButton");
-            if (moreButton != null)
-            {
-                moreButton.KeyboardAccelerators.Add(GetMoreButtonKeyboardAccelerators(commandBar));
-            }
         }
     }
 

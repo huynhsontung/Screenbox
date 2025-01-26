@@ -168,8 +168,8 @@
             Margin="{x:Bind Padding, Mode=OneWay}"
             ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
             ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
+            Opacity="0"
             Visibility="Collapsed">
-
             <Border
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -177,7 +177,6 @@
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32" />
-
             <CommandBar
                 x:Name="SelectionCommandBar"
                 VerticalContentAlignment="Center"

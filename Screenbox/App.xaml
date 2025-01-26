@@ -87,14 +87,12 @@
                     <ctAnimations:ImplicitAnimationSet x:Key="FadeInImplicitAnimation">
                         <ctAnimations:OpacityAnimation
                             EasingType="Linear"
-                            From="0"
                             To="1"
                             Duration="{StaticResource ControlFasterAnimationDuration}" />
                     </ctAnimations:ImplicitAnimationSet>
                     <ctAnimations:ImplicitAnimationSet x:Key="FadeOutImplicitAnimation">
                         <ctAnimations:OpacityAnimation
                             EasingType="Linear"
-                            From="1"
                             To="0"
                             Duration="{StaticResource ControlFasterAnimationDuration}" />
                     </ctAnimations:ImplicitAnimationSet>

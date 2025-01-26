@@ -27,19 +27,16 @@
             Duration="{StaticResource ControlNormalAnimationDuration}" />
         <ctAnimations:OpacityAnimation
             EasingType="Linear"
-            From="0"
             To="1"
             Duration="{StaticResource ControlFastAnimationDuration}" />
     </ctAnimations:ImplicitAnimationSet>
     <ctAnimations:ImplicitAnimationSet x:Key="SelectionRowExitImplicitAnimation">
         <ctAnimations:TranslationAnimation
             EasingMode="EaseIn"
-            From="0,0,0"
             To="0,48,0"
             Duration="{StaticResource ControlFastAnimationDuration}" />
         <ctAnimations:OpacityAnimation
             EasingType="Linear"
-            From="1"
             To="0"
             Duration="{StaticResource ControlFasterAnimationDuration}" />
     </ctAnimations:ImplicitAnimationSet>
