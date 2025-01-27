@@ -365,6 +365,7 @@
                 <VisualState x:Name="Deactivated">
                     <VisualState.Setters>
                         <Setter Target="AppTitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
+                        <Setter Target="NavView.IsBackEnabled" Value="False" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
