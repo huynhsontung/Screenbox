@@ -451,7 +451,7 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 FlowDirection="LeftToRight"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Translation="0,0,32">
                 <Grid.Background>
                     <ImageBrush
@@ -861,7 +861,7 @@
                         <Setter Target="LayoutRoot.Height" Value="128" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
@@ -904,7 +904,7 @@
                         <Setter Target="LayoutRoot.Height" Value="0" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />

@@ -27,8 +27,6 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
-                <ThemeShadow x:Name="SharedShadow" />
-
                 <ctConverters:BoolToObjectConverter
                     x:Key="BoolToSelectAllNoneToolTipTextConverter"
                     FalseValue="{strings:Resources Key=SelectAllToolTip}"
@@ -175,7 +173,7 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Translation="0,0,32" />
             <CommandBar
                 x:Name="SelectionCommandBar"

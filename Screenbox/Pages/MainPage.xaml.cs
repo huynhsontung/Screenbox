@@ -53,7 +53,7 @@ namespace Screenbox.Pages
             //Register a handler for when the window changes focus
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
 
-            NotificationView.Translation = new Vector3(0, 0, 8);
+            NotificationView.Translation = new Vector3(0, 0, 16);
 
             _pages = new Dictionary<string, Type>
             {

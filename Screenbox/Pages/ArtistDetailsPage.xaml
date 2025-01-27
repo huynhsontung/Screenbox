@@ -23,8 +23,6 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <ThemeShadow x:Name="SharedShadow" />
-
             <CollectionViewSource
                 x:Name="AlbumSource"
                 IsSourceGrouped="True"
@@ -45,7 +43,7 @@
                             BorderThickness="1"
                             CornerRadius="{StaticResource ControlCornerRadius}"
                             FlowDirection="LeftToRight"
-                            Shadow="{StaticResource SharedShadow}"
+                            Shadow="{StaticResource ElevationThemeShadow}"
                             Translation="0,0,8">
                             <Grid.Background>
                                 <ImageBrush ImageSource="{Binding Key.AlbumArt}" Stretch="UniformToFill" />
@@ -178,7 +176,7 @@
                 Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 RadiusX="8"
                 RadiusY="12"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Stroke="{ThemeResource ControlElevationBorderBrush}"
                 StrokeThickness="1"
                 Translation="0,0,32" />
@@ -199,7 +197,7 @@
                     BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                     BorderThickness="1"
                     CornerRadius="96"
-                    Shadow="{StaticResource SharedShadow}"
+                    Shadow="{StaticResource ElevationThemeShadow}"
                     SizeChanged="ProfilePicture_OnSizeChanged"
                     Translation="0,0,16">
                     <FontIcon
