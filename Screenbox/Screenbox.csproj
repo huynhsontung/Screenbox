@@ -164,6 +164,7 @@
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
+    <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
