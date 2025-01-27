@@ -4,7 +4,7 @@ using Windows.Storage.FileProperties;
 
 namespace Screenbox.Core.Models;
 [ProtoContract]
-public sealed class VideoInfo
+public sealed class VideoInfo : IMediaProperties
 {
     [ProtoMember(1)] public string Title { get; set; } = string.Empty;
     [ProtoMember(2)] public string Subtitle { get; set; } = string.Empty;
