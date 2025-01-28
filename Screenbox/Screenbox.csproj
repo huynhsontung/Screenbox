@@ -166,6 +166,7 @@
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
+    <Compile Include="Controls\Extensions\SplitButtonExtenstions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
@@ -179,7 +180,7 @@
     <Compile Include="Controls\Interactions\NavigationViewKeyboardBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonAccessibilityBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
       <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>

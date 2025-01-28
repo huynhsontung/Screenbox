@@ -6,6 +6,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Controls.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -123,9 +124,12 @@
                 x:Name="HeaderOpenButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                extensions:SplitButtonExtenstions.PrimaryButtonToolTip="{strings:Resources Key=OpenFilesToolTip}"
+                extensions:SplitButtonExtenstions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
+                extensions:SplitButtonExtenstions.SecondaryButtonToolTip="{strings:Resources Key=OpenFilesSecondaryToolTip}"
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
-                AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
+                AutomationProperties.Name="{x:Bind HeaderOpenButtonText.Text}"
                 Command="{x:Bind Common.OpenFilesCommand}"
                 Flyout="{StaticResource OpenFlyout}">
                 <StackPanel Orientation="Horizontal">
@@ -139,10 +143,7 @@
                         Text="{strings:Resources Key=OpenFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonAccessibilityBehavior
-                        PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
-                        SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                        SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
+                    <interactions:SplitButtonXYNavigationBehavior />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
@@ -193,6 +194,9 @@
 
                 <muxc:SplitButton
                     x:Name="WelcomePanelOpenButton"
+                    extensions:SplitButtonExtenstions.PrimaryButtonToolTip="{strings:Resources Key=OpenFilesToolTip}"
+                    extensions:SplitButtonExtenstions.SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
+                    extensions:SplitButtonExtenstions.SecondaryButtonToolTip="{strings:Resources Key=OpenFilesSecondaryToolTip}"
                     AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                     AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
@@ -206,10 +210,7 @@
                         <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=OpenFiles}" />
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SplitButtonAccessibilityBehavior
-                            PrimaryButtonTooltip="{strings:Resources Key=OpenFilesToolTip}"
-                            SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                            SecondaryButtonTooltip="{strings:Resources Key=OpenFilesSecondaryToolTip}" />
+                        <interactions:SplitButtonXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                 </muxc:SplitButton>
             </StackPanel>

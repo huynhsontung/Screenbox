@@ -12,13 +12,13 @@ namespace Screenbox.Controls.Interactions;
 /// A behavior that sets a <see cref="ToolTip"/> to each part of the <see cref="Microsoft.UI.Xaml.Controls.SplitButton"/>,
 /// enables navigation to the secondary button and ensures the drop down access key display is not dismissed when invoked.
 /// </summary>
-internal class SplitButtonAccessibilityBehavior : BehaviorBase<Microsoft.UI.Xaml.Controls.SplitButton>
+internal class SplitButtonXYNavigationBehavior : BehaviorBase<Microsoft.UI.Xaml.Controls.SplitButton>
 {
     /// <summary>
     /// Identifies the <see cref="PrimaryButtonTooltip"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PrimaryButtonTooltipProperty = DependencyProperty.Register(
-        nameof(PrimaryButtonTooltip), typeof(string), typeof(SplitButtonAccessibilityBehavior), new PropertyMetadata(null));
+        nameof(PrimaryButtonTooltip), typeof(string), typeof(SplitButtonXYNavigationBehavior), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the tooltip associated with the primary button.
@@ -33,7 +33,7 @@ internal class SplitButtonAccessibilityBehavior : BehaviorBase<Microsoft.UI.Xaml
     /// Identifies the <see cref="SecondaryButtonTooltip"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SecondaryButtonTooltipProperty = DependencyProperty.Register(
-        nameof(SecondaryButtonTooltip), typeof(string), typeof(SplitButtonAccessibilityBehavior), new PropertyMetadata(null));
+        nameof(SecondaryButtonTooltip), typeof(string), typeof(SplitButtonXYNavigationBehavior), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the tooltip associated with the secondary button.
@@ -48,7 +48,7 @@ internal class SplitButtonAccessibilityBehavior : BehaviorBase<Microsoft.UI.Xaml
     /// Identifies the <see cref="SecondaryButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SecondaryButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(SecondaryButtonAccessKey), typeof(string), typeof(SplitButtonAccessibilityBehavior), new PropertyMetadata(null));
+        nameof(SecondaryButtonAccessKey), typeof(string), typeof(SplitButtonXYNavigationBehavior), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key of the secondary button.
