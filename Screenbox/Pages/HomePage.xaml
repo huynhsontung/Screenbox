@@ -201,7 +201,8 @@
                     AutomationProperties.HelpText="{strings:Resources Key=OpenFilesToolTip}"
                     AutomationProperties.Name="{strings:Resources Key=OpenFiles}"
                     Command="{x:Bind Common.OpenFilesCommand}"
-                    Flyout="{StaticResource OpenFlyout}">
+                    Flyout="{StaticResource OpenFlyout}"
+                    Style="{StaticResource AccentSplitButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
                             Margin="{StaticResource IconButtonStandardIconMargin}"
