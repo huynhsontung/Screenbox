@@ -1,6 +1,32 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
 
+# All files
+[*]
+indent_style = space
+
+# Solution files
+[*.sln]
+indent_size = 4
+indent_style = tab
+tab_width = 4
+
+# XML project files
+[*.{csproj,filters}]
+indent_size = 2
+
+# XML configuration files
+[*.{appxmanifest,glif,plist,props,resw,targets}]
+indent_size = 2
+
+# Data serialization files
+[*.{json,yml}]
+indent_size = 2
+
+# Markdown files
+[*.md]
+indent_size = 2
+
 # C# files
 [*.cs]
 
