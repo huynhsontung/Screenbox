@@ -7,7 +7,7 @@ namespace Screenbox.Controls.Extensions;
 /// <summary>
 /// Provides attached dependency properties for the <see cref="CommandBar"/> control.
 /// </summary>
-internal class CommandBarExtensions
+public static class CommandBarExtensions
 {
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for binding a <see cref="Style"/> to the more <see cref="Button"/> of the associated <see cref="CommandBar"/>
@@ -60,7 +60,7 @@ internal class CommandBarExtensions
     {
         if (sender is CommandBar commandBar)
         {
-            Button moreButton = commandBar.FindDescendant<Button>(b => b.Name == "MoreButton");
+            var moreButton = commandBar.FindDescendant<Button>(b => b.Name == "MoreButton");
             if (moreButton != null)
             {
                 moreButton.Style = GetMoreButtonStyle(commandBar);

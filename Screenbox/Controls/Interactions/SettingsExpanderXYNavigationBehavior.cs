@@ -28,10 +28,10 @@ internal class SettingsExpanderXYNavigationBehavior : Behavior<SettingsExpander>
     {
         if (sender is SettingsExpander settingsExpander)
         {
-            ToggleButton toggleButton = settingsExpander.FindDescendant<ToggleButton>(e => e.Name == "ExpanderHeader");
+            var toggleButton = settingsExpander.FindDescendant<ToggleButton>(e => e.Name == "ExpanderHeader");
             if (toggleButton != null)
             {
-                ContentPresenter contentPresenter = toggleButton.FindDescendant<ContentPresenter>(c => c.Name == "PART_ContentPresenter");
+                var contentPresenter = toggleButton.FindDescendant<ContentPresenter>(c => c.Name == "PART_ContentPresenter");
                 if (contentPresenter != null)
                 {
                     toggleButton.XYFocusRight = contentPresenter;
