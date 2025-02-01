@@ -813,10 +813,10 @@
     <value>Đối số hoạt động</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Cho phép nhiều tiến trình</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Luôn mở các tệp phương tiện trong một tiến trình mới</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Xếp theo</value>
