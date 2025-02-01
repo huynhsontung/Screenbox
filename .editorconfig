@@ -16,12 +16,18 @@ tab_width = 4
 indent_size = 2
 
 # XML configuration files
-[*.{appxmanifest,glif,plist,props,resw,targets}]
+[*.{appxmanifest,props,resw,targets}]
 indent_size = 2
 
 # Data serialization files
 [*.{json,yml}]
 indent_size = 2
+
+# Font files
+[*.{glif,plist}]
+indent_size = 2
+end_of_line = lf
+insert_final_newline = true
 
 # Markdown files
 [*.md]
