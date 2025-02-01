@@ -36,7 +36,7 @@ namespace Screenbox.Pages
         private void HomePage_OnDragOver(object sender, DragEventArgs e)
         {
             e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Open;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
         }
 
         private async void HomePage_OnDrop(object sender, DragEventArgs e)
