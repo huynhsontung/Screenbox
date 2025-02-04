@@ -140,13 +140,13 @@
     <value>Fehler beim Speichern des Frames</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Abgelaufene Zeit</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Verbleibende Zeit</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Gesamtdauer</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Kapitel {0}</value>
@@ -470,7 +470,7 @@
     <value>Suche nach Datei(en) zum Hinzufügen zur Wiedergabeliste</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>Weitere Optionen zum Hinzufügen von Medien zur Warteschlange</value>
+    <value>Weitere Optionen zum Hinzufügen von Medien zur Wiedergabeliste</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Ordner zur Musikbibliothek hinzufügen</value>
@@ -888,9 +888,9 @@
     <value>Fehler beim Laden der Grafik</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Beim Öffnen einer einzelnen Datei automatisch alle anderen Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Alle Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
   </data>
 </root>
