@@ -534,7 +534,7 @@
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushDivider}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeSidesThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeHorizontalThicknessFilterConverter}}">
                             <!--  Add a brush transition to match the default button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
@@ -940,7 +940,7 @@
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushCheckedDivider}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeSidesThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeHorizontalThicknessFilterConverter}}">
                             <!--  Add a brush transition to match the accent button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />

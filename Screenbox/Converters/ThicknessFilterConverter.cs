@@ -23,7 +23,7 @@ public class ThicknessFilterConverter : IValueConverter
 
     public ThicknessFilterKind Filter { get; set; } = ThicknessFilterKind.None;
 
-    public Thickness ExcludeThicknessConvert(Thickness thickness, ThicknessFilterKind filterKind)
+    public Thickness ExcludeConvert(Thickness thickness, ThicknessFilterKind filterKind)
     {
         Thickness result = thickness;
 
@@ -60,9 +60,12 @@ public class ThicknessFilterConverter : IValueConverter
     {
         if (value is Thickness thickness)
         {
-            return ExcludeThicknessConvert(thickness, Filter);
+            return ExcludeConvert(thickness, Filter);
         }
-        return null;
+        else
+        {
+            return value;
+        }
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

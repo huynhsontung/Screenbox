@@ -212,6 +212,7 @@
                     </StackPanel>
                     <interactivity:Interaction.Behaviors>
                         <interactions:SplitButtonXYNavigationBehavior />
+                        <interactions:AutoFocusBehavior />
                     </interactivity:Interaction.Behaviors>
                 </muxc:SplitButton>
             </StackPanel>
