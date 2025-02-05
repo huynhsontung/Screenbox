@@ -140,13 +140,13 @@
     <value>Échec de sauvegarde de l'image vidéo</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Temps écoulé</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Temps restant</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Durée totale</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Chapitre {0}</value>
@@ -879,18 +879,18 @@
     <value>Vidéos</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Afficher l'album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Afficher l'artiste</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Impossible de charger le visuel</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Lors de l'ouverture d'un seul fichier, tous les autres fichiers du dossier sont automatiquement ajoutés à la file d'attente de lecture.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Ajouter tous les fichiers du dossier à la file d'attente</value>
   </data>
 </root>
