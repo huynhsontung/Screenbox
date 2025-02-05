@@ -57,8 +57,8 @@ jobs:
 
     - name: Render secrets
       env:
-        APPCENTER_API_KEY: ${{ secrets.APPCENTER_API_KEY }}
-        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        APPCENTER_API_KEY: ${{ github.ref_type == 'tag' && secrets.APPCENTER_API_KEY || '' }}
+        SENTRY_DSN: ${{ github.ref_type == 'tag' && secrets.SENTRY_DSN || '' }}
       run: Get-Content Screenbox/Secrets.cs.template | .\gomplate.exe | Set-Content Screenbox/Secrets.cs
 
     - name: Get tag version
