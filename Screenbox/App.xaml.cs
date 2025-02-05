@@ -1,8 +1,11 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
@@ -25,12 +28,6 @@ using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-#if !DEBUG
-using CommunityToolkit.WinUI.Helpers;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Crashes;
-#endif
 
 namespace Screenbox
 {
@@ -164,24 +161,21 @@ namespace Screenbox
 
         private static void ConfigureAppCenter()
         {
-#if !DEBUG
-            AppCenter.Start(Secrets.AppCenterApiKey,
-                typeof(Analytics), typeof(Crashes));
-#endif
+            AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
         }
 
         private static void ConfigureSentry()
         {
-#if !DEBUG
+
             SentrySdk.Init(options =>
             {
                 options.Dsn = Secrets.SentryDsn;
-                options.SampleRate = 0.5f;
+                options.SampleRate = 1.0f;
+                options.StackTraceMode = StackTraceMode.Enhanced;
                 options.IsGlobalModeEnabled = true;
                 options.AutoSessionTracking = true;
                 options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString()}";
             });
-#endif
         }
 
         private void SetMinWindowSize()
