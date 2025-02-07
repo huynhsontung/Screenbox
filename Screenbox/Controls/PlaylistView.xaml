@@ -168,7 +168,6 @@
             Margin="{x:Bind Padding, Mode=OneWay}"
             ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
             ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
-            Opacity="0"
             Visibility="Collapsed">
             <Border
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -314,6 +313,9 @@
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
+            <ListView.Resources>
+                <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
+            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{Binding DataContext.PlaySingleCommand, ElementName=PlaylistListView}" />
