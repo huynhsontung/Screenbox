@@ -166,7 +166,7 @@
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\SplitButtonExtenstions.cs" />
+    <Compile Include="Controls\Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />

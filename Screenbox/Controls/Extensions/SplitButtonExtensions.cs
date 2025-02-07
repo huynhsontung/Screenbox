@@ -12,13 +12,13 @@ namespace Screenbox.Controls.Extensions;
 /// <summary>
 /// Provides attached dependency properties for the buttons of the <see cref="SplitButton"/> control.
 /// </summary>
-public static class SplitButtonExtenstions
+public static class SplitButtonExtensions
 {
     /// <summary>
     /// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTip"/> to the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     /// </summary>
     public static readonly DependencyProperty PrimaryButtonToolTipProperty = DependencyProperty.RegisterAttached(
-       "PrimaryButtonToolTip", typeof(object), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnPrimaryButtonToolTipPropertyChanged));
+       "PrimaryButtonToolTip", typeof(object), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnPrimaryButtonToolTipPropertyChanged));
 
     /// <summary>
     /// Gets the <see cref="ToolTip"/> for the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -41,7 +41,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTipService.PlacementProperty"/> to the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty PrimaryButtonToolTipPlacementProperty = DependencyProperty.RegisterAttached(
-    //    "PrimaryButtonToolTipPlacement", typeof(PlacementMode), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnPrimaryButtonToolTipPlacementPropertyChanged));
+    //    "PrimaryButtonToolTipPlacement", typeof(PlacementMode), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnPrimaryButtonToolTipPlacementPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="ToolTipService.PlacementProperty"/> for the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -64,7 +64,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTipService.PlacementTargetProperty"/> to the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty PrimaryButtonToolTipPlacementTargetProperty = DependencyProperty.RegisterAttached(
-    //    "PrimaryButtonToolTipPlacementTarget", typeof(UIElement), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnPrimaryButtonToolTipPlacementTargetPropertyChanged));
+    //    "PrimaryButtonToolTipPlacementTarget", typeof(UIElement), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnPrimaryButtonToolTipPlacementTargetPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="ToolTipService.PlacementTargetProperty"/> for the primary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -87,7 +87,7 @@ public static class SplitButtonExtenstions
     /// Attached <see cref="DependencyProperty"/> for binding a <see cref="UIElement.AccessKey"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     /// </summary>
     public static readonly DependencyProperty SecondaryButtonAccessKeyProperty = DependencyProperty.RegisterAttached(
-        "SecondaryButtonAccessKey", typeof(string), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonAccessKeyPropertyChanged));
+        "SecondaryButtonAccessKey", typeof(string), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonAccessKeyPropertyChanged));
 
     /// <summary>
     /// Gets the <see cref="UIElement.AccessKey"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -110,7 +110,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="UIElement.KeyTipHorizontalOffset"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonKeyTipHorizontalOffsetProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonKeyTipHorizontalOffset", typeof(double), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonKeyTipHorizontalOffsetPropertyChanged));
+    //    "SecondaryButtonKeyTipHorizontalOffset", typeof(double), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonKeyTipHorizontalOffsetPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="UIElement.KeyTipHorizontalOffset"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -133,7 +133,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="UIElement.KeyTipPlacementMode"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonKeyTipPlacementModeProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonKeyTipPlacementMode", typeof(KeyTipPlacementMode), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonKeyTipPlacementModePropertyChanged));
+    //    "SecondaryButtonKeyTipPlacementMode", typeof(KeyTipPlacementMode), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonKeyTipPlacementModePropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="UIElement.KeyTipPlacementMode"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -156,7 +156,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="UIElement.KeyTipTarget"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonKeyTipTargetProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonKeyTipTarget", typeof(UIElement), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonKeyTipTargetPropertyChanged));
+    //    "SecondaryButtonKeyTipTarget", typeof(UIElement), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonKeyTipTargetPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="UIElement.KeyTipTarget"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -179,7 +179,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="UIElement.KeyTipVerticalOffset"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonKeyTipVerticalOffsetProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonKeyTipVerticalOffset", typeof(double), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonKeyTipVerticalOffsetPropertyChanged));
+    //    "SecondaryButtonKeyTipVerticalOffset", typeof(double), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonKeyTipVerticalOffsetPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="UIElement.KeyTipVerticalOffset"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -202,7 +202,7 @@ public static class SplitButtonExtenstions
     /// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTip"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     /// </summary>
     public static readonly DependencyProperty SecondaryButtonToolTipProperty = DependencyProperty.RegisterAttached(
-        "SecondaryButtonToolTip", typeof(object), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonToolTipPropertyChanged));
+        "SecondaryButtonToolTip", typeof(object), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonToolTipPropertyChanged));
 
     /// <summary>
     /// Gets the <see cref="ToolTip"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -225,7 +225,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTipService.PlacementProperty"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonToolTipPlacementProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonToolTipPlacement", typeof(PlacementMode), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonToolTipPlacementPropertyChanged));
+    //    "SecondaryButtonToolTipPlacement", typeof(PlacementMode), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonToolTipPlacementPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="ToolTipService.PlacementProperty"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -248,7 +248,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="ToolTipService.PlacementTargetProperty"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonToolTipPlacementTargetProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonToolTipPlacementTarget", typeof(UIElement), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonToolTipPlacementTargetPropertyChanged));
+    //    "SecondaryButtonToolTipPlacementTarget", typeof(UIElement), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonToolTipPlacementTargetPropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="ToolTipService.PlacementTargetProperty"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
@@ -271,7 +271,7 @@ public static class SplitButtonExtenstions
     ///// Attached <see cref="DependencyProperty"/> for binding a <see cref="AutomationProperties.NameProperty"/> to the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
     ///// </summary>
     //public static readonly DependencyProperty SecondaryButtonAutomationNameProperty = DependencyProperty.RegisterAttached(
-    //    "SecondaryButtonAutomationName", typeof(string), typeof(SplitButtonExtenstions), new PropertyMetadata(null, OnSecondaryButtonAutomationNamePropertyChanged));
+    //    "SecondaryButtonAutomationName", typeof(string), typeof(SplitButtonExtensions), new PropertyMetadata(null, OnSecondaryButtonAutomationNamePropertyChanged));
 
     ///// <summary>
     ///// Gets the <see cref="AutomationProperties.NameProperty"/> for the secondary <see cref="Button"/> of the specified <see cref="SplitButton"/>
