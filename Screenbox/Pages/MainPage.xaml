@@ -289,7 +289,7 @@
                     x:Name="NavViewSearchBox"
                     controls:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
                     AccessKey="{strings:KeyboardResources Key=NavigationPaneAutoSuggestButtonKey}"
-                    AccessKeyInvoked="NavViewSearchBoxAccessKeyFocus_OnInvoked"
+                    AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
                     KeyTipPlacementMode="Right"
