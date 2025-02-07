@@ -220,7 +220,11 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource ImageExportGlyph}}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="S" Modifiers="Shift" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
                 <MenuFlyoutItem
                     AccessKey="{strings:KeyboardResources Key=MenuItemCastKey}"
                     Click="CastMenuFlyoutItem_OnClick"
@@ -401,6 +405,7 @@
                     <FontIcon Glyph="&#xE892;" />
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="PageUp" />
+                        <KeyboardAccelerator Key="P" Modifiers="Shift" />
                     </Button.KeyboardAccelerators>
                 </Button>
                 <Button
@@ -414,6 +419,7 @@
                     <FontIcon Glyph="&#xE893;" />
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="PageDown" />
+                        <KeyboardAccelerator Key="N" Modifiers="Shift" />
                     </Button.KeyboardAccelerators>
                 </Button>
             </StackPanel>
