@@ -105,7 +105,7 @@
             Orientation="Horizontal">
             <Button
                 x:Name="AddFilesButton"
-                Margin="0,0,12,0"
+                Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind ViewModel.AddFilesCommand}"
@@ -121,7 +121,7 @@
 
             <Button
                 x:Name="ClearButton"
-                Margin="0,0,12,0"
+                Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
                 AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
