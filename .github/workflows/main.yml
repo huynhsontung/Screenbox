@@ -73,23 +73,37 @@ jobs:
       run: .\scripts\update-manifest.ps1 -Version "${{ steps.get-tag-version.outputs.version }}"
       
     - name: Build store package
-      run: |
-        msbuild Screenbox.sln `
-        -v:d `
-        -p:RestoreConfigFile=nuget.config `
-        -p:RestoreLockedMode=true `
-        -p:Configuration=Release `
-        -p:Platform=x64 `
-        -p:AppxBundle=Always `
-        -p:AppxBundlePlatforms="$env:BuildPlatforms" `
-        -p:UapAppxPackageBuildMode=$env:BuildMode `
-        -p:AppxPackageDir=$env:PackageDir `
-        -p:AppxPackageSigningEnabled=false `
-        -restore
       env:
         BuildMode: StoreUpload
         BuildPlatforms: x86|x64|arm64
         PackageDir: C:\DeployOutput
+        SENTRY_ORG: starpine
+        SENTRY_PROJECT: screenbox
+        SENTRY_URL: sentry.starpine.dev
+        SENTRY_RELEASE : ${{ steps.get-tag-version.outputs.version }}
+      run: |
+        $sentryArgs = ""
+        if ('${{ github.ref_type }}' -eq 'tag') {
+          $sentryArgs = "-p:SentryUploadSymbols=true ` 
+                        -p:SentryCreateRelease=true ` 
+                        -p:SentryOrg=$env:SENTRY_ORG ` 
+                        -p:SentryProject=$env:SENTRY_PROJECT ` 
+                        -p:SentryUrl=$env:SENTRY_URL `
+                        -p:SentryAuthToken='${{ secrets.SENTRY_AUTH_TOKEN }}' ` 
+                        -p:SentrySetCommits=true"
+        }
+        msbuild Screenbox.sln `
+          -v:d `
+          -p:RestoreConfigFile=nuget.config `
+          -p:RestoreLockedMode=true `
+          -p:Configuration=Release `
+          -p:Platform=x64 `
+          -p:AppxBundle=Always `
+          -p:AppxBundlePlatforms="$env:BuildPlatforms" `
+          -p:UapAppxPackageBuildMode=$env:BuildMode `
+          -p:AppxPackageDir=$env:PackageDir `
+          -p:AppxPackageSigningEnabled=false $sentryArgs `
+          -restore
     
     - name: Create store-upload artifact
       uses: actions/upload-artifact@v4
