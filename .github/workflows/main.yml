@@ -80,16 +80,16 @@ jobs:
         SENTRY_ORG: starpine
         SENTRY_PROJECT: screenbox
         SENTRY_URL: sentry.starpine.dev
-        SENTRY_RELEASE : ${{ steps.get-tag-version.outputs.version }}
+        SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
       run: |
         $sentryArgs = ""
         if ('${{ github.ref_type }}' -eq 'tag') {
           $sentryArgs = "-p:SentryUploadSymbols=true ` 
-                        -p:SentryCreateRelease=true ` 
                         -p:SentryOrg=$env:SENTRY_ORG ` 
                         -p:SentryProject=$env:SENTRY_PROJECT ` 
                         -p:SentryUrl=$env:SENTRY_URL `
                         -p:SentryAuthToken='${{ secrets.SENTRY_AUTH_TOKEN }}' ` 
+                        -p:SentryCreateRelease=true ` 
                         -p:SentrySetCommits=true"
         }
         msbuild Screenbox.sln `
