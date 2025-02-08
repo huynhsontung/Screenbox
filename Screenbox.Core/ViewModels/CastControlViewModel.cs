@@ -2,10 +2,10 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Events;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
+using Sentry;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Windows.System;
@@ -52,16 +52,16 @@ namespace Screenbox.Core.ViewModels
         private void Cast()
         {
             if (SelectedRenderer == null) return;
-            _castService.SetActiveRenderer(SelectedRenderer);
-            CastingDevice = SelectedRenderer;
-            IsCasting = true;
-            Analytics.TrackEvent("StartCasting", new Dictionary<string, string>
+            SentrySdk.AddBreadcrumb("Start casting", category: "command", type: "user", data: new Dictionary<string, string>
             {
                 {"rendererHash", SelectedRenderer.Name.GetHashCode().ToString()},
-                {"type", SelectedRenderer.Type},
+                {"rendererType", SelectedRenderer.Type},
                 {"canRenderAudio", SelectedRenderer.CanRenderAudio.ToString()},
                 {"canRenderVideo", SelectedRenderer.CanRenderVideo.ToString()},
             });
+            _castService.SetActiveRenderer(SelectedRenderer);
+            CastingDevice = SelectedRenderer;
+            IsCasting = true;
         }
 
         private bool CanCast() => SelectedRenderer is { IsAvailable: true };
@@ -69,10 +69,10 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void StopCasting()
         {
+            SentrySdk.AddBreadcrumb("Stop casting", category: "command", type: "user");
             _castService.SetActiveRenderer(null);
             IsCasting = false;
             StartDiscovering();
-            Analytics.TrackEvent("StopCasting");
         }
 
         private void CastServiceOnRendererLost(object sender, RendererLostEventArgs e)

@@ -4,13 +4,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using LibVLCSharp.Shared;
-using Microsoft.AppCenter.Analytics;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -318,6 +318,13 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnCurrentItemChanged(MediaViewModel? value)
         {
+            SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
+                ? new Dictionary<string, string>
+                {
+                    { "MediaType", value.MediaType.ToString() }
+                }
+                : null);
+
             switch (value?.Source)
             {
                 case StorageFile file:
@@ -340,12 +347,6 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
             await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
             await UpdateMediaBufferAsync();
-            Analytics.TrackEvent("PlaylistCurrentItemChanged", value != null
-                ? new Dictionary<string, string>
-                {
-                    { "MediaType", value.MediaType.ToString() }
-                }
-                : null);
         }
 
         partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)

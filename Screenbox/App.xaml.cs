@@ -1,8 +1,11 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
@@ -25,12 +28,6 @@ using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-#if !DEBUG
-using CommunityToolkit.WinUI.Helpers;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Crashes;
-#endif
 
 namespace Screenbox
 {
@@ -164,24 +161,21 @@ namespace Screenbox
 
         private static void ConfigureAppCenter()
         {
-#if !DEBUG
-            AppCenter.Start(Secrets.AppCenterApiKey,
-                typeof(Analytics), typeof(Crashes));
-#endif
+            AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
         }
 
         private static void ConfigureSentry()
         {
-#if !DEBUG
+
             SentrySdk.Init(options =>
             {
                 options.Dsn = Secrets.SentryDsn;
-                options.SampleRate = 0.5f;
+                options.SampleRate = 1.0f;
+                options.StackTraceMode = StackTraceMode.Enhanced;
                 options.IsGlobalModeEnabled = true;
                 options.AutoSessionTracking = true;
                 options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString()}";
             });
-#endif
         }
 
         private void SetMinWindowSize()
@@ -192,6 +186,11 @@ namespace Screenbox
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
+            SentrySdk.AddBreadcrumb("File activated", category: "activation", type: "user", data: new Dictionary<string, string>
+            {
+                { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
+            });
+
             Frame rootFrame = InitRootFrame();
             if (rootFrame.Content is not MainPage)
             {
@@ -200,10 +199,6 @@ namespace Screenbox
 
             Window.Current.Activate();
             WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
-            Analytics.TrackEvent("FileActivated", new Dictionary<string, string>
-            {
-                { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
-            });
         }
 
         /// <summary>
@@ -213,6 +208,12 @@ namespace Screenbox
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            SentrySdk.AddBreadcrumb("Launched", category: "lifecycle", data: new Dictionary<string, string>
+            {
+                { "PrelaunchActivated", e.PrelaunchActivated.ToString() },
+                { "PreviousExecutionState", e.PreviousExecutionState.ToString() }
+            });
+
             Frame rootFrame = InitRootFrame();
             LibVLCSharp.Shared.Core.Initialize();
 
@@ -260,8 +261,8 @@ namespace Screenbox
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
+            SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
             IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
-            Analytics.TrackEvent("Suspending");
             await Task.WhenAll(tasks);
             await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
             deferral.Complete();
