@@ -40,6 +40,7 @@
     <x:String x:Key="ImageExportGlyph">&#xEE71;</x:String>
     <x:String x:Key="MusicVisualizerGlyph">&#xF010D;</x:String>
     <x:String x:Key="MusicVisualizerMirroredGlyph">&#xF010E;</x:String>
+    <x:String x:Key="FiltersGlyph">&#xE795;</x:String>
 
     <x:String x:Key="MoviesGlyph">&#xE8B2;</x:String>
     <x:String x:Key="MoviesOffGlyph">&#xF0022;</x:String>
