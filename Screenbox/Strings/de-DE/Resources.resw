@@ -893,4 +893,19 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Alle Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
   </data>
+  <data name="Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Select a theme to match your Windows settings or choose a custom one</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Theme</value>
+  </data>
 </root>
