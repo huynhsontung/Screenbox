@@ -189,11 +189,11 @@ namespace Screenbox.Core.Services
         {
             var folderPaths = MusicLibrary!.Folders.Select(f => f.Path).ToList();
             var records = _songs.Select(song =>
-                new PersistentSongRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
-            var libraryCache = new PersistentMusicLibrary
+                new PersistentMediaRecord(song.Name, song.Location, song.MediaInfo.MusicProperties, song.DateAdded)).ToList();
+            var libraryCache = new PersistentStorageLibrary
             {
                 FolderPaths = folderPaths,
-                SongRecords = records
+                Records = records
             };
             cancellationToken.ThrowIfCancellationRequested();
             try
@@ -209,12 +209,12 @@ namespace Screenbox.Core.Services
         private async Task CacheVideosAsync(CancellationToken cancellationToken)
         {
             var folderPaths = VideosLibrary!.Folders.Select(f => f.Path).ToList();
-            List<PersistentVideoRecord> records = _videos.Select(video =>
-                           new PersistentVideoRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
-            var libraryCache = new PersistentVideoLibrary()
+            List<PersistentMediaRecord> records = _videos.Select(video =>
+                           new PersistentMediaRecord(video.Name, video.Location, video.MediaInfo.VideoProperties, video.DateAdded)).ToList();
+            var libraryCache = new PersistentStorageLibrary()
             {
                 FolderPaths = folderPaths,
-                VideoRecords = records
+                Records = records
             };
             cancellationToken.ThrowIfCancellationRequested();
             try
@@ -227,12 +227,12 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private async Task<PersistentMusicLibrary?> LoadMusicLibraryCacheAsync()
+        private async Task<PersistentStorageLibrary?> LoadStorageLibraryCacheAsync(string fileName)
         {
             try
             {
-                return await _filesService.LoadFromDiskAsync<PersistentMusicLibrary>(
-                    ApplicationData.Current.LocalFolder, SongsCacheFileName);
+                return await _filesService.LoadFromDiskAsync<PersistentStorageLibrary>(
+                    ApplicationData.Current.LocalFolder, fileName);
             }
             catch (Exception)
             {
@@ -244,10 +244,10 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private List<MediaViewModel> GetSongsFromCache(PersistentMusicLibrary libraryCache)
+        private List<MediaViewModel> GetMediaFromCache(PersistentStorageLibrary libraryCache)
         {
-            var records = libraryCache.SongRecords;
-            List<MediaViewModel> songs = records.Select(record =>
+            var records = libraryCache.Records;
+            List<MediaViewModel> mediaList = records.Select(record =>
             {
                 MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
                 media.IsFromLibrary = true;
@@ -260,43 +260,7 @@ namespace Screenbox.Core.Services
                 }
                 return media;
             }).ToList();
-            return songs;
-        }
-
-        private async Task<PersistentVideoLibrary?> LoadVideosLibraryCacheAsync()
-        {
-            try
-            {
-                return await _filesService.LoadFromDiskAsync<PersistentVideoLibrary>(
-                    ApplicationData.Current.LocalFolder, VideoCacheFileName);
-            }
-            catch (Exception)
-            {
-                // FileNotFoundException
-                // UnauthorizedAccessException
-                // and other Protobuf exceptions
-                // Deserialization failed
-                return null;
-            }
-        }
-
-        private List<MediaViewModel> GetVideosFromCache(PersistentVideoLibrary libraryCache)
-        {
-            var records = libraryCache.VideoRecords;
-            List<MediaViewModel> videos = records.Select(record =>
-            {
-                MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
-                media.IsFromLibrary = true;
-                if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
-                media.MediaInfo = new MediaInfo(record.Properties);
-                if (record.DateAdded != default)
-                {
-                    DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
-                    media.DateAdded = utcTime.ToLocalTime();
-                }
-                return media;
-            }).ToList();
-            return videos;
+            return mediaList;
         }
 
         private async Task FetchMusicCancelableAsync(bool useCache, CancellationToken cancellationToken)
@@ -314,10 +278,10 @@ namespace Screenbox.Core.Services
                 List<MediaViewModel> songs = new();
                 if (useCache)
                 {
-                    var libraryCache = await LoadMusicLibraryCacheAsync();
-                    if (libraryCache?.SongRecords.Count > 0)
+                    var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
+                    if (libraryCache?.Records.Count > 0)
                     {
-                        songs = GetSongsFromCache(libraryCache);
+                        songs = GetMediaFromCache(libraryCache);
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
@@ -364,9 +328,10 @@ namespace Screenbox.Core.Services
                 {
                     // Ensure only songs not in the library has IsFromLibrary = false
                     _songs.ForEach(song => song.IsFromLibrary = false);
-                    songs.ForEach(song => song.IsFromLibrary = true);
-                    CleanOutdatedSongs();
                 }
+
+                songs.ForEach(song => song.IsFromLibrary = true);
+                CleanOutdatedSongs();
 
                 // Populate Album and Artists for each song
                 foreach (MediaViewModel song in songs)
@@ -424,10 +389,10 @@ namespace Screenbox.Core.Services
                 List<MediaViewModel> videos = new();
                 if (useCache)
                 {
-                    var libraryCache = await LoadVideosLibraryCacheAsync();
-                    if (libraryCache?.VideoRecords.Count > 0)
+                    var libraryCache = await LoadStorageLibraryCacheAsync(VideoCacheFileName);
+                    if (libraryCache?.Records.Count > 0)
                     {
-                        videos = GetVideosFromCache(libraryCache);
+                        videos = GetMediaFromCache(libraryCache);
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, VideosLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.

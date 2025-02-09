@@ -190,6 +190,7 @@
     <Compile Include="Messages\TogglePlayPauseMessage.cs" />
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
+    <Compile Include="Models\IMediaProperties.cs" />
     <Compile Include="Models\LivelyInfoModel.cs" />
     <Compile Include="Models\LivelyMusicModel.cs" />
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />
@@ -198,14 +199,12 @@
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
-    <Compile Include="Models\PersistentMusicLibrary.cs" />
-    <Compile Include="Models\PersistentVideoLibrary.cs" />
-    <Compile Include="Models\PersistentVideoRecord.cs" />
+    <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
-    <Compile Include="Models\PersistentSongRecord.cs" />
+    <Compile Include="Models\PersistentMediaRecord.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
