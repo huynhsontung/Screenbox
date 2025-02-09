@@ -10,14 +10,11 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using System;
 using System.Collections.ObjectModel;
-using System.Resources;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
-using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -31,7 +28,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
-        [ObservableProperty] private int _setTheme;
+        [ObservableProperty] private int _theme;
         [ObservableProperty] private bool _enqueueAllFilesInFolder;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
@@ -52,6 +49,7 @@ namespace Screenbox.Core.ViewModels
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
+        private int _originalTheme;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -81,7 +79,7 @@ namespace Screenbox.Core.ViewModels
             _playerShowControls = _settingsService.PlayerShowControls;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
-            _setTheme = (int)_settingsService.SetTheme;
+            _theme = (int)_settingsService.Theme;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
@@ -89,7 +87,7 @@ namespace Screenbox.Core.ViewModels
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
-            _isRelaunchRequired = CheckForRelaunch();
+            _originalTheme = _theme;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -102,13 +100,11 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        partial void OnSetThemeChanged(int value)
+        partial void OnThemeChanged(int value)
         {
-            _settingsService.SetTheme = (ThemeOption)value;
-            Messenger.Send(new SettingsChangedMessage(nameof(SetTheme), typeof(SettingsPageViewModel)));
-
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values["AppTheme"] = value.ToString();
-            IsRelaunchRequired = true;
+            _settingsService.Theme = (ThemeOption)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
+            CheckForRelaunch();
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -186,7 +182,7 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.AdvancedMode = value;
             Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
-            IsRelaunchRequired = CheckForRelaunch();
+            CheckForRelaunch();
         }
 
         partial void OnUseMultipleInstancesChanged(bool value)
@@ -204,7 +200,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             GlobalArguments = _settingsService.GlobalArguments;
-            IsRelaunchRequired = CheckForRelaunch();
+            CheckForRelaunch();
         }
 
         [RelayCommand]
@@ -400,7 +396,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private bool CheckForRelaunch()
+        private void CheckForRelaunch()
         {
             // Check if global arguments have been changed
             bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
@@ -420,8 +416,10 @@ namespace Screenbox.Core.ViewModels
             // Require relaunch when advanced mode is on and global arguments have been changed
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
+            bool themeChanged = _originalTheme != Theme;
+
             // Combine everything
-            return whenOn || whenOff || whenOnAndChanged;
+            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged || themeChanged;
         }
     }
 }

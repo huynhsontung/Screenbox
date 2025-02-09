@@ -302,7 +302,7 @@
                     Description="{strings:Resources Key=SettingsThemeSelectionDescription}"
                     Header="{strings:Resources Key=SettingsThemeSelectionHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.SetTheme, Mode=TwoWay}">
+                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />

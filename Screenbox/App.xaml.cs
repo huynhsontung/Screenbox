@@ -6,6 +6,7 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -25,7 +26,6 @@ using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Screenbox.Core.Enums;
 
 
 #if !DEBUG
@@ -89,24 +89,12 @@ namespace Screenbox
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
 
-            // Theme Storage Test
-            int theme;
-
-            try
+            var settings = services.GetRequiredService<ISettingsService>();
+            if (settings.Theme != ThemeOption.Auto)
             {
-                theme = int.Parse(Windows.Storage.ApplicationData.Current.LocalSettings.Values["AppTheme"].ToString());
-                if (theme == (int)ThemeOption.Light)
-                {
-                    this.RequestedTheme = ApplicationTheme.Light;
-                }
-                else if (theme == (int)ThemeOption.Dark)
-                {
-                    this.RequestedTheme = ApplicationTheme.Dark;
-                }
-            }
-            catch (NullReferenceException e)
-            {
-                //theme = 0;
+                RequestedTheme = settings.Theme == ThemeOption.Light
+                    ? ApplicationTheme.Light
+                    : ApplicationTheme.Dark;
             }
         }
 

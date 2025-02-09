@@ -14,7 +14,7 @@ namespace Screenbox.Core.Services
         int PersistentVolume { get; set; }
         string PersistentSubtitleLanguage { get; set; }
         bool ShowRecent { get; set; }
-        ThemeOption SetTheme { get; set; }
+        ThemeOption Theme { get; set; }
         bool EnqueueAllFilesInFolder { get; set; }
         bool SearchRemovableStorage { get; set; }
         int MaxVolume { get; set; }
