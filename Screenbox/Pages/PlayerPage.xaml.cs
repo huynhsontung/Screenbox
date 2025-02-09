@@ -361,10 +361,13 @@ namespace Screenbox.Pages
 
         private void UpdateContentState()
         {
-            var contentVisualStateName = ViewModel.AudioOnly
-                ? (ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible, ViewMode: not WindowViewMode.Compact }
+            // LivelyWallpaperPlayer == null when the control is not loaded
+            var audioVisualStateName = LivelyWallpaperPlayer != null &&
+                ViewModel is { ShowVisualizer: true, PlayerVisibility: PlayerVisibilityState.Visible, ViewMode: not WindowViewMode.Compact }
                     ? "AudioWithVisualizer"
-                    : "AudioOnly")
+                    : "AudioOnly";
+            var contentVisualStateName = ViewModel.AudioOnly
+                ? audioVisualStateName
                 : "Video";
             VisualStateManager.GoToState(this, contentVisualStateName, true);
 
