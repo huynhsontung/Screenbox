@@ -26,7 +26,7 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<SettingsPageViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
-            PendingChangesInfoBar.Translation = new Vector3(0, 0, 8);
+            PendingChangesInfoBar.Translation = new Vector3(0, 0, 16);
 
             VlcCommandLineHelpTextParts = new string[2];
             string[] parts = Strings.Resources.VlcCommandLineHelpText

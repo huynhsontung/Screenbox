@@ -23,8 +23,6 @@
                 <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <ThemeShadow x:Name="SharedShadow" />
-
             <MenuFlyout x:Name="ItemFlyout">
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayCommand}"
@@ -89,7 +87,7 @@
                 Fill="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 RadiusX="8"
                 RadiusY="12"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Stroke="{ThemeResource ControlElevationBorderBrush}"
                 StrokeThickness="1"
                 Translation="0,0,32" />
@@ -110,7 +108,7 @@
                     BorderThickness="1"
                     CornerRadius="{StaticResource OverlayCornerRadius}"
                     FlowDirection="LeftToRight"
-                    Shadow="{StaticResource SharedShadow}"
+                    Shadow="{StaticResource ElevationThemeShadow}"
                     SizeChanged="AlbumArt_OnSizeChanged"
                     Translation="0,0,16">
                     <Grid.Background>

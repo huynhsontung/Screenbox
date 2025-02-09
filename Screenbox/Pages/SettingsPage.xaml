@@ -30,8 +30,6 @@
         <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
-        <ThemeShadow x:Name="SharedShadow" />
-
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
 
         <!--  Section header text style  -->
@@ -517,7 +515,7 @@
             IsOpen="{x:Bind ViewModel.IsRelaunchRequired, Mode=OneWay}"
             Message="{strings:Resources Key=RelaunchForChangesMessage}"
             Severity="Warning"
-            Shadow="{StaticResource SharedShadow}">
+            Shadow="{StaticResource ElevationThemeShadow}">
             <muxc:InfoBar.Transitions>
                 <TransitionCollection>
                     <RepositionThemeTransition />

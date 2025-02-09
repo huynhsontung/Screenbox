@@ -123,7 +123,7 @@
                                     <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource TextFillColorPrimary}" />
                                 </ResourceDictionary>
                                 <ResourceDictionary x:Key="HighContrast">
-                                    <StaticResource x:Key="SubtleButtonForegroundPressed" ResourceKey="SystemColorHighlightTextColorBrush" />
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource SystemColorHighlightTextColor}" />
                                 </ResourceDictionary>
                             </ResourceDictionary.ThemeDictionaries>
                         </ResourceDictionary>

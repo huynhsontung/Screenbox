@@ -13,7 +13,6 @@
         <muxc:XamlControlsResources>
             <muxc:XamlControlsResources.MergedDictionaries>
                 <ResourceDictionary>
-
                     <!--  Brushes  -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
@@ -97,6 +96,10 @@
                             Duration="{StaticResource ControlFasterAnimationDuration}" />
                     </ctAnimations:ImplicitAnimationSet>
 
+                    <!--  Shadow  -->
+                    <ThemeShadow x:Key="ElevationThemeShadow" />
+
+                    <!--  Styles  -->
                     <Style
                         x:Key="TitleMediumTextBlockStyle"
                         BasedOn="{StaticResource BaseTextBlockStyle}"
@@ -122,7 +125,6 @@
                                 TextWrapping="NoWrap" />
                         </Button>
                     </DataTemplate>
-
                 </ResourceDictionary>
 
                 <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
