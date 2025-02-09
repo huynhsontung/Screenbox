@@ -328,9 +328,10 @@ namespace Screenbox.Core.Services
                 {
                     // Ensure only songs not in the library has IsFromLibrary = false
                     _songs.ForEach(song => song.IsFromLibrary = false);
-                    songs.ForEach(song => song.IsFromLibrary = true);
-                    CleanOutdatedSongs();
                 }
+
+                songs.ForEach(song => song.IsFromLibrary = true);
+                CleanOutdatedSongs();
 
                 // Populate Album and Artists for each song
                 foreach (MediaViewModel song in songs)
