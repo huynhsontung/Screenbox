@@ -32,7 +32,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Screenbox
 {
-
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
