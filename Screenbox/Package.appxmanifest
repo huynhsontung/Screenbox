@@ -11,13 +11,13 @@
 
   <Identity
     Name="Screenbox"
-    Publisher="CN=SKure27"
+    Publisher="CN=ABCDF790-DBE4-48F7-8204-32FCB69ADF9C"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="13f69037-4fca-4b86-a6f5-a77c0969d41a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Screenbox</DisplayName>
+    <DisplayName>[Debug] Screenbox</DisplayName>
     <PublisherDisplayName>Tung H.</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -36,7 +36,7 @@
       EntryPoint="Screenbox.App"
       desktop4:SupportsMultipleInstances="true">
       <uap:VisualElements
-        DisplayName="Screenbox"
+        DisplayName="[Debug] Screenbox"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="ms-resource:ManifestResources/AppDescription"
