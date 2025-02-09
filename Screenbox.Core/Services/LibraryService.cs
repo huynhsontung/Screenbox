@@ -390,9 +390,9 @@ namespace Screenbox.Core.Services
 
                 MusicLibraryContentChanged?.Invoke(this, EventArgs.Empty);
                 await CacheSongsAsync(cancellationToken);
-                if (hasCache && _musicChangeTrackerAvailable)
+                if (hasCache && _musicChangeTrackerAvailable && changeReader != null)
                 {
-                    await changeReader?.AcceptChangesAsync();
+                    await changeReader.AcceptChangesAsync();
                 }
                 else
                 {
@@ -482,9 +482,9 @@ namespace Screenbox.Core.Services
 
                 VideosLibraryContentChanged?.Invoke(this, EventArgs.Empty);
                 await CacheVideosAsync(cancellationToken);
-                if (hasCache)
+                if (hasCache && _videosChangeTrackerAvailable && changeReader != null)
                 {
-                    await changeReader?.AcceptChangesAsync();
+                    await changeReader.AcceptChangesAsync();
                 }
                 else
                 {

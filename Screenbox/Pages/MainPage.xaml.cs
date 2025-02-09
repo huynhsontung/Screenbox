@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.AppCenter.Analytics;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -67,7 +67,7 @@ namespace Screenbox.Pages
 
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ContentFrame.Navigated += ContentFrameOnNavigated;
+            ContentFrame.Navigating += ContentFrame_Navigating;
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -172,11 +172,12 @@ namespace Screenbox.Pages
             }
         }
 
-        private void ContentFrameOnNavigated(object sender, NavigationEventArgs e)
+        private void ContentFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
-            Analytics.TrackEvent(e.SourcePageType.Name, new Dictionary<string, string>()
-            {
-                {"NavigationMode", e.NavigationMode.ToString()}
+            SentrySdk.AddBreadcrumb(string.Empty, category: "navigation", type: "navigation", data: new Dictionary<string, string> {
+                { "from", ((Frame)sender).CurrentSourcePageType?.Name ?? string.Empty },
+                { "to", e.SourcePageType?.Name ?? string.Empty },
+                { "NavigationMode", e.NavigationMode.ToString()  }
             });
         }
 

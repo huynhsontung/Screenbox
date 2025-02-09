@@ -27,84 +27,74 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.SettingsControls/SettingsCard/SettingsCard.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+        <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
+        <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
-            <!--<x:Double x:Key="SettingsCardActionIconMaxSize">14</x:Double>-->
+        <ThemeShadow x:Name="SharedShadow" />
 
-            <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
+        <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
 
-            <ThemeShadow x:Name="SharedShadow" />
+        <!--  Section header text style  -->
+        <Style
+            x:Key="SettingsSectionHeaderTextBlockStyle"
+            BasedOn="{StaticResource BaseTextBlockStyle}"
+            TargetType="TextBlock">
+            <Setter Property="Margin" Value="1,28,0,8" />
+            <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
+        </Style>
 
-            <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
+        <!--  SettingsCard for the related links footer, with a darker background, reduced left padding, increased minimum height and vertical padding  -->
+        <Style x:Key="LinksSettingsExpanderItemStyle" TargetType="ctc:SettingsCard">
+            <Style.Setters>
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
+                <Setter Property="BorderThickness" Value="0,1,0,0" />
+                <Setter Property="MinHeight" Value="56" />
+                <Setter Property="Padding" Value="18,10,44,12" />
+                <Setter Property="CornerRadius" Value="0" />
+            </Style.Setters>
+        </Style>
 
-            <!--  Section header text style  -->
-            <Style
-                x:Key="SettingsSectionHeaderTextBlockStyle"
-                BasedOn="{StaticResource BaseTextBlockStyle}"
-                TargetType="TextBlock">
-                <Setter Property="Margin" Value="1,28,0,8" />
-                <Setter Property="AutomationProperties.HeadingLevel" Value="Level2" />
-            </Style>
+        <XamlUICommand
+            x:Key="RemoveVideosFolderCommand"
+            Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
+            Description="{strings:Resources Key=RemoveFolder}" />
 
-            <!--  Related links footer style, darken the background, reduce the left padding, increase the vertical padding of the item, and raise the minimum height  -->
-            <Style
-                x:Key="LinksSettingsExpanderItemStyle"
-                BasedOn="{StaticResource DefaultSettingsCardStyle}"
-                TargetType="ctc:SettingsCard">
-                <Style.Setters>
-                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorSecondaryBrush}" />
-                    <Setter Property="BorderThickness" Value="0,1,0,0" />
-                    <Setter Property="MinHeight" Value="56" />
-                    <Setter Property="Padding" Value="18,10,44,12" />
-                    <Setter Property="CornerRadius" Value="0" />
-                </Style.Setters>
-            </Style>
+        <XamlUICommand
+            x:Key="RemoveMusicFolderCommand"
+            Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
+            Description="{strings:Resources Key=RemoveFolder}" />
 
-            <XamlUICommand
-                x:Key="RemoveVideosFolderCommand"
-                Command="{x:Bind ViewModel.RemoveVideosFolderCommand}"
-                Description="{strings:Resources Key=RemoveFolder}" />
+        <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
+            <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
+                <Button
+                    Width="32"
+                    Height="32"
+                    Padding="0"
+                    Command="{StaticResource RemoveVideosFolderCommand}"
+                    CommandParameter="{x:Bind}"
+                    Style="{StaticResource SubtleButtonStyle}">
+                    <FontIcon Glyph="&#xE894;" />
+                </Button>
+            </ctc:SettingsCard>
+        </DataTemplate>
 
-            <XamlUICommand
-                x:Key="RemoveMusicFolderCommand"
-                Command="{x:Bind ViewModel.RemoveMusicFolderCommand}"
-                Description="{strings:Resources Key=RemoveFolder}" />
+        <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
+            <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
+                <Button
+                    Width="32"
+                    Height="32"
+                    Padding="0"
+                    Command="{StaticResource RemoveMusicFolderCommand}"
+                    CommandParameter="{x:Bind}"
+                    Style="{StaticResource SubtleButtonStyle}">
+                    <FontIcon Glyph="&#xE894;" />
+                </Button>
+            </ctc:SettingsCard>
+        </DataTemplate>
 
-            <DataTemplate x:Key="VideosLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
-                    <Button
-                        Width="32"
-                        Height="32"
-                        Padding="0"
-                        Command="{StaticResource RemoveVideosFolderCommand}"
-                        CommandParameter="{x:Bind}"
-                        Style="{StaticResource SubtleButtonStyle}">
-                        <FontIcon Glyph="&#xE894;" />
-                    </Button>
-                </ctc:SettingsCard>
-            </DataTemplate>
-
-            <DataTemplate x:Key="MusicLibraryLocationTemplate" x:DataType="storage:StorageFolder">
-                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}">
-                    <Button
-                        Width="32"
-                        Height="32"
-                        Padding="0"
-                        Command="{StaticResource RemoveMusicFolderCommand}"
-                        CommandParameter="{x:Bind}"
-                        Style="{StaticResource SubtleButtonStyle}">
-                        <FontIcon Glyph="&#xE894;" />
-                    </Button>
-                </ctc:SettingsCard>
-            </DataTemplate>
-
-            <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
-                <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
-            </DataTemplate>
-        </ResourceDictionary>
+        <DataTemplate x:Key="RemovableStorageFolderTemplate" x:DataType="storage:StorageFolder">
+            <ctc:SettingsCard Description="{x:Bind Path}" Header="{x:Bind DisplayName}" />
+        </DataTemplate>
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
@@ -162,9 +152,12 @@
                     ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
                     Visibility="{x:Bind helpers:SystemInformation.IsXbox}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind SearchRemovableStorageToggle}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="SearchRemovableStorageToggle" IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="SearchRemovableStorageToggle"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsSearchRemovableStorageDescription}"
+                        IsOn="{x:Bind ViewModel.SearchRemovableStorage, Mode=TwoWay}" />
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
@@ -177,7 +170,7 @@
                     ItemsSource="{x:Bind ViewModel.MusicLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddMusicFolderButton}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddMusicFolderButton"
@@ -206,7 +199,7 @@
                     ItemsSource="{x:Bind ViewModel.VideoLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AddVideoFolderButton}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddVideoFolderButton"
@@ -231,7 +224,7 @@
                     HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind RefreshLibrariesButton}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="RefreshLibrariesButton"
@@ -292,9 +285,12 @@
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderGlyph}}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind ShowRecentToggleSwitch}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="ShowRecentToggleSwitch" IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="ShowRecentToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsClearRecentCard"
@@ -306,12 +302,13 @@
                 </ctc:SettingsExpander>
 
                 <ctc:SettingsCard
+                    x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}"
                     Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph=&#xF2CE;}">
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                                             Glyph={StaticResource FolderListGlyph}}">
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind SettingsEnqueueAllFilesInFolderCard.Description}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <!--  Player section  -->
@@ -323,7 +320,10 @@
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE799;}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsAutoResizeDescription}"
+                        SelectedIndex="{x:Bind ViewModel.PlayerAutoResize, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
@@ -341,7 +341,10 @@
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE767;,
                                              MirroredWhenRightToLeft=True}">
-                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsVolumeBoostDescription}"
+                        SelectedIndex="{x:Bind ViewModel.VolumeBoost, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
@@ -439,7 +442,10 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;,
                                              MirroredWhenRightToLeft=True}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
-                    <ToggleSwitch x:Name="UseMultipleInstancesToggleSwitch" IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="UseMultipleInstancesToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
+                        IsOn="{x:Bind ViewModel.UseMultipleInstances, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <ctc:SettingsExpander
@@ -449,9 +455,12 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE756;}"
                     IsExpanded="{x:Bind AdvancedModeToggleSwitch.IsOn, Mode=OneWay}">
                     <interactivity:Interaction.Behaviors>
-                        <interactions:SettingsExpanderXYNavigationBehavior XYFocusRight="{x:Bind AdvancedModeToggleSwitch}" />
+                        <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch x:Name="AdvancedModeToggleSwitch" IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="AdvancedModeToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsAdvancedModeDescription}"
+                        IsOn="{x:Bind ViewModel.AdvancedMode, Mode=TwoWay}" />
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard
                             x:Name="SettingsGlobalArgumentsCard"
@@ -503,7 +512,8 @@
                 <StackPanel
                     Margin="0,8,0,28"
                     Padding="{StaticResource HyperlinkButtonInlineMargin}"
-                    Orientation="Vertical">
+                    Orientation="Vertical"
+                    XYFocusKeyboardNavigation="Enabled">
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkDiscord}" NavigateUri="https://discord.gg/HZPZXjANxz" />
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkSponsor}" NavigateUri="https://github.com/sponsors/huynhsontung" />
                     <HyperlinkButton Content="{strings:Resources Key=HyperlinkTranslate}" NavigateUri="https://crowdin.com/project/screenbox" />
@@ -563,6 +573,7 @@
                     <VisualState.Setters>
                         <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                         <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <Setter Target="SettingsEnqueueAllFilesInFolderCard.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
                         <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource MusicVisualizerMirroredGlyph}}" />
                     </VisualState.Setters>
                 </VisualState>

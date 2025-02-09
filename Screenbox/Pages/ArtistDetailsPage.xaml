@@ -247,12 +247,13 @@
                         </interactivity:Interaction.Behaviors>
                     </TextBlock>
 
-                    <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that clicking the more button won't break the animation.  -->
+                    <!--  Wrap the CommandBar in a Grid which will host the translation animation, this ensures that opening the overflow popup does not reset the command bar position.  -->
                     <Grid x:Name="ButtonPanel">
                         <CommandBar
-                            Margin="-4,10,0,0"
-                            Padding="0"
+                            Margin="-8,8,0,0"
                             HorizontalAlignment="Left"
+                            extensions:CommandBarExtensions.MoreButtonStyle="{StaticResource EllipsisDefaultButtonStyle}"
+                            AccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
                             DefaultLabelPosition="Right">
                             <CommandBar.Resources>
                                 <StaticResource x:Key="CommandBarBackground" ResourceKey="ControlFillColorTransparentBrush" />
@@ -260,44 +261,33 @@
                                 <StaticResource x:Key="CommandBarBorderBrushOpen" ResourceKey="ControlFillColorTransparentBrush" />
                                 <StaticResource x:Key="CommandBarHighContrastBorder" ResourceKey="ControlFillColorTransparentBrush" />
 
-                                <!--  Values modified to align with the dimensions and layout of the default button  -->
-                                <x:Double x:Key="AppBarThemeCompactHeight">44</x:Double>
-                                <Thickness x:Key="AppBarButtonContentViewboxMargin">16,14,0,14</Thickness>
-                                <Thickness x:Key="AppBarButtonContentViewboxCollapsedMargin">0,14,0,2</Thickness>
-                                <!--<Thickness x:Key="AppBarButtonTextLabelMargin">6,0,6,8</Thickness>-->
-                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,12,16,13</Thickness>
-                                <Thickness x:Key="AppBarButtonInnerBorderMargin">4,6,4,6</Thickness>
-                                <!--<Thickness x:Key="AppBarButtonInnerBorderCompactMargin">4,6,4,26</Thickness>-->
-                                <!--<StaticResource x:Key="AppBarButtonDefaultWidth" ResourceKey="AppBarButtonCompactWidth" />-->
+                                <Thickness x:Key="AppBarEllipsisButtonInnerBorderMargin">4,8,4,8</Thickness>
+                                <!--  Adjust margin to match the size and layout of the default button  -->
+                                <Thickness x:Key="AppBarButtonContentViewboxMargin">16,16,0,16</Thickness>
+                                <Thickness x:Key="AppBarButtonTextLabelOnRightMargin">8,14,16,15</Thickness>
+                                <Thickness x:Key="AppBarButtonInnerBorderMargin">4,8,4,8</Thickness>
                             </CommandBar.Resources>
 
                             <AppBarButton
-                                x:Name="PlayButton"
-                                HorizontalAlignment="Stretch"
-                                BackgroundSizing="OuterBorderEdge"
-                                BorderBrush="{ThemeResource AccentButtonBorderBrush}"
+                                AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{strings:Resources Key=Play}"
-                                Style="{StaticResource AppBarButtonAccentButtonStyle}"
-                                XYFocusDown="{x:Bind ItemList}">
+                                Style="{StaticResource AccentButtonAppBarButtonStyle}">
                                 <interactivity:Interaction.Behaviors>
                                     <interactions:AutoFocusBehavior />
                                 </interactivity:Interaction.Behaviors>
                             </AppBarButton>
 
                             <AppBarButton
-                                HorizontalAlignment="Stretch"
-                                BorderBrush="{ThemeResource ButtonBorderBrush}"
+                                AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
                                 Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
                                 Label="{strings:Resources Key=ShuffleAndPlay}"
-                                Style="{StaticResource AppBarButtonDefaultButtonStyle}"
-                                XYFocusDown="{x:Bind ItemList}"
-                                XYFocusLeft="{x:Bind PlayButton}" />
+                                Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
                         </CommandBar>
                     </Grid>
                 </StackPanel>
@@ -315,8 +305,7 @@
             IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind AlbumSource.View}"
-            SelectionMode="None"
-            XYFocusUp="{x:Bind PlayButton}">
+            SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
@@ -378,6 +367,10 @@
                 <interactions:FocusOnItemClickBehavior />
             </interactivity:Interaction.Behaviors>
         </ListView>
+
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">

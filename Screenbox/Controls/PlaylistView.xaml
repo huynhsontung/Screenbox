@@ -166,10 +166,10 @@
             x:Name="SelectionCommandRow"
             Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
-            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionCommandBarHideAnimations}"
-            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionCommandBarShowAnimations}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
+            Opacity="0"
             Visibility="Collapsed">
-
             <Border
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -177,7 +177,6 @@
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 Shadow="{StaticResource SharedShadow}"
                 Translation="0,0,32" />
-
             <CommandBar
                 x:Name="SelectionCommandBar"
                 VerticalContentAlignment="Center"
@@ -326,7 +325,7 @@
             <ListView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="A"
-                    Invoked="PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked"
+                    Invoked="SelectDeselectAllKeyboardAccelerator_OnInvoked"
                     Modifiers="Control" />
             </ListView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>

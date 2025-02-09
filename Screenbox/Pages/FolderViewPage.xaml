@@ -145,6 +145,10 @@
             Text="{strings:Resources Key=EmptyFolder}"
             Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
+        <interactivity:Interaction.Behaviors>
+            <interactions:GamepadXYNavigationBehavior />
+        </interactivity:Interaction.Behaviors>
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
                 <VisualState x:Name="Expanded" />

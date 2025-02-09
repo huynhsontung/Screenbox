@@ -11,6 +11,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -137,13 +138,21 @@ namespace Screenbox.Controls
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
 
-        private void PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+        private void SelectDeselectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
         {
             if (PlaylistListView.Items.Count > 0)
             {
-                MultiSelectToggle.IsChecked = true;
-                PlaylistListView.SelectAll();
-                args.Handled = true;
+                if (PlaylistListView.SelectedItems.Count != ViewModel.Playlist.Items.Count)
+                {
+                    MultiSelectToggle.IsChecked = true;
+                    PlaylistListView.SelectRange(new ItemIndexRange(0, (uint)PlaylistListView.Items.Count));
+                    args.Handled = true;
+                }
+                else
+                {
+                    PlaylistListView.DeselectRange(new ItemIndexRange(0, (uint)PlaylistListView.Items.Count));
+                    args.Handled = true;
+                }
             }
         }
     }
