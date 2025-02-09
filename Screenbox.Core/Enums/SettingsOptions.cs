@@ -6,3 +6,10 @@ public enum PlayerAutoResizeOption
     OnLaunch,
     Never
 }
+
+public enum ThemeOption
+{
+    Auto,
+    Light,
+    Dark
+}

@@ -9,6 +9,7 @@ using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
@@ -82,6 +83,14 @@ namespace Screenbox
 
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
+
+            var settings = services.GetRequiredService<ISettingsService>();
+            if (settings.Theme != ThemeOption.Auto)
+            {
+                RequestedTheme = settings.Theme == ThemeOption.Light
+                    ? ApplicationTheme.Light
+                    : ApplicationTheme.Dark;
+            }
         }
 
         public static FlowDirection GetFlowDirection()
