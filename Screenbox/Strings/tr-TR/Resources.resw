@@ -140,13 +140,13 @@
     <value>Kare kaydedilemedi</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Geçen süre</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Kalan süre</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Toplam süre</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Bölüm {0}</value>
@@ -888,9 +888,24 @@
     <value>Görsel yüklenemedi</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Tek bir dosyayı açarken, klasördeki diğer tüm dosyaları otomatik olarak oynatma sırasına ekleyin.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Klasördeki tüm dosyaları sıraya ekle</value>
+  </data>
+  <data name="Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Select a theme to match your Windows settings or choose a custom one</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Theme</value>
   </data>
 </root>
