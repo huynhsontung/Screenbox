@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Screenbox")]
-[assembly: AssemblyCopyright("Copyright © 2022-2024 Tung Huynh")]
+[assembly: AssemblyCopyright("Copyright © 2022-2025 Tung Huynh")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

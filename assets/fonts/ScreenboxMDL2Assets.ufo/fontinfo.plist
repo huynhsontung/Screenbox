@@ -11,11 +11,11 @@
     <key>styleMapStyleName</key>
     <string>regular</string>
     <key>versionMajor</key>
-    <integer>24</integer>
+    <integer>25</integer>
     <key>versionMinor</key>
-    <integer>12</integer>
+    <integer>02</integer>
     <key>copyright</key>
-    <string>Copyright (c) 2023-2024 Screenbox Project Authors.</string>
+    <string>Copyright (c) 2023-2025 Screenbox Project Authors.</string>
     <key>unitsPerEm</key>
     <integer>2048</integer>
     <key>capHeight</key>
@@ -39,7 +39,7 @@
     <key>openTypeNameManufacturerURL</key>
     <string>https://github.com/huynhsontung/Screenbox</string>
     <key>openTypeNameVersion</key>
-    <string>Version 24.12</string>
+    <string>Version 25.02</string>
     <key>openTypeNameUniqueID</key>
     <string>Screenbox MDL2 Assets</string>
     <key>openTypeNameSampleText</key>

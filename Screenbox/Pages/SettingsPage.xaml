@@ -263,7 +263,8 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsThemeSelectionDescription}"
                     Header="{strings:Resources Key=SettingsThemeSelectionHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource FiltersGlyph}}">
                     <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.Theme, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
