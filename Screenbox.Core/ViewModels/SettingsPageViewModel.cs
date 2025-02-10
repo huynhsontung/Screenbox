@@ -49,7 +49,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
-        private int _originalTheme;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -87,7 +86,6 @@ namespace Screenbox.Core.ViewModels
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
-            _originalTheme = _theme;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -104,7 +102,6 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.Theme = (ThemeOption)value;
             Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
-            CheckForRelaunch();
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -416,10 +413,8 @@ namespace Screenbox.Core.ViewModels
             // Require relaunch when advanced mode is on and global arguments have been changed
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
-            bool themeChanged = _originalTheme != Theme;
-
             // Combine everything
-            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged || themeChanged;
+            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged;
         }
     }
 }

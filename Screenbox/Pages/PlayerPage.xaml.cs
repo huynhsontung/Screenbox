@@ -3,7 +3,6 @@
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Helpers;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
@@ -44,7 +43,6 @@ namespace Screenbox.Pages
         private const VirtualKey CommaKey = (VirtualKey)188;
 
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
-        private readonly ThemeListener _themeListener;
         private CancellationTokenSource? _animationCancellationTokenSource;
         private bool _startup;
 
@@ -53,13 +51,9 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
             _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
-            _themeListener = new ThemeListener();
-            _themeListener.ThemeChanged += ThemeListenerOnThemeChanged;
 
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
-            ViewModel.ActualTheme = ActualTheme;
-            UpdateBackgroundAcrylicOpacity(ActualTheme);
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
@@ -82,15 +76,13 @@ namespace Screenbox.Pages
                 PlayQueueFlyout.Hide();
         }
 
-        private void ThemeListenerOnThemeChanged(ThemeListener sender)
-        {
-            ViewModel.ActualTheme = ActualTheme;
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // Default content state
-            VisualStateManager.GoToState(this, "Video", false);
+            UpdateBackgroundAcrylicOpacity(ActualTheme);
+
+            // DO NOT SET CONTENT VISUAL STATE HERE
+            // It will cause element theme to not propagate correctly
+            // VisualStateManager.GoToState(this, "Video", false);
 
             if (e.Parameter is true)
             {

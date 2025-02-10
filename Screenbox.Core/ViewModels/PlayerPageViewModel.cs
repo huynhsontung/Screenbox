@@ -37,6 +37,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
@@ -50,7 +51,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
-        [ObservableProperty] private ElementTheme _actualTheme;
         [ObservableProperty] private bool _showVisualizer;
 
         [ObservableProperty]
@@ -105,6 +105,15 @@ namespace Screenbox.Core.ViewModels
         {
             if (message.NewValue == null) return;
             ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(message.NewValue.Path);
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
+                Window.Current.Content is Frame rootFrame)
+            {
+                rootFrame.RequestedTheme = _settingsService.Theme.ToElementTheme();
+            }
         }
 
         public void Receive(TogglePlayerVisibilityMessage message)
