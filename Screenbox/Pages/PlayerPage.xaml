@@ -750,9 +750,10 @@
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility">
+                            <!--  Do not apply transition on LivelyWallpaperPlayer here. The player may not been loaded yet.  -->
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility" >
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
+                            </ObjectAnimationUsingKeyFrames>-->
                             <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
                         </Storyboard>
                     </VisualTransition>
