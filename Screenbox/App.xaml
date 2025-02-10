@@ -17,12 +17,49 @@
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorLight2" />
+
+                            <!--  Caption button  -->
+                            <StaticResource x:Key="CaptionButtonBackground" ResourceKey="SubtleFillColorTransparent" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondary" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiary" />
+                            <!--  Foreground colors ignore the alpha channel, so we flattened them by layering them over the SolidBackgroundFillColorBase and its associated subtle color  -->
+                            <!--  TextFillColorPrimary  -->
+                            <Color x:Key="CaptionButtonForeground">#FFFFFF</Color>
+                            <!--  TextFillColorPrimary  -->
+                            <Color x:Key="CaptionButtonForegroundPointerOver">#FFFFFF</Color>
+                            <!--  TextFillColorSecondary  -->
+                            <Color x:Key="CaptionButtonForegroundPressed">#D1D1D1</Color>
+                            <!--  TextFillColorDisabled  -->
+                            <Color x:Key="CaptionButtonForegroundInactive">#717171</Color>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="Light">
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemAccentColorDark1" />
+
+                            <!--  Caption button  -->
+                            <StaticResource x:Key="CaptionButtonBackground" ResourceKey="SubtleFillColorTransparent" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPointerOver" ResourceKey="SubtleFillColorSecondary" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPressed" ResourceKey="SubtleFillColorTertiary" />
+                            <!--  Foreground colors ignore the alpha channel, so we flattened them by layering them over the SolidBackgroundFillColorBase and its associated subtle color  -->
+                            <!--  TextFillColorPrimary  -->
+                            <Color x:Key="CaptionButtonForeground">#1A1A1A</Color>
+                            <!--  TextFillColorPrimary  -->
+                            <Color x:Key="CaptionButtonForegroundPointerOver">#191919</Color>
+                            <!--  TextFillColorSecondary  -->
+                            <Color x:Key="CaptionButtonForegroundPressed">#5D5D5D</Color>
+                            <!--  TextFillColorDisabled  -->
+                            <Color x:Key="CaptionButtonForegroundInactive">#9B9B9B</Color>
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <StaticResource x:Key="AccentFillColorCustomBrush" ResourceKey="SystemColorHighlightColor" />
+
+                            <!--  Caption button, not used  -->
+                            <StaticResource x:Key="CaptionButtonBackground" ResourceKey="SystemColorWindowColor" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPointerOver" ResourceKey="SystemColorHighlightColor" />
+                            <StaticResource x:Key="CaptionButtonBackgroundPressed" ResourceKey="SystemColorHighlightColor" />
+                            <StaticResource x:Key="CaptionButtonForeground" ResourceKey="SystemColorWindowTextColor" />
+                            <StaticResource x:Key="CaptionButtonForegroundPointerOver" ResourceKey="SystemColorHighlightTextColor" />
+                            <StaticResource x:Key="CaptionButtonForegroundPressed" ResourceKey="SystemColorHighlightTextColor" />
+                            <StaticResource x:Key="CaptionButtonForegroundInactive" ResourceKey="SystemColorWindowTextColor" />
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
 

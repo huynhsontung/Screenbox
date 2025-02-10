@@ -353,9 +353,22 @@ namespace Screenbox.Pages
 
         private void UpdateSystemCaptionButtonForeground()
         {
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (titleBar != null && ViewModel.AudioOnly == false)
             {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
+                // Rest
+                titleBar.ButtonForegroundColor = Colors.White;
+
+                // Hover
+                titleBar.ButtonHoverBackgroundColor = Color.FromArgb(0x0F, 0xFF, 0xFF, 0xFF); // SubtleFillColorSecondary
+                titleBar.ButtonHoverForegroundColor = Colors.White;
+
+                // Pressed
+                titleBar.ButtonPressedBackgroundColor = Color.FromArgb(0x0A, 0xFF, 0xFF, 0xFF); // SubtleFillColorTertiary
+                titleBar.ButtonPressedForegroundColor = Color.FromArgb(0xFF, 0xD1, 0xD1, 0xD1); // TextFillColorSecondary
+
+                // Inactive
+                titleBar.ButtonInactiveForegroundColor = Color.FromArgb(0xFF, 0x71, 0x71, 0x71); // TextFillColorDisabled
             }
         }
 
