@@ -34,6 +34,12 @@
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
+                    <converters:ThicknessFilterConverter x:Key="ExcludeLeftThicknessFilterConverter" Filter="Left" />
+                    <!--<converters:ThicknessFilterConverter x:Key="ExcludeTopThicknessFilterConverter" Filter="Top" />-->
+                    <converters:ThicknessFilterConverter x:Key="ExcludeRightThicknessFilterConverter" Filter="Right" />
+                    <!--<converters:ThicknessFilterConverter x:Key="ExcludeBottomThicknessFilterConverter" Filter="Bottom" />-->
+                    <converters:ThicknessFilterConverter x:Key="ExcludeHorizontalThicknessFilterConverter" Filter="LeftRight" />
+                    <!--<converters:ThicknessFilterConverter x:Key="ExcludeVerticalThicknessFilterConverter" Filter="TopBottom" />-->
                     <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
                     <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
