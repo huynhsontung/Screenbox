@@ -271,9 +271,11 @@
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
-                        <x:String>ThemeAuto</x:String>
+                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
+                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
                         <x:String>ThemeLight</x:String>
                         <x:String>ThemeDark</x:String>
+                        <x:String>ThemeAuto</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 

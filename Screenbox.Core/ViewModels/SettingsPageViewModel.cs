@@ -78,7 +78,7 @@ namespace Screenbox.Core.ViewModels
             _playerShowControls = _settingsService.PlayerShowControls;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
-            _theme = (int)_settingsService.Theme;
+            _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
@@ -100,7 +100,9 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnThemeChanged(int value)
         {
-            _settingsService.Theme = (ThemeOption)value;
+            // The recommended theme option order is Light, Dark, System
+            // So we need to map the value to the correct ThemeOption
+            _settingsService.Theme = (ThemeOption)((value + 1) % 3);
             Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
         }
 
