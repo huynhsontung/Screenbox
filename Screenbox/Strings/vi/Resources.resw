@@ -893,19 +893,22 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Thêm tất cả các tập tin trong thư mục vào hàng đợi</value>
   </data>
-  <data name="Auto" xml:space="preserve">
-    <value>Auto</value>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Use system setting</value>
   </data>
-  <data name="Dark" xml:space="preserve">
+  <data name="ThemeDark" xml:space="preserve">
     <value>Dark</value>
   </data>
-  <data name="Light" xml:space="preserve">
+  <data name="ThemeLight" xml:space="preserve">
     <value>Light</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Select a theme to match your Windows settings or choose a custom one</value>
+    <value>Change the app's overall color scheme</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>Theme</value>
+    <value>App theme</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalization</value>
   </data>
 </root>
