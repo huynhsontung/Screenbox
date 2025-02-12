@@ -653,7 +653,7 @@
 
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
@@ -703,7 +703,7 @@
 
                 <VisualState x:Name="AudioWithVisualizer">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
@@ -742,7 +742,7 @@
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioOnly">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Default" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
@@ -761,7 +761,7 @@
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioWithVisualizer">
                         <Storyboard>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Default" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />

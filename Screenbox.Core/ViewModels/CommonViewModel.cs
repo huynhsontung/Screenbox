@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Controls;
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class CommonViewModel : ObservableRecipient,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
     {
@@ -51,6 +52,15 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
+                Window.Current.Content is Frame rootFrame)
+            {
+                rootFrame.RequestedTheme = _settingsService.Theme.ToElementTheme();
+            }
         }
 
         public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)

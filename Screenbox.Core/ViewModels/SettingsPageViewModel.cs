@@ -49,7 +49,6 @@ namespace Screenbox.Core.ViewModels
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
-        private int _originalTheme;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -79,7 +78,7 @@ namespace Screenbox.Core.ViewModels
             _playerShowControls = _settingsService.PlayerShowControls;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
-            _theme = (int)_settingsService.Theme;
+            _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
@@ -87,7 +86,6 @@ namespace Screenbox.Core.ViewModels
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
-            _originalTheme = _theme;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -102,9 +100,10 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnThemeChanged(int value)
         {
-            _settingsService.Theme = (ThemeOption)value;
+            // The recommended theme option order is Light, Dark, System
+            // So we need to map the value to the correct ThemeOption
+            _settingsService.Theme = (ThemeOption)((value + 1) % 3);
             Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
-            CheckForRelaunch();
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -416,10 +415,8 @@ namespace Screenbox.Core.ViewModels
             // Require relaunch when advanced mode is on and global arguments have been changed
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
-            bool themeChanged = _originalTheme != Theme;
-
             // Combine everything
-            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged || themeChanged;
+            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged;
         }
     }
 }

@@ -256,8 +256,8 @@
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 
-                <!--  General section  -->
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
+                <!--  Personalization section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPersonalization}" />
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
@@ -271,11 +271,16 @@
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
-                        <x:String>Auto</x:String>
-                        <x:String>Light</x:String>
-                        <x:String>Dark</x:String>
+                        <!--  The app settings guidelines recommend theme options to follow this order.  -->
+                        <!--  https://learn.microsoft.com/en-us/windows/apps/design/app-settings/guidelines-for-app-settings#color-mode-settings  -->
+                        <x:String>ThemeLight</x:String>
+                        <x:String>ThemeDark</x:String>
+                        <x:String>ThemeAuto</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
+
+                <!--  General section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
 
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
