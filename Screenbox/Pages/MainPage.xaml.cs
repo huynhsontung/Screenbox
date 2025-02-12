@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI.Helpers;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Sentry;
@@ -35,6 +36,8 @@ namespace Screenbox.Pages
 
         private readonly Dictionary<string, Type> _pages;
 
+        private readonly ThemeListener _themeListener;
+
         public MainPage()
         {
             InitializeComponent();
@@ -52,6 +55,10 @@ namespace Screenbox.Pages
 
             //Register a handler for when the window changes focus
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
+
+            //Register a handler for when the theme mode changes
+            _themeListener = new ThemeListener();
+            _themeListener.ThemeChanged += ThemeListener_OnThemeChanged;
 
             NotificationView.Translation = new Vector3(0, 0, 16);
 
@@ -124,12 +131,55 @@ namespace Screenbox.Pages
             ContentFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
+        private void ThemeListener_OnThemeChanged(ThemeListener sender)
+        {
+            UpdateSystemCaptionButton();
+        }
+
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
             if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
             {
+                // Restore the original caption button colors during the minimizing player transition
                 titleBar.ButtonForegroundColor = null;
+                titleBar.ButtonHoverBackgroundColor = null;
+                titleBar.ButtonHoverForegroundColor = null;
+                titleBar.ButtonPressedBackgroundColor = null;
+                titleBar.ButtonPressedForegroundColor = null;
+                titleBar.ButtonInactiveForegroundColor = null;
+
+                UpdateSystemCaptionButton();
+            }
+        }
+
+        private void UpdateSystemCaptionButton()
+        {
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (titleBar != null)
+            {
+                // Rest
+                var buttonBackgroundColor = (Color)Application.Current.Resources["CaptionButtonBackground"];
+                titleBar.ButtonBackgroundColor = buttonBackgroundColor;
+                var buttonForegroundColor = (Color)Application.Current.Resources["CaptionButtonForeground"];
+                titleBar.ButtonForegroundColor = buttonForegroundColor;
+
+                // Hover
+                var buttonHoverBackgroundColor = (Color)Application.Current.Resources["CaptionButtonBackgroundPointerOver"];
+                titleBar.ButtonHoverBackgroundColor = buttonHoverBackgroundColor;
+                var buttonHoverForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundPointerOver"];
+                titleBar.ButtonHoverForegroundColor = buttonHoverForegroundColor;
+
+                // Pressed
+                var buttonPressedBackgroundColor = (Color)Application.Current.Resources["CaptionButtonBackgroundPressed"];
+                titleBar.ButtonPressedBackgroundColor = buttonPressedBackgroundColor;
+                var buttonPressedForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundPressed"];
+                titleBar.ButtonPressedForegroundColor = buttonPressedForegroundColor;
+
+                // Inactive
+                titleBar.ButtonInactiveBackgroundColor = buttonBackgroundColor;
+                var buttonInactiveForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundInactive"];
+                titleBar.ButtonInactiveForegroundColor = buttonInactiveForegroundColor;
             }
         }
 
@@ -148,9 +198,7 @@ namespace Screenbox.Pages
 
             if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
             {
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                titleBar.InactiveBackgroundColor = Colors.Transparent;
+                UpdateSystemCaptionButton();
             }
         }
 
