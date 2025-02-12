@@ -893,19 +893,22 @@
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Adăugați toate fișierele din folder în coadă</value>
   </data>
-  <data name="Auto" xml:space="preserve">
-    <value>Automată</value>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Use system setting</value>
   </data>
-  <data name="Dark" xml:space="preserve">
-    <value>Întunecată</value>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
   </data>
-  <data name="Light" xml:space="preserve">
-    <value>Luminoasă</value>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Selectați o temă pentru a se potrivi cu setările Windows sau alegeți una personalizată</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
     <value>Temă</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalization</value>
   </data>
 </root>
