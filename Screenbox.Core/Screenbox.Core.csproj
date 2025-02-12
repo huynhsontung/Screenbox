@@ -272,6 +272,7 @@
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
+    <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
