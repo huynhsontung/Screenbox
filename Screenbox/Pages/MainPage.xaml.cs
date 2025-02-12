@@ -43,6 +43,12 @@ namespace Screenbox.Pages
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
+            // Enable mica background on Windows 11
+            if (Windows.Foundation.Metadata.ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+            {
+                muxc.BackdropMaterial.SetApplyToRootOrPageBackground(this, true);
+            }
+
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayRightInset);
 

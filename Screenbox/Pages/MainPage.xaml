@@ -15,7 +15,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
+    contract13NotPresent:Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
 
