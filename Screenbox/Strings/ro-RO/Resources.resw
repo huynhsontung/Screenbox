@@ -894,13 +894,13 @@
     <value>Adăugați toate fișierele din folder în coadă</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Utilizați setările de sistem</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Întunecată</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Luminoasă</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Selectați o temă pentru a se potrivi cu setările Windows sau alegeți una personalizată</value>
@@ -909,6 +909,6 @@
     <value>Temă</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personalizare</value>
   </data>
 </root>
