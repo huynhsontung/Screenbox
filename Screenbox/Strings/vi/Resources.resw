@@ -894,7 +894,7 @@
     <value>Thêm tất cả các tập tin trong thư mục vào hàng đợi</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Dùng cài đặt hệ thống</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Dark</value>
