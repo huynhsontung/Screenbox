@@ -5,10 +5,12 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.Enums;
+using Screenbox.Core.Events;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
+using Screenbox.Core.Services;
 using System;
 using System.Collections.ObjectModel;
 using Windows.Media.Core;
@@ -25,6 +27,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<TimeChangeOverrideMessage>,
         IRecipient<ChangeTimeRequestMessage>,
         IRecipient<PlayerControlsVisibilityChangedMessage>,
+        IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>,
         IRecipient<MediaPlayerChangedMessage>
     {
@@ -44,17 +47,31 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<ChapterCue> Chapters { get; }
 
+        private TimeSpan NaturalDuration => TimeSpan.FromMilliseconds(Length);
+
+        private TimeSpan Position
+        {
+            get => TimeSpan.FromMilliseconds(Time);
+            set => Time = value.TotalMilliseconds;
+        }
+
         private IMediaPlayer? _mediaPlayer;
 
+        private readonly ISettingsService _settingsService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _bufferingTimer;
         private readonly DispatcherQueueTimer _seekTimer;
         private readonly DispatcherQueueTimer _originalPositionTimer;
+        private readonly LastPositionTracker _lastPositionTracker;
         private TimeSpan _originalPosition;
+        private TimeSpan _lastTrackedPosition;
         private bool _timeChangeOverride;
+        private MediaViewModel? _currentItem;
 
-        public SeekBarViewModel()
+        public SeekBarViewModel(ISettingsService settingsService, LastPositionTracker lastPositionTracker)
         {
+            _settingsService = settingsService;
+            _lastPositionTracker = lastPositionTracker;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _bufferingTimer = _dispatcherQueue.CreateTimer();
             _seekTimer = _dispatcherQueue.CreateTimer();
@@ -66,6 +83,26 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(PlaylistCurrentItemChangedMessage message)
+        {
+            _lastTrackedPosition = TimeSpan.Zero;
+            _currentItem = message.Value;
+            if (message.Value != null)
+            {
+                TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
+                if (lastPosition <= TimeSpan.Zero) return;
+                if (_settingsService.RestorePlaybackPosition)
+                {
+                    // Media is not seekable yet, so we need to wait for the PlaybackStateChanged event
+                    _lastTrackedPosition = lastPosition;
+                }
+                else
+                {
+                    Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+                }
+            }
         }
 
         public void Receive(PropertyChangedMessage<PlayerVisibilityState> message)
@@ -83,7 +120,20 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(MediaPlayerChangedMessage message)
         {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.PlaybackStateChanged -= OnPlaybackStateChanged;
+                _mediaPlayer.NaturalDurationChanged -= OnNaturalDurationChanged;
+                _mediaPlayer.PositionChanged -= OnPositionChanged;
+                _mediaPlayer.MediaEnded -= OnEndReached;
+                _mediaPlayer.BufferingStarted -= OnBufferingStarted;
+                _mediaPlayer.BufferingEnded -= OnBufferingEnded;
+                _mediaPlayer.PlaybackItemChanged -= OnPlaybackItemChanged;
+                _mediaPlayer.CanSeekChanged -= OnCanSeekChanged;
+            }
+
             _mediaPlayer = message.Value;
+            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
             _mediaPlayer.NaturalDurationChanged += OnNaturalDurationChanged;
             _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.MediaEnded += OnEndReached;
@@ -131,6 +181,7 @@ namespace Screenbox.Core.ViewModels
 
         public void OnSeekBarValueChanged(object sender, RangeBaseValueChangedEventArgs args)
         {
+            var newPosition = TimeSpan.FromMilliseconds(args.NewValue);
             // Only update player position when there is a user interaction.
             // SeekBar should have OneWay binding to Time, so when Time changes and invokes
             // this handler, Time = args.NewValue. The only exception is when the change is
@@ -146,22 +197,28 @@ namespace Screenbox.Core.ViewModels
                 bool paused = _mediaPlayer.PlaybackState is MediaPlaybackState.Paused or MediaPlaybackState.Buffering;
                 if (shouldUpdate || paused || shouldOverride)
                 {
-                    SetPlayerPosition(TimeSpan.FromMilliseconds(args.NewValue), true);
+                    SetPlayerPosition(newPosition, true);
                 }
             }
+
+            UpdateLastPosition(newPosition);
         }
 
         private PositionChangedResult UpdatePosition(TimeSpan position, bool isOffset, bool debounce)
         {
-            TimeSpan currentPosition = TimeSpan.FromMilliseconds(Time);
+            TimeSpan currentPosition = Position;
             _originalPositionTimer.Debounce(() => _originalPosition = currentPosition, TimeSpan.FromSeconds(1), true);
 
             // Assume UI thread
-            Time = isOffset ? Math.Clamp(Time + position.TotalMilliseconds, 0, Length) : position.TotalMilliseconds;
-            SetPlayerPosition(TimeSpan.FromMilliseconds(Time), debounce);
+            Position = isOffset ? (currentPosition + position) switch
+            {
+                var newPosition when newPosition < TimeSpan.Zero => TimeSpan.Zero,
+                var newPosition when newPosition > NaturalDuration => NaturalDuration,
+                var newPosition => newPosition
+            } : position;
+            SetPlayerPosition(Position, debounce);
 
-            return new PositionChangedResult(currentPosition, TimeSpan.FromMilliseconds(Time),
-                _originalPosition, TimeSpan.FromMilliseconds(Length));
+            return new PositionChangedResult(currentPosition, Position, _originalPosition, NaturalDuration);
         }
 
         private void SetPlayerPosition(TimeSpan position, bool debounce)
@@ -184,6 +241,19 @@ namespace Screenbox.Core.ViewModels
             {
                 IsSeekable = sender.CanSeek;
             });
+        }
+
+        private void OnPlaybackStateChanged(IMediaPlayer sender, ValueChangedEventArgs<MediaPlaybackState> args)
+        {
+            if (args.NewValue is not (MediaPlaybackState.None or MediaPlaybackState.Opening) &&
+                _lastTrackedPosition > TimeSpan.Zero)
+            {
+                _dispatcherQueue.TryEnqueue(() =>
+                {
+                    SetPlayerPosition(_lastTrackedPosition, false);
+                    _lastTrackedPosition = TimeSpan.Zero;
+                });
+            }
         }
 
         private void OnPlaybackItemChanged(IMediaPlayer sender, object? args)
@@ -275,6 +345,22 @@ namespace Screenbox.Core.ViewModels
                 Chapters.Add(chapterCue);
             }
             // Chapters.SyncItems(chapterList);
+        }
+
+        private void UpdateLastPosition(TimeSpan position)
+        {
+            if (_currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
+                DateTimeOffset.Now - _lastPositionTracker.LastUpdated <= TimeSpan.FromSeconds(3))
+                return;
+
+            if (position > TimeSpan.FromSeconds(30) && position + TimeSpan.FromSeconds(10) < NaturalDuration)
+            {
+                _lastPositionTracker.UpdateLastPosition(_currentItem.Location, position);
+            }
+            else if (position > TimeSpan.FromSeconds(5))
+            {
+                _lastPositionTracker.RemovePosition(_currentItem.Location);
+            }
         }
     }
 }
