@@ -5,12 +5,12 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:Screenbox.Core.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="128"
     d:DesignWidth="1200"
@@ -33,7 +33,7 @@
             <x:Double x:Key="Speed200">2.0</x:Double>
 
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
-            <toolkitConverters:BoolToObjectConverter
+            <ctConverters:BoolToObjectConverter
                 x:Key="ShuffleModeGlyphConverter"
                 FalseValue="{StaticResource ShuffleOffGlyph}"
                 TrueValue="{StaticResource ShuffleGlyph}" />

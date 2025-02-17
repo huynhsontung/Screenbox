@@ -534,7 +534,7 @@
                             contract7NotPresent:CornerRadius="{Binding Source={ThemeResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}">
                             <!--  Add brush transition to match the default button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
@@ -547,7 +547,7 @@
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushDivider}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeHorizontalThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomThicknessFilterConverter}}">
                             <!--  Add a brush transition to match the default button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
@@ -561,7 +561,7 @@
                             contract7NotPresent:CornerRadius="{Binding Source={ThemeResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                             contract7Present:CornerRadius="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
                             Background="{TemplateBinding Background}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}">
                             <!--  Add a brush transition to match the default button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
@@ -953,7 +953,7 @@
                             Grid.Column="1"
                             Width="1"
                             Background="{ThemeResource SplitButtonBorderBrushCheckedDivider}"
-                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeHorizontalThicknessFilterConverter}}">
+                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomThicknessFilterConverter}}">
                             <!--  Add a brush transition to match the accent button  -->
                             <contract7Present:Grid.BackgroundTransition>
                                 <contract7Present:BrushTransition Duration="0:0:0.083" />
@@ -1116,8 +1116,8 @@
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondary}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1132,8 +1132,8 @@
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1148,8 +1148,8 @@
                                         <Setter Target="SecondaryButton.Foreground" Value="{ThemeResource SplitButtonForegroundSecondaryPressed}" />
                                         <Setter Target="DividerBackgroundGrid.Background" Value="{ThemeResource SplitButtonBorderBrushDivider}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1166,8 +1166,8 @@
                                         <!--  Add a border to match default button style in high contrast  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1186,8 +1186,8 @@
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1204,8 +1204,8 @@
                                         <!--  Add a border to match default button style in high contrast  -->
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPointerOver}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
 
@@ -1224,8 +1224,8 @@
                                         <Setter Target="SecondaryBackgroundGrid.BorderBrush" Value="{ThemeResource SplitButtonBorderBrushPressed}" />
                                         <Setter Target="Border.BorderBrush" Value="{ThemeResource ControlFillColorTransparentBrush}" />
                                         <!--  Work around for the background sizing issue, microsoft/microsoft-ui-xaml#6885  -->
-                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeRightThicknessFilterConverter}}" />
-                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource ExcludeLeftThicknessFilterConverter}}" />
+                                        <Setter Target="PrimaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomLeftThicknessFilterConverter}}" />
+                                        <Setter Target="SecondaryBackgroundGrid.BorderThickness" Value="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopBottomRightThicknessFilterConverter}}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
