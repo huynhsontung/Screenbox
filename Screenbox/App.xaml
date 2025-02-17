@@ -5,9 +5,9 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:strings="using:Screenbox.Strings"
-    xmlns:toolkitConverters="using:CommunityToolkit.WinUI.Converters">
+    xmlns:strings="using:Screenbox.Strings">
 
     <Application.Resources>
         <muxc:XamlControlsResources>
@@ -40,21 +40,21 @@
                     <!--<converters:ThicknessFilterConverter x:Key="ExcludeBottomThicknessFilterConverter" Filter="Bottom" />-->
                     <converters:ThicknessFilterConverter x:Key="ExcludeHorizontalThicknessFilterConverter" Filter="LeftRight" />
                     <!--<converters:ThicknessFilterConverter x:Key="ExcludeVerticalThicknessFilterConverter" Filter="TopBottom" />-->
-                    <toolkitConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
-                    <toolkitConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-                    <toolkitConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-                    <toolkitConverters:EmptyObjectToObjectConverter
+                    <ctConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
+                    <ctConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+                    <ctConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+                    <ctConverters:EmptyObjectToObjectConverter
                         x:Key="EmptyObjectToVisibilityConverter"
                         EmptyValue="Collapsed"
                         NotEmptyValue="Visible" />
-                    <toolkitConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-                    <toolkitConverters:DoubleToObjectConverter
+                    <ctConverters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+                    <ctConverters:DoubleToObjectConverter
                         x:Key="DoubleToBoolConverter"
                         FalseValue="False"
                         GreaterThan="0"
                         NullValue="False"
                         TrueValue="True" />
-                    <toolkitConverters:BoolToObjectConverter
+                    <ctConverters:BoolToObjectConverter
                         x:Key="BoolToPlayPauseTextConverter"
                         FalseValue="{strings:Resources Key=Play}"
                         TrueValue="{strings:Resources Key=Pause}" />
