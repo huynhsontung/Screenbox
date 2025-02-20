@@ -231,7 +231,7 @@
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
-    <value>Opus Audio</value>
+    <value>Âm Thanh Opus</value>
     <comment>Display name for the file type ".opus"</comment>
   </data>
   <data name="FileDisplayNameOggVideo" xml:space="preserve">
@@ -243,19 +243,19 @@
     <comment>Display name for the file type ".mov" and ".qt"</comment>
   </data>
   <data name="FileDisplayNameRealAudio" xml:space="preserve">
-    <value>RealAudio File</value>
+    <value>Tệp RealAudio</value>
     <comment>Display name for the file type ".ra"</comment>
   </data>
   <data name="FileDisplayNameRealMedia" xml:space="preserve">
-    <value>RealMedia File</value>
+    <value>Tệp RealMedia</value>
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
-    <value>RealMedia Variable Bit Rate File</value>
+    <value>Tệp Tỷ Lệ Bit Biến RealMedia</value>
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
-    <value>DVD Video Object File</value>
+    <value>Tệp Đối Tượng Video DVD</value>
     <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
@@ -307,7 +307,7 @@
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
-    <value>WavPack Correction File</value>
+    <value>Tệp Điều Chỉnh Wavpack</value>
     <comment>Display name for the file type ".wvc"</comment>
   </data>
 </root>
