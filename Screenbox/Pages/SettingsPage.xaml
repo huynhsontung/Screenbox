@@ -317,8 +317,8 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Continue playing from where you last stopped when opening a file"
-                    Header="Always resume from last position">
+                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
+                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 

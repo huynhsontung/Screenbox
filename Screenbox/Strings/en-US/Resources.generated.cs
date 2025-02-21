@@ -3170,6 +3170,32 @@ namespace Screenbox.Strings{
             }
         }
         #endregion
+
+        #region SettingsRestorePlaybackPositionHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Always resume from last position
+        /// </summary>
+        public static string SettingsRestorePlaybackPositionHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsRestorePlaybackPositionHeader");
+            }
+        }
+        #endregion
+
+        #region SettingsRestorePlaybackPositionDescription
+        /// <summary>
+        ///   Looks up a localized string similar to: Continue playing from where you last stopped when opening a file
+        /// </summary>
+        public static string SettingsRestorePlaybackPositionDescription
+        {
+            get
+            {
+                return _resourceLoader.GetString("SettingsRestorePlaybackPositionDescription");
+            }
+        }
+        #endregion
     }
 
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("DotNetPlus.ReswPlus", "2.1.3")]
@@ -3423,6 +3449,8 @@ namespace Screenbox.Strings{
             SettingsThemeSelectionDescription,
             SettingsThemeSelectionHeader,
             SettingsCategoryPersonalization,
+            SettingsRestorePlaybackPositionHeader,
+            SettingsRestorePlaybackPositionDescription,
         }
 
         private static ResourceLoader _resourceLoader;
