@@ -25,6 +25,7 @@ namespace Screenbox.Core.Services
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
         private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
+        private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
@@ -97,6 +98,12 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<bool>(GeneralEnqueueAllInFolder);
             set => SetValue(GeneralEnqueueAllInFolder, value);
+        }
+
+        public bool RestorePlaybackPosition
+        {
+            get => GetValue<bool>(GeneralRestorePlaybackPosition);
+            set => SetValue(GeneralRestorePlaybackPosition, value);
         }
 
         public bool PlayerShowControls

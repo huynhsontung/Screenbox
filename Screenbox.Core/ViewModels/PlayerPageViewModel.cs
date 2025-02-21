@@ -32,7 +32,6 @@ namespace Screenbox.Core.ViewModels
         IRecipient<UpdateStatusMessage>,
         IRecipient<UpdateVolumeStatusMessage>,
         IRecipient<TogglePlayerVisibilityMessage>,
-        IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
@@ -71,7 +70,6 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly IFilesService _filesService;
-        private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private bool _resizeNext;
@@ -90,7 +88,6 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityState.Hidden;
-            _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
@@ -132,19 +129,11 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public void Receive(SuspendingMessage message)
-        {
-            message.Reply(_lastPositionTracker.SaveToDiskAsync(_filesService));
-        }
-
-        public async void Receive(MediaPlayerChangedMessage message)
+        public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
-            _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
-
-            await _lastPositionTracker.LoadFromDiskAsync(_filesService);
         }
 
         public void Receive(UpdateVolumeStatusMessage message)
@@ -174,11 +163,6 @@ namespace Screenbox.Core.ViewModels
         public void Receive(PlaylistCurrentItemChangedMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
-            if (message.Value != null)
-            {
-                TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
-                Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
-            }
         }
 
         public void Receive(ShowPlayPauseBadgeMessage message)
@@ -662,27 +646,6 @@ namespace Screenbox.Core.ViewModels
                     DelayHideControls();
                 }
             });
-        }
-
-        private void OnPositionChanged(IMediaPlayer sender, object? args)
-        {
-            // Only record position for media over 1 minute
-            // Update every 3 seconds
-            TimeSpan position = sender.Position;
-            if (Media == null || sender.NaturalDuration <= TimeSpan.FromMinutes(1) ||
-                DateTimeOffset.Now - _lastUpdated <= TimeSpan.FromSeconds(3))
-                return;
-
-            if (position > TimeSpan.FromSeconds(30) && position + TimeSpan.FromSeconds(10) < sender.NaturalDuration)
-            {
-                _lastUpdated = DateTimeOffset.Now;
-                _lastPositionTracker.UpdateLastPosition(Media.Location, position);
-            }
-            else if (position > TimeSpan.FromSeconds(5))
-            {
-                _lastUpdated = DateTimeOffset.Now;
-                _lastPositionTracker.RemovePosition(Media.Location);
-            }
         }
 
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, EventArgs args)

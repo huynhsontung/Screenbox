@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using System;
@@ -11,17 +14,41 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Helpers
 {
-    internal class LastPositionTracker
+    public sealed class LastPositionTracker : ObservableRecipient,
+        IRecipient<SuspendingMessage>,
+        IRecipient<MediaPlayerChangedMessage>
     {
         private const int Capacity = 64;
         private const string SaveFileName = "last_positions.bin";
 
+        public DateTimeOffset LastUpdated { get; private set; }
+
+        private readonly IFilesService _filesService;
         private List<MediaLastPosition> _lastPositions = new(Capacity + 1);
         private MediaLastPosition? _updateCache;
         private string? _removeCache;
 
+        public LastPositionTracker(IFilesService filesService)
+        {
+            _filesService = filesService;
+
+            IsActive = true;
+        }
+
+        public void Receive(SuspendingMessage message)
+        {
+            message.Reply(SaveToDiskAsync());
+        }
+
+        public async void Receive(MediaPlayerChangedMessage message)
+        {
+            if (_lastPositions.Count > 0) return;
+            await LoadFromDiskAsync();
+        }
+
         public void UpdateLastPosition(string location, TimeSpan position)
         {
+            LastUpdated = DateTimeOffset.Now;
             _removeCache = null;
             MediaLastPosition? item = _updateCache;
             if (item?.Location == location)
@@ -66,16 +93,17 @@ namespace Screenbox.Core.Helpers
 
         public void RemovePosition(string location)
         {
+            LastUpdated = DateTimeOffset.Now;
             if (_removeCache == location) return;
             _lastPositions.RemoveAll(x => x.Location == location);
             _removeCache = location;
         }
 
-        public async Task SaveToDiskAsync(IFilesService filesService)
+        public async Task SaveToDiskAsync()
         {
             try
             {
-                await filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions.ToList());
+                await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions.ToList());
             }
             catch (FileLoadException)
             {
@@ -83,12 +111,12 @@ namespace Screenbox.Core.Helpers
             }
         }
 
-        public async Task LoadFromDiskAsync(IFilesService filesService)
+        public async Task LoadFromDiskAsync()
         {
             try
             {
                 List<MediaLastPosition> lastPositions =
-                    await filesService.LoadFromDiskAsync<List<MediaLastPosition>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
+                    await _filesService.LoadFromDiskAsync<List<MediaLastPosition>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
                 lastPositions.Capacity = Capacity;
                 _lastPositions = lastPositions;
             }
