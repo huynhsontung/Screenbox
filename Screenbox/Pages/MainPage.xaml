@@ -356,7 +356,6 @@
                 HorizontalScrollMode="Disabled">
                 <StackPanel>
                     <TextBlock
-                        x:Name="CriticalErrorDescription"
                         MaxWidth="768"
                         HorizontalAlignment="Left"
                         d:Text="{strings:Resources Key=CriticalErrorDirect3D11NotAvailable}"
@@ -394,7 +393,7 @@
                                 AutomationProperties.AccessibilityView="Content"
                                 FontWeight="SemiLight"
                                 Style="{StaticResource SubtitleTextBlockStyle}">
-                                <Run Text="For more information about this issue and possible fixes, visit" /><LineBreak />
+                                <Run Text="{strings:Resources Key=CriticalErrorMoreInformation}" /><LineBreak />
                                 <Hyperlink NavigateUri="https://github.com/huynhsontung/Screenbox">https://github.com/huynhsontung/Screenbox</Hyperlink>
                             </TextBlock>
 

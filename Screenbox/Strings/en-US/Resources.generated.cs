@@ -2235,6 +2235,19 @@ namespace Screenbox.Strings{
         }
         #endregion
 
+        #region CriticalErrorMoreInformation
+        /// <summary>
+        ///   Looks up a localized string similar to: For more information about this issue and possible fixes, visit
+        /// </summary>
+        public static string CriticalErrorMoreInformation
+        {
+            get
+            {
+                return _resourceLoader.GetString("CriticalErrorMoreInformation");
+            }
+        }
+        #endregion
+
         #region FailedToOpenFilesNotificationTitle
         /// <summary>
         ///   Looks up a localized string similar to: Failed to open file(s)
@@ -3273,6 +3286,7 @@ namespace Screenbox.Strings{
             SubtitleAddedNotificationTitle,
             CriticalError,
             CriticalErrorDirect3D11NotAvailable,
+            CriticalErrorMoreInformation,
             FailedToOpenFilesNotificationTitle,
             OpenUrlPlaceholder,
             OpenConnectedDevicesSettingsButtonText,
