@@ -361,6 +361,8 @@
                                         <!--  Add AppBarButtonInnerBorder, Content and OverflowTextLabel brushes to offset the default button brushes  -->
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrush}" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
@@ -372,8 +374,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPointerOver}" />
-                                        <!--  Add BackgroundSizing to extend the background to the edge, compensating for the border thickness  -->
-                                        <Setter Target="AppBarButtonInnerBorder.BackgroundSizing" Value="OuterBorderEdge" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
@@ -388,8 +390,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPressed}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPressed}" />
-                                        <!--  Add BackgroundSizing to extend the background to the edge, compensating for the border thickness  -->
-                                        <Setter Target="AppBarButtonInnerBorder.BackgroundSizing" Value="OuterBorderEdge" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
@@ -404,8 +406,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundSubMenuOpened}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushSubMenuOpened}" />
-                                        <!--  Add BackgroundSizing to extend the background to the edge, compensating for the border thickness  -->
-                                        <Setter Target="AppBarButtonInnerBorder.BackgroundSizing" Value="OuterBorderEdge" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
@@ -766,6 +768,8 @@
                                         <!--  Add AppBarButtonInnerBorder, Content and OverflowTextLabel brushes to offset the accent button brushes  -->
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackground}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrush}" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForeground}" />
                                         <Setter Target="SubItemChevron.Visibility" Value="Collapsed" />
@@ -777,6 +781,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPointerOver}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPointerOver}" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPointerOver}" />
@@ -791,6 +797,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundPressed}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushPressed}" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundPressed}" />
@@ -805,6 +813,8 @@
                                     <VisualState.Setters>
                                         <Setter Target="AppBarButtonInnerBorder.Background" Value="{ThemeResource AppBarButtonBackgroundSubMenuOpened}" />
                                         <Setter Target="AppBarButtonInnerBorder.BorderBrush" Value="{ThemeResource AppBarButtonBorderBrushSubMenuOpened}" />
+                                        <!--  Adjust the BorderThickness to match the menu flyout item  -->
+                                        <Setter Target="AppBarButtonInnerBorder.BorderThickness" Value="{ThemeResource MenuFlyoutItemBorderThickness}" />
                                         <Setter Target="Content.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="TextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
                                         <Setter Target="OverflowTextLabel.Foreground" Value="{ThemeResource AppBarButtonForegroundSubMenuOpened}" />
