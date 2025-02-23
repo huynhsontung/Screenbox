@@ -4,6 +4,8 @@ root = true
 # All files
 [*]
 indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 # Solution files
 [*.sln]
@@ -14,20 +16,26 @@ tab_width = 4
 # XML project files
 [*.{csproj,filters}]
 indent_size = 2
+insert_final_newline = false
 
 # XML configuration files
-[*.{appxmanifest,props,resw,targets}]
+[*.{appxmanifest,config,props,resw,targets,xml}]
 indent_size = 2
+insert_final_newline = false
+
+# XML font files
+[*.{glif,plist}]
+end_of_line = lf
+indent_size = 2
+
+# XML user interface files
+[*.xaml]
+charset = utf-8-bom
+indent_size = 4
 
 # Data serialization files
 [*.{json,yml}]
 indent_size = 2
-
-# Font files
-[*.{glif,plist}]
-indent_size = 2
-end_of_line = lf
-insert_final_newline = true
 
 # Markdown files
 [*.md]
@@ -35,6 +43,7 @@ indent_size = 2
 
 # C# files
 [*.cs]
+charset = utf-8-bom
 
 #### Core EditorConfig Options ####
 
@@ -93,6 +102,10 @@ dotnet_code_quality_unused_parameters = all:suggestion
 # New line preferences
 dotnet_style_allow_multiple_blank_lines_experimental = true:silent
 dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
+
+#### .NET formatting rules
+
+dotnet_sort_system_directives_first = true
 
 #### C# Coding Conventions ####
 
@@ -162,6 +175,7 @@ csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
 #### C# Formatting Rules ####
 
 # Indentation preferences
+csharp_indent_case_contents_when_block = false
 csharp_indent_labels = one_less_than_current
 
 # Space preferences
