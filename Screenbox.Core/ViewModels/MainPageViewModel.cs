@@ -106,7 +106,7 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.GamepadX:
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
-                case VirtualKey.GamepadY when !PlayerVisible:
+                case VirtualKey.GamepadView when !PlayerVisible:
                     Messenger.Send(new TogglePlayerVisibilityMessage());
                     break;
                 default:

@@ -111,6 +111,12 @@ namespace Screenbox.Pages
         {
             base.OnKeyDown(e);
             ViewModel.ProcessGamepadKeyDown(e);
+
+            if (e.Key == VirtualKey.GamepadY)
+            {
+                NavViewSearchBox.Focus(FocusState.Programmatic);
+                e.Handled = true;
+            }
         }
 
         public void GoBack()
@@ -371,17 +377,17 @@ namespace Screenbox.Pages
         /// </summary>
         private void NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
-                NavViewSearchBox.Focus(FocusState.Keyboard);
+            NavViewSearchBox.Focus(FocusState.Keyboard);
+            args.Handled = true;
         }
 
         /// <summary>
         /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the access key combination.
-        /// </summary>
-        private void NavViewSearchBoxAccessKeyFocus_OnInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
+        /// </summary
+        private void NavViewSearchBox_OnAccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
         {
-            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
-                NavViewSearchBox.Focus(FocusState.Keyboard);
+            NavViewSearchBox.Focus(FocusState.Keyboard);
+            args.Handled = true;
         }
     }
 }
