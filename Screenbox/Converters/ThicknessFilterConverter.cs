@@ -13,7 +13,24 @@ namespace Screenbox.Converters;
 /// </summary>
 public class ThicknessFilterConverter : IValueConverter
 {
-    public enum ThicknessFilterKind { None, Left, Top, Right, Bottom, LeftRight, TopBottom };
+    public enum ThicknessFilterKind
+    {
+        None,
+        Left,
+        Top,
+        Right,
+        Bottom,
+        LeftRight,
+        TopBottom,
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight,
+        LeftRightTop,
+        LeftRightBottom,
+        TopBottomLeft,
+        TopBottomRight,
+    }
 
     /// <summary>
     /// Identifies the <see cref="FilterProperty"/> property.
@@ -32,24 +49,88 @@ public class ThicknessFilterConverter : IValueConverter
             case ThicknessFilterKind.None:
                 break;
             case ThicknessFilterKind.Left:
-                result.Left = 0;
+                //result.Left = thickness.Left;
+                result.Top = 0;
+                result.Right = 0;
+                result.Bottom = 0;
                 break;
             case ThicknessFilterKind.Top:
-                result.Top = 0;
+                result.Left = 0;
+                //result.Top = thickness.Top;
+                result.Right = 0;
+                result.Bottom = 0;
                 break;
             case ThicknessFilterKind.Right:
-                result.Right = 0;
+                result.Left = 0;
+                result.Top = 0;
+                //result.Right = thickness.Right;
+                result.Bottom = 0;
                 break;
             case ThicknessFilterKind.Bottom:
-                result.Bottom = 0;
+                result.Left = 0;
+                result.Top = 0;
+                result.Right = 0;
+                //result.Bottom = thickness.Bottom;
                 break;
             case ThicknessFilterKind.LeftRight:
-                result.Left = 0;
-                result.Right = 0;
+                //result.Left = thickness.Left;
+                result.Top = 0;
+                //result.Right = thickness.Right;
+                result.Bottom = 0;
                 break;
             case ThicknessFilterKind.TopBottom:
-                result.Top = 0;
+                result.Left = 0;
+                //result.Top = thickness.Top;
+                result.Right = 0;
+                //result.Bottom = thickness.Bottom;
+                break;
+            case ThicknessFilterKind.TopLeft:
+                //result.Left = thickness.Left;
+                //result.Top = thickness.Top;
+                result.Right = 0;
                 result.Bottom = 0;
+                break;
+            case ThicknessFilterKind.TopRight:
+                result.Left = 0;
+                //result.Top = thickness.Top;
+                //result.Right = thickness.Right;
+                result.Bottom = 0;
+                break;
+            case ThicknessFilterKind.BottomLeft:
+                //result.Left = thickness.Left;
+                result.Top = 0;
+                result.Right = 0;
+                //result.Bottom = thickness.Bottom;
+                break;
+            case ThicknessFilterKind.BottomRight:
+                result.Left = 0;
+                result.Top = 0;
+                //result.Right = thickness.Right;
+                //result.Bottom = thickness.Bottom;
+                break;
+            case ThicknessFilterKind.LeftRightTop:
+                //result.Left = thickness.Left;
+                //result.Top = thickness.Top;
+                //result.Right = thickness.Right;
+                result.Bottom = 0;
+                break;
+            case ThicknessFilterKind.LeftRightBottom:
+                //result.Left = thickness.Left;
+                result.Top = 0;
+                //result.Right = thickness.Right;
+                //result.Bottom = thickness.Bottom;
+                break;
+            case ThicknessFilterKind.TopBottomLeft:
+                //result.Left = thickness.Left;
+                //result.Top = thickness.Top;
+                result.Right = 0;
+                //result.Bottom = thickness.Bottom;
+                break;
+            case ThicknessFilterKind.TopBottomRight:
+                result.Left = 0;
+                //result.Top = thickness.Top;
+                //result.Right = thickness.Right;
+                //result.Bottom = thickness.Bottom;
                 break;
         }
 
