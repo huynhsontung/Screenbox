@@ -888,7 +888,7 @@
     <value>Failed to load visual</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Add all files in folder to queue</value>
