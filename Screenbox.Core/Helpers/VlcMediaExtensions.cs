@@ -1,7 +1,7 @@
-﻿using LibVLCSharp.Shared;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 
 namespace Screenbox.Core.Helpers;
 internal static class VlcMediaExtensions
@@ -27,7 +27,7 @@ internal static class VlcMediaExtensions
         media.ParsedChanged += MediaOnParsedChanged;
         try
         {
-            if (await Task.WhenAny(tsc.Task, Task.Delay(timeout, cancellationToken)) != task)
+            if (await Task.WhenAny(tsc.Task, Task.Delay(timeout, cancellationToken)) != task && !task.IsCompleted)
             {
                 tsc.SetCanceled();
             }
@@ -54,7 +54,7 @@ internal static class VlcMediaExtensions
         media.ParsedChanged += OnMediaOnParsedChanged;
         try
         {
-            if (await Task.WhenAny(tcs.Task, Task.Delay(timeout, cancellationToken)) != task)
+            if (await Task.WhenAny(tcs.Task, Task.Delay(timeout, cancellationToken)) != task && !task.IsCompleted)
             {
                 tcs.SetCanceled();
             }
