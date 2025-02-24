@@ -318,7 +318,8 @@
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
-                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}">
+                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
                     <ToggleSwitch IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
