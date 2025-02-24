@@ -1,5 +1,10 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -7,16 +12,9 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -58,35 +56,6 @@ namespace Screenbox.Core.ViewModels
         public async void OnLoaded()
         {
             await UpdateContentAsync();
-        }
-
-        public async Task OnDrop(DragEventArgs e)
-        {
-            try
-            {
-                if (e.DataView.Contains(StandardDataFormats.StorageItems))
-                {
-                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
-                    if (items.Count > 0)
-                    {
-                        Messenger.Send(new PlayFilesMessage(items));
-                        return;
-                    }
-                }
-
-                if (e.DataView.Contains(StandardDataFormats.WebLink))
-                {
-                    Uri? uri = await e.DataView.GetWebLinkAsync();
-                    if (uri.IsFile)
-                    {
-                        Messenger.Send(new PlayMediaMessage(uri));
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
-            }
         }
 
         [RelayCommand]
