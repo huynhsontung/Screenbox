@@ -364,13 +364,13 @@ namespace Screenbox.Core.ViewModels
                     return source;
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                // System.Exception: The data necessary to complete this operation is not yet available.
-                if (e.HResult != unchecked((int)0x8000000A) &&
-                    // System.Exception: The RPC server is unavailable.
-                    e.HResult != unchecked((int)0x800706BA))
-                    LogService.Log(e);
+                //// System.Exception: The data necessary to complete this operation is not yet available.
+                //if (e.HResult != unchecked((int)0x8000000A) &&
+                //    // System.Exception: The RPC server is unavailable.
+                //    e.HResult != unchecked((int)0x800706BA))
+                //    LogService.Log(e);
             }
 
             return null;
