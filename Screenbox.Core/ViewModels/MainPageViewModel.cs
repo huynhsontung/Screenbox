@@ -1,5 +1,9 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -8,10 +12,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
@@ -120,6 +121,35 @@ namespace Screenbox.Core.ViewModels
             }
 
             args.Handled = true;
+        }
+
+        public async Task OnDropAsync(DataPackageView data)
+        {
+            try
+            {
+                if (data.Contains(StandardDataFormats.StorageItems))
+                {
+                    IReadOnlyList<IStorageItem>? items = await data.GetStorageItemsAsync();
+                    if (items.Count > 0)
+                    {
+                        Messenger.Send(new PlayFilesMessage(items));
+                        return;
+                    }
+                }
+
+                if (data.Contains(StandardDataFormats.WebLink))
+                {
+                    Uri? uri = await data.GetWebLinkAsync();
+                    if (uri.IsFile)
+                    {
+                        Messenger.Send(new PlayMediaMessage(uri));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
+            }
         }
 
         public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
