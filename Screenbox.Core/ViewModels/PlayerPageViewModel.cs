@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,9 +15,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media.Playback;
@@ -192,13 +192,13 @@ namespace Screenbox.Core.ViewModels
             OverrideControlsDelayHide(message.Delay);
         }
 
-        public async void OnDrop(object sender, DragEventArgs e)
+        public async Task OnDropAsync(DataPackageView data)
         {
             try
             {
-                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                if (data.Contains(StandardDataFormats.StorageItems))
                 {
-                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    IReadOnlyList<IStorageItem>? items = await data.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
                         if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
@@ -216,9 +216,9 @@ namespace Screenbox.Core.ViewModels
                     }
                 }
 
-                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                if (data.Contains(StandardDataFormats.WebLink))
                 {
-                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    Uri? uri = await data.GetWebLinkAsync();
                     if (uri.IsFile)
                     {
                         Messenger.Send(new PlayMediaMessage(uri));
