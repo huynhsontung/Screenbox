@@ -3069,7 +3069,7 @@ namespace Screenbox.Strings{
 
         #region SettingsEnqueueAllFilesInFolderDescription
         /// <summary>
-        ///   Looks up a localized string similar to: When opening a single file, automatically add all other files in the folder to the play queue.
+        ///   Looks up a localized string similar to: When opening a single file, automatically add all other files in the folder to the play queue
         /// </summary>
         public static string SettingsEnqueueAllFilesInFolderDescription
         {
