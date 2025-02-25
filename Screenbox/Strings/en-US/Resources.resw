@@ -914,4 +914,10 @@
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
     <value>Personalization</value>
   </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
+  </data>
 </root>

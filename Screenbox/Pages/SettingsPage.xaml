@@ -172,7 +172,7 @@
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddMusicFolderButton"
-                        AutomationProperties.HelpText="{x:Bind AddMusicFolderButton.(ToolTipService.ToolTip)}"
+                        AutomationProperties.HelpText="{strings:Resources Key=AddMusicFolderToolTip}"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddMusicFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddMusicFolderToolTip}">
@@ -201,7 +201,7 @@
                     </interactivity:Interaction.Behaviors>
                     <Button
                         x:Name="AddVideoFolderButton"
-                        AutomationProperties.HelpText="{x:Bind AddVideoFolderButton.(ToolTipService.ToolTip)}"
+                        AutomationProperties.HelpText="{strings:Resources Key=AddVideoFolderToolTip}"
                         AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                         Command="{x:Bind ViewModel.AddVideosFolderCommand}"
                         ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}">
@@ -312,7 +312,15 @@
                     Header="{strings:Resources Key=SettingsEnqueueAllFilesInFolderHeader}"
                     HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                              Glyph={StaticResource FolderListGlyph}}">
-                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind SettingsEnqueueAllFilesInFolderCard.Description}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsEnqueueAllFilesInFolderDescription}" IsOn="{x:Bind ViewModel.EnqueueAllFilesInFolder, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}"
+                    Header="{strings:Resources Key=SettingsRestorePlaybackPositionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xEF3B;}">
+                    <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
                 <!--  Player section  -->
