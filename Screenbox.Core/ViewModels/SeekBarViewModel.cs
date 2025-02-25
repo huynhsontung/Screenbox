@@ -89,19 +89,9 @@ namespace Screenbox.Core.ViewModels
         {
             _lastTrackedPosition = TimeSpan.Zero;
             _currentItem = message.Value;
-            if (message.Value != null)
+            if (message.Value != null && _lastPositionTracker.IsLoaded)
             {
-                TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
-                if (lastPosition <= TimeSpan.Zero) return;
-                if (_settingsService.RestorePlaybackPosition)
-                {
-                    // Media is not seekable yet, so we need to wait for the PlaybackStateChanged event
-                    _lastTrackedPosition = lastPosition;
-                }
-                else
-                {
-                    Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
-                }
+                RestoreLastPosition(message.Value);
             }
         }
 
@@ -118,7 +108,7 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        public void Receive(MediaPlayerChangedMessage message)
+        public async void Receive(MediaPlayerChangedMessage message)
         {
             if (_mediaPlayer != null)
             {
@@ -141,6 +131,15 @@ namespace Screenbox.Core.ViewModels
             _mediaPlayer.BufferingEnded += OnBufferingEnded;
             _mediaPlayer.PlaybackItemChanged += OnPlaybackItemChanged;
             _mediaPlayer.CanSeekChanged += OnCanSeekChanged;
+
+            if (!_lastPositionTracker.IsLoaded)
+            {
+                await _lastPositionTracker.LoadFromDiskAsync();
+                if (_currentItem != null)
+                {
+                    RestoreLastPosition(_currentItem);
+                }
+            }
         }
 
         public void Receive(TimeChangeOverrideMessage message)
@@ -202,6 +201,28 @@ namespace Screenbox.Core.ViewModels
             }
 
             UpdateLastPosition(newPosition);
+        }
+
+        private void RestoreLastPosition(MediaViewModel media)
+        {
+            TimeSpan lastPosition = _lastPositionTracker.GetPosition(media.Location);
+            if (lastPosition <= TimeSpan.Zero) return;
+            if (_settingsService.RestorePlaybackPosition)
+            {
+                if (_mediaPlayer?.PlaybackState is { } and not (MediaPlaybackState.None or MediaPlaybackState.Opening))
+                {
+                    UpdatePosition(lastPosition, false, false);
+                }
+                else
+                {
+                    // Media is not seekable yet, so we need to wait for the PlaybackStateChanged event
+                    _lastTrackedPosition = lastPosition;
+                }
+            }
+            else
+            {
+                Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
+            }
         }
 
         private PositionChangedResult UpdatePosition(TimeSpan position, bool isOffset, bool debounce)

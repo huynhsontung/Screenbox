@@ -15,11 +15,12 @@ using Windows.Storage;
 namespace Screenbox.Core.Helpers
 {
     public sealed class LastPositionTracker : ObservableRecipient,
-        IRecipient<SuspendingMessage>,
-        IRecipient<MediaPlayerChangedMessage>
+        IRecipient<SuspendingMessage>
     {
         private const int Capacity = 64;
         private const string SaveFileName = "last_positions.bin";
+
+        public bool IsLoaded => LastUpdated != default;
 
         public DateTimeOffset LastUpdated { get; private set; }
 
@@ -38,12 +39,6 @@ namespace Screenbox.Core.Helpers
         public void Receive(SuspendingMessage message)
         {
             message.Reply(SaveToDiskAsync());
-        }
-
-        public async void Receive(MediaPlayerChangedMessage message)
-        {
-            if (_lastPositions.Count > 0) return;
-            await LoadFromDiskAsync();
         }
 
         public void UpdateLastPosition(string location, TimeSpan position)
@@ -119,6 +114,7 @@ namespace Screenbox.Core.Helpers
                     await _filesService.LoadFromDiskAsync<List<MediaLastPosition>>(ApplicationData.Current.TemporaryFolder, SaveFileName);
                 lastPositions.Capacity = Capacity;
                 _lastPositions = lastPositions;
+                LastUpdated = DateTimeOffset.UtcNow;
             }
             catch (FileNotFoundException)
             {
