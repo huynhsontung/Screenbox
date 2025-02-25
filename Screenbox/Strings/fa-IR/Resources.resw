@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Failed to open file(s)</value>
   </data>
@@ -910,5 +913,11 @@
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
     <value>Personalization</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
   </data>
 </root>
