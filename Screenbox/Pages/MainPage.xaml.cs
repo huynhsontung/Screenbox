@@ -1,15 +1,16 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
+using Sentry;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -388,6 +389,19 @@ namespace Screenbox.Pages
         {
             NavViewSearchBox.Focus(FocusState.Keyboard);
             args.Handled = true;
+        }
+
+        private void NavView_DragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
+        }
+
+        private void NavView_Drop(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            ViewModel.OnDrop(e.DataView);
         }
     }
 }

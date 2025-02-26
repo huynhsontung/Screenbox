@@ -185,10 +185,13 @@
 
         <controls:CustomNavigationView
             x:Name="NavView"
+            AllowDrop="True"
             BackRequested="NavView_BackRequested"
             Canvas.ZIndex="0"
             CompactModeThresholdWidth="701"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
+            DragOver="NavView_DragOver"
+            Drop="NavView_Drop"
             ExpandedModeThresholdWidth="1058"
             IsPaneOpen="{x:Bind ViewModel.IsPaneOpen, Mode=TwoWay}"
             IsSettingsVisible="False"

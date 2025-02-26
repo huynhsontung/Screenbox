@@ -100,11 +100,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid
-        AllowDrop="True"
-        Background="Transparent"
-        DragOver="HomePage_OnDragOver"
-        Drop="HomePage_OnDrop">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />

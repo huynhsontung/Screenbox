@@ -2,7 +2,6 @@
 
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -31,17 +30,6 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedTo(e);
             VisualStateManager.GoToState(this, ViewModel.HasRecentMedia ? "RecentMedia" : "Welcome", false);
-        }
-
-        private void HomePage_OnDragOver(object sender, DragEventArgs e)
-        {
-            e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
-        }
-
-        private async void HomePage_OnDrop(object sender, DragEventArgs e)
-        {
-            await ViewModel.OnDrop(e);
         }
     }
 }

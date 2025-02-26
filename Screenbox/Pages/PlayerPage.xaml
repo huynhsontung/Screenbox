@@ -24,7 +24,7 @@
     extensions:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     AllowDrop="True"
     DragOver="OnDragOver"
-    Drop="{x:Bind ViewModel.OnDrop}"
+    Drop="OnDrop"
     Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">

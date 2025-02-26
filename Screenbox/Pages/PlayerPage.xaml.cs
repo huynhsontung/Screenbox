@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
@@ -7,9 +10,6 @@ using Screenbox.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Threading;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
@@ -480,8 +480,15 @@ namespace Screenbox.Pages
 
         private void OnDragOver(object sender, DragEventArgs e)
         {
+            e.Handled = true;
             e.AcceptedOperation = DataPackageOperation.Link;
             if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
+        }
+
+        private async void OnDrop(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            await ViewModel.OnDropAsync(e.DataView);
         }
     }
 }

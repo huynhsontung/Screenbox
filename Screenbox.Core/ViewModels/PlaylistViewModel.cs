@@ -1,16 +1,16 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
 
@@ -52,11 +52,6 @@ namespace Screenbox.Core.ViewModels
             _hasItems = playlist.Items.Count > 0;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
-        }
-
-        public async Task EnqueuePlaylistAsync(IReadOnlyList<IStorageItem> items)
-        {
-            await Playlist.EnqueueAsync(items);
         }
 
         private void ItemsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
