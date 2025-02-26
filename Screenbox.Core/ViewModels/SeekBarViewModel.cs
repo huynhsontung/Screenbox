@@ -1,5 +1,7 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -11,8 +13,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.ObjectModel;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.System;
@@ -209,7 +209,7 @@ namespace Screenbox.Core.ViewModels
             if (lastPosition <= TimeSpan.Zero) return;
             if (_settingsService.RestorePlaybackPosition)
             {
-                if (_mediaPlayer?.PlaybackState is { } and not (MediaPlaybackState.None or MediaPlaybackState.Opening))
+                if (_currentItem?.IsPlaying ?? false)
                 {
                     UpdatePosition(lastPosition, false, false);
                 }
