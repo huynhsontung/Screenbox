@@ -140,13 +140,13 @@
     <value>Не вдалося зберегти кадр</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Пройшло часу</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Залишилося часу</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Загальна тривалість</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Глава {0}</value>
@@ -204,7 +204,7 @@
     <value>Черга відтворення</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Повторення: вимк.</value>
+    <value>Повторення: вимкнено</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
     <value>Повторення: всі файли</value>
@@ -258,7 +258,7 @@
     <value>Відео</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>Ця папка порожня</value>
+    <value>Ця тека порожня</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>Елементів: {0}</value>
@@ -272,7 +272,7 @@
     <value>Порожньо</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
-    <value>Відновити перегляд</value>
+    <value>Відновити перегляд із зануренням</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
     <value>Мінімізувати перегляд з ефектом занурення</value>
@@ -308,7 +308,7 @@
     <value>Невідомий жанр</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Додати папку</value>
+    <value>Додати теку</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Очистити</value>
@@ -425,7 +425,7 @@
     <value>Налаштування відео</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Вiдкрити</value>
+    <value>Відкрити</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
     <value>Вказано розташувань: {0}</value>
@@ -436,10 +436,10 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ShuffleMode_Variant0" xml:space="preserve">
-    <value>Перемішування: вимк.</value>
+    <value>Перемішування: вимк</value>
   </data>
   <data name="ShuffleMode_Variant1" xml:space="preserve">
-    <value>Перемішування: увімк.</value>
+    <value>Перемішування: увімк</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
     <value>Відновлення місця, де ви зупинились</value>
@@ -467,22 +467,22 @@
     <value>Додати файл(и)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
-    <value>Пошук файлів для додавання у чергу</value>
+    <value>Шукати файл(и) для додавання у чергу</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
     <value>Більше параметрів для додавання медіа в чергу відтворення</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Додати папку до бібліотеки музики</value>
+    <value>Додати теку до бібліотеки музики</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
     <value>Додати медіа за посиланням</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Додати папку до бібліотеки відео</value>
+    <value>Додати теку до бібліотеки відео</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Відкрити папку</value>
+    <value>Відкрити теку</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
     <value>Відкрити посилання</value>
@@ -514,7 +514,7 @@
     <value>Усі відео</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Папки з відео</value>
+    <value>Теки з відео</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
     <value>Результати пошуку за запитом «{0}»</value>
@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Немає сумісного візуалізатора. Переконайтеся, що на вашому пристрої доступний Direct3D 11.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Не вдалося відкрити файл(и)</value>
   </data>
@@ -722,7 +725,7 @@
     <value>«Допомога з командним рядком VLC»</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Відвідайте {0}, щоб дізнатися повний список доступних параметрів.</value>
+    <value>Перегляньте {0} для повного списку доступних варіантів.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -732,16 +735,16 @@
     <value>Розширений режим</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>У розширеному режимі ви можете змінювати поведінку LibVLC за допомогою командного рядка.</value>
+    <value>У розширеному режимі ви можете змінювати поведінку LibVLC за допомогою командного рядка</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Глобальні аргументи</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Аргументи командного рядка, які застосовуються до всіх відтворюваних медіа.</value>
+    <value>Аргументи командного рядка, які застосовуються до всіх відтворюваних медіа</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Вилучити папку</value>
+    <value>Вилучити теку</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
     <value>Очікувані зміни</value>
@@ -777,7 +780,7 @@
     <value>Композитори</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Не вдалося додати папку</value>
+    <value>Не вдалося додати теку</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
     <value>Відкрити альбом</value>
@@ -843,7 +846,7 @@
     <value>Візуалізація</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Переглянути файл(и)</value>
+    <value>Переглянути файли</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Стандартна</value>
@@ -879,18 +882,42 @@
     <value>Відео</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Показати альбом</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Показати виконавця</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Збій завантаження графіки повідомлення</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>При відкритті одного файлу, автоматично додавати усі інші файли у теці до черги.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Додати усі файли в теці до черги</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Використовувати системні налаштування</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Темна</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Світла</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Змінити загальну колірну схему додатка</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Тема додатка</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Персоналізація</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
   </data>
 </root>

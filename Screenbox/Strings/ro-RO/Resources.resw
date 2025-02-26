@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Nu este disponibil niciun dispozitiv de redare compatibil. Asigurați-vă că Direct3D 11 este disponibil pe dispozitivul dvs.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Deschiderea fișierelor a eșuat</value>
   </data>
@@ -892,5 +895,29 @@
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Adăugați toate fișierele din folder în coadă</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilizați setările de sistem</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Întunecată</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Luminoasă</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Selectați o temă pentru a se potrivi cu setările Windows sau alegeți una personalizată</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Temă</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalizare</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
   </data>
 </root>

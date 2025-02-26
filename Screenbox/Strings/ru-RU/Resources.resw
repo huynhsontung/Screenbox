@@ -140,13 +140,13 @@
     <value>Не удалось сохранить кадр</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Времени прошло</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Времени осталось</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Общая продолжительность</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Глава {0}</value>
@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Нет доступных совместимых устройств. Убедитесь, что Direct3D 11 доступен на вашем устройстве.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Для получения дополнительной информации об этой проблеме и возможных её исправлениях, обратитесь к</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Не удалось открыть файл(ы)</value>
   </data>
@@ -879,18 +882,42 @@
     <value>Видео</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Показать альбом</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Показать артиста</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Не удалось загрузить визуальные эффекты</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>При открытии одного файла, автоматически добавлять все остальные файлы из папки в очередь воспроизведения.</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Добавлять все файлы из папки в очередь</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Как в системе</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Изменить общую цветовую схему приложения</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Тема приложения</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Персонализация</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Всегда продолжать с последнего места</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Продолжить воспроизведение там, где вы остановились</value>
   </data>
 </root>

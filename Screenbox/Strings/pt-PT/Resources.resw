@@ -341,7 +341,7 @@
     <value>Bem-vindo ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Arregace as mangas e começa a reproduzir algum do seu conteúdo multimédia.</value>
+    <value>Vamos começar a reproduzir algum do seu conteúdo multimédia para animar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Não está disponível nenhuma composição compatível. Certifique-se de que o Direct3D 11 está disponível no seu dispositivo.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Não foi possível abrir o ficheiro(s)</value>
   </data>
@@ -892,5 +895,29 @@
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Adicionar todos os ficheiros na pasta à fila</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilizar definição do sistema</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Escuro</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Selecionar o tema da aplicação a apresentar</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Tema da aplicação</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalização</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
   </data>
 </root>

@@ -140,13 +140,13 @@
     <value>Fehler beim Speichern des Frames</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Abgelaufene Zeit</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Verbleibende Zeit</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Gesamtdauer</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Kapitel {0}</value>
@@ -470,7 +470,7 @@
     <value>Suche nach Datei(en) zum Hinzufügen zur Wiedergabeliste</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>Weitere Optionen zum Hinzufügen von Medien zur Warteschlange</value>
+    <value>Weitere Optionen zum Hinzufügen von Medien zur Wiedergabeliste</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Ordner zur Musikbibliothek hinzufügen</value>
@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Kein kompatibler Renderer verfügbar. Bitte stelle sicher, dass Direct3D 11 auf deinem Gerät verfügbar ist.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Weitere Informationen über dieses Problem und mögliche Behebungen finden Sie unter</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Fehler beim Öffnen der Datei(en)</value>
   </data>
@@ -888,9 +891,33 @@
     <value>Fehler beim Laden der Grafik</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue.</value>
+    <value>Beim Öffnen einer einzelnen Datei automatisch alle anderen Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Alle Dateien im Ordner zur Wiedergabeliste hinzufügen</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Systemeinstellung verwenden</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Ändert das allgemeine Farbschema der App</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Erscheinungsbild</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalisierung</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Immer von der letzten Position fortsetzen</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Beim Öffnen einer Datei die Wiedergabe dort fortsetzen, wo Sie das letzte Mal gestoppt haben</value>
   </data>
 </root>

@@ -694,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Không có trình kết xuất tương thích nào có sẵn. Hãy đảm bảo Direct3D 11 có sẵn trên thiết bị của bạn.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>For more information about this issue and possible fixes, visit</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Không thể mở tập tin</value>
   </data>
@@ -813,10 +816,10 @@
     <value>Đối số hoạt động</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Cho phép nhiều tiến trình</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Luôn mở các tệp phương tiện trong một tiến trình mới</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Xếp theo</value>
@@ -892,5 +895,29 @@
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Thêm tất cả các tập tin trong thư mục vào hàng đợi</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Dùng cài đặt hệ thống</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Change the app's overall color scheme</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalization</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Always resume from last position</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continue playing from where you last stopped when opening a file</value>
   </data>
 </root>
