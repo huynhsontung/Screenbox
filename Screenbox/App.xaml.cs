@@ -2,7 +2,6 @@
 
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
-using LibVLCSharp.Shared;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
@@ -93,10 +92,16 @@ namespace Screenbox
         [HandleProcessCorruptedStateExceptions]
         private static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            if (e.Exception is VLCException
-                {
-                    Message: "Could not create Direct3D11 device : No compatible adapter found."
-                })
+            /*
+             * A notable limitation is that the UnhandledException event arguments don’t contain as much detail as the original exception
+             * as propagated from app code. Whenever possible, if the app requires specific processing of a certain exception, it’s always
+             * better to catch the exception as it propagates, because more detail will be available then. The UnhandledException event
+             * arguments expose an exception object through the Exception property. However, the type, message, and stack trace of this
+             * exception object are not guaranteed to match those of the original exception that was raised. The event arguments do expose
+             * a Message property. In most cases, this will contain the message of the originally raised exception.
+             * Ref: https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.application.unhandledexception
+             */
+            if (e.Message == "Could not create Direct3D11 device : No compatible adapter found.")
             {
                 e.Handled = true;
                 WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
