@@ -83,14 +83,13 @@ jobs:
         SENTRY_RELEASE : screenbox@${{ steps.get-tag-version.outputs.version }}
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       run: |
-        $sentryArgs = ""
         if ('${{ github.ref_type }}' -eq 'tag') {
-          $sentryArgs = "-p:SentryUploadSymbols=true `
-                        -p:SentryOrg=$env:SENTRY_ORG `
-                        -p:SentryProject=$env:SENTRY_PROJECT `
-                        -p:SentryUrl=$env:SENTRY_URL `
-                        -p:SentryCreateRelease=true `
-                        -p:SentrySetCommits=true"
+          $sentryArgs = "-p:SentryUploadSymbols=true", `
+                        "-p:SentryOrg=$env:SENTRY_ORG", `
+                        "-p:SentryProject=$env:SENTRY_PROJECT", `
+                        "-p:SentryUrl=$env:SENTRY_URL", `
+                        "-p:SentryCreateRelease=true", `
+                        "-p:SentrySetCommits=true"
         }
         msbuild Screenbox.sln `
           -v:d `
@@ -102,7 +101,7 @@ jobs:
           -p:AppxBundlePlatforms="$env:BuildPlatforms" `
           -p:UapAppxPackageBuildMode=$env:BuildMode `
           -p:AppxPackageDir=$env:PackageDir `
-          -p:AppxPackageSigningEnabled=false $sentryArgs `
+          -p:AppxPackageSigningEnabled=false @sentryArgs `
           -restore
     
     - name: Create store-upload artifact
