@@ -165,6 +165,7 @@
     <Compile Include="Messages\ClearPlaylistMessage.cs" />
     <Compile Include="Messages\CloseNotificationMessage.cs" />
     <Compile Include="Messages\CriticalErrorMessage.cs" />
+    <Compile Include="Messages\DragDropMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\MediaLoadFailedNotificationMessage.cs" />
     <Compile Include="Messages\MediaPlayerChangedMessage.cs" />

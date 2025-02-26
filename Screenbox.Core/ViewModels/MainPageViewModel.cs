@@ -123,33 +123,9 @@ namespace Screenbox.Core.ViewModels
             args.Handled = true;
         }
 
-        public async Task OnDropAsync(DataPackageView data)
+        public void OnDrop(DataPackageView data)
         {
-            try
-            {
-                if (data.Contains(StandardDataFormats.StorageItems))
-                {
-                    IReadOnlyList<IStorageItem>? items = await data.GetStorageItemsAsync();
-                    if (items.Count > 0)
-                    {
-                        Messenger.Send(new PlayFilesMessage(items));
-                        return;
-                    }
-                }
-
-                if (data.Contains(StandardDataFormats.WebLink))
-                {
-                    Uri? uri = await data.GetWebLinkAsync();
-                    if (uri.IsFile)
-                    {
-                        Messenger.Send(new PlayMediaMessage(uri));
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                Messenger.Send(new MediaLoadFailedNotificationMessage(exception.Message, string.Empty));
-            }
+            Messenger.Send(new DragDropMessage(data));
         }
 
         public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

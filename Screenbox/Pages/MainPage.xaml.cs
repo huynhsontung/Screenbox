@@ -398,10 +398,10 @@ namespace Screenbox.Pages
             if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
         }
 
-        private async void NavView_Drop(object sender, DragEventArgs e)
+        private void NavView_Drop(object sender, DragEventArgs e)
         {
             e.Handled = true;
-            await ViewModel.OnDropAsync(e.DataView);
+            ViewModel.OnDrop(e.DataView);
         }
     }
 }

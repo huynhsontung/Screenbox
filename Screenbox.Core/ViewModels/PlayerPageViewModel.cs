@@ -37,6 +37,7 @@ namespace Screenbox.Core.ViewModels
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
+        IRecipient<DragDropMessage>,
         IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
@@ -98,6 +99,11 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public async void Receive(DragDropMessage message)
+        {
+            await OnDropAsync(message.Data);
         }
 
         public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
