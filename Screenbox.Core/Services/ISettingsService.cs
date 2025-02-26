@@ -22,6 +22,7 @@ namespace Screenbox.Core.Services
         string GlobalArguments { get; set; }
         bool AdvancedMode { get; set; }
         bool UseMultipleInstances { get; set; }
+        double SmtcUpdateInterval { get; set; }
         string LivelyActivePath { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
     }
