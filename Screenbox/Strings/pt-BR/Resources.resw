@@ -695,7 +695,7 @@
     <value>Nenhum renderizador compatível disponível. Certifique-se de que o Direct3D 11 esteja disponível no seu dispositivo.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Para mais informações sobre este problema e possíveis correções, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Falha ao abrir o(s) arquivo(s)</value>
@@ -915,9 +915,9 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Sempre retomar da última posição</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Continue a reproduzir de onde você parou pela última vez ao abrir um arquivo</value>
   </data>
 </root>
