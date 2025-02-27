@@ -640,7 +640,7 @@
     <value>Redimensionar automaticamente</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Redimensionar a janela da aplicação para ajustar melhor com a resolução nativa do vídeo em reprodução</value>
+    <value>Redimensionar a janela da aplicação para corresponder à resolução nativa do vídeo em reprodução</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Amplificar volume</value>
@@ -695,7 +695,7 @@
     <value>Não está disponível nenhuma composição compatível. Certifique-se de que o Direct3D 11 está disponível no seu dispositivo.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Para obter mais informações e sugestões para corrigir este problema, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Não foi possível abrir o ficheiro(s)</value>
@@ -915,9 +915,9 @@
     <value>Personalização</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Retomar sempre da última posição</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Continuar a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
   </data>
 </root>
