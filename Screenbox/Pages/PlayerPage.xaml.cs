@@ -124,7 +124,7 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarDragRegion);
-            UpdateSystemCaptionButtonForeground();
+            UpdateSystemCaptionButton();
         }
 
         private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -247,7 +247,7 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     UpdateContentState();
-                    UpdateSystemCaptionButtonForeground();
+                    UpdateSystemCaptionButton();
                     UpdatePreviewType();
                     break;
                 case nameof(PlayerPageViewModel.PlayerVisibility):
@@ -343,11 +343,35 @@ namespace Screenbox.Pages
                 _animationCancellationTokenSource = null;
         }
 
-        private void UpdateSystemCaptionButtonForeground()
+        private void UpdateSystemCaptionButton()
         {
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (titleBar != null)
             {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
+                // Rest
+                var buttonForegroundColor = (Color)Application.Current.Resources["CaptionButtonForeground"];
+                var buttonForegroundColorDark = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF);
+                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? buttonForegroundColor : buttonForegroundColorDark;
+
+                // Hover
+                var buttonHoverBackgroundColor = (Color)Application.Current.Resources["CaptionButtonBackgroundPointerOver"];
+                var buttonHoverForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundPointerOver"];
+                var buttonHoverBackgroundColorDark = Color.FromArgb(0x0F, 0xFF, 0xFF, 0xFF); // SubtleFillColorSecondary
+                titleBar.ButtonHoverBackgroundColor = ViewModel.AudioOnly ? buttonHoverBackgroundColor : buttonHoverBackgroundColorDark;
+                titleBar.ButtonHoverForegroundColor = ViewModel.AudioOnly ? buttonHoverForegroundColor : buttonForegroundColorDark;
+
+                // Pressed
+                var buttonPressedBackgroundColor = (Color)Application.Current.Resources["CaptionButtonBackgroundPressed"];
+                var buttonPressedForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundPressed"];
+                var buttonPressedBackgroundColorDark = Color.FromArgb(0x0A, 0xFF, 0xFF, 0xFF); // SubtleFillColorTertiary
+                var buttonPressedForegroundColorDark = Color.FromArgb(0xFF, 0xD1, 0xD1, 0xD1);
+                titleBar.ButtonPressedBackgroundColor = ViewModel.AudioOnly ? buttonPressedBackgroundColor : buttonPressedBackgroundColorDark;
+                titleBar.ButtonPressedForegroundColor = ViewModel.AudioOnly ? buttonPressedForegroundColor : buttonPressedForegroundColorDark;
+
+                // Inactive
+                var buttonInactiveForegroundColor = (Color)Application.Current.Resources["CaptionButtonForegroundInactive"];
+                var buttonInactiveForegroundColorDark = Color.FromArgb(0xFF, 0x71, 0x71, 0x71);
+                titleBar.ButtonInactiveForegroundColor = ViewModel.AudioOnly ? buttonInactiveForegroundColor : buttonInactiveForegroundColorDark;
             }
         }
 
