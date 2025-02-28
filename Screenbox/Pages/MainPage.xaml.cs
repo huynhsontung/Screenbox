@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.WinUI.Helpers;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
 using Sentry;
@@ -37,8 +36,6 @@ namespace Screenbox.Pages
 
         private readonly Dictionary<string, Type> _pages;
 
-        private readonly ThemeListener _themeListener;
-
         public MainPage()
         {
             InitializeComponent();
@@ -58,8 +55,7 @@ namespace Screenbox.Pages
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
 
             //Register a handler for when the theme mode changes
-            _themeListener = new ThemeListener();
-            _themeListener.ThemeChanged += ThemeListener_OnThemeChanged;
+            ActualThemeChanged += OnActualThemeChanged;
 
             NotificationView.Translation = new Vector3(0, 0, 16);
 
@@ -138,7 +134,7 @@ namespace Screenbox.Pages
             ContentFrame.Navigate(pageType, parameter, new SuppressNavigationTransitionInfo());
         }
 
-        private void ThemeListener_OnThemeChanged(ThemeListener sender)
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
         {
             UpdateSystemCaptionButton();
         }
