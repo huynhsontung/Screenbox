@@ -695,7 +695,7 @@
     <value>אין מעבד תואם זמין. אנא ודא שDirect3D 11 זמין במכשיר שלך.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>למידע נוסף על בעיה זו ותיקונים אפשריים, ראה</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>פתיחת הקובץ/ים נכשלה</value>
@@ -897,27 +897,27 @@
     <value>הוסף את כל הקבצים בתיקייה לתור</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>השתמש בהגדרות המערכת</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>כהה</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>בהיר</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>שנה את ערכת הצבעים הכוללת של האפליקציה</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>ערכת הנושא של האפליקציה</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>התאמה אישית</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>המשך תמיד מהמיקום האחרון</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>בעת פתיחת קובץ, המשך אותו מהמקום שבו הפסקת בפעם האחרונה</value>
   </data>
 </root>
