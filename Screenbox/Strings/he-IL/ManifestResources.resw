@@ -151,7 +151,7 @@
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
-    <value/>
+    <value>Monkey's Audio</value>
     <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
