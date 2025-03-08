@@ -38,9 +38,17 @@
     <x:String x:Key="SpeedHighGlyph">&#xEC4A;</x:String>
     <x:String x:Key="AutoRacingGlyph">&#xEB24;</x:String>
     <x:String x:Key="ImageExportGlyph">&#xEE71;</x:String>
+
+    <x:String x:Key="MoviesLibraryGlyph">&#xF00B7;</x:String>
+    <x:String x:Key="MoviesLibraryMirroredGlyph">&#xF00B8;</x:String>
+    <x:String x:Key="MusicLibraryGlyph">&#xF00B9;</x:String>
+    <x:String x:Key="MusicLibraryMirroredGlyph">&#xF00BA;</x:String>
+    <x:String x:Key="FiltersGlyph">&#xE795;</x:String>
+    <!--<x:String x:Key="FiltersSolidGlyph">&#xF353;</x:String>-->
+    <x:String x:Key="RecentFilledGlyph">&#xF00F0;</x:String>
+    <x:String x:Key="RecentEmptyGlyph">&#xF00F1;</x:String>
     <x:String x:Key="MusicVisualizerGlyph">&#xF010D;</x:String>
     <x:String x:Key="MusicVisualizerMirroredGlyph">&#xF010E;</x:String>
-    <x:String x:Key="FiltersGlyph">&#xE795;</x:String>
 
     <x:String x:Key="MoviesGlyph">&#xE8B2;</x:String>
     <x:String x:Key="MoviesOffGlyph">&#xF0022;</x:String>
@@ -51,6 +59,8 @@
     <x:String x:Key="PlaylistMusicGlyph">&#xE93F;</x:String>
     <x:String x:Key="PlaylistMusicMirroredGlyph">&#xF006F;</x:String>
     <x:String x:Key="PlayAddGlyph">&#xF5EB;</x:String>
+    <!--<x:String x:Key="SingleSelectGlyph">&#xEA20;</x:String>-->
+    <!--<x:String x:Key="SingleSelectMirroredGlyph">&#xEA66;</x:String>-->
 
     <x:String x:Key="FolderGlyph">&#xE8B7;</x:String>
     <x:String x:Key="FolderOpenGlyph">&#xE838;</x:String>

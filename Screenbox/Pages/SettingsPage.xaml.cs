@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core.ViewModels;
-using System;
+﻿using System;
 using System.Linq;
 using System.Numerics;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -46,6 +46,18 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+        }
+
+        private string GetShowRecentSettingsExpanderGlyph(bool show)
+        {
+            if (show is true)
+            {
+                return "\U000F00F0";
+            }
+            else
+            {
+                return "\U000F00F1";
+            }
         }
     }
 }

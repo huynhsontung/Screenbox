@@ -162,11 +162,15 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.MusicLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph={StaticResource AudioGlyph}}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            x:Name="MusicLibrarySettingsExpanderIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource MusicLibraryGlyph}" />
+                    </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
@@ -191,11 +195,15 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{x:Bind strings:Resources.LocationSpecified(ViewModel.VideoLocations.Count), Mode=OneWay, FallbackValue={x:Null}}"
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
-                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph={StaticResource MoviesGlyph}}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            x:Name="VideoLibrarySettingsExpanderIcon"
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{StaticResource MoviesLibraryGlyph}" />
+                    </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
@@ -286,9 +294,13 @@
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsShowRecentDescription}"
-                    Header="{strings:Resources Key=SettingsShowRecentHeader}"
-                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                             Glyph={StaticResource FolderGlyph}}">
+                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{x:Bind GetShowRecentSettingsExpanderGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            MirroredWhenRightToLeft="True" />
+                    </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
@@ -584,7 +596,9 @@
                         <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
+                        <contract13Present:Setter Target="MusicLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MusicLibraryMirroredGlyph}" />
                         <contract13Present:Setter Target="SettingsExpanderAddMusicFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
+                        <contract13Present:Setter Target="VideoLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MoviesLibraryMirroredGlyph}" />
                         <contract13Present:Setter Target="SettingsExpanderAddVideoFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
                         <Setter Target="SettingsEnqueueAllFilesInFolderCard.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource FolderListMirroredGlyph}}" />
                         <Setter Target="SettingsAudioVisualExpander.HeaderIcon" Value="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily}, Glyph={StaticResource MusicVisualizerMirroredGlyph}}" />
