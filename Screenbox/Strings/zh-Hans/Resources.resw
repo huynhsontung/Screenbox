@@ -695,7 +695,7 @@
     <value>没有兼容的渲染器可用。请确保 Direct3D 11 在你的设备上可用。</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>欲了解更多关于这个问题的信息和可能的修复，请访问</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>无法打开文件</value>
@@ -915,9 +915,9 @@
     <value>个性化</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>总是从最后位置恢复</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>打开文件时继续从你最后停止的位置播放</value>
   </data>
 </root>
