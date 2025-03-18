@@ -45,8 +45,8 @@
     <x:String x:Key="MusicLibraryMirroredGlyph">&#xF00BA;</x:String>
     <x:String x:Key="FiltersGlyph">&#xE795;</x:String>
     <!--<x:String x:Key="FiltersSolidGlyph">&#xF353;</x:String>-->
-    <x:String x:Key="RecentFilledGlyph">&#xF00F0;</x:String>
-    <x:String x:Key="RecentEmptyGlyph">&#xF00F1;</x:String>
+    <!--<x:String x:Key="RecentGlyph">&#xF00F0;</x:String>-->
+    <!--<x:String x:Key="RecentEmptyGlyph">&#xF00F1;</x:String>-->
     <x:String x:Key="MusicVisualizerGlyph">&#xF010D;</x:String>
     <x:String x:Key="MusicVisualizerMirroredGlyph">&#xF010E;</x:String>
 

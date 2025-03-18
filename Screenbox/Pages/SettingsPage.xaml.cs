@@ -48,16 +48,13 @@ namespace Screenbox.Pages
             ViewModel.OnNavigatedFrom();
         }
 
-        private string GetShowRecentSettingsExpanderGlyph(bool show)
+        /// <summary>
+        /// Get a character code to use as the Show Recent setting icon glyph.
+        /// </summary>
+        /// <returns>Recent glyph if it's true, or Recent Empty glyph if it's false.</returns>
+        private string GetShowRecentSettingsExpanderGlyph(bool b)
         {
-            if (show is true)
-            {
-                return "\U000F00F0";
-            }
-            else
-            {
-                return "\U000F00F1";
-            }
+            return b ? "\U000F00F0" : "\U000F00F1";
         }
     }
 }
