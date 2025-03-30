@@ -7,39 +7,6 @@ using Windows.UI.Xaml.Data;
 namespace Screenbox.Converters;
 
 /// <summary>
-/// Specifies the filter type used in a <see cref="ThicknessFilterConverter"/> instance.
-/// This <see cref="Enum"/> supports a bitwise combination of its member values.
-/// </summary>
-[Flags]
-public enum ThicknessFilterKind
-{
-    /// <summary>
-    /// No filter applied.
-    /// </summary>
-    None = 0,
-
-    /// <summary>
-    /// Filters Left value.
-    /// </summary>
-    Left = 1,
-
-    /// <summary>
-    /// Filters Top value.
-    /// </summary>
-    Top = 2,
-
-    /// <summary>
-    /// Filters Right value.
-    /// </summary>
-    Right = 4,
-
-    /// <summary>
-    /// Filters Bottom value.
-    /// </summary>
-    Bottom = 8
-}
-
-/// <summary>
 /// An <see cref="IValueConverter"/> that takes an existing <see cref="Thickness"/> struct and returns a new one,
 /// using filters to keep only the specified fields and setting all others to 0.
 /// <example>For example:
@@ -69,6 +36,39 @@ public enum ThicknessFilterKind
 /// </summary>
 public sealed class ThicknessFilterConverter : DependencyObject, IValueConverter
 {
+    /// <summary>
+    /// Specifies the filter type used in a <see cref="ThicknessFilterConverter"/> instance.
+    /// This <see cref="Enum"/> supports a bitwise combination of its member values.
+    /// </summary>
+    [Flags]
+    public enum ThicknessFilterKind
+    {
+        /// <summary>
+        /// No filter applied.
+        /// </summary>
+        None = 0,
+
+        /// <summary>
+        /// Filters Left value.
+        /// </summary>
+        Left = 1,
+
+        /// <summary>
+        /// Filters Top value.
+        /// </summary>
+        Top = 2,
+
+        /// <summary>
+        /// Filters Right value.
+        /// </summary>
+        Right = 4,
+
+        /// <summary>
+        /// Filters Bottom value.
+        /// </summary>
+        Bottom = 8
+    }
+
     /// <summary>
     /// Identifies the <see cref="Filter"/> dependency property.
     /// </summary>
