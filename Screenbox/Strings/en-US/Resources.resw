@@ -920,4 +920,10 @@
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
     <value>Continue playing from where you last stopped when opening a file</value>
   </data>
+  <data name="SettingsSmtcUpdateIntervalDescription" xml:space="preserve">
+    <value>The default interval is 5 seconds</value>
+  </data>
+  <data name="SettingsSmtcUpdateIntervalHeader" xml:space="preserve">
+    <value>System Media Transport Controls (SMTC) update interval</value>
+  </data>
 </root>

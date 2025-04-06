@@ -500,8 +500,8 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="The default interval is 5 seconds"
-                    Header="System Media Transport Controls (SMTC) update interval"
+                    Description="{strings:Resources Key=SettingsSmtcUpdateIntervalDescription}"
+                    Header="{strings:Resources Key=SettingsSmtcUpdateIntervalHeader}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <Slider
                         Width="150"
