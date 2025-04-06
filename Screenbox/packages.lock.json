@@ -127,14 +127,11 @@
         "resolved": "2.0.1",
         "contentHash": "apwpIX7KU6//EzgbKmsoCPD2nLO8x+evVStxRr+Rjt8K1jw7ixuo8yHOSwpyt6K8MSLYONZP94cxC9Qbg8GIqQ=="
       },
-      "ReswPlusLib": {
+      "ReswPlus": {
         "type": "Direct",
-        "requested": "[2.0.0, )",
-        "resolved": "2.0.0",
-        "contentHash": "zbgQieRrpin1Dy4ddUcRIrvgsD/WIrof2U7lmuCGD+9A9FDwsTayOvfq4qqvPFMc5fwBN4RdM7ER6hz0t5o8Jg==",
-        "dependencies": {
-          "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0"
-        }
+        "requested": "[0.3.1.5, )",
+        "resolved": "0.3.1.5",
+        "contentHash": "OjpWXQXX6dDrcmy98jOOhp0EJv7kb43pSD8UkvqXU9e3oruh/fQLuI65lu2zKWQYqPtR5xhZUNsGZjndnspjpA=="
       },
       "Sentry": {
         "type": "Direct",
