@@ -34,6 +34,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private bool _useMultipleInstances;
+        [ObservableProperty] private double _smtcUpdateInterval;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
 
@@ -85,6 +86,7 @@ namespace Screenbox.Core.ViewModels
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
+            _smtcUpdateInterval = _settingsService.SmtcUpdateInterval;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
@@ -196,6 +198,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.UseMultipleInstances = value;
             Messenger.Send(new SettingsChangedMessage(nameof(UseMultipleInstances), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnSmtcUpdateIntervalChanged(double value)
+        {
+            _settingsService.SmtcUpdateInterval = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(SmtcUpdateInterval), typeof(SettingsPageViewModel)));
         }
 
         partial void OnGlobalArgumentsChanged(string value)
