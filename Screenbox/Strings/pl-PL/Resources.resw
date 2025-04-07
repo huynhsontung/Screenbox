@@ -695,7 +695,7 @@
     <value>Brak kompatybilnego renderowania. Upewnij się, że Direct3D 11 jest dostępny na twoim urządzeniu.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Aby uzyskać więcej informacji na temat tego problemu i możliwych rozwiązań, odwiedź</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Nie można otworzyć pliku(ów)</value>
@@ -897,27 +897,27 @@
     <value>Dodaj wszystkie pliki w folderze do kolejki</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Użyj ustawienia systemowego</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Ciemny</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Jasny</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Zmień schemat kolorów aplikacji</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Motyw aplikacji</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personalizacja</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Zawsze wznawiaj od ostatniej pozycji</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Kontynuuj odtwarzanie z miejsca ostatniego zatrzymania podczas otwierania pliku</value>
   </data>
 </root>

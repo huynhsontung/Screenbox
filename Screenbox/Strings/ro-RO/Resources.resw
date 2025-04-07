@@ -695,7 +695,7 @@
     <value>Nu este disponibil niciun dispozitiv de redare compatibil. Asigurați-vă că Direct3D 11 este disponibil pe dispozitivul dvs.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Pentru mai multe informații despre această problemă și posibile soluții, vizitați</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Deschiderea fișierelor a eșuat</value>
@@ -915,9 +915,9 @@
     <value>Personalizare</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Continuă întotdeauna din ultima poziție</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Continuă redarea de unde ai oprit ultima dată la deschiderea unui fișier</value>
   </data>
 </root>
