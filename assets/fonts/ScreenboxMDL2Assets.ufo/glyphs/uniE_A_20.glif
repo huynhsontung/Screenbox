@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<glyph name="uniEA20" format="2">
+  <advance width="2048"/>
+  <unicode hex="EA20"/>
+  <outline>
+    <contour>
+      <point x="88" y="1144" type="line"/>
+      <point x="192" y="1039" type="line"/>
+      <point x="472" y="1320" type="line"/>
+      <point x="552" y="1240" type="line"/>
+      <point x="192" y="881" type="line"/>
+      <point x="8" y="1064" type="line"/>
+    </contour>
+    <contour>
+      <point x="768" y="1024" type="line"/>
+      <point x="768" y="1152" type="line"/>
+      <point x="2048" y="1152" type="line"/>
+      <point x="2048" y="1024" type="line"/>
+    </contour>
+  </outline>
+</glyph>
