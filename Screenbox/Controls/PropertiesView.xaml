@@ -29,7 +29,7 @@
                         Margin="0,0,8,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{Binding Key}"
                         TextTrimming="CharacterEllipsis" />
@@ -121,7 +121,7 @@
                         Margin="0,10,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Foreground="{StaticResource SystemControlForegroundBaseMediumBrush}"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Style="{StaticResource CaptionTextBlockStyle}"
                         Text="{x:Bind strings:Resources.PropertyFileLocation}"
                         TextTrimming="CharacterEllipsis" />

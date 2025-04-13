@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Content Dialog item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -15,6 +16,7 @@ namespace Screenbox.Controls
             this.DefaultStyleKey = typeof(ContentDialog);
             this.InitializeComponent();
             FlowDirection = App.GetFlowDirection();
+            RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         }
 
         public static async Task<Uri?> GetUrlAsync()
