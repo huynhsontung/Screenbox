@@ -157,6 +157,7 @@
     <Compile Include="Helpers\MessengerExtensions.cs" />
     <Compile Include="Helpers\StreamAbstraction.cs" />
     <Compile Include="Helpers\SystemInformation.cs" />
+    <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Helpers\VlcMediaExtensions.cs" />
     <Compile Include="Helpers\WebView2Util.cs" />
     <Compile Include="Messages\ChangeAspectRatioMessage.cs" />

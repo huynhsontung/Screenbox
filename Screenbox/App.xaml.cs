@@ -1,5 +1,10 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
+using System.Security;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI.Helpers;
 using Microsoft.AppCenter;
@@ -16,11 +21,6 @@ using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
 using Sentry.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using System.Security;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources.Core;
@@ -304,9 +304,19 @@ namespace Screenbox
 
                 var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
                 rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
+
+                // Register a handler for when the theme mode changes
+                rootFrame.ActualThemeChanged += OnActualThemeChanged;
+
+                TitleBarHelper.SetCaptionButtonColors(rootFrame);
             }
 
             return rootFrame;
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            TitleBarHelper.SetCaptionButtonColors(sender);
         }
     }
 }
