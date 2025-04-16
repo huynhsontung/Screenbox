@@ -17,6 +17,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;

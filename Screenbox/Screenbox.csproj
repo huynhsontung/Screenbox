@@ -237,6 +237,7 @@
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\ThicknessFilterConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
     </Compile>
