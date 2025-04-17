@@ -9,7 +9,7 @@ namespace Screenbox.Helpers;
 public static class TitleBarHelper
 {
     /// <summary>
-    /// Hide the default title bar and extend the client area to fill the entire view.
+    /// Extends the client area to fill the entire view and hides the default title bar.
     /// </summary>
     //public static void ExtendViewIntoTitleBar()
     //{
@@ -21,10 +21,13 @@ public static class TitleBarHelper
     //}
 
     /// <summary>
-    /// Set subtle colors to the title bar buttons (system caption buttons).
-    /// Applicable only when the view is extended into the title bar.
+    /// Sets the subtle fill colors to the background, and the text fill colors to the
+    /// foreground of the title bar buttons (system caption buttons).
     /// </summary>
-    /// <param name="element">The base element from which to retrieve the <see cref="FrameworkElement.RequestedTheme"/> property.</param>
+    /// <remarks>
+    /// Call this method only when the view is extended into the title bar.
+    /// </remarks>
+    /// <param name="element">The element to retrieve the requested theme property.</param>
     public static void SetCaptionButtonColors(FrameworkElement element)
     {
         var buttonBackgroundColor = Colors.Transparent;
@@ -65,7 +68,7 @@ public static class TitleBarHelper
     }
 
     /// <summary>
-    /// Set the the system default colors to the title bar buttons.
+    /// Resets the title bar buttons colors back to the default settings.
     /// </summary>
     //public static void ResetCaptionButtonColors()
     //{

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
-using Screenbox.Core.Helpers;
 using Screenbox.Core.ViewModels;
 using Sentry;
 using Windows.ApplicationModel.Core;
