@@ -14,9 +14,7 @@ using Screenbox.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -125,7 +123,6 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarDragRegion);
-            TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
         }
 
         private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -154,13 +151,6 @@ namespace Screenbox.Pages
                 // Focus can fail if player is file activated
                 // Controls are disabled by default until playback is ready
                 PlayerControls.FocusFirstButton();
-            }
-
-            if (!ViewModel.AudioOnly)
-            {
-                // Temporary fix for when a file is opened directly
-                // from the explorer in light theme mode
-                TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
             }
         }
 
@@ -218,6 +208,7 @@ namespace Screenbox.Pages
             bool collapsing = args.OldState?.Name == nameof(Normal) && args.NewState?.Name == nameof(MiniPlayer);
 
             if (expanding || collapsing) PlayerControls.FocusFirstButton();
+            UpdateRootTheme();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -255,7 +246,7 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     UpdateContentState();
-                    TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     break;
                 case nameof(PlayerPageViewModel.PlayerVisibility):
@@ -277,6 +268,7 @@ namespace Screenbox.Pages
                     }
 
                     UpdateContentState();
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     UpdateMiniPlayerMargin();
                     break;
@@ -409,6 +401,14 @@ namespace Screenbox.Pages
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private void UpdateRootTheme()
+        {
+            LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
+                ? ElementTheme.Dark
+                : ElementTheme.Default;
+            TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
         }
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)
