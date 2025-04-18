@@ -695,7 +695,7 @@
     <value>Uyumlu oluşturucu yok.  Lütfen cihazınızda Direct3D 11'in mevcut olduğundan emin olun.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Bu konu ve olası düzeltmeler hakkında daha fazla bilgi için ziyaret edin</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Dosya(lar) açılamadı</value>
@@ -897,13 +897,13 @@
     <value>Klasördeki tüm dosyaları sıraya ekle</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Sistem ayarını kullan</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Koyu</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Açık</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Windows ayarlarınızla eşleşecek bir tema seçin veya özel bir tema seçin</value>
@@ -912,12 +912,12 @@
     <value>Tema</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Kişiselleştirme</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Her zaman son kısımdan devam et</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>En son kaldığınız yerden oynatmaya devam et</value>
   </data>
 </root>

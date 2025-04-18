@@ -695,7 +695,7 @@
     <value>Không có trình kết xuất tương thích nào có sẵn. Hãy đảm bảo Direct3D 11 có sẵn trên thiết bị của bạn.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Để biết thêm thông tin về vấn đề này và các bản sửa lỗi có thể, hãy truy cập</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Không thể mở tập tin</value>
@@ -906,16 +906,16 @@
     <value>Light</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Thay đổi bảng màu tổng thể của ứng dụng</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Giao diện ứng dụng</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Cá nhân hóa</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Luôn tiếp tục từ vị trí cuối cùng</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
     <value>Continue playing from where you last stopped when opening a file</value>
