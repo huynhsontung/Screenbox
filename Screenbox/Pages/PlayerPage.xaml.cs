@@ -10,12 +10,11 @@ using Screenbox.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -124,7 +123,6 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarDragRegion);
-            UpdateSystemCaptionButtonForeground();
         }
 
         private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -210,6 +208,7 @@ namespace Screenbox.Pages
             bool collapsing = args.OldState?.Name == nameof(Normal) && args.NewState?.Name == nameof(MiniPlayer);
 
             if (expanding || collapsing) PlayerControls.FocusFirstButton();
+            UpdateRootTheme();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -247,7 +246,7 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     UpdateContentState();
-                    UpdateSystemCaptionButtonForeground();
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     break;
                 case nameof(PlayerPageViewModel.PlayerVisibility):
@@ -269,6 +268,7 @@ namespace Screenbox.Pages
                     }
 
                     UpdateContentState();
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     UpdateMiniPlayerMargin();
                     break;
@@ -343,14 +343,6 @@ namespace Screenbox.Pages
                 _animationCancellationTokenSource = null;
         }
 
-        private void UpdateSystemCaptionButtonForeground()
-        {
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
-            }
-        }
-
         private void UpdateContentState()
         {
             var contentVisualStateName = ViewModel.AudioOnly
@@ -409,6 +401,14 @@ namespace Screenbox.Pages
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private void UpdateRootTheme()
+        {
+            LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
+                ? ElementTheme.Dark
+                : ElementTheme.Default;
+            TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
         }
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)

@@ -51,7 +51,7 @@ namespace Screenbox.Pages
             // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            //Register a handler for when the window changes focus
+            // Register a handler for when the window changes focus
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
 
             NotificationView.Translation = new Vector3(0, 0, 16);
@@ -134,10 +134,6 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonForegroundColor = null;
-            }
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -151,13 +147,6 @@ namespace Screenbox.Pages
                 SetTitleBar();
                 NavView.SelectedItem = NavView.MenuItems[0];
                 _ = ViewModel.FetchLibraries();
-            }
-
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                titleBar.InactiveBackgroundColor = Colors.Transparent;
             }
         }
 

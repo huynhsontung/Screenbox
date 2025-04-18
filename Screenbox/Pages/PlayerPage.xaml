@@ -641,7 +641,6 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
@@ -653,7 +652,6 @@
 
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
@@ -703,7 +701,6 @@
 
                 <VisualState x:Name="AudioWithVisualizer">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="Default" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
@@ -716,9 +713,6 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition GeneratedDuration="0:0:0.5" To="Video">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Dark" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
@@ -741,9 +735,6 @@
 
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioOnly">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Default" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
@@ -760,9 +751,6 @@
 
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioWithVisualizer">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Default" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>

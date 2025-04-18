@@ -18,6 +18,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
@@ -314,9 +315,19 @@ namespace Screenbox
 
                 var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
                 rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
+
+                // Register a handler for when the theme mode changes
+                rootFrame.ActualThemeChanged += OnActualThemeChanged;
+
+                TitleBarHelper.SetCaptionButtonColors(rootFrame);
             }
 
             return rootFrame;
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            TitleBarHelper.SetCaptionButtonColors(sender);
         }
     }
 }

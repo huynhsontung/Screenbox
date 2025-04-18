@@ -27,6 +27,7 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             FlowDirection = App.GetFlowDirection();
+            RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         }
     }
 }
