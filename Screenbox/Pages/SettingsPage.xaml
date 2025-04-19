@@ -390,9 +390,9 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
+                    Description="Show chapter names in the player (may contain spoilers)"
                     Header="Show Chapter Names"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D2;}"
-                    Description="Show chapter names in the player (may contain spoilers)">
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D2;}">
                     <ToggleSwitch x:Name="ShowChaptersToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 

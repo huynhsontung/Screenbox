@@ -1,5 +1,9 @@
 ﻿#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.Globalization;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,10 +14,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -119,13 +119,14 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(SettingsChangedMessage message)
         {
-            if (message.SettingsName == nameof(SettingsPageViewModel.AdvancedMode))
+            switch (message.SettingsName)
             {
-                IsAdvancedModeActive = _settingsService.AdvancedMode;
-            }
-            else if (message.SettingsName == nameof(SettingsPageViewModel.PlayerShowChapters))
-            {
-                PlayerShowChapters = _settingsService.PlayerShowChapters;
+                case nameof(SettingsPageViewModel.AdvancedMode):
+                    IsAdvancedModeActive = _settingsService.AdvancedMode;
+                    break;
+                case nameof(SettingsPageViewModel.PlayerShowChapters):
+                    PlayerShowChapters = _settingsService.PlayerShowChapters;
+                    break;
             }
         }
 
