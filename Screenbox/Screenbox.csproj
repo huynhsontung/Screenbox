@@ -444,9 +444,9 @@
     <None Include="Secrets.cs.template" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\en-US\KeyboardResources.resw"/>
+    <PRIResource Include="Strings\en-US\KeyboardResources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
-    <PRIResource Include="Strings\en-US\Resources.resw"/>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
     <PRIResource Include="Strings\ar-SA\KeyboardResources.resw" />
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
