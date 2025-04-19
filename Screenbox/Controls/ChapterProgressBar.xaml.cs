@@ -1,11 +1,13 @@
 ﻿#nullable enable
 
 using CommunityToolkit.WinUI;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using Windows.Media.Core;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -123,7 +125,7 @@ namespace Screenbox.Controls
             {
                 foreach (ChapterViewModel item in ProgressItems)
                 {
-                    item.Width = GetItemWidth(item);
+                    item.Width = GetItemWidth(item.Minimum, item.Maximum);
                 }
             }
         }
@@ -206,17 +208,35 @@ namespace Screenbox.Controls
             if (Chapters?.Count > 0)
             {
                 ChapterIndex = -1;
+                var chaptersDuration = TimeSpan.Zero;
                 foreach (ChapterCue cue in Chapters)
                 {
+                    chaptersDuration += cue.Duration;
+                    var startTime = cue.StartTime.TotalMilliseconds;
+                    var endTime = (cue.Duration + cue.StartTime).TotalMilliseconds;
                     ChapterViewModel progressItem = new()
                     {
-                        Minimum = cue.StartTime.TotalMilliseconds,
-                        Maximum = (cue.Duration + cue.StartTime).TotalMilliseconds
+                        Minimum = startTime,
+                        Maximum = endTime,
+                        Width = GetItemWidth(startTime, endTime)
                     };
 
-                    // This assumes Maximum is updated before this function is called
-                    progressItem.Width = GetItemWidth(progressItem);
                     ProgressItems.Add(progressItem);
+                }
+
+                // Check if the total duration of all chapters matches with media length
+                if (Maximum - chaptersDuration.TotalMilliseconds > 1000)
+                {
+                    // If not, we need to add a dummy chapter to fill the gap
+                    ChapterViewModel progressItem = new()
+                    {
+                        Minimum = chaptersDuration.TotalMilliseconds,
+                        Maximum = Maximum,
+                        Width = GetItemWidth(chaptersDuration.TotalMilliseconds, Maximum)
+                    };
+
+                    ProgressItems.Add(progressItem);
+                    LogService.Log("Chapters duration does not match with media length.");
                 }
             }
             else
@@ -230,10 +250,10 @@ namespace Screenbox.Controls
             }
         }
 
-        private double GetItemWidth(ChapterViewModel item)
+        private double GetItemWidth(double start, double end)
         {
             double availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
-            return Maximum > 0 ? (item.Maximum - item.Minimum) / Maximum * availableWidth : 0;
+            return Maximum > 0 ? (end - start) / Maximum * availableWidth : 0;
         }
     }
 }
