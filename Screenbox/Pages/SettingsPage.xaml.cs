@@ -1,8 +1,8 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core.ViewModels;
-using System;
+﻿using System;
 using System.Linq;
 using System.Numerics;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -46,6 +46,15 @@ namespace Screenbox.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.OnNavigatedFrom();
+        }
+
+        /// <summary>
+        /// Get a character code to use as the Show Recent setting icon glyph.
+        /// </summary>
+        /// <returns>Recent glyph if it's true, or Recent Empty glyph if it's false.</returns>
+        private string GetShowRecentSettingsExpanderGlyph(bool b)
+        {
+            return b ? "\U000F00F0" : "\U000F00F1";
         }
     }
 }
