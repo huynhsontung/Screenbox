@@ -429,7 +429,8 @@
                 FontSize="{StaticResource BodyTextBlockFontSize}"
                 Length="{x:Bind SeekBar.ViewModel.Length, Mode=OneWay}"
                 Time="{x:Bind SeekBar.ViewModel.Time, Mode=OneWay}"
-                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}" />
+                TitleName="{x:Bind ViewModel.TitleName, Mode=OneWay}"
+                ShowChapterName="{x:Bind ViewModel.PlayerShowChapters, Mode=OneWay}" />
         </StackPanel>
         <!--  Secondary Panel  -->
         <StackPanel
