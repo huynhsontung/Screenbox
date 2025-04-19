@@ -34,6 +34,7 @@ namespace Screenbox.Core.Services
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
         private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
+        private const string PlayerShowChaptersKey = "Player/ShowChapters";
 
         public bool UseIndexer
         {
@@ -155,6 +156,12 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerLivelyPathKey, value);
         }
 
+        public bool PlayerShowChapters
+        {
+            get => GetValue<bool>(PlayerShowChaptersKey);
+            set => SetValue(PlayerShowChaptersKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
@@ -172,6 +179,7 @@ namespace Screenbox.Core.Services
             SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
             SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
+            SetDefault(PlayerShowChaptersKey, true);
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)
