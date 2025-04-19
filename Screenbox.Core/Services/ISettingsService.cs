@@ -11,6 +11,7 @@ namespace Screenbox.Core.Services
         bool PlayerSeekGesture { get; set; }
         bool PlayerTapGesture { get; set; }
         bool PlayerShowControls { get; set; }
+        bool PlayerShowChapters { get; set; }
         int PersistentVolume { get; set; }
         string PersistentSubtitleLanguage { get; set; }
         bool ShowRecent { get; set; }
