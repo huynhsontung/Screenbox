@@ -72,6 +72,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private double _playbackSpeed;
         [ObservableProperty] private bool _isAdvancedModeActive;
         [ObservableProperty] private bool _isMinimal;
+        [ObservableProperty] private bool _playerShowChapters;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShouldBeAdaptive))]
@@ -109,6 +110,7 @@ namespace Screenbox.Core.ViewModels
             _playbackSpeed = 1.0;
             _isAdvancedModeActive = settingsService.AdvancedMode;
             _isMinimal = true;
+            _playerShowChapters = settingsService.PlayerShowChapters;
             Playlist = playlist;
             Playlist.PropertyChanged += PlaylistViewModelOnPropertyChanged;
 
@@ -117,8 +119,14 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(SettingsChangedMessage message)
         {
-            if (message.SettingsName != nameof(SettingsPageViewModel.AdvancedMode)) return;
-            IsAdvancedModeActive = _settingsService.AdvancedMode;
+            if (message.SettingsName == nameof(SettingsPageViewModel.AdvancedMode))
+            {
+                IsAdvancedModeActive = _settingsService.AdvancedMode;
+            }
+            else if (message.SettingsName == nameof(SettingsPageViewModel.PlayerShowChapters))
+            {
+                PlayerShowChapters = _settingsService.PlayerShowChapters;
+            }
         }
 
         public void Receive(MediaPlayerChangedMessage message)
