@@ -1,13 +1,12 @@
 ﻿#nullable enable
 
-using CommunityToolkit.WinUI;
-using Screenbox.Core.Services;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
+using CommunityToolkit.WinUI;
+using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
 using Windows.Media.Core;
 using Windows.System;
 using Windows.UI.Xaml;
