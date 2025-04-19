@@ -510,6 +510,21 @@
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsSmtcUpdateIntervalDescription}"
+                    Header="{strings:Resources Key=SettingsSmtcUpdateIntervalHeader}"
+                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    <Slider
+                        Width="150"
+                        Maximum="6"
+                        Minimum="1"
+                        StepFrequency="1"
+                        TickFrequency="1"
+                        TickPlacement="Inline"
+                        Value="{x:Bind ViewModel.SmtcUpdateInterval, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
                 <!--  About section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAbout}" />
 
