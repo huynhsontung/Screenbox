@@ -124,14 +124,14 @@ namespace Screenbox.Controls
             {
                 foreach (ChapterViewModel item in ProgressItems)
                 {
-                    item.Width = GetItemWidth(item.Maximum - item.Minimum);
+                    item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
                 }
             }
         }
 
         private void ChaptersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _chaptersUpdateTimer.Debounce(PopulateProgressItems, TimeSpan.FromMilliseconds(50));
+            _chaptersUpdateTimer.Debounce(PopulateProgressItems, TimeSpan.FromMilliseconds(100));
         }
 
         private void UpdateProgress()
@@ -218,7 +218,6 @@ namespace Screenbox.Controls
                         {
                             Minimum = lastChapterEndTime.TotalMilliseconds,
                             Maximum = cue.StartTime.TotalMilliseconds,
-                            Width = GetItemWidth(gap.TotalMilliseconds)
                         };
 
                         ProgressItems.Add(gapChapter);
@@ -231,7 +230,6 @@ namespace Screenbox.Controls
                     {
                         Minimum = startTime,
                         Maximum = endTime,
-                        Width = GetItemWidth(endTime - startTime)
                     };
 
                     ProgressItems.Add(chapter);
@@ -245,11 +243,16 @@ namespace Screenbox.Controls
                     {
                         Minimum = lastChapterEndTime.TotalMilliseconds,
                         Maximum = Maximum,
-                        Width = GetItemWidth(Maximum - lastChapterEndTime.TotalMilliseconds)
                     };
 
                     ProgressItems.Add(gapChapter);
                     LogService.Log("Chapters duration does not match with media length.");
+                }
+
+                // Update the width of each chapter
+                foreach (ChapterViewModel item in ProgressItems)
+                {
+                    item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
                 }
             }
             else
@@ -263,9 +266,9 @@ namespace Screenbox.Controls
             }
         }
 
-        private double GetItemWidth(double durationMs)
+        private double GetItemWidth(double durationMs, int chapterCount)
         {
-            double availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
+            double availableWidth = ActualWidth - Spacing * chapterCount;
             return Maximum > 0 ? durationMs / Maximum * availableWidth : 0;
         }
     }
