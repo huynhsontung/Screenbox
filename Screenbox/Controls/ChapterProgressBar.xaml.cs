@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
-using CommunityToolkit.WinUI;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using CommunityToolkit.WinUI;
+using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
 using Windows.Media.Core;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -123,14 +124,14 @@ namespace Screenbox.Controls
             {
                 foreach (ChapterViewModel item in ProgressItems)
                 {
-                    item.Width = GetItemWidth(item);
+                    item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
                 }
             }
         }
 
         private void ChaptersOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            _chaptersUpdateTimer.Debounce(PopulateProgressItems, TimeSpan.FromMilliseconds(50));
+            _chaptersUpdateTimer.Debounce(PopulateProgressItems, TimeSpan.FromMilliseconds(100));
         }
 
         private void UpdateProgress()
@@ -206,17 +207,52 @@ namespace Screenbox.Controls
             if (Chapters?.Count > 0)
             {
                 ChapterIndex = -1;
+                var lastChapterEndTime = TimeSpan.Zero;
                 foreach (ChapterCue cue in Chapters)
                 {
-                    ChapterViewModel progressItem = new()
+                    var gap = cue.StartTime - lastChapterEndTime;
+                    if (gap > TimeSpan.FromMilliseconds(500))
                     {
-                        Minimum = cue.StartTime.TotalMilliseconds,
-                        Maximum = (cue.Duration + cue.StartTime).TotalMilliseconds
+                        // If there is a gap between chapters, we need to add a dummy chapter
+                        ChapterViewModel gapChapter = new()
+                        {
+                            Minimum = lastChapterEndTime.TotalMilliseconds,
+                            Maximum = cue.StartTime.TotalMilliseconds,
+                        };
+
+                        ProgressItems.Add(gapChapter);
+                    }
+
+                    lastChapterEndTime = cue.StartTime + cue.Duration;
+                    var startTime = cue.StartTime.TotalMilliseconds;
+                    var endTime = (cue.Duration + cue.StartTime).TotalMilliseconds;
+                    ChapterViewModel chapter = new()
+                    {
+                        Minimum = startTime,
+                        Maximum = endTime,
                     };
 
-                    // This assumes Maximum is updated before this function is called
-                    progressItem.Width = GetItemWidth(progressItem);
-                    ProgressItems.Add(progressItem);
+                    ProgressItems.Add(chapter);
+                }
+
+                // Check if the last chapter end time matches the media length
+                if (Maximum - lastChapterEndTime.TotalMilliseconds > 500)
+                {
+                    // If not, we need to add a dummy chapter to fill the gap
+                    ChapterViewModel gapChapter = new()
+                    {
+                        Minimum = lastChapterEndTime.TotalMilliseconds,
+                        Maximum = Maximum,
+                    };
+
+                    ProgressItems.Add(gapChapter);
+                    LogService.Log("Chapters duration does not match with media length.");
+                }
+
+                // Update the width of each chapter
+                foreach (ChapterViewModel item in ProgressItems)
+                {
+                    item.Width = GetItemWidth(item.Maximum - item.Minimum, ProgressItems.Count);
                 }
             }
             else
@@ -230,10 +266,10 @@ namespace Screenbox.Controls
             }
         }
 
-        private double GetItemWidth(ChapterViewModel item)
+        private double GetItemWidth(double durationMs, int chapterCount)
         {
-            double availableWidth = ActualWidth - Spacing * (Chapters?.Count ?? 0);
-            return Maximum > 0 ? (item.Maximum - item.Minimum) / Maximum * availableWidth : 0;
+            double availableWidth = ActualWidth - Spacing * chapterCount;
+            return Maximum > 0 ? durationMs / Maximum * availableWidth : 0;
         }
     }
 }
