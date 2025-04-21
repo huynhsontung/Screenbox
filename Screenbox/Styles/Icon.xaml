@@ -49,6 +49,7 @@
     <!--<x:String x:Key="RecentEmptyGlyph">&#xF00F1;</x:String>-->
     <x:String x:Key="MusicVisualizerGlyph">&#xF010D;</x:String>
     <x:String x:Key="MusicVisualizerMirroredGlyph">&#xF010E;</x:String>
+    <x:String x:Key="SystemMediaPlayerGlyph">&#xF0131;</x:String>
 
     <x:String x:Key="MoviesGlyph">&#xE8B2;</x:String>
     <x:String x:Key="MoviesOffGlyph">&#xF0022;</x:String>
