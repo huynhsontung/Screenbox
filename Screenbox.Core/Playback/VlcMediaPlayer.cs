@@ -1,8 +1,8 @@
 ﻿#nullable enable
 
+using System;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Events;
-using System;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Media.Core;
@@ -393,6 +393,7 @@ namespace Screenbox.Core.Playback
         {
             item.SubtitleTracks.SelectedIndexChanged -= SubtitleTracksOnSelectedIndexChanged;
             item.AudioTracks.SelectedIndexChanged -= AudioTracksOnSelectedIndexChanged;
+            item.VideoTracks.SelectedIndexChanged -= VideoTracksOnSelectedIndexChanged;
         }
 
         private void RegisterItemHandlers(PlaybackItem item)
@@ -400,12 +401,19 @@ namespace Screenbox.Core.Playback
             RemoveItemHandlers(item);
             item.SubtitleTracks.SelectedIndexChanged += SubtitleTracksOnSelectedIndexChanged;
             item.AudioTracks.SelectedIndexChanged += AudioTracksOnSelectedIndexChanged;
+            item.VideoTracks.SelectedIndexChanged += VideoTracksOnSelectedIndexChanged;
         }
 
         private void AudioTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
         {
             PlaybackAudioTrackList trackList = (PlaybackAudioTrackList)sender;
             VlcPlayer.SetAudioTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
+        }
+
+        private void VideoTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            PlaybackVideoTrackList trackList = (PlaybackVideoTrackList)sender;
+            VlcPlayer.SetVideoTrack(sender.SelectedIndex < 0 ? -1 : trackList[sender.SelectedIndex].VlcTrackId);
         }
 
         private void SubtitleTracksOnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
