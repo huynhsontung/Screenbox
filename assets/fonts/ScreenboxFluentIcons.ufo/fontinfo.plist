@@ -13,7 +13,7 @@
     <key>versionMajor</key>
     <integer>25</integer>
     <key>versionMinor</key>
-    <integer>03</integer>
+    <integer>04</integer>
     <key>copyright</key>
     <string>Copyright (c) 2023-2025 Screenbox Project Authors.</string>
     <key>unitsPerEm</key>
@@ -39,7 +39,7 @@
     <key>openTypeNameManufacturerURL</key>
     <string>https://github.com/huynhsontung/Screenbox</string>
     <key>openTypeNameVersion</key>
-    <string>Version 25.03</string>
+    <string>Version 25.04</string>
     <key>openTypeNameUniqueID</key>
     <string>Screenbox Fluent Icons</string>
     <key>openTypeNameSampleText</key>
