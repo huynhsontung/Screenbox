@@ -102,7 +102,15 @@ namespace Screenbox
                 }
                 else
                 {
-                    CaptureUnhandledException(ex);
+                    // Tell Sentry this was an unhandled exception
+                    ex.Data[Mechanism.HandledKey] = false;
+                    ex.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
+
+                    // Capture the exception
+                    SentrySdk.CaptureException(ex);
+
+                    // Flush the event immediately
+                    SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
                     throw;
                 }
             }
@@ -111,19 +119,6 @@ namespace Screenbox
         public static FlowDirection GetFlowDirection()
         {
             return IsRightToLeftLanguage ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
-        }
-
-        private static void CaptureUnhandledException(Exception exception)
-        {
-            // Tell Sentry this was an unhandled exception
-            exception.Data[Mechanism.HandledKey] = false;
-            exception.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
-
-            // Capture the exception
-            SentrySdk.CaptureException(exception);
-
-            // Flush the event immediately
-            SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
         }
 
         private static IServiceProvider ConfigureServices()
@@ -182,7 +177,7 @@ namespace Screenbox
             {
                 options.Dsn = Secrets.SentryDsn;
                 options.SampleRate = 1.0f;
-                options.StackTraceMode = StackTraceMode.Enhanced;
+                // options.StackTraceMode = StackTraceMode.Enhanced;    // Not supported in UWP
                 options.IsGlobalModeEnabled = true;
                 options.AutoSessionTracking = true;
                 options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";

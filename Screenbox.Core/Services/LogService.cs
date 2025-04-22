@@ -1,14 +1,15 @@
 ﻿#nullable enable
 
-using LibVLCSharp.Shared;
-using Microsoft.AppCenter.Crashes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using LibVLCSharp.Shared;
+using Microsoft.AppCenter.Crashes;
 using Sentry;
+using Sentry.Protocol;
 
 namespace Screenbox.Core.Services
 {
@@ -17,9 +18,7 @@ namespace Screenbox.Core.Services
         public static void Log(object? message, [CallerMemberName] string? source = default)
         {
             Debug.WriteLine($"[{DateTime.Now.ToString(CultureInfo.CurrentCulture)} - {source}]: {message}");
-#if !DEBUG
             if (message is Exception e) TrackError(e);
-#endif
         }
 
         [Conditional("DEBUG")]
@@ -34,9 +33,9 @@ namespace Screenbox.Core.Services
             Log(e.FormattedLog, "LibVLC");
         }
 
+        [Conditional("DEBUG")]
         private static void TrackError(Exception e)
         {
-            SentrySdk.CaptureException(e);
             if (e.Data.Count > 0)
             {
                 Dictionary<string, string> dict = new(e.Data.Count);
@@ -52,6 +51,9 @@ namespace Screenbox.Core.Services
             {
                 Crashes.TrackError(e);
             }
+
+            e.Data[Mechanism.HandledKey] = true;
+            SentrySdk.CaptureException(e);
         }
     }
 }
