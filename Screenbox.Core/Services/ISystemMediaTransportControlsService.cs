@@ -13,7 +13,7 @@ namespace Screenbox.Core.Services
     {
         SystemMediaTransportControls TransportControls { get; }
         Task UpdateTransportControlsDisplayAsync(MediaViewModel? item);
-        void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime);
+        void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime, TimeSpan updateInterval = default);
         void UpdatePlaybackStatus(MediaPlaybackState state);
         void ClosePlayback();
     }

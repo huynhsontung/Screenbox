@@ -79,9 +79,10 @@ namespace Screenbox.Core.Services
             }
         }
 
-        public void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime)
+        public void UpdatePlaybackPosition(TimeSpan position, TimeSpan startTime, TimeSpan endTime, TimeSpan updateInterval = default)
         {
-            if (DateTime.Now - _lastUpdated < TimeSpan.FromSeconds(5)) return;
+            if (updateInterval < TimeSpan.FromSeconds(1)) updateInterval = TimeSpan.FromSeconds(5);
+            if (DateTime.Now - _lastUpdated < updateInterval) return;
             _lastUpdated = DateTime.Now;
             SystemMediaTransportControlsTimelineProperties timelineProps = new()
             {

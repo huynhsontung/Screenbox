@@ -45,6 +45,7 @@ namespace Screenbox.Core.ViewModels
         private VlcMediaPlayer? _mediaPlayer;
         private ManipulationLock _manipulationLock;
         private TimeSpan _timeBeforeManipulation;
+        private TimeSpan _smtcUpdateInterval;
         private bool _playerSeekGesture;
         private bool _playerVolumeGesture;
 
@@ -209,7 +210,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnPositionChanged(IMediaPlayer sender, object? args)
         {
-            _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration);
+            _transportControlsService.UpdatePlaybackPosition(sender.Position, TimeSpan.Zero, sender.NaturalDuration, _smtcUpdateInterval);
         }
 
         public void OnSizeChanged(object sender, SizeChangedEventArgs args)
@@ -290,6 +291,7 @@ namespace Screenbox.Core.ViewModels
         {
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerVolumeGesture = _settingsService.PlayerVolumeGesture;
+            _smtcUpdateInterval = TimeSpan.FromSeconds(_settingsService.SmtcUpdateInterval);
         }
 
         private void DisposeMediaPlayer()

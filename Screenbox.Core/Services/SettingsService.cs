@@ -28,6 +28,7 @@ namespace Screenbox.Core.Services
         private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
+        private const string AdvancedSmtcUpdateIntervalKey = "Advanced/SMTCUpdateInterval";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
@@ -148,6 +149,12 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerLivelyPathKey, value);
         }
 
+        public double SmtcUpdateInterval
+        {
+            get => GetValue<double>(AdvancedSmtcUpdateIntervalKey);
+            set => SetValue(AdvancedSmtcUpdateIntervalKey, value);
+        }
+
         public SettingsService()
         {
             SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
@@ -163,6 +170,7 @@ namespace Screenbox.Core.Services
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
             SetDefault(AdvancedMultipleInstancesKey, false);
+            SetDefault(AdvancedSmtcUpdateIntervalKey, 5.0);
             SetDefault(GlobalArgumentsKey, string.Empty);
 
             // Device family specific overrides
