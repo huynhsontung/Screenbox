@@ -389,6 +389,14 @@
                     <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Show chapter names in the player (may contain spoilers)"
+                    Header="Show Chapter Names"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE8D2;}">
+                    <ToggleSwitch x:Name="ShowChaptersToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
