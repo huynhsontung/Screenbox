@@ -5,7 +5,6 @@
     xmlns:animations="using:Screenbox.Controls.Animations"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -317,17 +316,17 @@
     <interactivity:Interaction.Behaviors>
         <interactions:AdaptiveLayoutBreakpointsBehavior x:Name="AdaptiveLayoutBehavior" Breakpoints="390,580,740" />
         <interactions:MediaListViewItemBehavior />
-        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="True">
-            <core:GoToStateAction
+        <interactivity:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="True">
+            <interactivity:GoToStateAction
                 StateName="Playing"
                 TargetObject="{x:Bind}"
                 UseTransitions="True" />
-        </core:DataTriggerBehavior>
-        <core:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="False">
-            <core:GoToStateAction
+        </interactivity:DataTriggerBehavior>
+        <interactivity:DataTriggerBehavior Binding="{Binding IsPlaying}" Value="False">
+            <interactivity:GoToStateAction
                 StateName="NotPlaying"
                 TargetObject="{x:Bind}"
                 UseTransitions="True" />
-        </core:DataTriggerBehavior>
+        </interactivity:DataTriggerBehavior>
     </interactivity:Interaction.Behaviors>
 </UserControl>

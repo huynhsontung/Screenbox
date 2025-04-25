@@ -418,9 +418,9 @@
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="DoubleTapped">
-                    <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                    <interactivity:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </controls:PlayerElement>
 

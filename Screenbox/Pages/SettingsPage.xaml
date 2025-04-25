@@ -257,9 +257,9 @@
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
                             IsClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Click">
+                                <interactivity:EventTriggerBehavior EventName="Click">
                                     <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
-                                </core:EventTriggerBehavior>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>

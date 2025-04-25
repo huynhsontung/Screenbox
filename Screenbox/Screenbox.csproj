@@ -11,6 +11,7 @@
     <PublishAot>true</PublishAot>
     <PublishProfile>win-$(Platform).pubxml</PublishProfile>
     <DisableRuntimeMarshalling>true</DisableRuntimeMarshalling>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableMsixTooling>true</EnableMsixTooling>
     <DefineConstants>DISABLE_XAML_GENERATED_MAIN</DefineConstants>
   </PropertyGroup>
@@ -37,15 +38,15 @@
       <Version>8.2.250402</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.6</Version>
+      <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.6</Version>
+      <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>9.0.3</Version>
+      <Version>9.0.4</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.4" />
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.8.7</Version>
     </PackageReference>
@@ -55,8 +56,9 @@
     <PackageReference Include="LibVLC.UWP">
       <Version>3.0.20-2405070635</Version>
     </PackageReference>
+    <PackageReference Include="ReswPlus" Version="0.3.2.2-alpha" />
     <PackageReference Include="Sentry">
-      <Version>5.0.1</Version>
+      <Version>5.6.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
