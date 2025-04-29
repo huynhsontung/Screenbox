@@ -214,11 +214,11 @@
                 Height="44"
                 Margin="4,6,4,2"
                 VerticalAlignment="Top"
-                AccessKey="{strings:KeyboardResources Key=NavigationBackButtonKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
                 AutomationProperties.Name="{x:Bind BackButton.(ToolTipService.ToolTip)}"
                 Command="{x:Bind ViewModel.GoBackCommand}"
                 Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=MinimizeImmersiveView}">
+                ToolTipService.ToolTip="{x:Bind strings:Resources.MinimizeImmersiveView}">
                 <muxc:AnimatedIcon>
                     <muxc:AnimatedIcon.Source>
                         <animatedvisuals:AnimatedChevronDownSmallVisualSource />
@@ -237,13 +237,13 @@
                 Margin="0,6,0,2"
                 Padding="0"
                 VerticalAlignment="Top"
-                AccessKey="{strings:KeyboardResources Key=PlayerQueueKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerQueueKey}"
                 AllowDrop="True"
                 AutomationProperties.Name="{x:Bind PlayQueueButton.(ToolTipService.ToolTip)}"
                 DragEnter="PlayQueueButton_OnDragEnter"
                 DragLeave="PlayQueueButton_OnDragLeave"
                 Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
+                ToolTipService.ToolTip="{x:Bind strings:Resources.PlayQueue}">
                 <FontIcon
                     x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
@@ -324,7 +324,7 @@
                 VerticalAlignment="Top"
                 AutomationProperties.Name="{x:Bind LivelyOptionsButton.(ToolTipService.ToolTip)}"
                 Style="{StaticResource SubtleButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
+                ToolTipService.ToolTip="{x:Bind strings:Resources.VisualizerOptionsToolTip}">
                 <FontIcon
                     x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
@@ -482,8 +482,8 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Left"
             VerticalContentAlignment="Top"
-            AccessKey="{strings:KeyboardResources Key=PlayerRestoreKey}"
-            AutomationProperties.Name="{strings:Resources Key=RestoreView}"
+            AccessKey="{x:Bind strings:KeyboardResources.PlayerRestoreKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.RestoreView}"
             Command="{x:Bind ViewModel.RestorePlayerCommand}"
             KeyTipPlacementMode="Center"
             Visibility="Collapsed">
@@ -520,7 +520,7 @@
                 </muxc:AnimatedIcon.FallbackIconSource>
             </muxc:AnimatedIcon>
             <ToolTipService.ToolTip>
-                <ToolTip Content="{strings:Resources Key=RestoreView}" PlacementRect="0,6,162,90" />
+                <ToolTip Content="{x:Bind strings:Resources.RestoreView}" PlacementRect="0,6,162,90" />
             </ToolTipService.ToolTip>
         </Button>
 

@@ -25,24 +25,24 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{x:Bind strings:Resources.Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding Media}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -81,7 +81,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
+            AccessKey="{x:Bind strings:KeyboardResources.CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemTemplate="{StaticResource BreadcrumbItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
@@ -142,7 +142,7 @@
             Padding="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
-            Text="{strings:Resources Key=EmptyFolder}"
+            Text="{x:Bind strings:Resources.EmptyFolder}"
             Visibility="{x:Bind ViewModel.IsEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
 
         <VisualStateManager.VisualStateGroups>

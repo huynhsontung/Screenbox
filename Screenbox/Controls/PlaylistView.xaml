@@ -31,8 +31,8 @@
 
                 <ctConverters:BoolToObjectConverter
                     x:Key="BoolToSelectAllNoneToolTipTextConverter"
-                    FalseValue="{strings:Resources Key=SelectAllToolTip}"
-                    TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
+                    FalseValue="{x:Bind strings:Resources.SelectAllToolTip}"
+                    TrueValue="{x:Bind strings:Resources.SelectNoneToolTip}" />
 
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
@@ -40,51 +40,51 @@
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayGlyph}}"
-                        Text="{strings:Resources Key=Play}" />
+                        Text="{x:Bind strings:Resources.Play}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.PlayNextCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                            Glyph={StaticResource PlayAddGlyph}}"
-                        Text="{strings:Resources Key=PlayNext}" />
+                        Text="{x:Bind strings:Resources.PlayNext}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE894;}"
-                        Text="{strings:Resources Key=Remove}" />
+                        Text="{x:Bind strings:Resources.Remove}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemUpCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                        Text="{strings:Resources Key=MoveUp}" />
+                        Text="{x:Bind strings:Resources.MoveUp}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemDownCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                        Text="{strings:Resources Key=MoveDown}" />
+                        Text="{x:Bind strings:Resources.MoveDown}" />
                     <MenuFlyoutItem
                         Command="{StaticResource ShowPropertiesCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon Glyph=&#xE946;}"
-                        Text="{strings:Resources Key=Properties}" />
+                        Text="{x:Bind strings:Resources.Properties}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenAlbumCommand}"
                         CommandParameter="{Binding Album}"
                         Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                        Text="{strings:Resources Key=ShowAlbum}"
+                        Text="{x:Bind strings:Resources.ShowAlbum}"
                         Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                     <MenuFlyoutItem
                         Command="{x:Bind Common.OpenArtistCommand}"
                         CommandParameter="{Binding MainArtist}"
                         Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                        Text="{strings:Resources Key=ShowArtist}"
+                        Text="{x:Bind strings:Resources.ShowArtist}"
                         Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                     <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                     <MenuFlyoutItem
                         CommandParameter="{Binding}"
                         Icon="{ui:SymbolIcon Symbol=Setting}"
-                        Text="{strings:Resources Key=SetPlaybackOptions}"
+                        Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                         Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                         <MenuFlyoutItem.Command>
                             <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.Playlist.PlaySingleCommand}" />
@@ -108,8 +108,8 @@
             <Button
                 x:Name="AddFilesButton"
                 Margin="0,0,12,0"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.Name="{strings:Resources Key=AddFiles}"
+                AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                AutomationProperties.Name="{x:Bind strings:Resources.AddFiles}"
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
@@ -117,14 +117,14 @@
                         Margin="{StaticResource IconButtonStandardIconMargin}"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                         Glyph="{StaticResource FolderOpenGlyph}" />
-                    <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFiles}" />
                 </StackPanel>
             </Button>
 
             <Button
                 x:Name="ClearButton"
                 Margin="0,0,12,0"
-                AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.CommandClearKey}"
                 AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
@@ -137,13 +137,13 @@
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=Clear}" />
+                        Text="{x:Bind strings:Resources.Clear}" />
                 </StackPanel>
             </Button>
 
             <ToggleButton
                 x:Name="MultiSelectToggle"
-                AccessKey="{strings:KeyboardResources Key=CommandMultiSelectKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.CommandMultiSelectKey}"
                 AutomationProperties.Name="{x:Bind MultiSelectToggleLabel.Text}"
                 IsChecked="{x:Bind ViewModel.EnableMultiSelect, Mode=TwoWay}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
@@ -157,7 +157,7 @@
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=Multiselect}" />
+                        Text="{x:Bind strings:Resources.Multiselect}" />
                 </StackPanel>
             </ToggleButton>
         </StackPanel>
@@ -201,13 +201,13 @@
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Label="{strings:Resources Key=PlayNext}" />
+                    Label="{x:Bind strings:Resources.PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon Glyph=&#xE894;}"
-                    Label="{strings:Resources Key=Remove}">
+                    Label="{x:Bind strings:Resources.Remove}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
                     </AppBarButton.KeyboardAccelerators>
@@ -217,13 +217,13 @@
                     Command="{x:Bind ViewModel.MoveSelectedItemUpCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon Glyph=&#xE74A;}"
-                    Label="{strings:Resources Key=MoveUp}" />
+                    Label="{x:Bind strings:Resources.MoveUp}" />
                 <AppBarButton
                     x:Name="MoveDownButton"
                     Command="{x:Bind ViewModel.MoveSelectedItemDownCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon Glyph=&#xE74B;}"
-                    Label="{strings:Resources Key=MoveDown}" />
+                    Label="{x:Bind strings:Resources.MoveDown}" />
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
@@ -233,7 +233,7 @@
                             VerticalAlignment="Center"
                             d:Content="11 items selected"
                             AutomationProperties.HelpText="{Binding ElementName=SelectionCheckBox, Path=Content, Mode=OneWay}"
-                            AutomationProperties.Name="{strings:Resources Key=SelectAll}"
+                            AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Click="SelectionCheckBox_OnClick"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             ToolTipService.ToolTip="{Binding ElementName=SelectionCheckBox, Path=IsChecked, Converter={StaticResource BoolToSelectAllNoneToolTipTextConverter}}" />
@@ -245,10 +245,10 @@
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
                             controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
-                            AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
+                            AutomationProperties.Name="{x:Bind strings:Resources.ClearSelection}"
                             BorderThickness="0"
                             Command="{x:Bind ViewModel.ClearSelectionCommand}"
-                            Content="{strings:Resources Key=Clear}">
+                            Content="{x:Bind strings:Resources.Clear}">
                             <Button.Resources>
                                 <!--  Override default brushes to make the Button background transparent and the foreground to use the accent color  -->
                                 <ResourceDictionary>

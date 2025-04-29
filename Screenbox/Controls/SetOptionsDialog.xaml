@@ -7,21 +7,21 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=SetPlaybackOptions}"
-    CloseButtonText="{strings:Resources Key=Close}"
+    Title="{x:Bind strings:Resources.SetPlaybackOptions}"
+    CloseButtonText="{x:Bind strings:Resources.Close}"
     DefaultButton="Primary"
-    PrimaryButtonText="{strings:Resources Key=Set}"
-    SecondaryButtonText="{strings:Resources Key=SetAndPlay}"
+    PrimaryButtonText="{x:Bind strings:Resources.Set}"
+    SecondaryButtonText="{x:Bind strings:Resources.SetAndPlay}"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" Spacing="12">
         <TextBlock x:Name="HelpText" TextWrapping="Wrap">
-            <Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine1}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
+            <Run Text="{x:Bind strings:Resources.SetPlaybackOptionsHelpTextLine1}" /><LineBreak /><Run Text="{x:Bind VlcCommandLineHelpTextParts[0]}" />
             <Hyperlink NavigateUri="https://wiki.videolan.org/VLC_command-line_help/">
-                <Run Text="{strings:Resources Key=VlcCommandLineHelpLink}" />
+                <Run Text="{x:Bind strings:Resources.VlcCommandLineHelpLink}" />
             </Hyperlink>
-            <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" /><LineBreak /><Run Text="{strings:Resources Key=SetPlaybackOptionsHelpTextLine2}" />
+            <Run Text="{x:Bind VlcCommandLineHelpTextParts[1]}" /><LineBreak /><Run Text="{x:Bind strings:Resources.SetPlaybackOptionsHelpTextLine2}" />
         </TextBlock>
         <TextBox
             x:Name="OptionsTextBox"

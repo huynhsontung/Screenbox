@@ -20,7 +20,7 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
-        <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{strings:Resources Key=UnknownGenre}" />
+        <converters:DefaultStringConverter x:Key="GenreTextConverter" Default="{x:Bind strings:Resources.UnknownGenre}" />
 
         <animations:AnimatedPlayingVisualSource x:Key="AnimatedPlayingVisualSource" Color_FFFFFF="{ThemeResource AccentFillColorCustomBrush}" />
     </UserControl.Resources>
@@ -47,7 +47,7 @@
             AutoPlay="False"
             IsHitTestVisible="False"
             Source="{StaticResource AnimatedPlayingVisualSource}"
-            ToolTipService.ToolTip="{strings:Resources Key=IsPlaying}"
+            ToolTipService.ToolTip="{x:Bind strings:Resources.IsPlaying}"
             Visibility="Collapsed" />
 
         <TextBlock

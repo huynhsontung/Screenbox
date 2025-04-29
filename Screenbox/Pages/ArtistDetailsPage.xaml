@@ -119,30 +119,30 @@
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayGlyph}}"
-                    Text="{strings:Resources Key=Play}" />
+                    Text="{x:Bind strings:Resources.Play}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.PlayNextCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
-                    Text="{strings:Resources Key=PlayNext}" />
+                    Text="{x:Bind strings:Resources.PlayNext}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
-                    Text="{strings:Resources Key=Properties}" />
+                    Text="{x:Bind strings:Resources.Properties}" />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenAlbumCommand}"
                     CommandParameter="{Binding Album}"
                     Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                    Text="{strings:Resources Key=ShowAlbum}"
+                    Text="{x:Bind strings:Resources.ShowAlbum}"
                     Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
                 <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
                 <MenuFlyoutItem
                     CommandParameter="{Binding}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />
@@ -240,7 +240,7 @@
                         Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{strings:Resources Key=Artist}"
+                        Text="{x:Bind strings:Resources.Artist}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <interactions:OverflowTextToolTipBehavior />
@@ -279,7 +279,7 @@
                                 Command="{x:Bind ViewModel.PlayCommand}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
-                                Label="{strings:Resources Key=Play}"
+                                Label="{x:Bind strings:Resources.Play}"
                                 Style="{StaticResource AppBarButtonAccentButtonStyle}"
                                 XYFocusDown="{x:Bind ItemList}">
                                 <interactivity:Interaction.Behaviors>
@@ -294,7 +294,7 @@
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource ShuffleGlyph},
                                                    MirroredWhenRightToLeft=True}"
-                                Label="{strings:Resources Key=ShuffleAndPlay}"
+                                Label="{x:Bind strings:Resources.ShuffleAndPlay}"
                                 Style="{StaticResource AppBarButtonDefaultButtonStyle}"
                                 XYFocusDown="{x:Bind ItemList}"
                                 XYFocusLeft="{x:Bind PlayButton}" />

@@ -6,8 +6,8 @@
     xmlns:local="using:Screenbox.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    Title="{strings:Resources Key=Properties}"
-    CloseButtonText="{strings:Resources Key=Close}"
+    Title="{x:Bind strings:Resources.Properties}"
+    CloseButtonText="{x:Bind strings:Resources.Close}"
     DefaultButton="Close"
     Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">

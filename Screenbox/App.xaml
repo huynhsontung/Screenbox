@@ -51,8 +51,8 @@
                         TrueValue="True" />
                     <toolkitConverters:BoolToObjectConverter
                         x:Key="BoolToPlayPauseTextConverter"
-                        FalseValue="{strings:Resources Key=Play}"
-                        TrueValue="{strings:Resources Key=Pause}" />
+                        FalseValue="Play"
+                        TrueValue="Pause" />
 
                     <!--  Font sizes  -->
                     <x:Double x:Key="TopNavigationViewItemFontSize">18</x:Double>

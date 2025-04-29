@@ -21,23 +21,23 @@
     <Page.Resources>
         <MenuFlyout x:Key="AddToPlayQueueFlyout" Placement="BottomEdgeAlignedRight">
             <MenuFlyoutItem
-                AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.MenuItemFileKey}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderOpenGlyph}}"
-                Text="{strings:Resources Key=AddFiles}" />
+                Text="{x:Bind strings:Resources.AddFiles}" />
             <MenuFlyoutItem
                 x:Name="AddToPlayQueueMenuFlyoutFolderItem"
-                AccessKey="{strings:KeyboardResources Key=MenuItemFolderKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.MenuItemFolderKey}"
                 Command="{x:Bind ViewModel.AddFolderCommand}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource FolderListGlyph}}"
-                Text="{strings:Resources Key=AddFolder}" />
+                Text="{x:Bind strings:Resources.AddFolder}" />
             <MenuFlyoutItem
-                AccessKey="{strings:KeyboardResources Key=MenuItemUrlKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.MenuItemUrlKey}"
                 Icon="{ui:SymbolIcon Symbol=Globe}"
                 KeyTipPlacementMode="Left"
-                Text="{strings:Resources Key=AddUrl}">
+                Text="{x:Bind strings:Resources.AddUrl}">
                 <MenuFlyoutItem.Command>
                     <commands:OpenUrlCommand NextCommand="{x:Bind ViewModel.AddUrlCommand}" />
                 </MenuFlyoutItem.Command>
@@ -64,14 +64,14 @@
             <TextBlock
                 HorizontalAlignment="Left"
                 Style="{StaticResource TitleMediumTextBlockStyle}"
-                Text="{strings:Resources Key=PlayQueue}" />
+                Text="{x:Bind strings:Resources.PlayQueue}" />
             <muxc:SplitButton
                 x:Name="HeaderAddButton"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
-                AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
-                AutomationProperties.HelpText="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                AutomationProperties.Name="{strings:Resources Key=AddFiles}"
+                AccessKey="{x:Bind strings:KeyboardResources.CommandAddOpenFilesKey}"
+                AutomationProperties.HelpText="{x:Bind strings:Resources.AddFilesToPlayQueueToolTip}"
+                AutomationProperties.Name="{x:Bind strings:Resources.AddFiles}"
                 Command="{x:Bind PlaylistView.ViewModel.AddFilesCommand}"
                 Flyout="{StaticResource AddToPlayQueueFlyout}">
                 <StackPanel Orientation="Horizontal">
@@ -82,13 +82,13 @@
                     <TextBlock
                         x:Name="HeaderAddButtonText"
                         Margin="8,0,0,0"
-                        Text="{strings:Resources Key=AddFiles}" />
+                        Text="{x:Bind strings:Resources.AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
                     <interactions:SplitButtonAccessibilityBehavior
-                        PrimaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueToolTip}"
-                        SecondaryButtonAccessKey="{strings:KeyboardResources Key=CommandMoreOptionsKey}"
-                        SecondaryButtonTooltip="{strings:Resources Key=AddFilesToPlayQueueSecondaryToolTip}" />
+                        PrimaryButtonTooltip="{x:Bind strings:Resources.AddFilesToPlayQueueToolTip}"
+                        SecondaryButtonAccessKey="{x:Bind strings:KeyboardResources.CommandMoreOptionsKey}"
+                        SecondaryButtonTooltip="{x:Bind strings:Resources.AddFilesToPlayQueueSecondaryToolTip}" />
                     <interactions:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>

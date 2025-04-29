@@ -42,7 +42,7 @@
             Margin="{StaticResource BottomMediumMargin}"
             Padding="{StaticResource ContentPagePadding}"
             Visibility="Collapsed">
-            <TextBlock Style="{StaticResource TitleMediumTextBlockStyle}" Text="{strings:Resources Key=Videos}" />
+            <TextBlock Style="{StaticResource TitleMediumTextBlockStyle}" Text="{x:Bind strings:Resources.Videos}" />
         </Grid>
 
         <Grid
@@ -80,20 +80,20 @@
                 <TextBlock
                     Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{strings:Resources Key=NoVideosPanelHeader}" />
+                    Text="{x:Bind strings:Resources.NoVideosPanelHeader}" />
 
                 <TextBlock
                     Margin="{StaticResource BottomMediumMargin}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{strings:Resources Key=NoVideosPanelSubtext}"
+                    Text="{x:Bind strings:Resources.NoVideosPanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <Button
-                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                    AccessKey="{x:Bind strings:KeyboardResources.CommandAddFolderKey}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
@@ -101,7 +101,7 @@
                             Margin="{StaticResource IconButtonStandardIconMargin}"
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                             Glyph="{StaticResource NewFolderGlyph}" />
-                        <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFolder}" />
+                        <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -130,21 +130,21 @@
                     x:Name="HeaderNavView"
                     Margin="56,0,16,0"
                     Style="{StaticResource TitleMediumTextBlockStyle}"
-                    Text="{strings:Resources Key=Videos}" />
+                    Text="{x:Bind strings:Resources.Videos}" />
             </muxc:NavigationView.PaneHeader>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     x:Name="FoldersMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemFoldersKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.TopNavigationItemFoldersKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=VideoFolders}"
+                    Content="{x:Bind strings:Resources.VideoFolders}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="folders" />
                 <muxc:NavigationViewItem
                     x:Name="AllVideosMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=TopNavigationItemVideosKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.TopNavigationItemVideosKey}"
                     AutomationProperties.HeadingLevel="Level2"
-                    Content="{strings:Resources Key=AllVideos}"
+                    Content="{x:Bind strings:Resources.AllVideos}"
                     FontSize="{StaticResource TopNavigationViewItemFontSize}"
                     Tag="all" />
             </muxc:NavigationView.MenuItems>
@@ -153,10 +153,10 @@
                     x:Name="HeaderAddFolderButton"
                     Margin="{StaticResource ContentPagePadding}"
                     VerticalAlignment="Top"
-                    AccessKey="{strings:KeyboardResources Key=CommandAddFolderKey}"
-                    AutomationProperties.Name="{strings:Resources Key=AddFolder}"
+                    AccessKey="{x:Bind strings:KeyboardResources.CommandAddFolderKey}"
+                    AutomationProperties.Name="{x:Bind strings:Resources.AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
-                    ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
+                    ToolTipService.ToolTip="{x:Bind strings:Resources.AddVideoFolderToolTip}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
@@ -167,7 +167,7 @@
                         <TextBlock
                             x:Name="HeaderAddFolderButtonText"
                             Margin="8,0,0,0"
-                            Text="{strings:Resources Key=AddFolder}" />
+                            Text="{x:Bind strings:Resources.AddFolder}" />
                     </StackPanel>
                 </Button>
             </muxc:NavigationView.PaneFooter>

@@ -39,14 +39,14 @@
                 Padding="16,0,4,0"
                 VerticalAlignment="Center"
                 Style="{StaticResource BodyTextBlockStyle}"
-                Text="{strings:Resources Key=Visuals}" />
+                Text="{x:Bind strings:Resources.Visuals}" />
             <!--  Let user select new wallpaper to install  -->
             <Button
                 Grid.Column="1"
                 Margin="0,0,16,0"
                 Padding="8,2,8,3"
                 Command="{x:Bind ViewModel.BrowseVisualizerCommand}"
-                Content="{strings:Resources Key=BrowseFiles}"
+                Content="{x:Bind strings:Resources.BrowseFiles}"
                 FontSize="{StaticResource CaptionTextBlockFontSize}" />
         </Grid>
 
@@ -83,7 +83,7 @@
                             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImageBrush}"
                             BorderThickness="1"
                             CornerRadius="4"
-                            ToolTipService.ToolTip="{strings:Resources Key=PoweredByLivelyWallpaper}"
+                            ToolTipService.ToolTip="{x:Bind strings:Resources.PoweredByLivelyWallpaper}"
                             Visibility="{x:Bind Path, Converter={StaticResource StringVisibilityConverter}}">
                             <Image
                                 Width="16"

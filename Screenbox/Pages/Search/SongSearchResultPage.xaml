@@ -21,36 +21,36 @@
                 CommandParameter="{Binding}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource PlayGlyph}}"
-                Text="{strings:Resources Key=Play}" />
+                Text="{x:Bind strings:Resources.Play}" />
             <MenuFlyoutItem
                 Command="{x:Bind Common.PlayNextCommand}"
                 CommandParameter="{Binding}"
                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                    Glyph={StaticResource PlayAddGlyph}}"
-                Text="{strings:Resources Key=PlayNext}" />
+                Text="{x:Bind strings:Resources.PlayNext}" />
             <MenuFlyoutSeparator />
             <MenuFlyoutItem
                 Command="{StaticResource ShowPropertiesCommand}"
                 CommandParameter="{Binding}"
                 Icon="{ui:FontIcon Glyph=&#xE946;}"
-                Text="{strings:Resources Key=Properties}" />
+                Text="{x:Bind strings:Resources.Properties}" />
             <MenuFlyoutItem
                 Command="{x:Bind Common.OpenAlbumCommand}"
                 CommandParameter="{Binding Album}"
                 Icon="{ui:FontIcon Glyph=&#xE93C;}"
-                Text="{strings:Resources Key=ShowAlbum}"
+                Text="{x:Bind strings:Resources.ShowAlbum}"
                 Visibility="{Binding Album, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
             <MenuFlyoutItem
                 Command="{x:Bind Common.OpenArtistCommand}"
                 CommandParameter="{Binding MainArtist}"
                 Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                Text="{strings:Resources Key=ShowArtist}"
+                Text="{x:Bind strings:Resources.ShowArtist}"
                 Visibility="{Binding MainArtist, Converter={StaticResource EmptyObjectToVisibilityConverter}}" />
             <MenuFlyoutSeparator Visibility="{x:Bind Common.IsAdvancedModeEnabled}" />
             <MenuFlyoutItem
                 CommandParameter="{Binding}"
                 Icon="{ui:SymbolIcon Symbol=Setting}"
-                Text="{strings:Resources Key=SetPlaybackOptions}"
+                Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                 Visibility="{x:Bind Common.IsAdvancedModeEnabled}">
                 <MenuFlyoutItem.Command>
                     <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.PlayCommand}" />

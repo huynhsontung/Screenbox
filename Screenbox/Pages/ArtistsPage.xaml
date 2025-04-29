@@ -38,7 +38,7 @@
                     Command="{x:Bind Common.OpenArtistCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon Glyph=&#xE77B;}"
-                    Text="{strings:Resources Key=ShowArtist}" />
+                    Text="{x:Bind strings:Resources.ShowArtist}" />
             </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
@@ -57,8 +57,8 @@
             x:Name="ShufflePlayButton"
             Grid.Row="0"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandShuffleAndPlayKey}"
-            AutomationProperties.Name="{strings:Resources Key=ShuffleAndPlay}"
+            AccessKey="{x:Bind strings:KeyboardResources.CommandShuffleAndPlayKey}"
+            AutomationProperties.Name="{x:Bind strings:Resources.ShuffleAndPlay}"
             Command="{x:Bind ViewModel.ShuffleAndPlayCommand}"
             Style="{StaticResource AccentButtonStyle}">
             <StackPanel Orientation="Horizontal">
@@ -67,7 +67,7 @@
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     Glyph="{StaticResource ShuffleGlyph}"
                     MirroredWhenRightToLeft="True" />
-                <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=ShuffleAndPlay}" />
+                <TextBlock Margin="8,0,0,0" Text="{x:Bind strings:Resources.ShuffleAndPlay}" />
             </StackPanel>
         </Button>
 

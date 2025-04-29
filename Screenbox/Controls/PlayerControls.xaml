@@ -57,7 +57,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="SpeedSlider"
-                        Header="{strings:Resources Key=CustomPlaybackSpeed}"
+                        Header="{x:Bind strings:Resources.CustomPlaybackSpeed}"
                         IsThumbToolTipEnabled="False"
                         Maximum="2"
                         Minimum="0.05"
@@ -74,7 +74,7 @@
                     <TextBox
                         x:Name="AspectRatioTextBox"
                         AutomationProperties.Name="Custom aspect ratio TextBox"
-                        Header="{strings:Resources Key=CustomAspectRatio}"
+                        Header="{x:Bind strings:Resources.CustomAspectRatio}"
                         PlaceholderText="16:9"
                         TextChanged="AspectRatioTextBox_OnTextChanged" />
                 </StackPanel>
@@ -88,7 +88,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="SubtitleTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
+                        Header="{x:Bind strings:Resources.TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
@@ -107,7 +107,7 @@
                     Spacing="8">
                     <Slider
                         x:Name="AudioTimingOffsetSlider"
-                        Header="{strings:Resources Key=TimingOffset}"
+                        Header="{x:Bind strings:Resources.TimingOffset}"
                         IsThumbToolTipEnabled="False"
                         Maximum="3000"
                         Minimum="-3000"
@@ -120,19 +120,19 @@
 
             <MenuFlyout x:Key="NormalPlayerContextMenu">
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFileKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemFileKey}"
                     Command="{x:Bind Common.OpenFilesCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource FolderOpenGlyph}}"
                     KeyTipPlacementMode="Left"
-                    Text="{strings:Resources Key=OpenFiles}">
+                    Text="{x:Bind strings:Resources.OpenFiles}">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="O" Modifiers="Control" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemPropertiesKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemPropertiesKey}"
                     Command="{StaticResource ShowPropertiesCommand}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:FontIcon Glyph=&#xE946;}"
@@ -144,7 +144,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="PlaybackSpeedSubMenu"
-                    AccessKey="{strings:KeyboardResources Key=MenuItemSpeedKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemSpeedKey}"
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
@@ -212,17 +212,17 @@
                         x:Name="CustomPlaybackSpeedMenuItem"
                         Click="CustomSpeedMenuItem_OnClick"
                         GroupName="SpeedGroup"
-                        Text="{strings:Resources Key=Custom}" />
+                        Text="{x:Bind strings:Resources.Custom}" />
                 </MenuFlyoutSubItem>
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemSaveSnapshotKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemSaveSnapshotKey}"
                     Command="{x:Bind ViewModel.SaveSnapshotCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource ImageExportGlyph}}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
                     Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemCastKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemCastKey}"
                     Click="CastMenuFlyoutItem_OnClick"
                     Icon="{ui:FontIcon Glyph=&#xEC15;,
                                        MirroredWhenRightToLeft=True}"
@@ -235,22 +235,22 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutSubItem
                     x:Name="AspectRatioSubMenu"
-                    AccessKey="{strings:KeyboardResources Key=MenuItemAspectRatioKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemAspectRatioKey}"
                     Icon="{ui:FontIcon Glyph=&#xE799;}"
                     IsEnabled="{x:Bind ViewModel.HasVideo, Mode=OneWay}"
-                    Text="{strings:Resources Key=AspectRatio}">
+                    Text="{x:Bind strings:Resources.AspectRatio}">
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
                         CommandParameter="Fit"
                         GroupName="AspectRatioGroup"
                         IsChecked="True"
                         Tag="0:0"
-                        Text="{strings:Resources Key=Fit}" />
+                        Text="{x:Bind strings:Resources.Fit}" />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
                         CommandParameter="Fill"
                         GroupName="AspectRatioGroup"
-                        Text="{strings:Resources Key=Fill}" />
+                        Text="{x:Bind strings:Resources.Fill}" />
                     <MenuFlyoutSeparator />
                     <muxc:RadioMenuFlyoutItem
                         Command="{x:Bind ViewModel.SetAspectRatioCommand}"
@@ -286,7 +286,7 @@
                         x:Name="CustomAspectRatioMenuItem"
                         Click="CustomAspectRatioMenuItem_OnClick"
                         GroupName="AspectRatioGroup"
-                        Text="{strings:Resources Key=Custom}" />
+                        Text="{x:Bind strings:Resources.Custom}" />
                 </MenuFlyoutSubItem>
                 <!--<MenuFlyoutSubItem
                     Icon="{ui:FontIcon Glyph=&#xE714;}"
@@ -295,11 +295,11 @@
                 </MenuFlyoutSubItem>-->
 
                 <MenuFlyoutItem
-                    AccessKey="{strings:KeyboardResources Key=MenuItemAdvancedKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemAdvancedKey}"
                     CommandParameter="{x:Bind ViewModel.Playlist.CurrentItem, Mode=OneWay}"
                     Icon="{ui:SymbolIcon Symbol=Setting}"
                     IsEnabled="{x:Bind ViewModel.HasActiveItem, Mode=OneWay}"
-                    Text="{strings:Resources Key=SetPlaybackOptions}"
+                    Text="{x:Bind strings:Resources.SetPlaybackOptions}"
                     Visibility="{x:Bind ViewModel.IsAdvancedModeActive, Mode=OneWay}">
                     <MenuFlyoutItem.Command>
                         <commands:SetPlaybackOptionsCommand PlayCommand="{x:Bind ViewModel.ResetMediaPlaybackCommand}" />
@@ -309,7 +309,7 @@
                 <MenuFlyoutSeparator x:Name="ExtraOptionsSeparator" Visibility="Collapsed" />
                 <MenuFlyoutItem
                     x:Name="CompactOverlayMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=MenuItemCompactOverlayKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemCompactOverlayKey}"
                     Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource MiniContract2MirroredGlyph}}"
@@ -325,7 +325,7 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     x:Name="FullscreenMenuItem"
-                    AccessKey="{strings:KeyboardResources Key=MenuItemFullscreenKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.MenuItemFullscreenKey}"
                     Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                     Icon="{ui:FontIcon Glyph=&#xE740;}"
                     Text="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
@@ -377,7 +377,7 @@
                 x:Name="PlayPauseButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
-                AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerPlayPauseKey}"
                 AutomationProperties.Name="{x:Bind PlayPauseButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -393,7 +393,7 @@
                 <Button
                     x:Name="PreviousButton"
                     controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Previous}"
-                    AccessKey="{strings:KeyboardResources Key=PlayerPreviousKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.PlayerPreviousKey}"
                     AutomationProperties.Name="{x:Bind PreviousButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                     Command="{x:Bind ViewModel.Playlist.PreviousCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource LeftCornerRadiusFilterConverter}}"
@@ -406,7 +406,7 @@
                 <Button
                     x:Name="NextButton"
                     controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Next}"
-                    AccessKey="{strings:KeyboardResources Key=PlayerNextKey}"
+                    AccessKey="{x:Bind strings:KeyboardResources.PlayerNextKey}"
                     AutomationProperties.Name="{x:Bind NextButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                     Command="{x:Bind ViewModel.Playlist.NextCommand}"
                     CornerRadius="{Binding Source={StaticResource ControlCornerRadius}, Converter={StaticResource RightCornerRadiusFilterConverter}}"
@@ -440,7 +440,7 @@
                 x:Name="VolumeButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.Volume}"
-                AccessKey="{strings:KeyboardResources Key=PlayerVolumeButtonSliderKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerVolumeButtonSliderKey}"
                 AutomationProperties.Name="{x:Bind VolumeButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Flyout="{StaticResource VolumeControlFlyout}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -462,7 +462,7 @@
                 x:Name="ShuffleButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ShuffleMode(ViewModel.Playlist.ShuffleMode), Mode=OneWay}"
-                AccessKey="{strings:KeyboardResources Key=PlayerShuffleKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerShuffleKey}"
                 AutomationProperties.Name="{x:Bind ShuffleButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -477,7 +477,7 @@
                 x:Name="RepeatButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.RepeatMode(ViewModel.Playlist.RepeatMode), Mode=OneWay}"
-                AccessKey="{strings:KeyboardResources Key=PlayerRepeatKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerRepeatKey}"
                 AutomationProperties.Name="{x:Bind RepeatButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsChecked="{x:Bind ViewModel.Playlist.RepeatMode, Converter={StaticResource ToggleButtonCheckToRepeatModeConverter}, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
@@ -493,7 +493,7 @@
                 x:Name="AudioAndCaptionButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.AudioAndCaption}"
-                AccessKey="{strings:KeyboardResources Key=PlayerAudioAndCaptionsKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerAudioAndCaptionsKey}"
                 AutomationProperties.Name="{x:Bind AudioAndCaptionButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}">
@@ -525,7 +525,7 @@
                 x:Name="CompactOverlayButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.CompactOverlayToggle(ViewModel.IsCompact), Mode=OneWay}"
-                AccessKey="{strings:KeyboardResources Key=PlayerCompactOverlayKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerCompactOverlayKey}"
                 AutomationProperties.Name="{x:Bind CompactOverlayButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -545,7 +545,7 @@
                 x:Name="FullscreenButton"
                 Margin="0,0,4,0"
                 controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.FullscreenToggle(ViewModel.IsFullscreen), Mode=OneWay}"
-                AccessKey="{strings:KeyboardResources Key=PlayerFullscreenKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerFullscreenKey}"
                 AutomationProperties.Name="{x:Bind FullscreenButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
@@ -562,13 +562,13 @@
             <!--  More  -->
             <Button
                 x:Name="MoreButton"
-                AccessKey="{strings:KeyboardResources Key=PlayerMoreKey}"
+                AccessKey="{x:Bind strings:KeyboardResources.PlayerMoreKey}"
                 AutomationProperties.Name="{x:Bind MoreButton.(ToolTipService.ToolTip)}"
                 Flyout="{StaticResource NormalPlayerContextMenu}"
                 IsAccessKeyScope="True"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
-                ToolTipService.ToolTip="{strings:Resources Key=More}">
+                ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                 <FontIcon Glyph="&#xE712;" />
             </Button>
         </StackPanel>

@@ -11,7 +11,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{strings:Resources Key=Network}" />
+        <converters:DefaultStringConverter x:Key="DefaultTitleTextConverter" Default="{x:Bind strings:Resources.Network}" />
     </Page.Resources>
 
     <Grid>
@@ -34,7 +34,7 @@
             x:Name="BreadcrumbBar"
             Grid.Row="1"
             Margin="{StaticResource ContentPagePadding}"
-            AccessKey="{strings:KeyboardResources Key=CommandBreadcrumbBarKey}"
+            AccessKey="{x:Bind strings:KeyboardResources.CommandBreadcrumbBarKey}"
             ItemClicked="BreadcrumbBar_OnItemClicked"
             ItemsSource="{x:Bind ViewModel.Breadcrumbs}"
             KeyTipPlacementMode="Right" />
@@ -79,17 +79,17 @@
                 <TextBlock
                     Margin="0,0,0,4"
                     Style="{StaticResource TitleTextBlockStyle}"
-                    Text="{strings:Resources Key=NoNetworkDrivePanelHeader}" />
+                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelHeader}" />
 
                 <TextBlock
                     Margin="0,0,0,8"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{strings:Resources Key=NoNetworkDrivePanelSubtext}"
+                    Text="{x:Bind strings:Resources.NoNetworkDrivePanelSubtext}"
                     TextWrapping="Wrap" />
 
                 <HyperlinkButton
                     Margin="{StaticResource HyperlinkButtonInlineMargin}"
-                    Content="{strings:Resources Key=OpenConnectedDevicesSettingsButtonText}"
+                    Content="{x:Bind strings:Resources.OpenConnectedDevicesSettingsButtonText}"
                     NavigateUri="ms-settings:connecteddevices" />
             </StackPanel>
         </Grid>
