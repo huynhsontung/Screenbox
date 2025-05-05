@@ -224,7 +224,7 @@
     <value>キューに追加</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>すべて選択</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
     <value>Select all items in this view</value>
@@ -897,22 +897,22 @@
     <value>Add all files in folder to queue</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>システム設定を使用する</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>ダーク</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>ライト</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Change the app's overall color scheme</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>アプリ テーマ</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>個人用設定</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
     <value>Always resume from last position</value>
