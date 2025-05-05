@@ -151,7 +151,7 @@
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
-    <value>Monkey's Audio</value>
+    <value>Audio Monkey</value>
     <comment>Display name for the file type ".ape" (Monkey's Audio)</comment>
   </data>
   <data name="FileDisplayNameAVI" xml:space="preserve">
@@ -219,7 +219,7 @@
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value>Audio NIST SPHERE</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
