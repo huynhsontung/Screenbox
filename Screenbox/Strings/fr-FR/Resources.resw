@@ -897,22 +897,22 @@
     <value>Ajouter tous les fichiers du dossier à la file d'attente</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Utiliser le paramètre système</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Sombre</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Clair</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Change the app's overall color scheme</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Thème d’application</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personnalisation</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
     <value>Always resume from last position</value>
