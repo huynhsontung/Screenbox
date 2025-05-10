@@ -3,17 +3,50 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:system="using:System"
-    d:DesignHeight="364"
+    d:DesignHeight="492"
     d:DesignWidth="224"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ctConverters:DoubleToVisibilityConverter x:Key="GreaterThanZeroVisibilityConverter" GreaterThan="0" />
+    </UserControl.Resources>
 
     <StackPanel Width="224" Orientation="Vertical">
+        <!--  Video tracks  -->
+        <ListView
+            ItemContainerTransitions="{x:Null}"
+            ItemsSource="{x:Bind ViewModel.VideoTracks}"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False"
+            Visibility="{x:Bind ViewModel.VideoTracks.Count, Mode=OneWay, Converter={StaticResource GreaterThanZeroVisibilityConverter}}">
+            <ListView.Header>
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
+                    <TextBlock
+                        Padding="12,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.Video}"
+                        TextWrapping="NoWrap" />
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <MenuFlyoutSeparator IsTabStop="False" />
+            </ListView.Footer>
+            <d:ListView.Items>
+                <ListViewItem Content="Track 1" IsSelected="True" />
+                <ListViewItem Content="Alternate Angle (English)" />
+            </d:ListView.Items>
+        </ListView>
+
         <!--  Audio tracks  -->
         <ListView
             ItemContainerTransitions="{x:Null}"
@@ -48,13 +81,14 @@
                     </HyperlinkButton>
                 </Grid>
             </ListView.Header>
+            <ListView.Footer>
+                <MenuFlyoutSeparator IsTabStop="False" />
+            </ListView.Footer>
             <d:ListView.Items>
-                <ListViewItem Content="Track 1 (Surround Sound 5.1)" IsSelected="True" />
-                <ListViewItem Content="Commentary Track (Stereo 2.0)" />
+                <ListViewItem Content="Track 1" IsSelected="True" />
+                <ListViewItem Content="Commentary Track (English)" />
             </d:ListView.Items>
         </ListView>
-
-        <MenuFlyoutSeparator IsTabStop="False" />
 
         <!--  Subtitle tracks  -->
         <ListView
