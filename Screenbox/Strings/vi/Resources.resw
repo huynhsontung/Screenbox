@@ -900,10 +900,10 @@
     <value>Dùng cài đặt hệ thống</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Tối</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Sáng</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Thay đổi bảng màu tổng thể của ứng dụng</value>
@@ -918,6 +918,6 @@
     <value>Luôn tiếp tục từ vị trí cuối cùng</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Tiếp tục phát từ nơi bạn dừng cuối cùng khi mở tệp</value>
   </data>
 </root>
