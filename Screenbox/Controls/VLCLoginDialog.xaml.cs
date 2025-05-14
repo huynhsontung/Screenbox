@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Screenbox.Core;
+using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -43,7 +44,7 @@ namespace Screenbox.Controls
         public VLCLoginDialog()
         {
             this.InitializeComponent();
-            FlowDirection = App.GetFlowDirection();
+            FlowDirection = GlobalizationHelper.GetFlowDirection();
             RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         }
     }

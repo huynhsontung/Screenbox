@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
-using System;
-using System.Linq;
+using Screenbox.Helpers;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -97,19 +98,25 @@ namespace Screenbox.Controls
             SelectAlternatePlaybackSpeedItem(e.NewValue);
         }
 
+        /// <summary>
+        /// Gets the repeat mode glyph code based on the current auto-repeat mode of the player.
+        /// </summary>
+        /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
+        /// <param name="repeatMode">A value of the enumeration that specifies the auto repeat mode for the <see cref="MediaPlaybackAutoRepeatMode"/>.</param>
+        /// <returns>
+        /// <strong>Repeat Off</strong> glyph code <see cref="string"/> if <paramref name="repeatMode"/> is <see cref="MediaPlaybackAutoRepeatMode.None"/>,
+        /// <strong>Repeat All</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.List"/>, or <strong>Repeat One</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.Track"/>.
+        /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="repeatMode"/> is not one of the valid <see cref="MediaPlaybackAutoRepeatMode"/> value.</exception>
         private string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
         {
-            switch (repeatMode)
+            return repeatMode switch
             {
-                case MediaPlaybackAutoRepeatMode.None:
-                    return App.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7";
-                case MediaPlaybackAutoRepeatMode.List:
-                    return App.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE";
-                case MediaPlaybackAutoRepeatMode.Track:
-                    return App.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
-            }
+                MediaPlaybackAutoRepeatMode.None => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7",
+                MediaPlaybackAutoRepeatMode.List => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE",
+                MediaPlaybackAutoRepeatMode.Track => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED",
+                _ => throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null),
+            };
         }
 
         private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)

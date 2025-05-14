@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -24,7 +25,7 @@ public sealed partial class SetOptionsDialog : ContentDialog
     public SetOptionsDialog(string existingOptions, bool global = false)
     {
         this.InitializeComponent();
-        FlowDirection = App.GetFlowDirection();
+        FlowDirection = GlobalizationHelper.GetFlowDirection();
         RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         OptionTextBoxPlaceholder = global ? "--option=value" : ":option=value";
         Options = existingOptions;

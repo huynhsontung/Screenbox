@@ -7,7 +7,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
@@ -220,7 +220,7 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource ImageExportGlyph}}"
                     Text="{x:Bind strings:Resources.SaveCurrentFrame}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="S" Modifiers="Shift" />
                     </MenuFlyoutItem.KeyboardAccelerators>
@@ -535,7 +535,7 @@
                 AutomationProperties.Name="{x:Bind CompactOverlayButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleCompactLayoutCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                 <FontIcon
                     x:Name="CompactOverlayButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
@@ -555,7 +555,7 @@
                 AutomationProperties.Name="{x:Bind FullscreenButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.ToggleFullscreenCommand}"
                 Style="{StaticResource PlayerButtonStyle}"
-                Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                 <FontIcon
                     x:Name="FullscreenButtonIcon"
                     Glyph="&#xE740;"

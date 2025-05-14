@@ -3,10 +3,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
-    xmlns:class="using:Screenbox"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -94,7 +93,7 @@
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
                             x:Name="NoVideoPanelAddFolderButtonIcon"
@@ -157,7 +156,7 @@
                     AutomationProperties.Name="{strings:Resources Key=AddFolder}"
                     Command="{x:Bind ViewModel.AddFolderCommand}"
                     ToolTipService.ToolTip="{strings:Resources Key=AddVideoFolderToolTip}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <StackPanel Orientation="Horizontal">
                         <FontIcon
                             x:Name="HeaderAddFolderButtonIcon"
@@ -248,7 +247,7 @@
 
                 <VisualState x:Name="RightToLeft">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <contract13Present:Setter Target="NoVideoPanelAddFolderButtonIcon.Glyph" Value="{StaticResource NewFolderMirroredGlyph}" />
