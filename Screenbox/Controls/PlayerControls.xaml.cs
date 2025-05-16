@@ -99,6 +99,22 @@ namespace Screenbox.Controls
         }
 
         /// <summary>
+        /// Gets the shuffle mode glyph code based on a boolean condition.
+        /// </summary>
+        /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
+        /// <param name="value">A <see cref="bool"/> that specifies the shuffle mode.</param>
+        /// <returns>
+        /// <strong>Shuffle</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
+        /// otherwise, <strong>Shuffle Off</strong> glyph code.
+        /// </returns>
+        private string GetShuffleModeGlyph(bool value)
+        {
+            return value
+                ? (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0021" : "\uE8B1")
+                : (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F002B" : "\U000F002A");
+        }
+
+        /// <summary>
         /// Gets the repeat mode glyph code based on the current auto-repeat mode of the player.
         /// </summary>
         /// <remarks>The glyph code adapts according to the current text reading order.</remarks>

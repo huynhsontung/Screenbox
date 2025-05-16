@@ -33,10 +33,6 @@
             <x:Double x:Key="Speed200">2.0</x:Double>
 
             <converters:ToggleButtonCheckToRepeatModeConverter x:Key="ToggleButtonCheckToRepeatModeConverter" />
-            <ctConverters:BoolToObjectConverter
-                x:Key="ShuffleModeGlyphConverter"
-                FalseValue="{StaticResource ShuffleOffGlyph}"
-                TrueValue="{StaticResource ShuffleGlyph}" />
 
             <Flyout x:Key="VolumeControlFlyout">
                 <Flyout.FlyoutPresenterStyle>
@@ -473,7 +469,7 @@
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind ViewModel.Playlist.ShuffleMode, Converter={StaticResource ShuffleModeGlyphConverter}, Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind GetShuffleModeGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
