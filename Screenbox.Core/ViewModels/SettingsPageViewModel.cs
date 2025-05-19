@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,9 +11,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -33,6 +33,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _restorePlaybackPosition;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
+        [ObservableProperty] private int _videoUpscaling;
         [ObservableProperty] private bool _useMultipleInstances;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
@@ -190,6 +191,12 @@ namespace Screenbox.Core.ViewModels
             _settingsService.AdvancedMode = value;
             Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
             CheckForRelaunch();
+        }
+
+        partial void OnVideoUpscalingChanged(int value)
+        {
+            _settingsService.VideoUpscale = (VideoUpscaleOption)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseMultipleInstancesChanged(bool value)

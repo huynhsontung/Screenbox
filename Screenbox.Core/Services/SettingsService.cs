@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Enums;
-using Screenbox.Core.Helpers;
 using System;
 using System.Linq;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
@@ -27,6 +27,7 @@ namespace Screenbox.Core.Services
         private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
         private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
+        private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
@@ -136,6 +137,12 @@ namespace Screenbox.Core.Services
             set => SetValue(AdvancedModeKey, value);
         }
 
+        public VideoUpscaleOption VideoUpscale
+        {
+            get => (VideoUpscaleOption)GetValue<int>(AdvancedVideoUpscaleKey);
+            set => SetValue(AdvancedVideoUpscaleKey, (int)value);
+        }
+
         public bool UseMultipleInstances
         {
             get => GetValue<bool>(AdvancedMultipleInstancesKey);
@@ -162,6 +169,7 @@ namespace Screenbox.Core.Services
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
+            SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
             SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
 
