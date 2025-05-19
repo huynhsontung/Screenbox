@@ -695,7 +695,7 @@
     <value>Aucun moteur de rendu disponible. Assurez-vous que Direct3D 11 soit disponible et installé sur votre appareil.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Pour plus d'informations sur ce problème et les solutions possibles, consultez le site suivant</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Échec de chargement du fichier</value>
@@ -735,7 +735,7 @@
     <value>Mode avancé</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Le mode avancé permet de configurer les arguments en ligne de commande qui régissent le comportement de LibVLC.</value>
+    <value>Le mode avancé permet de configurer les arguments en ligne de commande qui régissent le comportement de LibVLC</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Arguments globaux</value>
@@ -906,7 +906,7 @@
     <value>Clair</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Modifier les couleurs de l'application</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
     <value>Thème d’application</value>
@@ -915,9 +915,9 @@
     <value>Personnalisation</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Reprendre toujours à la dernière position</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Reprendre la lecture à l'endroit où elle s'est arrêtée lors de l'ouverture d'un fichier</value>
   </data>
 </root>
