@@ -51,6 +51,7 @@ namespace Screenbox.Core.ViewModels
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
+        private static int _originalVideoUpscaling;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -86,9 +87,11 @@ namespace Screenbox.Core.ViewModels
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
+            _videoUpscaling = (int)_settingsService.VideoUpscale;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
+            _originalVideoUpscaling = (int)_settingsService.VideoUpscale;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -197,6 +200,7 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.VideoUpscale = (VideoUpscaleOption)value;
             Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
+            CheckForRelaunch();
         }
 
         partial void OnUseMultipleInstancesChanged(bool value)
@@ -412,6 +416,9 @@ namespace Screenbox.Core.ViewModels
 
         private void CheckForRelaunch()
         {
+            // Check if upscaling mode has been changed
+            bool upscalingChanged = _originalVideoUpscaling != VideoUpscaling;
+
             // Check if global arguments have been changed
             bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
 
@@ -431,7 +438,7 @@ namespace Screenbox.Core.ViewModels
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
             // Combine everything
-            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged;
+            IsRelaunchRequired = upscalingChanged || whenOn || whenOff || whenOnAndChanged;
         }
     }
 }
