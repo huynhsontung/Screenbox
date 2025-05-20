@@ -27,11 +27,6 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
-                <ctConverters:BoolToObjectConverter
-                    x:Key="BoolToSelectAllNoneToolTipTextConverter"
-                    FalseValue="{strings:Resources Key=SelectAllToolTip}"
-                    TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
-
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
@@ -225,18 +220,15 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox
                             x:Name="SelectionCheckBox"
-                            Margin="10,0,0,0"
-                            VerticalAlignment="Center"
+                            MinWidth="60"
+                            Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{Binding ElementName=SelectionCheckBox, Path=Content, Mode=OneWay}"
-                            AutomationProperties.Name="{strings:Resources Key=SelectAll}"
+                            AutomationProperties.HelpText="{x:Bind Path=SelectionCheckBox.Content.ToString(), Mode=OneWay}"
+                            AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Click="SelectionCheckBox_OnClick"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            ToolTipService.ToolTip="{Binding ElementName=SelectionCheckBox, Path=IsChecked, Converter={StaticResource BoolToSelectAllNoneToolTipTextConverter}}" />
-                        <TextBlock
-                            Margin="0,5,0,0"
-                            VerticalAlignment="Top"
-                            Text=" •" />
+                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
+                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource TopBottomThicknessFilterConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"

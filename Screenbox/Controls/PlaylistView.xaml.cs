@@ -155,5 +155,21 @@ namespace Screenbox.Controls
                 }
             }
         }
+
+        /// <summary>
+        /// Gets the tooltip text for a selection checkbox based on its current state.
+        /// </summary>
+        /// <param name="value">A nullable boolean representing the <see cref="CheckBox"/> state.</param>
+        /// <returns>
+        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked;
+        /// otherwise throw not implemented exception.
+        /// </returns>
+        /// <exception cref="NotImplementedException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
+        private string GetSelectionCheckBoxToolTip(bool? value)
+        {
+            return value is null
+                ? throw new NotImplementedException()
+                : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
+        }
     }
 }
