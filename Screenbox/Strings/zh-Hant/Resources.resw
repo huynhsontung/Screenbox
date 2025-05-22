@@ -695,7 +695,7 @@
     <value>無相容轉譯器。請確認已在此裝置上安裝 Direct3D 11。</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>關於此問題與修復方法，請至 </value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>無法開啟檔案</value>
@@ -852,7 +852,7 @@
     <value>預設</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>使用沈浸式模式播放音訊時顯示的背景風格</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>由 Lively Wallpaper 提供</value>
