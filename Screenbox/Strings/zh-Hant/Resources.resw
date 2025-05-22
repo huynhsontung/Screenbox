@@ -140,13 +140,13 @@
     <value>無法儲存影格</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>進度</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>剩餘</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>總時長</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章節</value>
@@ -461,7 +461,7 @@
     <value>瀏覽媒體檔案</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>進階媒體選項</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>新增檔案</value>
@@ -470,7 +470,7 @@
     <value>瀏覽要新增至播放佇列的檔案</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>新增至佇列進階選項</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>將檔案夾新增至您的音樂庫</value>
@@ -861,7 +861,7 @@
     <value>匯入視覺效果</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>從 GitHub 取得 Lively Wallpaper 以新增更多視覺效果</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>新增日期</value>
@@ -882,42 +882,42 @@
     <value>影片庫</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>顯示專輯</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>顯示演出者</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>載入視覺效果失敗</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>開啟單一檔案時，自動新增同資料夾內的所有檔案至佇列</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>新增所有檔案至佇列</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>使用系統設定</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>深色</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>淺色</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>更改介面色系</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>主題</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>個人化</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>還原前次播放進度</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>從上次結束的時間點開始播放</value>
   </data>
 </root>
