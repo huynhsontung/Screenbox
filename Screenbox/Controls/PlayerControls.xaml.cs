@@ -98,43 +98,6 @@ namespace Screenbox.Controls
             SelectAlternatePlaybackSpeedItem(e.NewValue);
         }
 
-        /// <summary>
-        /// Gets the shuffle mode glyph code based on a boolean condition.
-        /// </summary>
-        /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
-        /// <param name="value">A <see cref="bool"/> that specifies the shuffle mode.</param>
-        /// <returns>
-        /// <strong>Shuffle</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
-        /// otherwise, <strong>Shuffle Off</strong> glyph code.
-        /// </returns>
-        private string GetShuffleModeGlyph(bool value)
-        {
-            return value
-                ? (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0021" : "\uE8B1")
-                : (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F002B" : "\U000F002A");
-        }
-
-        /// <summary>
-        /// Gets the repeat mode glyph code based on the current auto-repeat mode of the player.
-        /// </summary>
-        /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
-        /// <param name="repeatMode">A value of the enumeration that specifies the auto repeat mode for the <see cref="MediaPlaybackAutoRepeatMode"/>.</param>
-        /// <returns>
-        /// <strong>Repeat Off</strong> glyph code <see cref="string"/> if <paramref name="repeatMode"/> is <see cref="MediaPlaybackAutoRepeatMode.None"/>,
-        /// <strong>Repeat All</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.List"/>, or <strong>Repeat One</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.Track"/>.
-        /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="repeatMode"/> is not one of the valid <see cref="MediaPlaybackAutoRepeatMode"/> value.</exception>
-        private string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
-        {
-            return repeatMode switch
-            {
-                MediaPlaybackAutoRepeatMode.None => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7",
-                MediaPlaybackAutoRepeatMode.List => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE",
-                MediaPlaybackAutoRepeatMode.Track => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED",
-                _ => throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null),
-            };
-        }
-
         private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
         {
             bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
@@ -149,22 +112,6 @@ namespace Screenbox.Controls
             {
                 CustomPlaybackSpeedMenuItem.IsChecked = true;
             }
-        }
-
-        /// <summary>
-        /// Get the Playback Speed glyph for a speed range to set on <see cref="PlaybackSpeedSubMenu"/>.
-        /// </summary>
-        /// <returns>Speed Medium glyph if PlaybackSpeed equals 1 x, Speed High glyph if its greater than 1 x, Auto Racing glyph if its greater than 1.75 x, Speed Low glyph if its less than 1 x, Speed Off glyph if its less than 0.25 x</returns>
-        private string GetPlaybackSpeedGlyph(double playbackSpeed)
-        {
-            return playbackSpeed switch
-            {
-                >= 1.75 => "\uEB24",
-                > 1.01 => "\uEC4A",
-                <= 0.25 => "\uEC48",
-                < 0.99 => "\U000F00A4",
-                _ => "\uEC49"
-            };
         }
 
         private bool IsCastButtonEnabled(bool hasActiveItem)
