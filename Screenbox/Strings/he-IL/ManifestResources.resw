@@ -175,7 +175,7 @@
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
-    <value/>
+    <value>Shockwave Flash Movie</value>
     <comment>Display name for the file type ".swf" (Small Web Format)</comment>
   </data>
   <data name="FileDisplayNameMatroskaAudio" xml:space="preserve">
