@@ -462,20 +462,20 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Change the video quality when playing above the native resolution."
-                    Header="Video upscaling method">
+                    Description="{strings:Resources Key=SettingsVideoUpscalingDescription}"
+                    Header="{strings:Resources Key=SettingsVideoUpscalingHeader}">
                     <ComboBox
                         MinWidth="150"
-                        AutomationProperties.HelpText="Change the video quality when playing above the native resolution."
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsVideoUpscalingHeader}"
                         SelectedIndex="{x:Bind ViewModel.VideoUpscaling, Mode=TwoWay}">
-                        <!--<ComboBox.ItemTemplate>
+                        <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
                             </DataTemplate>
-                        </ComboBox.ItemTemplate>-->
-                        <x:String>Bilinear</x:String>
-                        <x:String>Point</x:String>
-                        <x:String>Super resolution</x:String>
+                        </ComboBox.ItemTemplate>
+                        <x:String>VideoUpscalingLinear</x:String>
+                        <x:String>VideoUpscalingPoint</x:String>
+                        <x:String>VideoUpscalingSuper</x:String>
                     </ComboBox>
                 </ctc:SettingsCard>
 
