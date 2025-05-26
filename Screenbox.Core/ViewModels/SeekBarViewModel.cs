@@ -209,9 +209,10 @@ namespace Screenbox.Core.ViewModels
             if (lastPosition <= TimeSpan.Zero) return;
             if (_settingsService.RestorePlaybackPosition)
             {
-                if (_currentItem?.IsPlaying ?? false)
+                if (media.IsPlaying ?? false)
                 {
-                    UpdatePosition(lastPosition, false, false);
+                    _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => SetPlayerPosition(lastPosition, false));
+                    _lastTrackedPosition = TimeSpan.Zero;
                 }
                 else
                 {
@@ -269,7 +270,7 @@ namespace Screenbox.Core.ViewModels
             if (args.NewValue is not (MediaPlaybackState.None or MediaPlaybackState.Opening) &&
                 _lastTrackedPosition > TimeSpan.Zero)
             {
-                _dispatcherQueue.TryEnqueue(() =>
+                _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
                 {
                     SetPlayerPosition(_lastTrackedPosition, false);
                     _lastTrackedPosition = TimeSpan.Zero;
