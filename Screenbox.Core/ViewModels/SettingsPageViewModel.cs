@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,9 +11,6 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -33,6 +33,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _restorePlaybackPosition;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
+        [ObservableProperty] private int _videoUpscaling;
         [ObservableProperty] private bool _useMultipleInstances;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
@@ -50,6 +51,7 @@ namespace Screenbox.Core.ViewModels
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
         private static string? _originalGlobalArguments;
         private static bool? _originalAdvancedMode;
+        private static int _originalVideoUpscaling;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
@@ -85,9 +87,11 @@ namespace Screenbox.Core.ViewModels
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
+            _videoUpscaling = (int)_settingsService.VideoUpscale;
             _globalArguments = _settingsService.GlobalArguments;
             _originalAdvancedMode ??= _advancedMode;
             _originalGlobalArguments ??= _globalArguments;
+            _originalVideoUpscaling = (int)_settingsService.VideoUpscale;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -189,6 +193,13 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.AdvancedMode = value;
             Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
+            CheckForRelaunch();
+        }
+
+        partial void OnVideoUpscalingChanged(int value)
+        {
+            _settingsService.VideoUpscale = (VideoUpscaleOption)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
             CheckForRelaunch();
         }
 
@@ -405,6 +416,9 @@ namespace Screenbox.Core.ViewModels
 
         private void CheckForRelaunch()
         {
+            // Check if upscaling mode has been changed
+            bool upscalingChanged = _originalVideoUpscaling != VideoUpscaling;
+
             // Check if global arguments have been changed
             bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
 
@@ -424,7 +438,7 @@ namespace Screenbox.Core.ViewModels
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
             // Combine everything
-            IsRelaunchRequired = whenOn || whenOff || whenOnAndChanged;
+            IsRelaunchRequired = upscalingChanged || whenOn || whenOff || whenOnAndChanged;
         }
     }
 }

@@ -462,6 +462,25 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsVideoUpscalingDescription}"
+                    Header="{strings:Resources Key=SettingsVideoUpscalingHeader}">
+                    <ComboBox
+                        MinWidth="150"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsVideoUpscalingHeader}"
+                        SelectedIndex="{x:Bind ViewModel.VideoUpscaling, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <x:String>VideoUpscalingLinear</x:String>
+                        <x:String>VideoUpscalingPoint</x:String>
+                        <x:String>VideoUpscalingSuper</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
                     Header="{strings:Resources Key=SettingsUseMultipleInstancesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;,

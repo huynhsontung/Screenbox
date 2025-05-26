@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
@@ -10,9 +13,6 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Playback;
@@ -100,15 +100,22 @@ namespace Screenbox.Core.ViewModels
 
             Task.Run(() =>
             {
-                string[] args = _settingsService.GlobalArguments.Length > 0
-                    ? _settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                        .Concat(swapChainOptions).ToArray()
-                    : swapChainOptions;
+                var args = new List<string>();
+                if (_settingsService.GlobalArguments.Length > 0)
+                {
+                    args.AddRange(_settingsService.GlobalArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                }
 
+                if (_settingsService.VideoUpscale != VideoUpscaleOption.Linear)
+                {
+                    args.Add($"--d3d11-upscale-mode={_settingsService.VideoUpscale.ToString().ToLower()}");
+                }
+
+                args.AddRange(swapChainOptions);
                 VlcMediaPlayer player;
                 try
                 {
-                    player = _libVlcService.Initialize(args);
+                    player = _libVlcService.Initialize(args.ToArray());
                 }
                 catch (VLCException e)
                 {

@@ -21,6 +21,7 @@ namespace Screenbox.Core.Services
         int MaxVolume { get; set; }
         string GlobalArguments { get; set; }
         bool AdvancedMode { get; set; }
+        VideoUpscaleOption VideoUpscale { get; set; }
         bool UseMultipleInstances { get; set; }
         string LivelyActivePath { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }

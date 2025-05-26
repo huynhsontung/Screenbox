@@ -7,6 +7,13 @@ public enum PlayerAutoResizeOption
     Never
 }
 
+public enum VideoUpscaleOption
+{
+    Linear,
+    Point,
+    Super
+}
+
 public enum ThemeOption
 {
     Auto,
