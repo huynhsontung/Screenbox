@@ -463,7 +463,9 @@
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVideoUpscalingDescription}"
-                    Header="{strings:Resources Key=SettingsVideoUpscalingHeader}">
+                    Header="{strings:Resources Key=SettingsVideoUpscalingHeader}"
+                    HeaderIcon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                             Glyph={StaticResource ImagePixelGlyph}}">
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsVideoUpscalingHeader}"
