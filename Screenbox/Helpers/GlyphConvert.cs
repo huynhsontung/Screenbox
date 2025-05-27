@@ -86,8 +86,21 @@ public static partial class GlyphConvert
     /// <strong>Play</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
     /// otherwise, <strong>Pause</strong> glyph code.
     /// </returns>
-    public static string ToPlayingStateGlyph(bool value)
+    public static string ToPlayPauseGlyph(bool value)
     {
         return value ? "\uE769" : "\uE768";
+    }
+
+    /// <summary>
+    /// Gets the playing state solid gylph code based on a boolean condition.
+    /// </summary>
+    /// <param name="value">A <see cref="bool"/> that represents the playing state.</param>
+    /// <returns>
+    /// <strong>Play Solid</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
+    /// otherwise, <strong>Pause Solid</strong> glyph code.
+    /// </returns>
+    public static string ToPlayPauseSolidGlyph(bool value)
+    {
+        return value ? "\uE62E" : "\uF5B0";
     }
 }
