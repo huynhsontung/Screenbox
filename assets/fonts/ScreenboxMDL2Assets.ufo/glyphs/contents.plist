@@ -60,6 +60,8 @@
     <string>uniE_E_71.glif</string>
     <key>uniF2CE</key>
     <string>uniF_2C_E_.glif</string>
+    <key>uniF30C</key>
+    <string>uniF_30C_.glif</string>
     <key>uniF353</key>
     <string>uniF_353.glif</string>
     <key>uniF5B0</key>
@@ -102,5 +104,7 @@
     <string>uF_010E_.glif</string>
     <key>uF0127</key>
     <string>uF_0127.glif</string>
+    <key>uF0131</key>
+    <string>uF_0131.glif</string>
   </dict>
 </plist>
