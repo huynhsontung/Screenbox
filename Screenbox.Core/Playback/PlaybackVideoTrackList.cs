@@ -1,10 +1,15 @@
-﻿using LibVLCSharp.Shared;
+﻿#nullable enable
+
+using LibVLCSharp.Shared;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 
 namespace Screenbox.Core.Playback
 {
     public sealed class PlaybackVideoTrackList : SingleSelectTrackList<VideoTrack>
     {
         private readonly Media _media;
+        private readonly MediaPlaybackVideoTrackList? _source;
 
         public PlaybackVideoTrackList(Media media)
         {
@@ -19,6 +24,36 @@ namespace Screenbox.Core.Playback
             }
 
             SelectedIndex = 0;
+        }
+
+        public PlaybackVideoTrackList(MediaPlaybackVideoTrackList source)
+        {
+            _source = source;
+            SelectedIndex = source.SelectedIndex;
+            source.SelectedIndexChanged += (sender, args) => SelectedIndex = sender.SelectedIndex;
+            foreach (Windows.Media.Core.VideoTrack videoTrack in source)
+            {
+                TrackList.Add(new VideoTrack(videoTrack));
+            }
+
+            SelectedIndexChanged += OnSelectedIndexChanged;
+        }
+
+        public void Refresh()
+        {
+            if (_source == null) return;
+            TrackList.Clear();
+            foreach (Windows.Media.Core.VideoTrack videoTrack in _source)
+            {
+                TrackList.Add(new VideoTrack(videoTrack));
+            }
+        }
+
+        private void OnSelectedIndexChanged(ISingleSelectMediaTrackList sender, object? args)
+        {
+            // Only update for Windows track list. VLC track list is handled by the player.
+            if (_source == null || _source.SelectedIndex == sender.SelectedIndex) return;
+            _source.SelectedIndex = sender.SelectedIndex;
         }
 
         private void Media_ParsedChanged(object sender, MediaParsedChangedEventArgs e)

@@ -1,5 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,17 +15,11 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Search;
 using AudioTrack = Screenbox.Core.Playback.AudioTrack;
 using SubtitleTrack = Screenbox.Core.Playback.SubtitleTrack;
+using VideoTrack = Screenbox.Core.Playback.VideoTrack;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -30,12 +31,17 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<string> AudioTracks { get; }
 
+        public ObservableCollection<string> VideoTracks { get; }
+
         private PlaybackSubtitleTrackList? ItemSubtitleTrackList => _mediaPlayer?.PlaybackItem?.SubtitleTracks;
 
         private PlaybackAudioTrackList? ItemAudioTrackList => _mediaPlayer?.PlaybackItem?.AudioTracks;
 
+        private PlaybackVideoTrackList? ItemVideoTrackList => _mediaPlayer?.PlaybackItem?.VideoTracks;
+
         [ObservableProperty] private int _subtitleTrackIndex;
         [ObservableProperty] private int _audioTrackIndex;
+        [ObservableProperty] private int _videoTrackIndex;
         private readonly IFilesService _filesService;
         private readonly IResourceService _resourceService;
         private readonly ISettingsService _settingsService;
@@ -50,6 +56,7 @@ namespace Screenbox.Core.ViewModels
             _settingsService = settingsService;
             SubtitleTracks = new ObservableCollection<string>();
             AudioTracks = new ObservableCollection<string>();
+            VideoTracks = new ObservableCollection<string>();
             _mediaPlayer = Messenger.Send(new MediaPlayerRequestMessage()).Response;
 
             IsActive = true;
@@ -198,6 +205,12 @@ namespace Screenbox.Core.ViewModels
                 ItemAudioTrackList.SelectedIndex = value;
         }
 
+        partial void OnVideoTrackIndexChanged(int value)
+        {
+            if (ItemVideoTrackList != null && value >= 0 && value < VideoTracks.Count)
+                ItemVideoTrackList.SelectedIndex = value;
+        }
+
         [RelayCommand]
         private async Task AddSubtitle()
         {
@@ -221,8 +234,10 @@ namespace Screenbox.Core.ViewModels
         {
             UpdateSubtitleTrackList();
             UpdateAudioTrackList();
+            UpdateVideoTrackList();
             SubtitleTrackIndex = ItemSubtitleTrackList?.SelectedIndex + 1 ?? 0;
             AudioTrackIndex = ItemAudioTrackList?.SelectedIndex ?? -1;
+            VideoTrackIndex = ItemVideoTrackList?.SelectedIndex ?? -1;
 
             _flyoutOpened = true;
         }
@@ -244,6 +259,21 @@ namespace Screenbox.Core.ViewModels
                 AudioTrack audioTrack = ItemAudioTrackList[index];
                 string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
                 AudioTracks.Add(string.IsNullOrEmpty(audioTrack.Label) ? defaultTrackLabel : audioTrack.Label);
+            }
+        }
+
+        private void UpdateVideoTrackList()
+        {
+            if (ItemVideoTrackList == null) return;
+            VideoTracks.Clear();
+            ItemVideoTrackList.Refresh();
+            if (ItemVideoTrackList.Count <= 0) return;
+
+            for (int index = 0; index < ItemVideoTrackList.Count; index++)
+            {
+                VideoTrack videoTrack = ItemVideoTrackList[index];
+                string defaultTrackLabel = _resourceService.GetString(ResourceName.TrackIndex, index + 1);
+                VideoTracks.Add(string.IsNullOrEmpty(videoTrack.Label) ? defaultTrackLabel : videoTrack.Label);
             }
         }
 
