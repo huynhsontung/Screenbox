@@ -2,6 +2,7 @@
 
 using Screenbox.Core.Common;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -26,7 +27,7 @@ namespace Screenbox.Controls
         public PropertiesDialog()
         {
             this.InitializeComponent();
-            FlowDirection = App.GetFlowDirection();
+            FlowDirection = GlobalizationHelper.GetFlowDirection();
             RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         }
     }

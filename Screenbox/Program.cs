@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Screenbox;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Services;
 using System;
+using Screenbox;
+using Screenbox.Core.Services;
+using Screenbox.Helpers;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 
@@ -30,7 +30,7 @@ public static class Program
             IActivatedEventArgs? activatedArgs = AppInstance.GetActivatedEventArgs();    // This is null on Xbox
             bool isFileActivated = activatedArgs?.Kind == ActivationKind.File;
             bool isFeatureEnabled = settingsService.UseMultipleInstances;
-            bool isXbox = SystemInformation.IsXbox;
+            bool isXbox = DeviceInfoHelper.IsXbox;
             if ((!isXbox && isFeatureEnabled && isFileActivated) || registeredInstances.Count == 0)
             {
                 string key = Guid.NewGuid().ToString();

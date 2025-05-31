@@ -2,7 +2,6 @@
     x:Class="Screenbox.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
@@ -11,7 +10,7 @@
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="using:Screenbox.Core.Helpers"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -148,7 +147,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xE88E;}"
                     ItemTemplate="{StaticResource RemovableStorageFolderTemplate}"
                     ItemsSource="{x:Bind ViewModel.RemovableStorageFolders}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsXbox}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsXbox}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
@@ -164,7 +163,7 @@
                     Header="{strings:Resources Key=SettingsMusicLibraryLocationsHeader}"
                     ItemTemplate="{StaticResource MusicLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.MusicLocations}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             x:Name="MusicLibrarySettingsExpanderIcon"
@@ -197,7 +196,7 @@
                     Header="{strings:Resources Key=SettingsVideoLibraryLocationsHeader}"
                     ItemTemplate="{StaticResource VideosLibraryLocationTemplate}"
                     ItemsSource="{x:Bind ViewModel.VideoLocations}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             x:Name="VideoLibrarySettingsExpanderIcon"
@@ -228,7 +227,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=RefreshLibraries}"
                     HeaderIcon="{ui:SymbolIcon Symbol=Repair}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <interactivity:Interaction.Behaviors>
                         <interactions:SettingsExpanderXYNavigationBehavior />
                     </interactivity:Interaction.Behaviors>
@@ -298,7 +297,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind GetShowRecentSettingsExpanderGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind helpers:GlyphConvert.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>
@@ -344,7 +343,7 @@
                     Description="{strings:Resources Key=SettingsAutoResizeDescription}"
                     Header="{strings:Resources Key=SettingsAutoResizeHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE799;}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ComboBox
                         MinWidth="150"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsAutoResizeDescription}"
@@ -393,7 +392,7 @@
                     Margin="{StaticResource SettingsCardMargin}"
                     Header="{strings:Resources Key=SettingsGesturesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xEDA4;}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsXbox, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=true}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard Header="{strings:Resources Key=SettingsGestureSeek}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerSeekGesture, Mode=TwoWay}" />
@@ -449,7 +448,7 @@
                                     <HyperlinkButton
                                         Content="{strings:Resources Key=GetLivelyApp}"
                                         NavigateUri="https://www.rocksdanister.com/lively"
-                                        Visibility="{x:Bind helpers:SystemInformation.IsDesktop}" />
+                                        Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}" />
                                     <HyperlinkButton Content="{strings:Resources Key=GetLivelyVisuals}" NavigateUri="https://github.com/rocksdanister/audio-visualizer-wallpaper" />
                                 </ctc:WrapPanel>
                             </Grid>
@@ -487,7 +486,7 @@
                     Header="{strings:Resources Key=SettingsUseMultipleInstancesHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF5ED;,
                                              MirroredWhenRightToLeft=True}"
-                    Visibility="{x:Bind helpers:SystemInformation.IsDesktop}">
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
                     <ToggleSwitch
                         x:Name="UseMultipleInstancesToggleSwitch"
                         AutomationProperties.HelpText="{strings:Resources Key=SettingsUseMultipleInstancesDescription}"
@@ -614,7 +613,7 @@
 
                 <VisualState x:Name="RightToLeft">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <contract13Present:Setter Target="MusicLibrarySettingsExpanderIcon.Glyph" Value="{StaticResource MusicLibraryMirroredGlyph}" />

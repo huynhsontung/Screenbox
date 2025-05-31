@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -15,7 +16,7 @@ namespace Screenbox.Controls
         {
             this.DefaultStyleKey = typeof(ContentDialog);
             this.InitializeComponent();
-            FlowDirection = App.GetFlowDirection();
+            FlowDirection = GlobalizationHelper.GetFlowDirection();
             RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
         }
 

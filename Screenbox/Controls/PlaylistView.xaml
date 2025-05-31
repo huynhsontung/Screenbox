@@ -2,17 +2,18 @@
     x:Class="Screenbox.Controls.PlaylistView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:class="using:Screenbox"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:system="using:System"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
     d:DesignWidth="848"
@@ -26,11 +27,6 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
-
-                <ctConverters:BoolToObjectConverter
-                    x:Key="BoolToSelectAllNoneToolTipTextConverter"
-                    FalseValue="{strings:Resources Key=SelectAllToolTip}"
-                    TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
 
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
@@ -225,18 +221,15 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox
                             x:Name="SelectionCheckBox"
-                            Margin="10,0,0,0"
-                            VerticalAlignment="Center"
+                            MinWidth="60"
+                            Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{Binding ElementName=SelectionCheckBox, Path=Content, Mode=OneWay}"
-                            AutomationProperties.Name="{strings:Resources Key=SelectAll}"
+                            AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
+                            AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Click="SelectionCheckBox_OnClick"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            ToolTipService.ToolTip="{Binding ElementName=SelectionCheckBox, Path=IsChecked, Converter={StaticResource BoolToSelectAllNoneToolTipTextConverter}}" />
-                        <TextBlock
-                            Margin="0,5,0,0"
-                            VerticalAlignment="Top"
-                            Text=" •" />
+                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
+                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource TopBottomThicknessFilterConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
@@ -381,7 +374,7 @@
 
                 <VisualState x:Name="RightToLeft">
                     <VisualState.StateTriggers>
-                        <StateTrigger IsActive="{x:Bind class:App.IsRightToLeftLanguage}" />
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />

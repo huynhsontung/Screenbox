@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Screenbox.Core.ViewModels;
-using System;
-using System.Linq;
+using Screenbox.Helpers;
 using Windows.Media;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -97,21 +98,6 @@ namespace Screenbox.Controls
             SelectAlternatePlaybackSpeedItem(e.NewValue);
         }
 
-        private string GetRepeatModeGlyph(MediaPlaybackAutoRepeatMode repeatMode)
-        {
-            switch (repeatMode)
-            {
-                case MediaPlaybackAutoRepeatMode.None:
-                    return App.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7";
-                case MediaPlaybackAutoRepeatMode.List:
-                    return App.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE";
-                case MediaPlaybackAutoRepeatMode.Track:
-                    return App.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null);
-            }
-        }
-
         private void SelectAlternatePlaybackSpeedItem(double playbackSpeed)
         {
             bool isMenuValue = (int)(playbackSpeed * 100) % 25 == 0;
@@ -126,22 +112,6 @@ namespace Screenbox.Controls
             {
                 CustomPlaybackSpeedMenuItem.IsChecked = true;
             }
-        }
-
-        /// <summary>
-        /// Get the Playback Speed glyph for a speed range to set on <see cref="PlaybackSpeedSubMenu"/>.
-        /// </summary>
-        /// <returns>Speed Medium glyph if PlaybackSpeed equals 1 x, Speed High glyph if its greater than 1 x, Auto Racing glyph if its greater than 1.75 x, Speed Low glyph if its less than 1 x, Speed Off glyph if its less than 0.25 x</returns>
-        private string GetPlaybackSpeedGlyph(double playbackSpeed)
-        {
-            return playbackSpeed switch
-            {
-                >= 1.75 => "\uEB24",
-                > 1.01 => "\uEC4A",
-                <= 0.25 => "\uEC48",
-                < 0.99 => "\U000F00A4",
-                _ => "\uEC49"
-            };
         }
 
         private bool IsCastButtonEnabled(bool hasActiveItem)

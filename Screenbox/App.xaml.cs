@@ -26,7 +26,6 @@ using Sentry.Protocol;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -38,22 +37,6 @@ namespace Screenbox
     /// </summary>
     sealed partial class App : Application
     {
-        public static bool IsRightToLeftLanguage
-        {
-            get
-            {
-                try
-                {
-                    string flowDirectionSetting = ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
-                    return flowDirectionSetting == "RTL";
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    return false;
-                }
-            }
-        }
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -64,7 +47,7 @@ namespace Screenbox
             ConfigureSentry();
             InitializeComponent();
 
-            if (SystemInformation.IsXbox)
+            if (DeviceInfoHelper.IsXbox)
             {
                 // Disable pointer mode on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/how-to-disable-mouse-mode#xaml
@@ -114,11 +97,6 @@ namespace Screenbox
                     throw;
                 }
             }
-        }
-
-        public static FlowDirection GetFlowDirection()
-        {
-            return IsRightToLeftLanguage ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
         }
 
         private static IServiceProvider ConfigureServices()
@@ -185,7 +163,7 @@ namespace Screenbox
 
             SentrySdk.ConfigureScope(scope =>
             {
-                scope.SetTag("device_family", SystemInformation.DeviceFamily);
+                scope.SetTag("device_family", DeviceInfoHelper.DeviceFamily);
             });
         }
 
@@ -296,14 +274,14 @@ namespace Screenbox
 
                 // Turn off overscan on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/turn-off-overscan
-                if (SystemInformation.IsXbox)
+                if (DeviceInfoHelper.IsXbox)
                 {
                     Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
                         .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
                 }
 
                 // Check for RTL flow direction
-                if (IsRightToLeftLanguage)
+                if (GlobalizationHelper.IsRightToLeftLanguage)
                 {
                     rootFrame.FlowDirection = FlowDirection.RightToLeft;
                 }
