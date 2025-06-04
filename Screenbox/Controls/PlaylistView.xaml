@@ -226,7 +226,8 @@
                             d:Content="11 items selected"
                             AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                            Click="SelectionCheckBox_OnClick"
+                            Command="{x:Bind Common.ToggleListViewBaseItemSelectionCommand}"
+                            CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource TopBottomThicknessFilterConverter}}" Text="•" />

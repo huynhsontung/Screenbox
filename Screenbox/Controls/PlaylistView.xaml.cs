@@ -48,18 +48,6 @@ namespace Screenbox.Controls
             await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
         }
 
-        private void SelectionCheckBox_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (SelectionCheckBox.IsChecked ?? false)
-            {
-                PlaylistListView.SelectAll();
-            }
-            else
-            {
-                PlaylistListView.SelectedItems.Clear();
-            }
-        }
-
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
