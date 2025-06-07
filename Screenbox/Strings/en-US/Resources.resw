@@ -935,4 +935,7 @@
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Super resolution</value>
   </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
 </root>
