@@ -7,179 +7,119 @@ using Windows.UI.Xaml.Data;
 namespace Screenbox.Converters;
 
 /// <summary>
-/// An <see cref="IValueConverter"/> that takes an existing <see cref="Thickness"/> struct and returns a new one,
-/// using filters to keep only the specified fields and setting all others to 0.
-/// <example>For example:
+/// Defines constants that specify the filter type for a <see cref="ThicknessFilterConverter"/> instance.
+/// <para>This enumeration supports a bitwise combination of its member values.</para>
+/// </summary>
+/// <remarks>This enumeration is used by the <see cref="ThicknessFilterConverter.Filter"/> property.</remarks>
+[Flags]
+public enum ThicknessFilterKinds
+{
+    /// <summary>
+    /// No filter applied.
+    /// </summary>
+    None = 0,
+
+    /// <summary>
+    /// Filters Left value, sets Top, Right and Bottom to 0.
+    /// </summary>
+    Left = 1,
+
+    /// <summary>
+    /// Filters Top value, sets Left, Right and Bottom to 0.
+    /// </summary>
+    Top = 2,
+
+    /// <summary>
+    /// Filters Right value, sets Left, Top and Bottom to 0.
+    /// </summary>
+    Right = 4,
+
+    /// <summary>
+    /// Filters Bottom value, sets Left, Top and Right to 0.
+    /// </summary>
+    Bottom = 8,
+}
+
+/// <summary>
+/// Converts an existing <see cref="Thickness"/> struct to a new <see cref="Thickness"/> struct,
+/// with filters applied to extract only the specified fields, leaving the others set to 0.
+/// </summary>
+/// <remarks>
+/// Use the <see cref="ThicknessFilterConverter"/> with a Binding/x:Bind or TemplateBinding
+/// to create a new <see cref="Thickness"/> struct from an existing one.
+/// </remarks>
+/// <example>
+/// The following example shows how to use the <see cref="ThicknessFilterConverter"/> element.
 /// <code lang="xaml">
 /// &lt;ControlTemplate TargetType="Button"&gt;
 ///     &lt;Grid&gt;
 ///         &lt;Grid.Resources&gt;
-///             &lt;local:ThicknessFilterConverter x:Name="TopThicknessFilterConverter" Filter="Top" /&gt;
+///             &lt;local:ThicknessFilterConverter x:Name="VerticalThicknessFilterConverter" Filter="Top,Bottom" /&gt;
 ///         &lt;/Grid.Resources&gt;
 ///         &lt;Border Background="{TemplateBinding Background}"
-///                 BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopThicknessFilterConverter}}"
+///                 BorderBrush="{TemplateBinding BorderBrush}"
+///                 BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource VerticalThicknessFilterConverter}}"
 ///                 Padding="{TemplateBinding Padding}" /&gt;
 ///     &lt;/Grid&gt;
 /// &lt;/ControlTemplate&gt;
-/// 
+/// </code>
+/// <code lang="xaml">
 /// &lt;Grid&gt;
 ///     &lt;Grid.Resources&gt;
-///         &lt;local:ThicknessFilterConverter x:Name="TopThicknessFilterConverter" Filter="Top" /&gt;
+///         &lt;local:ThicknessFilterConverter x:Name="VerticalThicknessFilterConverter" Filter="Top,Bottom" /&gt;
 ///         &lt;Thickness x:Key="ExampleBorderThickness"&gt;1,1,1,1&lt;/Thickness&gt;
 ///     &lt;/Grid.Resources&gt;
-///     &lt;Border Background="Blue"
-///             BorderThickness="{Binding Source={StaticResource ExampleBorderThickness}, Converter={StaticResource TopThicknessFilterConverter}}" /&gt;
+///     &lt;Border Background="DarkBlue"
+///             BorderBrush="Cyan"
+///             BorderThickness="{Binding Source={StaticResource ExampleBorderThickness}, Converter={StaticResource VerticalThicknessFilterConverter}}" /&gt;
 /// &lt;/Grid&gt;
 /// </code>
-/// results in the BorderThickness of the <c>Border</c> having the value "0,1,0,0".
+/// <code lang="cs">
+/// var myBorder = new Border();
+/// var exampleThickness = new Thickness(1, 1, 1, 1);
+/// 
+/// // Create the converter instance and the filter type.
+/// var thicknessConverter = new ThicknessFilterConverter();
+/// var thicknessFilter = ThicknessFilterKinds.Top | ThicknessFilterKinds.Bottom;
+///
+/// // Attach the converter to the target. For example:
+/// myBorder.BorderThickness = thicknessConverter.Convert(exampleThickness, thicknessFilter);
+/// </code>
 /// </example>
-/// </summary>
-public sealed class ThicknessFilterConverter : DependencyObject, IValueConverter
+public sealed partial class ThicknessFilterConverter : DependencyObject, IValueConverter
 {
-    /// <summary>
-    /// Specifies the filter type used in a <see cref="ThicknessFilterConverter"/> instance.
-    /// This <see cref="Enum"/> supports a bitwise combination of its member values.
-    /// </summary>
-    [Flags]
-    public enum ThicknessFilterKind
-    {
-        /// <summary>
-        /// No filter applied.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// Filters Left value.
-        /// </summary>
-        Left = 1,
-
-        /// <summary>
-        /// Filters Top value.
-        /// </summary>
-        Top = 2,
-
-        /// <summary>
-        /// Filters Right value.
-        /// </summary>
-        Right = 4,
-
-        /// <summary>
-        /// Filters Bottom value.
-        /// </summary>
-        Bottom = 8
-    }
-
     /// <summary>
     /// Identifies the <see cref="Filter"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty FilterProperty = DependencyProperty.Register(
-        nameof(Filter), typeof(ThicknessFilterKind), typeof(ThicknessFilterConverter), new PropertyMetadata(null));
+        nameof(Filter), typeof(ThicknessFilterKinds), typeof(ThicknessFilterConverter), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the type of the filter applied to the <see cref="ThicknessFilterConverter"/>.
     /// </summary>
-    public ThicknessFilterKind Filter
+    public ThicknessFilterKinds Filter
     {
-        get { return (ThicknessFilterKind)GetValue(FilterProperty); }
+        get { return (ThicknessFilterKinds)GetValue(FilterProperty); }
         set { SetValue(FilterProperty, value); }
     }
 
     /// <summary>
-    /// Extracts, using filters, the specified fields from a <see cref="Thickness"/> struct.
+    /// Extracts the specified fields from a <see cref="Thickness"/> struct.
     /// </summary>
-    /// <param name="thickness">The <see cref="Thickness"/> to convert.</param>
-    /// <param name="filterKind">An <see cref="Enum"/> that defines the filter type.</param>
+    /// <param name="thickness">The source <see cref="Thickness"/> to convert.</param>
+    /// <param name="filterKind">An enumeration that specifies the filter type.</param>
     /// <returns>A <see cref="Thickness"/> with only the fields specified by the filter, while the rest are set to 0.</returns>
-    public Thickness ExtractThickness(Thickness thickness, ThicknessFilterKind filterKind)
+    public Thickness Convert(Thickness thickness, ThicknessFilterKinds filterKind)
     {
-        Thickness result = thickness;
+        var result = thickness;
 
-        switch (filterKind)
+        if (filterKind is not ThicknessFilterKinds.None)
         {
-            case ThicknessFilterKind.Left:
-                //result.Left = thickness.Left;
-                result.Top = 0;
-                result.Right = 0;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Top:
-                result.Left = 0;
-                //result.Top = thickness.Top;
-                result.Right = 0;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Right:
-                result.Left = 0;
-                result.Top = 0;
-                //result.Right = thickness.Right;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Bottom:
-                result.Left = 0;
-                result.Top = 0;
-                result.Right = 0;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Left | ThicknessFilterKind.Right:
-                //result.Left = thickness.Left;
-                result.Top = 0;
-                //result.Right = thickness.Right;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Top | ThicknessFilterKind.Bottom:
-                result.Left = 0;
-                //result.Top = thickness.Top;
-                result.Right = 0;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Top | ThicknessFilterKind.Left:
-                //result.Left = thickness.Left;
-                //result.Top = thickness.Top;
-                result.Right = 0;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Top | ThicknessFilterKind.Right:
-                result.Left = 0;
-                //result.Top = thickness.Top;
-                //result.Right = thickness.Right;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Bottom | ThicknessFilterKind.Left:
-                //result.Left = thickness.Left;
-                result.Top = 0;
-                result.Right = 0;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Bottom | ThicknessFilterKind.Right:
-                result.Left = 0;
-                result.Top = 0;
-                //result.Right = thickness.Right;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Left | ThicknessFilterKind.Right | ThicknessFilterKind.Top:
-                //result.Left = thickness.Left;
-                //result.Top = thickness.Top;
-                //result.Right = thickness.Right;
-                result.Bottom = 0;
-                break;
-            case ThicknessFilterKind.Left | ThicknessFilterKind.Right | ThicknessFilterKind.Bottom:
-                //result.Left = thickness.Left;
-                result.Top = 0;
-                //result.Right = thickness.Right;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Top | ThicknessFilterKind.Bottom | ThicknessFilterKind.Left:
-                //result.Left = thickness.Left;
-                //result.Top = thickness.Top;
-                result.Right = 0;
-                //result.Bottom = thickness.Bottom;
-                break;
-            case ThicknessFilterKind.Top | ThicknessFilterKind.Bottom | ThicknessFilterKind.Right:
-                result.Left = 0;
-                //result.Top = thickness.Top;
-                //result.Right = thickness.Right;
-                //result.Bottom = thickness.Bottom;
-                break;
+            return new Thickness(
+                filterKind.HasFlag(ThicknessFilterKinds.Left) ? result.Left : 0,
+                filterKind.HasFlag(ThicknessFilterKinds.Top) ? result.Top : 0,
+                filterKind.HasFlag(ThicknessFilterKinds.Right) ? result.Right : 0,
+                filterKind.HasFlag(ThicknessFilterKinds.Bottom) ? result.Bottom : 0);
         }
 
         return result;
@@ -197,12 +137,11 @@ public sealed class ThicknessFilterConverter : DependencyObject, IValueConverter
     {
         if (value is Thickness thickness)
         {
-            return ExtractThickness(thickness, Filter);
+            var filterType = Filter;
+            return Convert(thickness, filterType);
         }
-        else
-        {
-            return value;
-        }
+
+        return value;
     }
 
     /// <summary>

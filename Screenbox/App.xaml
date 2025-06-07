@@ -40,14 +40,14 @@
                     <!--<converters:ThicknessFilterConverter x:Key="BottomOnlyThicknessFilterConverter" Filter="Bottom" />-->
                     <!--<converters:ThicknessFilterConverter x:Key="LeftRightThicknessFilterConverter" Filter="Left,Right" />-->
                     <converters:ThicknessFilterConverter x:Key="TopBottomThicknessFilterConverter" Filter="Top,Bottom" />
-                    <!--<converters:ThicknessFilterConverter x:Key="TopLeftThicknessFilterConverter" Filter="Top,Left" />-->
+                    <!--<converters:ThicknessFilterConverter x:Key="TopLeftThicknessFilterConverter" Filter="Left,Top" />-->
                     <!--<converters:ThicknessFilterConverter x:Key="TopRightThicknessFilterConverter" Filter="Top,Right" />-->
-                    <!--<converters:ThicknessFilterConverter x:Key="BottomLeftThicknessFilterConverter" Filter="Bottom,Left" />-->
-                    <!--<converters:ThicknessFilterConverter x:Key="BottomRightThicknessFilterConverter" Filter="Bottom,Right" />-->
-                    <!--<converters:ThicknessFilterConverter x:Key="LeftRightTopThicknessFilterConverter" Filter="Left,Right,Top" />-->
-                    <!--<converters:ThicknessFilterConverter x:Key="LeftRightBottomThicknessFilterConverter" Filter="Left,Right,Bottom" />-->
-                    <converters:ThicknessFilterConverter x:Key="TopBottomLeftThicknessFilterConverter" Filter="Top,Bottom,Left" />
-                    <converters:ThicknessFilterConverter x:Key="TopBottomRightThicknessFilterConverter" Filter="Top,Bottom,Right" />
+                    <!--<converters:ThicknessFilterConverter x:Key="BottomLeftThicknessFilterConverter" Filter="Left,Bottom" />-->
+                    <!--<converters:ThicknessFilterConverter x:Key="BottomRightThicknessFilterConverter" Filter="Right,Bottom" />-->
+                    <!--<converters:ThicknessFilterConverter x:Key="LeftRightAndTopThicknessFilterConverter" Filter="Left,Top,Right" />-->
+                    <!--<converters:ThicknessFilterConverter x:Key="LeftRightAndBottomThicknessFilterConverter" Filter="Left,Right,Bottom" />-->
+                    <converters:ThicknessFilterConverter x:Key="TopBottomAndLeftThicknessFilterConverter" Filter="Left,Top,Bottom" />
+                    <converters:ThicknessFilterConverter x:Key="TopBottomAndRightThicknessFilterConverter" Filter="Top,Right,Bottom" />
                     <ctConverters:BoolNegationConverter x:Key="BoolNegationConverter" />
                     <ctConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
                     <ctConverters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
