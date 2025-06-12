@@ -2,7 +2,7 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls.Extensions;
+namespace Screenbox.Extensions;
 
 /// <summary>
 /// Provides attached dependency properties for the <see cref="CommandBar"/> control.

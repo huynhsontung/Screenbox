@@ -1,7 +1,7 @@
 ﻿using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls.Extensions;
+namespace Screenbox.Extensions;
 public static class ApplicationViewExtensions
 {
     /// <summary>

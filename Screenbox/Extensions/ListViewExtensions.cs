@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Screenbox.Controls.Extensions
+namespace Screenbox.Extensions
 {
     public static class ListViewExtensions
     {
