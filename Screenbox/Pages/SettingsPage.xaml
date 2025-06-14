@@ -10,6 +10,7 @@
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:globalization="using:Windows.Globalization"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -284,6 +285,23 @@
                         <x:String>ThemeLight</x:String>
                         <x:String>ThemeDark</x:String>
                         <x:String>ThemeAuto</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="Change the app display language"
+                    Header="App language"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
+                    <ComboBox
+                        x:Name="LanguageComboBox"
+                        MinWidth="150"
+                        ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
+                        SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="globalization:Language">
+                                <TextBlock Text="{x:Bind NativeName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </ctc:SettingsCard>
 
