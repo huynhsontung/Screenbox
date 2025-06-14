@@ -230,6 +230,7 @@
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
+    <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
