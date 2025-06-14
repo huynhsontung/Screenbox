@@ -290,8 +290,6 @@
             Grid.Row="1"
             Margin="{StaticResource TopMediumMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
-            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             AllowDrop="True"
@@ -300,11 +298,11 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
-            SelectionMode="Extended">
+            SelectionMode="Extended"
+            Style="{StaticResource MediaListViewStyle}">
             <ListView.Resources>
                 <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
             </ListView.Resources>

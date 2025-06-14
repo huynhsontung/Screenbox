@@ -216,14 +216,12 @@
             x:Name="ItemList"
             Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
-            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.SortedItems}"
-            SelectionMode="None">
+            SelectionMode="None"
+            Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
