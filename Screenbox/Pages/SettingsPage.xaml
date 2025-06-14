@@ -290,8 +290,8 @@
                 </ctc:SettingsCard>
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="Change the app display language"
-                    Header="App language"
+                    Description="{strings:Resources Key=SettingsLanguageSelectionDescription}"
+                    Header="{strings:Resources Key=SettingsLanguageSelectionHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
                         x:Name="LanguageComboBox"
