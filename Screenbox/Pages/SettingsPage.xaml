@@ -295,7 +295,7 @@
                     HeaderIcon="{ui:FontIcon Glyph=&#xF2B7;}">
                     <ComboBox
                         x:Name="LanguageComboBox"
-                        MinWidth="150"
+                        MinWidth="200"
                         ItemsSource="{x:Bind ViewModel.AvailableLanguages}"
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
