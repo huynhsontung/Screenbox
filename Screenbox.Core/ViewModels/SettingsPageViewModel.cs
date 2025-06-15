@@ -56,16 +56,16 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
-        private static readonly InitialValues _initialValues = new();
+        private static InitialValues? _initialValues;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
 
-        private class InitialValues
+        private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, int Language)
         {
-            public string? GlobalArguments { get; set; }
-            public bool? AdvancedMode { get; set; }
-            public int VideoUpscaling { get; set; }
-            public int? Language { get; set; }
+            public string GlobalArguments { get; } = GlobalArguments;
+            public bool AdvancedMode { get; } = AdvancedMode;
+            public int VideoUpscaling { get; } = VideoUpscaling;
+            public int Language { get; } = Language;
         }
 
         public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
@@ -109,9 +109,6 @@ namespace Screenbox.Core.ViewModels
             _useMultipleInstances = _settingsService.UseMultipleInstances;
             _videoUpscaling = (int)_settingsService.VideoUpscale;
             _globalArguments = _settingsService.GlobalArguments;
-            _initialValues.AdvancedMode ??= _advancedMode;
-            _initialValues.GlobalArguments ??= _globalArguments;
-            _initialValues.VideoUpscaling = (int)_settingsService.VideoUpscale;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -123,7 +120,10 @@ namespace Screenbox.Core.ViewModels
 
             string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
             _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
-            _initialValues.Language ??= _selectedLanguage;
+
+            // Setting initial values for relaunch check
+            _initialValues ??= new InitialValues(_globalArguments, _advancedMode, _videoUpscaling, _selectedLanguage);
+            CheckForRelaunch();
 
             IsActive = true;
         }
@@ -461,6 +461,8 @@ namespace Screenbox.Core.ViewModels
 
         private void CheckForRelaunch()
         {
+            if (_initialValues == null) return;
+
             // Check if upscaling mode has been changed
             bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
 
