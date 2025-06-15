@@ -938,4 +938,13 @@
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Display chapter name when available</value>
   </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
+  </data>
 </root>

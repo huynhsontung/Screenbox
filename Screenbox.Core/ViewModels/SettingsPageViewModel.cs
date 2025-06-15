@@ -1,7 +1,9 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,6 +14,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Devices.Enumeration;
+using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -38,6 +41,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _useMultipleInstances;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
+        [ObservableProperty] private int _selectedLanguage;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -45,16 +49,24 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
+        public List<Models.Language> AvailableLanguages { get; }
+
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
-        private static string? _originalGlobalArguments;
-        private static bool? _originalAdvancedMode;
-        private static int _originalVideoUpscaling;
+        private static InitialValues? _initialValues;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
+
+        private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, int Language)
+        {
+            public string GlobalArguments { get; } = GlobalArguments;
+            public bool AdvancedMode { get; } = AdvancedMode;
+            public int VideoUpscaling { get; } = VideoUpscaling;
+            public int Language { get; } = Language;
+        }
 
         public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
         {
@@ -65,6 +77,12 @@ namespace Screenbox.Core.ViewModels
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
             RemovableStorageFolders = new ObservableCollection<StorageFolder>();
+
+            var manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l)).ToList();
+            AvailableLanguages = manifestLanguages.Select(l => new Models.Language(l.NativeName, l.LanguageTag, l.LayoutDirection))
+                .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
+                .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
+                .ToList();
 
             if (SystemInformation.IsXbox)
             {
@@ -91,9 +109,6 @@ namespace Screenbox.Core.ViewModels
             _useMultipleInstances = _settingsService.UseMultipleInstances;
             _videoUpscaling = (int)_settingsService.VideoUpscale;
             _globalArguments = _settingsService.GlobalArguments;
-            _originalAdvancedMode ??= _advancedMode;
-            _originalGlobalArguments ??= _globalArguments;
-            _originalVideoUpscaling = (int)_settingsService.VideoUpscale;
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -102,6 +117,13 @@ namespace Screenbox.Core.ViewModels
                 >= 125 => 1,
                 _ => 0
             };
+
+            string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+            _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
+
+            // Setting initial values for relaunch check
+            _initialValues ??= new InitialValues(_globalArguments, _advancedMode, _videoUpscaling, _selectedLanguage);
+            CheckForRelaunch();
 
             IsActive = true;
         }
@@ -112,6 +134,21 @@ namespace Screenbox.Core.ViewModels
             // So we need to map the value to the correct ThemeOption
             _settingsService.Theme = (ThemeOption)((value + 1) % 3);
             Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnSelectedLanguageChanged(int value)
+        {
+            if (value <= 0)
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                CheckForRelaunch();
+                return;
+            }
+
+            // If the value is out of bounds, do nothing
+            if (value >= AvailableLanguages.Count) return;
+            ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
+            CheckForRelaunch();
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -424,14 +461,19 @@ namespace Screenbox.Core.ViewModels
 
         private void CheckForRelaunch()
         {
+            if (_initialValues == null) return;
+
             // Check if upscaling mode has been changed
-            bool upscalingChanged = _originalVideoUpscaling != VideoUpscaling;
+            bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
+
+            // Check if app language has been changed
+            bool languageChanged = _initialValues.Language != SelectedLanguage;
 
             // Check if global arguments have been changed
-            bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
+            bool argsChanged = _initialValues.GlobalArguments != _settingsService.GlobalArguments;
 
             // Check if advanced mode has been changed
-            bool modeChanged = _originalAdvancedMode != AdvancedMode;
+            bool modeChanged = _initialValues.AdvancedMode != AdvancedMode;
 
             // Check if there are any global arguments set
             bool hasArgs = _settingsService.GlobalArguments.Length > 0;
@@ -446,7 +488,7 @@ namespace Screenbox.Core.ViewModels
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
             // Combine everything
-            IsRelaunchRequired = upscalingChanged || whenOn || whenOff || whenOnAndChanged;
+            IsRelaunchRequired = upscalingChanged || languageChanged || whenOn || whenOff || whenOnAndChanged;
         }
     }
 }
