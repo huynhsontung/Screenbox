@@ -48,18 +48,6 @@ namespace Screenbox.Controls
             await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
         }
 
-        private void SelectionCheckBox_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (SelectionCheckBox.IsChecked ?? false)
-            {
-                PlaylistListView.SelectAll();
-            }
-            else
-            {
-                PlaylistListView.SelectedItems.Clear();
-            }
-        }
-
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
@@ -140,17 +128,18 @@ namespace Screenbox.Controls
 
         private void SelectDeselectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (PlaylistListView.Items.Count > 0)
+            if (ViewModel.HasItems)
             {
-                if (PlaylistListView.SelectedItems.Count != ViewModel.Playlist.Items.Count)
+                var itemsRange = new ItemIndexRange(0, (uint)ViewModel.Playlist.Items.Count);
+                if (ViewModel.SelectionCount != ViewModel.Playlist.Items.Count)
                 {
-                    MultiSelectToggle.IsChecked = true;
-                    PlaylistListView.SelectRange(new ItemIndexRange(0, (uint)PlaylistListView.Items.Count));
+                    ViewModel.EnableMultiSelect = true;
+                    PlaylistListView.SelectRange(itemsRange);
                     args.Handled = true;
                 }
                 else
                 {
-                    PlaylistListView.DeselectRange(new ItemIndexRange(0, (uint)PlaylistListView.Items.Count));
+                    PlaylistListView.DeselectRange(itemsRange);
                     args.Handled = true;
                 }
             }
