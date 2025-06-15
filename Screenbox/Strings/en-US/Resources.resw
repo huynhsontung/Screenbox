@@ -944,4 +944,7 @@
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
     <value>Change the app's display language</value>
   </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
+  </data>
 </root>

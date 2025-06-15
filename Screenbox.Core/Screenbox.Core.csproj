@@ -193,6 +193,7 @@
     <Compile Include="Messages\UpdateStatusMessage.cs" />
     <Compile Include="Messages\UpdateVolumeStatusMessage.cs" />
     <Compile Include="Models\IMediaProperties.cs" />
+    <Compile Include="Models\Language.cs" />
     <Compile Include="Models\LivelyInfoModel.cs" />
     <Compile Include="Models\LivelyMusicModel.cs" />
     <Compile Include="Models\LivelyPlaybackStateModel.cs" />

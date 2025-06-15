@@ -49,7 +49,7 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
-        public List<Language> AvailableLanguages { get; }
+        public List<Models.Language> AvailableLanguages { get; }
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
@@ -77,7 +77,12 @@ namespace Screenbox.Core.ViewModels
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
             RemovableStorageFolders = new ObservableCollection<StorageFolder>();
-            AvailableLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l)).ToList();
+
+            var manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l)).ToList();
+            AvailableLanguages = manifestLanguages.Select(l => new Models.Language(l.NativeName, l.LanguageTag, l.LayoutDirection))
+                .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
+                .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
+                .ToList();
 
             if (SystemInformation.IsXbox)
             {
@@ -116,7 +121,7 @@ namespace Screenbox.Core.ViewModels
                 _ => 0
             };
 
-            string currentLanguage = Windows.ApplicationModel.Resources.Core.ResourceContext.GetForCurrentView().Languages[0];
+            string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
             _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
             _initialValues.Language ??= _selectedLanguage;
 
@@ -133,7 +138,15 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnSelectedLanguageChanged(int value)
         {
-            if (value < 0 || value >= AvailableLanguages.Count) return;
+            if (value <= 0)
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                CheckForRelaunch();
+                return;
+            }
+
+            // If the value is out of bounds, do nothing
+            if (value >= AvailableLanguages.Count) return;
             ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
             CheckForRelaunch();
         }

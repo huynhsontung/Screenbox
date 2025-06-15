@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -33,6 +34,13 @@ namespace Screenbox.Pages
                 .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim()).ToArray();
             Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
+
+            // Set the "System default" language option string
+            var systemLanguageOption = ViewModel.AvailableLanguages[0];
+            systemLanguageOption.NativeName = Strings.Resources.LanguageSystemDefault;
+            systemLanguageOption.LayoutDirection = GlobalizationHelper.IsRightToLeftLanguage
+                ? Windows.Globalization.LanguageLayoutDirection.Rtl
+                : Windows.Globalization.LanguageLayoutDirection.Ltr;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
