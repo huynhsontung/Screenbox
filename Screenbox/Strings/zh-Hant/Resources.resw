@@ -140,13 +140,13 @@
     <value>無法儲存影格</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>進度</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>剩餘</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>總時長</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>第 {0} 章節</value>
@@ -461,7 +461,7 @@
     <value>瀏覽媒體檔案</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>進階媒體選項</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>新增檔案</value>
@@ -470,7 +470,7 @@
     <value>瀏覽要新增至播放佇列的檔案</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>新增至佇列進階選項</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>將檔案夾新增至您的音樂庫</value>
@@ -695,7 +695,7 @@
     <value>無相容轉譯器。請確認已在此裝置上安裝 Direct3D 11。</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>關於此問題與修復方法，請至 </value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>無法開啟檔案</value>
@@ -852,7 +852,7 @@
     <value>預設</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
+    <value>使用沈浸式模式播放音訊時顯示的背景風格</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>由 Lively Wallpaper 提供</value>
@@ -861,7 +861,7 @@
     <value>匯入視覺效果</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>從 GitHub 取得 Lively Wallpaper 以新增更多視覺效果</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
     <value>新增日期</value>
@@ -882,42 +882,57 @@
     <value>影片庫</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>顯示專輯</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>顯示演出者</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>載入視覺效果失敗</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>開啟單一檔案時，自動新增同資料夾內的所有檔案至佇列</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>新增所有檔案至佇列</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>使用系統設定</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>深色</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>淺色</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>更改介面色系</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>主題</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>個人化</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>還原前次播放進度</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>從上次結束的時間點開始播放</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video upscaling method</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
   </data>
 </root>

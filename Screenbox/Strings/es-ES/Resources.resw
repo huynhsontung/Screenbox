@@ -140,13 +140,13 @@
     <value>Error al guardar el fotograma</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Tiempo transcurrido</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Tiempo restante</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Duración total</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
@@ -177,7 +177,7 @@
     <value>Volumen</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Ajustar volumen</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Buscar</value>
@@ -224,16 +224,16 @@
     <value>Añadir a la cola</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Seleccionar todo</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>Select all items in this view</value>
+    <value>Seleccionar todos los elementos de esta vista</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>No seleccionar ninguno</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>Clear your selection</value>
+    <value>Borrar selección</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>Borrar selección</value>
@@ -275,7 +275,7 @@
     <value>Restaurar vista de vídeo</value>
   </data>
   <data name="MinimizeImmersiveView" xml:space="preserve">
-    <value>Minimize immersive view</value>
+    <value>Minimizar la vista inmersiva</value>
   </data>
   <data name="Cast" xml:space="preserve">
     <value>Transmitir</value>
@@ -332,7 +332,7 @@
     <value>Buscar</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Buscar vídeos, canciones, álbumes y más</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuración</value>
@@ -695,7 +695,7 @@
     <value>No hay disponible un renderizador compatible. Por favor, asegúrese de que Direct3D 11 está disponible en su dispositivo.</value>
   </data>
   <data name="CriticalErrorMoreInformation" xml:space="preserve">
-    <value>For more information about this issue and possible fixes, visit</value>
+    <value>Para más información sobre este problema y posibles correcciones, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Fallo al abrir archivo(s)</value>
@@ -765,7 +765,7 @@
     <value>Licencia</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Reconocimientos por software de terceros</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Ayuda a traducir</value>
@@ -840,10 +840,10 @@
     <value>Descargar visuales en GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Opciones visuales de audio</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Efectos</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Buscar archivo(s)</value>
@@ -867,13 +867,13 @@
     <value>Fecha añadida</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Multimedia</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Archivos</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>Música</value>
@@ -882,42 +882,57 @@
     <value>Vídeos</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Mostrar álbum</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Mostrar artista</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Error al cargar la imagen</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Cuando se abre un único archivo, se añaden automáticamente todos los demás archivos de la carpeta a la cola</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Añadir todos los archivos a la cola</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Usar la configuración del sistema</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Oscuro</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Claro</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Cambiar el esquema de colores general de la aplicación</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Tema de la aplicación</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Personalización</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Siempre continuar desde la última posición</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Seguir reproduciendo desde donde se detuvo al abrir un archivo</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video upscaling method</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
   </data>
 </root>
