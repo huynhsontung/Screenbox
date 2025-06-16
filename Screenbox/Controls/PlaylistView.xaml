@@ -230,7 +230,7 @@
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
-                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource TopBottomThicknessFilterConverter}}" Text="•" />
+                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
