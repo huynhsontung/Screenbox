@@ -698,7 +698,7 @@
     <value>Aby uzyskać więcej informacji na temat tego problemu i możliwych rozwiązań, odwiedź</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Nie można otworzyć pliku(ów)</value>
+    <value>Nie można otworzyć pliku (plików)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>Wprowadź adres URL pliku lub strumienia</value>
@@ -725,7 +725,7 @@
     <value>Pomoc wiersza poleceń VLC</value>
   </data>
   <data name="VlcCommandLineHelpText" xml:space="preserve">
-    <value>Zobacz {0} aby zobaczyć pełną listę dostępnych opcji.</value>
+    <value>Zobacz {0}, aby zobaczyć pełną listę dostępnych opcji.</value>
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
@@ -735,13 +735,13 @@
     <value>Tryb rozszerzony</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
-    <value>Tryb zaawansowany pozwala dostosować zachowanie LibVLC za pomocą argumentów wiersza poleceń.</value>
+    <value>Tryb zaawansowany pozwala dostosować zachowanie LibVLC za pomocą argumentów wiersza poleceń</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
     <value>Argumenty globalne</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
-    <value>Argumenty wiersza poleceń, które dotyczą wszystkich odtwarzaczy multimediów.</value>
+    <value>Argumenty wiersza poleceń, które dotyczą wszystkich odtwarzaczy multimediów</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
     <value>Usuń folder</value>
@@ -795,7 +795,7 @@
     <value>Odśwież</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
-    <value>Użyj indeksatora do skanowania</value>
+    <value>Użyj indeksowania do skanowania</value>
   </data>
   <data name="SettingsUseIndexerDescription" xml:space="preserve">
     <value>Przyspiesz skanowanie bibliotek poprzez użycie indeksu systemowego, gdy jest on dostępny. Wyłącz tę opcję, jeśli nie widzisz wszystkich mediów w bibliotece.</value>
@@ -891,7 +891,7 @@
     <value>Nie udało się załadować wizualizacji</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>Podczas otwierania pojedynczego pliku, automatycznie dodaj wszystkie inne pliki w folderze do kolejki odtwarzania.</value>
+    <value>Podczas otwierania pojedynczego pliku, automatycznie dodaj wszystkie inne pliki w folderze do kolejki odtwarzania</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
     <value>Dodaj wszystkie pliki w folderze do kolejki</value>
@@ -921,18 +921,30 @@
     <value>Kontynuuj odtwarzanie z miejsca ostatniego zatrzymania podczas otwierania pliku</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Metoda skalowania obrazu</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Dwuliniowe</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Punkt</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super rozdzielczość</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
   </data>
 </root>
