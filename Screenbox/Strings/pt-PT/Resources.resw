@@ -924,7 +924,7 @@
     <value>Melhorar vídeo</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>A super resolução requer hardware compatível e suporte do controlador</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>Bi-linear</value>
