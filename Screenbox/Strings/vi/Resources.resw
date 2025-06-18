@@ -594,7 +594,7 @@
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Kênh {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
@@ -774,7 +774,7 @@
     <value>Tùy chọn</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
-    <value>Bù thời gian</value>
+    <value>Thời gian trễ</value>
   </data>
   <data name="PropertyComposers" xml:space="preserve">
     <value>Nhà soạn nhạc</value>
@@ -882,7 +882,7 @@
     <value>Videos</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Hiển thị album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
     <value>Hiển thị nghệ sĩ</value>
@@ -927,10 +927,10 @@
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Song tuyến tính</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Điểm</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Siêu phân giải</value>
