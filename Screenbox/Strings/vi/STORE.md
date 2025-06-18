@@ -15,5 +15,5 @@ Screenbox hỗ trợ nhiều định dạng tệp và codec phổ biến, đảm
 - Trải nghiệm người dùng hiện đại với hỗ trợ cử chỉ, được tối ưu hóa cho tất cả các loại thiết bị Windows.
 - Hỗ trợ nhiều định dạng âm thanh và video.
 - Duyệt và quản lý thư viện nhạc và video trên máy của bạn hoặc qua mạng.
-- Truyền phương tiện của bạn tới nhiều loại thiết bị bằng Chromecast.
+- Truyền phương tiện của bạn tới nhiều loại thiết bị với Chromecast.
 - Làm việc và thưởng thức phương tiện của bạn cùng lúc bằng chế độ ảnh trong ảnh.
