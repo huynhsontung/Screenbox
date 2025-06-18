@@ -945,6 +945,6 @@
     <value>Alterar o idioma de exibição do aplicativo</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Utilizar o idioma do sistema</value>
+    <value>Usar o idioma do sistema</value>
   </data>
 </root>
