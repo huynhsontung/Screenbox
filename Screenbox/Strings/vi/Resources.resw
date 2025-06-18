@@ -831,19 +831,19 @@
     <value>Năm phát hành</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Minh họa âm thanh</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Lấy Từ Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Tải minh họa trên GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Tùy chọn minh họa âm thanh</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Minh họa</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Duyệt tập tin</value>
@@ -858,7 +858,7 @@
     <value>Được cung cấp bởi Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Nhập minh họa</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
     <value>Nhận thêm ảnh qua ứng dụng Lively Wallpaper hoặc tải xuống từ GitHub</value>
@@ -888,7 +888,7 @@
     <value>Hiển thị nghệ sĩ</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Không tải được minh họa</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
     <value>Khi mở một tệp, tự động thêm tất cả các tệp khác trong thư mục vào hàng đợi phát.</value>
@@ -921,7 +921,7 @@
     <value>Tiếp tục phát từ nơi bạn dừng cuối cùng khi mở tệp</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Cách tăng độ phân giải video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
@@ -933,18 +933,18 @@
     <value>Point</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Siêu phân giải</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Hiển thị tên chương khi có sẵn</value>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Ngôn ngữ ứng dụng</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Thay đổi ngôn ngữ hiển thị của ứng dụng</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Dùng ngôn ngữ hệ thống</value>
   </data>
 </root>
