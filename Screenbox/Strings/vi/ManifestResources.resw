@@ -124,7 +124,7 @@
     <value>Screenbox</value>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>Trình phát video hiện đại tập trung vào hiệu suất và tính dễ sử dụng trên nhiều loại thiết bị Windows.</value>
+    <value>Trình phát video hiện đại tập trung vào hiệu suất và dễ sử dụng trên nhiều loại thiết bị Windows.</value>
   </data>
   <data name="FileDisplayName3GPP" xml:space="preserve">
     <value>Tệp Đa Phương Tiện 3GPP</value>
@@ -139,11 +139,11 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>Âm thanh Dolby AC-3</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
-    <value>AIFF Audio</value>
+    <value>Âm thanh AIFF</value>
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
@@ -159,7 +159,7 @@
     <comment>Display name for the file type ".avi" (Audio Video Interleave)</comment>
   </data>
   <data name="FileDisplayNameDTS" xml:space="preserve">
-    <value>DTS Audio</value>
+    <value>Âm thanh DTS</value>
     <comment>Display name for the file type ".dts" (Digital Theater Systems)</comment>
   </data>
   <data name="FileDisplayNameFLAC" xml:space="preserve">
@@ -207,7 +207,7 @@
     <comment>Display name for the file type ".m4a"</comment>
   </data>
   <data name="FileDisplayNameMP4Audiobook" xml:space="preserve">
-    <value>MPEG-4 Audiobook</value>
+    <value>Sách nói MPEG-4</value>
     <comment>Display name for the file type ".m4b"</comment>
   </data>
   <data name="FileDisplayNameMP4Video" xml:space="preserve">
@@ -219,7 +219,7 @@
     <comment>Display name for the file type ".mxf" (Material Exchange Format)</comment>
   </data>
   <data name="FileDisplayNameNIST" xml:space="preserve">
-    <value>NIST SPHERE Audio</value>
+    <value>Âm thanh NIST SPHERE</value>
     <comment>Display name for the file type ".nist" (National Institute of Standards and Technology Audio)</comment>
   </data>
   <data name="FileDisplayNameOggAudio" xml:space="preserve">
@@ -227,7 +227,7 @@
     <comment>Display name for the file type ".ogg" and ".oga"</comment>
   </data>
   <data name="FileDisplayNameOggSpeex" xml:space="preserve">
-    <value>Ogg Speex Audio</value>
+    <value>Âm thanh Ogg Speex</value>
     <comment>Display name for the file type ".spx"</comment>
   </data>
   <data name="FileDisplayNameOggOpus" xml:space="preserve">
@@ -271,11 +271,11 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>Tệp ASF</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
-    <value>Windows Media File</value>
+    <value>Tệp Phương Tiện Windows</value>
     <comment>Display name for the file type ".wm"</comment>
   </data>
   <data name="FileDisplayNameWindowsMediaAudio" xml:space="preserve">
@@ -287,7 +287,7 @@
     <comment>Display name for the file type ".wmv"</comment>
   </data>
   <data name="FileDisplayNameWindowsRecordedTV" xml:space="preserve">
-    <value>Windows Recorded TV Show File</value>
+    <value>Tệp Ghi Lại Chương Trình TV Windows</value>
     <comment>Display name for the file type ".wtv"</comment>
   </data>
   <data name="FileDisplayNameM3U8" xml:space="preserve">
@@ -299,11 +299,11 @@
     <comment>Display name for the file type ".m2t" and ".ts"</comment>
   </data>
   <data name="FileDisplayNameMPEG2TS" xml:space="preserve">
-    <value>BDAV MPEG-2 Transport Stream</value>
+    <value>Luồng Truyền Tải BDAV MPEG-2</value>
     <comment>Display name for the file type ".m2ts" and ".mts" (Blu-ray disc Audio-Video MPEG-2 Transport Stream)</comment>
   </data>
   <data name="FileDisplayNameWavPack" xml:space="preserve">
-    <value>WavPack Audio</value>
+    <value>Âm thanh WavPack</value>
     <comment>Display name for the file type ".wv"</comment>
   </data>
   <data name="FileDisplayNameWavPackCorrection" xml:space="preserve">
