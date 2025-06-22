@@ -13,7 +13,7 @@ public static class ListViewExtensions
     private static readonly bool IsApiContract13Present = Windows.Foundation.Metadata.ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 13);
 
     /// <summary>
-    /// Identifies the attached dependency property that specifies the <see cref="CornerRadius"/> for the items in a <see cref="ListViewBase"/>.
+    /// Identifies the attached dependency property that specifies the <see cref="CornerRadius"/> of <see cref="ListViewBase"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemCornerRadiusProperty = DependencyProperty.RegisterAttached(
         "ItemCornerRadius", typeof(CornerRadius), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemCornerRadiusPropertyChanged));
@@ -39,7 +39,7 @@ public static class ListViewExtensions
     }
 
     /// <summary>
-    /// Identifies the attached dependency property that specifies the margin between items in a <see cref="ListViewBase"/>.
+    /// Identifies the attached dependency property that specifies the margin of the <see cref="ListViewBase"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemMarginProperty = DependencyProperty.RegisterAttached(
         "ItemMargin", typeof(Thickness), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemMarginPropertyChanged));
@@ -65,7 +65,7 @@ public static class ListViewExtensions
     }
 
     /// <summary>
-    /// Identifies the attached dependency property that specifies the minimum height for items in a <see cref="ListView"/>.
+    /// Identifies the attached dependency property that specifies the minimum height of the <see cref="ListView"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemMinHeightProperty = DependencyProperty.RegisterAttached(
         "ItemMinHeight", typeof(double), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemMinHeightPropertyChanged));
@@ -173,26 +173,37 @@ public static class ListViewExtensions
         if (args.Phase > 0 || args.InRecycleQueue) return;
         if (!IsApiContract13Present)
         {
-            // In Windows 10, the ListViewItemPresenter doesn't have an inner Border element,
-            // resulting in the margin being applied at the ListViewItem container level.
-            // This introduces an inactive hit-test region around the visual bounds of the item.
+            // Due to the absence of a Border element in the Windows 10 ListViewItem,
+            // margin must be set at the container level. This introduces an inactive
+            // hit-test region around the visual bounds of the item.
             args.ItemContainer.Margin = GetItemMargin(sender);
         }
         else
         {
-            // The ListViewItemPresenter in Windows 11 appears to have an inner Border element,
+            // The ListViewItem in Windows 11 appears to have a Border element with a margin of '4,2,4,2',
             // likely intended to visually separate items while adhering to the minimum
             // touch target size guidelines of 40x40 effective pixels.
             //
-            //  __________________________
-            // | Border     2px           |
-            // |      ______________      |
-            // |     |     36px     |     |
-            // | 4px |    Content   | 4px |
-            // |     |______________|     |
-            // |            2px           |
-            // |__________________________|
+            // If the selection mode is set to single, multiple, or extended the item's visual tree looks like this:
+            //     ListViewItem
+            //       Root [ListViewItemPresenter]
+            //         Border (A border that specifies most of the layout and visual properties)
+            //         Content
+            //         Border (A selection indicator or CheckBox glyph)
             //
+            //     GridViewItem
+            //       Root [ListViewItemPresenter]
+            //         Border (A border that specifies most of the layout and visual properties
+            //         Content
+            //         Border (The CheckBox glyph)
+            //         Border (SelectedBorderBrush)
+            //           Border (SelectedInnerBorderBrush)
+            //
+            // When selection is disabled, then the item's visual tree looks like this:
+            //     ListViewItem
+            //       Root [ListViewItemPresenter]
+            //         Border (A border that specifies most of the layout and visual properties)
+            //         Content
             var border = args.ItemContainer.FindDescendant<Border>();
             if (border != null)
             {
@@ -224,7 +235,8 @@ public static class ListViewExtensions
             var margin = GetItemMargin(sender);
             double offsetMargin = margin.Top + margin.Bottom;
 
-            // Adjustment required to accommodate the added item container margin.
+            // If a margin is applied to the container, we have to subtract the vertical values
+            // from the minimum height to ensure it matches the Windows 11 ListViewItem dimensions.
             args.ItemContainer.MinHeight = GetItemMinHeight(sender) - offsetMargin;
         }
         else
