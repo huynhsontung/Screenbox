@@ -924,7 +924,7 @@
     <value>Skalierungsmethode</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
-    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+    <value>Super Resolution-Skalierung erfordert kompatible Hardware und Treiberunterstützung.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
     <value>Bilinear</value>
@@ -933,18 +933,18 @@
     <value>Point</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super Resolution</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Kapitelnamen anzeigen, wenn verfügbar</value>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>App-Sprache</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Die Anzeigesprache der App ändern</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Systemsprache verwenden</value>
   </data>
 </root>
