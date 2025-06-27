@@ -35,6 +35,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _theme;
         [ObservableProperty] private bool _enqueueAllFilesInFolder;
         [ObservableProperty] private bool _restorePlaybackPosition;
+        [ObservableProperty] private int _launchPage;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
         [ObservableProperty] private int _videoUpscaling;
@@ -104,6 +105,7 @@ namespace Screenbox.Core.ViewModels
             _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
+            _launchPage = (int)_settingsService.LaunchPage;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
@@ -209,6 +211,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.RestorePlaybackPosition = value;
             Messenger.Send(new SettingsChangedMessage(nameof(RestorePlaybackPosition), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnLaunchPageChanged(int value)
+        {
+            _settingsService.LaunchPage = (LaunchPageOption)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(LaunchPage), typeof(SettingsPageViewModel)));
         }
 
         async partial void OnSearchRemovableStorageChanged(bool value)
