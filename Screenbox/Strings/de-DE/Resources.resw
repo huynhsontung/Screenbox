@@ -646,7 +646,7 @@
     <value>Lautstärkeverstärker</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
-    <value>Erlaube die maximale Lautstärke über 100% zu gehen</value>
+    <value>Erlaube der maximalen Lautstärke über 100% zu gehen</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesten</value>
@@ -930,7 +930,7 @@
     <value>Bilinear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Nächster Nachbar</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Super Resolution</value>
