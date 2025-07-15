@@ -149,7 +149,8 @@ public static class ListViewExtensions
         var presenter = args.ItemContainer.FindDescendant<ListViewItemPresenter>();
         if (presenter != null)
         {
-            presenter.CornerRadius = GetItemCornerRadius(sender);
+            var cornerRadius = GetItemCornerRadius(sender);
+            presenter.CornerRadius = cornerRadius;
         }
     }
 
@@ -171,12 +172,13 @@ public static class ListViewExtensions
     private static void ItemMarginOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
+        var margin = GetItemMargin(sender);
         if (!IsApiContract13Present)
         {
             // Due to the absence of a Border element in the Windows 10 ListViewItem,
             // margin must be set at the container level. This introduces an inactive
             // hit-test region around the visual bounds of the item.
-            args.ItemContainer.Margin = GetItemMargin(sender);
+            args.ItemContainer.Margin = margin;
         }
         else
         {
@@ -207,7 +209,7 @@ public static class ListViewExtensions
             var border = args.ItemContainer.FindDescendant<Border>();
             if (border != null)
             {
-                border.Margin = GetItemMargin(sender);
+                border.Margin = margin;
             }
         }
     }
@@ -230,6 +232,7 @@ public static class ListViewExtensions
     private static void ItemMinHeightOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
+        var minHeight = GetItemMinHeight(sender);
         if (!IsApiContract13Present && ItemMarginProperty != null)
         {
             var margin = GetItemMargin(sender);
@@ -237,11 +240,11 @@ public static class ListViewExtensions
 
             // If a margin is applied to the container, we have to subtract the vertical values
             // from the minimum height to ensure it matches the Windows 11 ListViewItem dimensions.
-            args.ItemContainer.MinHeight = GetItemMinHeight(sender) - offsetMargin;
+            args.ItemContainer.MinHeight = minHeight - offsetMargin;
         }
         else
         {
-            args.ItemContainer.MinHeight = GetItemMinHeight(sender);
+            args.ItemContainer.MinHeight = minHeight;
         }
     }
 
