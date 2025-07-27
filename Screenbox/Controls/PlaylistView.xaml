@@ -28,6 +28,8 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
+                <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
+
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
@@ -226,7 +228,7 @@
                             d:Content="11 items selected"
                             AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                            Command="{x:Bind Common.ToggleListViewBaseItemSelectionCommand}"
+                            Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />

@@ -11,7 +11,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -34,6 +33,8 @@ namespace Screenbox.Controls
         internal PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
+
+        private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
 
         public PlaylistView()
         {
@@ -130,16 +131,10 @@ namespace Screenbox.Controls
         {
             if (ViewModel.HasItems)
             {
-                var itemsRange = new ItemIndexRange(0, (uint)ViewModel.Playlist.Items.Count);
-                if (ViewModel.SelectionCount != ViewModel.Playlist.Items.Count)
+                if (_selectionCommand.CanToggleSelection(PlaylistListView))
                 {
                     ViewModel.EnableMultiSelect = true;
-                    PlaylistListView.SelectRange(itemsRange);
-                    args.Handled = true;
-                }
-                else
-                {
-                    PlaylistListView.DeselectRange(itemsRange);
+                    _selectionCommand.ToggleSelection(PlaylistListView);
                     args.Handled = true;
                 }
             }
