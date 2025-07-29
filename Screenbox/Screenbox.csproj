@@ -163,6 +163,9 @@
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
+    <Compile Include="Controls\ErrorInfoPanel.xaml.cs">
+      <DependentUpon>ErrorInfoPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
@@ -542,6 +545,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorInfoPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
