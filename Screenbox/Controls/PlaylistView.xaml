@@ -231,6 +231,7 @@
                             Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                            IsThreeState="True"
                             ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource TopBottomThicknessFilterConverter}}" Text="•" />
                         <Button
