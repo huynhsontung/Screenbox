@@ -15,19 +15,41 @@ public sealed class SelectDeselectAllCommand : ICommand
 {
     public event EventHandler? CanExecuteChanged;
 
-    internal bool CanToggleSelection(ListViewBase listViewBase)
+    /// <summary>
+    /// Determines whether the <see cref="ListViewBase"/> items can be selected.
+    /// </summary>
+    /// <param name="listViewBase">The <see cref="ListViewBase"/> to evaluate.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="listViewBase"/> has a selection mode of
+    /// <see cref="ListViewSelectionMode.Multiple"/> or <see cref="ListViewSelectionMode.Extended"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    public bool CanToggleSelection(ListViewBase listViewBase)
     {
         return listViewBase.SelectionMode
             is ListViewSelectionMode.Multiple
             or ListViewSelectionMode.Extended;
     }
 
-    internal bool CanToggleSelection(ListBox listBox)
+    /// <summary>
+    /// Determines whether the <see cref="ListBox"/> items can be selected.
+    /// </summary>
+    /// <param name="listBox">The <see cref="ListBox"/> to evaluate.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="listBox"/> has a selection behavior of
+    /// <see cref="SelectionMode.Multiple"/> or <see cref="SelectionMode.Extended"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    public bool CanToggleSelection(ListBox listBox)
     {
-        return listBox.SelectionMode is SelectionMode.Multiple or SelectionMode.Extended;
+        return listBox.SelectionMode is not SelectionMode.Single;
     }
 
-    internal void ToggleSelection(ListViewBase listViewBase)
+    /// <summary>
+    /// Changes the selection state of all items in the specified <see cref="ListViewBase"/>.
+    /// For example, if all items in the <paramref name="listViewBase"/> are currently selected,
+    /// calling this method deselects all items.
+    /// </summary>
+    /// <param name="listViewBase">The target control whose selection state will be changed.</param>
+    public void ToggleSelection(ListViewBase listViewBase)
     {
         var allItemsRange = new ItemIndexRange(0, (uint)listViewBase.Items.Count);
         if (listViewBase.SelectedItems.Count != listViewBase.Items.Count)
@@ -40,7 +62,13 @@ public sealed class SelectDeselectAllCommand : ICommand
         }
     }
 
-    internal void ToggleSelection(ListBox listBox)
+    /// <summary>
+    /// Changes the selection state of all items in the specified <see cref="ListBox"/>.
+    /// For example, if all items in the <paramref name="listBox"/> are currently selected,
+    /// calling this method deselects all items.
+    /// </summary>
+    /// <param name="listBox">The target control whose selection state will be changed.</param>
+    public void ToggleSelection(ListBox listBox)
     {
         if (listBox.SelectedItems.Count != listBox.Items.Count)
         {
