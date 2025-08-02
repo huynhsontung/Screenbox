@@ -21,7 +21,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        [ObservableProperty] private string _volumeGlyph;
         private IMediaPlayer? _mediaPlayer;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
@@ -32,7 +31,6 @@ namespace Screenbox.Core.ViewModels
             _volume = settingsService.PersistentVolume;
             _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
-            _volumeGlyph = GetVolumeGlyph();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model doesn't receive any messages
@@ -75,7 +73,6 @@ namespace Screenbox.Core.ViewModels
             // bool stayMute = IsMute && newValue - _mediaPlayer.Volume < 0.005;
             _mediaPlayer.Volume = newValue;
             if (value > 0) IsMute = false;
-            VolumeGlyph = GetVolumeGlyph();
             _settingsService.PersistentVolume = value;
         }
 
@@ -83,7 +80,6 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             _mediaPlayer.IsMuted = value;
-            VolumeGlyph = GetVolumeGlyph();
         }
 
         private void OnVolumeChanged(IMediaPlayer sender, object? args)
@@ -101,15 +97,6 @@ namespace Screenbox.Core.ViewModels
             {
                 _dispatcherQueue.TryEnqueue(() => sender.IsMuted = IsMute);
             }
-        }
-
-        private string GetVolumeGlyph()
-        {
-            if (IsMute) return "\ue74f";
-            if (Volume < 25) return "\ue992";
-            if (Volume < 50) return "\ue993";
-            if (Volume < 75) return "\ue994";
-            return "\ue995";
         }
     }
 }

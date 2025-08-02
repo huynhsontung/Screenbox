@@ -449,7 +449,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
-                <FontIcon Glyph="{x:Bind VolumeControl.ViewModel.VolumeGlyph, Mode=OneWay}" MirroredWhenRightToLeft="True" />
+                <FontIcon Glyph="{x:Bind helpers:GlyphConvert.ToVolumeGlyph(VolumeControl.ViewModel.IsMute, VolumeControl.ViewModel.Volume), Mode=OneWay}" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>

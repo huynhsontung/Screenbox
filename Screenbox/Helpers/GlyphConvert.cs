@@ -103,4 +103,32 @@ public static partial class GlyphConvert
     {
         return value ? "\uE62E" : "\uF5B0";
     }
+
+    /// <summary>
+    /// Gets the volume glyph code based on mute state and volume value.
+    /// </summary>
+    /// <param name="isMute">A <see cref="bool"/> that specifies if the player is muted.</param>
+    /// <param name="volume">An <see cref="int"/> that specifies the player's volume.</param>
+    /// <returns>
+    /// <strong>Mute</strong> glyph code <see cref="string"/> if <paramref name="isMute"/> is <see langword="true"/>;
+    /// otherwise, a glyph code representing the volume level.
+    /// </returns>
+    public static string ToVolumeGlyph(bool isMute, int volume)
+    {
+        const string MuteGlyph = "\uE74F";
+        const string Volume0Glyph = "\uE992";
+        const string Volume1Glyph = "\uE993";
+        const string Volume2Glyph = "\uE994";
+        const string Volume3Glyph = "\uE995";
+
+        if (isMute) return MuteGlyph;
+
+        return volume switch
+        {
+            < 25 => Volume0Glyph,
+            < 50 => Volume1Glyph,
+            < 75 => Volume2Glyph,
+            _ => Volume3Glyph
+        };
+    }
 }
