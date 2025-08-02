@@ -31,12 +31,14 @@
 
         <Thickness x:Key="ErrorInfoPanelQrCodeMargin">0,0,20,0</Thickness>
         <x:Double x:Key="ErrorInfoPanelQrCodeSize">148</x:Double>
-        <!--<x:Double x:Key="ErrorInfoPanelQrCodeStrokeThickness">4</x:Double>-->
 
         <Thickness x:Key="ErrorInfoPanelDescriptionMargin">0,24,0,0</Thickness>
     </UserControl.Resources>
 
-    <ScrollViewer Padding="{x:Bind Padding, Mode=OneWay}" HorizontalScrollMode="Disabled">
+    <ScrollViewer
+        Padding="{x:Bind Padding, Mode=OneWay}"
+        HorizontalScrollMode="Disabled"
+        VerticalScrollBarVisibility="Auto">
         <Grid MaxWidth="{ThemeResource ErrorInfoPanelMaxWidth}" Padding="{ThemeResource ErrorInfoPanelPadding}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
