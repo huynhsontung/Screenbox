@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -14,12 +15,11 @@ namespace Screenbox.Controls
         /// Identifies the <see cref="VolumeToggleButtonStyle"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VolumeToggleButtonStyleProperty = DependencyProperty.Register(
-            nameof(VolumeToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata((Style)Application.Current.Resources["DefaultToggleButtonStyle"]));
+            nameof(VolumeToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(null, OnVolumeToggleButtonStylePropertyChanged));
 
         /// <summary>
         /// Gets or sets the Style that defines the look of the volume toggle button.
         /// </summary>
-        /// <returns>The Style that defines the look of the volume toggle button. The default is DefaultToggleButtonStyle.</returns>
         public Style VolumeToggleButtonStyle
         {
             get { return (Style)GetValue(VolumeToggleButtonStyleProperty); }
@@ -44,12 +44,28 @@ namespace Screenbox.Controls
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
+        private static void OnVolumeToggleButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is VolumeControl control && control.VolumeToggleButton != null)
+            {
+                control.VolumeToggleButton.Style = (Style)e.NewValue;
+            }
+        }
+
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(VolumeViewModel.MaxVolume))
             {
                 UpdateIndicatorBoostWidth();
             }
+        }
+
+        private void VolumeSlider_OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            var pointer = e.GetCurrentPoint((UIElement)sender);
+            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
+            int volumeChange = mouseWheelDelta > 0 ? 5 : -5;
+            ViewModel.SetVolume(volumeChange, true);
         }
 
         private void VolumeControl_OnSizeChanged(object sender, SizeChangedEventArgs e)

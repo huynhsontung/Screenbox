@@ -1,15 +1,12 @@
 ﻿#nullable enable
 
 using System;
-using Windows.System;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -52,18 +49,8 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ChangeVolumeRequestMessage message)
         {
-            Volume = message.IsOffset ?
-                Math.Clamp(Volume + message.Value, 0, MaxVolume) :
-                Math.Clamp(message.Value, 0, MaxVolume);
+            SetVolume(message.Value, message.IsOffset);
             message.Reply(Volume);
-        }
-
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volumeChange = mouseWheelDelta > 0 ? 5 : -5;
-            Volume = Math.Clamp(Volume + volumeChange, 0, MaxVolume);
         }
 
         partial void OnVolumeChanged(int value)
@@ -97,6 +84,17 @@ namespace Screenbox.Core.ViewModels
             {
                 _dispatcherQueue.TryEnqueue(() => sender.IsMuted = IsMute);
             }
+        }
+
+        /// <summary>
+        /// Sets the volume to a specified value or adjusts it by a given amount.
+        /// </summary>
+        /// <param name="value">The target volume to set or the offset amount to adjust.</param>
+        /// <param name="isOffset">If <see langword="true"/>, adjusts the current volume by the specified <paramref name="value"/>;
+        /// otherwise, sets the volume directly. The default value is <see langword="false"/>.</param>
+        public void SetVolume(int value, bool isOffset = false)
+        {
+            Volume = Math.Clamp(isOffset ? Volume + value : value, 0, MaxVolume);
         }
     }
 }
