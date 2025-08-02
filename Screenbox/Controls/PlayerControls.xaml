@@ -144,7 +144,7 @@
                     KeyTipPlacementMode="Left"
                     Text="{x:Bind strings:Resources.PlaybackSpeed}">
                     <MenuFlyoutSubItem.Icon>
-                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
+                        <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToSpeedGlyph(ViewModel.PlaybackSpeed), Mode=OneWay}" />
                     </MenuFlyoutSubItem.Icon>
                     <muxc:RadioMenuFlyoutItem
                         x:Name="PlaybackSpeed025MenuItem"
@@ -381,7 +381,7 @@
                 AutomationProperties.Name="{x:Bind PlayPauseButton.(controls:AcceleratorService.ToolTip), Mode=OneWay}"
                 Command="{x:Bind ViewModel.PlayPauseCommand}"
                 Style="{StaticResource PlayerButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
                     <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
@@ -449,7 +449,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerButtonStyle}"
                 Visibility="Collapsed">
-                <FontIcon Glyph="{x:Bind helpers:GlyphConvert.ToVolumeGlyph(VolumeControl.ViewModel.IsMute, VolumeControl.ViewModel.Volume), Mode=OneWay}" MirroredWhenRightToLeft="True" />
+                <FontIcon Glyph="{x:Bind converters:GlyphConverter.ToVolumeGlyph(VolumeControl.ViewModel.IsMute, VolumeControl.ViewModel.Volume), Mode=OneWay}" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
                     <KeyboardAccelerator Key="M" />
                 </Button.KeyboardAccelerators>
@@ -470,7 +470,7 @@
                 IsChecked="{x:Bind ViewModel.Playlist.ShuffleMode, Mode=TwoWay}"
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToShuffleGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToShuffleGlyph(ViewModel.Playlist.ShuffleMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="S" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>
@@ -486,7 +486,7 @@
                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                 IsThreeState="True"
                 Style="{StaticResource PlayerToggleButtonStyle}">
-                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind helpers:GlyphConvert.ToRepeatGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
+                <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToRepeatGlyph(ViewModel.Playlist.RepeatMode), Mode=OneWay}" />
                 <ToggleButton.KeyboardAccelerators>
                     <KeyboardAccelerator Key="R" Modifiers="Control" />
                 </ToggleButton.KeyboardAccelerators>

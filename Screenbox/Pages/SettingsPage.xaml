@@ -317,7 +317,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:GlyphConvert.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>

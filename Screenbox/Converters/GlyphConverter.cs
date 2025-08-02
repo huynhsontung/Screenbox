@@ -1,12 +1,13 @@
 ﻿using System;
+using Screenbox.Helpers;
 using Windows.Media;
 
-namespace Screenbox.Helpers;
+namespace Screenbox.Converters;
 
 /// <summary>
 /// Provides <see langword="static"/> methods to convert value types to glyph codes.
 /// </summary>
-public static partial class GlyphConvert
+public static partial class GlyphConverter
 {
     /// <summary>
     /// Gets the shuffle glyph code based on a boolean condition.
