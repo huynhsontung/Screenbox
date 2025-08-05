@@ -32,6 +32,8 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleTimingOffsetChanged;
+        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioTimingOffsetChanged;
 
         public ChapterCue? Chapter
         {
@@ -125,6 +127,56 @@ namespace Screenbox.Core.Playback
                     double oldValue = VlcPlayer.Rate;
                     VlcPlayer.SetRate((float)value);
                     PlaybackRateChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the subtitle timing offset in milliseconds.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="SubtitleTimingOffsetChanged"/> event is raised whenever this property changes,
+        /// providing both the new and old values.
+        /// </remarks>
+        /// <value>
+        /// A <see cref="double"/> representing the subtitle offset in milliseconds.
+        /// Converted to microseconds as used internally by LibVLC.
+        /// </value>
+        public double SubtitleTimingOffset
+        {
+            get => VlcPlayer.SpuDelay / 1000.0;
+            set
+            {
+                double oldValue = VlcPlayer.SpuDelay / 1000.0;
+                if (Math.Abs(oldValue - value) > 0.0001)
+                {
+                    VlcPlayer.SetSpuDelay((long)(value * 1000));
+                    SubtitleTimingOffsetChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the audio timing offset in milliseconds.
+        /// </summary>
+        /// <remarks>
+        /// The <see cref="AudioTimingOffsetChanged"/> event is raised whenever this property changes,
+        /// providing both the new and old values.
+        /// </remarks>
+        /// <value>
+        /// A <see cref="double"/> representing the audio offset in milliseconds.
+        /// Converted to microseconds as used internally by LibVLC.
+        /// </value>
+        public double AudioTimingOffset
+        {
+            get => VlcPlayer.AudioDelay / 1000.0;
+            set
+            {
+                double oldValue = VlcPlayer.AudioDelay / 1000.0;
+                if (Math.Abs(oldValue - value) > 0.0001)
+                {
+                    VlcPlayer.SetAudioDelay((long)(value * 1000));
+                    AudioTimingOffsetChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
                 }
             }
         }

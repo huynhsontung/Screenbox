@@ -28,6 +28,8 @@ namespace Screenbox.Core.Playback
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
         event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleTimingOffsetChanged;
+        event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioTimingOffsetChanged;
 
         bool CanPause { get; }
         bool CanSeek { get; }
@@ -42,6 +44,8 @@ namespace Screenbox.Core.Playback
         TimeSpan NaturalDuration { get; }
         ChapterCue? Chapter { get; }
         double PlaybackRate { get; set; }
+        double SubtitleTimingOffset { get; set; }
+        double AudioTimingOffset { get; set; }
         Rect NormalizedSourceRect { get; set; }
         double Volume { get; set; }
         public PlaybackItem? PlaybackItem { get; set; }
