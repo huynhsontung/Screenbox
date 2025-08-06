@@ -136,11 +136,11 @@ namespace Screenbox.Core.Playback
         /// </summary>
         /// <remarks>
         /// The <see cref="SubtitleTimingOffsetChanged"/> event is raised whenever this property changes,
-        /// providing both the new and old values.
+        /// providing both the new and old values. The value is converted from milliseconds to microseconds
+        /// before being passed to the LibVLC API.
         /// </remarks>
         /// <value>
         /// A <see cref="double"/> representing the subtitle offset in milliseconds.
-        /// Converted to microseconds as used internally by LibVLC.
         /// </value>
         public double SubtitleTimingOffset
         {
@@ -161,11 +161,11 @@ namespace Screenbox.Core.Playback
         /// </summary>
         /// <remarks>
         /// The <see cref="AudioTimingOffsetChanged"/> event is raised whenever this property changes,
-        /// providing both the new and old values.
+        /// providing both the new and old values. The value is converted from milliseconds to microseconds
+        /// before being passed to the LibVLC API.
         /// </remarks>
         /// <value>
         /// A <see cref="double"/> representing the audio offset in milliseconds.
-        /// Converted to microseconds as used internally by LibVLC.
         /// </value>
         public double AudioTimingOffset
         {
