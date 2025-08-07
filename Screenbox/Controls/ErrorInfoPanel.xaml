@@ -10,7 +10,7 @@
     d:DesignWidth="600"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Thickness x:Key="ErrorInfoPanelPadding">0,0,0,48</Thickness>
+        <Thickness x:Key="ErrorInfoPanelPadding">0,32,0,48</Thickness>
         <x:Double x:Key="ErrorInfoPanelMaxWidth">1024</x:Double>
 
         <x:String x:Key="ErrorInfoPanelSmileEmoticonText">:)</x:String>

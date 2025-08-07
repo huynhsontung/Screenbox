@@ -337,7 +337,7 @@
         <!--  Critical error  -->
         <controls:ErrorInfoPanel
             x:Name="CriticalErrorInfoControl"
-            Margin="0,64,0,0"
+            Margin="0,32,0,0"
             Padding="{StaticResource ContentPagePadding}"
             Description="{x:Bind strings:Resources.CriticalError}"
             Message="{x:Bind ViewModel.CriticalErrorMessage, Mode=OneWay}"
