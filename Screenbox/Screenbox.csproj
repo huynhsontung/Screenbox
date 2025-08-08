@@ -163,8 +163,8 @@
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
-    <Compile Include="Controls\ErrorInfoPanel.xaml.cs">
-      <DependentUpon>ErrorInfoPanel.xaml</DependentUpon>
+    <Compile Include="Controls\ErrorInfo.xaml.cs">
+      <DependentUpon>ErrorInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
@@ -548,7 +548,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ErrorInfoPanel.xaml">
+    <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Screenbox.Controls.ErrorInfoPanel"
+    x:Class="Screenbox.Controls.ErrorInfo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,36 +10,40 @@
     d:DesignWidth="600"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Thickness x:Key="ErrorInfoPanelPadding">0,32,0,48</Thickness>
-        <x:Double x:Key="ErrorInfoPanelMaxWidth">1024</x:Double>
+        <Thickness x:Key="ErrorInfoPadding">0,32,0,48</Thickness>
+        <x:Double x:Key="ErrorInfoMaxWidth">1024</x:Double>
 
-        <x:String x:Key="ErrorInfoPanelSmileEmoticonText">:)</x:String>
-        <x:String x:Key="ErrorInfoPanelLaughEmoticonText">:D</x:String>
-        <x:String x:Key="ErrorInfoPanelFrownEmoticonText">:(</x:String>
-        <x:String x:Key="ErrorInfoPanelCryEmoticonText">:'(</x:String>
-        <x:String x:Key="ErrorInfoPanelSurpriseEmoticonText">:O</x:String>
-        <x:String x:Key="ErrorInfoPanelWinkEmoticonText">;)</x:String>
-        <x:String x:Key="ErrorInfoPanelSkepticalEmoticonText">:/</x:String>
-        <x:String x:Key="ErrorInfoPanelNeutralEmoticonText">:|</x:String>
+        <x:String x:Key="ErrorInfoSmileyEmoticonText">:)</x:String>
+        <x:String x:Key="ErrorInfoOpenMouthEmoticonText">:D</x:String>
+        <x:String x:Key="ErrorInfoWinkEmoticonText">;)</x:String>
+        <x:String x:Key="ErrorInfoSurpriseEmoticonText">:O</x:String>
+        <x:String x:Key="ErrorInfoAngryEmoticonText">:@</x:String>
+        <x:String x:Key="ErrorInfoConfusedEmoticonText">:S</x:String>
+        <x:String x:Key="ErrorInfoEmbarrassedEmoticonText">:$</x:String>
+        <x:String x:Key="ErrorInfoSadEmoticonText">:(</x:String>
+        <x:String x:Key="ErrorInfoCryEmoticonText">:'(</x:String>
+        <x:String x:Key="ErrorInfoDisappointedEmoticonText">:|</x:String>
+        <x:String x:Key="ErrorInfoAnnoyedEmoticonText">:\</x:String>
+        <x:String x:Key="ErrorInfoSkepticalEmoticonText">:/</x:String>
 
-        <Thickness x:Key="ErrorInfoPanelEmoticonMargin">0,0,0,16</Thickness>
-        <x:Double x:Key="ErrorInfoPanelEmoticonFontSize">128</x:Double>
+        <Thickness x:Key="ErrorInfoEmoticonMargin">0,0,0,16</Thickness>
+        <x:Double x:Key="ErrorInfoEmoticonFontSize">128</x:Double>
 
-        <Thickness x:Key="ErrorInfoPanelMessageMargin">0,0,0,40</Thickness>
-        <x:Double x:Key="ErrorInfoPanelMessageFontSize">28</x:Double>
-        <FontWeight x:Key="ErrorInfoPanelMessageFontWeight">Semilight</FontWeight>
+        <Thickness x:Key="ErrorInfoMessageMargin">0,0,0,40</Thickness>
+        <x:Double x:Key="ErrorInfoMessageFontSize">28</x:Double>
+        <FontWeight x:Key="ErrorInfoMessageFontWeight">Semilight</FontWeight>
 
-        <Thickness x:Key="ErrorInfoPanelQrCodeMargin">0,0,20,0</Thickness>
-        <x:Double x:Key="ErrorInfoPanelQrCodeSize">148</x:Double>
+        <Thickness x:Key="ErrorInfoQrCodeContentMargin">0,0,20,0</Thickness>
+        <x:Double x:Key="ErrorInfoQrCodeContentSize">148</x:Double>
 
-        <Thickness x:Key="ErrorInfoPanelDescriptionMargin">0,24,0,0</Thickness>
+        <Thickness x:Key="ErrorInfoDescriptionMargin">0,24,0,0</Thickness>
     </UserControl.Resources>
 
     <ScrollViewer
         Padding="{x:Bind Padding, Mode=OneWay}"
         HorizontalScrollMode="Disabled"
         VerticalScrollBarVisibility="Auto">
-        <Grid MaxWidth="{ThemeResource ErrorInfoPanelMaxWidth}" Padding="{ThemeResource ErrorInfoPanelPadding}">
+        <Grid MaxWidth="{ThemeResource ErrorInfoMaxWidth}" Padding="{ThemeResource ErrorInfoPadding}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -52,42 +56,39 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock
-                x:Name="Emoticon"
+                x:Name="EmoticonTextBlock"
                 Grid.Row="0"
                 Grid.ColumnSpan="2"
-                Margin="{ThemeResource ErrorInfoPanelEmoticonMargin}"
+                Margin="{ThemeResource ErrorInfoEmoticonMargin}"
                 AutomationProperties.AccessibilityView="Raw"
-                FontSize="{ThemeResource ErrorInfoPanelEmoticonFontSize}"
+                FontSize="{ThemeResource ErrorInfoEmoticonFontSize}"
                 OpticalMarginAlignment="TrimSideBearings"
-                Text="{StaticResource ErrorInfoPanelFrownEmoticonText}" />
+                Text="{StaticResource ErrorInfoSadEmoticonText}" />
 
             <TextBlock
                 x:Name="MessageTextBlock"
                 Grid.Row="1"
                 Grid.ColumnSpan="2"
-                Margin="{ThemeResource ErrorInfoPanelMessageMargin}"
+                Margin="{ThemeResource ErrorInfoMessageMargin}"
                 HorizontalAlignment="Left"
                 AutomationProperties.AccessibilityView="Content"
                 AutomationProperties.LiveSetting="Assertive"
-                FontSize="{ThemeResource ErrorInfoPanelMessageFontSize}"
-                FontWeight="{ThemeResource ErrorInfoPanelMessageFontWeight}"
+                FontSize="{ThemeResource ErrorInfoMessageFontSize}"
+                FontWeight="{ThemeResource ErrorInfoMessageFontWeight}"
                 OpticalMarginAlignment="TrimSideBearings"
                 Text="{x:Bind Message, Mode=OneWay}"
                 TextWrapping="WrapWholeWords" />
 
-            <Border
-                x:Name="QrCodeBorder"
+            <ContentPresenter
+                x:Name="QrCodeContentPresenter"
                 Grid.Row="2"
                 Grid.RowSpan="2"
-                Margin="{ThemeResource ErrorInfoPanelQrCodeMargin}"
+                MinWidth="{ThemeResource ErrorInfoQrCodeContentSize}"
+                MinHeight="{ThemeResource ErrorInfoQrCodeContentSize}"
+                Margin="{ThemeResource ErrorInfoQrCodeContentMargin}"
                 VerticalAlignment="Top"
-                Background="{ThemeResource SystemControlForegroundChromeWhiteBrush}">
-                <ContentPresenter
-                    MinWidth="{ThemeResource ErrorInfoPanelQrCodeSize}"
-                    MinHeight="{ThemeResource ErrorInfoPanelQrCodeSize}"
-                    AutomationProperties.AccessibilityView="Raw"
-                    Content="{x:Bind QrCode, Mode=OneWay}" />
-            </Border>
+                AutomationProperties.AccessibilityView="Raw"
+                Content="{x:Bind QrCodeContent, Mode=OneWay}" />
 
             <TextBlock
                 x:Name="HelpLinkTextBlock"
@@ -106,54 +107,78 @@
                 x:Name="DescriptionTextBlock"
                 Grid.Row="3"
                 Grid.Column="1"
-                Margin="{ThemeResource ErrorInfoPanelDescriptionMargin}"
+                Margin="{ThemeResource ErrorInfoDescriptionMargin}"
                 Style="{StaticResource BodyTextBlockStyle}"
                 Text="{x:Bind Description, Mode=OneWay}" />
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="EmoticonGroup">
-                <VisualState x:Name="Frown" />
+                <VisualState x:Name="Sad" />
 
-                <VisualState x:Name="Smile">
+                <VisualState x:Name="Smiley">
                     <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelSmileEmoticonText}" />
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoSmileyEmoticonText}" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualState x:Name="Laugh">
                     <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelLaughEmoticonText}" />
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="Cry">
-                    <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelCryEmoticonText}" />
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="Surprise">
-                    <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelSurpriseEmoticonText}" />
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoOpenMouthEmoticonText}" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualState x:Name="Wink">
                     <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelWinkEmoticonText}" />
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoWinkEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Surprise">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoSurpriseEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Angry">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoAngryEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Confused">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoConfusedEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Embarrassed">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoEmbarrassedEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Cry">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoCryEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Disappointed">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoDisappointedEmoticonText}" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Annoyed">
+                    <VisualState.Setters>
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoAnnoyedEmoticonText}" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualState x:Name="Skeptical">
                     <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelSkepticalEmoticonText}" />
-                    </VisualState.Setters>
-                </VisualState>
-
-                <VisualState x:Name="Neutral">
-                    <VisualState.Setters>
-                        <Setter Target="Emoticon.Text" Value="{StaticResource ErrorInfoPanelNeutralEmoticonText}" />
+                        <Setter Target="EmoticonTextBlock.Text" Value="{StaticResource ErrorInfoSkepticalEmoticonText}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -164,17 +189,17 @@
                 <VisualState x:Name="MessageCollapsed">
                     <VisualState.Setters>
                         <Setter Target="MessageTextBlock.Visibility" Value="Collapsed" />
-                        <Setter Target="Emoticon.Margin" Value="{ThemeResource ErrorInfoPanelMessageMargin}" />
+                        <Setter Target="EmoticonTextBlock.Margin" Value="{ThemeResource ErrorInfoMessageMargin}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
 
-            <VisualStateGroup x:Name="QrCodeGroup">
-                <VisualState x:Name="QrCodeVisible" />
+            <VisualStateGroup x:Name="QrCodeContentGroup">
+                <VisualState x:Name="QrCodeContentVisible" />
 
-                <VisualState x:Name="QrCodeCollapsed">
+                <VisualState x:Name="QrCodeContentCollapsed">
                     <VisualState.Setters>
-                        <Setter Target="QrCodeBorder.Visibility" Value="Collapsed" />
+                        <Setter Target="QrCodeContentPresenter.Visibility" Value="Collapsed" />
                         <Setter Target="HelpLinkTextBlock.(Grid.Column)" Value="0" />
                         <Setter Target="HelpLinkTextBlock.(Grid.ColumnSpan)" Value="2" />
                         <Setter Target="DescriptionTextBlock.(Grid.Column)" Value="0" />

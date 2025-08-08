@@ -8,67 +8,85 @@ using Windows.UI.Xaml.Markup;
 namespace Screenbox.Controls;
 
 /// <summary>
-/// Defines constants that indicate the emoticon displayed on the <see cref="ErrorInfoPanel"/>.
+/// Defines constants that specify a emoticon to use as the severity level of a <see cref="ErrorInfo"/>.
 /// </summary>
-public enum EmoticonStatus
+/// <seealso href="https://windowsteamblog.com/windows_phone/b/windowsphone/archive/2011/11/29/tip-tuesday-express-yourself-with-emoji.aspx"/>
+public enum Emoticon
 {
-    Smile,
+    Smiley,
     Laugh,
-    Frown,
-    Cry,
-    Surprise,
     Wink,
+    Surprise,
+    Angry,
+    Confused,
+    Embarrassed,
+    Sad,
+    Cry,
+    Disappointed,
+    Annoyed,
     Skeptical,
-    Neutral
 }
 
 /// <summary>
-/// A user control that displays a critical error message with an emoticon, message, error code, and help link.
+/// Represents a control that displays error information, including an emoticon, message,
+/// description, optional QR code, and an optional hyperlink.
 /// </summary>
-[ContentProperty(Name = "QrCode")]
-public sealed partial class ErrorInfoPanel : UserControl
+/// <remarks>
+/// Use a ErrorInfo control to show information about a error to the user, typically occupying the entire view.
+/// <para>Use the <see cref="Emoticon"/> property to indicate the severity of the error.</para>
+/// <para>Use the <see cref="Message"/> property to provide a concise message of the error,
+/// and the <see cref="Description"/> property co show the corresponding error code.</para>
+/// <para>Use the <see cref="QrCodeContent"/> property (through a <see cref="FrameworkElement"/> such as an image or shape),
+/// and the <see cref="NavigateUri"/> property to direct the user to a location that provides support or documentation.</para>
+/// </remarks>
+[ContentProperty(Name = "QrCodeContent")]
+public sealed partial class ErrorInfo : UserControl
 {
-    private const string SmileStateName = "Smile";
+    private const string SmileyStateName = "Smiley";
     private const string LaughStateName = "Laugh";
-    private const string FrownStateName = "Frown";
-    private const string CryStateName = "Cry";
-    private const string SurpriseStateName = "Surprise";
     private const string WinkStateName = "Wink";
+    private const string SurpriseStateName = "Surprise";
+    private const string AngryStateName = "Angry";
+    private const string ConfusedStateName = "Confused";
+    private const string EmbarrassedStateName = "Embarrassed";
+    private const string SadStateName = "Sad";
+    private const string CryStateName = "Cry";
+    private const string DisappointedStateName = "Disappointed";
+    private const string AnnoyedStateName = "Annoyed";
     private const string SkepticalStateName = "Skeptical";
-    private const string NeutralStateName = "Neutral";
 
     private const string MessageVisibleStateName = "MessageVisible";
     private const string MessageCollapsedStateName = "MessageCollapsed";
-    private const string QrCodeVisibleStateName = "QrCodeVisible";
-    private const string QrCodeCollapsedStateName = "QrCodeCollapsed";
+    private const string QrCodeContentVisibleStateName = "QrCodeContentVisible";
+    private const string QrCodeContentCollapsedStateName = "QrCodeContentCollapsed";
     private const string NavigateUriVisibleStateName = "NavigateUriVisible";
     private const string NavigateUriCollapsedStateName = "NavigateUriCollapsed";
     private const string DescriptionVisibleStateName = "DescriptionVisible";
     private const string DescriptionCollapsedStateName = "DescriptionCollapsed";
 
     /// <summary>
-    /// Identifies the <see cref="Status"/> dependency property.
+    /// Identifies the <see cref="Emoticon"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty StatusProperty = DependencyProperty.Register(
-        nameof(Status), typeof(EmoticonStatus), typeof(ErrorInfoPanel), new PropertyMetadata(EmoticonStatus.Frown, OnPropertyChanged));
+    public static readonly DependencyProperty EmoticonProperty = DependencyProperty.Register(
+        nameof(Emoticon), typeof(Emoticon), typeof(ErrorInfo), new PropertyMetadata(Emoticon.Sad, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the emoticon that indicates the severity level of the <see cref="ErrorInfoPanel"/>.
+    /// Gets or sets the emoticon that indicates the severity level of the <see cref="ErrorInfo"/>.
     /// </summary>
-    public EmoticonStatus Status
+    public Emoticon Emoticon
     {
-        get { return (EmoticonStatus)GetValue(StatusProperty); }
-        set { SetValue(StatusProperty, value); }
+        get { return (Emoticon)GetValue(EmoticonProperty); }
+        set { SetValue(EmoticonProperty, value); }
     }
 
     /// <summary>
     /// Identifies the <see cref="Message"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
-        nameof(Message), typeof(string), typeof(ErrorInfoPanel), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(Message), typeof(string), typeof(ErrorInfo), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the message of the <see cref="ErrorInfoPanel"/>.
+    /// Gets or sets the message of the <see cref="ErrorInfo"/>.
     /// </summary>
     public string Message
     {
@@ -77,25 +95,25 @@ public sealed partial class ErrorInfoPanel : UserControl
     }
 
     /// <summary>
-    /// Identifies the <see cref="QrCode"/> dependency property.
+    /// Identifies the <see cref="QrCodeContent"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty QrCodeProperty = DependencyProperty.Register(
-        nameof(QrCode), typeof(FrameworkElement), typeof(ErrorInfoPanel), new PropertyMetadata(null, OnPropertyChanged));
+    public static readonly DependencyProperty QrCodeContentProperty = DependencyProperty.Register(
+        nameof(QrCodeContent), typeof(FrameworkElement), typeof(ErrorInfo), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets an arbitrary <see cref="FrameworkElement"/> that can be used to display a QR code.
     /// </summary>
-    public FrameworkElement QrCode
+    public FrameworkElement QrCodeContent
     {
-        get { return (FrameworkElement)GetValue(QrCodeProperty); }
-        set { SetValue(QrCodeProperty, value); }
+        get { return (FrameworkElement)GetValue(QrCodeContentProperty); }
+        set { SetValue(QrCodeContentProperty, value); }
     }
 
     /// <summary>
     /// Identifies the <see cref="NavigateUri"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty NavigateUriProperty = DependencyProperty.Register(
-        nameof(NavigateUri), typeof(Uri), typeof(ErrorInfoPanel), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(NavigateUri), typeof(Uri), typeof(ErrorInfo), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
     /// Gets or sets the Uniform Resource Identifier (URI) to navigate to when the <see cref="Windows.UI.Xaml.Documents.Hyperlink"/> is clicked.
@@ -110,10 +128,10 @@ public sealed partial class ErrorInfoPanel : UserControl
     /// Identifies the <see cref="Description"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty DescriptionProperty = DependencyProperty.Register(
-        nameof(Description), typeof(string), typeof(ErrorInfoPanel), new PropertyMetadata(null, OnPropertyChanged));
+        nameof(Description), typeof(string), typeof(ErrorInfo), new PropertyMetadata(null, OnPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the description of the <see cref="ErrorInfoPanel"/>.
+    /// Gets or sets the description of the <see cref="ErrorInfo"/>.
     /// </summary>
     public string Description
     {
@@ -122,38 +140,38 @@ public sealed partial class ErrorInfoPanel : UserControl
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorInfoPanel"/> class.
+    /// Initializes a new instance of the <see cref="ErrorInfo"/> class.
     /// </summary>
-    public ErrorInfoPanel()
+    public ErrorInfo()
     {
         InitializeComponent();
 
-        UpdateStatus();
+        UpdateEmoticon();
         UpdateMessageVisibility();
-        UpdateQrCodeVisibility();
+        UpdateQrCodeContentVisibility();
         UpdateNavigateUriVisibility();
         UpdateDescriptionVisibility();
     }
 
     protected override AutomationPeer OnCreateAutomationPeer()
     {
-        return new ErrorInfoPanelAutomationPeer(this);
+        return new ErrorInfoAutomationPeer(this);
     }
 
     private static void OnPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
-        var control = (ErrorInfoPanel)sender;
-        if (args.Property == StatusProperty)
+        var control = (ErrorInfo)sender;
+        if (args.Property == EmoticonProperty)
         {
-            control.UpdateStatus();
+            control.UpdateEmoticon();
         }
         else if (args.Property == MessageProperty)
         {
             control.UpdateMessageVisibility();
         }
-        else if (args.Property == QrCodeProperty)
+        else if (args.Property == QrCodeContentProperty)
         {
-            control.UpdateQrCodeVisibility();
+            control.UpdateQrCodeContentVisibility();
         }
         else if (args.Property == NavigateUriProperty)
         {
@@ -165,19 +183,23 @@ public sealed partial class ErrorInfoPanel : UserControl
         }
     }
 
-    private void UpdateStatus()
+    private void UpdateEmoticon()
     {
-        string emoticonState = Status switch
+        string emoticonState = Emoticon switch
         {
-            EmoticonStatus.Smile => SmileStateName,
-            EmoticonStatus.Laugh => LaughStateName,
-            EmoticonStatus.Frown => FrownStateName,
-            EmoticonStatus.Cry => CryStateName,
-            EmoticonStatus.Surprise => SurpriseStateName,
-            EmoticonStatus.Wink => WinkStateName,
-            EmoticonStatus.Skeptical => SkepticalStateName,
-            EmoticonStatus.Neutral => NeutralStateName,
-            _ => FrownStateName
+            Emoticon.Smiley => SmileyStateName,
+            Emoticon.Laugh => LaughStateName,
+            Emoticon.Wink => WinkStateName,
+            Emoticon.Surprise => SurpriseStateName,
+            Emoticon.Angry => AngryStateName,
+            Emoticon.Confused => ConfusedStateName,
+            Emoticon.Embarrassed => EmbarrassedStateName,
+            Emoticon.Sad => SadStateName,
+            Emoticon.Cry => CryStateName,
+            Emoticon.Disappointed => DisappointedStateName,
+            Emoticon.Annoyed => AnnoyedStateName,
+            Emoticon.Skeptical => SkepticalStateName,
+            _ => SadStateName
         };
 
         VisualStateManager.GoToState(this, emoticonState, false);
@@ -188,9 +210,9 @@ public sealed partial class ErrorInfoPanel : UserControl
         VisualStateManager.GoToState(this, !string.IsNullOrEmpty(Message) ? MessageVisibleStateName : MessageCollapsedStateName, true);
     }
 
-    private void UpdateQrCodeVisibility()
+    private void UpdateQrCodeContentVisibility()
     {
-        VisualStateManager.GoToState(this, QrCode != null ? QrCodeVisibleStateName : QrCodeCollapsedStateName, true);
+        VisualStateManager.GoToState(this, QrCodeContent != null ? QrCodeContentVisibleStateName : QrCodeContentCollapsedStateName, true);
     }
 
     private void UpdateNavigateUriVisibility()
@@ -204,13 +226,13 @@ public sealed partial class ErrorInfoPanel : UserControl
     }
 }
 
-public sealed class ErrorInfoPanelAutomationPeer : FrameworkElementAutomationPeer
+public sealed class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
 {
-    //private readonly ErrorInfoPanel _owner;
+    //private readonly ErrorInfo _owner;
     private readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
     private readonly string _criticalErrorMoreInformation;
 
-    public ErrorInfoPanelAutomationPeer(ErrorInfoPanel owner) : base(owner)
+    public ErrorInfoAutomationPeer(ErrorInfo owner) : base(owner)
     {
         _criticalErrorMoreInformation = _resourceLoader.GetString("CriticalErrorMoreInformation");
     }
@@ -228,7 +250,7 @@ public sealed class ErrorInfoPanelAutomationPeer : FrameworkElementAutomationPee
     protected override string GetNameCore()
     {
         string name = base.GetNameCore();
-        var owner = (ErrorInfoPanel)Owner;
+        var owner = (ErrorInfo)Owner;
         if (!string.IsNullOrEmpty(owner.Message))
         {
             if (owner.NavigateUri != null)
@@ -240,7 +262,7 @@ public sealed class ErrorInfoPanelAutomationPeer : FrameworkElementAutomationPee
                 name = owner.Message;
             }
         }
-        // TODO: If there is no message, return the localized string for the emoticon status
+        // TODO: If there is no message, return the localized string for the emoticon
         //else
         //{
         //}
@@ -251,7 +273,7 @@ public sealed class ErrorInfoPanelAutomationPeer : FrameworkElementAutomationPee
     protected override string GetFullDescriptionCore()
     {
         string description = base.GetFullDescriptionCore();
-        var owner = (ErrorInfoPanel)Owner;
+        var owner = (ErrorInfo)Owner;
         if (!string.IsNullOrEmpty(owner.Description))
         {
             description = owner.Description;
@@ -263,7 +285,7 @@ public sealed class ErrorInfoPanelAutomationPeer : FrameworkElementAutomationPee
     protected override string GetHelpTextCore()
     {
         string description = base.GetHelpTextCore();
-        var owner = (ErrorInfoPanel)Owner;
+        var owner = (ErrorInfo)Owner;
         if (owner.NavigateUri != null)
         {
             description = $"{_criticalErrorMoreInformation}: {owner.NavigateUri}";
