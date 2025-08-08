@@ -8,7 +8,7 @@
     <!--  Increase track height to avoid visual artifact on Surface  -->
     <x:Double x:Key="ProgressBarTrackHeight">2</x:Double>
 
-    <!--  ProgessBar without RepositionThemeAnimation  -->
+    <!--  ProgressBar without RepositionThemeAnimation  -->
     <!--  https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/ProgressBar/ProgressBar_themeresources.xaml  -->
     <Style x:Key="NoAnimationProgressBarStyle" TargetType="muxc:ProgressBar">
         <Setter Property="Foreground" Value="{ThemeResource ProgressBarForeground}" />
