@@ -136,13 +136,16 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             return;
         }
 
-        var jsonDocument = JsonDocument.Parse(jsonString);
+        using var jsonDocument = JsonDocument.Parse(jsonString);
         var jsonObject = jsonDocument.RootElement;
+        if (jsonObject.ValueKind != JsonValueKind.Object)
+            return;
+
         foreach (var item in jsonObject.EnumerateObject())
         {
             var typeToken = item.Value.GetProperty("type");
             var valueToken = item.Value.GetProperty("value");
-
+            if (typeToken.ValueKind == JsonValueKind.Null || valueToken.ValueKind == JsonValueKind.Null) continue;
             switch (typeToken.GetString())
             {
                 case "slider":
