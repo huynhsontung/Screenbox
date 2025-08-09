@@ -825,7 +825,7 @@
     <value>Sort by</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artis</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
     <value>Tahun Rilis</value>
@@ -843,7 +843,7 @@
     <value>Audio visual options</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visual</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
     <value>Browse files</value>
