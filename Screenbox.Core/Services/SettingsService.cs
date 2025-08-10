@@ -164,7 +164,7 @@ namespace Screenbox.Core.Services
 
         public SettingsService()
         {
-            SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
+            SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
