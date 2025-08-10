@@ -31,31 +31,55 @@ namespace Screenbox.Controls
             if (result != ContentDialogResult.Primary || !Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
                 return null;
 
-            // Validate if the URL is supported for media playback
-            if (!UrlHelpers.IsSupportedMediaUrl(uri))
-            {
-                // Show error message for unsupported URLs
-                string errorMessage = UrlHelpers.GetUnsupportedUrlMessage(uri);
-                ContentDialog errorDialog = new()
-                {
-                    Title = Resources.UnsupportedUrlErrorTitle,
-                    Content = errorMessage,
-                    CloseButtonText = Resources.Close,
-                    DefaultButton = ContentDialogButton.Close,
-                    FlowDirection = GlobalizationHelper.GetFlowDirection(),
-                    RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme
-                };
-                
-                await errorDialog.ShowAsync();
-                return null;
-            }
-
+            // The validation is now handled inline during text input
+            // If we reach here, the URL should be valid
             return uri;
         }
 
         private bool CanOpen(string url)
         {
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri _);
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+                return false;
+
+            // Check if URL is supported
+            if (!UrlHelpers.IsSupportedMediaUrl(uri))
+                return false;
+
+            return true;
+        }
+
+        private void UrlBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (sender is TextBox textBox)
+            {
+                string url = textBox.Text;
+                
+                // Clear error if text is empty
+                if (string.IsNullOrWhiteSpace(url))
+                {
+                    ErrorMessage.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    return;
+                }
+
+                // Validate URL format first
+                if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+                {
+                    ErrorMessage.Text = "Please enter a valid URL.";
+                    ErrorMessage.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    return;
+                }
+
+                // Validate if URL is supported
+                if (!UrlHelpers.IsSupportedMediaUrl(uri))
+                {
+                    ErrorMessage.Text = UrlHelpers.GetUnsupportedUrlMessage(uri);
+                    ErrorMessage.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    return;
+                }
+
+                // URL is valid and supported
+                ErrorMessage.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
         }
     }
 }

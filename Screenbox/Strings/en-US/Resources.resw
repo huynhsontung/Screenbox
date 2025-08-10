@@ -947,9 +947,6 @@
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Use system language</value>
   </data>
-  <data name="UnsupportedUrlErrorTitle" xml:space="preserve">
-    <value>URL Not Supported</value>
-  </data>
   <data name="UnsupportedUrlError" xml:space="preserve">
     <value>This URL format is not supported. Please use direct links to media files (MP4, MP3, M3U8, etc.).</value>
   </data>
