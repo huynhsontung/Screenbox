@@ -2,7 +2,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Screenbox.Core.Helpers;
 using Screenbox.Helpers;
+using Screenbox.Strings;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -25,9 +27,30 @@ namespace Screenbox.Controls
             OpenUrlDialog dialog = new();
             ContentDialogResult result = await dialog.ShowAsync();
             string url = dialog.UrlBox.Text;
-            return result == ContentDialogResult.Primary && Uri.TryCreate(url, UriKind.Absolute, out Uri uri)
-                ? uri
-                : null;
+            
+            if (result != ContentDialogResult.Primary || !Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
+                return null;
+
+            // Validate if the URL is supported for media playback
+            if (!UrlHelpers.IsSupportedMediaUrl(uri))
+            {
+                // Show error message for unsupported URLs
+                string errorMessage = UrlHelpers.GetUnsupportedUrlMessage(uri);
+                ContentDialog errorDialog = new()
+                {
+                    Title = Resources.UnsupportedUrlErrorTitle,
+                    Content = errorMessage,
+                    CloseButtonText = Resources.Close,
+                    DefaultButton = ContentDialogButton.Close,
+                    FlowDirection = GlobalizationHelper.GetFlowDirection(),
+                    RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme
+                };
+                
+                await errorDialog.ShowAsync();
+                return null;
+            }
+
+            return uri;
         }
 
         private bool CanOpen(string url)
