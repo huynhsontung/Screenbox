@@ -228,24 +228,18 @@ public sealed partial class ErrorInfo : UserControl
 
 public sealed class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
 {
-    //private readonly ErrorInfo _owner;
     private readonly ResourceLoader _resourceLoader = ResourceLoader.GetForViewIndependentUse();
-    private readonly string _criticalErrorMoreInformation;
+    private const string MoreErrorInfoString = "CriticalErrorMoreInformation";
+    private const string ClassName = "ErrorInfo";
 
     public ErrorInfoAutomationPeer(ErrorInfo owner) : base(owner)
     {
-        _criticalErrorMoreInformation = _resourceLoader.GetString("CriticalErrorMoreInformation");
     }
 
-    //protected override AutomationControlType GetAutomationControlTypeCore()
-    //{
-    //    return AutomationControlType.Group;
-    //}
-
-    //protected override string GetLocalizedControlTypeCore()
-    //{
-    //    return nameof(Panel);
-    //}
+    protected override string GetClassNameCore()
+    {
+        return ClassName;
+    }
 
     protected override string GetNameCore()
     {
@@ -255,7 +249,7 @@ public sealed class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
         {
             if (owner.NavigateUri != null)
             {
-                name = $"{owner.Message}; {_criticalErrorMoreInformation}:";
+                name = $"{owner.Message}; {_resourceLoader.GetString(MoreErrorInfoString)}:";
             }
             else
             {
@@ -288,7 +282,7 @@ public sealed class ErrorInfoAutomationPeer : FrameworkElementAutomationPeer
         var owner = (ErrorInfo)Owner;
         if (owner.NavigateUri != null)
         {
-            description = $"{_criticalErrorMoreInformation}: {owner.NavigateUri}";
+            description = $"{_resourceLoader.GetString(MoreErrorInfoString)}: {owner.NavigateUri}";
         }
 
         return description;
