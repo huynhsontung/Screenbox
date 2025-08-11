@@ -163,10 +163,6 @@
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
-    <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
-    <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
@@ -238,6 +234,10 @@
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Extensions\ApplicationViewExtensions.cs" />
+    <Compile Include="Extensions\CommandBarExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
+    <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
     <Compile Include="Helpers\GlyphConvert.cs" />
