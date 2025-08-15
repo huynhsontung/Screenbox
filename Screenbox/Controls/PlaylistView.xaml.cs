@@ -11,7 +11,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -35,6 +34,8 @@ namespace Screenbox.Controls
 
         internal CommonViewModel Common { get; }
 
+        private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
+
         public PlaylistView()
         {
             this.InitializeComponent();
@@ -50,13 +51,17 @@ namespace Screenbox.Controls
 
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
+            int selectedCount = PlaylistListView.SelectedItems.Count;
+            SelectionCheckBox.IsChecked = selectedCount == 0
+                ? false
+                : selectedCount == PlaylistListView.Items.Count ? true : null;
+
             if (ViewModel.EnableMultiSelect)
             {
                 VisualStateManager.GoToState(this, "Multiple", true);
             }
 
-            ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
+            ViewModel.SelectionCount = selectedCount;
         }
 
         internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
@@ -130,16 +135,10 @@ namespace Screenbox.Controls
         {
             if (ViewModel.HasItems)
             {
-                var itemsRange = new ItemIndexRange(0, (uint)ViewModel.Playlist.Items.Count);
-                if (ViewModel.SelectionCount != ViewModel.Playlist.Items.Count)
+                if (_selectionCommand.CanToggleSelection(PlaylistListView))
                 {
                     ViewModel.EnableMultiSelect = true;
-                    PlaylistListView.SelectRange(itemsRange);
-                    args.Handled = true;
-                }
-                else
-                {
-                    PlaylistListView.DeselectRange(itemsRange);
+                    _selectionCommand.ToggleSelection(PlaylistListView);
                     args.Handled = true;
                 }
             }
