@@ -163,6 +163,7 @@
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
+    <Compile Include="Controls\CustomNavigationView.Properties.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
@@ -177,7 +178,6 @@
     <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
     <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
     <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
-    <Compile Include="Controls\Interactions\NavigationViewKeyboardBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
@@ -719,6 +719,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\ItemContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\NavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

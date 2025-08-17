@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
-    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
@@ -22,25 +21,10 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <!--  Add acrylic to the minimal/overlay pane and compact/expanded pane (Windows 10 only)  -->
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/NavigationView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
-            <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
-            <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
@@ -48,82 +32,6 @@
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
-
-            <!--  NavigationView compact pane search button with an animated icon, padding, common state brushes, and no pointer animations to match other pane buttons  -->
-            <Style x:Key="NavigationViewPaneSearchButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="{ThemeResource NavigationViewItemBackground}" />
-                <Setter Property="Foreground" Value="{ThemeResource NavigationViewItemForeground}" />
-                <Setter Property="BorderThickness" Value="{ThemeResource NavigationViewToggleBorderThickness}" />
-                <Setter Property="Height" Value="36" />
-                <Setter Property="Padding" Value="{ThemeResource NavigationViewItemButtonMargin}" />
-                <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="Content" Value="&#xE721;" />
-                <Setter Property="FocusVisualMargin" Value="-4,0" />
-                <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <!--  To ensure the animated icon faces the same direction as the find symbol, lock the flow direction and mirror the icon  -->
-                            <Grid
-                                x:Name="RootGrid"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                FlowDirection="RightToLeft">
-                                <!--  Increase the icon size slightly because the find animated visual has more padding than the symbol  -->
-                                <muxc:AnimatedIcon
-                                    x:Name="Icon"
-                                    Width="20"
-                                    Height="20"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    muxc:AnimatedIcon.State="Normal"
-                                    AutomationProperties.AccessibilityView="Raw"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    MirroredWhenRightToLeft="True">
-                                    <animatedVisuals:AnimatedFindVisualSource />
-                                    <muxc:AnimatedIcon.FallbackIconSource>
-                                        <muxc:FontIconSource FontSize="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FontSize}" Glyph="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}" />
-                                    </muxc:AnimatedIcon.FallbackIconSource>
-                                </muxc:AnimatedIcon>
-
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal" />
-
-                                        <VisualState x:Name="PointerOver">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPointerOver}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPointerOver}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOver" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Pressed">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPressed}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPressed}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="Pressed" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Disabled">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundDisabled}" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
@@ -187,8 +95,9 @@
         <controls:CustomNavigationView
             x:Name="NavView"
             AllowDrop="True"
+            BackButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
             BackRequested="NavView_BackRequested"
-            Canvas.ZIndex="0"
+            CloseButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationCloseButtonKey}"
             CompactModeThresholdWidth="701"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             DragOver="NavView_DragOver"
@@ -199,7 +108,16 @@
             IsTitleBarAutoPaddingEnabled="False"
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
+            PaneSearchButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationPaneAutoSuggestButtonKey}"
+            PaneSearchButtonStyle="{StaticResource AnimatedNavigationViewPaneSearchButtonStyle}"
+            PaneToggleButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationTogglePaneButtonKey}"
             SelectionChanged="NavView_SelectionChanged">
+            <controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="E" Modifiers="Control" />
+            </controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators>
+            <controls:CustomNavigationView.PaneSearchButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="F" Modifiers="Control" />
+            </controls:CustomNavigationView.PaneSearchButtonKeyboardAccelerators>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
@@ -328,10 +246,6 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom" />
             </Grid>
-
-            <interactivity:Interaction.Behaviors>
-                <interactions:NavigationViewKeyboardBehavior />
-            </interactivity:Interaction.Behaviors>
         </controls:CustomNavigationView>
 
         <!--  Critical error  -->

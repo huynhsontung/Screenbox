@@ -1,19 +1,26 @@
 ﻿#nullable enable
 
-using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Animations;
 using System;
 using System.Numerics;
+using CommunityToolkit.WinUI;
+using CommunityToolkit.WinUI.Animations;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 
 namespace Screenbox.Controls
 {
-    public sealed class CustomNavigationView : NavigationView
+    public sealed partial class CustomNavigationView : NavigationView
     {
+        private const string TogglePaneButtonName = "TogglePaneButton";
+        private const string SearchButtonName = "PaneAutoSuggestButton";
+        private const string NavViewBackButton = "NavigationViewBackButton";
+        private const string NavViewCloseButton = "NavigationViewCloseButton";
+
         public static readonly DependencyProperty OverlayContentProperty = DependencyProperty.Register(
             nameof(OverlayContent),
             typeof(UIElement),
@@ -65,6 +72,10 @@ namespace Screenbox.Controls
         private Grid? _paneToggleButtonGrid;
         private Grid? _contentGrid;
         private Grid? _paneContentGrid;
+        private Button? _paneToggleButton;
+        private Button? _paneSearchButton;
+        private Button? _backButton;
+        private Button? _closeButton;
 
         public CustomNavigationView()
         {
@@ -91,6 +102,96 @@ namespace Screenbox.Controls
             if (shadowCaster != null)
             {
                 shadowCaster.Translation = new Vector3(0, 0, 32);
+            }
+
+            if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
+            {
+                _paneToggleButton = paneToggleButton;
+
+                if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
+                {
+                    paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
+                }
+
+                if (PaneToggleButtonKeyboardAccelerators != null)
+                {
+                    var defaultKeyboardAccelerator = new KeyboardAccelerator
+                    {
+                        Key = VirtualKey.Back,
+                        Modifiers = VirtualKeyModifiers.Windows
+                    };
+
+                    // Remove the default (Windows + Back) key combination and restore it after the user-defined keyboard accelerators.
+                    // https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/NavigationView/NavigationView.cpp#L407-L413
+                    paneToggleButton.KeyboardAccelerators.Clear();
+
+                    foreach (var item in PaneToggleButtonKeyboardAccelerators)
+                    {
+                        paneToggleButton.KeyboardAccelerators.Add(item);
+                    }
+
+                    paneToggleButton.KeyboardAccelerators.Add(defaultKeyboardAccelerator);
+                }
+            }
+
+            if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
+            {
+                _paneSearchButton = paneSearchButton;
+
+                UpdatePaneSearchButtonStyle();
+
+                if (!string.IsNullOrEmpty(PaneSearchButtonAccessKey))
+                {
+                    paneSearchButton.AccessKey = PaneSearchButtonAccessKey;
+                }
+
+                if (PaneSearchButtonKeyboardAccelerators != null)
+                {
+                    foreach (var item in PaneSearchButtonKeyboardAccelerators)
+                    {
+                        paneSearchButton.KeyboardAccelerators.Add(item);
+                    }
+                }
+            }
+
+            if (GetTemplateChild(NavViewBackButton) is Button backButton)
+            {
+                _backButton = backButton;
+
+                UpdateBackButtonStyle();
+
+                if (!string.IsNullOrEmpty(BackButtonAccessKey))
+                {
+                    backButton.AccessKey = BackButtonAccessKey;
+                }
+
+                if (BackButtonKeyboardAccelerators != null)
+                {
+                    foreach (var item in BackButtonKeyboardAccelerators)
+                    {
+                        backButton.KeyboardAccelerators.Add(item);
+                    }
+                }
+            }
+
+            if (GetTemplateChild(NavViewCloseButton) is Button closeButton)
+            {
+                _closeButton = closeButton;
+
+                UpdateCloseButtonStyle();
+
+                if (!string.IsNullOrEmpty(CloseButtonAccessKey))
+                {
+                    closeButton.AccessKey = CloseButtonAccessKey;
+                }
+
+                if (CloseButtonKeyboardAccelerators != null)
+                {
+                    foreach (var item in CloseButtonKeyboardAccelerators)
+                    {
+                        closeButton.KeyboardAccelerators.Add(item);
+                    }
+                }
             }
 
             SetContentVisibility(ContentVisibility);
@@ -176,6 +277,39 @@ namespace Screenbox.Controls
         {
             CustomNavigationView view = (CustomNavigationView)d;
             Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
+        }
+
+        private void UpdateBackButtonStyle()
+        {
+            if (_backButton != null)
+            {
+                if (BackButtonStyle != null)
+                {
+                    _backButton.Style = BackButtonStyle;
+                }
+            }
+        }
+
+        private void UpdateCloseButtonStyle()
+        {
+            if (_closeButton != null)
+            {
+                if (BackButtonStyle != null)
+                {
+                    _closeButton.Style = BackButtonStyle;
+                }
+            }
+        }
+
+        private void UpdatePaneSearchButtonStyle()
+        {
+            if (_paneSearchButton != null)
+            {
+                if (PaneSearchButtonStyle != null)
+                {
+                    _paneSearchButton.Style = PaneSearchButtonStyle;
+                }
+            }
         }
 
         private static ImplicitAnimationSet GetShowAnimations()
