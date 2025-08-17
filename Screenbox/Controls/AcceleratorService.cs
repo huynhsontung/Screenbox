@@ -1,77 +1,92 @@
 ﻿#nullable enable
 
 using Screenbox.Helpers;
-using System.Linq;
-using System.Text;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Controls
+namespace Screenbox.Controls;
+
+/// <summary>
+/// Represents a service that provides <see langword="class"/> methods to display a <see cref="ToolTip"/>,
+/// with the corresponding key combinations appended at the end.
+/// </summary>
+/// <remarks>If a control has more than one accelerator defined, only the first is presented.</remarks>
+/// <example>
+/// In this example, we specify the ToolTip for a Button. The keyboard accelerator is
+/// displayed in the UI element flyout as "Create a new document (Ctrl+Alt+N)".
+/// <code lang="xml">
+/// &lt;Button Content="New" local:AcceleratorService.ToolTip="Create a new document"&gt;
+///    &lt;Button.KeyboardAccelerators&gt;
+///        &lt;KeyboardAccelerator Key="N" Modifiers="Control,Menu" /&gt;
+///    &lt;/Button.KeyboardAccelerators&gt;
+/// &lt;/Button&gt;
+/// </code>
+/// or
+/// <code lang="csharp">
+/// var button = new Button { Content = "New" };
+/// AcceleratorService.SetToolTip(button, "Create a new document");
+/// button.KeyboardAccelerators.Add(new KeyboardAccelerator
+/// {
+///     Key = VirtualKey.N,
+///     Modifiers = KeyboardAcceleratorModifiers.Control | KeyboardAcceleratorModifiers.Menu
+/// });
+/// </code>
+/// </example>
+[Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
+public sealed class AcceleratorService
 {
-    public sealed class AcceleratorService : DependencyObject
+    /// <summary>
+    /// Identifies the AcceleratorService.ToolTip XAML attached property.
+    /// </summary>
+    public static readonly DependencyProperty ToolTipProperty = DependencyProperty.RegisterAttached(
+        "ToolTip", typeof(string), typeof(AcceleratorService), new PropertyMetadata(string.Empty, OnToolTipPropertyChanged));
+
+    /// <summary>
+    /// Gets the value of the AcceleratorService.ToolTip XAML attached property for a <see cref="UIElement"/>.
+    /// </summary>
+    /// <param name="element">The element from which the property value is read.</param>
+    /// <returns>The string tooltip content.</returns>
+    public static string GetToolTip(UIElement element)
     {
-        public static readonly DependencyProperty ToolTipProperty =
-            DependencyProperty.RegisterAttached(
-                "ToolTip",
-                typeof(string),
-                typeof(AcceleratorService),
-                new PropertyMetadata(string.Empty)
-            );
+        return (string)element.GetValue(ToolTipProperty);
+    }
 
-        public static void SetToolTip(UIElement element, string value)
+    /// <summary>
+    /// Sets the value of the AcceleratorService.ToolTip XAML attached property.
+    /// </summary>
+    /// <param name="element">The element to set tooltip content on.</param>
+    /// <param name="value">The string to set as tooltip content.</param>
+    public static void SetToolTip(UIElement element, string value)
+    {
+        element.SetValue(ToolTipProperty, value);
+    }
+
+    private static void OnToolTipPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is UIElement element && e.NewValue is string value)
         {
-            element.SetValue(ToolTipProperty, value);
-            KeyboardAccelerator? accelerator = element.KeyboardAccelerators.FirstOrDefault(x => x.IsEnabled);
-            bool shouldShowShortcut = DeviceInfoHelper.IsDesktop;
-            if (accelerator != null && shouldShowShortcut)
+            string toolTipString = value;
+
+            if (DeviceInfoHelper.IsKeyboardPresent)
             {
-                string shortcut = ToShortcut(accelerator);
-                ToolTipService.SetToolTip(element,
-                    string.IsNullOrEmpty(shortcut) ? value :
-                    GlobalizationHelper.IsRightToLeftLanguage ? $"({shortcut}) {value}" : $"{value} ({shortcut})");
-            }
-            else
-            {
-                ToolTipService.SetToolTip(element, value);
-            }
-        }
-
-        public static string GetToolTip(UIElement element)
-        {
-            return (string)element.GetValue(ToolTipProperty);
-        }
-
-        private static string ToShortcut(KeyboardAccelerator ka)
-        {
-            if (ka.Modifiers != VirtualKeyModifiers.None)
-            {
-                StringBuilder builder = new(16);
-                if ((ka.Modifiers & VirtualKeyModifiers.Control) != 0)
+                var keyboardAccelerators = element.KeyboardAccelerators;
+                if (keyboardAccelerators.Count > 0)
                 {
-                    builder.Append("Ctrl+");
+                    var keyboardAccelerator = keyboardAccelerators[0];
+                    if (keyboardAccelerator.IsEnabled)
+                    {
+                        string keyboardAcceleratorText = GlobalizationHelper.GetKeyboardAcceleratorDisplayName(keyboardAccelerator);
+                        if (!string.IsNullOrEmpty(keyboardAcceleratorText))
+                        {
+                            toolTipString = GlobalizationHelper.IsRightToLeftLanguage
+                                ? $"({keyboardAcceleratorText}) {value}"
+                                : $"{value} ({keyboardAcceleratorText})";
+                        }
+                    }
                 }
-
-                if ((ka.Modifiers & VirtualKeyModifiers.Windows) != 0)
-                {
-                    builder.Append(builder.Length > 0 ? "+Win+" : "Win+");
-                }
-
-                if ((ka.Modifiers & VirtualKeyModifiers.Menu) != 0)
-                {
-                    builder.Append(builder.Length > 0 ? "+Alt+" : "Alt+");
-                }
-
-                if ((ka.Modifiers & VirtualKeyModifiers.Shift) != 0)
-                {
-                    builder.Append(builder.Length > 0 ? "+Shift+" : "Shift+");
-                }
-
-                return builder.Append(ka.Key.ToString()).ToString();
             }
 
-            return ka.Key.ToString();
+            ToolTipService.SetToolTip(element, toolTipString);
         }
     }
 }
