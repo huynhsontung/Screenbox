@@ -1,11 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Enums;
 using Screenbox.Core.ViewModels;
-using System;
-using System.Windows.Input;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -45,8 +46,12 @@ public sealed partial class MediaListViewItem : UserControl
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         _firstPlay = true;
-        AdaptiveLayoutBehavior.Override =
-            (DataContext as MediaViewModel)?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+        var media = DataContext as MediaViewModel;
+        AdaptiveLayoutBehavior.Override = media?.MediaType != MediaPlaybackType.Music ? 0 : -1;
+
+        AutomationProperties.SetName(PlayButton, $"{Strings.Resources.Play} {media?.Name}"); // TODO: Handle Play/Pause state change
+        AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {media?.MainArtist?.Name}");
+        AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {media?.Album?.Name}");
     }
 
     private async void PlayingStatesOnCurrentStateChanged(object sender, VisualStateChangedEventArgs e)
