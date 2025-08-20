@@ -1,12 +1,13 @@
 ﻿using System;
+using Screenbox.Helpers;
 using Windows.Media;
 
-namespace Screenbox.Helpers;
+namespace Screenbox.Converters;
 
 /// <summary>
 /// Provides <see langword="static"/> methods to convert value types to glyph codes.
 /// </summary>
-public static partial class GlyphConvert
+public static partial class GlyphConverter
 {
     /// <summary>
     /// Gets the shuffle glyph code based on a boolean condition.
@@ -19,9 +20,14 @@ public static partial class GlyphConvert
     /// </returns>
     public static string ToShuffleGlyph(bool value)
     {
+        const string ShuffleGlyph = "\uE8B1";
+        const string ShuffleOffGlyph = "\U000F002A";
+        const string ShuffleGlyphMirrored = "\U000F0021";
+        const string ShuffleOffGlyphMirrored = "\U000F002B";
+
         return value
-            ? (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0021" : "\uE8B1")
-            : (GlobalizationHelper.IsRightToLeftLanguage ? "\U000F002B" : "\U000F002A");
+            ? (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleGlyphMirrored : ShuffleGlyph)
+            : (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleOffGlyphMirrored : ShuffleOffGlyph);
     }
 
     /// <summary>
@@ -36,11 +42,18 @@ public static partial class GlyphConvert
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="repeatMode"/> is not one of the valid <see cref="MediaPlaybackAutoRepeatMode"/> value.</exception>
     public static string ToRepeatGlyph(MediaPlaybackAutoRepeatMode repeatMode)
     {
+        const string RepeatOffGlyph = "\uF5E7";
+        const string RepeatOneGlyph = "\uE8ED";
+        const string RepeatAllGlyph = "\uE8EE";
+        const string RepeatOffMirroredGlyph = "\U000F0127";
+        const string RepeatOneMirroredGlyph = "\U000F004D";
+        const string RepeatAllMirroredGlyph = "\U000F004E";
+
         return repeatMode switch
         {
-            MediaPlaybackAutoRepeatMode.None => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F0127" : "\uF5E7",
-            MediaPlaybackAutoRepeatMode.List => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004E" : "\uE8EE",
-            MediaPlaybackAutoRepeatMode.Track => GlobalizationHelper.IsRightToLeftLanguage ? "\U000F004D" : "\uE8ED",
+            MediaPlaybackAutoRepeatMode.None => GlobalizationHelper.IsRightToLeftLanguage ? RepeatOffMirroredGlyph : RepeatOffGlyph,
+            MediaPlaybackAutoRepeatMode.Track => GlobalizationHelper.IsRightToLeftLanguage ? RepeatOneMirroredGlyph : RepeatOneGlyph,
+            MediaPlaybackAutoRepeatMode.List => GlobalizationHelper.IsRightToLeftLanguage ? RepeatAllMirroredGlyph : RepeatAllGlyph,
             _ => throw new ArgumentOutOfRangeException(nameof(repeatMode), repeatMode, null),
         };
     }
@@ -55,13 +68,25 @@ public static partial class GlyphConvert
     /// </returns>
     public static string ToSpeedGlyph(double speed)
     {
+        const string SpeedOffGlyph = "\uEC48";
+        const string SpeedLowGlyph = "\U000F00A4";
+        const string SpeedMediumGlyph = "\uEC49";
+        const string SpeedHighGlyph = "\uEC4A";
+        const string AutoRacingGlyph = "\uEB24";
+
+        const double VeryHighSpeed = 1.75;
+        const double NormalSpeed = 1.0;
+        const double VeryLowSpeed = 0.25;
+
+        const double Tolerance = 0.0001;
+
         return speed switch
         {
-            >= 1.75 => "\uEB24",
-            > 1.01 => "\uEC4A",
-            <= 0.25 => "\uEC48",
-            < 0.99 => "\U000F00A4",
-            _ => "\uEC49"
+            >= VeryHighSpeed - Tolerance => AutoRacingGlyph,
+            > NormalSpeed + Tolerance => SpeedHighGlyph,
+            >= NormalSpeed - Tolerance and <= NormalSpeed + Tolerance => SpeedMediumGlyph,
+            > VeryLowSpeed + Tolerance => SpeedLowGlyph,
+            _ => SpeedOffGlyph,
         };
     }
 
@@ -75,7 +100,10 @@ public static partial class GlyphConvert
     /// </returns>
     public static string ToRecentGlyph(bool value)
     {
-        return value ? "\U000F00F0" : "\U000F00F1";
+        const string RecentGlyph = "\U000F00F0";
+        const string RecentEmptyGlyph = "\U000F00F1";
+
+        return value ? RecentGlyph : RecentEmptyGlyph;
     }
 
     /// <summary>
@@ -88,7 +116,10 @@ public static partial class GlyphConvert
     /// </returns>
     public static string ToPlayPauseGlyph(bool value)
     {
-        return value ? "\uE769" : "\uE768";
+        const string PlayGlyph = "\uE768";
+        const string PauseGlyph = "\uE769";
+
+        return value ? PauseGlyph : PlayGlyph;
     }
 
     /// <summary>
@@ -101,6 +132,37 @@ public static partial class GlyphConvert
     /// </returns>
     public static string ToPlayPauseSolidGlyph(bool value)
     {
-        return value ? "\uE62E" : "\uF5B0";
+        const string PlaySolidGlyph = "\uF5B0";
+        const string PauseSolidGlyph = "\uE62E";
+
+        return value ? PauseSolidGlyph : PlaySolidGlyph;
+    }
+
+    /// <summary>
+    /// Gets the volume glyph code based on mute state and volume value.
+    /// </summary>
+    /// <param name="isMute">A <see cref="bool"/> that specifies if the player is muted.</param>
+    /// <param name="volume">An <see cref="int"/> that specifies the player's volume.</param>
+    /// <returns>
+    /// <strong>Mute</strong> glyph code <see cref="string"/> if <paramref name="isMute"/> is <see langword="true"/>;
+    /// otherwise, a glyph code representing the volume level.
+    /// </returns>
+    public static string ToVolumeGlyph(bool isMute, int volume)
+    {
+        const string MuteGlyph = "\uE74F";
+        const string Volume0Glyph = "\uE992";
+        const string Volume1Glyph = "\uE993";
+        const string Volume2Glyph = "\uE994";
+        const string Volume3Glyph = "\uE995";
+
+        if (isMute) return MuteGlyph;
+
+        return volume switch
+        {
+            < 25 => Volume0Glyph,
+            < 50 => Volume1Glyph,
+            < 75 => Volume2Glyph,
+            _ => Volume3Glyph
+        };
     }
 }

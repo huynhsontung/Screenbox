@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
@@ -47,12 +48,12 @@
             controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             d:Style="{StaticResource SmallPlayerToggleButtonStyle}"
             AccessKey="{strings:KeyboardResources Key=PlayerMuteKey}"
-            AutomationProperties.Name="{Binding ElementName=VolumeToggleButton, Path=(ToolTipService.ToolTip), Mode=OneWay}"
+            AutomationProperties.Name="{x:Bind strings:Resources.MuteToggle(ViewModel.IsMute), Mode=OneWay}"
             IsChecked="{x:Bind ViewModel.IsMute, Mode=TwoWay}"
             Style="{x:Bind VolumeToggleButtonStyle, Mode=OneWay}">
             <FontIcon
                 d:Glyph="&#xE994;"
-                Glyph="{x:Bind ViewModel.VolumeGlyph, Mode=OneWay}"
+                Glyph="{x:Bind converters:GlyphConverter.ToVolumeGlyph(ViewModel.IsMute, ViewModel.Volume), Mode=OneWay}"
                 MirroredWhenRightToLeft="True" />
             <ToggleButton.KeyboardAccelerators>
                 <KeyboardAccelerator Key="M" />
@@ -79,7 +80,7 @@
             AutomationProperties.Name="{strings:Resources Key=VolumeSliderTooltip}"
             IsThumbToolTipEnabled="{x:Bind ShowValueText, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
             Maximum="{x:Bind ViewModel.MaxVolume, Mode=OneWay}"
-            PointerWheelChanged="{x:Bind ViewModel.OnPointerWheelChanged}"
+            PointerWheelChanged="VolumeSlider_OnPointerWheelChanged"
             Value="{x:Bind ViewModel.Volume, Mode=TwoWay}" />
 
         <TextBlock
