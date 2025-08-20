@@ -325,8 +325,7 @@
                     MaxWidth="400"
                     Margin="10,0,10,16"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Shadow="{StaticResource ElevationThemeShadow}" />
+                    VerticalAlignment="Bottom" />
             </Grid>
 
             <interactivity:Interaction.Behaviors>
