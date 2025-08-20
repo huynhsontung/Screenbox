@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/NoAnimationProgressBar.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/Progress.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate x:Key="ItemTemplate" x:DataType="viewModels:ChapterViewModel">
@@ -21,7 +21,7 @@
                     Width="{Binding Width}"
                     Maximum="{Binding Maximum}"
                     Minimum="{Binding Minimum}"
-                    Style="{StaticResource NoAnimationProgressBar}"
+                    Style="{StaticResource NoAnimationProgressBarStyle}"
                     Value="{Binding Value}" />
             </DataTemplate>
 
