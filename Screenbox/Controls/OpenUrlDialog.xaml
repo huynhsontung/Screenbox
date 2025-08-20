@@ -14,6 +14,21 @@
     mc:Ignorable="d">
 
     <Grid>
-        <TextBox x:Name="UrlBox" PlaceholderText="{strings:Resources Key=OpenUrlPlaceholder}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBox x:Name="UrlBox" 
+                 Grid.Row="0"
+                 PlaceholderText="{strings:Resources Key=OpenUrlPlaceholder}" 
+                 TextChanged="UrlBox_TextChanged" />
+        
+        <TextBlock x:Name="ErrorMessage" 
+                   Grid.Row="1"
+                   Margin="0,8,0,0"
+                   Foreground="{ThemeResource SystemErrorTextColor}"
+                   TextWrapping="Wrap"
+                   Visibility="Collapsed" />
     </Grid>
 </ContentDialog>

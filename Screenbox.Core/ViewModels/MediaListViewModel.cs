@@ -645,13 +645,25 @@ namespace Screenbox.Core.ViewModels
         {
             MediaViewModel media => media,
             StorageFile file => _mediaFactory.GetSingleton(file),
-            Uri uri => _mediaFactory.GetTransient(uri),
+            Uri uri when UrlHelpers.IsSupportedMediaUrl(uri) => _mediaFactory.GetTransient(uri),
+            Uri uri => throw new ArgumentException(UrlHelpers.GetUnsupportedUrlMessage(uri)),
             _ => null
         };
 
         private async Task EnqueueAndPlay(object value)
         {
-            MediaViewModel? playNext = GetMedia(value);
+            MediaViewModel? playNext = null;
+            try
+            {
+                playNext = GetMedia(value);
+            }
+            catch (ArgumentException ex)
+            {
+                // Show error notification for unsupported URLs
+                Messenger.Send(new ErrorMessage("URL Not Supported", ex.Message));
+                return;
+            }
+            
             if (playNext != null)
             {
                 Enqueue(new[] { playNext });
