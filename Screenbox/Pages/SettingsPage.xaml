@@ -355,6 +355,28 @@
                     <ToggleSwitch AutomationProperties.HelpText="{strings:Resources Key=SettingsRestorePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.RestorePlaybackPosition, Mode=TwoWay}" />
                 </ctc:SettingsCard>
 
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsLaunchPageDescription}"
+                    Header="{strings:Resources Key=SettingsLaunchPageHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE80F;}">
+                    <ComboBox MinWidth="150" SelectedIndex="{x:Bind ViewModel.LaunchPage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                        <x:String>Home</x:String>
+                        <x:String>Songs</x:String>
+                        <x:String>Albums</x:String>
+                        <x:String>Artists</x:String>
+                        <x:String>VideoFolders</x:String>
+                        <x:String>AllVideos</x:String>
+                        <x:String>Network</x:String>
+                        <x:String>PlayQueue</x:String>
+                    </ComboBox>
+                </ctc:SettingsCard>
+
                 <!--  Player section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryPlayer}" />
 
