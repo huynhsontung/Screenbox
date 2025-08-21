@@ -1,16 +1,17 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.WinUI;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.WinUI;
+using Screenbox.Core.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -47,18 +48,6 @@ namespace Screenbox.Controls
             await PlaylistListView.SmoothScrollIntoViewWithItemAsync(ViewModel.Playlist.CurrentItem, ScrollItemPlacement.Center);
         }
 
-        private void SelectionCheckBox_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (SelectionCheckBox.IsChecked ?? false)
-            {
-                PlaylistListView.SelectAll();
-            }
-            else
-            {
-                PlaylistListView.SelectedItems.Clear();
-            }
-        }
-
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
@@ -77,7 +66,7 @@ namespace Screenbox.Controls
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                await ViewModel.EnqueuePlaylistAsync(items);
+                await ViewModel.Playlist.EnqueueAsync(items);
             }
         }
 
@@ -137,14 +126,39 @@ namespace Screenbox.Controls
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
 
-        private void PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+        private void SelectDeselectAllKeyboardAccelerator_OnInvoked(Windows.UI.Xaml.Input.KeyboardAccelerator sender, Windows.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (PlaylistListView.Items.Count > 0)
+            if (ViewModel.HasItems)
             {
-                MultiSelectToggle.IsChecked = true;
-                PlaylistListView.SelectAll();
-                args.Handled = true;
+                var itemsRange = new ItemIndexRange(0, (uint)ViewModel.Playlist.Items.Count);
+                if (ViewModel.SelectionCount != ViewModel.Playlist.Items.Count)
+                {
+                    ViewModel.EnableMultiSelect = true;
+                    PlaylistListView.SelectRange(itemsRange);
+                    args.Handled = true;
+                }
+                else
+                {
+                    PlaylistListView.DeselectRange(itemsRange);
+                    args.Handled = true;
+                }
             }
+        }
+
+        /// <summary>
+        /// Gets the tooltip text for a selection checkbox based on its current state.
+        /// </summary>
+        /// <param name="value">A nullable boolean representing the <see cref="CheckBox"/> state.</param>
+        /// <returns>
+        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked;
+        /// otherwise throw not implemented exception.
+        /// </returns>
+        /// <exception cref="NotImplementedException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
+        private string GetSelectionCheckBoxToolTip(bool? value)
+        {
+            return value is null
+                ? throw new NotImplementedException()
+                : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
         }
     }
 }

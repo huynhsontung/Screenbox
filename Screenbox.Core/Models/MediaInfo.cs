@@ -24,18 +24,23 @@ public sealed class MediaInfo
         MusicProperties = new MusicInfo();
     }
 
-    public MediaInfo(MusicInfo musicProperties)
+    internal MediaInfo(IMediaProperties properties)
     {
         MediaType = MediaPlaybackType.Music;
-        MusicProperties = musicProperties;
-        VideoProperties = new VideoInfo();
-    }
-
-    public MediaInfo(VideoInfo videoProperties)
-    {
-        MediaType = MediaPlaybackType.Video;
-        MusicProperties = new MusicInfo();
-        VideoProperties = videoProperties;
+        if (properties is MusicInfo musicProperties)
+        {
+            MusicProperties = musicProperties;
+            VideoProperties = new VideoInfo();
+        }
+        else if (properties is VideoInfo videoProperties)
+        {
+            MusicProperties = new MusicInfo();
+            VideoProperties = videoProperties;
+        }
+        else
+        {
+            throw new ArgumentException("Invalid media properties type.");
+        }
     }
 
     public MediaInfo(BasicProperties basicProperties, MusicProperties musicProperties)

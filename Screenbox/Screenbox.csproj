@@ -149,8 +149,8 @@
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
     <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
-    <Compile Include="Controls\AudioTrackSubtitlePicker.xaml.cs">
-      <DependentUpon>AudioTrackSubtitlePicker.xaml</DependentUpon>
+    <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
+      <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CastControl.xaml.cs">
       <DependentUpon>CastControl.xaml</DependentUpon>
@@ -164,7 +164,9 @@
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
+    <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
     <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
+    <Compile Include="Controls\Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
@@ -178,7 +180,7 @@
     <Compile Include="Controls\Interactions\NavigationViewKeyboardBehavior.cs" />
     <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
     <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonAccessibilityBehavior.cs" />
+    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
     <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
       <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>
@@ -228,12 +230,18 @@
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
+    <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
+    <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Helpers\DeviceInfoHelper.cs" />
+    <Compile Include="Helpers\GlobalizationHelper.cs" />
+    <Compile Include="Helpers\GlyphConvert.cs" />
+    <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
     </Compile>
@@ -304,16 +312,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\ResourceService.cs" />
-    <Compile Include="Strings\en-US\KeyboardResources.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>KeyboardResources.resw</DependentUpon>
-    </Compile>
-    <Compile Include="Strings\en-US\Resources.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resw</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -453,62 +451,79 @@
     <None Include="Secrets.cs.template" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\en-US\KeyboardResources.resw">
-      <Generator>ReswPlusGenerator</Generator>
-      <LastGenOutput>KeyboardResources.generated.cs</LastGenOutput>
-    </PRIResource>
+    <PRIResource Include="Strings\en-US\KeyboardResources.resw" />
     <PRIResource Include="Strings\en-US\ManifestResources.resw" />
-    <PRIResource Include="Strings\en-US\Resources.resw">
-      <Generator>ReswPlusAdvancedGenerator</Generator>
-      <LastGenOutput>Resources.generated.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </PRIResource>
+    <PRIResource Include="Strings\en-US\Resources.resw" />
+    <PRIResource Include="Strings\ar-SA\KeyboardResources.resw" />
     <PRIResource Include="Strings\ar-SA\ManifestResources.resw" />
     <PRIResource Include="Strings\ar-SA\Resources.resw" />
+    <PRIResource Include="Strings\be-BY\KeyboardResources.resw" />
     <PRIResource Include="Strings\be-BY\ManifestResources.resw" />
     <PRIResource Include="Strings\be-BY\Resources.resw" />
+    <PRIResource Include="Strings\de-DE\KeyboardResources.resw" />
     <PRIResource Include="Strings\de-DE\ManifestResources.resw" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
+    <PRIResource Include="Strings\el-GR\KeyboardResources.resw" />
     <PRIResource Include="Strings\el-GR\ManifestResources.resw" />
     <PRIResource Include="Strings\el-GR\Resources.resw" />
+    <PRIResource Include="Strings\es-ES\KeyboardResources.resw" />
     <PRIResource Include="Strings\es-ES\ManifestResources.resw" />
     <PRIResource Include="Strings\es-ES\Resources.resw" />
+    <PRIResource Include="Strings\fr-FR\KeyboardResources.resw" />
     <PRIResource Include="Strings\fr-FR\ManifestResources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\he-IL\KeyboardResources.resw" />
     <PRIResource Include="Strings\he-IL\ManifestResources.resw" />
     <PRIResource Include="Strings\he-IL\Resources.resw" />
+    <PRIResource Include="Strings\hu-HU\KeyboardResources.resw" />
     <PRIResource Include="Strings\hu-HU\ManifestResources.resw" />
     <PRIResource Include="Strings\hu-HU\Resources.resw" />
+    <PRIResource Include="Strings\id-ID\KeyboardResources.resw" />
     <PRIResource Include="Strings\id-ID\ManifestResources.resw" />
     <PRIResource Include="Strings\id-ID\Resources.resw" />
+    <PRIResource Include="Strings\it-IT\KeyboardResources.resw" />
     <PRIResource Include="Strings\it-IT\ManifestResources.resw" />
     <PRIResource Include="Strings\it-IT\Resources.resw" />
+    <PRIResource Include="Strings\ja-JP\KeyboardResources.resw" />
     <PRIResource Include="Strings\ja-JP\ManifestResources.resw" />
     <PRIResource Include="Strings\ja-JP\Resources.resw" />
+    <PRIResource Include="Strings\ms-MY\KeyboardResources.resw" />
     <PRIResource Include="Strings\ms-MY\ManifestResources.resw" />
     <PRIResource Include="Strings\ms-MY\Resources.resw" />
+    <PRIResource Include="Strings\nl-NL\KeyboardResources.resw" />
     <PRIResource Include="Strings\nl-NL\ManifestResources.resw" />
     <PRIResource Include="Strings\nl-NL\Resources.resw" />
+    <PRIResource Include="Strings\pl-PL\KeyboardResources.resw" />
     <PRIResource Include="Strings\pl-PL\ManifestResources.resw" />
     <PRIResource Include="Strings\pl-PL\Resources.resw" />
+    <PRIResource Include="Strings\pt-BR\KeyboardResources.resw" />
     <PRIResource Include="Strings\pt-BR\ManifestResources.resw" />
     <PRIResource Include="Strings\pt-BR\Resources.resw" />
+    <PRIResource Include="Strings\pt-PT\KeyboardResources.resw" />
     <PRIResource Include="Strings\pt-PT\ManifestResources.resw" />
     <PRIResource Include="Strings\pt-PT\Resources.resw" />
+    <PRIResource Include="Strings\ro-RO\KeyboardResources.resw" />
     <PRIResource Include="Strings\ro-RO\ManifestResources.resw" />
     <PRIResource Include="Strings\ro-RO\Resources.resw" />
+    <PRIResource Include="Strings\ru-RU\KeyboardResources.resw" />
     <PRIResource Include="Strings\ru-RU\ManifestResources.resw" />
     <PRIResource Include="Strings\ru-RU\Resources.resw" />
+    <PRIResource Include="Strings\si-LK\KeyboardResources.resw" />
     <PRIResource Include="Strings\si-LK\ManifestResources.resw" />
     <PRIResource Include="Strings\si-LK\Resources.resw" />
+    <PRIResource Include="Strings\tr-TR\KeyboardResources.resw" />
     <PRIResource Include="Strings\tr-TR\ManifestResources.resw" />
     <PRIResource Include="Strings\tr-TR\Resources.resw" />
+    <PRIResource Include="Strings\uk-UA\KeyboardResources.resw" />
     <PRIResource Include="Strings\uk-UA\ManifestResources.resw" />
     <PRIResource Include="Strings\uk-UA\Resources.resw" />
+    <PRIResource Include="Strings\vi\KeyboardResources.resw" />
     <PRIResource Include="Strings\vi\ManifestResources.resw" />
     <PRIResource Include="Strings\vi\Resources.resw" />
+    <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
+    <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hant\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hant\Resources.resw" />
   </ItemGroup>
@@ -517,7 +532,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\AudioTrackSubtitlePicker.xaml">
+    <Page Include="Controls\CompositeTrackPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -578,10 +593,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SetOptionsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\Styles\NoAnimationProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -701,56 +712,64 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\Icon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\ItemContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Progress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Uwp.Animations">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Behaviors">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.Primitives">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Controls.SettingsControls">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Converters">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Uwp.Extensions">
-      <Version>8.1.240821</Version>
+      <Version>8.1.240916</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Analytics">
-      <Version>5.0.5</Version>
+      <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.AppCenter.Crashes">
-      <Version>5.0.5</Version>
+      <Version>5.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>8.0.0</Version>
+      <Version>9.0.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.8.6</Version>
+      <Version>2.8.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
-    <PackageReference Include="ReswPlusLib">
-      <Version>2.0.0</Version>
+    <PackageReference Include="ReswPlus">
+      <Version>0.3.1.5</Version>
     </PackageReference>
     <PackageReference Include="LibVLC.UWP">
-      <Version>3.0.20-2405070635</Version>
+      <Version>3.0.21-2505100334</Version>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>4.10.2</Version>
+      <Version>5.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

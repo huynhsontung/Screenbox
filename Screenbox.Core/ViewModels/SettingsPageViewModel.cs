@@ -1,5 +1,10 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,10 +13,8 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.System;
@@ -25,14 +28,20 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerSeekGesture;
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _playerShowControls;
+        [ObservableProperty] private bool _playerShowChapters;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
+        [ObservableProperty] private int _theme;
+        [ObservableProperty] private bool _enqueueAllFilesInFolder;
+        [ObservableProperty] private bool _restorePlaybackPosition;
         [ObservableProperty] private bool _searchRemovableStorage;
         [ObservableProperty] private bool _advancedMode;
+        [ObservableProperty] private int _videoUpscaling;
         [ObservableProperty] private bool _useMultipleInstances;
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
+        [ObservableProperty] private int _selectedLanguage;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -40,15 +49,24 @@ namespace Screenbox.Core.ViewModels
 
         public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
+        public List<Models.Language> AvailableLanguages { get; }
+
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
-        private static string? _originalGlobalArguments;
-        private static bool? _originalAdvancedMode;
+        private static InitialValues? _initialValues;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
+
+        private record InitialValues(string GlobalArguments, bool AdvancedMode, int VideoUpscaling, int Language)
+        {
+            public string GlobalArguments { get; } = GlobalArguments;
+            public bool AdvancedMode { get; } = AdvancedMode;
+            public int VideoUpscaling { get; } = VideoUpscaling;
+            public int Language { get; } = Language;
+        }
 
         public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
         {
@@ -59,6 +77,12 @@ namespace Screenbox.Core.ViewModels
             MusicLocations = new ObservableCollection<StorageFolder>();
             VideoLocations = new ObservableCollection<StorageFolder>();
             RemovableStorageFolders = new ObservableCollection<StorageFolder>();
+
+            var manifestLanguages = ApplicationLanguages.ManifestLanguages.Select(l => new Language(l)).ToList();
+            AvailableLanguages = manifestLanguages.Select(l => new Models.Language(l.NativeName, l.LanguageTag, l.LayoutDirection))
+                .OrderBy(l => l.NativeName, StringComparer.CurrentCultureIgnoreCase)
+                .Prepend(new Models.Language(string.Empty, string.Empty, LanguageLayoutDirection.Ltr))
+                .ToList();
 
             if (SystemInformation.IsXbox)
             {
@@ -74,15 +98,17 @@ namespace Screenbox.Core.ViewModels
             _playerSeekGesture = _settingsService.PlayerSeekGesture;
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
+            _playerShowChapters = _settingsService.PlayerShowChapters;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
+            _theme = ((int)_settingsService.Theme + 2) % 3;
+            _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
+            _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
             _searchRemovableStorage = _settingsService.SearchRemovableStorage;
             _advancedMode = _settingsService.AdvancedMode;
             _useMultipleInstances = _settingsService.UseMultipleInstances;
+            _videoUpscaling = (int)_settingsService.VideoUpscale;
             _globalArguments = _settingsService.GlobalArguments;
-            _originalAdvancedMode ??= _advancedMode;
-            _originalGlobalArguments ??= _globalArguments;
-            _isRelaunchRequired = CheckForRelaunch();
             int maxVolume = _settingsService.MaxVolume;
             _volumeBoost = maxVolume switch
             {
@@ -92,7 +118,37 @@ namespace Screenbox.Core.ViewModels
                 _ => 0
             };
 
+            string currentLanguage = ApplicationLanguages.PrimaryLanguageOverride;
+            _selectedLanguage = AvailableLanguages.FindIndex(l => l.LanguageTag.Equals(currentLanguage));
+
+            // Setting initial values for relaunch check
+            _initialValues ??= new InitialValues(_globalArguments, _advancedMode, _videoUpscaling, _selectedLanguage);
+            CheckForRelaunch();
+
             IsActive = true;
+        }
+
+        partial void OnThemeChanged(int value)
+        {
+            // The recommended theme option order is Light, Dark, System
+            // So we need to map the value to the correct ThemeOption
+            _settingsService.Theme = (ThemeOption)((value + 1) % 3);
+            Messenger.Send(new SettingsChangedMessage(nameof(Theme), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnSelectedLanguageChanged(int value)
+        {
+            if (value <= 0)
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                CheckForRelaunch();
+                return;
+            }
+
+            // If the value is out of bounds, do nothing
+            if (value >= AvailableLanguages.Count) return;
+            ApplicationLanguages.PrimaryLanguageOverride = AvailableLanguages[value].LanguageTag;
+            CheckForRelaunch();
         }
 
         partial void OnPlayerAutoResizeChanged(int value)
@@ -125,6 +181,12 @@ namespace Screenbox.Core.ViewModels
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowControls), typeof(SettingsPageViewModel)));
         }
 
+        partial void OnPlayerShowChaptersChanged(bool value)
+        {
+            _settingsService.PlayerShowChapters = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowChapters), typeof(SettingsPageViewModel)));
+        }
+
         partial void OnUseIndexerChanged(bool value)
         {
             _settingsService.UseIndexer = value;
@@ -135,6 +197,18 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.ShowRecent = value;
             Messenger.Send(new SettingsChangedMessage(nameof(ShowRecent), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnEnqueueAllFilesInFolderChanged(bool value)
+        {
+            _settingsService.EnqueueAllFilesInFolder = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(EnqueueAllFilesInFolder), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnRestorePlaybackPositionChanged(bool value)
+        {
+            _settingsService.RestorePlaybackPosition = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(RestorePlaybackPosition), typeof(SettingsPageViewModel)));
         }
 
         async partial void OnSearchRemovableStorageChanged(bool value)
@@ -164,7 +238,14 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.AdvancedMode = value;
             Messenger.Send(new SettingsChangedMessage(nameof(AdvancedMode), typeof(SettingsPageViewModel)));
-            IsRelaunchRequired = CheckForRelaunch();
+            CheckForRelaunch();
+        }
+
+        partial void OnVideoUpscalingChanged(int value)
+        {
+            _settingsService.VideoUpscale = (VideoUpscaleOption)value;
+            Messenger.Send(new SettingsChangedMessage(nameof(VideoUpscaling), typeof(SettingsPageViewModel)));
+            CheckForRelaunch();
         }
 
         partial void OnUseMultipleInstancesChanged(bool value)
@@ -182,7 +263,7 @@ namespace Screenbox.Core.ViewModels
             }
 
             GlobalArguments = _settingsService.GlobalArguments;
-            IsRelaunchRequired = CheckForRelaunch();
+            CheckForRelaunch();
         }
 
         [RelayCommand]
@@ -378,13 +459,21 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private bool CheckForRelaunch()
+        private void CheckForRelaunch()
         {
+            if (_initialValues == null) return;
+
+            // Check if upscaling mode has been changed
+            bool upscalingChanged = _initialValues.VideoUpscaling != VideoUpscaling;
+
+            // Check if app language has been changed
+            bool languageChanged = _initialValues.Language != SelectedLanguage;
+
             // Check if global arguments have been changed
-            bool argsChanged = _originalGlobalArguments != _settingsService.GlobalArguments;
+            bool argsChanged = _initialValues.GlobalArguments != _settingsService.GlobalArguments;
 
             // Check if advanced mode has been changed
-            bool modeChanged = _originalAdvancedMode != AdvancedMode;
+            bool modeChanged = _initialValues.AdvancedMode != AdvancedMode;
 
             // Check if there are any global arguments set
             bool hasArgs = _settingsService.GlobalArguments.Length > 0;
@@ -399,7 +488,7 @@ namespace Screenbox.Core.ViewModels
             bool whenOnAndChanged = AdvancedMode && argsChanged;
 
             // Combine everything
-            return whenOn || whenOff || whenOnAndChanged;
+            IsRelaunchRequired = upscalingChanged || languageChanged || whenOn || whenOff || whenOnAndChanged;
         }
     }
 }

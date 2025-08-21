@@ -5,6 +5,7 @@ using LibVLCSharp.Shared;
 using Screenbox.Core.Playback;
 using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 
@@ -17,13 +18,26 @@ namespace Screenbox.Core.Services
         public LibVLC? LibVlc { get; private set; }
 
         private readonly NotificationService _notificationService;
+        private readonly bool _useFal;
 
         public LibVlcService(INotificationService notificationService)
         {
             _notificationService = (NotificationService)notificationService;
 
-            // Clear FA periodically because of 1000 items limit
-            StorageApplicationPermissions.FutureAccessList.Clear();
+            // FutureAccessList is preferred because it can handle network StorageFiles
+            // If FutureAccessList is somehow unavailable, SharedStorageAccessManager will be the fallback
+            _useFal = true;
+
+            try
+            {
+                // Clear FA periodically because of 1000 items limit
+                StorageApplicationPermissions.FutureAccessList.Clear();
+            }
+            catch (Exception)   // FileNotFoundException
+            {
+                // FutureAccessList is not available
+                _useFal = false;
+            }
         }
 
         public VlcMediaPlayer Initialize(string[] swapChainOptions)
@@ -61,7 +75,18 @@ namespace Screenbox.Core.Services
         {
             Guard.IsNotNull(LibVlc, nameof(LibVlc));
             LibVLC libVlc = LibVlc;
-            string mrl = "winrt://" + StorageApplicationPermissions.FutureAccessList.Add(file, "media");
+            if (file is StorageFile storageFile &&
+                storageFile.Provider.Id.Equals("network", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrEmpty(storageFile.Path))
+            {
+                // Optimization for network files. Avoid having to deal with WinRT quirks.
+                return CreateMedia(new Uri(storageFile.Path, UriKind.Absolute), options);
+            }
+
+            string token = _useFal
+                ? StorageApplicationPermissions.FutureAccessList.Add(file, "media")
+                : SharedStorageAccessManager.AddFile(file);
+            string mrl = "winrt://" + token;
             return new Media(libVlc, mrl, FromType.FromLocation, options);
         }
 
@@ -72,7 +97,7 @@ namespace Screenbox.Core.Services
             return new Media(libVlc, uri, options);
         }
 
-        public static void DisposeMedia(Media media)
+        public void DisposeMedia(Media media)
         {
             string mrl = media.Mrl;
             if (mrl.StartsWith("winrt://"))
@@ -80,7 +105,14 @@ namespace Screenbox.Core.Services
                 string token = mrl.Substring(8);
                 try
                 {
-                    StorageApplicationPermissions.FutureAccessList.Remove(token);
+                    if (_useFal)
+                    {
+                        StorageApplicationPermissions.FutureAccessList.Remove(token);
+                    }
+                    else
+                    {
+                        SharedStorageAccessManager.RemoveFile(token);
+                    }
                 }
                 catch (Exception)
                 {

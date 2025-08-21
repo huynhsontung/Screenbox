@@ -1,15 +1,16 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Microsoft.AppCenter.Analytics;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.ViewModels;
+using Sentry;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -50,10 +51,10 @@ namespace Screenbox.Pages
             // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            //Register a handler for when the window changes focus
+            // Register a handler for when the window changes focus
             Window.Current.CoreWindow.Activated += CoreWindow_Activated;
 
-            NotificationView.Translation = new Vector3(0, 0, 8);
+            NotificationView.Translation = new Vector3(0, 0, 16);
 
             _pages = new Dictionary<string, Type>
             {
@@ -68,7 +69,7 @@ namespace Screenbox.Pages
 
             DataContext = Ioc.Default.GetRequiredService<MainPageViewModel>();
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            ContentFrame.Navigated += ContentFrameOnNavigated;
+            ContentFrame.Navigating += ContentFrame_Navigating;
         }
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
@@ -112,6 +113,12 @@ namespace Screenbox.Pages
         {
             base.OnKeyDown(e);
             ViewModel.ProcessGamepadKeyDown(e);
+
+            if (e.Key == VirtualKey.GamepadY)
+            {
+                NavViewSearchBox.Focus(FocusState.Programmatic);
+                e.Handled = true;
+            }
         }
 
         public void GoBack()
@@ -128,10 +135,6 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarElement);
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonForegroundColor = null;
-            }
         }
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -145,13 +148,6 @@ namespace Screenbox.Pages
                 SetTitleBar();
                 NavView.SelectedItem = NavView.MenuItems[0];
                 _ = ViewModel.FetchLibraries();
-            }
-
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonBackgroundColor = Colors.Transparent;
-                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                titleBar.InactiveBackgroundColor = Colors.Transparent;
             }
         }
 
@@ -173,11 +169,12 @@ namespace Screenbox.Pages
             }
         }
 
-        private void ContentFrameOnNavigated(object sender, NavigationEventArgs e)
+        private void ContentFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
-            Analytics.TrackEvent(e.SourcePageType.Name, new Dictionary<string, string>()
-            {
-                {"NavigationMode", e.NavigationMode.ToString()}
+            SentrySdk.AddBreadcrumb(string.Empty, category: "navigation", type: "navigation", data: new Dictionary<string, string> {
+                { "from", ((Frame)sender).CurrentSourcePageType?.Name ?? string.Empty },
+                { "to", e.SourcePageType?.Name ?? string.Empty },
+                { "NavigationMode", e.NavigationMode.ToString()  }
             });
         }
 
@@ -371,17 +368,30 @@ namespace Screenbox.Pages
         /// </summary>
         private void NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
-                NavViewSearchBox.Focus(FocusState.Keyboard);
+            NavViewSearchBox.Focus(FocusState.Keyboard);
+            args.Handled = true;
         }
 
         /// <summary>
         /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the access key combination.
-        /// </summary>
-        private void NavViewSearchBoxAccessKeyFocus_OnInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
+        /// </summary
+        private void NavViewSearchBox_OnAccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
         {
-            if (NavViewSearchBox.FocusState == FocusState.Unfocused)
-                NavViewSearchBox.Focus(FocusState.Keyboard);
+            NavViewSearchBox.Focus(FocusState.Keyboard);
+            args.Handled = true;
+        }
+
+        private void NavView_DragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            e.AcceptedOperation = DataPackageOperation.Link;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
+        }
+
+        private void NavView_Drop(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            ViewModel.OnDrop(e.DataView);
         }
     }
 }

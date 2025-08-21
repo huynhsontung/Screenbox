@@ -137,7 +137,16 @@
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>أخفق حفظ الإطار</value>
+    <value>فشل حفظ الإطار</value>
+  </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>الوقت المنقضي</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>الوقت المتبقي</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>المدة الإجمالية</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>الفصل {0}</value>
@@ -159,10 +168,10 @@
     <value>ملء الشاشة</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
-    <value>الصوت و التسميات التوضيحية</value>
+    <value>الصوت والترجمة</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>الخروج من ملء الشاشة</value>
+    <value>الخروج من وضع ملء الشاشة</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>مستوى الصوت</value>
@@ -171,7 +180,7 @@
     <value>ضبط مستوى الصوت</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>سحب</value>
+    <value>تمرير</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
     <value>الخروج من وضع صورة في صورة</value>
@@ -186,13 +195,13 @@
     <value>تشغيل</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>ايقاف مؤقت</value>
+    <value>إيقاف مؤقت</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>المزيد</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>قائمة انتظار التشغيل</value>
+    <value>تشغيل قائمة الانتظار</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>التكرار: إيقاف</value>
@@ -204,7 +213,7 @@
     <value>التكرار: مرة واحدة</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
-    <value>تم تحديد {0} عناصر</value>
+    <value>تم تحديد {0} عنصر</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="ItemsSelected_Other" xml:space="preserve">
@@ -215,31 +224,31 @@
     <value>إضافة إلى قائمة الانتظار</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>حدد الكل</value>
+    <value>تحديد الكل</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
-    <value>حدد كافة العناصر في هذا العرض</value>
+    <value>تحديد جميع العناصر في هذا العرض</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
     <value>عدم التحديد</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
-    <value>امسح اختيارك</value>
+    <value>مسح التحديد الخاص بك</value>
   </data>
   <data name="ClearSelection" xml:space="preserve">
     <value>مسح التحديد</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>ازالة</value>
+    <value>إزالة</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
     <value>تشغيل التالي</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>اذهب للأعلى</value>
+    <value>إلى الأعلى</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>اذهب للأسفل</value>
+    <value>إلى الأسفل</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>يتم تشغيله حالياً</value>
@@ -407,7 +416,7 @@
     <value>لا يوجد جهاز متاح على الشبكة</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
-    <value>تعذر العثور على الوسائط الخاصة بك؟ تأكد من اقتران جهاز الشبكة الخاص بك في إعدادات Windows.</value>
+    <value>لم تتمكن من العثور على الوسائط الخاصة بك؟ تأكد من اقتران جهاز الشبكة الخاص بك في إعدادات Windows.</value>
   </data>
   <data name="Recent" xml:space="preserve">
     <value>الأخيرة</value>
@@ -685,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>لا يوجد عارض متوافق. الرجاء التأكد من توفر Direct3D 11 على جهازك.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>للحصول على المزيد من المعلومات حول هذه المسألة والإصلاحات المحتملة، زر</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>فشل في فتح الملفات</value>
   </data>
@@ -870,12 +882,69 @@
     <value>مقاطع الفيديو</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>عرض الألبوم</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>عرض الفنان</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>فشل تحميل الصورة</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>عند فتح مِلَفّ واحد، أضف تلقائياً جميع الملفات الأخرى في المجلد إلى قائمة انتظار التشغيل</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>إضافة جميع الملفات في المجلد إلى قائمة الانتظار</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>استخدام إعدادات النظام</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>تغيير نظام الألوان العام للتطبيق</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>سمة التطبيق</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>التخصيص</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>الاستئناف دائماً من آخر موضع</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>متابعة التشغيل من حيث توقفت آخر مرة عند فتح مِلَفّ</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video upscaling method</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
   </data>
 </root>

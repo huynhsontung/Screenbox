@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Nu s-a reușit salvarea cadrului</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Timp scurs</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Timp rămas</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Durată totală</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capitol {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -685,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Nu este disponibil niciun dispozitiv de redare compatibil. Asigurați-vă că Direct3D 11 este disponibil pe dispozitivul dvs.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Pentru mai multe informații despre această problemă și posibile soluții, vizitați</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Deschiderea fișierelor a eșuat</value>
   </data>
@@ -876,6 +888,63 @@
     <value>Afișare artist</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Încărcarea vizualelor a eșuat</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>La deschiderea unui singur fișier, adăugați automat toate celelalte fișiere din folder în coada de redare.</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Adăugați toate fișierele din folder în coadă</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilizați setările de sistem</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Întunecată</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Luminoasă</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Selectați o temă pentru a se potrivi cu setările Windows sau alegeți una personalizată</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Temă</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalizare</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Continuă întotdeauna din ultima poziție</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continuă redarea de unde ai oprit ultima dată la deschiderea unui fișier</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video upscaling method</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bilinear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolution</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
   </data>
 </root>

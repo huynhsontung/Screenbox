@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Helpers;
+using Screenbox.Helpers;
 using System.Linq;
 using System.Text;
 using Windows.System;
@@ -24,13 +24,13 @@ namespace Screenbox.Controls
         {
             element.SetValue(ToolTipProperty, value);
             KeyboardAccelerator? accelerator = element.KeyboardAccelerators.FirstOrDefault(x => x.IsEnabled);
-            bool shouldShowShortcut = SystemInformation.IsDesktop;
+            bool shouldShowShortcut = DeviceInfoHelper.IsDesktop;
             if (accelerator != null && shouldShowShortcut)
             {
                 string shortcut = ToShortcut(accelerator);
                 ToolTipService.SetToolTip(element,
                     string.IsNullOrEmpty(shortcut) ? value :
-                    App.IsRightToLeftLanguage ? $"({shortcut}) {value}" : $"{value} ({shortcut})");
+                    GlobalizationHelper.IsRightToLeftLanguage ? $"({shortcut}) {value}" : $"{value} ({shortcut})");
             }
             else
             {

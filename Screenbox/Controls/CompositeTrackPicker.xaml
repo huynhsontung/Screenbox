@@ -1,0 +1,175 @@
+﻿<UserControl
+    x:Class="Screenbox.Controls.CompositeTrackPicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:contract14Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,14)"
+    xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Screenbox.Strings"
+    xmlns:system="using:System"
+    d:DesignHeight="492"
+    d:DesignWidth="224"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ctConverters:DoubleToVisibilityConverter x:Key="GreaterThanZeroVisibilityConverter" GreaterThan="0" />
+    </UserControl.Resources>
+
+    <StackPanel Width="224" Orientation="Vertical">
+        <!--  Video tracks  -->
+        <ListView
+            ItemContainerTransitions="{x:Null}"
+            ItemsSource="{x:Bind ViewModel.VideoTracks}"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectedIndex="{x:Bind ViewModel.VideoTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False"
+            Visibility="{x:Bind ViewModel.VideoTracks.Count, Mode=OneWay, Converter={StaticResource GreaterThanZeroVisibilityConverter}}">
+            <ListView.Header>
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
+                    <TextBlock
+                        Padding="12,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{x:Bind strings:Resources.Video}"
+                        TextWrapping="NoWrap" />
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <MenuFlyoutSeparator IsTabStop="False" />
+            </ListView.Footer>
+            <d:ListView.Items>
+                <ListViewItem Content="Track 1" IsSelected="True" />
+                <ListViewItem Content="Alternate Angle (English)" />
+            </d:ListView.Items>
+        </ListView>
+
+        <!--  Audio tracks  -->
+        <ListView
+            ItemContainerTransitions="{x:Null}"
+            ItemsSource="{x:Bind ViewModel.AudioTracks}"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectedIndex="{x:Bind ViewModel.AudioTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False">
+            <ListView.Header>
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        Padding="12,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{strings:Resources Key=Audio}"
+                        TextWrapping="NoWrap" />
+                    <HyperlinkButton
+                        Grid.Column="1"
+                        Padding="{StaticResource HyperlinkButtonUniformPadding}"
+                        contract14Present:AutomationProperties.AutomationControlType="Button"
+                        Command="{x:Bind ShowAudioOptionsCommand}">
+                        <TextBlock
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{strings:Resources Key=Options}"
+                            TextWrapping="NoWrap" />
+                    </HyperlinkButton>
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <MenuFlyoutSeparator IsTabStop="False" />
+            </ListView.Footer>
+            <d:ListView.Items>
+                <ListViewItem Content="Track 1" IsSelected="True" />
+                <ListViewItem Content="Commentary Track (English)" />
+            </d:ListView.Items>
+        </ListView>
+
+        <!--  Subtitle tracks  -->
+        <ListView
+            ItemContainerTransitions="{x:Null}"
+            ItemsSource="{x:Bind ViewModel.SubtitleTracks}"
+            ScrollViewer.VerticalScrollMode="Disabled"
+            SelectedIndex="{x:Bind ViewModel.SubtitleTrackIndex, Mode=TwoWay}"
+            SelectionMode="Single"
+            SingleSelectionFollowsFocus="False">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="system:String">
+                    <TextBlock
+                        x:Name="TrackNameText"
+                        Text="{x:Bind}"
+                        TextTrimming="{StaticResource MenuFlyoutItemTextTrimming}">
+                        <interactivity:Interaction.Behaviors>
+                            <interactions:OverflowTextToolTipBehavior />
+                        </interactivity:Interaction.Behaviors>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.Header>
+                <Grid MinHeight="{StaticResource ListViewItemMinHeight}" Margin="4,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        Padding="12,0,0,0"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{strings:Resources Key=Subtitles}"
+                        TextWrapping="NoWrap" />
+                    <HyperlinkButton
+                        Grid.Column="1"
+                        Padding="{StaticResource HyperlinkButtonUniformPadding}"
+                        contract14Present:AutomationProperties.AutomationControlType="Button"
+                        Command="{x:Bind ShowSubtitleOptionsCommand}">
+                        <TextBlock
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{strings:Resources Key=Options}"
+                            TextWrapping="NoWrap" />
+                    </HyperlinkButton>
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <!--  Imitate the look of ListViewItem  -->
+                <Button
+                    MinHeight="36"
+                    Margin="{StaticResource MenuFlyoutItemMargin}"
+                    Padding="12,4"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Left"
+                    Command="{x:Bind ViewModel.AddSubtitleCommand}"
+                    Content="{strings:Resources Key=AddSubtitle}"
+                    Style="{StaticResource SubtleButtonStyle}">
+                    <Button.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.ThemeDictionaries>
+                                <ResourceDictionary x:Key="Default">
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource TextFillColorPrimary}" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="Light">
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource TextFillColorPrimary}" />
+                                </ResourceDictionary>
+                                <ResourceDictionary x:Key="HighContrast">
+                                    <SolidColorBrush x:Key="SubtleButtonForegroundPressed" Color="{ThemeResource SystemColorHighlightTextColor}" />
+                                </ResourceDictionary>
+                            </ResourceDictionary.ThemeDictionaries>
+                        </ResourceDictionary>
+                    </Button.Resources>
+                </Button>
+            </ListView.Footer>
+            <d:ListView.Items>
+                <ListViewItem Content="{strings:Resources Key=Disable}" />
+                <ListViewItem Content="English" IsSelected="True" />
+                <ListViewItem Content="French (Français)" />
+                <ListViewItem Content="Spanish (Latin America) (Castellano)" />
+            </d:ListView.Items>
+        </ListView>
+    </StackPanel>
+</UserControl>

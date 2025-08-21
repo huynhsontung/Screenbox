@@ -1,5 +1,9 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
@@ -8,10 +12,7 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
@@ -106,7 +107,7 @@ namespace Screenbox.Core.ViewModels
                 case VirtualKey.GamepadX:
                     Messenger.Send(new TogglePlayPauseMessage(true));
                     break;
-                case VirtualKey.GamepadY when !PlayerVisible:
+                case VirtualKey.GamepadView when !PlayerVisible:
                     Messenger.Send(new TogglePlayerVisibilityMessage());
                     break;
                 default:
@@ -120,6 +121,11 @@ namespace Screenbox.Core.ViewModels
             }
 
             args.Handled = true;
+        }
+
+        public void OnDrop(DataPackageView data)
+        {
+            Messenger.Send(new DragDropMessage(data));
         }
 
         public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

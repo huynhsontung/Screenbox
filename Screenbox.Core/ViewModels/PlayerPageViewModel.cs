@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,15 +15,13 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -31,11 +32,11 @@ namespace Screenbox.Core.ViewModels
         IRecipient<UpdateStatusMessage>,
         IRecipient<UpdateVolumeStatusMessage>,
         IRecipient<TogglePlayerVisibilityMessage>,
-        IRecipient<SuspendingMessage>,
         IRecipient<MediaPlayerChangedMessage>,
         IRecipient<PlaylistCurrentItemChangedMessage>,
         IRecipient<ShowPlayPauseBadgeMessage>,
         IRecipient<OverrideControlsHideDelayMessage>,
+        IRecipient<DragDropMessage>,
         IRecipient<PropertyChangedMessage<LivelyWallpaperModel?>>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>
     {
@@ -49,7 +50,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private WindowViewMode _viewMode;
         [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
         [ObservableProperty] private MediaViewModel? _media;
-        [ObservableProperty] private ElementTheme _actualTheme;
         [ObservableProperty] private bool _showVisualizer;
 
         [ObservableProperty]
@@ -71,7 +71,6 @@ namespace Screenbox.Core.ViewModels
         private readonly ISettingsService _settingsService;
         private readonly IResourceService _resourceService;
         private readonly IFilesService _filesService;
-        private readonly LastPositionTracker _lastPositionTracker;
         private IMediaPlayer? _mediaPlayer;
         private bool _visibilityOverride;
         private bool _resizeNext;
@@ -90,7 +89,6 @@ namespace Screenbox.Core.ViewModels
             _playPauseBadgeTimer = _dispatcherQueue.CreateTimer();
             _navigationViewDisplayMode = Messenger.Send<NavigationViewDisplayModeRequestMessage>();
             _playerVisibility = PlayerVisibilityState.Hidden;
-            _lastPositionTracker = new LastPositionTracker();
             _lastUpdated = DateTimeOffset.MinValue;
 
             FocusManager.GotFocus += FocusManagerOnFocusChanged;
@@ -98,6 +96,11 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public async void Receive(DragDropMessage message)
+        {
+            await OnDropAsync(message.Data);
         }
 
         public void Receive(PropertyChangedMessage<LivelyWallpaperModel?> message)
@@ -132,19 +135,11 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        public void Receive(SuspendingMessage message)
-        {
-            message.Reply(_lastPositionTracker.SaveToDiskAsync(_filesService));
-        }
-
-        public async void Receive(MediaPlayerChangedMessage message)
+        public void Receive(MediaPlayerChangedMessage message)
         {
             _mediaPlayer = message.Value;
             _mediaPlayer.PlaybackStateChanged += OnStateChanged;
-            _mediaPlayer.PositionChanged += OnPositionChanged;
             _mediaPlayer.NaturalVideoSizeChanged += OnNaturalVideoSizeChanged;
-
-            await _lastPositionTracker.LoadFromDiskAsync(_filesService);
         }
 
         public void Receive(UpdateVolumeStatusMessage message)
@@ -174,11 +169,6 @@ namespace Screenbox.Core.ViewModels
         public void Receive(PlaylistCurrentItemChangedMessage message)
         {
             _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
-            if (message.Value != null)
-            {
-                TimeSpan lastPosition = _lastPositionTracker.GetPosition(message.Value.Location);
-                Messenger.Send(new RaiseResumePositionNotificationMessage(lastPosition));
-            }
         }
 
         public void Receive(ShowPlayPauseBadgeMessage message)
@@ -192,13 +182,13 @@ namespace Screenbox.Core.ViewModels
             OverrideControlsDelayHide(message.Delay);
         }
 
-        public async void OnDrop(object sender, DragEventArgs e)
+        public async Task OnDropAsync(DataPackageView data)
         {
             try
             {
-                if (e.DataView.Contains(StandardDataFormats.StorageItems))
+                if (data.Contains(StandardDataFormats.StorageItems))
                 {
-                    IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
+                    IReadOnlyList<IStorageItem>? items = await data.GetStorageItemsAsync();
                     if (items.Count > 0)
                     {
                         if (items.Count == 1 && items[0] is StorageFile file && file.IsSupportedSubtitle() &&
@@ -216,9 +206,9 @@ namespace Screenbox.Core.ViewModels
                     }
                 }
 
-                if (e.DataView.Contains(StandardDataFormats.WebLink))
+                if (data.Contains(StandardDataFormats.WebLink))
                 {
-                    Uri? uri = await e.DataView.GetWebLinkAsync();
+                    Uri? uri = await data.GetWebLinkAsync();
                     if (uri.IsFile)
                     {
                         Messenger.Send(new PlayMediaMessage(uri));
@@ -418,21 +408,40 @@ namespace Screenbox.Core.ViewModels
 
         public void OnResizeKeyboardAcceleratorInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (sender.Modifiers != VirtualKeyModifiers.None) return;
+            if (_mediaPlayer == null) return;
             args.Handled = true;
+            Size videoSize = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
+            var view = ApplicationView.GetForCurrentView();
+            // Visible bounds always have 1 pixel less than actual window height?
+            var currentSize = new Size(view.VisibleBounds.Width, view.VisibleBounds.Height + 1);
+            // Desired step is 10% of the current window size
+            // However, 10% step doesn't always give a round number for resizing and rounding error will accumulate
+            // We want to maintain the original aspect ratio as long as possible
+            var stepHeight = Math.Round(currentSize.Height * 0.1);
+            var stepWidth = Math.Round(currentSize.Width * 0.1);
+            var desiredStepSize = Math.Min(stepWidth / currentSize.Width, stepHeight / currentSize.Height);
             switch (sender.Key)
             {
-                case VirtualKey.Number1:
-                    ResizeWindow(0.5);
+                case VirtualKey.Number1 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 0.5);
                     break;
-                case VirtualKey.Number2:
-                    ResizeWindow(1);
+                case VirtualKey.Number2 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 1);
                     break;
-                case VirtualKey.Number3:
-                    ResizeWindow(2);
+                case VirtualKey.Number3 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 1.5);
                     break;
-                case VirtualKey.Number4:
-                    ResizeWindow(0);
+                case VirtualKey.Number4 when sender.Modifiers == VirtualKeyModifiers.None:
+                    ResizeWindow(videoSize, 0);
+                    break;
+                case (VirtualKey)0xBB when sender.Modifiers == VirtualKeyModifiers.Control:  // Plus ("+")
+                    ResizeWindow(currentSize, 1 + desiredStepSize);
+                    break;
+                case (VirtualKey)0xBD when sender.Modifiers == VirtualKeyModifiers.Control:  // Minus ("-")
+                    ResizeWindow(currentSize, 1 - desiredStepSize);
+                    break;
+                default:
+                    args.Handled = false;
                     break;
             }
         }
@@ -645,27 +654,6 @@ namespace Screenbox.Core.ViewModels
             });
         }
 
-        private void OnPositionChanged(IMediaPlayer sender, object? args)
-        {
-            // Only record position for media over 1 minute
-            // Update every 3 seconds
-            TimeSpan position = sender.Position;
-            if (Media == null || sender.NaturalDuration <= TimeSpan.FromMinutes(1) ||
-                DateTimeOffset.Now - _lastUpdated <= TimeSpan.FromSeconds(3))
-                return;
-
-            if (position > TimeSpan.FromSeconds(30) && position + TimeSpan.FromSeconds(10) < sender.NaturalDuration)
-            {
-                _lastUpdated = DateTimeOffset.Now;
-                _lastPositionTracker.UpdateLastPosition(Media.Location, position);
-            }
-            else if (position > TimeSpan.FromSeconds(5))
-            {
-                _lastUpdated = DateTimeOffset.Now;
-                _lastPositionTracker.RemovePosition(Media.Location);
-            }
-        }
-
         private void OnNaturalVideoSizeChanged(IMediaPlayer sender, EventArgs args)
         {
             if (!_resizeNext && _settingsService.PlayerAutoResize != PlayerAutoResizeOption.Always) return;
@@ -673,21 +661,21 @@ namespace Screenbox.Core.ViewModels
 
             _dispatcherQueue.TryEnqueue(() =>
             {
-                if (ResizeWindow(1)) return;
+                Size desiredSize = new(sender.NaturalVideoWidth, sender.NaturalVideoHeight);
+                if (ResizeWindow(desiredSize, 1)) return;
 
                 // Resize to fill the screen only when video size is bigger than max window size
                 Size maxWindowSize = _windowService.GetMaxWindowSize();
                 if (sender.NaturalVideoWidth >= maxWindowSize.Width ||
                     sender.NaturalVideoHeight >= maxWindowSize.Height)
-                    ResizeWindow();
+                    ResizeWindow(desiredSize, 0);
             });
         }
 
-        private bool ResizeWindow(double scalar = 0)
+        private bool ResizeWindow(Size desiredSize, double scalar = 1)
         {
-            if (_mediaPlayer == null || scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
-            Size videoDimension = new(_mediaPlayer.NaturalVideoWidth, _mediaPlayer.NaturalVideoHeight);
-            double actualScalar = _windowService.ResizeWindow(videoDimension, scalar);
+            if (scalar < 0 || _windowService.ViewMode != WindowViewMode.Default) return false;
+            double actualScalar = _windowService.ResizeWindow(desiredSize, scalar);
             if (actualScalar > 0)
             {
                 string status = _resourceService.GetString(ResourceName.ScaleStatus, $"{actualScalar * 100:0.##}%");

@@ -1,9 +1,9 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Enums;
-using Screenbox.Core.Helpers;
 using System;
 using System.Linq;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
@@ -14,6 +14,7 @@ namespace Screenbox.Core.Services
     {
         private static IPropertySet SettingsStorage => ApplicationData.Current.LocalSettings.Values;
 
+        private const string GeneralThemeKey = "General/Theme";
         private const string PlayerAutoResizeKey = "Player/AutoResize";
         private const string PlayerVolumeGestureKey = "Player/Gesture/Volume";
         private const string PlayerSeekGestureKey = "Player/Gesture/Seek";
@@ -23,17 +24,28 @@ namespace Screenbox.Core.Services
         private const string LibrariesUseIndexerKey = "Libraries/UseIndexer";
         private const string LibrariesSearchRemovableStorageKey = "Libraries/SearchRemovableStorage";
         private const string GeneralShowRecent = "General/ShowRecent";
+        private const string GeneralEnqueueAllInFolder = "General/EnqueueAllInFolder";
+        private const string GeneralRestorePlaybackPosition = "General/RestorePlaybackPosition";
         private const string AdvancedModeKey = "Advanced/IsEnabled";
+        private const string AdvancedVideoUpscaleKey = "Advanced/VideoUpscale";
         private const string AdvancedMultipleInstancesKey = "Advanced/MultipleInstances";
         private const string GlobalArgumentsKey = "Values/GlobalArguments";
         private const string PersistentVolumeKey = "Values/Volume";
         private const string MaxVolumeKey = "Values/MaxVolume";
         private const string PersistentRepeatModeKey = "Values/RepeatMode";
+        private const string PersistentSubtitleLanguageKey = "Values/SubtitleLanguage";
+        private const string PlayerShowChaptersKey = "Player/ShowChapters";
 
         public bool UseIndexer
         {
             get => GetValue<bool>(LibrariesUseIndexerKey);
             set => SetValue(LibrariesUseIndexerKey, value);
+        }
+
+        public ThemeOption Theme
+        {
+            get => (ThemeOption)GetValue<int>(GeneralThemeKey);
+            set => SetValue(GeneralThemeKey, (int)value);
         }
 
         public PlayerAutoResizeOption PlayerAutoResize
@@ -66,6 +78,12 @@ namespace Screenbox.Core.Services
             set => SetValue(PersistentVolumeKey, value);
         }
 
+        public string PersistentSubtitleLanguage
+        {
+            get => GetValue<string>(PersistentSubtitleLanguageKey) ?? string.Empty;
+            set => SetValue(PersistentSubtitleLanguageKey, value);
+        }
+
         public int MaxVolume
         {
             get => GetValue<int>(MaxVolumeKey);
@@ -76,6 +94,18 @@ namespace Screenbox.Core.Services
         {
             get => GetValue<bool>(GeneralShowRecent);
             set => SetValue(GeneralShowRecent, value);
+        }
+
+        public bool EnqueueAllFilesInFolder
+        {
+            get => GetValue<bool>(GeneralEnqueueAllInFolder);
+            set => SetValue(GeneralEnqueueAllInFolder, value);
+        }
+
+        public bool RestorePlaybackPosition
+        {
+            get => GetValue<bool>(GeneralRestorePlaybackPosition);
+            set => SetValue(GeneralRestorePlaybackPosition, value);
         }
 
         public bool PlayerShowControls
@@ -108,6 +138,12 @@ namespace Screenbox.Core.Services
             set => SetValue(AdvancedModeKey, value);
         }
 
+        public VideoUpscaleOption VideoUpscale
+        {
+            get => (VideoUpscaleOption)GetValue<int>(AdvancedVideoUpscaleKey);
+            set => SetValue(AdvancedVideoUpscaleKey, (int)value);
+        }
+
         public bool UseMultipleInstances
         {
             get => GetValue<bool>(AdvancedMultipleInstancesKey);
@@ -120,9 +156,15 @@ namespace Screenbox.Core.Services
             set => SetValue(PlayerLivelyPathKey, value);
         }
 
+        public bool PlayerShowChapters
+        {
+            get => GetValue<bool>(PlayerShowChaptersKey);
+            set => SetValue(PlayerShowChaptersKey, value);
+        }
+
         public SettingsService()
         {
-            SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Always);
+            SetDefault(PlayerAutoResizeKey, (int)PlayerAutoResizeOption.Never);
             SetDefault(PlayerVolumeGestureKey, true);
             SetDefault(PlayerSeekGestureKey, true);
             SetDefault(PlayerTapGestureKey, true);
@@ -134,8 +176,10 @@ namespace Screenbox.Core.Services
             SetDefault(GeneralShowRecent, true);
             SetDefault(PersistentRepeatModeKey, (int)MediaPlaybackAutoRepeatMode.None);
             SetDefault(AdvancedModeKey, false);
+            SetDefault(AdvancedVideoUpscaleKey, (int)VideoUpscaleOption.Linear);
             SetDefault(AdvancedMultipleInstancesKey, false);
             SetDefault(GlobalArgumentsKey, string.Empty);
+            SetDefault(PlayerShowChaptersKey, true);
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)

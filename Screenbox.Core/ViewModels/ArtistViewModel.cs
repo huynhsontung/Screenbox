@@ -22,16 +22,11 @@ namespace Screenbox.Core.ViewModels
 
         [ObservableProperty] private bool _isPlaying;
 
-        public ArtistViewModel()
-        {
-            Name = string.Empty;
-            RelatedSongs = new ObservableCollection<MediaViewModel>();
-            RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
-        }
-
-        public ArtistViewModel(string artist) : this()
+        public ArtistViewModel(string artist)
         {
             Name = artist;
+            RelatedSongs = new ObservableCollection<MediaViewModel>();
+            RelatedSongs.CollectionChanged += RelatedSongsOnCollectionChanged;
         }
 
         public override string ToString()

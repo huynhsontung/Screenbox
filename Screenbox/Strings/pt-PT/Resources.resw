@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Erro ao guardar fotograma</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Tempo decorrido</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Tempo restante</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Duração total</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Capítulo {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -332,7 +341,7 @@
     <value>Bem-vindo ao Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
-    <value>Arregace as mangas e começa a reproduzir algum do seu conteúdo multimédia.</value>
+    <value>Vamos começar a reproduzir algum do seu conteúdo multimédia para animar as coisas.</value>
   </data>
   <data name="Properties" xml:space="preserve">
     <value>Propriedades</value>
@@ -631,7 +640,7 @@
     <value>Redimensionar automaticamente</value>
   </data>
   <data name="SettingsAutoResizeDescription" xml:space="preserve">
-    <value>Redimensionar a janela da aplicação para ajustar melhor com a resolução nativa do vídeo em reprodução</value>
+    <value>Redimensionar a janela da aplicação para corresponder à resolução nativa do vídeo em reprodução</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
     <value>Amplificar volume</value>
@@ -684,6 +693,9 @@
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Não está disponível nenhuma composição compatível. Certifique-se de que o Direct3D 11 está disponível no seu dispositivo.</value>
+  </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Para obter mais informações e sugestões para corrigir este problema, visite</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Não foi possível abrir o ficheiro(s)</value>
@@ -858,7 +870,7 @@
     <value>Media</value>
   </data>
   <data name="Video" xml:space="preserve">
-    <value>Video</value>
+    <value>Vídeo</value>
   </data>
   <data name="File" xml:space="preserve">
     <value>Ficheiro</value>
@@ -876,6 +888,63 @@
     <value>Mostrar artista</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Falha ao carregar o visual</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Quando abrir um ficheiro, adicionar todos os ficheiros na pasta à fila de reprodução</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Adicionar todos os ficheiros na pasta à fila</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Utilizar definição do sistema</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Escuro</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Claro</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Selecionar o tema da aplicação a apresentar</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Tema da aplicação</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Personalização</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Retomar sempre da última posição</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>Continuar a reprodução a partir do ponto onde parou pela última vez ao abrir um ficheiro</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Melhorar vídeo</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Bi-linear</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Point</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Super resolução</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
   </data>
 </root>

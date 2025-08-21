@@ -119,198 +119,198 @@
   </resheader>
   <data name="NavigationBackButtonKey" xml:space="preserve">
     <value>A</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for returning to the previous screen. Must be unique with respect to every other Player key in this file and the initial Command, Navigation and TopNavigation key.</comment>
   </data>
   <data name="NavigationCloseButtonKey" xml:space="preserve">
     <value>A</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for closing the navigation view. Must be unique with respect to every other Player key in this file and the initial Command, Navigation and TopNavigation key.</comment>
   </data>
   <data name="NavigationTogglePaneButtonKey" xml:space="preserve">
     <value>NE</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for opening and closing the navigation view. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationPaneAutoSuggestButtonKey" xml:space="preserve">
     <value>NL</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for searching. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemHomeKey" xml:space="preserve">
     <value>NI</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the home page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemMusicKey" xml:space="preserve">
     <value>NM</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the music library page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemVideosKey" xml:space="preserve">
     <value>NV</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the videos library page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemNetworkKey" xml:space="preserve">
     <value>NR</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the network drives page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemQueueKey" xml:space="preserve">
     <value>NF</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the play queue page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemSettingsKey" xml:space="preserve">
     <value>ND</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the settings page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemFoldersKey" xml:space="preserve">
     <value>TP</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the videos folders page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemVideosKey" xml:space="preserve">
     <value>TT</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the all videos page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemSongsKey" xml:space="preserve">
     <value>TM</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the songs page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemAlbumsKey" xml:space="preserve">
     <value>TA</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the albums page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemArtistsKey" xml:space="preserve">
     <value>TI</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the artists page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="CommandAddOpenFilesKey" xml:space="preserve">
     <value>CA</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for opening files. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandMoreOptionsKey" xml:space="preserve">
     <value>CM</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for more open options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandAddFolderKey" xml:space="preserve">
     <value>CA</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for adding folders. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandShuffleAndPlayKey" xml:space="preserve">
     <value>CD</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for shuffling and playing files. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandSortByKey" xml:space="preserve">
     <value>CO</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for sorting options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandPlayKey" xml:space="preserve">
     <value>CP</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for playing. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandClearKey" xml:space="preserve">
     <value>CE</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for clearing the queue. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandMultiSelectKey" xml:space="preserve">
     <value>CS</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the selection bar. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandBreadcrumbBarKey" xml:space="preserve">
     <value>CL</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the breadcrumb bar. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="PlayerQueueKey" xml:space="preserve">
     <value>F</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the play queue flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerRestoreKey" xml:space="preserve">
     <value>U</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for restoring the immersive view. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerSeekBarKey" xml:space="preserve">
     <value>B</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the seek bar. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerPlayPauseKey" xml:space="preserve">
     <value>P</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing and pausing. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerPreviousKey" xml:space="preserve">
     <value>T</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing the previous file. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerNextKey" xml:space="preserve">
     <value>G</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing the next file. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerVolumeButtonSliderKey" xml:space="preserve">
     <value>V</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the volume flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerMuteKey" xml:space="preserve">
     <value>S</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for muting. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerShuffleKey" xml:space="preserve">
     <value>D</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for toggling shuffe. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerRepeatKey" xml:space="preserve">
     <value>R</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for changing the repeat behavior. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerAudioAndCaptionsKey" xml:space="preserve">
     <value>L</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening the audio and subtitles flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerCompactOverlayKey" xml:space="preserve">
     <value>Y</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting picture-in-picture. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerFullscreenKey" xml:space="preserve">
     <value>I</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting fullscreen. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerMoreKey" xml:space="preserve">
     <value>O</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the more options flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="MenuItemFileKey" xml:space="preserve">
     <value>F</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening files. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemFolderKey" xml:space="preserve">
     <value>P</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening folders. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemUrlKey" xml:space="preserve">
     <value>L</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening URLs. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemPropertiesKey" xml:space="preserve">
     <value>P</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for file properties. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemSpeedKey" xml:space="preserve">
     <value>V</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playback speed. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemSaveSnapshotKey" xml:space="preserve">
     <value>G</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for saving a snapshot. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemCastKey" xml:space="preserve">
     <value>C</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the casting flyout. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemAspectRatioKey" xml:space="preserve">
     <value>R</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for aspect ratio options. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemAdvancedKey" xml:space="preserve">
     <value>A</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for advanced mode options. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemCompactOverlayKey" xml:space="preserve">
     <value>Y</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting picture-in-picture. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemFullscreenKey" xml:space="preserve">
     <value>I</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting fullscreen. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
 </root>

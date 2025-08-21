@@ -8,10 +8,12 @@
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:system="using:System"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
     d:DesignWidth="848"
@@ -26,30 +28,24 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
-                <ThemeShadow x:Name="SharedShadow" />
-
-                <ctConverters:BoolToObjectConverter
-                    x:Key="BoolToSelectAllNoneToolTipTextConverter"
-                    FalseValue="{strings:Resources Key=SelectAllToolTip}"
-                    TrueValue="{strings:Resources Key=SelectNoneToolTip}" />
-
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
                         CommandParameter="{Binding}"
-                        Icon="{ui:FontIcon Glyph=&#xE768;}"
+                        Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                           Glyph={StaticResource PlayGlyph}}"
                         Text="{strings:Resources Key=Play}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.PlayNextCommand}"
                         CommandParameter="{Binding}"
                         Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                           Glyph=&#xF5EB;}"
+                                           Glyph={StaticResource PlayAddGlyph}}"
                         Text="{strings:Resources Key=PlayNext}" />
                     <MenuFlyoutSeparator />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.RemoveCommand}"
                         CommandParameter="{Binding}"
-                        Icon="{ui:FontIcon Glyph=&#xE74D;}"
+                        Icon="{ui:FontIcon Glyph=&#xE894;}"
                         Text="{strings:Resources Key=Remove}" />
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.MoveItemUpCommand}"
@@ -105,27 +101,33 @@
             Orientation="Horizontal">
             <Button
                 x:Name="AddFilesButton"
-                Margin="0,0,12,0"
+                Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandAddOpenFilesKey}"
                 AutomationProperties.Name="{strings:Resources Key=AddFiles}"
                 Command="{x:Bind ViewModel.AddFilesCommand}"
                 Visibility="Collapsed">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE838;" />
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource FolderOpenGlyph}" />
                     <TextBlock Margin="8,0,0,0" Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
             </Button>
 
             <Button
                 x:Name="ClearButton"
-                Margin="0,0,12,0"
+                Margin="0,0,8,0"
                 AccessKey="{strings:KeyboardResources Key=CommandClearKey}"
                 AutomationProperties.Name="{x:Bind ClearButtonLabel.Text}"
                 Command="{x:Bind ViewModel.Playlist.ClearCommand}"
                 IsEnabled="{x:Bind ViewModel.HasItems, Mode=OneWay}"
                 KeyTipPlacementMode="Bottom">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE74D;" />
+                    <FontIcon
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                        Glyph="{StaticResource DeleteGlyph}" />
                     <TextBlock
                         x:Name="ClearButtonLabel"
                         Margin="8,0,0,0"
@@ -142,7 +144,10 @@
                 KeyTipPlacementMode="Bottom"
                 XYFocusLeft="{x:Bind ClearButton}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon Margin="{StaticResource IconButtonStandardIconMargin}" Glyph="&#xE762;" />
+                    <FontIcon
+                        x:Name="MultiSelectToggleIcon"
+                        Margin="{StaticResource IconButtonStandardIconMargin}"
+                        Glyph="&#xE762;" />
                     <TextBlock
                         x:Name="MultiSelectToggleLabel"
                         Margin="8,0,0,0"
@@ -155,18 +160,16 @@
             x:Name="SelectionCommandRow"
             Grid.Row="0"
             Margin="{x:Bind Padding, Mode=OneWay}"
-            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionCommandBarHideAnimations}"
-            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionCommandBarShowAnimations}"
+            ctAnimations:Implicit.HideAnimations="{StaticResource SelectionRowExitImplicitAnimation}"
+            ctAnimations:Implicit.ShowAnimations="{StaticResource SelectionRowEntranceImplicitAnimation}"
             Visibility="Collapsed">
-
             <Border
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="{StaticResource CommandBarFlyoutBorderThemeThickness}"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Translation="0,0,32" />
-
             <CommandBar
                 x:Name="SelectionCommandBar"
                 VerticalContentAlignment="Center"
@@ -189,13 +192,13 @@
                     Command="{x:Bind ViewModel.PlaySelectedNextCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph=&#xF5EB;}"
+                                       Glyph={StaticResource PlayAddGlyph}}"
                     Label="{strings:Resources Key=PlayNext}" />
                 <AppBarButton
                     x:Name="RemoveSelectedButton"
                     Command="{x:Bind ViewModel.RemoveSelectedCommand}"
                     CommandParameter="{x:Bind PlaylistListView.SelectedItems}"
-                    Icon="Delete"
+                    Icon="{ui:FontIcon Glyph=&#xE894;}"
                     Label="{strings:Resources Key=Remove}">
                     <AppBarButton.KeyboardAccelerators>
                         <KeyboardAccelerator Key="Delete" />
@@ -218,18 +221,16 @@
                     <StackPanel Orientation="Horizontal">
                         <CheckBox
                             x:Name="SelectionCheckBox"
-                            Margin="10,0,0,0"
-                            VerticalAlignment="Center"
+                            MinWidth="60"
+                            Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{Binding ElementName=SelectionCheckBox, Path=Content, Mode=OneWay}"
-                            AutomationProperties.Name="{strings:Resources Key=SelectAll}"
-                            Click="SelectionCheckBox_OnClick"
+                            AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
+                            AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
+                            Command="{x:Bind Common.ToggleListViewBaseItemSelectionCommand}"
+                            CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            ToolTipService.ToolTip="{Binding ElementName=SelectionCheckBox, Path=IsChecked, Converter={StaticResource BoolToSelectAllNoneToolTipTextConverter}}" />
-                        <TextBlock
-                            Margin="0,5,0,0"
-                            VerticalAlignment="Top"
-                            Text=" •" />
+                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
+                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
@@ -304,6 +305,9 @@
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
             SelectionMode="Extended">
+            <ListView.Resources>
+                <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
+            </ListView.Resources>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem IsIconVisible="True" PlayCommand="{Binding DataContext.PlaySingleCommand, ElementName=PlaylistListView}" />
@@ -315,7 +319,7 @@
             <ListView.KeyboardAccelerators>
                 <KeyboardAccelerator
                     Key="A"
-                    Invoked="PlaylistListViewSelectAllKeyboardAccelerator_OnInvoked"
+                    Invoked="SelectDeselectAllKeyboardAccelerator_OnInvoked"
                     Modifiers="Control" />
             </ListView.KeyboardAccelerators>
             <interactivity:Interaction.Behaviors>
@@ -362,6 +366,19 @@
                         <Setter Target="RemoveSelectedButton.LabelPosition" Value="Collapsed" />
                         <Setter Target="PlaylistListView.(ui:ScrollViewerExtensions.VerticalScrollBarMargin)" Value="0" />
                         <Setter Target="Footer.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MultiSelectToggleIcon.Glyph" Value="&#xEA98;" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

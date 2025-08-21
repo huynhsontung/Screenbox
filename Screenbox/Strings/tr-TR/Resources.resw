@@ -139,6 +139,15 @@
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Kare kaydedilemedi</value>
   </data>
+  <data name="TimeElapsed" xml:space="preserve">
+    <value>Geçen süre</value>
+  </data>
+  <data name="TimeRemaining" xml:space="preserve">
+    <value>Kalan süre</value>
+  </data>
+  <data name="TimeLength" xml:space="preserve">
+    <value>Toplam süre</value>
+  </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Bölüm {0}</value>
     <comment>#Format[Int32 chapter]</comment>
@@ -685,6 +694,9 @@
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>Uyumlu oluşturucu yok.  Lütfen cihazınızda Direct3D 11'in mevcut olduğundan emin olun.</value>
   </data>
+  <data name="CriticalErrorMoreInformation" xml:space="preserve">
+    <value>Bu konu ve olası düzeltmeler hakkında daha fazla bilgi için ziyaret edin</value>
+  </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
     <value>Dosya(lar) açılamadı</value>
   </data>
@@ -870,12 +882,69 @@
     <value>Videolar</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Albümü göster</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Sanatçıyı göster</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Görsel yüklenemedi</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
+    <value>Tek bir dosyayı açarken, klasördeki diğer tüm dosyaları otomatik olarak oynatma sırasına ekleyin.</value>
+  </data>
+  <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
+    <value>Klasördeki tüm dosyaları sıraya ekle</value>
+  </data>
+  <data name="ThemeAuto" xml:space="preserve">
+    <value>Sistem ayarını kullan</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Koyu</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="SettingsThemeSelectionDescription" xml:space="preserve">
+    <value>Windows ayarlarınızla eşleşecek bir tema seçin veya özel bir tema seçin</value>
+  </data>
+  <data name="SettingsThemeSelectionHeader" xml:space="preserve">
+    <value>Tema</value>
+  </data>
+  <data name="SettingsCategoryPersonalization" xml:space="preserve">
+    <value>Kişiselleştirme</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
+    <value>Her zaman son kısımdan devam et</value>
+  </data>
+  <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
+    <value>En son kaldığınız yerden oynatmaya devam et</value>
+  </data>
+  <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
+    <value>Video görüntü yükseltme yöntemi</value>
+  </data>
+  <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
+    <value>Super resolution upscaling requires compatible hardware and driver support.</value>
+  </data>
+  <data name="VideoUpscalingLinear" xml:space="preserve">
+    <value>Çift Doğrusal</value>
+  </data>
+  <data name="VideoUpscalingPoint" xml:space="preserve">
+    <value>Nokta</value>
+  </data>
+  <data name="VideoUpscalingSuper" xml:space="preserve">
+    <value>Süper çözünürlük</value>
+  </data>
+  <data name="SettingsShowChaptersHeader" xml:space="preserve">
+    <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
+    <value>Change the app's display language</value>
+  </data>
+  <data name="LanguageSystemDefault" xml:space="preserve">
+    <value>Use system language</value>
   </data>
 </root>

@@ -55,7 +55,7 @@
           <uap:FileTypeAssociation Name="3gpp">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\Icons\MediaFileAssociation.png</uap:Logo>
+            <uap:Logo>Assets\Icons\VideoFileAssociation.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/3gpp">.3gp</uap:FileType>
               <uap:FileType ContentType="video/3gpp">.3gpp</uap:FileType>
@@ -66,7 +66,7 @@
           <uap:FileTypeAssociation Name="3gpp2">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayName3GPP2</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\Icons\MediaFileAssociation.png</uap:Logo>
+            <uap:Logo>Assets\Icons\VideoFileAssociation.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/3gpp2">.3g2</uap:FileType>
               <uap:FileType ContentType="video/3gpp2">.3gp2</uap:FileType>
@@ -304,7 +304,7 @@
           <uap:FileTypeAssociation Name="mp4">
             <uap:DisplayName>ms-resource:ManifestResources/FileDisplayNameMP4</uap:DisplayName>
             <uap:EditFlags OpenIsSafe="true"/>
-            <uap:Logo>Assets\Icons\MediaFileAssociation.png</uap:Logo>
+            <uap:Logo>Assets\Icons\VideoFileAssociation.png</uap:Logo>
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="video/mp4">.mp4</uap:FileType>
               <uap:FileType ContentType="video/mp4">.mpg4</uap:FileType>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
 
@@ -12,7 +13,7 @@ public static class ServiceHelpers
         services.AddTransient<PlayerElementViewModel>();
         services.AddTransient<PropertyViewModel>();
         services.AddTransient<ChapterViewModel>();
-        services.AddTransient<AudioTrackSubtitleViewModel>();
+        services.AddTransient<CompositeTrackPickerViewModel>();
         services.AddTransient<SeekBarViewModel>();
         services.AddTransient<VideosPageViewModel>();
         services.AddTransient<NetworkPageViewModel>();
@@ -40,6 +41,9 @@ public static class ServiceHelpers
         services.AddSingleton<CommonViewModel>();   // Shared between many pages
         services.AddSingleton<VolumeViewModel>();   // Avoid thread lock
         services.AddSingleton<MediaListViewModel>(); // Global playlist
+
+        // Misc
+        services.AddTransient<LastPositionTracker>();
 
         // Factories
         services.AddSingleton<MediaViewModelFactory>();

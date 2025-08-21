@@ -1,22 +1,20 @@
 ﻿#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.Threading;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
-using CommunityToolkit.WinUI.Helpers;
 using Screenbox.Controls;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
-using System;
-using System.ComponentModel;
-using System.Threading;
+using Screenbox.Helpers;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -44,7 +42,6 @@ namespace Screenbox.Pages
         private const VirtualKey CommaKey = (VirtualKey)188;
 
         private readonly DispatcherQueueTimer _delayFlyoutOpenTimer;
-        private readonly ThemeListener _themeListener;
         private CancellationTokenSource? _animationCancellationTokenSource;
         private bool _startup;
 
@@ -53,13 +50,9 @@ namespace Screenbox.Pages
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<PlayerPageViewModel>();
             _delayFlyoutOpenTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
-            _themeListener = new ThemeListener();
-            _themeListener.ThemeChanged += ThemeListenerOnThemeChanged;
 
             RegisterSeekBarPointerHandlers();
             UpdatePreviewType();
-            ViewModel.ActualTheme = ActualTheme;
-            UpdateBackgroundAcrylicOpacity(ActualTheme);
 
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             LeftPaddingColumn.Width = new GridLength(coreTitleBar.SystemOverlayLeftInset);
@@ -82,15 +75,13 @@ namespace Screenbox.Pages
                 PlayQueueFlyout.Hide();
         }
 
-        private void ThemeListenerOnThemeChanged(ThemeListener sender)
-        {
-            ViewModel.ActualTheme = ActualTheme;
-        }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // Default content state
-            VisualStateManager.GoToState(this, "Video", false);
+            UpdateBackgroundAcrylicOpacity(ActualTheme);
+
+            // DO NOT SET CONTENT VISUAL STATE HERE
+            // It will cause element theme to not propagate correctly
+            // VisualStateManager.GoToState(this, "Video", false);
 
             if (e.Parameter is true)
             {
@@ -132,7 +123,6 @@ namespace Screenbox.Pages
         private void SetTitleBar()
         {
             Window.Current.SetTitleBar(TitleBarDragRegion);
-            UpdateSystemCaptionButtonForeground();
         }
 
         private void AlbumArtImageOnSourceChanged(DependencyObject sender, DependencyProperty dp)
@@ -218,6 +208,7 @@ namespace Screenbox.Pages
             bool collapsing = args.OldState?.Name == nameof(Normal) && args.NewState?.Name == nameof(MiniPlayer);
 
             if (expanding || collapsing) PlayerControls.FocusFirstButton();
+            UpdateRootTheme();
         }
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -255,7 +246,7 @@ namespace Screenbox.Pages
                     break;
                 case nameof(PlayerPageViewModel.AudioOnly):
                     UpdateContentState();
-                    UpdateSystemCaptionButtonForeground();
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     break;
                 case nameof(PlayerPageViewModel.PlayerVisibility):
@@ -277,6 +268,7 @@ namespace Screenbox.Pages
                     }
 
                     UpdateContentState();
+                    UpdateRootTheme();
                     UpdatePreviewType();
                     UpdateMiniPlayerMargin();
                     break;
@@ -351,14 +343,6 @@ namespace Screenbox.Pages
                 _animationCancellationTokenSource = null;
         }
 
-        private void UpdateSystemCaptionButtonForeground()
-        {
-            if (ApplicationView.GetForCurrentView()?.TitleBar is { } titleBar)
-            {
-                titleBar.ButtonForegroundColor = ViewModel.AudioOnly ? null : Colors.White;
-            }
-        }
-
         private void UpdateContentState()
         {
             var contentVisualStateName = ViewModel.AudioOnly
@@ -417,6 +401,14 @@ namespace Screenbox.Pages
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private void UpdateRootTheme()
+        {
+            LayoutRoot.RequestedTheme = !ViewModel.AudioOnly && ViewModel.PlayerVisibility == PlayerVisibilityState.Visible
+                ? ElementTheme.Dark
+                : ElementTheme.Default;
+            TitleBarHelper.SetCaptionButtonColors(LayoutRoot);
         }
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)
@@ -488,8 +480,15 @@ namespace Screenbox.Pages
 
         private void OnDragOver(object sender, DragEventArgs e)
         {
+            e.Handled = true;
             e.AcceptedOperation = DataPackageOperation.Link;
-            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Open;
+            if (e.DragUIOverride != null) e.DragUIOverride.Caption = Strings.Resources.Play;
+        }
+
+        private async void OnDrop(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+            await ViewModel.OnDropAsync(e.DataView);
         }
     }
 }

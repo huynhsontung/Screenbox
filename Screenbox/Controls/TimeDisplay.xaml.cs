@@ -34,6 +34,11 @@ namespace Screenbox.Controls
             typeof(Style),
             typeof(TimeDisplay),
             new PropertyMetadata(null));
+        public static readonly DependencyProperty ShowChapterNameProperty = DependencyProperty.Register(
+            nameof(ShowChapterName),
+            typeof(bool),
+            typeof(TimeDisplay),
+            new PropertyMetadata(true, OnNameChanged));
 
         public double Time
         {
@@ -65,6 +70,12 @@ namespace Screenbox.Controls
             set => SetValue(TextBlockStyleProperty, value);
         }
 
+        public bool ShowChapterName
+        {
+            get => (bool)GetValue(ShowChapterNameProperty);
+            set => SetValue(ShowChapterNameProperty, value);
+        }
+
         private bool _showRemaining;
 
         public TimeDisplay()
@@ -75,6 +86,12 @@ namespace Screenbox.Controls
         private static void OnNameChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TimeDisplay view = (TimeDisplay)d;
+            if (!view.ShowChapterName)
+            {
+                VisualStateManager.GoToState(view, "None", false);
+                return;
+            }
+            
             if (string.IsNullOrEmpty(view.TitleName) && string.IsNullOrEmpty(view.ChapterName))
             {
                 VisualStateManager.GoToState(view, "None", false);

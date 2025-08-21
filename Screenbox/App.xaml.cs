@@ -1,8 +1,16 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
+using System.Security;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Helpers;
 using LibVLCSharp.Shared;
+using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Microsoft.Extensions.DependencyInjection;
 using Screenbox.Controls;
 using Screenbox.Core;
@@ -10,27 +18,17 @@ using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Screenbox.Pages;
 using Screenbox.Services;
 using Sentry;
 using Sentry.Protocol;
-using System;
-using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using System.Security;
-using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Resources.Core;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-
-#if !DEBUG
-using CommunityToolkit.WinUI.Helpers;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Crashes;
-#endif
 
 namespace Screenbox
 {
@@ -39,22 +37,6 @@ namespace Screenbox
     /// </summary>
     sealed partial class App : Application
     {
-        public static bool IsRightToLeftLanguage
-        {
-            get
-            {
-                try
-                {
-                    string flowDirectionSetting = ResourceContext.GetForCurrentView().QualifierValues["LayoutDirection"];
-                    return flowDirectionSetting == "RTL";
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    return false;
-                }
-            }
-        }
-
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -65,7 +47,7 @@ namespace Screenbox
             ConfigureSentry();
             InitializeComponent();
 
-            if (SystemInformation.IsXbox)
+            if (DeviceInfoHelper.IsXbox)
             {
                 // Disable pointer mode on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/how-to-disable-mouse-mode#xaml
@@ -81,41 +63,39 @@ namespace Screenbox
             HighContrastAdjustment = ApplicationHighContrastAdjustment.None;
 
             Suspending += OnSuspending;
-            UnhandledException += OnUnhandledException;
 
             IServiceProvider services = ConfigureServices();
             CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.ConfigureServices(services);
         }
 
-        public static FlowDirection GetFlowDirection()
-        {
-            return IsRightToLeftLanguage ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
-        }
-
         [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
-        private static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        private void CoreApplication_UnhandledErrorDetected(object sender, UnhandledErrorDetectedEventArgs e)
         {
-            if (e.Exception is VLCException
-                {
-                    Message: "Could not create Direct3D11 device : No compatible adapter found."
-                })
+            try
             {
-                e.Handled = true;
-                WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
-                LogService.Log(e);
+                e.UnhandledError.Propagate();
             }
-            else if (e.Exception is { } exception)
+            catch (Exception ex)
             {
-                // Tell Sentry this was an unhandled exception
-                exception.Data[Mechanism.HandledKey] = false;
-                exception.Data[Mechanism.MechanismKey] = "Application.UnhandledException";
+                if (ex is VLCException { Message: "Could not create Direct3D11 device : No compatible adapter found." })
+                {
+                    WeakReferenceMessenger.Default.Send(new CriticalErrorMessage(Strings.Resources.CriticalErrorDirect3D11NotAvailable));
+                    LogService.Log(ex);
+                }
+                else
+                {
+                    // Tell Sentry this was an unhandled exception
+                    ex.Data[Mechanism.HandledKey] = false;
+                    ex.Data[Mechanism.MechanismKey] = "CoreApplication.UnhandledErrorDetected";
 
-                // Capture the exception
-                SentrySdk.CaptureException(exception);
+                    // Capture the exception
+                    SentrySdk.CaptureException(ex);
 
-                // Flush the event immediately
-                SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+                    // Flush the event immediately
+                    SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult();
+                    throw;
+                }
             }
         }
 
@@ -165,24 +145,27 @@ namespace Screenbox
 
         private static void ConfigureAppCenter()
         {
-#if !DEBUG
-            AppCenter.Start(Secrets.AppCenterApiKey,
-                typeof(Analytics), typeof(Crashes));
-#endif
+            AppCenter.Start(Secrets.AppCenterApiKey, typeof(Analytics), typeof(Crashes));
         }
 
-        private static void ConfigureSentry()
+        private void ConfigureSentry()
         {
-#if !DEBUG
+            CoreApplication.UnhandledErrorDetected += CoreApplication_UnhandledErrorDetected;
+
             SentrySdk.Init(options =>
             {
                 options.Dsn = Secrets.SentryDsn;
-                options.SampleRate = 0.5f;
+                options.SampleRate = 1.0f;
+                // options.StackTraceMode = StackTraceMode.Enhanced;    // Not supported in UWP
                 options.IsGlobalModeEnabled = true;
                 options.AutoSessionTracking = true;
-                options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString()}";
+                options.Release = $"screenbox@{Package.Current.Id.Version.ToFormattedString(3)}";
             });
-#endif
+
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.SetTag("device_family", DeviceInfoHelper.DeviceFamily);
+            });
         }
 
         private void SetMinWindowSize()
@@ -193,6 +176,11 @@ namespace Screenbox
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
+            SentrySdk.AddBreadcrumb("File activated", category: "activation", type: "user", data: new Dictionary<string, string>
+            {
+                { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
+            });
+
             Frame rootFrame = InitRootFrame();
             if (rootFrame.Content is not MainPage)
             {
@@ -201,10 +189,6 @@ namespace Screenbox
 
             Window.Current.Activate();
             WeakReferenceMessenger.Default.Send(new PlayFilesMessage(args.Files, args.NeighboringFilesQuery));
-            Analytics.TrackEvent("FileActivated", new Dictionary<string, string>
-            {
-                { "PreviousExecutionState", args.PreviousExecutionState.ToString() }
-            });
         }
 
         /// <summary>
@@ -214,11 +198,17 @@ namespace Screenbox
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            SentrySdk.AddBreadcrumb("Launched", category: "lifecycle", data: new Dictionary<string, string>
+            {
+                { "PrelaunchActivated", e.PrelaunchActivated.ToString() },
+                { "PreviousExecutionState", e.PreviousExecutionState.ToString() }
+            });
+
             Frame rootFrame = InitRootFrame();
             LibVLCSharp.Shared.Core.Initialize();
 
             if (e.PrelaunchActivated) return;
-            Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(true);
+            CoreApplication.EnablePrelaunch(true);
             if (rootFrame.Content == null)
             {
                 SetMinWindowSize();
@@ -227,6 +217,18 @@ namespace Screenbox
 
             // Ensure the current window is active
             Window.Current.Activate();
+
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                //DebugSettings.EnableFrameRateCounter = true;
+                //DebugSettings.EnableRedrawRegions = true;
+                //DebugSettings.FailFastOnErrors = true;
+                //DebugSettings.IsBindingTracingEnabled = true;
+                //DebugSettings.IsOverdrawHeatMapEnabled = true;
+                //DebugSettings.IsTextPerformanceVisualizationEnabled = true;
+            }
+#endif
         }
 
         /// <summary>
@@ -249,8 +251,8 @@ namespace Screenbox
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
+            SentrySdk.AddBreadcrumb("Suspending", category: "lifecycle");
             IReadOnlyCollection<Task> tasks = WeakReferenceMessenger.Default.Send<SuspendingMessage>().Responses;
-            Analytics.TrackEvent("Suspending");
             await Task.WhenAll(tasks);
             await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2));
             deferral.Complete();
@@ -273,20 +275,33 @@ namespace Screenbox
 
                 // Turn off overscan on Xbox
                 // https://learn.microsoft.com/en-us/windows/uwp/xbox-apps/turn-off-overscan
-                if (SystemInformation.IsXbox)
+                if (DeviceInfoHelper.IsXbox)
                 {
                     Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
                         .SetDesiredBoundsMode(Windows.UI.ViewManagement.ApplicationViewBoundsMode.UseCoreWindow);
                 }
 
                 // Check for RTL flow direction
-                if (IsRightToLeftLanguage)
+                if (GlobalizationHelper.IsRightToLeftLanguage)
                 {
                     rootFrame.FlowDirection = FlowDirection.RightToLeft;
                 }
+
+                var settings = CommunityToolkit.Mvvm.DependencyInjection.Ioc.Default.GetRequiredService<ISettingsService>();
+                rootFrame.RequestedTheme = settings.Theme.ToElementTheme();
+
+                // Register a handler for when the theme mode changes
+                rootFrame.ActualThemeChanged += OnActualThemeChanged;
+
+                TitleBarHelper.SetCaptionButtonColors(rootFrame);
             }
 
             return rootFrame;
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            TitleBarHelper.SetCaptionButtonColors(sender);
         }
     }
 }

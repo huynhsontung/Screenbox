@@ -11,6 +11,7 @@
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
@@ -23,7 +24,7 @@
     extensions:ApplicationViewExtensions.Title="{x:Bind ViewModel.Media.Name, Mode=OneWay, FallbackValue={}}"
     AllowDrop="True"
     DragOver="OnDragOver"
-    Drop="{x:Bind ViewModel.OnDrop}"
+    Drop="OnDrop"
     Loaded="OnLoaded"
     Loading="OnLoading"
     mc:Ignorable="d">
@@ -83,9 +84,9 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <ctConverters:BoolToObjectConverter
-                x:Key="FilledPlayPauseGlyphConverter"
-                FalseValue="&#xE62E;"
-                TrueValue="&#xF5B0;" />
+                x:Key="PlayPauseSolidGlyphConverter"
+                FalseValue="{StaticResource PauseSolidGlyph}"
+                TrueValue="{StaticResource PlaySolidGlyph}" />
 
             <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
@@ -149,6 +150,14 @@
                 Modifiers="Shift" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.PlusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
+            <KeyboardAccelerator
+                Key="{x:Bind pages:PlayerPage.MinusKey}"
+                Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
+                Modifiers="Control" />
             <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number2" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Number3" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
@@ -236,9 +245,10 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=PlayQueue}">
                 <FontIcon
+                    x:Name="PlayQueueButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xE93F;" />
+                    Glyph="{StaticResource PlaylistMusicGlyph}" />
                 <Button.Flyout>
                     <Flyout
                         x:Name="PlayQueueFlyout"
@@ -316,9 +326,10 @@
                 Style="{StaticResource SubtleButtonStyle}"
                 ToolTipService.ToolTip="{strings:Resources Key=VisualizerOptionsToolTip}">
                 <FontIcon
+                    x:Name="LivelyOptionsButtonIcon"
                     FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                     FontSize="20"
-                    Glyph="&#xF0003;" />
+                    Glyph="{StaticResource MusicVisualizerGlyph}" />
                 <Button.Flyout>
                     <Flyout>
                         <Flyout.FlyoutPresenterStyle>
@@ -440,7 +451,7 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource OverlayCornerRadius}"
                 FlowDirection="LeftToRight"
-                Shadow="{StaticResource SharedShadow}"
+                Shadow="{StaticResource ElevationThemeShadow}"
                 Translation="0,0,32">
                 <Grid.Background>
                     <ImageBrush
@@ -521,8 +532,8 @@
             Padding="9,5,9,6"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            animations:Implicit.HideAnimations="{StaticResource SimpleHideAnimations}"
-            animations:Implicit.ShowAnimations="{StaticResource SimpleShowAnimations}"
+            animations:Implicit.HideAnimations="{StaticResource FadeOutImplicitAnimation}"
+            animations:Implicit.ShowAnimations="{StaticResource FadeInImplicitAnimation}"
             d:Visibility="Visible"
             Background="{ThemeResource AcrylicInAppFillColorBaseBrush}"
             BorderBrush="{ThemeResource ControlStrokeColorForStrongFillWhenOnImage}"
@@ -559,11 +570,11 @@
             </animations:Implicit.HideAnimations>
             <FontIcon
                 x:Name="PlayerStateBadgeIcon"
-                d:Glyph="&#xF5B0;"
+                d:Glyph="{StaticResource PlaySolidGlyph}"
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource FilledPlayPauseGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource PlayPauseSolidGlyphConverter}, Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing
@@ -630,7 +641,6 @@
             <VisualStateGroup x:Name="ContentStates">
                 <VisualState x:Name="Video">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="Dark" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
@@ -642,7 +652,6 @@
 
                 <VisualState x:Name="AudioOnly">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
                         <Setter Target="HeaderBackground.Opacity" Value="0" />
                         <Setter Target="BackgroundElement.Visibility" Value="Visible" />
                         <Setter Target="VideoView.Opacity" Value="0" />
@@ -692,7 +701,6 @@
 
                 <VisualState x:Name="AudioWithVisualizer">
                     <VisualState.Setters>
-                        <Setter Target="LayoutRoot.RequestedTheme" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
                         <Setter Target="HeaderBackground.Opacity" Value="1" />
                         <Setter Target="BackgroundElement.Visibility" Value="Collapsed" />
                         <Setter Target="LivelyWallpaperPlayer.Visibility" Value="Visible" />
@@ -705,9 +713,6 @@
                 <VisualStateGroup.Transitions>
                     <VisualTransition GeneratedDuration="0:0:0.5" To="Video">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Dark" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
@@ -730,27 +735,22 @@
 
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioOnly">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BackgroundElement" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                             </ObjectAnimationUsingKeyFrames>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility">
+                            <!--  Do not apply transition on LivelyWallpaperPlayer here. The player may not been loaded yet.  -->
+                            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="LivelyWallpaperPlayer" Storyboard.TargetProperty="Visibility" >
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
-                            </ObjectAnimationUsingKeyFrames>
+                            </ObjectAnimationUsingKeyFrames>-->
                             <RepositionThemeAnimation FromVerticalOffset="200" TargetName="AlbumArtPanel" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition GeneratedDuration="0:0:0.24" To="AudioWithVisualizer">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LayoutRoot" Storyboard.TargetProperty="RequestedTheme">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ViewModel.ActualTheme, Mode=OneWay}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AlbumArtPanel" Storyboard.TargetProperty="Visibility">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed" />
                             </ObjectAnimationUsingKeyFrames>
@@ -850,7 +850,7 @@
                         <Setter Target="LayoutRoot.Height" Value="128" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
@@ -893,7 +893,7 @@
                         <Setter Target="LayoutRoot.Height" Value="0" />
                         <Setter Target="LayoutRoot.Padding" Value="8,8,8,8" />
                         <Setter Target="LayoutRoot.VerticalAlignment" Value="Bottom" />
-                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource SharedShadow}" />
+                        <Setter Target="LayoutRoot.Shadow" Value="{StaticResource ElevationThemeShadow}" />
                         <Setter Target="SecondColumn.Width" Value="*" />
                         <Setter Target="HeaderBackground.Visibility" Value="Collapsed" />
                         <Setter Target="TitleBarArea.(Grid.Column)" Value="1" />
@@ -946,6 +946,20 @@
                 <VisualState x:Name="HiddenNormalMargin">
                     <VisualState.Setters>
                         <Setter Target="LayoutRoot.Margin" Value="12,0,12,-1" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+
+            <VisualStateGroup x:Name="FlowDirectionStates">
+                <VisualState x:Name="LeftToRight" />
+
+                <VisualState x:Name="RightToLeft">
+                    <VisualState.StateTriggers>
+                        <StateTrigger IsActive="{x:Bind helpers:GlobalizationHelper.IsRightToLeftLanguage}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PlayQueueButtonIcon.Glyph" Value="{StaticResource PlaylistMusicMirroredGlyph}" />
+                        <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="{StaticResource MusicVisualizerMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

@@ -1,5 +1,8 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,16 +11,15 @@ using Screenbox.Core.Enums;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 namespace Screenbox.Core.ViewModels
 {
     public sealed partial class CommonViewModel : ObservableRecipient,
+        IRecipient<SettingsChangedMessage>,
         IRecipient<PropertyChangedMessage<NavigationViewDisplayMode>>,
         IRecipient<PropertyChangedMessage<PlayerVisibilityState>>
     {
@@ -51,6 +53,15 @@ namespace Screenbox.Core.ViewModels
 
             // Activate the view model's messenger
             IsActive = true;
+        }
+
+        public void Receive(SettingsChangedMessage message)
+        {
+            if (message.SettingsName == nameof(SettingsPageViewModel.Theme) &&
+                Window.Current.Content is Frame rootFrame)
+            {
+                rootFrame.RequestedTheme = _settingsService.Theme.ToElementTheme();
+            }
         }
 
         public void Receive(PropertyChangedMessage<NavigationViewDisplayMode> message)
@@ -118,6 +129,29 @@ namespace Screenbox.Core.ViewModels
             {
                 Messenger.Send(new ErrorMessage(
                     _resourceService.GetString(ResourceName.FailedToOpenFilesNotificationTitle), e.Message));
+            }
+        }
+
+        /// <summary>
+        /// Toggles the selection state of all items in the specified <see cref="ListViewBase"/>.
+        /// </summary>
+        /// <param name="listViewBase">The list that contains the items to change the selection state.</param>
+        [RelayCommand]
+        private void ToggleListViewBaseItemSelection(ListViewBase? listViewBase)
+        {
+            if (listViewBase == null) return;
+            if (listViewBase.SelectionMode == ListViewSelectionMode.Multiple ||
+                listViewBase.SelectionMode == ListViewSelectionMode.Extended)
+            {
+                var allItemsRange = new ItemIndexRange(0, (uint)listViewBase.Items.Count);
+                if (listViewBase.SelectedItems.Count != listViewBase.Items.Count)
+                {
+                    listViewBase.SelectRange(allItemsRange);
+                }
+                else
+                {
+                    listViewBase.DeselectRange(allItemsRange);
+                }
             }
         }
     }

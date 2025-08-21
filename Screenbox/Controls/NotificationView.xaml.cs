@@ -17,7 +17,6 @@ namespace Screenbox.Controls
         {
             this.InitializeComponent();
             DataContext = Ioc.Default.GetRequiredService<NotificationViewModel>();
-            InfoBar.Translation = new Vector3(0, 0, 8);
         }
 
         private InfoBarSeverity ConvertInfoBarSeverity(NotificationLevel level)
