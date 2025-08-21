@@ -27,6 +27,16 @@ Detailed overview of the codebase architecture, technology stack, and developmen
 3. **Set up your development environment** following the setup instructions
 4. **Look for "good first issue" labels** on [GitHub Issues](https://github.com/huynhsontung/Screenbox/issues)
 
+### For Non-Developers
+
+You can contribute to Screenbox without writing code:
+
+- **🌍 Translations**: Help translate the app through [Crowdin](https://crowdin.com/project/screenbox)
+- **🐛 Bug Reports**: Report issues you encounter while using the app
+- **💡 Feature Requests**: Suggest improvements and new features
+- **📱 Testing**: Try beta versions and provide feedback
+- **📢 Community**: Help other users in discussions and social media
+
 ### For Translators
 
 Screenbox supports multiple languages and we welcome translation contributions:
@@ -77,6 +87,11 @@ Screenbox is a modern media player for Windows built with:
 
 - **GitHub Issues**: [Report bugs and request features](https://github.com/huynhsontung/Screenbox/issues)
 - **GitHub Discussions**: [Ask questions and get help](https://github.com/huynhsontung/Screenbox/discussions)
+
+### Additional Resources
+
+- **Release Notes**: [GitHub Releases](https://github.com/huynhsontung/Screenbox/releases) - Latest features and changes
+- **Microsoft Store**: [Download Screenbox](https://apps.microsoft.com/detail/9NTSNMSVCB5L) - Official release channel
 
 ### Contributing
 
