@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
 using Windows.ApplicationModel.Resources;
 using Windows.System;
@@ -58,38 +58,40 @@ public static class GlobalizationHelper
         string keyText = GetVirtualKeyDisplayName(value.Key);
         string separator = _resourceLoader.GetString(KeyboardAcceleratorValueSeparatorResourceName);
         var modifiers = value.Modifiers;
-        var keyboardAcceleratorDisplayName = new List<string>(5);
 
-        // The tooltip shows the modifier keys in a different sequence than the enum (Ctrl+Alt+Windows+Shift).
+        string[] parts = new string[5];
+        int count = 0;
+
+        // Modifier keys in the tooltip appear in a different sequence than specified by the enum.
         if ((modifiers & VirtualKeyModifiers.Control) != 0)
         {
-            keyboardAcceleratorDisplayName.Add(GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Control));
+            parts[count++] = GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Control);
         }
         if ((modifiers & VirtualKeyModifiers.Menu) != 0)
         {
-            keyboardAcceleratorDisplayName.Add(GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Menu));
+            parts[count++] = GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Menu);
         }
         if ((modifiers & VirtualKeyModifiers.Windows) != 0)
         {
-            keyboardAcceleratorDisplayName.Add(GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Windows));
+            parts[count++] = GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Windows);
         }
         if ((modifiers & VirtualKeyModifiers.Shift) != 0)
         {
-            keyboardAcceleratorDisplayName.Add(GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Shift));
+            parts[count++] = GetVirtualKeyModifiersDisplayName(VirtualKeyModifiers.Shift);
         }
 
-        // If the key is already represented as a modifier, do not repeat its display name.
-        if (!string.IsNullOrEmpty(keyText) && !keyboardAcceleratorDisplayName.Contains(keyText))
+        // Avoid adding the key if it is already represented as a modifier.
+        if (!string.IsNullOrEmpty(keyText) && Array.IndexOf(parts, keyText, 0, count) == -1)
         {
-            keyboardAcceleratorDisplayName.Add(keyText);
+            parts[count++] = keyText;
         }
 
-        if (_isKeyboardAcceleratorMirrored)
+        if (_isKeyboardAcceleratorMirrored && count > 1)
         {
-            keyboardAcceleratorDisplayName.Reverse();
+            Array.Reverse(parts, 0, count);
         }
 
-        return string.Join(separator, keyboardAcceleratorDisplayName);
+        return string.Join(separator, parts, 0, count);
     }
 
     /// <summary>
