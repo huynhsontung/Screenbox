@@ -54,6 +54,20 @@ winget install screenbox -s winget
 
 Feel free to open an issue if you want to report a bug, give feedback, or ask a question. PRs are very welcome!
 
+### For Contributors
+
+- 📖 **[Contributing Guide](docs/CONTRIBUTING.md)** - Complete guide for new contributors
+- 🏗️ **[Project Structure](docs/PROJECT_STRUCTURE.md)** - Detailed codebase architecture overview
+
+### Quick Start for Developers
+
+1. **Prerequisites**: Visual Studio 2022 with UWP development workload
+2. **Clone**: `git clone https://github.com/huynhsontung/Screenbox.git`
+3. **Build**: Open `Screenbox.sln` and build the solution (Ctrl+Shift+B)
+4. **Run**: Set platform to x64 and start debugging (F5)
+
+See the [Contributing Guide](docs/CONTRIBUTING.md) for detailed setup instructions.
+
 ## Translation
 
 [![Crowdin](https://badges.crowdin.net/screenbox/localized.svg)](https://crowdin.com/project/screenbox)
