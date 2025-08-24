@@ -936,15 +936,15 @@
     <value>Süper çözünürlük</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Mevcut olduğunda bölüm adını görüntüle</value>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Uygulama dili</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Uygulamanın görüntüleme dilini değiştir</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Sistem dilini kullan</value>
   </data>
 </root>
