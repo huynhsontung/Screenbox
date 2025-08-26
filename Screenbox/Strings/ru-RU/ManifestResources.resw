@@ -255,7 +255,7 @@
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
-    <value>DVD Video Object File</value>
+    <value>Видео файл DVD</value>
     <comment>Display name for the file type ".vob" (DVD Video Object)</comment>
   </data>
   <data name="FileDisplayNameWebAudio" xml:space="preserve">
@@ -271,7 +271,7 @@
     <comment>Display name for the file type ".wav" (Waveform Audio)</comment>
   </data>
   <data name="FileDisplayNameASF" xml:space="preserve">
-    <value>ASF File</value>
+    <value>ASF файл</value>
     <comment>Display name for the file type ".asf" (Advanced Systems Format)</comment>
   </data>
   <data name="FileDisplayNameWindowsMedia" xml:space="preserve">
