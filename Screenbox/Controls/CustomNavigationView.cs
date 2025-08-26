@@ -150,6 +150,7 @@ namespace Screenbox.Controls
                     foreach (var item in PaneSearchButtonKeyboardAccelerators)
                     {
                         paneSearchButton.KeyboardAccelerators.Add(item);
+                        // TODO: Consolidate and add the same shortcuts to AutoSuggestBox.
                     }
                 }
             }
@@ -211,6 +212,26 @@ namespace Screenbox.Controls
         {
             if (ContentVisibility == Visibility.Visible)
             {
+                // Invoke the search experience with the gamepad Y button.
+                // https://learn.microsoft.com/en-us/windows/apps/design/devices/designing-for-tv#search-experience
+                // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#accelerator-support
+                if (e.Key == VirtualKey.GamepadY && _paneSearchButton != null)
+                {
+                    if (!IsPaneOpen)
+                    {
+                        IsPaneOpen = true;
+                    }
+
+                    var autoSuggestBox = AutoSuggestBox;
+                    if (autoSuggestBox != null)
+                    {
+                        autoSuggestBox.Focus(FocusState.Programmatic);
+                    }
+
+                    e.Handled = true;
+                    return;
+                }
+
                 base.OnKeyDown(e);
             }
         }

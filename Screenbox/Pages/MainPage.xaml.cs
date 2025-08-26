@@ -94,12 +94,6 @@ namespace Screenbox.Pages
         {
             base.OnKeyDown(e);
             ViewModel.ProcessGamepadKeyDown(e);
-
-            if (e.Key == VirtualKey.GamepadY)
-            {
-                NavViewSearchBox.Focus(FocusState.Programmatic);
-                e.Handled = true;
-            }
         }
 
         public void GoBack()
