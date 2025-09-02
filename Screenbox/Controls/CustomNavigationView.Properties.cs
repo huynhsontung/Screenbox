@@ -9,6 +9,54 @@ namespace Screenbox.Controls;
 public partial class CustomNavigationView
 {
     /// <summary>
+    /// Identifies the <see cref="Overlay"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty OverlayProperty = DependencyProperty.Register(
+        nameof(Overlay), typeof(UIElement), typeof(CustomNavigationView), new PropertyMetadata(null, OnOverlayPropertyChanged));
+
+    /// <summary>
+    /// Gets or sets the content to be displayed as an overlay at the same
+    /// visual hierarchy as the <see cref="Windows.UI.Xaml.Controls.SplitView"/> pane and content.
+    /// </summary>
+    public UIElement? Overlay
+    {
+        get => (UIElement?)GetValue(OverlayProperty);
+        set => SetValue(OverlayProperty, value);
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="OverlayZIndex"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty OverlayZIndexProperty = DependencyProperty.Register(
+        nameof(OverlayZIndex), typeof(int), typeof(CustomNavigationView), new PropertyMetadata(0, OnOverlayZIndexPropertyChanged));
+
+    /// <summary>
+    /// Gets or sets the Z-order of the overlay element.
+    /// </summary>
+    /// <value>The ZIndex value in the range ±1,000,000. The default is 0.</value>
+    /// <remarks>Values above 1 will render the element above the navigation pane.</remarks>
+    public int OverlayZIndex
+    {
+        get => (int)GetValue(OverlayZIndexProperty);
+        set => SetValue(OverlayZIndexProperty, value);
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="ContentVisibility"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
+        nameof(ContentVisibility), typeof(Visibility), typeof(CustomNavigationView), new PropertyMetadata(Visibility.Visible, OnContentVisibilityPropertyChanged));
+
+    /// <summary>
+    /// Gets or sets the visibility of everything except the overlay element.
+    /// </summary>
+    public Visibility ContentVisibility
+    {
+        get => (Visibility)GetValue(ContentVisibilityProperty);
+        set => SetValue(ContentVisibilityProperty, value);
+    }
+
+    /// <summary>
     /// Identifies the <see cref="BackButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonAccessKeyProperty = DependencyProperty.Register(
@@ -158,16 +206,60 @@ public partial class CustomNavigationView
         set => SetValue(PaneSearchButtonStyleProperty, value);
     }
 
+    private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var owner = (CustomNavigationView)d;
+        owner.OnOverlayChanged((UIElement?)e.OldValue, (UIElement?)e.NewValue);
+    }
+
+    private static void OnOverlayZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var owner = (CustomNavigationView)d;
+        owner.OnOverlayZIndexChanged((int)e.OldValue, (int)e.NewValue);
+    }
+
+    private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var owner = (CustomNavigationView)d;
+        owner.OnContentVisibilityChanged((Visibility)e.OldValue, (Visibility)e.NewValue);
+    }
+
     private static void OnBackButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var owner = (CustomNavigationView)d;
-        owner.UpdateBackButtonStyle();
-        owner.UpdateCloseButtonStyle();
+        owner.OnBackButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
     }
 
     private static void OnPaneSearchButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var owner = (CustomNavigationView)d;
-        owner.UpdatePaneSearchButtonStyle();
+        owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+    }
+
+    protected virtual void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
+    {
+        UpdateOverlay();
+    }
+
+    protected virtual void OnOverlayZIndexChanged(int oldValue, int newValue)
+    {
+        UpdateOverlayZIndex(newValue);
+    }
+
+    protected virtual void OnContentVisibilityChanged(Visibility oldValue, Visibility newValue)
+    {
+        UpdateContentVisibility(newValue);
+        UpdateOverlayLayout();
+    }
+
+    protected virtual void OnBackButtonStyleChanged(Style? oldValue, Style? newValue)
+    {
+        UpdateBackButtonStyle();
+        UpdateCloseButtonStyle();
+    }
+
+    protected virtual void OnPaneSearchButtonStyleChanged(Style? oldValue, Style? newValue)
+    {
+        UpdatePaneSearchButtonStyle();
     }
 }

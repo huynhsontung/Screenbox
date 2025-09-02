@@ -8,355 +8,426 @@ using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
+using NavigationViewDisplayModeChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewDisplayModeChangedEventArgs;
+using NavigationViewPaneClosingEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs;
 
-namespace Screenbox.Controls
+namespace Screenbox.Controls;
+
+/// <summary>
+/// Represents a custom navigation view that extends the functionality of the <see cref="NavigationView"/> control.
+/// </summary>
+/// <remarks>
+/// <para>The <see cref="CustomNavigationView"/> provides additional features such customizable access keys,
+/// keyboard accelerators, and styles for the buttons that are built-in to NavigationView.</para>
+/// It also enables changing the visibility of navigation content and rendering a custom overlay
+/// with configurable z-order.
+/// <para>Key features include:</para>
+/// <list type="bullet">
+/// <item><description><strong>Overlay:</strong> Displayed custom content on the same layer as the navigation pane.</description></item>
+/// <item><description><strong>Styling:</strong> Apply custom styles to built-in buttons.</description></item>
+/// <item><description><strong>Accessibility:</strong> Configure built-in buttons access keys and keyboard accelerators.</description></item>
+/// <item><description><strong>Motion:</strong> Fluid animations for content when visibility changes.</description></item>
+/// </list>
+/// </remarks>
+/// <example>
+/// This example shows how to create a simple NavigationView with an overlay,
+/// including some of its new capabilities.
+/// <code>
+/// &lt;controls:CustomNavigationView BackButtonAccessKey="B"
+///                                CloseButtonStyle="{StaticResource AccentButtonStyle}"
+///                                OverlayZIndex="2"&gt;
+///     &lt;controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators&gt;
+///         &lt;KeyboardAccelerator Key="T" Modifiers="Control" /&gt;
+///     &lt;/controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators&gt;
+/// 
+///     &lt;controls:CustomNavigationView.Overlay&gt;
+///         &lt;Border Background="Red" /&gt;
+///     &lt;/controls:CustomNavigationView.Overlay&gt;
+/// &lt;/controls:CustomNavigationView&gt;
+/// </code>
+/// </example>
+public partial class CustomNavigationView : NavigationView
 {
-    public sealed partial class CustomNavigationView : NavigationView
+    private const string TogglePaneButtonName = "TogglePaneButton";
+    private const string RootSplitViewName = "RootSplitView";
+    private const string PaneContentGridName = "PaneContentGrid";
+    private const string ContentGridName = "ContentGrid";
+    private const string SearchButtonName = "PaneAutoSuggestButton";
+    private const string PaneToggleButtonGridName = "PaneToggleButtonGrid";
+    private const string NavViewBackButton = "NavigationViewBackButton";
+    private const string NavViewCloseButton = "NavigationViewCloseButton";
+
+    private const string ShadowCaster = "ShadowCaster";
+
+    private static readonly ImplicitAnimationSet _slowFadeInAnimationSet = new()
     {
-        private const string TogglePaneButtonName = "TogglePaneButton";
-        private const string SearchButtonName = "PaneAutoSuggestButton";
-        private const string NavViewBackButton = "NavigationViewBackButton";
-        private const string NavViewCloseButton = "NavigationViewCloseButton";
+       new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear }
+    };
+    private static readonly ImplicitAnimationSet _slowFadeOutAnimationSet = new()
+    {
+        new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear }
+    };
+    private static readonly ImplicitAnimationSet _paneShowAnimationSet = new()
+    {
+       new TranslationAnimation { From = "-48,0,0", To = "0,0,0", Duration = TimeSpan.FromMilliseconds(167), EasingMode = EasingMode.EaseInOut },
+    };
+    private static readonly ImplicitAnimationSet _showContentAnimationSet = new()
+    {
+        new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear },
+        new TranslationAnimation { To = "0,0,0", Duration = TimeSpan.FromMilliseconds(500), EasingMode = EasingMode.EaseOut }
+    };
+    private static readonly ImplicitAnimationSet _hideContentAnimationSet = new()
+    {
+        new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear },
+        new TranslationAnimation { To = "0,-400,0", Duration = TimeSpan.FromMilliseconds(250), EasingMode = EasingMode.EaseIn }
+    };
 
-        public static readonly DependencyProperty OverlayContentProperty = DependencyProperty.Register(
-            nameof(OverlayContent),
-            typeof(UIElement),
-            typeof(CustomNavigationView),
-            new PropertyMetadata(null, OnOverlayContentChanged));
+    private Grid? _overlayRoot;
+    private Border? _contentBackground;
+    private SplitView? _splitView;
+    private Grid? _paneToggleButtonGrid;
+    private Grid? _contentGrid;
+    private Grid? _paneContentGrid;
+    private Button? _paneToggleButton;
+    private Button? _paneSearchButton;
+    private Button? _backButton;
+    private Button? _closeButton;
 
-        public static readonly DependencyProperty OverlayZIndexProperty = DependencyProperty.Register(
-            nameof(OverlayZIndex),
-            typeof(int),
-            typeof(CustomNavigationView),
-            new PropertyMetadata(0, OnOverlayZIndexChanged));
+    public CustomNavigationView()
+    {
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+        DisplayModeChanged += OnDisplayModeChanged;
+        PaneOpening += OnPaneOpening;
+        PaneClosing += OnPaneClosing;
+    }
 
-        public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
-            nameof(ContentVisibility),
-            typeof(Visibility),
-            typeof(CustomNavigationView),
-            new PropertyMetadata(Visibility.Visible, OnContentVisibilityChanged));
+    protected override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
 
-        /// <summary>
-        /// Visibility of everything except the overlay element.
-        /// </summary>
-        public Visibility ContentVisibility
+        _splitView = (SplitView?)GetTemplateChild(RootSplitViewName);
+
+        if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
         {
-            get => (Visibility)GetValue(ContentVisibilityProperty);
-            set => SetValue(ContentVisibilityProperty, value);
-        }
+            _paneToggleButton = paneToggleButton;
 
-        /// <summary>
-        /// Canvas.ZIndex of the overlay element. Set a value above 1 to render on top of the nav pane. Default is 0.
-        /// </summary>
-        public int OverlayZIndex
-        {
-            get => (int)GetValue(OverlayZIndexProperty);
-            set => SetValue(OverlayZIndexProperty, value);
-        }
-
-        /// <summary>
-        /// Content of the overlay element that has the same level with the nav pane.
-        /// </summary>
-        public UIElement? OverlayContent
-        {
-            get => (UIElement?)GetValue(OverlayContentProperty);
-            set => SetValue(OverlayContentProperty, value);
-        }
-
-        private readonly Border _overlayRoot;
-        private Border? _contentBackground;
-        private SplitView? _splitView;
-        private Grid? _paneToggleButtonGrid;
-        private Grid? _contentGrid;
-        private Grid? _paneContentGrid;
-        private Button? _paneToggleButton;
-        private Button? _paneSearchButton;
-        private Button? _backButton;
-        private Button? _closeButton;
-
-        public CustomNavigationView()
-        {
-            Loaded += OnLoaded;
-
-            Border overlayRoot = new()
+            if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
             {
-                Name = "OverlayRoot"
-            };
+                paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
+            }
+
+            if (PaneToggleButtonKeyboardAccelerators != null)
+            {
+                var defaultKeyboardAccelerator = new KeyboardAccelerator
+                {
+                    Key = VirtualKey.Back,
+                    Modifiers = VirtualKeyModifiers.Windows
+                };
+
+                // Remove the default (Windows + Back) key combination and restore it after the user-defined keyboard accelerators.
+                // https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/NavigationView/NavigationView.cpp#L407-L413
+                paneToggleButton.KeyboardAccelerators.Clear();
+
+                foreach (var item in PaneToggleButtonKeyboardAccelerators)
+                {
+                    paneToggleButton.KeyboardAccelerators.Add(item);
+                }
+
+                paneToggleButton.KeyboardAccelerators.Add(defaultKeyboardAccelerator);
+            }
+        }
+
+        if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
+        {
+            _paneSearchButton = paneSearchButton;
+
+            UpdatePaneSearchButtonStyle();
+
+            if (!string.IsNullOrEmpty(PaneSearchButtonAccessKey))
+            {
+                paneSearchButton.AccessKey = PaneSearchButtonAccessKey;
+            }
+
+            if (PaneSearchButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in PaneSearchButtonKeyboardAccelerators)
+                {
+                    paneSearchButton.KeyboardAccelerators.Add(item);
+                    // TODO: Consolidate and add the same shortcuts to AutoSuggestBox.
+                }
+            }
+        }
+
+        if (GetTemplateChild(NavViewBackButton) is Button backButton)
+        {
+            _backButton = backButton;
+
+            UpdateBackButtonStyle();
+
+            if (!string.IsNullOrEmpty(BackButtonAccessKey))
+            {
+                backButton.AccessKey = BackButtonAccessKey;
+            }
+
+            if (BackButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in BackButtonKeyboardAccelerators)
+                {
+                    backButton.KeyboardAccelerators.Add(item);
+                }
+            }
+        }
+
+        if (GetTemplateChild(NavViewCloseButton) is Button closeButton)
+        {
+            _closeButton = closeButton;
+
+            UpdateCloseButtonStyle();
+
+            if (!string.IsNullOrEmpty(CloseButtonAccessKey))
+            {
+                closeButton.AccessKey = CloseButtonAccessKey;
+            }
+
+            if (CloseButtonKeyboardAccelerators != null)
+            {
+                foreach (var item in CloseButtonKeyboardAccelerators)
+                {
+                    closeButton.KeyboardAccelerators.Add(item);
+                }
+            }
+        }
+
+        if (GetTemplateChild(PaneContentGridName) is Grid paneContentGrid)
+        {
+            _paneContentGrid = paneContentGrid;
+
+            // Set implicit animation to play when the SplitView pane visibility changes.
+            Implicit.SetShowAnimations(paneContentGrid, _paneShowAnimationSet);
+            // Do not use HideAnimations, it causes the AutoSuggestBox to flicker for a few frames.
+        }
+
+        if (GetTemplateChild(PaneToggleButtonGridName) is Grid paneToggleButtonGrid)
+        {
+            _paneToggleButtonGrid = paneToggleButtonGrid;
+
+            // Set implicit animations to play when ContentVisibility changes.
+            Implicit.SetShowAnimations(paneToggleButtonGrid, _slowFadeInAnimationSet);
+            Implicit.SetHideAnimations(paneToggleButtonGrid, _slowFadeOutAnimationSet);
+        }
+
+        if (GetTemplateChild(ContentGridName) is Grid contentGrid)
+        {
+            _contentGrid = contentGrid;
+
+            // Set implicit animations to play when ContentVisibility changes.
+            Implicit.SetShowAnimations(contentGrid, _showContentAnimationSet);
+            Implicit.SetHideAnimations(contentGrid, _hideContentAnimationSet);
+        }
+
+        if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
+        {
+            shadowCaster.Translation = new Vector3(0, 0, 32);
+        }
+
+        UpdateOverlay();
+        UpdateContentVisibility(ContentVisibility);
+    }
+
+    protected override void OnKeyDown(KeyRoutedEventArgs e)
+    {
+        if (ContentVisibility == Visibility.Visible)
+        {
+            // Invoke the search experience with the gamepad Y button.
+            // https://learn.microsoft.com/en-us/windows/apps/design/devices/designing-for-tv#search-experience
+            // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#accelerator-support
+            if (e.Key == VirtualKey.GamepadY && _paneSearchButton != null)
+            {
+                if (!IsPaneOpen)
+                {
+                    IsPaneOpen = true;
+                }
+
+                var autoSuggestBox = AutoSuggestBox;
+                if (autoSuggestBox != null)
+                {
+                    autoSuggestBox.Focus(FocusState.Programmatic);
+                }
+
+                e.Handled = true;
+                return;
+            }
+
+            base.OnKeyDown(e);
+        }
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_splitView?.FindDescendant<Grid>() is { } splitViewGrid)
+        {
+            splitViewGrid.Children.Add(_overlayRoot);
+        }
+
+        if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
+        {
+            _contentBackground = contentBackground;
+            contentBackground.SetValue(Implicit.ShowAnimationsProperty, _slowFadeInAnimationSet);
+            contentBackground.SetValue(Implicit.HideAnimationsProperty, _slowFadeOutAnimationSet);
+        }
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+        Unloaded -= OnUnloaded;
+        DisplayModeChanged -= OnDisplayModeChanged;
+        PaneOpening -= OnPaneOpening;
+        PaneClosing -= OnPaneClosing;
+
+        if (_overlayRoot != null)
+        {
+            _overlayRoot.Tapped -= OverlayRootOnTapped;
+        }
+    }
+
+    private void OnDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
+    {
+        UpdateOverlayLayout();
+    }
+
+    private void OnPaneOpening(NavigationView sender, object args)
+    {
+        UpdateOverlayLayout();
+    }
+
+    private void OnPaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
+    {
+        UpdateOverlayLayout();
+    }
+
+    private void OverlayRootOnTapped(object sender, TappedRoutedEventArgs e)
+    {
+        if (DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen)
+        {
+            IsPaneOpen = false;
+        }
+    }
+
+    private void UpdateContentVisibility(Visibility visibility)
+    {
+        if (_paneToggleButtonGrid != null)
+        {
+            _paneToggleButtonGrid.Visibility = visibility;
+        }
+
+        if (_contentGrid != null)
+        {
+            _contentGrid.Visibility = visibility;
+        }
+
+        if (_paneContentGrid != null)
+        {
+            _paneContentGrid.Visibility = visibility;
+        }
+
+        if (_contentBackground != null)
+        {
+            _contentBackground.Visibility = visibility;
+        }
+    }
+
+    private void UpdateOverlay()
+    {
+        if (_overlayRoot == null)
+        {
+            var overlayRoot = new Grid { Name = "OverlayRoot" };
+            Grid.SetColumnSpan(overlayRoot, 2);
             overlayRoot.Tapped += OverlayRootOnTapped;
-            overlayRoot.SetValue(Grid.ColumnProperty, 0);
-            overlayRoot.SetValue(Grid.ColumnSpanProperty, 2);
+
             _overlayRoot = overlayRoot;
         }
 
-        protected override void OnApplyTemplate()
+        _overlayRoot.Children.Clear();
+
+        if (Overlay != null)
         {
-            base.OnApplyTemplate();
-            _splitView = (SplitView?)GetTemplateChild("RootSplitView");
-            _paneToggleButtonGrid = (Grid?)GetTemplateChild("PaneToggleButtonGrid");
-            _contentGrid = (Grid?)GetTemplateChild("ContentGrid");
-            _paneContentGrid = (Grid?)GetTemplateChild("PaneContentGrid");
-            Grid? shadowCaster = (Grid?)GetTemplateChild("ShadowCaster");
-            if (shadowCaster != null)
-            {
-                shadowCaster.Translation = new Vector3(0, 0, 32);
-            }
+            _overlayRoot.Children.Add(Overlay);
+            UpdateOverlayLayout();
+        }
+    }
 
-            if (GetTemplateChild(TogglePaneButtonName) is Button paneToggleButton)
-            {
-                _paneToggleButton = paneToggleButton;
+    private void UpdateOverlayZIndex(int index)
+    {
+        if (_overlayRoot != null)
+        {
+            Canvas.SetZIndex(_overlayRoot, index);
+        }
+    }
 
-                if (!string.IsNullOrEmpty(PaneToggleButtonAccessKey))
-                {
-                    paneToggleButton.AccessKey = PaneToggleButtonAccessKey;
-                }
+    private void UpdateOverlayLayout()
+    {
+        if (_overlayRoot == null) return;
 
-                if (PaneToggleButtonKeyboardAccelerators != null)
-                {
-                    var defaultKeyboardAccelerator = new KeyboardAccelerator
-                    {
-                        Key = VirtualKey.Back,
-                        Modifiers = VirtualKeyModifiers.Windows
-                    };
-
-                    // Remove the default (Windows + Back) key combination and restore it after the user-defined keyboard accelerators.
-                    // https://github.com/microsoft/microsoft-ui-xaml/blob/v2.8.7/dev/NavigationView/NavigationView.cpp#L407-L413
-                    paneToggleButton.KeyboardAccelerators.Clear();
-
-                    foreach (var item in PaneToggleButtonKeyboardAccelerators)
-                    {
-                        paneToggleButton.KeyboardAccelerators.Add(item);
-                    }
-
-                    paneToggleButton.KeyboardAccelerators.Add(defaultKeyboardAccelerator);
-                }
-            }
-
-            if (GetTemplateChild(SearchButtonName) is Button paneSearchButton)
-            {
-                _paneSearchButton = paneSearchButton;
-
-                UpdatePaneSearchButtonStyle();
-
-                if (!string.IsNullOrEmpty(PaneSearchButtonAccessKey))
-                {
-                    paneSearchButton.AccessKey = PaneSearchButtonAccessKey;
-                }
-
-                if (PaneSearchButtonKeyboardAccelerators != null)
-                {
-                    foreach (var item in PaneSearchButtonKeyboardAccelerators)
-                    {
-                        paneSearchButton.KeyboardAccelerators.Add(item);
-                        // TODO: Consolidate and add the same shortcuts to AutoSuggestBox.
-                    }
-                }
-            }
-
-            if (GetTemplateChild(NavViewBackButton) is Button backButton)
-            {
-                _backButton = backButton;
-
-                UpdateBackButtonStyle();
-
-                if (!string.IsNullOrEmpty(BackButtonAccessKey))
-                {
-                    backButton.AccessKey = BackButtonAccessKey;
-                }
-
-                if (BackButtonKeyboardAccelerators != null)
-                {
-                    foreach (var item in BackButtonKeyboardAccelerators)
-                    {
-                        backButton.KeyboardAccelerators.Add(item);
-                    }
-                }
-            }
-
-            if (GetTemplateChild(NavViewCloseButton) is Button closeButton)
-            {
-                _closeButton = closeButton;
-
-                UpdateCloseButtonStyle();
-
-                if (!string.IsNullOrEmpty(CloseButtonAccessKey))
-                {
-                    closeButton.AccessKey = CloseButtonAccessKey;
-                }
-
-                if (CloseButtonKeyboardAccelerators != null)
-                {
-                    foreach (var item in CloseButtonKeyboardAccelerators)
-                    {
-                        closeButton.KeyboardAccelerators.Add(item);
-                    }
-                }
-            }
-
-            SetContentVisibility(ContentVisibility);
-
-            // Set implicit animations to play when ContentVisibility changes
-            _paneToggleButtonGrid?.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
-            _paneToggleButtonGrid?.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
-            _contentGrid?.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
-            _contentGrid?.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
-
-            // Don't set implicit animations on _paneContentGrid because of conflict with base NavView
-            // _paneContentGrid?.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
-            // _paneContentGrid?.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
+        // Applies layout logic consistent with other SplitView content grids.
+        if (ContentVisibility == Visibility.Collapsed)
+        {
+            Grid.SetColumn(_overlayRoot, 0);
+            Grid.SetColumnSpan(_overlayRoot, 2);
+            return;
         }
 
-        protected override void OnKeyDown(KeyRoutedEventArgs e)
+        switch (DisplayMode)
         {
-            if (ContentVisibility == Visibility.Visible)
+
+            case NavigationViewDisplayMode.Expanded:
+            case NavigationViewDisplayMode.Compact:
+                Grid.SetColumn(_overlayRoot, 1);
+                Grid.SetColumnSpan(_overlayRoot, 1);
+                break;
+            case NavigationViewDisplayMode.Minimal:
+            default:
+                Grid.SetColumn(_overlayRoot, 0);
+                Grid.SetColumnSpan(_overlayRoot, 2);
+                break;
+        }
+    }
+
+    private void UpdateBackButtonStyle()
+    {
+        if (_backButton != null)
+        {
+            if (BackButtonStyle != null)
             {
-                // Invoke the search experience with the gamepad Y button.
-                // https://learn.microsoft.com/en-us/windows/apps/design/devices/designing-for-tv#search-experience
-                // https://learn.microsoft.com/en-us/windows/apps/design/input/gamepad-and-remote-interactions#accelerator-support
-                if (e.Key == VirtualKey.GamepadY && _paneSearchButton != null)
-                {
-                    if (!IsPaneOpen)
-                    {
-                        IsPaneOpen = true;
-                    }
-
-                    var autoSuggestBox = AutoSuggestBox;
-                    if (autoSuggestBox != null)
-                    {
-                        autoSuggestBox.Focus(FocusState.Programmatic);
-                    }
-
-                    e.Handled = true;
-                    return;
-                }
-
-                base.OnKeyDown(e);
+                _backButton.Style = BackButtonStyle;
             }
         }
+    }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+    private void UpdateCloseButtonStyle()
+    {
+        if (_closeButton != null)
         {
-            if (_splitView?.FindDescendant<Grid>() is { } splitViewGrid)
+            if (BackButtonStyle != null)
             {
-                splitViewGrid.Children.Add(_overlayRoot);
-            }
-
-            if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
-            {
-                _contentBackground = contentBackground;
-                contentBackground.SetValue(Implicit.ShowAnimationsProperty, GetShowAnimations());
-                contentBackground.SetValue(Implicit.HideAnimationsProperty, GetHideAnimations());
+                _closeButton.Style = BackButtonStyle;
             }
         }
+    }
 
-        private void OverlayRootOnTapped(object sender, TappedRoutedEventArgs e)
+    private void UpdatePaneSearchButtonStyle()
+    {
+        if (_paneSearchButton != null)
         {
-            if (DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen)
+            if (PaneSearchButtonStyle != null)
             {
-                IsPaneOpen = false;
+                _paneSearchButton.Style = PaneSearchButtonStyle;
             }
-        }
-
-        private void SetContentVisibility(Visibility visibility)
-        {
-            if (_paneToggleButtonGrid != null)
-            {
-                _paneToggleButtonGrid.Visibility = visibility;
-            }
-
-            if (_contentGrid != null)
-            {
-                _contentGrid.Visibility = visibility;
-            }
-
-            if (_paneContentGrid != null)
-            {
-                _paneContentGrid.Visibility = visibility;
-            }
-
-            if (_contentBackground != null)
-            {
-                _contentBackground.Visibility = visibility;
-            }
-        }
-
-        private static void OnContentVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            CustomNavigationView view = (CustomNavigationView)d;
-            view.SetContentVisibility((Visibility)e.NewValue);
-        }
-
-        private static void OnOverlayContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            CustomNavigationView view = (CustomNavigationView)d;
-            view._overlayRoot.Child = (UIElement)e.NewValue;
-        }
-
-        private static void OnOverlayZIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            CustomNavigationView view = (CustomNavigationView)d;
-            Canvas.SetZIndex(view._overlayRoot, (int)e.NewValue);
-        }
-
-        private void UpdateBackButtonStyle()
-        {
-            if (_backButton != null)
-            {
-                if (BackButtonStyle != null)
-                {
-                    _backButton.Style = BackButtonStyle;
-                }
-            }
-        }
-
-        private void UpdateCloseButtonStyle()
-        {
-            if (_closeButton != null)
-            {
-                if (BackButtonStyle != null)
-                {
-                    _closeButton.Style = BackButtonStyle;
-                }
-            }
-        }
-
-        private void UpdatePaneSearchButtonStyle()
-        {
-            if (_paneSearchButton != null)
-            {
-                if (PaneSearchButtonStyle != null)
-                {
-                    _paneSearchButton.Style = PaneSearchButtonStyle;
-                }
-            }
-        }
-
-        private static ImplicitAnimationSet GetShowAnimations()
-        {
-            return new ImplicitAnimationSet
-            {
-                new OpacityAnimation
-                {
-                    Duration = TimeSpan.FromSeconds(0.3),
-                    From = 0,
-                    To = 1
-                }
-            };
-        }
-
-        private static ImplicitAnimationSet GetHideAnimations()
-        {
-            return new ImplicitAnimationSet
-            {
-                new OpacityAnimation
-                {
-                    Duration = TimeSpan.FromSeconds(0.3),
-                    From = 1,
-                    To = 0
-                }
-            };
         }
     }
 }
