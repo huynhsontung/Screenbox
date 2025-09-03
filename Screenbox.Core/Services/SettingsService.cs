@@ -7,6 +7,7 @@ using Screenbox.Core.Helpers;
 using Windows.Foundation.Collections;
 using Windows.Media;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 
 namespace Screenbox.Core.Services
 {
@@ -166,7 +167,23 @@ namespace Screenbox.Core.Services
         public bool PlayerAutoFullScreen
         {
             get => GetValue<bool>(PlayerAutoFullScreenKey);
-            set => SetValue(PlayerAutoFullScreenKey, value);
+            set 
+            { 
+                SetValue(PlayerAutoFullScreenKey, value);
+                
+                // Update preferred launch windowing mode based on setting
+                try
+                {
+                    var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+                    view.PreferredLaunchWindowingMode = value 
+                        ? Windows.UI.ViewManagement.ApplicationViewWindowingMode.FullScreen
+                        : Windows.UI.ViewManagement.ApplicationViewWindowingMode.Auto;
+                }
+                catch
+                {
+                    // Ignore errors when ApplicationView is not available (e.g., during testing)
+                }
+            }
         }
 
         public SettingsService()
@@ -188,6 +205,19 @@ namespace Screenbox.Core.Services
             SetDefault(GlobalArgumentsKey, string.Empty);
             SetDefault(PlayerShowChaptersKey, true);
             SetDefault(PlayerAutoFullScreenKey, false);
+
+            // Initialize preferred launch windowing mode based on current setting
+            try
+            {
+                var view = ApplicationView.GetForCurrentView();
+                view.PreferredLaunchWindowingMode = PlayerAutoFullScreen 
+                    ? ApplicationViewWindowingMode.FullScreen
+                    : ApplicationViewWindowingMode.Auto;
+            }
+            catch
+            {
+                // Ignore errors when ApplicationView is not available (e.g., during testing)
+            }
 
             // Device family specific overrides
             if (SystemInformation.IsXbox)
