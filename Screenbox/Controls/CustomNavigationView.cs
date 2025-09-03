@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Media.Animation;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
 using NavigationViewDisplayModeChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewDisplayModeChangedEventArgs;
+using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 using NavigationViewPaneClosingEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewPaneClosingEventArgs;
 
 namespace Screenbox.Controls;
@@ -60,6 +61,7 @@ public partial class CustomNavigationView : NavigationView
     private const string PaneToggleButtonGridName = "PaneToggleButtonGrid";
     private const string NavViewBackButton = "NavigationViewBackButton";
     private const string NavViewCloseButton = "NavigationViewCloseButton";
+    private const string NavViewSettingsItem = "SettingsItem";
 
     private const string ShadowCaster = "ShadowCaster";
 
@@ -96,6 +98,7 @@ public partial class CustomNavigationView : NavigationView
     private Button? _paneSearchButton;
     private Button? _backButton;
     private Button? _closeButton;
+    private NavigationViewItem? _settingsItem;
 
     public CustomNavigationView()
     {
@@ -280,6 +283,25 @@ public partial class CustomNavigationView : NavigationView
             contentBackground.SetValue(Implicit.ShowAnimationsProperty, _slowFadeInAnimationSet);
             contentBackground.SetValue(Implicit.HideAnimationsProperty, _slowFadeOutAnimationSet);
         }
+
+        if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name == NavViewSettingsItem) is NavigationViewItem settingsItem)
+        {
+            _settingsItem = settingsItem;
+
+            UpdateSettingsItemStyle();
+            if (!string.IsNullOrEmpty(SettingsItemAccessKey))
+            {
+                settingsItem.AccessKey = SettingsItemAccessKey;
+            }
+
+            if (SettingsItemKeyboardAccelerators != null)
+            {
+                foreach (var item in SettingsItemKeyboardAccelerators)
+                {
+                    settingsItem.KeyboardAccelerators.Add(item);
+                }
+            }
+        }
     }
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
@@ -427,6 +449,17 @@ public partial class CustomNavigationView : NavigationView
             if (PaneSearchButtonStyle != null)
             {
                 _paneSearchButton.Style = PaneSearchButtonStyle;
+            }
+        }
+    }
+
+    private void UpdateSettingsItemStyle()
+    {
+        if (_settingsItem != null)
+        {
+            if (SettingsItemStyle != null)
+            {
+                _settingsItem.Style = SettingsItemStyle;
             }
         }
     }

@@ -206,6 +206,51 @@ public partial class CustomNavigationView
         set => SetValue(PaneSearchButtonStyleProperty, value);
     }
 
+    /// <summary>
+    /// Identifies the <see cref="SettingsItemAccessKeyProperty"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty SettingsItemAccessKeyProperty = DependencyProperty.Register(
+        nameof(SettingsItemAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the access key (mnemonic) for the settings navigation view item.
+    /// </summary>
+    public string? SettingsItemAccessKey
+    {
+        get => (string?)GetValue(SettingsItemAccessKeyProperty);
+        set => SetValue(SettingsItemAccessKeyProperty, value);
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="SettingsItemKeyboardAccelerators"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty SettingsItemKeyboardAcceleratorsProperty = DependencyProperty.Register(
+        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+
+    /// <summary>
+    /// Gets or sets the collection of keyboard combinations for the settings navigation view item.
+    /// </summary>
+    public IList<KeyboardAccelerator>? SettingsItemKeyboardAccelerators
+    {
+        get => (IList<KeyboardAccelerator>?)GetValue(SettingsItemKeyboardAcceleratorsProperty);
+        set => SetValue(SettingsItemKeyboardAcceleratorsProperty, value);
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="SettingsItemStyle"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty SettingsItemStyleProperty = DependencyProperty.Register(
+        nameof(SettingsItemStyle), typeof(Style), typeof(CustomNavigationView), new PropertyMetadata(null, OnSettingsItemStylePropertyChanged));
+
+    /// <summary>
+    /// Gets or sets the style that defines the look of the settings navigation view item.
+    /// </summary>
+    public Style? SettingsItemStyle
+    {
+        get => (Style?)GetValue(SettingsItemStyleProperty);
+        set => SetValue(SettingsItemStyleProperty, value);
+    }
+
     private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var owner = (CustomNavigationView)d;
@@ -236,6 +281,12 @@ public partial class CustomNavigationView
         owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
     }
 
+    private static void OnSettingsItemStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var owner = (CustomNavigationView)d;
+        owner.OnSettingsItemStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+    }
+
     protected virtual void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
     {
         UpdateOverlay();
@@ -261,5 +312,10 @@ public partial class CustomNavigationView
     protected virtual void OnPaneSearchButtonStyleChanged(Style? oldValue, Style? newValue)
     {
         UpdatePaneSearchButtonStyle();
+    }
+
+    protected virtual void OnSettingsItemStyleChanged(Style? oldValue, Style? newValue)
+    {
+        UpdateSettingsItemStyle();
     }
 }
