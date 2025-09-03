@@ -381,6 +381,15 @@
 
                 <ctc:SettingsCard
                     Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsAutoFullScreenDescription}"
+                    Header="{strings:Resources Key=SettingsAutoFullScreenHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE740;}"
+                    Visibility="{x:Bind helpers:DeviceInfoHelper.IsDesktop}">
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerAutoFullScreen, Mode=TwoWay}" />
+                </ctc:SettingsCard>
+
+                <ctc:SettingsCard
+                    Margin="{StaticResource SettingsCardMargin}"
                     Description="{strings:Resources Key=SettingsVolumeBoostDescription}"
                     Header="{strings:Resources Key=SettingsVolumeBoostHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE767;,
