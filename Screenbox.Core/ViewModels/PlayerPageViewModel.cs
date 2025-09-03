@@ -615,9 +615,9 @@ namespace Screenbox.Core.ViewModels
                     // If it's audio only, don't resize on next video playback
                     _resizeNext = false;
                 }
-                else if (_settingsService.PlayerAutoFullScreen && _windowService.ViewMode != WindowViewMode.FullScreen)
+                else if (_settingsService.PlayerAutoFullScreen && _windowService.ViewMode == WindowViewMode.Default)
                 {
-                    // Auto enter full screen for video files if setting is enabled and not already in full screen
+                    // Auto enter full screen for video files if setting is enabled and in default window mode
                     _windowService.TryEnterFullScreen();
                 }
             }
