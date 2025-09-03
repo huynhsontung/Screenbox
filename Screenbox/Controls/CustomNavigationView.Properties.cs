@@ -207,7 +207,7 @@ public partial class CustomNavigationView
     }
 
     /// <summary>
-    /// Identifies the <see cref="SettingsItemAccessKeyProperty"/> dependency property.
+    /// Identifies the <see cref="SettingsItemAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemAccessKeyProperty = DependencyProperty.Register(
         nameof(SettingsItemAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
