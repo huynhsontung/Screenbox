@@ -174,10 +174,13 @@ namespace Screenbox.Core.Services
                 // Update preferred launch windowing mode based on setting
                 try
                 {
-                    var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
-                    view.PreferredLaunchWindowingMode = value 
-                        ? Windows.UI.ViewManagement.ApplicationViewWindowingMode.FullScreen
-                        : Windows.UI.ViewManagement.ApplicationViewWindowingMode.Auto;
+                    var view = ApplicationView.GetForCurrentView();
+                    if (view != null)
+                    {
+                        ApplicationView.PreferredLaunchWindowingMode = value 
+                            ? ApplicationViewWindowingMode.FullScreen
+                            : ApplicationViewWindowingMode.Auto;
+                    }
                 }
                 catch
                 {
@@ -210,9 +213,12 @@ namespace Screenbox.Core.Services
             try
             {
                 var view = ApplicationView.GetForCurrentView();
-                view.PreferredLaunchWindowingMode = PlayerAutoFullScreen 
-                    ? ApplicationViewWindowingMode.FullScreen
-                    : ApplicationViewWindowingMode.Auto;
+                if (view != null)
+                {
+                    ApplicationView.PreferredLaunchWindowingMode = PlayerAutoFullScreen 
+                        ? ApplicationViewWindowingMode.FullScreen
+                        : ApplicationViewWindowingMode.Auto;
+                }
             }
             catch
             {
