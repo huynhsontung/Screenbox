@@ -5,10 +5,13 @@ using System.Numerics;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Shapes;
 
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewDisplayMode = Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode;
@@ -89,6 +92,8 @@ public partial class CustomNavigationView : NavigationView
     };
 
     private Grid? _overlayRoot;
+    private Border? _overlayChildBorder;
+    private Rectangle? _overlayChildRectangle;
     private Border? _contentBackground;
     private SplitView? _splitView;
     private Grid? _paneToggleButtonGrid;
@@ -272,7 +277,7 @@ public partial class CustomNavigationView : NavigationView
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (_splitView?.FindDescendant<Grid>() is { } splitViewGrid)
+        if (Overlay != null && _splitView?.FindDescendant<Grid>() is { } splitViewGrid)
         {
             splitViewGrid.Children.Add(_overlayRoot);
         }
@@ -289,6 +294,7 @@ public partial class CustomNavigationView : NavigationView
             _settingsItem = settingsItem;
 
             UpdateSettingsItemStyle();
+
             if (!string.IsNullOrEmpty(SettingsItemAccessKey))
             {
                 settingsItem.AccessKey = SettingsItemAccessKey;
@@ -312,9 +318,9 @@ public partial class CustomNavigationView : NavigationView
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
 
-        if (_overlayRoot != null)
+        if (_overlayChildRectangle != null)
         {
-            _overlayRoot.Tapped -= OverlayRootOnTapped;
+            _overlayChildRectangle.Tapped -= OverlayLightDismissLayer_OnTapped;
         }
     }
 
@@ -333,7 +339,7 @@ public partial class CustomNavigationView : NavigationView
         UpdateOverlayLayout();
     }
 
-    private void OverlayRootOnTapped(object sender, TappedRoutedEventArgs e)
+    private void OverlayLightDismissLayer_OnTapped(object sender, TappedRoutedEventArgs e)
     {
         if (DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen)
         {
@@ -366,22 +372,38 @@ public partial class CustomNavigationView : NavigationView
 
     private void UpdateOverlay()
     {
+        if (Overlay == null) return;
+
         if (_overlayRoot == null)
         {
             var overlayRoot = new Grid { Name = "OverlayRoot" };
             Grid.SetColumnSpan(overlayRoot, 2);
-            overlayRoot.Tapped += OverlayRootOnTapped;
 
             _overlayRoot = overlayRoot;
+
+            var overlayBorder = new Border();
+            _overlayChildBorder = overlayBorder;
+
+            var rect = new Rectangle
+            {
+                Name = "LightDismissLayer",
+                Fill = new SolidColorBrush(Colors.Transparent),
+                Visibility = Visibility.Collapsed
+            };
+            rect.Tapped += OverlayLightDismissLayer_OnTapped;
+
+            _overlayChildRectangle = rect;
+        }
+
+        if (_overlayChildBorder != null)
+        {
+            _overlayChildBorder.Child = Overlay;
         }
 
         _overlayRoot.Children.Clear();
-
-        if (Overlay != null)
-        {
-            _overlayRoot.Children.Add(Overlay);
-            UpdateOverlayLayout();
-        }
+        _overlayRoot.Children.Add(_overlayChildBorder);
+        _overlayRoot.Children.Add(_overlayChildRectangle);
+        UpdateOverlayLayout();
     }
 
     private void UpdateOverlayZIndex(int index)
@@ -406,7 +428,6 @@ public partial class CustomNavigationView : NavigationView
 
         switch (DisplayMode)
         {
-
             case NavigationViewDisplayMode.Expanded:
             case NavigationViewDisplayMode.Compact:
                 Grid.SetColumn(_overlayRoot, 1);
@@ -417,6 +438,45 @@ public partial class CustomNavigationView : NavigationView
                 Grid.SetColumn(_overlayRoot, 0);
                 Grid.SetColumnSpan(_overlayRoot, 2);
                 break;
+        }
+
+        UpdateOverlayLightDismissLayerFill();
+        UpdateOverlayLightDismissLayerVisibility();
+    }
+
+    private void UpdateOverlayLightDismissLayerFill()
+    {
+        if (_overlayChildRectangle == null) return;
+
+        if (_splitView != null)
+        {
+            // We use the ContentGrid LightDismissLayer rectangle fill to avoid tracking
+            // LightDismissOverlayMode, theme and high contrast changes ourselves.
+            if (_splitView?.FindDescendant<Rectangle>(r => r.Name == "LightDismissLayer") is Rectangle contentRootRect)
+            {
+                _overlayChildRectangle.Fill = contentRootRect.Fill;
+            }
+
+            //var dismissOverlayBrush = Application.Current.Resources["SplitViewLightDismissOverlayBackground"] as SolidColorBrush; // SystemControlPageBackgroundMediumAltMediumBrush
+
+            //_overlayChildRectangle.Fill = _splitView.LightDismissOverlayMode switch
+            //{
+            //    LightDismissOverlayMode.On => dismissOverlayBrush,
+            //    LightDismissOverlayMode.Auto => DeviceInfoHelper.IsXbox
+            //                        ? dismissOverlayBrush
+            //                        : new SolidColorBrush(Colors.Transparent),
+            //    _ => new SolidColorBrush(Colors.Transparent),
+            //};
+        }
+    }
+
+    private void UpdateOverlayLightDismissLayerVisibility()
+    {
+        if (_overlayChildRectangle != null)
+        {
+            bool isLayerVisible = DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen;
+
+            _overlayChildRectangle.Visibility = isLayerVisible ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
