@@ -1,4 +1,6 @@
-﻿using Windows.UI.Core;
+﻿#nullable enable
+
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace Screenbox.Triggers;
@@ -45,7 +47,7 @@ namespace Screenbox.Triggers;
 [Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
 public sealed class WindowActivationModeTrigger : StateTriggerBase
 {
-    private readonly CoreWindow _coreWindow;
+    private CoreWindow? _coreWindow;
 
     /// <summary>
     /// Identifies the <see cref="ActivationMode"/> dependency property.
@@ -66,37 +68,34 @@ public sealed class WindowActivationModeTrigger : StateTriggerBase
     {
         if (d is WindowActivationModeTrigger trigger)
         {
+            trigger.UpdateActivatedEventHandler();
             trigger.UpdateTrigger();
         }
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WindowActivationModeTrigger"/> class,
-    /// and registers a handler for when the window completes activation or deactivation.
-    /// </summary>
-    public WindowActivationModeTrigger()
+    private void UpdateActivatedEventHandler()
     {
         _coreWindow = Window.Current?.CoreWindow;
-        if (_coreWindow != null)
+
+        var coreWindow = _coreWindow;
+        if (coreWindow != null)
         {
-            _coreWindow.Activated += CoreWindow_Activated;
+            coreWindow.Activated -= OnActivated;
+
+            if (ActivationMode is not CoreWindowActivationMode.None)
+            {
+                coreWindow.Activated += OnActivated;
+            }
         }
     }
 
-    private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
+    private void OnActivated(CoreWindow sender, WindowActivatedEventArgs args)
     {
         UpdateTrigger();
     }
 
     private void UpdateTrigger()
     {
-        if (_coreWindow != null)
-        {
-            SetActive(_coreWindow.ActivationMode == ActivationMode);
-        }
-        else
-        {
-            SetActive(false);
-        }
+        SetActive(_coreWindow?.ActivationMode == ActivationMode);
     }
 }
