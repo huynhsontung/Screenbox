@@ -22,10 +22,10 @@ Before you begin, ensure you have the following installed:
 - **Visual Studio 2022** (Community, Professional, or Enterprise) or later
   - Required workloads:
     - **WinUI application development**
-  - Optional components (recommended):
-    - **Universal Windows Platform tools**
-    - **Windows 11 SDK (10.0.22621)**
+    - **Universal Windows Platform tools** (check this option)
+    - **Windows 11 SDK (10.0.22621)** (check this option)
 - **Windows 10** version 1903 (build 18362) or later, or **Windows 11**
+- **Developer mode** enabled in Windows settings
 
 > **Note**: JetBrains Rider should also work but specific setup instructions aren't covered in this guide.
 
@@ -34,7 +34,12 @@ Before you begin, ensure you have the following installed:
 ### 1. Fork and Clone the Repository
 
 1. **Fork the repository** on GitHub by clicking the "Fork" button
-2. **Clone your fork** to your local machine:
+2. **Clone your fork** - you can do this directly in Visual Studio:
+   - Open Visual Studio
+   - Select "Clone a repository"
+   - Enter your fork's URL: `https://github.com/YOUR_USERNAME/Screenbox.git`
+   
+   Alternatively, clone via command line:
    ```bash
    git clone https://github.com/YOUR_USERNAME/Screenbox.git
    cd Screenbox
@@ -44,7 +49,7 @@ Before you begin, ensure you have the following installed:
 
 1. **Open the solution** in Visual Studio: `Screenbox.sln`
 2. **Build the solution** to restore NuGet packages: `Ctrl+Shift+B`
-3. **Set the platform** to x64 and **start debugging**: `F5`
+3. **Set the platform** to match your machine's architecture (typically x64) and **start debugging**: `F5`
 
 Visual Studio's built-in Git integration should be sufficient for most development workflows.
 
@@ -73,18 +78,19 @@ Screenbox.sln
 - `Screenbox.Core/Models/`: Data structures and entities
 - `Screenbox/Strings/`: Localization resources
 
+For a detailed breakdown of the entire codebase architecture, see the [Project Structure documentation](docs/PROJECT_STRUCTURE.md).
+
 ## 🔄 Development Workflow
 
 ### Creating a Pull Request
 
-1. **Create a feature branch**: `git checkout -b feature/your-feature-name`
-2. **Make your changes** and commit them with descriptive messages
-3. **Push to your fork**: `git push origin feature/your-feature-name`
-4. **Open a pull request** on GitHub with a clear description
+1. **Create a feature branch** from the main branch
+2. **Make your changes** and commit them with clear, descriptive messages
+3. **Push to your fork** and open a pull request on GitHub
 
 ### Pull Request Guidelines
 
-- Use descriptive titles that start with a prefix like `feat:`, `fix:`, or `docs:`
+- Use descriptive titles following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard (e.g., `feat:`, `fix:`, `docs:`, `refactor:`, etc.)
 - Include a clear description of what changes were made and why
 - Link to relevant issues if applicable
 ## 🧹 Code Guidelines
@@ -96,17 +102,7 @@ Before committing changes, please:
 1. **Run XAML Styler** on all `.xaml` files you've modified
 2. **Use Code Cleanup** (`Ctrl+K, Ctrl+E`) on all `.cs` files you've modified
 
-### EditorConfig
-
-The project includes a comprehensive `.editorconfig` file that defines formatting rules. Key highlights:
-
-- **C# files**: 4-space indentation, UTF-8 with BOM encoding
-- **XAML files**: 4-space indentation, UTF-8 with BOM encoding
-- **Private fields**: Use underscore prefix (`_fieldName`)
-- **Async methods**: End with "Async" suffix
-- **Interfaces**: Start with "I" prefix
-
-Your IDE should automatically apply these rules when the `.editorconfig` file is present.
+Your IDE should automatically apply the project's formatting rules when the `.editorconfig` file is present.
 ## 🧪 Testing
 
 ### Manual Testing Checklist
@@ -122,11 +118,7 @@ When testing your changes:
 ### Platform Testing
 
 While not required, testing on different architectures (x64, x86, ARM64) is helpful if you have access to those systems.
-            if (IsPlaying)
-            {
-                await _mediaService.PauseAsync();
-            }
-            else
+
 ## 🌍 Translation
 
 ### Adding New Strings
@@ -146,7 +138,13 @@ The main resource files are:
 
 For translating the app to other languages:
 - **Crowdin (Recommended)**: [crowdin.com/project/screenbox](https://crowdin.com/project/screenbox)
-- **Local translation**: Create copies of the `en-US` resource files in the appropriate language folder
+- **Local translation**: Only recommended for languages not available on Crowdin
+
+### Local Translation Workflow
+
+If your language isn't available on Crowdin, you can translate locally by creating copies of the `en-US` resource files in the appropriate language folder under `Screenbox\Strings`. Use [IETF language tags](https://www.venea.net/web/culture_code) to name the folder (e.g., `fr-FR` for French (France), `es-ES` for Spanish (Spain)). Localizable file types are `.resw` and `.md`.
+
+For detailed guidance on the translation workflow, see the [Translation section in the main README](README.md#translation).
 
 ## 📤 Submitting Contributions
 
