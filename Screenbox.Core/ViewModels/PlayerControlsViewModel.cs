@@ -415,7 +415,7 @@ namespace Screenbox.Core.ViewModels
                 StorageFolder destFolder =
                     await defaultSaveFolder.CreateFolderAsync("Screenbox",
                         CreationCollisionOption.OpenIfExists);
-                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyymmdd_HHmmss}{file.FileType}",
+                return await file.CopyAsync(destFolder, $"Screenbox_{DateTime.Now:yyyyMMdd_HHmmss}{file.FileType}",
                     NameCollisionOption.GenerateUniqueName);
             }
             finally
