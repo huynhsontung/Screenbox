@@ -22,34 +22,41 @@ Before you begin, ensure you have the following installed:
 - **Visual Studio 2022** (Community, Professional, or Enterprise) or later
   - Required workloads:
     - **WinUI application development**
-    - **Universal Windows Platform tools** (check this option)
-    - **Windows 11 SDK (10.0.22621)** (check this option)
+  - Required optional components:
+    - **Universal Windows Platform tools**
+    - **Windows 11 SDK (10.0.22621.0)**
+  - Recommended extensions:
+    - **XAML Styler**
 - **Windows 10** version 1903 (build 18362) or later, or **Windows 11**
-- **Developer mode** enabled in Windows settings
+- **Developer Mode** enabled in Windows settings
 
-> **Note**: JetBrains Rider should also work but specific setup instructions aren't covered in this guide.
+> [!NOTE]
+> JetBrains Rider should also work but specific setup instructions aren't covered in this guide.
 
 ## ⚙️ Development Environment Setup
 
 ### 1. Fork and Clone the Repository
 
-1. **Fork the repository** on GitHub by clicking the "Fork" button
-2. **Clone your fork** - you can do this directly in Visual Studio:
+1. **Fork the repository** On GitHub, click the **Fork** button
+2. **Clone your fork**
    - Open Visual Studio
-   - Select "Clone a repository"
-   - Enter your fork's URL: `https://github.com/YOUR_USERNAME/Screenbox.git`
+   - Select "Clone Repository..." from the File menu
+   - Enter your fork's URL, replace `YOUR-USERNAME` with your GitHub username:
+     ```
+     https://github.com/YOUR-USERNAME/Screenbox.git
+     ```
    
-   Alternatively, clone via command line:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/Screenbox.git
-   cd Screenbox
-   ```
+     Or, if you are familiar with Git:
+     ```bash
+     git clone https://github.com/YOUR-USERNAME/Screenbox.git
+     ```
 
 ### 2. Open and Build the Solution
 
 1. **Open the solution** in Visual Studio: `Screenbox.sln`
-2. **Build the solution** to restore NuGet packages: `Ctrl+Shift+B`
-3. **Set the platform** to match your machine's architecture (typically x64) and **start debugging**: `F5`
+2. **Set the platform** to match your machine's architecture (typically x64)
+3. **Build the solution** to restore NuGet packages: `F6`
+4. **Start debugging**: `F5`
 
 Visual Studio's built-in Git integration should be sufficient for most development workflows.
 
@@ -84,25 +91,37 @@ For a detailed breakdown of the entire codebase architecture, see the [Project S
 
 ### Creating a Pull Request
 
-1. **Create a feature branch** from the main branch
+1. **Create a new branch** from the main branch
+   - Select "New Branch..." from the Git menu
+   - Enter a short, descriptive name for your branch
+   
+   Or, if you are familiar with Git:
+   ```bash
+   git branch BRANCH-NAME
+   git checkout BRANCH-NAME
+   ```
 2. **Make your changes** and commit them with clear, descriptive messages
 3. **Push to your fork** and open a pull request on GitHub
+
+For a full walkthrough of the processs, see the [GitHub documentation](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
 ### Pull Request Guidelines
 
 - Use descriptive titles following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard (e.g., `feat:`, `fix:`, `docs:`, `refactor:`, etc.)
 - Include a clear description of what changes were made and why
 - Link to relevant issues if applicable
+
 ## 🧹 Code Guidelines
 
 ### Code Formatting
 
 Before committing changes, please:
 
-1. **Run XAML Styler** on all `.xaml` files you've modified
+1. **Run XAML Styler** (`Ctrl+K, Ctrl+2`) on all `.xaml` files you've modified
 2. **Use Code Cleanup** (`Ctrl+K, Ctrl+E`) on all `.cs` files you've modified
 
-Your IDE should automatically apply the project's formatting rules when the `.editorconfig` file is present.
+Your IDE should automatically use the project’s `.editorconfig` rules for formatting.
+
 ## 🧪 Testing
 
 ### Manual Testing Checklist
@@ -117,7 +136,7 @@ When testing your changes:
 
 ### Platform Testing
 
-While not required, testing on different architectures (x64, x86, ARM64) is helpful if you have access to those systems.
+While not required, testing on different architectures (x64, x86, ARM64) and platforms (such as Xbox One and Xbox Series consoles) is helpful if you have access to these systems.
 
 ## 🌍 Translation
 
@@ -125,7 +144,7 @@ While not required, testing on different architectures (x64, x86, ARM64) is help
 
 When adding features that require new user-facing text:
 
-1. **Only add new strings to the `.en-US.resw` files** in the `Screenbox/Strings/en-US/` directory
+1. **Only add new strings to the `.resw` files** in the `Screenbox/Strings/en-US/` directory
 2. **Use ReswPlus features** for pluralization and advanced formatting when needed
 3. **Follow existing naming conventions** for resource keys
 
@@ -140,9 +159,12 @@ For translating the app to other languages:
 - **Crowdin (Recommended)**: [crowdin.com/project/screenbox](https://crowdin.com/project/screenbox)
 - **Local translation**: Only recommended for languages not available on Crowdin
 
-### Local Translation Workflow
+#### Local Translation Workflow
 
-If your language isn't available on Crowdin, you can translate locally by creating copies of the `en-US` resource files in the appropriate language folder under `Screenbox\Strings`. Use [IETF language tags](https://www.venea.net/web/culture_code) to name the folder (e.g., `fr-FR` for French (France), `es-ES` for Spanish (Spain)). Localizable file types are `.resw` and `.md`.
+If your language isn't available on Crowdin, you can either request its addition or proceed with local translation. Just follow these steps: 
+
+- Under `Screenbox/Strings`, create a new sub-folder, for example "fr-FR" for French (France), using the [BCP-47 language tag](https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/msix/app-package-requirements#supported-languages) for the folder name.
+- Copy the contents of the `Screenbox/Strings/en-US/` folder into your language folder and translate them.
 
 For detailed guidance on the translation workflow, see the [Translation section in the main README](README.md#translation).
 
