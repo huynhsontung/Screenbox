@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.WinUI;
+﻿#nullable enable
+
+using CommunityToolkit.WinUI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -68,7 +70,7 @@ public static class ListViewExtensions
     /// Identifies the attached dependency property that specifies the minimum height of the <see cref="ListView"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemMinHeightProperty = DependencyProperty.RegisterAttached(
-        "ItemMinHeight", typeof(double), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemMinHeightPropertyChanged));
+        "ItemMinHeight", typeof(double), typeof(ListViewExtensions), new PropertyMetadata(default(double), OnItemMinHeightPropertyChanged));
 
     /// <summary>
     /// Gets the value of the ItemMinHeight attached property from the specified <see cref="ListViewBase"/>.
@@ -143,17 +145,6 @@ public static class ListViewExtensions
         }
     }
 
-    private static void ItemCornerRadiusOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-    {
-        if (args.Phase > 0 || args.InRecycleQueue) return;
-        var presenter = args.ItemContainer.FindDescendant<ListViewItemPresenter>();
-        if (presenter != null)
-        {
-            var cornerRadius = GetItemCornerRadius(sender);
-            presenter.CornerRadius = cornerRadius;
-        }
-    }
-
     private static void OnItemMarginPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
     {
         if (sender is ListViewBase listViewBase)
@@ -169,18 +160,56 @@ public static class ListViewExtensions
         }
     }
 
+    private static void OnItemMinHeightPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        if (sender is ListViewBase listViewBase)
+        {
+            listViewBase.ContainerContentChanging -= ItemMinHeightOnContainerContentChanging;
+            listViewBase.Unloaded -= OnListViewBaseUnloaded;
+
+            if (ItemMinHeightProperty != null)
+            {
+                listViewBase.ContainerContentChanging += ItemMinHeightOnContainerContentChanging;
+                listViewBase.Unloaded += OnListViewBaseUnloaded;
+            }
+        }
+    }
+
+    private static void OnItemIsFocusEngagementEnabledPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+    {
+        if (sender is ListViewBase listViewBase)
+        {
+            listViewBase.ContainerContentChanging -= ItemIsFocusEngagementEnabledOnContainerContentChanging;
+            listViewBase.Unloaded -= OnListViewBaseUnloaded;
+
+            if (ItemIsFocusEngagementEnabledProperty != null)
+            {
+                listViewBase.ContainerContentChanging += ItemIsFocusEngagementEnabledOnContainerContentChanging;
+                listViewBase.Unloaded += OnListViewBaseUnloaded;
+            }
+        }
+    }
+
+
+    private static void ItemCornerRadiusOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
+    {
+        if (args.Phase > 0 || args.InRecycleQueue) return;
+
+        var presenter = args.ItemContainer.FindDescendant<ListViewItemPresenter>();
+        if (presenter != null)
+        {
+            var cornerRadius = GetItemCornerRadius(sender);
+            presenter.CornerRadius = cornerRadius;
+        }
+    }
+
     private static void ItemMarginOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
+
         var margin = GetItemMargin(sender);
-        if (!IsApiContract13Present)
-        {
-            // Due to the absence of a Border element in the Windows 10 ListViewItem,
-            // margin must be set at the container level. This introduces an inactive
-            // hit-test region around the visual bounds of the item.
-            args.ItemContainer.Margin = margin;
-        }
-        else
+
+        if (IsApiContract13Present)
         {
             // The ListViewItem in Windows 11 appears to have a Border element with a margin of '4,2,4,2',
             // likely intended to visually separate items while adhering to the minimum
@@ -212,35 +241,33 @@ public static class ListViewExtensions
                 border.Margin = margin;
             }
         }
-    }
-
-    private static void OnItemMinHeightPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        if (sender is ListViewBase listViewBase)
+        else
         {
-            listViewBase.ContainerContentChanging -= ItemMinHeightOnContainerContentChanging;
-            listViewBase.Unloaded -= OnListViewBaseUnloaded;
-
-            if (ItemMinHeightProperty != null)
-            {
-                listViewBase.ContainerContentChanging += ItemMinHeightOnContainerContentChanging;
-                listViewBase.Unloaded += OnListViewBaseUnloaded;
-            }
+            // Due to the absence of a Border element in the Windows 10 ListViewItem,
+            // margin must be set at the container level. This introduces an inactive
+            // hit-test region around the visual bounds of the item.
+            args.ItemContainer.Margin = margin;
         }
     }
 
     private static void ItemMinHeightOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
-        var minHeight = GetItemMinHeight(sender);
+
+        double minHeight = GetItemMinHeight(sender);
+
         if (!IsApiContract13Present && ItemMarginProperty != null)
         {
             var margin = GetItemMargin(sender);
             double offsetMargin = margin.Top + margin.Bottom;
+            double normalizedMinHeight = minHeight - offsetMargin;
 
-            // If a margin is applied to the container, we have to subtract the vertical values
-            // from the minimum height to ensure it matches the Windows 11 ListViewItem dimensions.
-            args.ItemContainer.MinHeight = minHeight - offsetMargin;
+            if (normalizedMinHeight >= 0)
+            {
+                // If a margin is applied to the container, we have to subtract the vertical values
+                // from the minimum height to ensure it matches the Windows 11 ListViewItem dimensions.
+                args.ItemContainer.MinHeight = normalizedMinHeight;
+            }
         }
         else
         {
@@ -248,24 +275,10 @@ public static class ListViewExtensions
         }
     }
 
-    private static void OnItemIsFocusEngagementEnabledPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
-    {
-        if (sender is ListViewBase listViewBase)
-        {
-            listViewBase.ContainerContentChanging -= ItemIsFocusEngagementEnabledOnContainerContentChanging;
-            listViewBase.Unloaded -= OnListViewBaseUnloaded;
-
-            if (ItemIsFocusEngagementEnabledProperty != null)
-            {
-                listViewBase.ContainerContentChanging += ItemIsFocusEngagementEnabledOnContainerContentChanging;
-                listViewBase.Unloaded += OnListViewBaseUnloaded;
-            }
-        }
-    }
-
     private static void ItemIsFocusEngagementEnabledOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
+
         args.ItemContainer.IsFocusEngagementEnabled = GetItemIsFocusEngagementEnabled(sender);
     }
 }
