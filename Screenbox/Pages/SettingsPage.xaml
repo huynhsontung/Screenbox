@@ -413,6 +413,23 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
                         </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsControlsHideDelayHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsControlsHideDelayHeader}"
+                                SelectedIndex="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <x:String>HideDelay1s</x:String>
+                                <x:String>HideDelay2s</x:String>
+                                <x:String>HideDelay3s</x:String>
+                                <x:String>HideDelay4s</x:String>
+                                <x:String>HideDelay5s</x:String>
+                            </ComboBox>
+                        </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 

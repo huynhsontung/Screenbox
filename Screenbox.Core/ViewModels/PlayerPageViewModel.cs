@@ -576,9 +576,11 @@ namespace Screenbox.Core.ViewModels
             return true;
         }
 
-        private void DelayHideControls(int delayInSeconds = 3)
+        private void DelayHideControls()
         {
             if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
+
+            int delayInSeconds = _settingsService.PlayerControlsHideDelay;
             _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));
         }
 
@@ -592,7 +594,7 @@ namespace Screenbox.Core.ViewModels
         {
             if (_visibilityOverride) return;
             ControlsHidden = false;
-            DelayHideControls(4);
+            DelayHideControls();
         }
 
         private async void ProcessOpeningMedia(MediaViewModel? current)

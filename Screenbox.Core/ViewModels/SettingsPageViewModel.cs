@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private bool _playerShowChapters;
+        [ObservableProperty] private int _playerControlsHideDelay;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
@@ -99,6 +100,15 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
+            _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay switch
+            {
+                1 => 0,
+                2 => 1,
+                3 => 2,
+                4 => 3,
+                5 => 4,
+                _ => 2  // Default to 3 seconds (Index 2)
+            };
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _theme = ((int)_settingsService.Theme + 2) % 3;
@@ -185,6 +195,21 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerShowChapters = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowChapters), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerControlsHideDelayChanged(int value)
+        {
+            _settingsService.PlayerControlsHideDelay = value switch
+            {
+                // Index => Seconds
+                0 => 1,
+                1 => 2,
+                2 => 3,
+                3 => 4,
+                4 => 5,
+                _ => 3
+            };
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerControlsHideDelay), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)
