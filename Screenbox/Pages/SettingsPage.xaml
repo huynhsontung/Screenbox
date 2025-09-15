@@ -401,19 +401,20 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
-                <ctc:SettingsCard
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
+                    Description="{x:Bind strings:Resources.SettingsOverlayControlsDescription}"
+                    Header="{x:Bind strings:Resources.SettingsOverlayControlsHeader}"
                     HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowChaptersHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowChaptersToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
-                </ctc:SettingsCard>
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowControlsHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"

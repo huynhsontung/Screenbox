@@ -648,6 +648,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
   </data>
+  <data name="SettingsOverlayControlsHeader" xml:space="preserve">
+    <value>Overlay controls</value>
+  </data>
+  <data name="SettingsOverlayControlsDescription" xml:space="preserve">
+    <value>Change the appearance and behavior of the on-screen player controls</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestures</value>
   </data>
