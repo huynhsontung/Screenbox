@@ -78,14 +78,14 @@ public partial class CustomNavigationView : NavigationView
     };
     private static readonly ImplicitAnimationSet _paneShowAnimationSet = new()
     {
-       new TranslationAnimation { From = "-48,0,0", To = "0,0,0", Duration = TimeSpan.FromMilliseconds(167), EasingMode = EasingMode.EaseInOut },
+       new TranslationAnimation { From = "-48,0,0", To = "0,0,0", Duration = TimeSpan.FromMilliseconds(167), EasingMode = EasingMode.EaseOut },
     };
-    private static readonly ImplicitAnimationSet _showContentAnimationSet = new()
+    private static readonly ImplicitAnimationSet _contentShowAnimationSet = new()
     {
         new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear },
-        new TranslationAnimation { To = "0,0,0", Duration = TimeSpan.FromMilliseconds(500), EasingMode = EasingMode.EaseOut }
+        new TranslationAnimation { To = "0,0,0", Duration = TimeSpan.FromMilliseconds(400), EasingMode = EasingMode.EaseOut }
     };
-    private static readonly ImplicitAnimationSet _hideContentAnimationSet = new()
+    private static readonly ImplicitAnimationSet _contentHideAnimationSet = new()
     {
         new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear },
         new TranslationAnimation { To = "0,-400,0", Duration = TimeSpan.FromMilliseconds(250), EasingMode = EasingMode.EaseIn }
@@ -234,8 +234,8 @@ public partial class CustomNavigationView : NavigationView
             _contentGrid = contentGrid;
 
             // Set implicit animations to play when ContentVisibility changes.
-            Implicit.SetShowAnimations(contentGrid, _showContentAnimationSet);
-            Implicit.SetHideAnimations(contentGrid, _hideContentAnimationSet);
+            Implicit.SetShowAnimations(contentGrid, _contentShowAnimationSet);
+            Implicit.SetHideAnimations(contentGrid, _contentHideAnimationSet);
         }
 
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
