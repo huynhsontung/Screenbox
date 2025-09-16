@@ -118,29 +118,29 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FrameSavedNotificationTitle" xml:space="preserve">
-    <value>Đã lưu khung</value>
+    <value>Đã lưu khung hình</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
     <value>Ảnh trong ảnh</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Lưu khung hiện tại</value>
+    <value>Lưu khung hình hiện tại</value>
   </data>
   <data name="Loop" xml:space="preserve">
-    <value>Lặp</value>
+    <value>Lặp lại</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Tốc độ phát lại</value>
+    <value>Tốc độ phát</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
     <value>Âm lượng {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
-    <value>Không lưu được khung</value>
+    <value>Không lưu được khung hình</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Thời gian trôi qua</value>
+    <value>Thời gian đã phát</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
     <value>Thời gian còn lại</value>
@@ -255,7 +255,7 @@
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>Thư mục này trống</value>
@@ -356,7 +356,7 @@
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Nghệ sĩ</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Tốc độ bit</value>
@@ -449,7 +449,7 @@
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Danh sách phát</value>
   </data>
   <data name="Artists" xml:space="preserve">
     <value>Nghệ sĩ</value>
@@ -503,7 +503,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
@@ -879,7 +879,7 @@
     <value>Nhạc</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Video</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
     <value>Hiển thị album</value>
