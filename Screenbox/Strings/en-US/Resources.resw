@@ -947,20 +947,13 @@
   <data name="SettingsControlsHideDelayHeader" xml:space="preserve">
     <value>Dismiss controls after this amount of time without interaction</value>
   </data>
-  <data name="HideDelay1s" xml:space="preserve">
-    <value>1 second</value>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
-  <data name="HideDelay2s" xml:space="preserve">
-    <value>2 seconds</value>
-  </data>
-  <data name="HideDelay3s" xml:space="preserve">
-    <value>3 seconds</value>
-  </data>
-  <data name="HideDelay4s" xml:space="preserve">
-    <value>4 seconds</value>
-  </data>
-  <data name="HideDelay5s" xml:space="preserve">
-    <value>5 seconds</value>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
     <value>App language</value>

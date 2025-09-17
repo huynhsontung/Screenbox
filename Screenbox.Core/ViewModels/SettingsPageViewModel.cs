@@ -52,6 +52,8 @@ namespace Screenbox.Core.ViewModels
 
         public List<Models.Language> AvailableLanguages { get; }
 
+        public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
+
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -100,15 +102,7 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
-            _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay switch
-            {
-                1 => 0,
-                2 => 1,
-                3 => 2,
-                4 => 3,
-                5 => 4,
-                _ => 2  // Default to 3 seconds (Index 2)
-            };
+            _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _theme = ((int)_settingsService.Theme + 2) % 3;
@@ -199,16 +193,7 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnPlayerControlsHideDelayChanged(int value)
         {
-            _settingsService.PlayerControlsHideDelay = value switch
-            {
-                // Index => Seconds
-                0 => 1,
-                1 => 2,
-                2 => 3,
-                3 => 4,
-                4 => 5,
-                _ => 3
-            };
+            _settingsService.PlayerControlsHideDelay = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerControlsHideDelay), typeof(SettingsPageViewModel)));
         }
 

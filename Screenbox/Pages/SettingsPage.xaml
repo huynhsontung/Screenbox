@@ -32,6 +32,7 @@
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
         <converters:LanguageLayoutDirectionToFlowDirectionConverter x:Key="LanguageLayoutDirectionToFlowDirectionConverter" />
+        <converters:IntToUnitStringConverter x:Key="HideDelayOptionsToUnitStringConverter" Unit="Seconds" />
 
         <!--  Section header text style  -->
         <Style
@@ -417,17 +418,13 @@
                             <ComboBox
                                 MinWidth="150"
                                 AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsControlsHideDelayHeader}"
-                                SelectedIndex="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
+                                ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
+                                SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
-                                    <DataTemplate x:DataType="x:String">
-                                        <TextBlock Text="{x:Bind Converter={StaticResource ResourceNameToResourceStringConverter}}" />
+                                    <DataTemplate x:DataType="x:Int32">
+                                        <TextBlock Text="{x:Bind Converter={StaticResource HideDelayOptionsToUnitStringConverter}}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
-                                <x:String>HideDelay1s</x:String>
-                                <x:String>HideDelay2s</x:String>
-                                <x:String>HideDelay3s</x:String>
-                                <x:String>HideDelay4s</x:String>
-                                <x:String>HideDelay5s</x:String>
                             </ComboBox>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
