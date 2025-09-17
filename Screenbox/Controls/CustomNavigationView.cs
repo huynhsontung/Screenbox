@@ -27,11 +27,11 @@ namespace Screenbox.Controls;
 /// <remarks>
 /// <para>The <see cref="CustomNavigationView"/> provides additional features such customizable access keys,
 /// keyboard accelerators, and styles for the buttons that are built-in to NavigationView.</para>
-/// It also enables changing the visibility of navigation content and rendering a custom overlay
-/// with configurable z-order.
+/// It also supports rendering an overlay with configurable z-order and a <see cref="UIElement"/> as its content,
+/// while allowing the navigation pane and main content visibility to be changed independently of the overlay.
 /// <para>Key features include:</para>
 /// <list type="bullet">
-/// <item><description><strong>Overlay:</strong> Displayed custom content on the same layer as the navigation pane.</description></item>
+/// <item><description><strong>Overlay:</strong> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
 /// <item><description><strong>Styling:</strong> Apply custom styles to built-in buttons.</description></item>
 /// <item><description><strong>Accessibility:</strong> Configure built-in buttons access keys and keyboard accelerators.</description></item>
 /// <item><description><strong>Motion:</strong> Fluid animations for content when visibility changes.</description></item>
@@ -49,7 +49,7 @@ namespace Screenbox.Controls;
 ///     &lt;/controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators&gt;
 /// 
 ///     &lt;controls:CustomNavigationView.Overlay&gt;
-///         &lt;Border Background="Red" /&gt;
+///         &lt;Border Background="Red" Height="200" /&gt;
 ///     &lt;/controls:CustomNavigationView.Overlay&gt;
 /// &lt;/controls:CustomNavigationView&gt;
 /// </code>

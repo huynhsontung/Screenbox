@@ -15,8 +15,8 @@ public partial class CustomNavigationView
         nameof(Overlay), typeof(UIElement), typeof(CustomNavigationView), new PropertyMetadata(null, OnOverlayPropertyChanged));
 
     /// <summary>
-    /// Gets or sets the content to be displayed as an overlay at the same
-    /// visual hierarchy as the <see cref="Windows.UI.Xaml.Controls.SplitView"/> pane and content.
+    /// Gets or sets the content to be displayed as an overlay. By default, the overlay appears
+    /// between the <see cref="Windows.UI.Xaml.Controls.SplitView"/> pane and the content area, but its order can be adjusted.
     /// </summary>
     public UIElement? Overlay
     {
@@ -34,7 +34,10 @@ public partial class CustomNavigationView
     /// Gets or sets the Z-order of the overlay element.
     /// </summary>
     /// <value>The ZIndex value in the range ±1,000,000. The default is 0.</value>
-    /// <remarks>Values above 1 will render the element above the navigation pane.</remarks>
+    /// <remarks>
+    /// Values above 1 will render the element above the navigation pane,
+    /// and values below -1 renders the element below the main content.
+    /// </remarks>
     public int OverlayZIndex
     {
         get => (int)GetValue(OverlayZIndexProperty);
