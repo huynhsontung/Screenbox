@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls;
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Screenbox.Controls;
+
 public sealed partial class MediaListViewItem : UserControl
 {
     public static readonly DependencyProperty PlayCommandProperty = DependencyProperty.Register(
@@ -43,20 +44,30 @@ public sealed partial class MediaListViewItem : UserControl
     private GridLength BoolToGridLength(bool visibility) =>
         visibility ? new GridLength(1, GridUnitType.Star) : new GridLength(0);
 
+    private void UpdatePlayButtonsAutomationName(bool isPlaying)
+    {
+        var media = DataContext as MediaViewModel;
+        string playPauseText = isPlaying ? Strings.Resources.Pause : Strings.Resources.Play;
+
+        AutomationProperties.SetName(PlayButton, $"{playPauseText} {media?.Name}");
+    }
+
     private void OnDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         _firstPlay = true;
         var media = DataContext as MediaViewModel;
         AdaptiveLayoutBehavior.Override = media?.MediaType != MediaPlaybackType.Music ? 0 : -1;
 
-        AutomationProperties.SetName(PlayButton, $"{Strings.Resources.Play} {media?.Name}"); // TODO: Handle Play/Pause state change
+        UpdatePlayButtonsAutomationName(media?.IsPlaying ?? false);
         AutomationProperties.SetName(ArtistButton, $"{Strings.Resources.Artist}: {media?.MainArtist?.Name}");
         AutomationProperties.SetName(AlbumButton, $"{Strings.Resources.Albums}: {media?.Album?.Name}");
     }
 
     private async void PlayingStatesOnCurrentStateChanged(object sender, VisualStateChangedEventArgs e)
     {
-        if (_firstPlay && e.NewState?.Name == nameof(Playing))
+        bool isPlaying = e.NewState?.Name == nameof(Playing);
+        UpdatePlayButtonsAutomationName(isPlaying); // TODO: Use MediaViewModel PropertyChanged (IsPlaying) event.
+        if (_firstPlay && isPlaying)
         {
             _firstPlay = false;
             await PlayingIndicator.PlayAsync(0, 1, true);
