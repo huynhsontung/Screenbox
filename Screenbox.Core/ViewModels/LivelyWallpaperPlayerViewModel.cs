@@ -136,16 +136,19 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             return;
         }
 
-        using var jsonDocument = JsonDocument.Parse(jsonString);
-        var jsonObject = jsonDocument.RootElement;
-        if (jsonObject.ValueKind != JsonValueKind.Object)
-            return;
+        var jsonOptions = new JsonDocumentOptions { AllowTrailingCommas = true };
+        using var jsonDocument = JsonDocument.Parse(jsonString, jsonOptions);
+        var jsonElement = jsonDocument.RootElement;
 
-        foreach (var item in jsonObject.EnumerateObject())
+        foreach (var item in jsonElement.EnumerateObject())
         {
-            var typeToken = item.Value.GetProperty("type");
-            var valueToken = item.Value.GetProperty("value");
-            if (typeToken.ValueKind == JsonValueKind.Null || valueToken.ValueKind == JsonValueKind.Null) continue;
+            if (!item.Value.TryGetProperty("type", out var typeToken) ||
+                !item.Value.TryGetProperty("value", out var valueToken))
+                continue;
+
+            if (typeToken.ValueKind == JsonValueKind.Null || valueToken.ValueKind == JsonValueKind.Null)
+                continue;
+
             switch (typeToken.GetString())
             {
                 case "slider":
@@ -160,12 +163,18 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
                 case "color":
                     await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
                     break;
+                //case "textbox":
+                //    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
+                //    break;
                 case "folderDropdown":
-                    var relativePath = Path.Combine(item.Value.GetProperty("folder").GetString() ?? string.Empty,
-                        valueToken.GetString() ?? string.Empty);
-                    var filePath = Path.Combine(Source.Path, relativePath);
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name,
-                        File.Exists(filePath) ? relativePath : null);
+                    if (item.Value.TryGetProperty("folder", out var folderToken))
+                    {
+                        var relativePath = Path.Combine(folderToken.GetString() ?? string.Empty,
+                            valueToken.GetString() ?? string.Empty);
+                        var filePath = Path.Combine(Source.Path, relativePath);
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name,
+                            File.Exists(filePath) ? relativePath : null);
+                    }
                     break;
                 case "button":
                 case "label":
