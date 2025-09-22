@@ -5,7 +5,7 @@
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
@@ -296,14 +296,12 @@
             x:Name="ItemList"
             Grid.Row="1"
             Padding="{StaticResource ContentPagePadding}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
-            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind AlbumSource.View}"
-            SelectionMode="None">
+            SelectionMode="None"
+            Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <controls:MediaListViewItem
