@@ -55,6 +55,7 @@ namespace Screenbox.Controls
             SelectionCheckBox.IsChecked = selectedCount == 0
                 ? false
                 : selectedCount == PlaylistListView.Items.Count ? true : null;
+            ToolTipService.SetToolTip(SelectionCheckBox, GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked));
 
             if (ViewModel.EnableMultiSelect)
             {
@@ -149,15 +150,14 @@ namespace Screenbox.Controls
         /// </summary>
         /// <param name="value">A nullable boolean representing the <see cref="CheckBox"/> state.</param>
         /// <returns>
-        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked;
-        /// otherwise throw not implemented exception.
+        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked or
+        /// intermediate.
         /// </returns>
-        /// <exception cref="NotImplementedException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         private string GetSelectionCheckBoxToolTip(bool? value)
         {
-            return value is null
-                ? throw new NotImplementedException()
-                : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
+            return value is true
+                ? Strings.Resources.SelectNoneToolTip
+                : Strings.Resources.SelectAllToolTip;
         }
     }
 }
