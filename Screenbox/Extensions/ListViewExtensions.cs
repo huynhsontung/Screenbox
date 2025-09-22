@@ -18,16 +18,19 @@ public static class ListViewExtensions
     /// Identifies the attached dependency property that specifies the <see cref="CornerRadius"/> of <see cref="ListViewBase"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemCornerRadiusProperty = DependencyProperty.RegisterAttached(
-        "ItemCornerRadius", typeof(CornerRadius), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemCornerRadiusPropertyChanged));
+        "ItemCornerRadius",
+        typeof(CornerRadius?),
+        typeof(ListViewExtensions),
+        new PropertyMetadata(null, OnItemCornerRadiusPropertyChanged));
 
     /// <summary>
     /// Gets the value of the ItemCornerRadius attached property from the specified <see cref="ListViewBase"/>.
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> from which the property value is read.</param>
     /// <returns>The current value of the ItemCornerRadius attached property on the specified <see cref="ListViewBase"/>.</returns>
-    public static CornerRadius GetItemCornerRadius(ListViewBase element)
+    public static CornerRadius? GetItemCornerRadius(ListViewBase element)
     {
-        return (CornerRadius)element.GetValue(ItemCornerRadiusProperty);
+        return (CornerRadius?)element.GetValue(ItemCornerRadiusProperty);
     }
 
     /// <summary>
@@ -35,7 +38,7 @@ public static class ListViewExtensions
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> on which to set the property value.</param>
     /// <param name="value">The new value to set the property to.</param>
-    public static void SetItemCornerRadius(ListViewBase element, CornerRadius value)
+    public static void SetItemCornerRadius(ListViewBase element, CornerRadius? value)
     {
         element.SetValue(ItemCornerRadiusProperty, value);
     }
@@ -44,16 +47,19 @@ public static class ListViewExtensions
     /// Identifies the attached dependency property that specifies the margin of the <see cref="ListViewBase"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemMarginProperty = DependencyProperty.RegisterAttached(
-        "ItemMargin", typeof(Thickness), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemMarginPropertyChanged));
+        "ItemMargin",
+        typeof(Thickness?),
+        typeof(ListViewExtensions),
+        new PropertyMetadata(null, OnItemMarginPropertyChanged));
 
     /// <summary>
     /// Gets the value of the ItemMargin attached property from the specified <see cref="ListViewBase"/>.
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> from which the property value is read.</param>
     /// <returns>The current value of the ItemMargin attached property on the specified <see cref="ListViewBase"/>.</returns>
-    public static Thickness GetItemMargin(ListViewBase element)
+    public static Thickness? GetItemMargin(ListViewBase element)
     {
-        return (Thickness)element.GetValue(ItemMarginProperty);
+        return (Thickness?)element.GetValue(ItemMarginProperty);
     }
 
     /// <summary>
@@ -61,7 +67,7 @@ public static class ListViewExtensions
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> on which to set the property value.</param>
     /// <param name="value">The new value to set the property to.</param>
-    public static void SetItemMargin(ListViewBase element, Thickness value)
+    public static void SetItemMargin(ListViewBase element, Thickness? value)
     {
         element.SetValue(ItemMarginProperty, value);
     }
@@ -70,16 +76,19 @@ public static class ListViewExtensions
     /// Identifies the attached dependency property that specifies the minimum height of the <see cref="ListView"/> item.
     /// </summary>
     public static readonly DependencyProperty ItemMinHeightProperty = DependencyProperty.RegisterAttached(
-        "ItemMinHeight", typeof(double), typeof(ListViewExtensions), new PropertyMetadata(default(double), OnItemMinHeightPropertyChanged));
+        "ItemMinHeight",
+        typeof(double?),
+        typeof(ListViewExtensions),
+        new PropertyMetadata(null, OnItemMinHeightPropertyChanged));
 
     /// <summary>
     /// Gets the value of the ItemMinHeight attached property from the specified <see cref="ListViewBase"/>.
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> from which the property value is read.</param>
     /// <returns>The current value of the ItemMinHeight attached property on the specified <see cref="ListViewBase"/>.</returns>
-    public static double GetItemMinHeight(ListViewBase element)
+    public static double? GetItemMinHeight(ListViewBase element)
     {
-        return (double)element.GetValue(ItemMinHeightProperty);
+        return (double?)element.GetValue(ItemMinHeightProperty);
     }
 
     /// <summary>
@@ -87,7 +96,7 @@ public static class ListViewExtensions
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> on which to set the property value.</param>
     /// <param name="value">The new value to set the property to.</param>
-    public static void SetItemMinHeight(ListViewBase element, double value)
+    public static void SetItemMinHeight(ListViewBase element, double? value)
     {
         element.SetValue(ItemMinHeightProperty, value);
     }
@@ -96,16 +105,19 @@ public static class ListViewExtensions
     /// Identifies the attached dependency property that specifies whether focus can be constrained to the items in a <see cref="ListViewBase"/>.
     /// </summary>
     public static readonly DependencyProperty ItemIsFocusEngagementEnabledProperty = DependencyProperty.RegisterAttached(
-        "ItemIsFocusEngagementEnabled", typeof(bool), typeof(ListViewExtensions), new PropertyMetadata(null, OnItemIsFocusEngagementEnabledPropertyChanged));
+        "ItemIsFocusEngagementEnabled",
+        typeof(bool?),
+        typeof(ListViewExtensions),
+        new PropertyMetadata(null, OnItemIsFocusEngagementEnabledPropertyChanged));
 
     /// <summary>
     /// Gets the value of the ItemIsFocusEngagementEnabled attached property from the specified <see cref="ListViewBase"/>.
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> from which the property value is read.</param>
     /// <returns>The current value of the ItemIsFocusEngagementEnabled attached property on the specified <see cref="ListViewBase"/>.</returns>
-    public static bool GetItemIsFocusEngagementEnabled(ListViewBase element)
+    public static bool? GetItemIsFocusEngagementEnabled(ListViewBase element)
     {
-        return (bool)element.GetValue(ItemIsFocusEngagementEnabledProperty);
+        return (bool?)element.GetValue(ItemIsFocusEngagementEnabledProperty);
     }
 
     /// <summary>
@@ -113,7 +125,7 @@ public static class ListViewExtensions
     /// </summary>
     /// <param name="element">The <see cref="ListViewBase"/> on which to set the property value.</param>
     /// <param name="value">The new value to set the property to.</param>
-    public static void SetItemIsFocusEngagementEnabled(ListViewBase element, bool value)
+    public static void SetItemIsFocusEngagementEnabled(ListViewBase element, bool? value)
     {
         element.SetValue(ItemIsFocusEngagementEnabledProperty, value);
     }
@@ -137,7 +149,7 @@ public static class ListViewExtensions
             listViewBase.ContainerContentChanging -= ItemCornerRadiusOnContainerContentChanging;
             listViewBase.Unloaded -= OnListViewBaseUnloaded;
 
-            if (ItemCornerRadiusProperty != null)
+            if (GetItemCornerRadius(listViewBase) != null)
             {
                 listViewBase.ContainerContentChanging += ItemCornerRadiusOnContainerContentChanging;
                 listViewBase.Unloaded += OnListViewBaseUnloaded;
@@ -152,7 +164,7 @@ public static class ListViewExtensions
             listViewBase.ContainerContentChanging -= ItemMarginOnContainerContentChanging;
             listViewBase.Unloaded -= OnListViewBaseUnloaded;
 
-            if (ItemMarginProperty != null)
+            if (GetItemMargin(listViewBase) != null)
             {
                 listViewBase.ContainerContentChanging += ItemMarginOnContainerContentChanging;
                 listViewBase.Unloaded += OnListViewBaseUnloaded;
@@ -167,7 +179,7 @@ public static class ListViewExtensions
             listViewBase.ContainerContentChanging -= ItemMinHeightOnContainerContentChanging;
             listViewBase.Unloaded -= OnListViewBaseUnloaded;
 
-            if (ItemMinHeightProperty != null)
+            if (GetItemMinHeight(listViewBase) != null)
             {
                 listViewBase.ContainerContentChanging += ItemMinHeightOnContainerContentChanging;
                 listViewBase.Unloaded += OnListViewBaseUnloaded;
@@ -182,7 +194,7 @@ public static class ListViewExtensions
             listViewBase.ContainerContentChanging -= ItemIsFocusEngagementEnabledOnContainerContentChanging;
             listViewBase.Unloaded -= OnListViewBaseUnloaded;
 
-            if (ItemIsFocusEngagementEnabledProperty != null)
+            if (GetItemIsFocusEngagementEnabled(listViewBase) != null)
             {
                 listViewBase.ContainerContentChanging += ItemIsFocusEngagementEnabledOnContainerContentChanging;
                 listViewBase.Unloaded += OnListViewBaseUnloaded;
@@ -194,21 +206,16 @@ public static class ListViewExtensions
     private static void ItemCornerRadiusOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
         if (args.Phase > 0 || args.InRecycleQueue) return;
-
         var presenter = args.ItemContainer.FindDescendant<ListViewItemPresenter>();
-        if (presenter != null)
+        if (presenter != null && GetItemCornerRadius(sender) is { } cornerRadius)
         {
-            var cornerRadius = GetItemCornerRadius(sender);
             presenter.CornerRadius = cornerRadius;
         }
     }
 
     private static void ItemMarginOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
-        if (args.Phase > 0 || args.InRecycleQueue) return;
-
-        var margin = GetItemMargin(sender);
-
+        if (args.Phase > 0 || args.InRecycleQueue || GetItemMargin(sender) is not { } margin) return;
         if (IsApiContract13Present)
         {
             // The ListViewItem in Windows 11 appears to have a Border element with a margin of '4,2,4,2',
@@ -252,13 +259,9 @@ public static class ListViewExtensions
 
     private static void ItemMinHeightOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
-        if (args.Phase > 0 || args.InRecycleQueue) return;
-
-        double minHeight = GetItemMinHeight(sender);
-
-        if (!IsApiContract13Present && ItemMarginProperty != null)
+        if (args.Phase > 0 || args.InRecycleQueue || GetItemMinHeight(sender) is not { } minHeight) return;
+        if (!IsApiContract13Present && GetItemMargin(sender) is { } margin)
         {
-            var margin = GetItemMargin(sender);
             double offsetMargin = margin.Top + margin.Bottom;
             double normalizedMinHeight = minHeight - offsetMargin;
 
@@ -277,8 +280,7 @@ public static class ListViewExtensions
 
     private static void ItemIsFocusEngagementEnabledOnContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
     {
-        if (args.Phase > 0 || args.InRecycleQueue) return;
-
-        args.ItemContainer.IsFocusEngagementEnabled = GetItemIsFocusEngagementEnabled(sender);
+        if (args.Phase > 0 || args.InRecycleQueue || GetItemIsFocusEngagementEnabled(sender) is not { } isEnabled) return;
+        args.ItemContainer.IsFocusEngagementEnabled = isEnabled;
     }
 }
