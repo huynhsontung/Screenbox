@@ -10,7 +10,7 @@
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

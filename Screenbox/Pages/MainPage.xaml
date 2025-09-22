@@ -15,6 +15,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
+    xmlns:triggers="using:Screenbox.Triggers"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
     Loaded="MainPage_Loaded"
     mc:Ignorable="d">
@@ -325,8 +326,7 @@
                     MaxWidth="400"
                     Margin="10,0,10,16"
                     HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Shadow="{StaticResource ElevationThemeShadow}" />
+                    VerticalAlignment="Bottom" />
             </Grid>
 
             <interactivity:Interaction.Behaviors>
@@ -354,9 +354,10 @@
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowActivationStates">
-                <VisualState x:Name="Activated" />
-
                 <VisualState x:Name="Deactivated">
+                    <VisualState.StateTriggers>
+                        <triggers:WindowActivationModeTrigger ActivationMode="Deactivated" />
+                    </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="AppTitleText.Foreground" Value="{ThemeResource TextFillColorDisabledBrush}" />
                         <Setter Target="NavView.IsBackEnabled" Value="False" />

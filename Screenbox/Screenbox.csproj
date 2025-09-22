@@ -166,10 +166,6 @@
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Extensions\ApplicationViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\CommandBarExtensions.cs" />
-    <Compile Include="Controls\Extensions\ListViewExtensions.cs" />
-    <Compile Include="Controls\Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
@@ -239,8 +235,12 @@
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
-    <Compile Include="Converters\ThicknessFilterConverter.cs" />
+    <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Extensions\ApplicationViewExtensions.cs" />
+    <Compile Include="Extensions\CommandBarExtensions.cs" />
+    <Compile Include="Extensions\ListViewExtensions.cs" />
+    <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
     <Compile Include="Helpers\GlyphConvert.cs" />
@@ -312,6 +312,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Secrets.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Triggers\WindowActivationModeTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -600,10 +601,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Styles\NoAnimationProgressBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\Templates\GridViewItemTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -721,6 +718,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\ItemContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Progress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
