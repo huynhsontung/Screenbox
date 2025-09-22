@@ -28,6 +28,8 @@
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
 
+                <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
+
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
                         Command="{x:Bind ViewModel.Playlist.PlaySingleCommand}"
@@ -219,6 +221,7 @@
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
+                        <!--  SelectionCheckBox value and tooltip are updated in code-behind  -->
                         <CheckBox
                             x:Name="SelectionCheckBox"
                             MinWidth="60"
@@ -226,10 +229,11 @@
                             d:Content="11 items selected"
                             AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                            Command="{x:Bind Common.ToggleListViewBaseItemSelectionCommand}"
+                            Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
+                            IsThreeState="True"
+                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked)}" />
                         <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
