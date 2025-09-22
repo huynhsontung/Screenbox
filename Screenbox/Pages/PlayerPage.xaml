@@ -81,13 +81,6 @@
                     <StaticResource x:Key="PlayerControlsBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-
-            <ctConverters:BoolToObjectConverter
-                x:Key="PlayPauseSolidGlyphConverter"
-                FalseValue="{StaticResource PauseSolidGlyph}"
-                TrueValue="{StaticResource PlaySolidGlyph}" />
-
-            <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -573,7 +566,7 @@
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource PlayPauseSolidGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseSolidGlyph(ViewModel.IsPlayingBadge), Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing

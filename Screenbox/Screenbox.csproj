@@ -228,6 +228,7 @@
     </Compile>
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
+    <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
     <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
@@ -243,7 +244,6 @@
     <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
-    <Compile Include="Helpers\GlyphConvert.cs" />
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>
