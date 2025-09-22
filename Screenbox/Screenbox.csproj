@@ -163,6 +163,9 @@
     </Compile>
     <Compile Include="Controls\CustomNavigationView.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
+    <Compile Include="Controls\ErrorInfo.xaml.cs">
+      <DependentUpon>ErrorInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
     <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
     <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
@@ -543,6 +546,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ChapterProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
