@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
@@ -15,14 +17,17 @@ namespace Screenbox.Controls
         /// Identifies the <see cref="VolumeToggleButtonStyle"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VolumeToggleButtonStyleProperty = DependencyProperty.Register(
-            nameof(VolumeToggleButtonStyle), typeof(Style), typeof(VolumeControl), new PropertyMetadata(null, OnVolumeToggleButtonStylePropertyChanged));
+            nameof(VolumeToggleButtonStyle),
+            typeof(Style),
+            typeof(VolumeControl),
+            new PropertyMetadata(null, OnVolumeToggleButtonStylePropertyChanged));
 
         /// <summary>
         /// Gets or sets the Style that defines the look of the volume toggle button.
         /// </summary>
-        public Style VolumeToggleButtonStyle
+        public Style? VolumeToggleButtonStyle
         {
-            get { return (Style)GetValue(VolumeToggleButtonStyleProperty); }
+            get { return (Style?)GetValue(VolumeToggleButtonStyleProperty); }
             set { SetValue(VolumeToggleButtonStyleProperty, value); }
         }
 
@@ -48,7 +53,7 @@ namespace Screenbox.Controls
         {
             if (d is VolumeControl control && control.VolumeToggleButton != null)
             {
-                control.VolumeToggleButton.Style = (Style)e.NewValue;
+                control.VolumeToggleButton.Style = (Style?)e.NewValue;
             }
         }
 
