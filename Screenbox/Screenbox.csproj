@@ -162,8 +162,6 @@
     <Compile Include="Controls\CommonGridViewItem.xaml.cs">
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CustomNavigationView.cs" />
-    <Compile Include="Controls\CustomNavigationView.Properties.cs" />
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
@@ -191,6 +189,8 @@
     <Compile Include="Controls\MediaListViewItem.xaml.cs">
       <DependentUpon>MediaListViewItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NavigationViewEx.cs" />
+    <Compile Include="Controls\NavigationViewEx.Properties.cs" />
     <Compile Include="Controls\NotificationView.xaml.cs">
       <DependentUpon>NotificationView.xaml</DependentUpon>
     </Compile>

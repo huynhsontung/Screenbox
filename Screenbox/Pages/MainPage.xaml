@@ -92,7 +92,7 @@
             </StackPanel>
         </Grid>
 
-        <controls:CustomNavigationView
+        <controls:NavigationViewEx
             x:Name="NavView"
             AllowDrop="True"
             BackButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
@@ -112,12 +112,12 @@
             PaneSearchButtonStyle="{StaticResource AnimatedNavigationViewPaneSearchButtonStyle}"
             PaneToggleButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationTogglePaneButtonKey}"
             SelectionChanged="NavView_SelectionChanged">
-            <controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators>
+            <controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
                 <KeyboardAccelerator Key="E" Modifiers="Control" />
-            </controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators>
-            <controls:CustomNavigationView.PaneSearchButtonKeyboardAccelerators>
+            </controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+            <controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
                 <KeyboardAccelerator Key="F" Modifiers="Control" />
-            </controls:CustomNavigationView.PaneSearchButtonKeyboardAccelerators>
+            </controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
@@ -229,9 +229,9 @@
                 </AutoSuggestBox>
             </muxc:NavigationView.AutoSuggestBox>
 
-            <controls:CustomNavigationView.Overlay>
+            <controls:NavigationViewEx.Overlay>
                 <Frame x:Name="PlayerFrame" />
-            </controls:CustomNavigationView.Overlay>
+            </controls:NavigationViewEx.Overlay>
 
             <Grid x:Name="ContentGrid" Padding="0,48,0,0">
                 <Frame
@@ -246,7 +246,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom" />
             </Grid>
-        </controls:CustomNavigationView>
+        </controls:NavigationViewEx>
 
         <!--  Critical error  -->
         <controls:ErrorInfo

@@ -6,13 +6,13 @@ using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls;
 
-public partial class CustomNavigationView
+public sealed partial class NavigationViewEx
 {
     /// <summary>
     /// Identifies the <see cref="Overlay"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayProperty = DependencyProperty.Register(
-        nameof(Overlay), typeof(UIElement), typeof(CustomNavigationView), new PropertyMetadata(null, OnOverlayPropertyChanged));
+        nameof(Overlay), typeof(UIElement), typeof(NavigationViewEx), new PropertyMetadata(null, OnOverlayPropertyChanged));
 
     /// <summary>
     /// Gets or sets the content to be displayed as an overlay. By default, the overlay appears
@@ -28,7 +28,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="OverlayZIndex"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty OverlayZIndexProperty = DependencyProperty.Register(
-        nameof(OverlayZIndex), typeof(int), typeof(CustomNavigationView), new PropertyMetadata(0, OnOverlayZIndexPropertyChanged));
+        nameof(OverlayZIndex), typeof(int), typeof(NavigationViewEx), new PropertyMetadata(0, OnOverlayZIndexPropertyChanged));
 
     /// <summary>
     /// Gets or sets the Z-order of the overlay element.
@@ -48,7 +48,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="ContentVisibility"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty ContentVisibilityProperty = DependencyProperty.Register(
-        nameof(ContentVisibility), typeof(Visibility), typeof(CustomNavigationView), new PropertyMetadata(Visibility.Visible, OnContentVisibilityPropertyChanged));
+        nameof(ContentVisibility), typeof(Visibility), typeof(NavigationViewEx), new PropertyMetadata(Visibility.Visible, OnContentVisibilityPropertyChanged));
 
     /// <summary>
     /// Gets or sets the visibility of everything except the overlay element.
@@ -63,7 +63,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="BackButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(BackButtonAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+        nameof(BackButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the back button.
@@ -78,7 +78,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="BackButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(BackButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(BackButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the back button.
@@ -93,7 +93,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="BackButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty BackButtonStyleProperty = DependencyProperty.Register(
-        nameof(BackButtonStyle), typeof(Style), typeof(CustomNavigationView), new PropertyMetadata(null, OnBackButtonStylePropertyChanged));
+        nameof(BackButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnBackButtonStylePropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the back button.
@@ -108,7 +108,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="CloseButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty CloseButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(CloseButtonAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+        nameof(CloseButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the close button.
@@ -123,7 +123,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="CloseButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty CloseButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(CloseButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(CloseButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the close button.
@@ -138,7 +138,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="PaneToggleButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneToggleButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(PaneToggleButtonAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+        nameof(PaneToggleButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the menu toggle button.
@@ -153,7 +153,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="PaneToggleButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneToggleButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneToggleButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(PaneToggleButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the menu toggle button.
@@ -168,7 +168,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="PaneSearchButtonAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonAccessKeyProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+        nameof(PaneSearchButtonAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the search button.
@@ -183,7 +183,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="PaneSearchButtonKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(PaneSearchButtonKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the search button.
@@ -198,7 +198,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="PaneSearchButtonStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty PaneSearchButtonStyleProperty = DependencyProperty.Register(
-        nameof(PaneSearchButtonStyle), typeof(Style), typeof(CustomNavigationView), new PropertyMetadata(null, OnPaneSearchButtonStylePropertyChanged));
+        nameof(PaneSearchButtonStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnPaneSearchButtonStylePropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the search button.
@@ -213,7 +213,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="SettingsItemAccessKey"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemAccessKeyProperty = DependencyProperty.Register(
-        nameof(SettingsItemAccessKey), typeof(string), typeof(CustomNavigationView), new PropertyMetadata(null));
+        nameof(SettingsItemAccessKey), typeof(string), typeof(NavigationViewEx), new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the access key (mnemonic) for the settings navigation view item.
@@ -228,7 +228,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="SettingsItemKeyboardAccelerators"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemKeyboardAcceleratorsProperty = DependencyProperty.Register(
-        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(CustomNavigationView), new PropertyMetadata(new List<KeyboardAccelerator>()));
+        nameof(SettingsItemKeyboardAccelerators), typeof(IList<KeyboardAccelerator>), typeof(NavigationViewEx), new PropertyMetadata(new List<KeyboardAccelerator>()));
 
     /// <summary>
     /// Gets or sets the collection of keyboard combinations for the settings navigation view item.
@@ -243,7 +243,7 @@ public partial class CustomNavigationView
     /// Identifies the <see cref="SettingsItemStyle"/> dependency property.
     /// </summary>
     public static readonly DependencyProperty SettingsItemStyleProperty = DependencyProperty.Register(
-        nameof(SettingsItemStyle), typeof(Style), typeof(CustomNavigationView), new PropertyMetadata(null, OnSettingsItemStylePropertyChanged));
+        nameof(SettingsItemStyle), typeof(Style), typeof(NavigationViewEx), new PropertyMetadata(null, OnSettingsItemStylePropertyChanged));
 
     /// <summary>
     /// Gets or sets the style that defines the look of the settings navigation view item.
@@ -256,68 +256,68 @@ public partial class CustomNavigationView
 
     private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnOverlayChanged((UIElement?)e.OldValue, (UIElement?)e.NewValue);
     }
 
     private static void OnOverlayZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnOverlayZIndexChanged((int)e.OldValue, (int)e.NewValue);
     }
 
     private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnContentVisibilityChanged((Visibility)e.OldValue, (Visibility)e.NewValue);
     }
 
     private static void OnBackButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnBackButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
     }
 
     private static void OnPaneSearchButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
     }
 
     private static void OnSettingsItemStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (CustomNavigationView)d;
+        var owner = (NavigationViewEx)d;
         owner.OnSettingsItemStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
     }
 
-    protected virtual void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
+    private void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
     {
         UpdateOverlay();
     }
 
-    protected virtual void OnOverlayZIndexChanged(int oldValue, int newValue)
+    private void OnOverlayZIndexChanged(int oldValue, int newValue)
     {
         UpdateOverlayZIndex(newValue);
     }
 
-    protected virtual void OnContentVisibilityChanged(Visibility oldValue, Visibility newValue)
+    private void OnContentVisibilityChanged(Visibility oldValue, Visibility newValue)
     {
         UpdateContentVisibility(newValue);
         UpdateOverlayLayout();
     }
 
-    protected virtual void OnBackButtonStyleChanged(Style? oldValue, Style? newValue)
+    private void OnBackButtonStyleChanged(Style? oldValue, Style? newValue)
     {
         UpdateBackButtonStyle();
         UpdateCloseButtonStyle();
     }
 
-    protected virtual void OnPaneSearchButtonStyleChanged(Style? oldValue, Style? newValue)
+    private void OnPaneSearchButtonStyleChanged(Style? oldValue, Style? newValue)
     {
         UpdatePaneSearchButtonStyle();
     }
 
-    protected virtual void OnSettingsItemStyleChanged(Style? oldValue, Style? newValue)
+    private void OnSettingsItemStyleChanged(Style? oldValue, Style? newValue)
     {
         UpdateSettingsItemStyle();
     }

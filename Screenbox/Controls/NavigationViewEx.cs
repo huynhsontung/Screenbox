@@ -25,7 +25,7 @@ namespace Screenbox.Controls;
 /// Represents a custom navigation view that extends the functionality of the <see cref="NavigationView"/> control.
 /// </summary>
 /// <remarks>
-/// <para>The <see cref="CustomNavigationView"/> provides additional features such customizable access keys,
+/// <para>The <see cref="NavigationViewEx"/> provides additional features such customizable access keys,
 /// keyboard accelerators, and styles for the buttons that are built-in to NavigationView.</para>
 /// It also supports rendering an overlay with configurable z-order and a <see cref="UIElement"/> as its content,
 /// while allowing the navigation pane and main content visibility to be changed independently of the overlay.
@@ -41,20 +41,20 @@ namespace Screenbox.Controls;
 /// This example shows how to create a simple NavigationView with an overlay,
 /// including some of its new capabilities.
 /// <code>
-/// &lt;controls:CustomNavigationView BackButtonAccessKey="B"
-///                                CloseButtonStyle="{StaticResource AccentButtonStyle}"
-///                                OverlayZIndex="2"&gt;
-///     &lt;controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators&gt;
+/// &lt;controls:NavigationViewEx BackButtonAccessKey="B"
+///                            CloseButtonStyle="{StaticResource AccentButtonStyle}"
+///                            OverlayZIndex="2"&gt;
+///     &lt;controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
 ///         &lt;KeyboardAccelerator Key="T" Modifiers="Control" /&gt;
-///     &lt;/controls:CustomNavigationView.PaneToggleButtonKeyboardAccelerators&gt;
+///     &lt;/controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators&gt;
 /// 
-///     &lt;controls:CustomNavigationView.Overlay&gt;
+///     &lt;controls:NavigationViewEx.Overlay&gt;
 ///         &lt;Border Background="Red" Height="200" /&gt;
-///     &lt;/controls:CustomNavigationView.Overlay&gt;
-/// &lt;/controls:CustomNavigationView&gt;
+///     &lt;/controls:NavigationViewEx.Overlay&gt;
+/// &lt;/controls:NavigationViewEx&gt;
 /// </code>
 /// </example>
-public partial class CustomNavigationView : NavigationView
+public sealed partial class NavigationViewEx : NavigationView
 {
     private const string TogglePaneButtonName = "TogglePaneButton";
     private const string RootSplitViewName = "RootSplitView";
@@ -105,7 +105,7 @@ public partial class CustomNavigationView : NavigationView
     private Button? _closeButton;
     private NavigationViewItem? _settingsItem;
 
-    public CustomNavigationView()
+    public NavigationViewEx()
     {
         Loaded += OnLoaded;
         Unloaded += OnUnloaded;
