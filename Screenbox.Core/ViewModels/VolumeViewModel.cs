@@ -1,15 +1,12 @@
 ﻿#nullable enable
 
 using System;
-using Windows.System;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -21,7 +18,6 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private int _maxVolume;
         [ObservableProperty] private int _volume;
         [ObservableProperty] private bool _isMute;
-        [ObservableProperty] private string _volumeGlyph;
         private IMediaPlayer? _mediaPlayer;
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly ISettingsService _settingsService;
@@ -32,7 +28,6 @@ namespace Screenbox.Core.ViewModels
             _volume = settingsService.PersistentVolume;
             _maxVolume = settingsService.MaxVolume;
             _isMute = _volume == 0;
-            _volumeGlyph = GetVolumeGlyph();
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // View model doesn't receive any messages
@@ -54,18 +49,8 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(ChangeVolumeRequestMessage message)
         {
-            Volume = message.IsOffset ?
-                Math.Clamp(Volume + message.Value, 0, MaxVolume) :
-                Math.Clamp(message.Value, 0, MaxVolume);
+            SetVolume(message.Value, message.IsOffset);
             message.Reply(Volume);
-        }
-
-        public void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
-        {
-            PointerPoint? pointer = e.GetCurrentPoint((UIElement)sender);
-            int mouseWheelDelta = pointer.Properties.MouseWheelDelta;
-            int volumeChange = mouseWheelDelta > 0 ? 5 : -5;
-            Volume = Math.Clamp(Volume + volumeChange, 0, MaxVolume);
         }
 
         partial void OnVolumeChanged(int value)
@@ -75,7 +60,6 @@ namespace Screenbox.Core.ViewModels
             // bool stayMute = IsMute && newValue - _mediaPlayer.Volume < 0.005;
             _mediaPlayer.Volume = newValue;
             if (value > 0) IsMute = false;
-            VolumeGlyph = GetVolumeGlyph();
             _settingsService.PersistentVolume = value;
         }
 
@@ -83,7 +67,6 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
             _mediaPlayer.IsMuted = value;
-            VolumeGlyph = GetVolumeGlyph();
         }
 
         private void OnVolumeChanged(IMediaPlayer sender, object? args)
@@ -103,13 +86,15 @@ namespace Screenbox.Core.ViewModels
             }
         }
 
-        private string GetVolumeGlyph()
+        /// <summary>
+        /// Sets the volume to a specified value or adjusts it by a given amount.
+        /// </summary>
+        /// <param name="value">The target volume to set or the offset amount to adjust.</param>
+        /// <param name="isOffset">If <see langword="true"/>, adjusts the current volume by the specified <paramref name="value"/>;
+        /// otherwise, sets the volume directly. The default value is <see langword="false"/>.</param>
+        public void SetVolume(int value, bool isOffset = false)
         {
-            if (IsMute) return "\ue74f";
-            if (Volume < 25) return "\ue992";
-            if (Volume < 50) return "\ue993";
-            if (Volume < 75) return "\ue994";
-            return "\ue995";
+            Volume = Math.Clamp(isOffset ? Volume + value : value, 0, MaxVolume);
         }
     }
 }

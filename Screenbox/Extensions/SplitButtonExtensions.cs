@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Input;
 
 using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
 
-namespace Screenbox.Controls.Extensions;
+namespace Screenbox.Extensions;
 
 /// <summary>
 /// Provides attached dependency properties for the buttons of the <see cref="SplitButton"/> control.
