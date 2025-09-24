@@ -23,8 +23,15 @@ namespace Screenbox.Core.Services
             _mediaParsingService = mediaParsingService;
         }
 
-        public bool CanNext(Playlist playlist)
+        public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
         {
+            // With list repeat, we can always go next if there are items
+            if (repeatMode == MediaPlaybackAutoRepeatMode.List && playlist.Items.Count > 0)
+            {
+                return true;
+            }
+
+            // Single file with neighboring files
             if (playlist.Items.Count == 1)
             {
                 return playlist.NeighboringFilesQuery != null;
@@ -33,17 +40,14 @@ namespace Screenbox.Core.Services
             return playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1;
         }
 
-        public bool CanPrevious(Playlist playlist)
+        public bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
         {
-            if (playlist.Items.Count == 1)
-            {
-                return playlist.NeighboringFilesQuery != null;
-            }
-
-            return playlist.CurrentIndex > 0 && playlist.CurrentIndex - 1 < playlist.Items.Count;
+            // We can always go back even when there is only one item in the queue
+            // If there is no previous item then the player will just restart the current item
+            return playlist.Items.Count > 0 && playlist.CurrentIndex >= 0;
         }
 
-        public async Task<PlaybackNavigationResult> GetNextAsync(Playlist playlist)
+        public async Task<PlaybackNavigationResult> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
         {
             if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
                 return new PlaybackNavigationResult(null);
@@ -74,11 +78,18 @@ namespace Screenbox.Core.Services
                 return new PlaybackNavigationResult(playlist.Items[playlist.CurrentIndex + 1]);
             }
 
-            // At the end - no repeat mode means stop
+            // At the end - handle repeat mode
+            if (repeatMode == MediaPlaybackAutoRepeatMode.List && playlist.Items.Count > 0)
+            {
+                // Loop back to first item
+                return new PlaybackNavigationResult(playlist.Items[0]);
+            }
+
+            // No repeat mode means stop
             return new PlaybackNavigationResult(null);
         }
 
-        public async Task<PlaybackNavigationResult> GetPreviousAsync(Playlist playlist)
+        public async Task<PlaybackNavigationResult> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
         {
             if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
                 return new PlaybackNavigationResult(null);
@@ -109,7 +120,14 @@ namespace Screenbox.Core.Services
                 return new PlaybackNavigationResult(playlist.Items[playlist.CurrentIndex - 1]);
             }
 
-            // At the beginning - no repeat mode means stop
+            // At the beginning - handle repeat mode
+            if (repeatMode == MediaPlaybackAutoRepeatMode.List && playlist.Items.Count > 0)
+            {
+                // Loop back to last item
+                return new PlaybackNavigationResult(playlist.Items[playlist.Items.Count - 1]);
+            }
+
+            // No repeat mode means stop
             return new PlaybackNavigationResult(null);
         }
 
@@ -127,7 +145,7 @@ namespace Screenbox.Core.Services
                 default:
                     if (playlist.Items.Count > 1)
                     {
-                        return await GetNextAsync(playlist);
+                        return await GetNextAsync(playlist, repeatMode);
                     }
                     break;
             }
