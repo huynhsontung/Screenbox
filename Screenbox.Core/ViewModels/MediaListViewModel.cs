@@ -132,7 +132,7 @@ namespace Screenbox.Core.ViewModels
             foreach (var media in message.Value.ToList())
             {
                 var result = await _mediaParsingService.CreatePlaylistAsync(media);
-                foreach (var subMedia in result.Playlist)
+                foreach (var subMedia in result.Items)
                 {
                     if (message.AddNext && canInsert)
                     {
@@ -287,6 +287,11 @@ namespace Screenbox.Core.ViewModels
 
         private bool CanNext()
         {
+            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
+            {
+                return _playlist.Items.Count > 0;
+            }
+
             return _playbackControlService.CanNext(_playlist);
         }
 
@@ -309,11 +314,22 @@ namespace Screenbox.Core.ViewModels
             {
                 PlaySingle(result.NextItem);
             }
+            else
+            {
+                // Handle repeat mode logic when no next item from service
+                if (RepeatMode == MediaPlaybackAutoRepeatMode.List && _playlist.Items.Count > 1)
+                {
+                    // Go to first item in list repeat mode
+                    PlaySingle(_playlist.Items[0]);
+                }
+                // If not list repeat mode or single item, do nothing (stop)
+            }
         }
 
         private bool CanPrevious()
         {
-            return _playbackControlService.CanPrevious(_playlist);
+            // We can always go back even when there is only one item in the queue
+            return Items.Count != 0 && CurrentItem != null;
         }
 
         [RelayCommand(CanExecute = nameof(CanPrevious))]
@@ -347,7 +363,17 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                _mediaPlayer.Position = TimeSpan.Zero;
+                // Handle repeat mode logic when no previous item from service
+                if (RepeatMode == MediaPlaybackAutoRepeatMode.List && _playlist.Items.Count > 1)
+                {
+                    // Go to last item in list repeat mode
+                    PlaySingle(_playlist.Items.Last());
+                }
+                else
+                {
+                    // At beginning without repeat - restart current track
+                    _mediaPlayer.Position = TimeSpan.Zero;
+                }
             }
         }
 
@@ -387,9 +413,9 @@ namespace Screenbox.Core.ViewModels
                 }
 
                 // Create new playlist
-                _playlist = new Playlist(result.Playlist)
+                _playlist = new Playlist(result.Items)
                 {
-                    CurrentIndex = result.Playlist.IndexOf(result.PlayNext),
+                    CurrentIndex = result.Items.IndexOf(result.PlayNext),
                     NeighboringFilesQuery = neighboringFilesQuery
                 };
 
@@ -550,9 +576,9 @@ namespace Screenbox.Core.ViewModels
 
                 if (result != null && !result.PlayNext.Source.Equals(CurrentItem?.Source))
                 {
-                    _playlist = new Playlist(result.Playlist)
+                    _playlist = new Playlist(result.Items)
                     {
-                        CurrentIndex = result.Playlist.IndexOf(result.PlayNext)
+                        CurrentIndex = result.Items.IndexOf(result.PlayNext)
                     };
                     UpdateItemsFromPlaylist();
                     PlaySingle(result.PlayNext);
@@ -585,9 +611,9 @@ namespace Screenbox.Core.ViewModels
 
                 if (result != null)
                 {
-                    _playlist = new Playlist(result.Playlist)
+                    _playlist = new Playlist(result.Items)
                     {
-                        CurrentIndex = result.Playlist.IndexOf(result.PlayNext)
+                        CurrentIndex = result.Items.IndexOf(result.PlayNext)
                     };
                     UpdateItemsFromPlaylist();
                     PlaySingle(result.PlayNext);
@@ -637,23 +663,29 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(async () =>
             {
-                if (RepeatMode == MediaPlaybackAutoRepeatMode.Track)
+                switch (RepeatMode)
                 {
-                    sender.Position = TimeSpan.Zero;
-                }
-                else
-                {
-                    var result = await _playbackControlService.HandleMediaEndedAsync(_playlist, RepeatMode);
-                    if (result.NextItem != null)
-                    {
-                        if (result.UpdatedPlaylist != null)
+                    case MediaPlaybackAutoRepeatMode.List when _playlist.CurrentIndex == _playlist.Items.Count - 1:
+                        // At last item with list repeat - go to first
+                        if (_playlist.Items.Count > 0)
                         {
-                            _playlist = result.UpdatedPlaylist;
-                            UpdateItemsFromPlaylist();
+                            PlaySingle(_playlist.Items[0]);
                         }
+                        break;
 
-                        PlaySingle(result.NextItem);
-                    }
+                    case MediaPlaybackAutoRepeatMode.Track:
+                        // Track repeat - restart current track
+                        sender.Position = TimeSpan.Zero;
+                        break;
+
+                    default:
+                        // No repeat mode or not at end with list repeat - try to get next
+                        if (_playlist.Items.Count > 1)
+                        {
+                            await NextAsync();
+                        }
+                        // If single item and no repeat, playback naturally stops
+                        break;
                 }
             });
         }

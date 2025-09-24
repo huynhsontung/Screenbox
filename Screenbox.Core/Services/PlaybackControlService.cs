@@ -1,9 +1,7 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
-using System.Linq;
 using System.Threading.Tasks;
+using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
 
@@ -16,7 +14,7 @@ namespace Screenbox.Core.Services
         private readonly IMediaParsingService _mediaParsingService;
 
         public PlaybackControlService(
-            IFilesService filesService, 
+            IFilesService filesService,
             IPlaylistService playlistService,
             IMediaParsingService mediaParsingService)
         {
@@ -37,12 +35,17 @@ namespace Screenbox.Core.Services
 
         public bool CanPrevious(Playlist playlist)
         {
-            return playlist.Items.Count != 0 && playlist.CurrentItem != null;
+            if (playlist.Items.Count == 1)
+            {
+                return playlist.NeighboringFilesQuery != null;
+            }
+
+            return playlist.CurrentIndex > 0 && playlist.CurrentIndex - 1 < playlist.Items.Count;
         }
 
         public async Task<PlaybackNavigationResult> GetNextAsync(Playlist playlist)
         {
-            if (playlist.Items.Count == 0 || playlist.CurrentItem == null) 
+            if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
                 return new PlaybackNavigationResult(null);
 
             // Single file with neighboring files
@@ -52,34 +55,32 @@ namespace Screenbox.Core.Services
                 if (nextFile != null)
                 {
                     var result = await _mediaParsingService.CreatePlaylistAsync(nextFile);
-                    var newPlaylist = new Playlist(result.Playlist)
+                    var newPlaylist = new Playlist(result.Items)
                     {
-                        CurrentIndex = result.Playlist.IndexOf(result.PlayNext),
-                        NeighboringFilesQuery = playlist.NeighboringFilesQuery
+                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
+                        NeighboringFilesQuery = playlist.NeighboringFilesQuery,
+                        ShuffleMode = playlist.ShuffleMode,
+                        ShuffleBackup = playlist.ShuffleBackup,
+                        LastUpdated = playlist.LastUpdated
                     };
                     return new PlaybackNavigationResult(newPlaylist, result.PlayNext);
                 }
                 return new PlaybackNavigationResult(null);
             }
 
-            // Last item with list repeat
-            if (playlist.CurrentIndex == playlist.Items.Count - 1)
-            {
-                return new PlaybackNavigationResult(playlist.Items[0]);
-            }
-
-            // Normal next
+            // Normal next navigation
             if (playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1)
             {
                 return new PlaybackNavigationResult(playlist.Items[playlist.CurrentIndex + 1]);
             }
 
+            // At the end - no repeat mode means stop
             return new PlaybackNavigationResult(null);
         }
 
         public async Task<PlaybackNavigationResult> GetPreviousAsync(Playlist playlist)
         {
-            if (playlist.Items.Count == 0 || playlist.CurrentItem == null) 
+            if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
                 return new PlaybackNavigationResult(null);
 
             // Single file with neighboring files
@@ -89,28 +90,26 @@ namespace Screenbox.Core.Services
                 if (previousFile != null)
                 {
                     var result = await _mediaParsingService.CreatePlaylistAsync(previousFile);
-                    var newPlaylist = new Playlist(result.Playlist)
+                    var newPlaylist = new Playlist(result.Items)
                     {
-                        CurrentIndex = result.Playlist.IndexOf(result.PlayNext),
-                        NeighboringFilesQuery = playlist.NeighboringFilesQuery
+                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
+                        NeighboringFilesQuery = playlist.NeighboringFilesQuery,
+                        ShuffleMode = playlist.ShuffleMode,
+                        ShuffleBackup = playlist.ShuffleBackup,
+                        LastUpdated = playlist.LastUpdated
                     };
                     return new PlaybackNavigationResult(newPlaylist, result.PlayNext);
                 }
                 return new PlaybackNavigationResult(null);
             }
 
-            // First item with list repeat
-            if (playlist.CurrentIndex == 0)
-            {
-                return new PlaybackNavigationResult(playlist.Items.Last());
-            }
-
-            // Normal previous
+            // Normal previous navigation
             if (playlist.CurrentIndex >= 1 && playlist.CurrentIndex < playlist.Items.Count)
             {
                 return new PlaybackNavigationResult(playlist.Items[playlist.CurrentIndex - 1]);
             }
 
+            // At the beginning - no repeat mode means stop
             return new PlaybackNavigationResult(null);
         }
 
@@ -120,11 +119,11 @@ namespace Screenbox.Core.Services
             {
                 case MediaPlaybackAutoRepeatMode.List when playlist.CurrentIndex == playlist.Items.Count - 1:
                     return new PlaybackNavigationResult(playlist.Items[0]);
-                    
+
                 case MediaPlaybackAutoRepeatMode.Track:
                     // Track repeat is handled by the media player itself
                     return new PlaybackNavigationResult(null);
-                    
+
                 default:
                     if (playlist.Items.Count > 1)
                     {

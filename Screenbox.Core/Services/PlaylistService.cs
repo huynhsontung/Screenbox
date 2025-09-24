@@ -1,15 +1,12 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
 using Windows.Media;
-using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 
@@ -34,8 +31,10 @@ namespace Screenbox.Core.Services
             var result = await _mediaParsingService.CreatePlaylistAsync(storageItems, playNext, cancellationToken);
             if (result == null) return new Playlist();
 
-            var playlist = new Playlist(result.Playlist);
-            playlist.CurrentIndex = result.Playlist.IndexOf(result.PlayNext);
+            var playlist = new Playlist(result.Items)
+            {
+                CurrentIndex = result.Items.IndexOf(result.PlayNext)
+            };
             return playlist;
         }
 
@@ -47,11 +46,11 @@ namespace Screenbox.Core.Services
                 var result = await _mediaParsingService.CreatePlaylistAsync(neighboringFiles, currentFile, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (result?.Playlist.Count > 0)
+                if (result?.Items.Count > 0)
                 {
-                    var newPlaylist = new Playlist(result.Playlist)
+                    var newPlaylist = new Playlist(result.Items)
                     {
-                        CurrentIndex = result.Playlist.IndexOf(result.PlayNext),
+                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
                         ShuffleMode = playlist.ShuffleMode,
                         ShuffleBackup = playlist.ShuffleBackup,
                         NeighboringFilesQuery = playlist.NeighboringFilesQuery,
@@ -97,7 +96,7 @@ namespace Screenbox.Core.Services
         {
             var restored = new Playlist();
             var backup = new List<MediaViewModel>(shuffleBackup.OriginalPlaylist);
-            
+
             foreach (var removal in shuffleBackup.Removals)
             {
                 backup.Remove(removal);

@@ -40,12 +40,12 @@ namespace Screenbox.Core.Services
     public sealed class PlaylistCreateResult
     {
         public MediaViewModel PlayNext { get; }
-        public List<MediaViewModel> Playlist { get; }
+        public List<MediaViewModel> Items { get; }
 
-        public PlaylistCreateResult(MediaViewModel playNext, List<MediaViewModel> playlist)
+        public PlaylistCreateResult(MediaViewModel playNext, List<MediaViewModel> items)
         {
             PlayNext = playNext;
-            Playlist = playlist;
+            Items = items;
         }
 
         public PlaylistCreateResult(MediaViewModel playNext) : this(playNext, new List<MediaViewModel> { playNext }) { }
