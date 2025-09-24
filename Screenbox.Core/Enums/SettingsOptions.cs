@@ -20,3 +20,15 @@ public enum ThemeOption
     Light,
     Dark
 }
+
+public enum LaunchPageOption
+{
+    Home,
+    Songs,
+    Albums,
+    Artists,
+    VideoFolders,
+    AllVideos,
+    Network,
+    PlayQueue
+}
