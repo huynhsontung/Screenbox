@@ -148,7 +148,6 @@
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
     <Compile Include="Commands\SetPlaybackOptionsCommand.cs" />
     <Compile Include="Commands\ShowPropertiesCommand.cs" />
-    <Compile Include="Controls\AcceleratorService.cs" />
     <Compile Include="Controls\Animations\AnimatedPlayingVisualSource.cs" />
     <Compile Include="Controls\CompositeTrackPicker.xaml.cs">
       <DependentUpon>CompositeTrackPicker.xaml</DependentUpon>
@@ -239,12 +238,14 @@
     <Compile Include="Converters\SearchItemGlyphConverter.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
+    <Compile Include="Extensions\AcceleratorService.cs" />
     <Compile Include="Extensions\ApplicationViewExtensions.cs" />
     <Compile Include="Extensions\CommandBarExtensions.cs" />
     <Compile Include="Extensions\ListViewExtensions.cs" />
     <Compile Include="Extensions\SplitButtonExtensions.cs" />
     <Compile Include="Helpers\DeviceInfoHelper.cs" />
     <Compile Include="Helpers\GlobalizationHelper.cs" />
+    <Compile Include="Helpers\KeyboardAcceleratorHelper.cs" />
     <Compile Include="Helpers\TitleBarHelper.cs" />
     <Compile Include="Pages\AlbumDetailsPage.xaml.cs">
       <DependentUpon>AlbumDetailsPage.xaml</DependentUpon>

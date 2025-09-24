@@ -4,10 +4,10 @@ using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls;
+namespace Screenbox.Extensions;
 
 /// <summary>
-/// Represents a service that provides <see langword="class"/> methods to display a <see cref="ToolTip"/>,
+/// Represents a service that provides <see langword="static"/> methods to display a <see cref="ToolTip"/>,
 /// with the corresponding key combinations appended at the end.
 /// </summary>
 /// <remarks>If a control has more than one accelerator defined, only the first is presented.</remarks>
@@ -75,7 +75,7 @@ public sealed class AcceleratorService
                     var keyboardAccelerator = keyboardAccelerators[0];
                     if (keyboardAccelerator.IsEnabled)
                     {
-                        string keyboardAcceleratorText = GlobalizationHelper.GetKeyboardAcceleratorDisplayName(keyboardAccelerator);
+                        string keyboardAcceleratorText = keyboardAccelerator.ToDisplayName();
                         if (!string.IsNullOrEmpty(keyboardAcceleratorText))
                         {
                             toolTipString = GlobalizationHelper.IsRightToLeftLanguage
