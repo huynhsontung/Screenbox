@@ -203,6 +203,7 @@
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
+    <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
@@ -229,8 +230,11 @@
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
     <Compile Include="Services\ILivelyWallpaperService.cs" />
+    <Compile Include="Services\IMediaParsingService.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IPlaybackControlService.cs" />
+    <Compile Include="Services\IPlaylistService.cs" />
     <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
@@ -240,8 +244,11 @@
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\MediaParsingService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\PlaybackControlService.cs" />
+    <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
@@ -327,6 +334,8 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="REFACTORING_SUMMARY.md" />
+    <None Include="TESTING_GUIDE.md" />
     <PRIResource Include="Helpers\LanguageCodes.resw">
       <SubType>Designer</SubType>
     </PRIResource>
