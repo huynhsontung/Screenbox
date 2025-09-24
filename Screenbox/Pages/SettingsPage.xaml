@@ -30,7 +30,6 @@
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-        <converters:LanguageLayoutDirectionToFlowDirectionConverter x:Key="LanguageLayoutDirectionToFlowDirectionConverter" />
 
         <!--  Section header text style  -->
         <Style
@@ -300,7 +299,7 @@
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="models:Language">
-                                <TextBlock FlowDirection="{x:Bind LayoutDirection, Converter={StaticResource LanguageLayoutDirectionToFlowDirectionConverter}}" Text="{x:Bind NativeName}" />
+                                <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
