@@ -16,7 +16,7 @@ using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
-    public sealed partial class PlaylistViewModel : ObservableRecipient
+    public sealed partial class PlayQueueViewModel : ObservableRecipient
     {
         public MediaListViewModel Playlist { get; }
 
@@ -44,7 +44,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IResourceService _resourceService;
         private readonly DispatcherQueue _dispatcherQueue;
 
-        public PlaylistViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
+        public PlayQueueViewModel(MediaListViewModel playlist, IFilesService filesService, IResourceService resourceService)
         {
             Playlist = playlist;
             _filesService = filesService;

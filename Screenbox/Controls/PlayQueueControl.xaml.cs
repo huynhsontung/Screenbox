@@ -16,12 +16,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Controls
 {
-    public sealed partial class PlaylistView : UserControl
+    public sealed partial class PlayQueueControl : UserControl
     {
         public static readonly DependencyProperty IsFlyoutProperty = DependencyProperty.Register(
             "IsFlyout",
             typeof(bool),
-            typeof(PlaylistView),
+            typeof(PlayQueueControl),
             new PropertyMetadata(false));
 
         public bool IsFlyout
@@ -30,16 +30,16 @@ namespace Screenbox.Controls
             set => SetValue(IsFlyoutProperty, value);
         }
 
-        internal PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
+        internal PlayQueueViewModel ViewModel => (PlayQueueViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
 
         private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
 
-        public PlaylistView()
+        public PlayQueueControl()
         {
             this.InitializeComponent();
-            DataContext = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
@@ -115,11 +115,11 @@ namespace Screenbox.Controls
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(PlaylistViewModel.SelectionCount)) return;
+            if (e.PropertyName != nameof(PlayQueueViewModel.SelectionCount)) return;
             if (ViewModel.SelectionCount == 0) PlaylistListView.SelectedItems.Clear();
         }
 
-        private void PlaylistView_OnLoaded(object sender, RoutedEventArgs e)
+        private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
         {
             UpdateLayoutState();
             GoToCurrentItem();
@@ -127,7 +127,7 @@ namespace Screenbox.Controls
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
-        private void PlaylistView_OnUnloaded(object sender, RoutedEventArgs e)
+        private void PlayQueue_OnUnloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
