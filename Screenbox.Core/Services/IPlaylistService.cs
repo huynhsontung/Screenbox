@@ -1,10 +1,9 @@
 ﻿#nullable enable
 
-using Screenbox.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
 using Windows.Storage.Search;
@@ -16,11 +15,6 @@ namespace Screenbox.Core.Services
     /// </summary>
     public interface IPlaylistService
     {
-        /// <summary>
-        /// Create a new playlist from storage items
-        /// </summary>
-        Task<Playlist> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default);
-
         /// <summary>
         /// Add neighboring files to an existing playlist
         /// </summary>
@@ -34,7 +28,7 @@ namespace Screenbox.Core.Services
         /// <summary>
         /// Restore playlist from shuffle backup
         /// </summary>
-        Playlist RestoreFromShuffle(Playlist playlist, ShuffleBackup shuffleBackup);
+        Playlist RestoreFromShuffle(Playlist playlist);
 
         /// <summary>
         /// Get next item index based on current state

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.Diagnostics;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
@@ -17,25 +19,11 @@ namespace Screenbox.Core.Services
     /// </summary>
     public sealed class PlaylistService : IPlaylistService
     {
-        private readonly IMediaParsingService _mediaParsingService;
-        private readonly IFilesService _filesService;
+        private readonly IPlaylistFactory _playlistFactory;
 
-        public PlaylistService(IMediaParsingService mediaParsingService, IFilesService filesService)
+        public PlaylistService(IPlaylistFactory playlistFactory)
         {
-            _mediaParsingService = mediaParsingService;
-            _filesService = filesService;
-        }
-
-        public async Task<Playlist> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default)
-        {
-            var result = await _mediaParsingService.CreatePlaylistAsync(storageItems, playNext, cancellationToken);
-            if (result == null) return new Playlist();
-
-            var playlist = new Playlist(result.Items)
-            {
-                CurrentIndex = result.Items.IndexOf(result.PlayNext)
-            };
-            return playlist;
+            _playlistFactory = playlistFactory;
         }
 
         public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, StorageFile currentFile, CancellationToken cancellationToken = default)
@@ -43,21 +31,10 @@ namespace Screenbox.Core.Services
             try
             {
                 var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-                var result = await _mediaParsingService.CreatePlaylistAsync(neighboringFiles, currentFile, cancellationToken);
+                var result = await _playlistFactory.CreatePlaylistAsync(neighboringFiles, currentFile, playlist, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (result?.Items.Count > 0)
-                {
-                    var newPlaylist = new Playlist(result.Items)
-                    {
-                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
-                        ShuffleMode = playlist.ShuffleMode,
-                        ShuffleBackup = playlist.ShuffleBackup,
-                        NeighboringFilesQuery = playlist.NeighboringFilesQuery,
-                        LastUpdated = playlist.LastUpdated
-                    };
-                    return newPlaylist;
-                }
+                return result;
             }
             catch (OperationCanceledException)
             {
@@ -92,8 +69,10 @@ namespace Screenbox.Core.Services
             return shuffled;
         }
 
-        public Playlist RestoreFromShuffle(Playlist playlist, ShuffleBackup shuffleBackup)
+        public Playlist RestoreFromShuffle(Playlist playlist)
         {
+            Guard.IsNotNull(playlist.ShuffleBackup, nameof(playlist.ShuffleBackup));
+            var shuffleBackup = playlist.ShuffleBackup;
             var restored = new Playlist();
             var backup = new List<MediaViewModel>(shuffleBackup.OriginalPlaylist);
 

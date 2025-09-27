@@ -204,11 +204,13 @@
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\Playlist.cs" />
+    <Compile Include="Models\PlaylistCreateResult.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Models\PersistentMediaRecord.cs" />
+    <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
@@ -230,7 +232,7 @@
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
     <Compile Include="Services\ILivelyWallpaperService.cs" />
-    <Compile Include="Services\IMediaParsingService.cs" />
+    <Compile Include="Factories\IPlaylistFactory.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Services\IPlaybackControlService.cs" />
@@ -244,7 +246,7 @@
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
-    <Compile Include="Services\MediaParsingService.cs" />
+    <Compile Include="Factories\PlaylistFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\PlaybackControlService.cs" />

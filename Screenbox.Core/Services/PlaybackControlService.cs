@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System.Threading.Tasks;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
@@ -10,17 +11,14 @@ namespace Screenbox.Core.Services
     public sealed class PlaybackControlService : IPlaybackControlService
     {
         private readonly IFilesService _filesService;
-        private readonly IPlaylistService _playlistService;
-        private readonly IMediaParsingService _mediaParsingService;
+        private readonly IPlaylistFactory _playlistFactory;
 
         public PlaybackControlService(
             IFilesService filesService,
-            IPlaylistService playlistService,
-            IMediaParsingService mediaParsingService)
+            IPlaylistFactory playlistFactory)
         {
             _filesService = filesService;
-            _playlistService = playlistService;
-            _mediaParsingService = mediaParsingService;
+            _playlistFactory = playlistFactory;
         }
 
         public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
@@ -58,16 +56,8 @@ namespace Screenbox.Core.Services
                 var nextFile = await _filesService.GetNextFileAsync(file, playlist.NeighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    var result = await _mediaParsingService.CreatePlaylistAsync(nextFile);
-                    var newPlaylist = new Playlist(result.Items)
-                    {
-                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
-                        NeighboringFilesQuery = playlist.NeighboringFilesQuery,
-                        ShuffleMode = playlist.ShuffleMode,
-                        ShuffleBackup = playlist.ShuffleBackup,
-                        LastUpdated = playlist.LastUpdated
-                    };
-                    return new PlaybackNavigationResult(newPlaylist, result.PlayNext);
+                    var result = await _playlistFactory.CreatePlaylistAsync(nextFile, playlist);
+                    return new PlaybackNavigationResult(result, result.CurrentItem);
                 }
                 return new PlaybackNavigationResult(null);
             }
@@ -100,16 +90,8 @@ namespace Screenbox.Core.Services
                 var previousFile = await _filesService.GetPreviousFileAsync(file, playlist.NeighboringFilesQuery);
                 if (previousFile != null)
                 {
-                    var result = await _mediaParsingService.CreatePlaylistAsync(previousFile);
-                    var newPlaylist = new Playlist(result.Items)
-                    {
-                        CurrentIndex = result.Items.IndexOf(result.PlayNext),
-                        NeighboringFilesQuery = playlist.NeighboringFilesQuery,
-                        ShuffleMode = playlist.ShuffleMode,
-                        ShuffleBackup = playlist.ShuffleBackup,
-                        LastUpdated = playlist.LastUpdated
-                    };
-                    return new PlaybackNavigationResult(newPlaylist, result.PlayNext);
+                    var result = await _playlistFactory.CreatePlaylistAsync(previousFile, playlist);
+                    return new PlaybackNavigationResult(result, result.CurrentItem);
                 }
                 return new PlaybackNavigationResult(null);
             }
