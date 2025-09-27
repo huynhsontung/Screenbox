@@ -360,7 +360,7 @@ namespace Screenbox.Core.ViewModels
         public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
         {
             var playlist = await _mediaListFactory.TryParseMediaListAsync(files);
-            if (playlist.Items.Count > 0)
+            if (playlist?.Items.Count > 0)
             {
                 foreach (var item in playlist.Items)
                 {

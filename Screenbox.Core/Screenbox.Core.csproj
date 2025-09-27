@@ -203,6 +203,7 @@
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
+    <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\NextMediaList.cs" />
     <Compile Include="Models\PlaylistInfo.cs" />
