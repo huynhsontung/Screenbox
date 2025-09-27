@@ -55,7 +55,7 @@ namespace Screenbox.Core.ViewModels
         // Services (stateless)
         private readonly IPlaylistService _playlistService;
         private readonly IPlaybackControlService _playbackControlService;
-        private readonly IPlaylistFactory _playlistFactory;
+        private readonly IMediaListFactory _mediaListFactory;
         private readonly IFilesService _filesService;
         private readonly ISettingsService _settingsService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
@@ -72,14 +72,14 @@ namespace Screenbox.Core.ViewModels
         public MediaListViewModel(
             IPlaylistService playlistService,
             IPlaybackControlService playbackControlService,
-            IPlaylistFactory playlistFactory,
+            IMediaListFactory mediaListFactory,
             IFilesService filesService,
             ISettingsService settingsService,
             ISystemMediaTransportControlsService transportControlsService)
         {
             _playlistService = playlistService;
             _playbackControlService = playbackControlService;
-            _playlistFactory = playlistFactory;
+            _mediaListFactory = mediaListFactory;
             _filesService = filesService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
@@ -132,7 +132,7 @@ namespace Screenbox.Core.ViewModels
 
             foreach (var media in message.Value.ToList())
             {
-                var result = await _playlistFactory.CreatePlaylistAsync(media);
+                var result = await _mediaListFactory.ParseMediaListAsync(media);
                 foreach (var subMedia in result.Items)
                 {
                     if (message.AddNext && canInsert)
@@ -359,7 +359,7 @@ namespace Screenbox.Core.ViewModels
 
         public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
         {
-            var playlist = await _playlistFactory.CreatePlaylistAsync(files);
+            var playlist = await _mediaListFactory.TryParseMediaListAsync(files);
             if (playlist.Items.Count > 0)
             {
                 foreach (var item in playlist.Items)
@@ -378,9 +378,8 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                var result = await _playlistFactory.CreatePlaylistAsync(file, _playlist);
-                var media = result.CurrentItem;
-                if (media == null) return;
+                var result = await _mediaListFactory.ParseMediaListAsync(file);
+                var media = result.NextItem;
 
                 // Check if already in playlist
                 if (Items.Contains(media))
@@ -390,7 +389,11 @@ namespace Screenbox.Core.ViewModels
                 }
 
                 // Create new playlist
-                _playlist = result;
+                _playlist = new Playlist(result.NextItem, result.Items)
+                {
+                    NeighboringFilesQuery = neighboringFilesQuery
+                };
+
                 UpdateItemsFromPlaylist();
                 PlaySingle(media);
 
@@ -414,15 +417,12 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                var playlist = await _playlistFactory.CreatePlaylistAsync(files, reference: _playlist);
-                if (playlist.Items.Count > 0)
+                var result = await _mediaListFactory.TryParseMediaListAsync(files);
+                if (result?.Items.Count > 0)
                 {
-                    _playlist = playlist;
+                    _playlist = new Playlist(result.NextItem, result.Items);
                     UpdateItemsFromPlaylist();
-                    if (playlist.CurrentItem != null)
-                    {
-                        PlaySingle(playlist.CurrentItem);
-                    }
+                    PlaySingle(result.NextItem);
                 }
             }
             catch (Exception)
@@ -531,26 +531,26 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                Playlist? result = null;
+                NextMediaList? result = null;
 
                 switch (value)
                 {
                     case MediaViewModel media:
-                        result = await _playlistFactory.CreatePlaylistAsync(media);
+                        result = await _mediaListFactory.ParseMediaListAsync(media);
                         break;
                     case StorageFile file:
-                        result = await _playlistFactory.CreatePlaylistAsync(file);
+                        result = await _mediaListFactory.ParseMediaListAsync(file);
                         break;
                     case Uri uri:
-                        result = await _playlistFactory.CreatePlaylistAsync(uri);
+                        result = await _mediaListFactory.ParseMediaListAsync(uri);
                         break;
                 }
 
-                if (result?.CurrentItem != null && !result.CurrentItem.Source.Equals(CurrentItem?.Source))
+                if (result?.NextItem != null && !result.NextItem.Source.Equals(CurrentItem?.Source))
                 {
-                    _playlist = result;
+                    _playlist = new Playlist(result.NextItem, result.Items);
                     UpdateItemsFromPlaylist();
-                    PlaySingle(result.CurrentItem);
+                    PlaySingle(result.NextItem);
                 }
             }
             catch (Exception)
@@ -563,26 +563,26 @@ namespace Screenbox.Core.ViewModels
         {
             try
             {
-                Playlist? result = null;
+                NextMediaList? result = null;
 
                 switch (value)
                 {
                     case StorageFile file:
-                        result = await _playlistFactory.CreatePlaylistAsync(file);
+                        result = await _mediaListFactory.ParseMediaListAsync(file);
                         break;
                     case Uri uri:
-                        result = await _playlistFactory.CreatePlaylistAsync(uri);
+                        result = await _mediaListFactory.ParseMediaListAsync(uri);
                         break;
                     case MediaViewModel media:
-                        result = await _playlistFactory.CreatePlaylistAsync(media);
+                        result = await _mediaListFactory.ParseMediaListAsync(media);
                         break;
                 }
 
-                if (result?.CurrentItem != null)
+                if (result?.NextItem != null)
                 {
-                    _playlist = result;
+                    _playlist = new Playlist(result.NextItem, result.Items);
                     UpdateItemsFromPlaylist();
-                    PlaySingle(result.CurrentItem);
+                    PlaySingle(result.NextItem);
                 }
 
                 await TryEnqueueAndPlayPlaylistAsync(value);

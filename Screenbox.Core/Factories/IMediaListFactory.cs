@@ -10,27 +10,27 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Factories;
 
-public interface IPlaylistFactory
+public interface IMediaListFactory
 {
     /// <summary>
     /// Create a playlist from storage items
     /// </summary>
-    Task<Playlist> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, Playlist? reference = null, CancellationToken cancellationToken = default);
+    Task<NextMediaList?> TryParseMediaListAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a single media item
     /// </summary>
-    Task<Playlist> CreatePlaylistAsync(MediaViewModel media, CancellationToken cancellationToken = default);
+    Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a storage file
     /// </summary>
-    Task<Playlist> CreatePlaylistAsync(StorageFile file, Playlist? reference = null, CancellationToken cancellationToken = default);
+    Task<NextMediaList> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Create a playlist from a URI
     /// </summary>
-    Task<Playlist> CreatePlaylistAsync(Uri uri, CancellationToken cancellationToken = default);
+    Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Parse sub-media items recursively (for playlist files)

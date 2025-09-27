@@ -19,11 +19,11 @@ namespace Screenbox.Core.Services
     /// </summary>
     public sealed class PlaylistService : IPlaylistService
     {
-        private readonly IPlaylistFactory _playlistFactory;
+        private readonly IMediaListFactory _mediaListFactory;
 
-        public PlaylistService(IPlaylistFactory playlistFactory)
+        public PlaylistService(IMediaListFactory mediaListFactory)
         {
-            _playlistFactory = playlistFactory;
+            _mediaListFactory = mediaListFactory;
         }
 
         public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, StorageFile currentFile, CancellationToken cancellationToken = default)
@@ -31,10 +31,10 @@ namespace Screenbox.Core.Services
             try
             {
                 var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-                var result = await _playlistFactory.CreatePlaylistAsync(neighboringFiles, currentFile, playlist, cancellationToken);
+                var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, currentFile, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
-
-                return result;
+                if (result?.Items.Count > 0)
+                    return new Playlist(result.NextItem, result.Items, playlist);
             }
             catch (OperationCanceledException)
             {

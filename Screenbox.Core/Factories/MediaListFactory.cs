@@ -14,16 +14,16 @@ using Windows.Storage;
 
 namespace Screenbox.Core.Factories;
 
-public sealed class PlaylistFactory : IPlaylistFactory
+public sealed class MediaListFactory : IMediaListFactory
 {
     private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistFactory(MediaViewModelFactory mediaFactory)
+    public MediaListFactory(MediaViewModelFactory mediaFactory)
     {
         _mediaFactory = mediaFactory;
     }
 
-    public async Task<Playlist> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, Playlist? reference = null, CancellationToken cancellationToken = default)
+    public async Task<NextMediaList?> TryParseMediaListAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null, CancellationToken cancellationToken = default)
     {
         var queue = new List<MediaViewModel>();
         var storageItemQueue = storageItems.ToList();
@@ -62,10 +62,10 @@ public sealed class PlaylistFactory : IPlaylistFactory
             }
         }
 
-        return queue.Count > 0 ? new Playlist(next ?? queue[0], queue, reference) : new Playlist(reference);
+        return queue.Count > 0 ? new NextMediaList(next ?? queue[0], queue) : null;
     }
 
-    public async Task<Playlist> CreatePlaylistAsync(MediaViewModel media, CancellationToken cancellationToken = default)
+    public async Task<NextMediaList> ParseMediaListAsync(MediaViewModel media, CancellationToken cancellationToken = default)
     {
         // The ordering of the conditional terms below is important
         // Delay check Item as much as possible. Item is lazy init.
@@ -74,34 +74,34 @@ public sealed class PlaylistFactory : IPlaylistFactory
             || media.Item.Value?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
             || await ParseSubMediaRecursiveAsync(media, cancellationToken) is not { Count: > 0 } playlist)
         {
-            return new Playlist(media, new List<MediaViewModel> { media });
+            return new NextMediaList(media);
         }
 
-        return new Playlist(playlist[0], playlist);
+        return new NextMediaList(playlist[0], playlist);
     }
 
-    public async Task<Playlist> CreatePlaylistAsync(StorageFile file, Playlist? reference = null, CancellationToken cancellationToken = default)
+    public async Task<NextMediaList> ParseMediaListAsync(StorageFile file, CancellationToken cancellationToken = default)
     {
         var media = _mediaFactory.GetSingleton(file);
         if (file.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } items)
         {
             media = items[0];
-            return new Playlist(media, items, reference);
+            return new NextMediaList(media, items);
         }
 
-        return new Playlist(media, new List<MediaViewModel> { media }, reference);
+        return new NextMediaList(media);
     }
 
-    public async Task<Playlist> CreatePlaylistAsync(Uri uri, CancellationToken cancellationToken = default)
+    public async Task<NextMediaList> ParseMediaListAsync(Uri uri, CancellationToken cancellationToken = default)
     {
         var media = _mediaFactory.GetTransient(uri);
         if (await ParseSubMediaRecursiveAsync(media, cancellationToken) is { Count: > 0 } playlist)
         {
             media = playlist[0];
-            return new Playlist(media, playlist);
+            return new NextMediaList(media, playlist);
         }
 
-        return new Playlist(media, new List<MediaViewModel> { media });
+        return new NextMediaList(media);
     }
 
     public async Task<List<MediaViewModel>> ParseSubMediaRecursiveAsync(MediaViewModel source, CancellationToken cancellationToken = default)

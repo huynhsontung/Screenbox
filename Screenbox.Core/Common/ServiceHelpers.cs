@@ -50,7 +50,7 @@ public static class ServiceHelpers
         services.AddSingleton<StorageItemViewModelFactory>();
         services.AddSingleton<ArtistViewModelFactory>();
         services.AddSingleton<AlbumViewModelFactory>();
-        services.AddSingleton<IPlaylistFactory, PlaylistFactory>();
+        services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
         // Services
         services.AddSingleton<LibVlcService>();

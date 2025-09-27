@@ -11,14 +11,14 @@ namespace Screenbox.Core.Services
     public sealed class PlaybackControlService : IPlaybackControlService
     {
         private readonly IFilesService _filesService;
-        private readonly IPlaylistFactory _playlistFactory;
+        private readonly IMediaListFactory _mediaListFactory;
 
         public PlaybackControlService(
             IFilesService filesService,
-            IPlaylistFactory playlistFactory)
+            IMediaListFactory mediaListFactory)
         {
             _filesService = filesService;
-            _playlistFactory = playlistFactory;
+            _mediaListFactory = mediaListFactory;
         }
 
         public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
@@ -56,8 +56,9 @@ namespace Screenbox.Core.Services
                 var nextFile = await _filesService.GetNextFileAsync(file, playlist.NeighboringFilesQuery);
                 if (nextFile != null)
                 {
-                    var result = await _playlistFactory.CreatePlaylistAsync(nextFile, playlist);
-                    return new PlaybackNavigationResult(result, result.CurrentItem);
+                    var result = await _mediaListFactory.ParseMediaListAsync(nextFile);
+                    var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
+                    return new PlaybackNavigationResult(newPlaylist, result.NextItem);
                 }
                 return new PlaybackNavigationResult(null);
             }
@@ -90,8 +91,9 @@ namespace Screenbox.Core.Services
                 var previousFile = await _filesService.GetPreviousFileAsync(file, playlist.NeighboringFilesQuery);
                 if (previousFile != null)
                 {
-                    var result = await _playlistFactory.CreatePlaylistAsync(previousFile, playlist);
-                    return new PlaybackNavigationResult(result, result.CurrentItem);
+                    var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
+                    var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
+                    return new PlaybackNavigationResult(newPlaylist, result.NextItem);
                 }
                 return new PlaybackNavigationResult(null);
             }
