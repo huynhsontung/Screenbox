@@ -8,6 +8,8 @@ Thank you for your interest in contributing to Screenbox! This guide will help y
 - [⚙️ Development Environment Setup](#️-development-environment-setup)
 - [🏗️ Project Structure](#️-project-structure)
 - [🔄 Development Workflow](#-development-workflow)
+  - [📝 Creating an Issue](#-creating-an-issue)
+  - [🔀 Creating a Pull Request](#-creating-a-pull-request)
 - [🧹 Code Guidelines](#-code-guidelines)
 - [🧪 Testing](#-testing)
 - [🌍 Translation](#-translation)
@@ -24,7 +26,7 @@ Before you begin, ensure you have the following installed:
     - **WinUI application development**
   - Required optional components:
     - **Universal Windows Platform tools**
-    - **Windows 11 SDK (10.0.22621.0)**
+    - **Windows 11 SDK (10.0.26100.0)**
   - Recommended extensions:
     - **XAML Styler**
 - **Windows 10** version 1903 (build 18362) or later, or **Windows 11**
@@ -79,17 +81,39 @@ Screenbox.sln
 
 ### Main Directories
 
-- `Screenbox/Views/`: XAML pages and user controls
-- `Screenbox/ViewModels/`: Presentation logic and data binding
-- `Screenbox.Core/Services/`: Business logic and data access
-- `Screenbox.Core/Models/`: Data structures and entities
+- `Screenbox/Pages/`: XAML pages
+- `Screenbox/Controls/`: Custom controls and user interface components
+- `Screenbox/Converters/`: Data binding converters
+- `Screenbox/Helpers/`: Utility and helper classes
 - `Screenbox/Strings/`: Localization resources
+- `Screenbox.Core/ViewModels/`: Presentation logic and data binding
+- `Screenbox.Core/Services/`: Business logic and data access services
+- `Screenbox.Core/Models/`: Data structures and entities
+- `Screenbox.Core/Messages/`: MVVM Toolkit messenger message types
+- `Screenbox.Core/Playback/`: Media playback logic and components
 
 For a detailed breakdown of the entire codebase architecture, see the [Project Structure documentation](docs/PROJECT_STRUCTURE.md).
 
 ## 🔄 Development Workflow
 
-### Creating a Pull Request
+### 📝 Creating an Issue
+
+Creating an issue is a great way to discuss bugs, feature requests, or enhancements with the maintainers and community.
+
+#### When to Create an Issue
+
+- **Bug Reports**: When you encounter unexpected behavior or errors
+- **Enhancements**: When you want to improve existing features or add new functionality
+
+#### Issue Guidelines
+
+1. **Search existing issues** first to avoid duplicates
+2. **Use the appropriate issue template** (Bug Report or Enhancement)
+3. **Use descriptive titles** that clearly summarize the problem or request
+4. **Provide detailed information** as requested in the template
+5. **Be respectful** and constructive in your communication
+
+### 🔀 Creating a Pull Request
 
 1. **Create a new branch** from the main branch
    - Select "New Branch..." from the Git menu
@@ -98,18 +122,20 @@ For a detailed breakdown of the entire codebase architecture, see the [Project S
    Or, if you are familiar with Git:
    ```bash
    git branch BRANCH-NAME
-   git checkout BRANCH-NAME
+   git switch BRANCH-NAME
    ```
 2. **Make your changes** and commit them with clear, descriptive messages
 3. **Push to your fork** and open a pull request on GitHub
 
-For a full walkthrough of the processs, see the [GitHub documentation](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
+For a full walkthrough of the process, see the [GitHub documentation](https://docs.github.com/en/get-started/exploring-projects-on-github/contributing-to-a-project).
 
-### Pull Request Guidelines
+#### Pull Request Guidelines
 
-- Use descriptive titles following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard (e.g., `feat:`, `fix:`, `docs:`, `refactor:`, etc.)
-- Include a clear description of what changes were made and why
-- Link to relevant issues if applicable
+- **Use descriptive titles** following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) standard (e.g., `feat:`, `fix:`, `docs:`, `refactor:`, etc.)
+- **Include a clear description** of what changes were made and why
+- **Link to relevant issues** if applicable
+- **Keep pull requests focused** on one feature or fix per PR when possible
+- **Update documentation** if your changes affect user-facing functionality
 
 ## 🧹 Code Guidelines
 
@@ -120,7 +146,7 @@ Before committing changes, please:
 1. **Run XAML Styler** (`Ctrl+K, Ctrl+2`) on all `.xaml` files you've modified
 2. **Use Code Cleanup** (`Ctrl+K, Ctrl+E`) on all `.cs` files you've modified
 
-Your IDE should automatically use the project’s `.editorconfig` rules for formatting.
+Your IDE should automatically use the project's `.editorconfig` rules for formatting.
 
 ## 🧪 Testing
 
@@ -166,7 +192,9 @@ If your language isn't available on Crowdin, you can either request its addition
 - Under `Screenbox/Strings`, create a new sub-folder, for example "fr-FR" for French (France), using the [BCP-47 language tag](https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/msix/app-package-requirements#supported-languages) for the folder name.
 - Copy the contents of the `Screenbox/Strings/en-US/` folder into your language folder and translate them.
 
-For detailed guidance on the translation workflow, see the [Translation section in the main README](README.md#translation).
+For detailed guidance on the translation workflow and language support, see:
+- [Translation section in the main README](README.md#translation).
+- [Microsoft Language Resources](https://learn.microsoft.com/en-us/globalization/reference/microsoft-language-resources) for comprehensive language and localization reference
 
 ## 📤 Submitting Contributions
 
