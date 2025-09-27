@@ -54,13 +54,27 @@ winget install screenbox -s winget
 
 Feel free to open an issue if you want to report a bug, give feedback, or ask a question. PRs are very welcome!
 
+### For Contributors
+
+- 📖 **[Contributing Guide](CONTRIBUTING.md)** - Complete guide for new contributors
+- 🏗️ **[Project Structure](docs/PROJECT_STRUCTURE.md)** - Detailed codebase architecture overview
+
+### Quick Start for Developers
+
+1. **Prerequisites**: Visual Studio 2022 with UWP development workload
+2. **Clone**: `git clone https://github.com/huynhsontung/Screenbox.git`
+3. **Build**: Open `Screenbox.sln` and build the solution (Ctrl+Shift+B)
+4. **Run**: Set platform to x64 and start debugging (F5)
+
+See the [Contributing Guide](CONTRIBUTING.md) for detailed setup instructions.
+
 ## Translation
 
 [![Crowdin](https://badges.crowdin.net/screenbox/localized.svg)](https://crowdin.com/project/screenbox)
 
 Help translate the app to your language on [Crowdin](https://crowdin.com/project/screenbox)! Crowdin offers an intuitive UX for you to get started and is the recommended tool for localization. Translations are automatically synced to GitHub and published in the next minor update.
 
-You can also translate the app locally without Crowdin. The project source language is English, United States. All localizable source files are in the `Screenbox\Strings\en-US` directory. Localizable file types are `.resw` and `.md`. It is recommended that you use [ResX Resource Manager](https://github.com/dotnet/ResXResourceManager) for easier `.resw` translation.
+You can also translate the app locally without Crowdin. The project source language is English, United States. All localizable source files are in the `Screenbox\Strings\en-US` directory. Localizable file types are `.resw` and `.md`.
 
 Make sure you have your translations in the appropriate folder under the `Screenbox\Strings` directory. We use a [IETF language tag](https://www.venea.net/web/culture_code) to name the folder that contains resources for that language (e.g. `fr-FR` for French (France), `es-ES` for Spanish (Spain)). Files in these folders are translated copies of the original resource files in `Screenbox\Strings\en-US`.
 
