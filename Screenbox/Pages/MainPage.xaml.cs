@@ -51,9 +51,6 @@ namespace Screenbox.Pages
             // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
 
-            // Register a handler for when the window changes focus
-            Window.Current.CoreWindow.Activated += CoreWindow_Activated;
-
             NotificationView.Translation = new Vector3(0, 0, 16);
 
             _pages = new Dictionary<string, Type>
@@ -79,21 +76,6 @@ namespace Screenbox.Pages
             // Left padding should only be set if we pin flow direction on the title bar.
             // LeftPaddingColumn.Width = new GridLength(sender.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(Math.Max(sender.SystemOverlayLeftInset, sender.SystemOverlayRightInset));
-        }
-
-        /// <summary>
-        /// Change the <see cref="VisualState"/> depending on whether the app is active or inactive.
-        /// </summary>
-        private void CoreWindow_Activated(CoreWindow sender, WindowActivatedEventArgs args)
-        {
-            if (args.WindowActivationState == CoreWindowActivationState.Deactivated)
-            {
-                VisualStateManager.GoToState(this, "Deactivated", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "Activated", true);
-            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

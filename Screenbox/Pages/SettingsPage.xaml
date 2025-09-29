@@ -6,7 +6,6 @@
     xmlns:contract13Present="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:ctBehaviors="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -31,7 +30,6 @@
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-        <converters:LanguageLayoutDirectionToFlowDirectionConverter x:Key="LanguageLayoutDirectionToFlowDirectionConverter" />
         <converters:IntToUnitStringConverter x:Key="HideDelayOptionsToUnitStringConverter" Unit="Seconds" />
 
         <!--  Section header text style  -->
@@ -259,9 +257,9 @@
                             Header="{strings:Resources Key=ManageSystemIndexingLink}"
                             IsClickEnabled="True">
                             <interactivity:Interaction.Behaviors>
-                                <core:EventTriggerBehavior EventName="Click">
+                                <interactivity:EventTriggerBehavior EventName="Click">
                                     <ctBehaviors:NavigateToUriAction NavigateUri="ms-settings:search" />
-                                </core:EventTriggerBehavior>
+                                </interactivity:EventTriggerBehavior>
                             </interactivity:Interaction.Behaviors>
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
@@ -302,7 +300,7 @@
                         SelectedIndex="{x:Bind ViewModel.SelectedLanguage, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="models:Language">
-                                <TextBlock FlowDirection="{x:Bind LayoutDirection, Converter={StaticResource LanguageLayoutDirectionToFlowDirectionConverter}}" Text="{x:Bind NativeName}" />
+                                <TextBlock FlowDirection="{x:Bind converters:LanguageLayoutDirectionToFlowDirectionConverter.ToFlowDirection(LayoutDirection)}" Text="{x:Bind NativeName}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -318,7 +316,7 @@
                     <ctc:SettingsExpander.HeaderIcon>
                         <FontIcon
                             FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind helpers:GlyphConvert.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
                             MirroredWhenRightToLeft="True" />
                     </ctc:SettingsExpander.HeaderIcon>
                     <interactivity:Interaction.Behaviors>

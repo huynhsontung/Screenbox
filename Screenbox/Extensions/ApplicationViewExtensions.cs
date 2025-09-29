@@ -1,7 +1,16 @@
-﻿using Windows.UI.ViewManagement;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+// Source: https://github.com/CommunityToolkit/WindowsCommunityToolkit/blob/main/Microsoft.Toolkit.Uwp.UI/Extensions/ApplicationViewExtensions.cs
+
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls.Extensions;
+namespace Screenbox.Extensions;
+
+/// <summary>
+/// Provides attached properties for interacting with the <see cref="Windows.UI.ViewManagement.ApplicationView"/> on a window (app view).
+/// </summary>
 public static class ApplicationViewExtensions
 {
     /// <summary>
