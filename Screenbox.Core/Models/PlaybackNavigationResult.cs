@@ -9,27 +9,16 @@ namespace Screenbox.Core.Models;
 /// </summary>
 public sealed class PlaybackNavigationResult
 {
-    public MediaViewModel? NextItem { get; }
+    public MediaViewModel NextItem { get; }
     public Playlist? UpdatedPlaylist { get; }
-    public bool RequiresNeighboringFileNavigation { get; }
 
-    public PlaybackNavigationResult(MediaViewModel? nextItem)
+    public PlaybackNavigationResult(MediaViewModel nextItem)
     {
         NextItem = nextItem;
     }
 
-    public PlaybackNavigationResult(Playlist updatedPlaylist, MediaViewModel? nextItem)
+    public PlaybackNavigationResult(Playlist updatedPlaylist, MediaViewModel nextItem) : this(nextItem)
     {
         UpdatedPlaylist = updatedPlaylist;
-        NextItem = nextItem;
-    }
-
-    public static PlaybackNavigationResult NeighboringFileRequired() =>
-        new(null, true);
-
-    private PlaybackNavigationResult(MediaViewModel? nextItem, bool requiresNeighboringFileNavigation)
-    {
-        NextItem = nextItem;
-        RequiresNeighboringFileNavigation = requiresNeighboringFileNavigation;
     }
 }

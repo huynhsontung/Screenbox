@@ -332,18 +332,15 @@ namespace Screenbox.Core.ViewModels
         {
             var result = await _playbackControlService.GetNextAsync(_playlist, RepeatMode);
 
-            if (result.UpdatedPlaylist != null)
+            if (result != null)
             {
-                // Playlist was replaced (neighboring file navigation)
-                _playlist = result.UpdatedPlaylist;
-                UpdateItemsFromPlaylist();
-                if (result.NextItem != null)
+                if (result.UpdatedPlaylist != null)
                 {
-                    PlaySingle(result.NextItem);
+                    // Playlist was replaced (neighboring file navigation)
+                    _playlist = result.UpdatedPlaylist;
+                    UpdateItemsFromPlaylist();
                 }
-            }
-            else if (result.NextItem != null)
-            {
+
                 PlaySingle(result.NextItem);
             }
         }
@@ -368,18 +365,15 @@ namespace Screenbox.Core.ViewModels
 
             var result = await _playbackControlService.GetPreviousAsync(_playlist, RepeatMode);
 
-            if (result.UpdatedPlaylist != null)
+            if (result != null)
             {
-                // Playlist was replaced (neighboring file navigation)
-                _playlist = result.UpdatedPlaylist;
-                UpdateItemsFromPlaylist();
-                if (result.NextItem != null)
+                if (result.UpdatedPlaylist != null)
                 {
-                    PlaySingle(result.NextItem);
+                    // Playlist was replaced (neighboring file navigation)
+                    _playlist = result.UpdatedPlaylist;
+                    UpdateItemsFromPlaylist();
                 }
-            }
-            else if (result.NextItem != null)
-            {
+
                 PlaySingle(result.NextItem);
             }
             else
@@ -578,18 +572,15 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(() =>
             {
                 var result = _playbackControlService.HandleMediaEnded(_playlist, RepeatMode);
-                if (result.UpdatedPlaylist != null)
+                if (result != null)
                 {
-                    // Playlist was replaced (neighboring file navigation)
-                    _playlist = result.UpdatedPlaylist;
-                    UpdateItemsFromPlaylist();
-                    if (result.NextItem != null)
+                    if (result.UpdatedPlaylist != null)
                     {
-                        PlaySingle(result.NextItem);
+                        // Playlist was replaced (neighboring file navigation)
+                        _playlist = result.UpdatedPlaylist;
+                        UpdateItemsFromPlaylist();
                     }
-                }
-                else if (result.NextItem != null)
-                {
+
                     PlaySingle(result.NextItem);
                 }
                 else if (RepeatMode == MediaPlaybackAutoRepeatMode.Track)

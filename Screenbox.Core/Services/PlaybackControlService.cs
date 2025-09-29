@@ -45,10 +45,10 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return playlist.Items.Count > 0 && playlist.CurrentIndex >= 0;
     }
 
-    public async Task<PlaybackNavigationResult> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public async Task<PlaybackNavigationResult?> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return new PlaybackNavigationResult(null);
+            return null;
 
         // Single file with neighboring files
         if (playlist.Items.Count == 1 && playlist.NeighboringFilesQuery != null && playlist.CurrentItem.Source is StorageFile file)
@@ -60,16 +60,16 @@ public sealed class PlaybackControlService : IPlaybackControlService
                 var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
-            return new PlaybackNavigationResult(null);
+            return null;
         }
 
         return GetNext(playlist, repeatMode);
     }
 
-    private PlaybackNavigationResult GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    private PlaybackNavigationResult? GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return new PlaybackNavigationResult(null);
+            return null;
 
         // Normal next navigation
         if (playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1)
@@ -85,13 +85,13 @@ public sealed class PlaybackControlService : IPlaybackControlService
         }
 
         // No repeat mode means stop
-        return new PlaybackNavigationResult(null);
+        return null;
     }
 
-    public async Task<PlaybackNavigationResult> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public async Task<PlaybackNavigationResult?> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return new PlaybackNavigationResult(null);
+            return null;
 
         // Single file with neighboring files
         if (playlist.Items.Count == 1 && playlist.NeighboringFilesQuery != null && playlist.CurrentItem.Source is StorageFile file)
@@ -103,16 +103,16 @@ public sealed class PlaybackControlService : IPlaybackControlService
                 var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
-            return new PlaybackNavigationResult(null);
+            return null;
         }
 
         return GetPrevious(playlist, repeatMode);
     }
 
-    private PlaybackNavigationResult GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    private PlaybackNavigationResult? GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return new PlaybackNavigationResult(null);
+            return null;
 
         // Normal previous navigation
         if (playlist.CurrentIndex >= 1 && playlist.CurrentIndex < playlist.Items.Count)
@@ -128,10 +128,10 @@ public sealed class PlaybackControlService : IPlaybackControlService
         }
 
         // No repeat mode means stop
-        return new PlaybackNavigationResult(null);
+        return null;
     }
 
-    public PlaybackNavigationResult HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
+    public PlaybackNavigationResult? HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
     {
         switch (repeatMode)
         {
@@ -140,7 +140,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
 
             case MediaPlaybackAutoRepeatMode.Track:
                 // Track repeat is handled by the media player itself
-                return new PlaybackNavigationResult(null);
+                return null;
 
             default:
                 if (playlist.Items.Count > 1)
@@ -150,6 +150,6 @@ public sealed class PlaybackControlService : IPlaybackControlService
                 break;
         }
 
-        return new PlaybackNavigationResult(null);
+        return null;
     }
 }

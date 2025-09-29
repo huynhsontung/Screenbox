@@ -21,15 +21,15 @@ public interface IPlaybackControlService
     /// <summary>
     /// Get the next media item to play
     /// </summary>
-    Task<PlaybackNavigationResult> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    Task<PlaybackNavigationResult?> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
 
     /// <summary>
     /// Get the previous media item to play
     /// </summary>
-    Task<PlaybackNavigationResult> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    Task<PlaybackNavigationResult?> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
 
     /// <summary>
     /// Handle end of media playback
     /// </summary>
-    PlaybackNavigationResult HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
+    PlaybackNavigationResult? HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
 }
