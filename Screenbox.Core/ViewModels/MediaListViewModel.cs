@@ -379,58 +379,44 @@ namespace Screenbox.Core.ViewModels
 
         private async Task HandleSingleFileAsync(StorageFile file, Windows.Storage.Search.StorageFileQueryResult? neighboringFilesQuery)
         {
-            try
+            var result = await _mediaListFactory.ParseMediaListAsync(file);
+            var media = result.NextItem;
+
+            // Check if already in playlist
+            if (Items.Contains(media))
             {
-                var result = await _mediaListFactory.ParseMediaListAsync(file);
-                var media = result.NextItem;
-
-                // Check if already in playlist
-                if (Items.Contains(media))
-                {
-                    PlaySingle(media);
-                    return;
-                }
-
-                // Create new playlist
-                _playlist = new Playlist(result.NextItem, result.Items)
-                {
-                    NeighboringFilesQuery = neighboringFilesQuery
-                };
-
-                UpdateItemsFromPlaylist();
                 PlaySingle(media);
-
-                // Enqueue neighboring files if needed
-                if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
-                {
-                    _playlist.NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
-                    if (_playlist.NeighboringFilesQuery != null)
-                    {
-                        await EnqueueNeighboringFilesAsync(file);
-                    }
-                }
+                return;
             }
-            catch (Exception)
+
+            // Create new playlist
+            _playlist = new Playlist(result.NextItem, result.Items)
             {
-                // Handle error appropriately
+                NeighboringFilesQuery = neighboringFilesQuery
+            };
+
+            UpdateItemsFromPlaylist();
+            PlaySingle(media);
+
+            // Enqueue neighboring files if needed
+            if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
+            {
+                _playlist.NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+                if (_playlist.NeighboringFilesQuery != null)
+                {
+                    await EnqueueNeighboringFilesAsync(file);
+                }
             }
         }
 
         private async Task HandleMultipleFilesAsync(IReadOnlyList<IStorageItem> files)
         {
-            try
+            var result = await _mediaListFactory.TryParseMediaListAsync(files);
+            if (result?.Items.Count > 0)
             {
-                var result = await _mediaListFactory.TryParseMediaListAsync(files);
-                if (result?.Items.Count > 0)
-                {
-                    _playlist = new Playlist(result.NextItem, result.Items);
-                    UpdateItemsFromPlaylist();
-                    PlaySingle(result.NextItem);
-                }
-            }
-            catch (Exception)
-            {
-                // Handle error appropriately
+                _playlist = new Playlist(result.NextItem, result.Items);
+                UpdateItemsFromPlaylist();
+                PlaySingle(result.NextItem);
             }
         }
 
@@ -532,33 +518,26 @@ namespace Screenbox.Core.ViewModels
 
         private async Task EnqueueAndPlay(object value)
         {
-            try
+            NextMediaList? result = null;
+
+            switch (value)
             {
-                NextMediaList? result = null;
-
-                switch (value)
-                {
-                    case StorageFile file:
-                        result = await _mediaListFactory.ParseMediaListAsync(file);
-                        break;
-                    case Uri uri:
-                        result = await _mediaListFactory.ParseMediaListAsync(uri);
-                        break;
-                    case MediaViewModel media:
-                        result = await _mediaListFactory.ParseMediaListAsync(media);
-                        break;
-                }
-
-                if (result?.NextItem != null)
-                {
-                    _playlist = new Playlist(result.NextItem, result.Items);
-                    UpdateItemsFromPlaylist();
-                    PlaySingle(result.NextItem);
-                }
+                case StorageFile file:
+                    result = await _mediaListFactory.ParseMediaListAsync(file);
+                    break;
+                case Uri uri:
+                    result = await _mediaListFactory.ParseMediaListAsync(uri);
+                    break;
+                case MediaViewModel media:
+                    result = await _mediaListFactory.ParseMediaListAsync(media);
+                    break;
             }
-            catch (Exception)
+
+            if (result?.NextItem != null)
             {
-                // Handle error appropriately
+                _playlist = new Playlist(result.NextItem, result.Items);
+                UpdateItemsFromPlaylist();
+                PlaySingle(result.NextItem);
             }
         }
 
