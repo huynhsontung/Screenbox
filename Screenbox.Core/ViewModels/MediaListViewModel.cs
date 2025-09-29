@@ -206,7 +206,7 @@ namespace Screenbox.Core.ViewModels
 
         #region Property Changed Handlers
 
-        async partial void OnCurrentItemChanging(MediaViewModel? value)
+        partial void OnCurrentItemChanging(MediaViewModel? value)
         {
             if (CurrentItem != null)
             {
@@ -226,8 +226,41 @@ namespace Screenbox.Core.ViewModels
                 CurrentIndex = -1;
                 _playlist.CurrentIndex = -1;
             }
+        }
 
-            await HandleCurrentItemChangedAsync(value);
+        async partial void OnCurrentItemChanged(MediaViewModel? value)
+        {
+            NextCommand.NotifyCanExecuteChanged();
+            PreviousCommand.NotifyCanExecuteChanged();
+            SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
+                ? new Dictionary<string, string>
+                {
+                    { "MediaType", value.MediaType.ToString() }
+                }
+                : null);
+
+            // Add to recent files
+            switch (value?.Source)
+            {
+                case StorageFile file:
+                    _filesService.AddToRecent(file);
+                    break;
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                    try
+                    {
+                        var file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                        _filesService.AddToRecent(file);
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    break;
+            }
+
+            Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
+            await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
+            await UpdateMediaBufferAsync();
         }
 
         partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
@@ -464,39 +497,6 @@ namespace Screenbox.Core.ViewModels
             _playlist = new Playlist();
             CurrentItem = null;
             ShuffleMode = false;
-        }
-
-        private async Task HandleCurrentItemChangedAsync(MediaViewModel? value)
-        {
-            SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
-                ? new Dictionary<string, string>
-                {
-                    { "MediaType", value.MediaType.ToString() }
-                }
-                : null);
-
-            // Add to recent files
-            switch (value?.Source)
-            {
-                case StorageFile file:
-                    _filesService.AddToRecent(file);
-                    break;
-                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                    try
-                    {
-                        var file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                        _filesService.AddToRecent(file);
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                    break;
-            }
-
-            Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
-            await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
-            await UpdateMediaBufferAsync();
         }
 
         private async Task UpdateMediaBufferAsync()

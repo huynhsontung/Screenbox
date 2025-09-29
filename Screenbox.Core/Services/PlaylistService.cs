@@ -100,35 +100,6 @@ public sealed class PlaylistService : IPlaylistService
         return restored;
     }
 
-    public int? GetNextIndex(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, StorageFileQueryResult? neighboringFilesQuery = null)
-    {
-        if (playlistCount == 0) return null;
-
-        if (playlistCount == 1)
-        {
-            return neighboringFilesQuery != null ? null : currentIndex; // Signal neighboring file check needed
-        }
-
-        if (repeatMode == MediaPlaybackAutoRepeatMode.List)
-        {
-            return currentIndex == playlistCount - 1 ? 0 : currentIndex + 1;
-        }
-
-        return currentIndex < playlistCount - 1 ? currentIndex + 1 : null;
-    }
-
-    public int? GetPreviousIndex(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode)
-    {
-        if (playlistCount == 0) return null;
-
-        if (repeatMode == MediaPlaybackAutoRepeatMode.List)
-        {
-            return currentIndex == 0 ? playlistCount - 1 : currentIndex - 1;
-        }
-
-        return currentIndex > 0 ? currentIndex - 1 : null;
-    }
-
     public IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5)
     {
         if (currentIndex < 0 || playlistCount == 0) return Array.Empty<int>();

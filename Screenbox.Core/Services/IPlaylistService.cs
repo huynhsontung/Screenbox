@@ -31,16 +31,6 @@ public interface IPlaylistService
     Playlist RestoreFromShuffle(Playlist playlist);
 
     /// <summary>
-    /// Get next item index based on current state
-    /// </summary>
-    int? GetNextIndex(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, StorageFileQueryResult? neighboringFilesQuery = null);
-
-    /// <summary>
-    /// Get previous item index based on current state
-    /// </summary>
-    int? GetPreviousIndex(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode);
-
-    /// <summary>
     /// Get media buffer indices around current position
     /// </summary>
     IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5);
