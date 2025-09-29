@@ -63,6 +63,14 @@ public sealed class PlaybackControlService : IPlaybackControlService
             return new PlaybackNavigationResult(null);
         }
 
+        return GetNext(playlist, repeatMode);
+    }
+
+    private PlaybackNavigationResult GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    {
+        if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
+            return new PlaybackNavigationResult(null);
+
         // Normal next navigation
         if (playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1)
         {
@@ -98,6 +106,14 @@ public sealed class PlaybackControlService : IPlaybackControlService
             return new PlaybackNavigationResult(null);
         }
 
+        return GetPrevious(playlist, repeatMode);
+    }
+
+    private PlaybackNavigationResult GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    {
+        if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
+            return new PlaybackNavigationResult(null);
+
         // Normal previous navigation
         if (playlist.CurrentIndex >= 1 && playlist.CurrentIndex < playlist.Items.Count)
         {
@@ -115,7 +131,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return new PlaybackNavigationResult(null);
     }
 
-    public async Task<PlaybackNavigationResult> HandleMediaEndedAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
+    public PlaybackNavigationResult HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode)
     {
         switch (repeatMode)
         {
@@ -129,7 +145,7 @@ public sealed class PlaybackControlService : IPlaybackControlService
             default:
                 if (playlist.Items.Count > 1)
                 {
-                    return await GetNextAsync(playlist, repeatMode);
+                    return GetNext(playlist, repeatMode);
                 }
                 break;
         }

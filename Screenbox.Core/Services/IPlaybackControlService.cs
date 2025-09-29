@@ -31,5 +31,5 @@ public interface IPlaybackControlService
     /// <summary>
     /// Handle end of media playback
     /// </summary>
-    Task<PlaybackNavigationResult> HandleMediaEndedAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
+    PlaybackNavigationResult HandleMediaEnded(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode);
 }

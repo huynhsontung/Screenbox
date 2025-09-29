@@ -184,12 +184,11 @@ namespace Screenbox.Core.ViewModels
 
             if (_delayPlay != null)
             {
-                _dispatcherQueue.TryEnqueue(async () =>
+                async void SetPlayQueue()
                 {
                     if (_delayPlay is MediaViewModel media && Items.Contains(media))
                     {
                         PlaySingle(media);
-                        await TryEnqueueAndPlayPlaylistAsync(media);
                     }
                     else
                     {
@@ -197,7 +196,9 @@ namespace Screenbox.Core.ViewModels
                         await EnqueueAndPlay(_delayPlay);
                     }
                     _delayPlay = null;
-                });
+                }
+
+                _dispatcherQueue.TryEnqueue(SetPlayQueue);
             }
         }
 
@@ -207,11 +208,6 @@ namespace Screenbox.Core.ViewModels
 
         async partial void OnCurrentItemChanging(MediaViewModel? value)
         {
-            if (_mediaPlayer != null)
-            {
-                _mediaPlayer.PlaybackItem = value?.Item.Value;
-            }
-
             if (CurrentItem != null)
             {
                 _cts?.Cancel();
@@ -276,8 +272,15 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void PlaySingle(MediaViewModel vm)
         {
+            if (_mediaPlayer == null)
+            {
+                _delayPlay = vm;
+                return;
+            }
+
             CurrentItem = vm;
-            _mediaPlayer?.Play();
+            _mediaPlayer.PlaybackItem = vm.Item.Value;
+            _mediaPlayer.Play();
         }
 
         [RelayCommand]
@@ -527,38 +530,6 @@ namespace Screenbox.Core.ViewModels
             await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
         }
 
-        private async Task TryEnqueueAndPlayPlaylistAsync(object value)
-        {
-            try
-            {
-                NextMediaList? result = null;
-
-                switch (value)
-                {
-                    case MediaViewModel media:
-                        result = await _mediaListFactory.ParseMediaListAsync(media);
-                        break;
-                    case StorageFile file:
-                        result = await _mediaListFactory.ParseMediaListAsync(file);
-                        break;
-                    case Uri uri:
-                        result = await _mediaListFactory.ParseMediaListAsync(uri);
-                        break;
-                }
-
-                if (result?.NextItem != null && !result.NextItem.Source.Equals(CurrentItem?.Source))
-                {
-                    _playlist = new Playlist(result.NextItem, result.Items);
-                    UpdateItemsFromPlaylist();
-                    PlaySingle(result.NextItem);
-                }
-            }
-            catch (Exception)
-            {
-                // Handle error appropriately
-            }
-        }
-
         private async Task EnqueueAndPlay(object value)
         {
             try
@@ -584,8 +555,6 @@ namespace Screenbox.Core.ViewModels
                     UpdateItemsFromPlaylist();
                     PlaySingle(result.NextItem);
                 }
-
-                await TryEnqueueAndPlayPlaylistAsync(value);
             }
             catch (Exception)
             {
@@ -627,10 +596,9 @@ namespace Screenbox.Core.ViewModels
 
         private void OnEndReached(IMediaPlayer sender, object? args)
         {
-            _dispatcherQueue.TryEnqueue(async () =>
+            _dispatcherQueue.TryEnqueue(() =>
             {
-                var result = await _playbackControlService.HandleMediaEndedAsync(_playlist, RepeatMode);
-
+                var result = _playbackControlService.HandleMediaEnded(_playlist, RepeatMode);
                 if (result.UpdatedPlaylist != null)
                 {
                     // Playlist was replaced (neighboring file navigation)
@@ -650,13 +618,12 @@ namespace Screenbox.Core.ViewModels
                     // Track repeat - restart current track
                     sender.Position = TimeSpan.Zero;
                 }
-                // If no result and not track repeat, playback naturally stops
             });
         }
 
         private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
         {
-            _dispatcherQueue.TryEnqueue(async () =>
+            async void HandleTransportControlsButtonPressed()
             {
                 switch (args.Button)
                 {
@@ -667,7 +634,9 @@ namespace Screenbox.Core.ViewModels
                         await PreviousAsync();
                         break;
                 }
-            });
+            }
+
+            _dispatcherQueue.TryEnqueue(HandleTransportControlsButtonPressed);
         }
 
         private void TransportControlsOnAutoRepeatModeChangeRequested(Windows.Media.SystemMediaTransportControls sender, Windows.Media.AutoRepeatModeChangeRequestedEventArgs args)
