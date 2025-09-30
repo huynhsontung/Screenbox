@@ -921,7 +921,7 @@
     <value>Continuă redarea de unde ai oprit ultima dată la deschiderea unui fișier</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Metodă de creștere a rezoluției video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
