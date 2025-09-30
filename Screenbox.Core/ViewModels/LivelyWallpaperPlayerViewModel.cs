@@ -1,23 +1,21 @@
 ﻿#nullable enable
 
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.Json;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.WinUI;
 using Microsoft.UI.Xaml.Controls;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -138,32 +136,45 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             return;
         }
 
-        var jsonObject = JObject.Parse(jsonString);
-        foreach (KeyValuePair<string, JToken?> item in jsonObject)
+        var jsonOptions = new JsonDocumentOptions { AllowTrailingCommas = true };
+        using var jsonDocument = JsonDocument.Parse(jsonString, jsonOptions);
+        var jsonElement = jsonDocument.RootElement;
+
+        foreach (var item in jsonElement.EnumerateObject())
         {
-            var typeToken = item.Value?["type"];
-            var valueToken = item.Value?["value"];
-            if (typeToken == null || valueToken == null) continue;
-            switch (typeToken.ToString())
+            if (!item.Value.TryGetProperty("type", out var typeToken) ||
+                !item.Value.TryGetProperty("value", out var valueToken))
+                continue;
+
+            if (typeToken.ValueKind == JsonValueKind.Null || valueToken.ValueKind == JsonValueKind.Null)
+                continue;
+
+            switch (typeToken.GetString())
             {
                 case "slider":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Key, (double)valueToken);
+                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetDouble());
                     break;
                 case "dropdown":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Key, (int)valueToken);
+                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetInt32());
                     break;
                 case "checkbox":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Key, (bool)valueToken);
+                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetBoolean());
                     break;
                 case "color":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Key, valueToken.ToString());
+                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
                     break;
+                //case "textbox":
+                //    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
+                //    break;
                 case "folderDropdown":
-                    var relativePath = Path.Combine(item.Value?["folder"]?.ToString() ?? string.Empty,
-                        valueToken.ToString());
-                    var filePath = Path.Combine(Source.Path, relativePath);
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Key,
-                        File.Exists(filePath) ? relativePath : null);
+                    if (item.Value.TryGetProperty("folder", out var folderToken))
+                    {
+                        var relativePath = Path.Combine(folderToken.GetString() ?? string.Empty,
+                            valueToken.GetString() ?? string.Empty);
+                        var filePath = Path.Combine(Source.Path, relativePath);
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name,
+                            File.Exists(filePath) ? relativePath : null);
+                    }
                     break;
                 case "button":
                 case "label":
@@ -207,7 +218,7 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             model.Thumbnail = base64;
         }
 
-        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonConvert.SerializeObject(model));
+        await webView.ExecuteScriptFunctionAsync("livelyCurrentTrack", JsonSerializer.Serialize(model));
     }
 
     private void LoadMedia()
