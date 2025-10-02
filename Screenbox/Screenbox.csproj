@@ -526,7 +526,7 @@
     <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hans\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hans\Resources.resw" />
-    <PRIResource Include="Strings\zh-Hans\KeyboardResources.resw" />
+    <PRIResource Include="Strings\zh-Hant\KeyboardResources.resw" />
     <PRIResource Include="Strings\zh-Hant\ManifestResources.resw" />
     <PRIResource Include="Strings\zh-Hant\Resources.resw" />
   </ItemGroup>

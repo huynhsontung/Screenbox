@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,6 +117,278 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="VirtualKeyModifiersControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Control modifier, and VirtualKey.Control/LeftControl/RightControl key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersMenu" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Menu modifier, and VirtualKey.Menu/LeftMenu/RightMenu key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersShift" xml:space="preserve">
+    <value>Shift</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Shift modifier, and VirtualKey.Shift/LeftShift/RightShift key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersWindows" xml:space="preserve">
+    <value>Windows</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Windows modifier, and VirtualKey.LeftWindows/RightWindows key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNone" xml:space="preserve">
+    <value>None</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.None key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyLeftButton" xml:space="preserve">
+    <value>LeftButton</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.LeftButton (left mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyRightButton" xml:space="preserve">
+    <value>RightButton</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.RightButton (right mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyCancel" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Cancel key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyMiddleButton" xml:space="preserve">
+    <value>MiddleButton</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.MiddleButton (middle mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyXButton1" xml:space="preserve">
+    <value>XButton1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.XButton1 (first extended mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyXButton2" xml:space="preserve">
+    <value>XButton2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.XButton2 (second extended mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyBack" xml:space="preserve">
+    <value>Back</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Back key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Tab key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyClear" xml:space="preserve">
+    <value>Clear</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Clear key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEnter" xml:space="preserve">
+    <value>Enter</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Enter key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Pause key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyCapitalLock" xml:space="preserve">
+    <value>Caps Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.CapitalLock key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHangul" xml:space="preserve">
+    <value>Hangul</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Hangul/Kana key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyJunja" xml:space="preserve">
+    <value>Junja</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Junja key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyFinal" xml:space="preserve">
+    <value>Final</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Final key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHanja" xml:space="preserve">
+    <value>Hanja</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Hanja/Kanji key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Escape key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyConvert" xml:space="preserve">
+    <value>Convert</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Convert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNonConvert" xml:space="preserve">
+    <value>NonConvert</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NonConvert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyAccept" xml:space="preserve">
+    <value>Accept</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Accept key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModeChange" xml:space="preserve">
+    <value>ModeChange</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.ModeChange key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySpace" xml:space="preserve">
+    <value>Space</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Space key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPageUp" xml:space="preserve">
+    <value>PageUp</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.PageUp key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPageDown" xml:space="preserve">
+    <value>PageDown</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.PageDown key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEnd" xml:space="preserve">
+    <value>End</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.End key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHome" xml:space="preserve">
+    <value>Home</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Home key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyLeft" xml:space="preserve">
+    <value>Left</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Left key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyUp" xml:space="preserve">
+    <value>Up</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Up key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyRight" xml:space="preserve">
+    <value>Right</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Right key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyDown" xml:space="preserve">
+    <value>Down</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Down key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySelect" xml:space="preserve">
+    <value>Select</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Select key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPrint" xml:space="preserve">
+    <value>Print</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Print key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyExecute" xml:space="preserve">
+    <value>Execute</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Execute key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySnapshot" xml:space="preserve">
+    <value>Snapshot</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Snapshot key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyInsert" xml:space="preserve">
+    <value>Insert</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Insert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Delete key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHelp" xml:space="preserve">
+    <value>Help</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Help key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber0" xml:space="preserve">
+    <value>0</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number0 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber1" xml:space="preserve">
+    <value>1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number1 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber2" xml:space="preserve">
+    <value>2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number2 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber3" xml:space="preserve">
+    <value>3</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number3 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber4" xml:space="preserve">
+    <value>4</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number4 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber5" xml:space="preserve">
+    <value>5</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number5 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber6" xml:space="preserve">
+    <value>6</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number6 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber7" xml:space="preserve">
+    <value>7</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number7 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber8" xml:space="preserve">
+    <value>8</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number8 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber9" xml:space="preserve">
+    <value>9</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number9 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyApplication" xml:space="preserve">
+    <value>Application</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Application key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySleep" xml:space="preserve">
+    <value>Sleep</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Sleep key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad0" xml:space="preserve">
+    <value>Num 0</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad0 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad1" xml:space="preserve">
+    <value>Num 1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad1 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad2" xml:space="preserve">
+    <value>Num 2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad2 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad3" xml:space="preserve">
+    <value>Num 3</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad3 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad4" xml:space="preserve">
+    <value>Num 4</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad4 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad5" xml:space="preserve">
+    <value>Num 5</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad5 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad6" xml:space="preserve">
+    <value>Num 6</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad6 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad7" xml:space="preserve">
+    <value>Num 7</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad7 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad8" xml:space="preserve">
+    <value>Num 8</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad8 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad9" xml:space="preserve">
+    <value>Num 9</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad9 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySeparator" xml:space="preserve">
+    <value>Separator</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Separator key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberKeyLock" xml:space="preserve">
+    <value>Num Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberKeyLock key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyScroll" xml:space="preserve">
+    <value>Scroll Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Scroll key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="KeyboardAcceleratorValueSeparator" xml:space="preserve">
+    <value>+</value>
+    <comment>The string utilized to separate multiple values within a keyboard accelerator combination. To ensure consistency, the value must be identical to the one used by the system.</comment>
+  </data>
   <data name="NavigationBackButtonKey" xml:space="preserve">
     <value>Β</value>
     <comment>{Range="A-Z"}{Limit=1}Access key for returning to the previous screen. Must be unique with respect to every other Player key in this file and the initial Command, Navigation and TopNavigation key.</comment>

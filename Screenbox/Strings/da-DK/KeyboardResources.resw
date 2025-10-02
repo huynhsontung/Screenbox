@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,200 +117,472 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="VirtualKeyModifiersControl" xml:space="preserve">
+    <value>Ctrl</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Control modifier, and VirtualKey.Control/LeftControl/RightControl key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersMenu" xml:space="preserve">
+    <value>Alt</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Menu modifier, and VirtualKey.Menu/LeftMenu/RightMenu key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersShift" xml:space="preserve">
+    <value>Skift</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Shift modifier, and VirtualKey.Shift/LeftShift/RightShift key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModifiersWindows" xml:space="preserve">
+    <value>Windows</value>
+    <comment>Text displayed in a tooltip for the VirtualKeyModifiers.Windows modifier, and VirtualKey.LeftWindows/RightWindows key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNone" xml:space="preserve">
+    <value>Ingen</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.None key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyLeftButton" xml:space="preserve">
+    <value>VenstreKnap</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.LeftButton (left mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyRightButton" xml:space="preserve">
+    <value>HøjreKnap</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.RightButton (right mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyCancel" xml:space="preserve">
+    <value>Annuller</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Cancel key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyMiddleButton" xml:space="preserve">
+    <value>MidtersteKnap</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.MiddleButton (middle mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyXButton1" xml:space="preserve">
+    <value>XKnap1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.XButton1 (first extended mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyXButton2" xml:space="preserve">
+    <value>XKnap2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.XButton2 (second extended mouse button) key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyBack" xml:space="preserve">
+    <value>Tilbage</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Back key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyTab" xml:space="preserve">
+    <value>Tab</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Tab key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyClear" xml:space="preserve">
+    <value>Ryd</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Clear key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEnter" xml:space="preserve">
+    <value>Enter</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Enter key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPause" xml:space="preserve">
+    <value>Pause</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Pause key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyCapitalLock" xml:space="preserve">
+    <value>Caps Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.CapitalLock key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHangul" xml:space="preserve">
+    <value>Hangul</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Hangul/Kana key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyJunja" xml:space="preserve">
+    <value>Junja</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Junja key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyFinal" xml:space="preserve">
+    <value>Sidste</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Final key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHanja" xml:space="preserve">
+    <value>Hanja</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Hanja/Kanji key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEscape" xml:space="preserve">
+    <value>Esc</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Escape key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyConvert" xml:space="preserve">
+    <value>Konverter</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Convert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNonConvert" xml:space="preserve">
+    <value>KonverterIkke</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NonConvert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyAccept" xml:space="preserve">
+    <value>Acceptér</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Accept key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyModeChange" xml:space="preserve">
+    <value>ÆndreTilstand</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.ModeChange key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySpace" xml:space="preserve">
+    <value>Mellemrum</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Space key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPageUp" xml:space="preserve">
+    <value>SideOp</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.PageUp key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPageDown" xml:space="preserve">
+    <value>SideNed</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.PageDown key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyEnd" xml:space="preserve">
+    <value>End</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.End key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHome" xml:space="preserve">
+    <value>Hjem</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Home key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyLeft" xml:space="preserve">
+    <value>Venstre</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Left key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyUp" xml:space="preserve">
+    <value>Op</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Up key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyRight" xml:space="preserve">
+    <value>Højre</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Right key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyDown" xml:space="preserve">
+    <value>Ned</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Down key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySelect" xml:space="preserve">
+    <value>Vælg</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Select key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyPrint" xml:space="preserve">
+    <value>Print</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Print key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyExecute" xml:space="preserve">
+    <value>Udfør</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Execute key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySnapshot" xml:space="preserve">
+    <value>Snapshot</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Snapshot key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyInsert" xml:space="preserve">
+    <value>Indsæt</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Insert key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Delete key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyHelp" xml:space="preserve">
+    <value>Hjælp</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Help key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber0" xml:space="preserve">
+    <value>0</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number0 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber1" xml:space="preserve">
+    <value>1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number1 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber2" xml:space="preserve">
+    <value>2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number2 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber3" xml:space="preserve">
+    <value>3</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number3 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber4" xml:space="preserve">
+    <value>4</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number4 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber5" xml:space="preserve">
+    <value>5</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number5 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber6" xml:space="preserve">
+    <value>6</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number6 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber7" xml:space="preserve">
+    <value>7</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number7 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber8" xml:space="preserve">
+    <value>8</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number8 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumber9" xml:space="preserve">
+    <value>9</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Number9 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyApplication" xml:space="preserve">
+    <value>Program</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Application key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySleep" xml:space="preserve">
+    <value>Slumre</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Sleep key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad0" xml:space="preserve">
+    <value>NUM 0</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad0 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad1" xml:space="preserve">
+    <value>NUM 1</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad1 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad2" xml:space="preserve">
+    <value>NUM 2</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad2 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad3" xml:space="preserve">
+    <value>NUM 3</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad3 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad4" xml:space="preserve">
+    <value>NUM 4</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad4 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad5" xml:space="preserve">
+    <value>NUM 5</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad5 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad6" xml:space="preserve">
+    <value>NUM 6</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad6 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad7" xml:space="preserve">
+    <value>NUM 7</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad7 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad8" xml:space="preserve">
+    <value>NUM 8</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad8 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberPad9" xml:space="preserve">
+    <value>NUM 9</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberPad9 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeySeparator" xml:space="preserve">
+    <value>Separator</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Separator key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyNumberKeyLock" xml:space="preserve">
+    <value>Num Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.NumberKeyLock key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="VirtualKeyScroll" xml:space="preserve">
+    <value>Scroll Lock</value>
+    <comment>Text displayed in a tooltip for the VirtualKey.Scroll key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
+  </data>
+  <data name="KeyboardAcceleratorValueSeparator" xml:space="preserve">
+    <value>+</value>
+    <comment>The string utilized to separate multiple values within a keyboard accelerator combination. To ensure consistency, the value must be identical to the one used by the system.</comment>
+  </data>
   <data name="NavigationBackButtonKey" xml:space="preserve">
     <value>B</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for returning to the previous screen. Must be unique with respect to every other Player key in this file and the initial Command, Navigation and TopNavigation key.</comment>
   </data>
   <data name="NavigationCloseButtonKey" xml:space="preserve">
     <value>B</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for closing the navigation view. Must be unique with respect to every other Player key in this file and the initial Command, Navigation and TopNavigation key.</comment>
   </data>
   <data name="NavigationTogglePaneButtonKey" xml:space="preserve">
     <value>NE</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for opening and closing the navigation view. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationPaneAutoSuggestButtonKey" xml:space="preserve">
     <value>NF</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for searching. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemHomeKey" xml:space="preserve">
     <value>NH</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the home page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemMusicKey" xml:space="preserve">
     <value>NM</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the music library page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemVideosKey" xml:space="preserve">
     <value>NV</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the videos library page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemNetworkKey" xml:space="preserve">
     <value>NN</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the network drives page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemQueueKey" xml:space="preserve">
     <value>NQ</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the play queue page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="NavigationItemSettingsKey" xml:space="preserve">
     <value>NS</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/TopNavigation character and the second character of other Navigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the settings page. For the initial key, avoid collision with any other Player or the first Command and TopNavigation key. The second key must be unique with respect to every other Navigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemFoldersKey" xml:space="preserve">
     <value>TO</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the videos folders page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemVideosKey" xml:space="preserve">
     <value>TV</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the all videos page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemSongsKey" xml:space="preserve">
     <value>TS</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the songs page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemAlbumsKey" xml:space="preserve">
     <value>TA</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the albums page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="TopNavigationItemArtistsKey" xml:space="preserve">
     <value>TP</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Command/Navigation character and the second character of other TopNavigation keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the artists page. For the initial key, avoid collision with any other Player or the first Command and Navigation key. The second key must be unique with respect to every other TopNavigation key in this file.</comment>
   </data>
   <data name="CommandAddOpenFilesKey" xml:space="preserve">
     <value>CF</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for opening files. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandMoreOptionsKey" xml:space="preserve">
     <value>CM</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for more open options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandAddFolderKey" xml:space="preserve">
     <value>CO</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for adding folders. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandShuffleAndPlayKey" xml:space="preserve">
     <value>CH</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for shuffling and playing files. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandSortByKey" xml:space="preserve">
     <value>CS</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for sorting options. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandPlayKey" xml:space="preserve">
     <value>CP</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for playing. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandClearKey" xml:space="preserve">
     <value>CC</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for clearing the queue. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandMultiSelectKey" xml:space="preserve">
     <value>CE</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the selection bar. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="CommandBreadcrumbBarKey" xml:space="preserve">
     <value>CB</value>
-    <comment>Two characters. Use the same first character and avoid collisions with the first Navigation/TopNavigation character and the second character of other Command keys.</comment>
+    <comment>{Range="A-Z"}{Limit=2}Access key for the breadcrumb bar. For the initial key, avoid collision with any other Player or the first Navigation and TopNavigation key. The second key must be unique with respect to every other Command key in this file.</comment>
   </data>
   <data name="PlayerQueueKey" xml:space="preserve">
     <value>Q</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the play queue flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerRestoreKey" xml:space="preserve">
     <value>I</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for restoring the immersive view. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerSeekBarKey" xml:space="preserve">
     <value>S</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the seek bar. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerPlayPauseKey" xml:space="preserve">
     <value>P</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing and pausing. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerPreviousKey" xml:space="preserve">
     <value>E</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing the previous file. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerNextKey" xml:space="preserve">
     <value>X</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playing the next file. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerVolumeButtonSliderKey" xml:space="preserve">
     <value>V</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the volume flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerMuteKey" xml:space="preserve">
     <value>M</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for muting. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerShuffleKey" xml:space="preserve">
     <value>H</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for toggling shuffe. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerRepeatKey" xml:space="preserve">
     <value>R</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for changing the repeat behavior. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerAudioAndCaptionsKey" xml:space="preserve">
     <value>A</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening the audio and subtitles flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerCompactOverlayKey" xml:space="preserve">
     <value>Y</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting picture-in-picture. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerFullscreenKey" xml:space="preserve">
     <value>F</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting fullscreen. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="PlayerMoreKey" xml:space="preserve">
     <value>O</value>
-    <comment>Single character. Avoid collisions with the first Command/Navigation/TopNavigation character and other Player keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the more options flyout. Must be unique with respect to every other Player and the initial Command/Navigation/TopNavigation key in this file.</comment>
   </data>
   <data name="MenuItemFileKey" xml:space="preserve">
     <value>F</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening files. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemFolderKey" xml:space="preserve">
     <value>O</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening folders. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemUrlKey" xml:space="preserve">
     <value>U</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for opening URLs. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemPropertiesKey" xml:space="preserve">
     <value>P</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for file properties. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemSpeedKey" xml:space="preserve">
     <value>S</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for playback speed. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemSaveSnapshotKey" xml:space="preserve">
     <value>N</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for saving a snapshot. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemCastKey" xml:space="preserve">
     <value>C</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for the casting flyout. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemAspectRatioKey" xml:space="preserve">
     <value>R</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for aspect ratio options. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemAdvancedKey" xml:space="preserve">
     <value>A</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for advanced mode options. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemCompactOverlayKey" xml:space="preserve">
     <value>Y</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting picture-in-picture. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
   <data name="MenuItemFullscreenKey" xml:space="preserve">
     <value>U</value>
-    <comment>Single character. Avoid collisions with other MenuItem keys.</comment>
+    <comment>{Range="A-Z"}{Limit=1}Access key for entering and exiting fullscreen. Must be unique with respect to every other MenuItem key in this file.</comment>
   </data>
 </root>
