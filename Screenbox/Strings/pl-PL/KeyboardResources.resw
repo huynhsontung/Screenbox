@@ -285,46 +285,6 @@
     <value>Pomoc</value>
     <comment>Text displayed in a tooltip for the VirtualKey.Help key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
   </data>
-  <data name="VirtualKeyNumber0" xml:space="preserve">
-    <value>0</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number0 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber1" xml:space="preserve">
-    <value>1</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number1 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber2" xml:space="preserve">
-    <value>2</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number2 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber3" xml:space="preserve">
-    <value>3</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number3 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber4" xml:space="preserve">
-    <value>4</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number4 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber5" xml:space="preserve">
-    <value>5</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number5 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber6" xml:space="preserve">
-    <value>6</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number6 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber7" xml:space="preserve">
-    <value>7</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number7 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber8" xml:space="preserve">
-    <value>8</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number8 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
-  <data name="VirtualKeyNumber9" xml:space="preserve">
-    <value>9</value>
-    <comment>Text displayed in a tooltip for the VirtualKey.Number9 key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
-  </data>
   <data name="VirtualKeyApplication" xml:space="preserve">
     <value>Aplikacja</value>
     <comment>Text displayed in a tooltip for the VirtualKey.Application key as part of a keyboard combination. This value must match the system terminology for consistency.</comment>
