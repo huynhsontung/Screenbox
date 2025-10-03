@@ -413,15 +413,15 @@ namespace Screenbox.Pages
 
         private void PlayQueueFlyout_OnOpening(object sender, object e)
         {
-            // Delay load PlaylistView until flyout is opening
+            // Delay load PlayQueueControl until flyout is opening
             // Save loading time when launching from file
-            FindName(nameof(PlaylistView));
+            FindName(nameof(PlayQueue));
         }
 
         private async void PlayQueueFlyout_OnOpened(object sender, object e)
         {
-            if (PlaylistView == null) return;
-            await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
+            if (PlayQueue == null) return;
+            await PlayQueue.SmoothScrollActiveItemIntoViewAsync();
         }
 
         private void OnActualThemeChanged(FrameworkElement sender, object args)

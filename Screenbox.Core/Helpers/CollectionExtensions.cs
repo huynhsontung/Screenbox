@@ -1,7 +1,7 @@
-using CommunityToolkit.Mvvm.Collections;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.Collections;
 
 namespace Screenbox.Core.Helpers;
 
