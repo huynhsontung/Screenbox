@@ -25,7 +25,7 @@ using Windows.System;
 namespace Screenbox.Core.ViewModels
 {
     /// <summary>
-    /// ViewModel for media list/playlist UI following proper MVVM separation
+    /// ViewModel for media list UI following proper MVVM separation
     /// </summary>
     public sealed partial class MediaListViewModel : ObservableRecipient,
         IRecipient<PlayMediaMessage>,
@@ -59,6 +59,7 @@ namespace Screenbox.Core.ViewModels
         private readonly IFilesService _filesService;
         private readonly ISettingsService _settingsService;
         private readonly ISystemMediaTransportControlsService _transportControlsService;
+        private readonly MediaViewModelFactory _mediaFactory;
 
         // ViewModel state
         private Playlist _playlist;
@@ -75,7 +76,8 @@ namespace Screenbox.Core.ViewModels
             IMediaListFactory mediaListFactory,
             IFilesService filesService,
             ISettingsService settingsService,
-            ISystemMediaTransportControlsService transportControlsService)
+            ISystemMediaTransportControlsService transportControlsService,
+            MediaViewModelFactory mediaFactory)
         {
             _playlistService = playlistService;
             _playbackControlService = playbackControlService;
@@ -83,6 +85,7 @@ namespace Screenbox.Core.ViewModels
             _filesService = filesService;
             _settingsService = settingsService;
             _transportControlsService = transportControlsService;
+            _mediaFactory = mediaFactory;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
             // Initialize UI collections
@@ -108,14 +111,32 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlayFilesMessage message)
         {
             var files = message.Value;
+            if (files.Count == 0) return;
+            var result = await _mediaListFactory.TryParseMediaListAsync(files);
+            if (result == null || result.Items.Count == 0) return;
 
-            if (files.Count == 1 && files[0] is StorageFile file)
+            _playlist = new Playlist(result.NextItem, result.Items)
             {
-                await HandleSingleFileAsync(file, message.NeighboringFilesQuery);
-            }
-            else
+                NeighboringFilesQuery = message.NeighboringFilesQuery
+            };
+
+            LoadFromPlaylist(_playlist);
+            PlaySingle(result.NextItem);
+
+            // Enqueue neighboring files if needed
+            if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
             {
-                await HandleMultipleFilesAsync(files);
+                if (_playlist.NeighboringFilesQuery == null && files[0] is StorageFile file)
+                {
+                    _playlist.NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+                }
+
+                if (_playlist.NeighboringFilesQuery != null)
+                {
+                    var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist);
+                    _playlist = updatedPlaylist;
+                    LoadFromPlaylist(updatedPlaylist);
+                }
             }
         }
 
@@ -138,13 +159,11 @@ namespace Screenbox.Core.ViewModels
                     if (message.AddNext && canInsert)
                     {
                         Items.Insert(CurrentIndex + 1 + counter, subMedia);
-                        _playlist.Items.Insert(CurrentIndex + 1 + counter, subMedia);
                         counter++;
                     }
                     else
                     {
                         Items.Add(subMedia);
-                        _playlist.Items.Add(subMedia);
                     }
                 }
             }
@@ -171,7 +190,7 @@ namespace Screenbox.Core.ViewModels
             {
                 _playlist.LastUpdated = message.Value;
                 ClearPlaylist();
-                await EnqueueAndPlay(message.Value);
+                await ParseAndPlayAsync(message.Value);
             }
         }
 
@@ -193,7 +212,7 @@ namespace Screenbox.Core.ViewModels
                     else
                     {
                         ClearPlaylist();
-                        await EnqueueAndPlay(_delayPlay);
+                        await ParseAndPlayAsync(_delayPlay);
                     }
                     _delayPlay = null;
                 }
@@ -208,6 +227,11 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnCurrentItemChanging(MediaViewModel? value)
         {
+            if (_mediaPlayer != null)
+            {
+                _mediaPlayer.PlaybackItem = value?.Item.Value;
+            }
+
             if (CurrentItem != null)
             {
                 _cts?.Cancel();
@@ -274,8 +298,9 @@ namespace Screenbox.Core.ViewModels
         {
             if (value)
             {
+                var playlist = SaveToPlaylist();
                 var shuffleBackup = new ShuffleBackup(new List<MediaViewModel>(Items));
-                var shuffledPlaylist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+                var shuffledPlaylist = _playlistService.ShufflePlaylist(playlist, CurrentIndex);
 
                 _playlist = shuffledPlaylist;
                 _playlist.ShuffleBackup = shuffleBackup;
@@ -295,7 +320,7 @@ namespace Screenbox.Core.ViewModels
                 }
             }
 
-            UpdateItemsFromPlaylist();
+            LoadFromPlaylist(_playlist);
         }
 
         #endregion
@@ -330,7 +355,8 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand(CanExecute = nameof(CanNext))]
         private async Task NextAsync()
         {
-            var result = await _playbackControlService.GetNextAsync(_playlist, RepeatMode);
+            var playlist = SaveToPlaylist();
+            var result = await _playbackControlService.GetNextAsync(playlist, RepeatMode);
 
             if (result != null)
             {
@@ -338,7 +364,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     // Playlist was replaced (neighboring file navigation)
                     _playlist = result.UpdatedPlaylist;
-                    UpdateItemsFromPlaylist();
+                    LoadFromPlaylist(result.UpdatedPlaylist);
                 }
 
                 PlaySingle(result.NextItem);
@@ -363,7 +389,8 @@ namespace Screenbox.Core.ViewModels
                 return;
             }
 
-            var result = await _playbackControlService.GetPreviousAsync(_playlist, RepeatMode);
+            var playlist = SaveToPlaylist();
+            var result = await _playbackControlService.GetPreviousAsync(playlist, RepeatMode);
 
             if (result != null)
             {
@@ -371,7 +398,7 @@ namespace Screenbox.Core.ViewModels
                 {
                     // Playlist was replaced (neighboring file navigation)
                     _playlist = result.UpdatedPlaylist;
-                    UpdateItemsFromPlaylist();
+                    LoadFromPlaylist(result.UpdatedPlaylist);
                 }
 
                 PlaySingle(result.NextItem);
@@ -389,13 +416,12 @@ namespace Screenbox.Core.ViewModels
 
         public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
         {
-            var playlist = await _mediaListFactory.TryParseMediaListAsync(files);
-            if (playlist?.Items.Count > 0)
+            var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
+            if (mediaList?.Items.Count > 0)
             {
-                foreach (var item in playlist.Items)
+                foreach (var item in mediaList.Items)
                 {
                     Items.Add(item);
-                    _playlist.Items.Add(item);
                 }
             }
         }
@@ -404,62 +430,17 @@ namespace Screenbox.Core.ViewModels
 
         #region Private Methods
 
-        private async Task HandleSingleFileAsync(StorageFile file, Windows.Storage.Search.StorageFileQueryResult? neighboringFilesQuery)
+        private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist)
         {
-            var result = await _mediaListFactory.ParseMediaListAsync(file);
-            var media = result.NextItem;
-
-            // Check if already in playlist
-            if (Items.Contains(media))
-            {
-                PlaySingle(media);
-                return;
-            }
-
-            // Create new playlist
-            _playlist = new Playlist(result.NextItem, result.Items)
-            {
-                NeighboringFilesQuery = neighboringFilesQuery
-            };
-
-            UpdateItemsFromPlaylist();
-            PlaySingle(media);
-
-            // Enqueue neighboring files if needed
-            if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
-            {
-                _playlist.NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
-                if (_playlist.NeighboringFilesQuery != null)
-                {
-                    await EnqueueNeighboringFilesAsync(file);
-                }
-            }
-        }
-
-        private async Task HandleMultipleFilesAsync(IReadOnlyList<IStorageItem> files)
-        {
-            var result = await _mediaListFactory.TryParseMediaListAsync(files);
-            if (result?.Items.Count > 0)
-            {
-                _playlist = new Playlist(result.NextItem, result.Items);
-                UpdateItemsFromPlaylist();
-                PlaySingle(result.NextItem);
-            }
-        }
-
-        private async Task EnqueueNeighboringFilesAsync(StorageFile currentFile)
-        {
-            if (_playlist.NeighboringFilesQuery == null) return;
+            if (playlist.NeighboringFilesQuery == null) return playlist;
 
             _playFilesCts?.Cancel();
             using var cts = new CancellationTokenSource();
             try
             {
                 _playFilesCts = cts;
-                var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(_playlist, _playlist.NeighboringFilesQuery, currentFile, cts.Token);
-
-                _playlist = updatedPlaylist;
-                UpdateItemsFromPlaylist();
+                var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, playlist.NeighboringFilesQuery, cts.Token);
+                return updatedPlaylist;
             }
             catch (OperationCanceledException)
             {
@@ -469,15 +450,24 @@ namespace Screenbox.Core.ViewModels
             {
                 _playFilesCts = null;
             }
+
+            return playlist;
         }
 
-        private void UpdateItemsFromPlaylist()
+        private Playlist SaveToPlaylist()
         {
-            // Sync ObservableCollection with playlist
-            Items.SyncItems(_playlist.Items);
+            var playlist = CurrentItem != null ? new Playlist(CurrentItem, Items, _playlist) : new Playlist(Items, _playlist);
+            _playlist = playlist;
+            return playlist;
+        }
+
+        private void LoadFromPlaylist(Playlist playlist)
+        {
+            // Sync ObservableCollection with mediaList
+            Items.SyncItems(playlist.Items);
 
             // Update current item
-            CurrentItem = _playlist.CurrentItem;
+            CurrentItem = playlist.CurrentItem;
         }
 
         private void ClearPlaylist()
@@ -489,7 +479,6 @@ namespace Screenbox.Core.ViewModels
 
             Items.Clear();
             _playlist = new Playlist();
-            CurrentItem = null;
             ShuffleMode = false;
         }
 
@@ -510,29 +499,41 @@ namespace Screenbox.Core.ViewModels
             await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
         }
 
-        private async Task EnqueueAndPlay(object value)
+        private async Task ParseAndPlayAsync(object value)
         {
             NextMediaList? result = null;
 
             switch (value)
             {
                 case StorageFile file:
+                    var fileMedia = _mediaFactory.GetSingleton(file);
+                    CreatePlaylistAndPlay(fileMedia);
                     result = await _mediaListFactory.ParseMediaListAsync(file);
                     break;
                 case Uri uri:
+                    var uriMedia = _mediaFactory.GetTransient(uri);
+                    CreatePlaylistAndPlay(uriMedia);
                     result = await _mediaListFactory.ParseMediaListAsync(uri);
                     break;
                 case MediaViewModel media:
+                    CreatePlaylistAndPlay(media);
                     result = await _mediaListFactory.ParseMediaListAsync(media);
                     break;
             }
 
-            if (result?.NextItem != null)
+            if (result != null)
             {
                 _playlist = new Playlist(result.NextItem, result.Items);
-                UpdateItemsFromPlaylist();
+                LoadFromPlaylist(_playlist);
                 PlaySingle(result.NextItem);
             }
+        }
+
+        private void CreatePlaylistAndPlay(MediaViewModel nextItem)
+        {
+            _playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
+            LoadFromPlaylist(_playlist);
+            PlaySingle(nextItem);
         }
 
         #endregion
@@ -571,14 +572,15 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                var result = _playbackControlService.HandleMediaEnded(_playlist, RepeatMode);
+                var playlist = SaveToPlaylist();
+                var result = _playbackControlService.HandleMediaEnded(playlist, RepeatMode);
                 if (result != null)
                 {
                     if (result.UpdatedPlaylist != null)
                     {
                         // Playlist was replaced (neighboring file navigation)
                         _playlist = result.UpdatedPlaylist;
-                        UpdateItemsFromPlaylist();
+                        LoadFromPlaylist(result.UpdatedPlaylist);
                     }
 
                     PlaySingle(result.NextItem);
@@ -619,6 +621,54 @@ namespace Screenbox.Core.ViewModels
             CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
+
+            if (Items.Count <= 1)
+            {
+                _playlist.ShuffleBackup = null;
+                return;
+            }
+
+            // Update shuffle backup if shuffling is enabled
+            ShuffleBackup? backup = _playlist.ShuffleBackup;
+            if (ShuffleMode && backup != null)
+            {
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Remove when e.OldItems.Count > 0:
+                        foreach (object item in e.OldItems)
+                        {
+                            backup.Removals.Add((MediaViewModel)item);
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Replace when e.OldItems.Count > 0 && e.OldItems.Count == e.NewItems.Count:
+                        for (int i = 0; i < e.OldItems.Count; i++)
+                        {
+                            int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
+                            if (backupIndex >= 0)
+                            {
+                                backup.OriginalPlaylist[backupIndex] = (MediaViewModel)e.NewItems[i];
+                            }
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Add:
+                        foreach (object item in e.NewItems)
+                        {
+                            if (!backup.Removals.Remove((MediaViewModel)item))
+                            {
+                                _playlist.ShuffleBackup = null;
+                                break;
+                            }
+                        }
+                        break;
+
+                    case NotifyCollectionChangedAction.Reset:
+                        _playlist.ShuffleBackup = null;
+                        break;
+                }
+
+            }
         }
 
         #endregion

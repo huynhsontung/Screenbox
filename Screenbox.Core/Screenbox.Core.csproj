@@ -337,8 +337,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="REFACTORING_SUMMARY.md" />
-    <None Include="TESTING_GUIDE.md" />
     <PRIResource Include="Helpers\LanguageCodes.resw">
       <SubType>Designer</SubType>
     </PRIResource>

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
 using Windows.Media;
-using Windows.Storage;
 using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
@@ -18,7 +17,7 @@ public interface IPlaylistService
     /// <summary>
     /// Add neighboring files to an existing playlist
     /// </summary>
-    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, StorageFile currentFile, CancellationToken cancellationToken = default);
+    Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Shuffle the items in a playlist

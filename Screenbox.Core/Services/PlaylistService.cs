@@ -9,7 +9,6 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Windows.Media;
-using Windows.Storage;
 using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
@@ -26,15 +25,17 @@ public sealed class PlaylistService : IPlaylistService
         _mediaListFactory = mediaListFactory;
     }
 
-    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, StorageFile currentFile, CancellationToken cancellationToken = default)
+    public async Task<Playlist> AddNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery, CancellationToken cancellationToken = default)
     {
         try
         {
             var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-            var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, currentFile, cancellationToken);
+            var result = await _mediaListFactory.TryParseMediaListAsync(neighboringFiles, null, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             if (result?.Items.Count > 0)
-                return new Playlist(result.NextItem, result.Items, playlist);
+                return playlist.CurrentItem != null
+                    ? new Playlist(playlist.CurrentItem, result.Items, playlist)
+                    : new Playlist(result.Items, playlist);
         }
         catch (OperationCanceledException)
         {
