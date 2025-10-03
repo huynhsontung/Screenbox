@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System.Globalization;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,6 +36,8 @@ namespace Screenbox.Extensions;
 [Windows.Foundation.Metadata.ContractVersion(typeof(Windows.Foundation.UniversalApiContract), 327680u)]
 public sealed class AcceleratorService
 {
+    private static readonly bool _isHebrew = CultureInfo.CurrentCulture.TwoLetterISOLanguageName is "he";
+
     /// <summary>
     /// Identifies the AcceleratorService.ToolTip XAML attached property.
     /// </summary>
@@ -78,8 +81,10 @@ public sealed class AcceleratorService
                         string keyboardAcceleratorText = keyboardAccelerator.ToDisplayName();
                         if (!string.IsNullOrEmpty(keyboardAcceleratorText))
                         {
-                            toolTipString = GlobalizationHelper.IsRightToLeftLanguage
-                                ? $"({keyboardAcceleratorText}) {value}"
+                            // To ensure correct display order in Hebrew, enclose accelerator text in left-to-right (LTR) embedding marks.
+                            // This guarantees that modifiers appear before the translated key labels.
+                            toolTipString = _isHebrew
+                                ? $"{value} \u202A({keyboardAcceleratorText})\u202C"
                                 : $"{value} ({keyboardAcceleratorText})";
                         }
                     }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 
@@ -11,9 +10,6 @@ namespace Screenbox.Helpers;
 /// </summary>
 public static class KeyboardAcceleratorHelper
 {
-    private static readonly bool _isKeyboardAcceleratorMirrored =
-        CultureInfo.CurrentCulture.TwoLetterISOLanguageName is "ar" or "fa";
-
     /// <summary>
     /// Converts the value of the specified <see cref="KeyboardAccelerator"/> to its equivalent
     /// <see cref="string"/> representation.
@@ -57,11 +53,6 @@ public static class KeyboardAcceleratorHelper
         if (!string.IsNullOrEmpty(keyText) && Array.IndexOf(parts, keyText, 0, count) == -1)
         {
             parts[count++] = keyText;
-        }
-
-        if (_isKeyboardAcceleratorMirrored && count > 1)
-        {
-            Array.Reverse(parts, 0, count);
         }
 
         return string.Join(separator, parts, 0, count);
