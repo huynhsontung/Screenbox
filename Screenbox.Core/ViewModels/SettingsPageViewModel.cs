@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private bool _playerShowChapters;
+        [ObservableProperty] private bool _playerAutoFullScreen;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
@@ -99,6 +100,7 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
+            _playerAutoFullScreen = _settingsService.PlayerAutoFullScreen;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _theme = ((int)_settingsService.Theme + 2) % 3;
@@ -185,6 +187,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerShowChapters = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowChapters), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerAutoFullScreenChanged(bool value)
+        {
+            _settingsService.PlayerAutoFullScreen = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerAutoFullScreen), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)
