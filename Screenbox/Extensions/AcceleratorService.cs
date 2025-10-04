@@ -9,9 +9,9 @@ namespace Screenbox.Extensions;
 
 /// <summary>
 /// Represents a service that provides <see langword="static"/> methods to display a <see cref="ToolTip"/>,
-/// with the corresponding key combinations appended at the end.
+/// with the corresponding key combinations appended.
 /// </summary>
-/// <remarks>If a control has more than one accelerator defined, only the first is presented.</remarks>
+/// <remarks>If a control has more than one accelerator defined, only the first is displayed.</remarks>
 /// <example>
 /// In this example, we specify the ToolTip for a Button. The keyboard accelerator is
 /// displayed in the UI element flyout as "Create a new document (Ctrl+Alt+N)".
@@ -81,8 +81,16 @@ public sealed class AcceleratorService
                         string keyboardAcceleratorText = keyboardAccelerator.ToDisplayName();
                         if (!string.IsNullOrEmpty(keyboardAcceleratorText))
                         {
-                            // To ensure correct display order in Hebrew, enclose accelerator text in left-to-right (LTR) embedding marks.
-                            // This guarantees that modifiers appear before the translated key labels.
+                            // For Hebrew, we enclose the accelerator text in left-to-right (LTR) embedding marks
+                            // to ensure the modifiers appear before any translated key.
+                            // Example:
+                            //   value: "הסר מסמך" ("Remove document")
+                            //   keyboardAcceleratorText: "Ctrl+Alt+הסר" ("Ctrl+Alt+Remove")
+                            //   toolTipString: "הסר מסמך (Ctrl+Alt+הסר)"
+                            //
+                            // In right-to-left (RTL) languages, the system automatically adjusts the tooltip format for proper readability.
+                            // The default format "{value} ({keyboardAcceleratorText})" is reversed to "({keyboardAcceleratorText}) {value}".
+                            // This ensures that the keyboard shortcut and tooltip text appear in a logical order for those languages.
                             toolTipString = _isHebrew
                                 ? $"{value} \u202A({keyboardAcceleratorText})\u202C"
                                 : $"{value} ({keyboardAcceleratorText})";
