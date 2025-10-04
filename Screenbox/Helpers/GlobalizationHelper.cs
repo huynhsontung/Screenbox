@@ -6,13 +6,13 @@ namespace Screenbox.Helpers;
 /// <summary>
 /// Provides <see langword="static"/> helper methods related to globalization.
 /// </summary>
-public static partial class GlobalizationHelper
+public static class GlobalizationHelper
 {
     /// <summary>
     /// Gets whether the text direction for the current app's language is right-to-left (RTL).
     /// </summary>
     /// <returns><see langword="true"/>, if the text direction is right-to-left; otherwise, <see langword="false"/>.</returns>
-    public static bool IsRightToLeftLanguage => CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
+    public static readonly bool IsRightToLeftLanguage = CultureInfo.CurrentCulture.TextInfo.IsRightToLeft;
 
     /// <summary>
     /// Gets the <see cref="FlowDirection"/> based on the text directionality of the app's display language.
