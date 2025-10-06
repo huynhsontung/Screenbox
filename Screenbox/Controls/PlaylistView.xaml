@@ -238,7 +238,7 @@
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
-                            controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
+                            extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                             AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
                             BorderThickness="0"
                             Command="{x:Bind ViewModel.ClearSelectionCommand}"
