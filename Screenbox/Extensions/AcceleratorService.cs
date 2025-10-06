@@ -82,15 +82,11 @@ public sealed class AcceleratorService
                         if (!string.IsNullOrEmpty(keyboardAcceleratorText))
                         {
                             // For Hebrew, we enclose the accelerator text in left-to-right (LTR) embedding marks
-                            // to ensure the modifiers appear before any translated key.
-                            // Example:
-                            //   value: "הסר מסמך" ("Remove document")
-                            //   keyboardAcceleratorText: "Ctrl+Alt+הסר" ("Ctrl+Alt+Remove")
-                            //   toolTipString: "הסר מסמך (Ctrl+Alt+הסר)"
+                            // to ensure modifiers appear before any translated key.
+                            // Example: הסר+Ctrl+Alt ["Clear"+Ctrl+Alt] becomes Ctrl+Alt+הסר [Ctrl+Alt+"Clear"]
                             //
                             // In right-to-left (RTL) languages, the system automatically adjusts the tooltip format for proper readability.
                             // The default format "{value} ({keyboardAcceleratorText})" is reversed to "({keyboardAcceleratorText}) {value}".
-                            // This ensures that the keyboard shortcut and tooltip text appear in a logical order for those languages.
                             toolTipString = _isHebrew
                                 ? $"{value} \u202A({keyboardAcceleratorText})\u202C"
                                 : $"{value} ({keyboardAcceleratorText})";
