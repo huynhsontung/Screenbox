@@ -402,9 +402,9 @@
 
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Description="{x:Bind strings:Resources.SettingsOverlayControlsDescription}"
-                    Header="{x:Bind strings:Resources.SettingsOverlayControlsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
+                    Description="{x:Bind strings:Resources.SettingsOnScreenControlsDescription}"
+                    Header="{x:Bind strings:Resources.SettingsOnScreenControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75A;}">
                     <ctc:SettingsExpander.Items>
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowControlsHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
@@ -412,10 +412,10 @@
                         <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
                             <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
                         </ctc:SettingsCard>
-                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsControlsHideDelayHeader}">
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}">
                             <ComboBox
                                 MinWidth="150"
-                                AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsControlsHideDelayHeader}"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}"
                                 ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
                                 SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>

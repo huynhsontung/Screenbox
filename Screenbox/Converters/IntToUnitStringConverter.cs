@@ -14,8 +14,8 @@ public enum UnitKind
     None = 0,
     Albums = 1,
     Songs = 2,
-    Seconds = 4,
-    Items = 11,
+    Seconds = 6,
+    Items = 13,
 }
 
 /// <summary>

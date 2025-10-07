@@ -648,11 +648,11 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
   </data>
-  <data name="SettingsOverlayControlsHeader" xml:space="preserve">
-    <value>Overlay controls</value>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
   </data>
-  <data name="SettingsOverlayControlsDescription" xml:space="preserve">
-    <value>Change the appearance and behavior of the on-screen player controls</value>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestures</value>
@@ -944,8 +944,8 @@
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Display chapter name when available</value>
   </data>
-  <data name="SettingsControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time without interaction</value>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
     <value>{0} second</value>
