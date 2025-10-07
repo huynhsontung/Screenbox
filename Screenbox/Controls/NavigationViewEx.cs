@@ -282,13 +282,6 @@ public sealed partial class NavigationViewEx : NavigationView
             splitViewGrid.Children.Add(_overlayRoot);
         }
 
-        if (_splitView?.FindDescendant<Border>(b => b.Name == "ContentBackground") is { } contentBackground)
-        {
-            _contentBackground = contentBackground;
-            contentBackground.SetValue(Implicit.ShowAnimationsProperty, _slowFadeInAnimationSet);
-            contentBackground.SetValue(Implicit.HideAnimationsProperty, _slowFadeOutAnimationSet);
-        }
-
         if (IsSettingsVisible && _splitView?.FindDescendant<NavigationViewItem>(s => s.Name == NavViewSettingsItem) is NavigationViewItem settingsItem)
         {
             _settingsItem = settingsItem;

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
 using Screenbox.Core.ViewModels;
@@ -12,9 +11,7 @@ using Sentry;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -50,8 +47,6 @@ namespace Screenbox.Pages
             // Register a handler for when the size of the overlaid caption control changes.
             // For example, when the app moves to a screen with a different DPI.
             coreTitleBar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
-
-            NotificationView.Translation = new Vector3(0, 0, 16);
 
             _pages = new Dictionary<string, Type>
             {
@@ -317,20 +312,6 @@ namespace Screenbox.Pages
         private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
         {
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
-        }
-
-        private Thickness GetBackgroundMargin(muxc.NavigationViewDisplayMode mode, bool isPaneOpen)
-        {
-            return mode switch
-            {
-                muxc.NavigationViewDisplayMode.Minimal => new Thickness(0),
-                muxc.NavigationViewDisplayMode.Expanded when !isPaneOpen => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
-                muxc.NavigationViewDisplayMode.Expanded =>
-                    // Right margin to account for Expanded to Compact state transition
-                    new Thickness(NavView.OpenPaneLength, 0, -NavView.OpenPaneLength, 0),
-                muxc.NavigationViewDisplayMode.Compact => new Thickness(NavView.CompactPaneLength, 0, 0, 0),
-                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-            };
         }
 
         /// <summary>
