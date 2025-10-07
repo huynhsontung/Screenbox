@@ -1,0 +1,105 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <!--  Add in-app acrylic to the minimal/overlay pane  -->
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+            <!--  Add background acrylic to the compact/expanded pane (Windows 10 only)  -->
+            <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+            <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
+            <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!--  Top border and TopLeft corner radius removed to adhere to the 'Custom T' design pattern for seamless top edge integration.  -->
+    <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
+    <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
+    <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
+
+    <!--  NavigationView pane search button with animated icon, and padding, visual state brushes and no pointer animations to match with other pane buttons.  -->
+    <Style x:Key="AnimatedNavigationViewPaneSearchButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource NavigationViewItemBackground}" />
+        <Setter Property="Foreground" Value="{ThemeResource NavigationViewItemForeground}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource NavigationViewToggleBorderThickness}" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Padding" Value="{ThemeResource NavigationViewItemButtonMargin}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Content" Value="&#xE721;" />
+        <Setter Property="FocusVisualMargin" Value="-4,0" />
+        <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <!--  Ensure the same handedness as Find icon by mirroring the animated icon and pinning FlowDirection.  -->
+                    <Grid
+                        x:Name="RootGrid"
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        FlowDirection="RightToLeft">
+                        <!--  Slightly larger size to compensate for the animated visual extra padding compared to the Find icon.  -->
+                        <muxc:AnimatedIcon
+                            x:Name="Icon"
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            muxc:AnimatedIcon.State="Normal"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Foreground="{TemplateBinding Foreground}"
+                            MirroredWhenRightToLeft="True">
+                            <animatedVisuals:AnimatedFindVisualSource />
+                            <muxc:AnimatedIcon.FallbackIconSource>
+                                <muxc:FontIconSource FontSize="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FontSize}" Glyph="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}" />
+                            </muxc:AnimatedIcon.FallbackIconSource>
+                        </muxc:AnimatedIcon>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPointerOver}" />
+                                        <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPointerOver}" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOver" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPressed}" />
+                                        <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPressed}" />
+                                        <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="Pressed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundDisabled}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

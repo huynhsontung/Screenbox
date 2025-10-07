@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
-    xmlns:contract13NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract,13)"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
@@ -22,25 +21,10 @@
 
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <!--  Add acrylic to the minimal/overlay pane and compact/expanded pane (Windows 10 only)  -->
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="AcrylicInAppFillColorBaseBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemControlAcrylicWindowBrush" />
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                    <contract13NotPresent:StaticResource x:Key="NavigationViewExpandedPaneBackground" ResourceKey="SystemColorWindowColorBrush" />
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/NavigationView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-            <Thickness x:Key="NavigationViewContentGridBorderThickness">1,0,0,0</Thickness>
-            <Thickness x:Key="NavigationViewMinimalContentGridBorderThickness">0,0,0,0</Thickness>
-            <CornerRadius x:Key="NavigationViewContentGridCornerRadius">0,0,0,0</CornerRadius>
             <Thickness x:Key="AppTitleMarginExpanded">48,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginCompact">76,0,0,0</Thickness>
             <Thickness x:Key="AppTitleMarginMinimal">100,0,0,0</Thickness>
@@ -48,82 +32,6 @@
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
             <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
-
-            <!--  NavigationView compact pane search button with an animated icon, padding, common state brushes, and no pointer animations to match other pane buttons  -->
-            <Style x:Key="NavigationViewPaneSearchButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="{ThemeResource NavigationViewItemBackground}" />
-                <Setter Property="Foreground" Value="{ThemeResource NavigationViewItemForeground}" />
-                <Setter Property="BorderThickness" Value="{ThemeResource NavigationViewToggleBorderThickness}" />
-                <Setter Property="Height" Value="36" />
-                <Setter Property="Padding" Value="{ThemeResource NavigationViewItemButtonMargin}" />
-                <Setter Property="HorizontalAlignment" Value="Center" />
-                <Setter Property="FontFamily" Value="{StaticResource SymbolThemeFontFamily}" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="Content" Value="&#xE721;" />
-                <Setter Property="FocusVisualMargin" Value="-4,0" />
-                <Setter Property="CornerRadius" Value="{ThemeResource ControlCornerRadius}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <!--  To ensure the animated icon faces the same direction as the find symbol, lock the flow direction and mirror the icon  -->
-                            <Grid
-                                x:Name="RootGrid"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                Padding="{TemplateBinding Padding}"
-                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="{TemplateBinding CornerRadius}"
-                                FlowDirection="RightToLeft">
-                                <!--  Increase the icon size slightly because the find animated visual has more padding than the symbol  -->
-                                <muxc:AnimatedIcon
-                                    x:Name="Icon"
-                                    Width="20"
-                                    Height="20"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    muxc:AnimatedIcon.State="Normal"
-                                    AutomationProperties.AccessibilityView="Raw"
-                                    Foreground="{TemplateBinding Foreground}"
-                                    MirroredWhenRightToLeft="True">
-                                    <animatedVisuals:AnimatedFindVisualSource />
-                                    <muxc:AnimatedIcon.FallbackIconSource>
-                                        <muxc:FontIconSource FontSize="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FontSize}" Glyph="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}" />
-                                    </muxc:AnimatedIcon.FallbackIconSource>
-                                </muxc:AnimatedIcon>
-
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="CommonStates">
-                                        <VisualState x:Name="Normal" />
-
-                                        <VisualState x:Name="PointerOver">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPointerOver}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPointerOver}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="PointerOver" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Pressed">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundPressed}" />
-                                                <Setter Target="Icon.Foreground" Value="{ThemeResource NavigationViewButtonForegroundPressed}" />
-                                                <Setter Target="Icon.(muxc:AnimatedIcon.State)" Value="Pressed" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-
-                                        <VisualState x:Name="Disabled">
-                                            <VisualState.Setters>
-                                                <Setter Target="RootGrid.Background" Value="{ThemeResource NavigationViewButtonBackgroundDisabled}" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
                 <StackPanel Orientation="Horizontal">
@@ -184,12 +92,14 @@
             </StackPanel>
         </Grid>
 
-        <controls:CustomNavigationView
+        <controls:NavigationViewEx
             x:Name="NavView"
             AllowDrop="True"
+            BackButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationBackButtonKey}"
             BackRequested="NavView_BackRequested"
-            Canvas.ZIndex="0"
+            CloseButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationCloseButtonKey}"
             CompactModeThresholdWidth="701"
+            ContentVisibilityTransition="Top"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             DragOver="NavView_DragOver"
             Drop="NavView_Drop"
@@ -199,7 +109,16 @@
             IsTitleBarAutoPaddingEnabled="False"
             PaneClosing="NavView_OnPaneClosing"
             PaneOpening="NavView_OnPaneOpening"
+            PaneSearchButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationPaneAutoSuggestButtonKey}"
+            PaneSearchButtonStyle="{StaticResource AnimatedNavigationViewPaneSearchButtonStyle}"
+            PaneToggleButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationTogglePaneButtonKey}"
             SelectionChanged="NavView_SelectionChanged">
+            <controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="E" Modifiers="Control" />
+            </controls:NavigationViewEx.PaneToggleButtonKeyboardAccelerators>
+            <controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
+                <KeyboardAccelerator Key="F" Modifiers="Control" />
+            </controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
@@ -286,6 +205,7 @@
                     <TextBlock x:Name="SettingsNavItemText" Text="{strings:Resources Key=Settings}" />
                 </muxc:NavigationViewItem>
             </muxc:NavigationView.FooterMenuItems>
+
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="NavViewSearchBox"
@@ -309,11 +229,10 @@
                     </AutoSuggestBox.KeyboardAccelerators>
                 </AutoSuggestBox>
             </muxc:NavigationView.AutoSuggestBox>
-            <controls:CustomNavigationView.OverlayContent>
-                <Grid x:Name="OverlayGrid">
-                    <Frame x:Name="PlayerFrame" />
-                </Grid>
-            </controls:CustomNavigationView.OverlayContent>
+
+            <controls:NavigationViewEx.Overlay>
+                <Frame x:Name="PlayerFrame" />
+            </controls:NavigationViewEx.Overlay>
 
             <Grid x:Name="ContentGrid" Padding="0,48,0,0">
                 <Frame
@@ -328,11 +247,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom" />
             </Grid>
-
-            <interactivity:Interaction.Behaviors>
-                <interactions:NavigationViewKeyboardBehavior />
-            </interactivity:Interaction.Behaviors>
-        </controls:CustomNavigationView>
+        </controls:NavigationViewEx>
 
         <!--  Critical error  -->
         <controls:ErrorInfo
@@ -382,22 +297,16 @@
             </VisualStateGroup>
 
             <VisualStateGroup x:Name="NavigationViewStates">
-                <VisualState x:Name="Expanded">
-                    <VisualState.Setters>
-                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
-                    </VisualState.Setters>
-                </VisualState>
+                <VisualState x:Name="Expanded" />
                 <VisualState x:Name="Compact">
                     <VisualState.Setters>
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginCompact}" />
-                        <Setter Target="OverlayGrid.Margin" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Minimal">
                     <VisualState.Setters>
                         <Setter Target="TitleBarElement.Margin" Value="84,0,0,0" />
                         <Setter Target="AppTitle.Margin" Value="{StaticResource AppTitleMarginMinimal}" />
-                        <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Hidden">
@@ -405,17 +314,14 @@
                         <Setter Target="AppTitleBar.Visibility" Value="Collapsed" />
                         <Setter Target="NavView.ContentVisibility" Value="Collapsed" />
                         <Setter Target="NavView.OverlayZIndex" Value="2" />
-                        <Setter Target="OverlayGrid.Margin" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
                 <VisualStateGroup.Transitions>
                     <VisualTransition From="Compact" To="Expanded">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.OpenPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="OverlayGrid" />
+                            <!--  -272 offset is derived from subtracting CompactPaneLength from OpenPaneLength (48 - 320)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-272" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="16" TargetName="AppTitle" />
                             <DoubleAnimation
                                 Storyboard.TargetName="HomeNavItemText"
@@ -458,37 +364,33 @@
 
                     <VisualTransition From="Expanded" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
-                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="OverlayGrid" />
+                            <!--  272 offset is derived from subtracting OpenPaneLength from CompactPaneLength (320 - 48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="272" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="-16" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Compact" To="Minimal">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="0" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginMinimal}" />
                             </ObjectAnimationUsingKeyFrames>
+                            <!--  48 offset is derived from adding CompactPaneLength (48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="48" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="-24" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>
 
                     <VisualTransition From="Minimal" To="Compact">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="OverlayGrid" Storyboard.TargetProperty="Margin">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Bind ToLeftOnlyMargin(NavView.CompactPaneLength)}" />
-                            </ObjectAnimationUsingKeyFrames>
                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AppTitle" Storyboard.TargetProperty="Margin">
                                 <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource AppTitleMarginCompact}" />
                             </ObjectAnimationUsingKeyFrames>
+                            <!--  -48 offset is derived from subtracting CompactPaneLength (48)  -->
+                            <RepositionThemeAnimation FromHorizontalOffset="-48" TargetName="PlayerFrame" />
                             <RepositionThemeAnimation FromHorizontalOffset="24" TargetName="AppTitle" />
                         </Storyboard>
                     </VisualTransition>
