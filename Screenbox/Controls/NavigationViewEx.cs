@@ -68,6 +68,8 @@ public sealed partial class NavigationViewEx : NavigationView
 
     private const string ShadowCaster = "ShadowCaster";
 
+    private const string ContentGridFinalValue = "400";
+
     private static readonly ImplicitAnimationSet _slowFadeInAnimationSet = new()
     {
        new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear }
@@ -80,16 +82,8 @@ public sealed partial class NavigationViewEx : NavigationView
     {
        new TranslationAnimation { From = "-48,0,0", To = "0,0,0", Duration = TimeSpan.FromMilliseconds(167), EasingMode = EasingMode.EaseOut },
     };
-    private static readonly ImplicitAnimationSet _contentShowAnimationSet = new()
-    {
-        new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear },
-        new TranslationAnimation { To = "0,0,0", Duration = TimeSpan.FromMilliseconds(400), EasingMode = EasingMode.EaseOut }
-    };
-    private static readonly ImplicitAnimationSet _contentHideAnimationSet = new()
-    {
-        new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear },
-        new TranslationAnimation { To = "0,-400,0", Duration = TimeSpan.FromMilliseconds(250), EasingMode = EasingMode.EaseIn }
-    };
+    private ImplicitAnimationSet? _contentShowAnimationSet;
+    private ImplicitAnimationSet? _contentHideAnimationSet;
 
     private Grid? _overlayRoot;
     private Border? _overlayChildBorder;
@@ -234,8 +228,7 @@ public sealed partial class NavigationViewEx : NavigationView
             _contentGrid = contentGrid;
 
             // Set implicit animations to play when ContentVisibility changes.
-            Implicit.SetShowAnimations(contentGrid, _contentShowAnimationSet);
-            Implicit.SetHideAnimations(contentGrid, _contentHideAnimationSet);
+            UpdateContentAnimations();
         }
 
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
@@ -411,7 +404,7 @@ public sealed partial class NavigationViewEx : NavigationView
     {
         if (_overlayRoot == null) return;
 
-        // Applies layout logic consistent with other SplitView content grids.
+        // Aligns the overlay layout with the SplitView content area.
         if (ContentVisibility == Visibility.Collapsed)
         {
             Grid.SetColumn(_overlayRoot, 0);
@@ -514,6 +507,55 @@ public sealed partial class NavigationViewEx : NavigationView
             {
                 _settingsItem.Style = SettingsItemStyle;
             }
+        }
+    }
+
+    private string GetTranslationTo(TransitionDirection direction, bool entrance)
+    {
+        return direction switch
+        {
+            TransitionDirection.Top => entrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
+            TransitionDirection.Bottom => entrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
+            TransitionDirection.Left => entrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
+            TransitionDirection.Right => entrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
+            _ => "0,0,0"
+        };
+    }
+
+    private void UpdateContentAnimations()
+    {
+        var showAnimationSet = new ImplicitAnimationSet
+        {
+            new OpacityAnimation { To = 1, Duration = TimeSpan.FromMilliseconds(250), EasingType = EasingType.Linear }
+        };
+        var hideAnimationSet = new ImplicitAnimationSet
+        {
+            new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear }
+        };
+
+        if (ContentVisibilityTransition != TransitionDirection.None)
+        {
+            showAnimationSet.Add(new TranslationAnimation
+            {
+                To = GetTranslationTo(ContentVisibilityTransition, true),
+                Duration = TimeSpan.FromMilliseconds(400),
+                EasingMode = EasingMode.EaseOut
+            });
+            hideAnimationSet.Add(new TranslationAnimation
+            {
+                To = GetTranslationTo(ContentVisibilityTransition, false),
+                Duration = TimeSpan.FromMilliseconds(250),
+                EasingMode = EasingMode.EaseIn
+            });
+        }
+
+        _contentShowAnimationSet = showAnimationSet;
+        _contentHideAnimationSet = hideAnimationSet;
+
+        if (_contentGrid != null)
+        {
+            Implicit.SetShowAnimations(_contentGrid, _contentShowAnimationSet);
+            Implicit.SetHideAnimations(_contentGrid, _contentHideAnimationSet);
         }
     }
 }

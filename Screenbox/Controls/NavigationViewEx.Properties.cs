@@ -254,40 +254,75 @@ public sealed partial class NavigationViewEx
         set => SetValue(SettingsItemStyleProperty, value);
     }
 
+    /// <summary>
+    /// Identifies the <see cref="ContentVisibilityTransition"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty ContentVisibilityTransitionProperty = DependencyProperty.Register(
+        nameof(ContentVisibilityTransition), typeof(TransitionDirection), typeof(NavigationViewEx), new PropertyMetadata(TransitionDirection.None, OnContentVisibilityTransitionPropertyChanged));
+
+    /// <summary>
+    /// Gets or sets the direction used for the translation animation of the content grid.
+    /// </summary>
+    public TransitionDirection ContentVisibilityTransition
+    {
+        get => (TransitionDirection)GetValue(ContentVisibilityTransitionProperty);
+        set => SetValue(ContentVisibilityTransitionProperty, value);
+    }
+
     private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnOverlayChanged((UIElement?)e.OldValue, (UIElement?)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnOverlayChanged((UIElement?)e.OldValue, (UIElement?)e.NewValue);
+        }
     }
 
     private static void OnOverlayZIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnOverlayZIndexChanged((int)e.OldValue, (int)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnOverlayZIndexChanged((int)e.OldValue, (int)e.NewValue);
+        }
     }
 
     private static void OnContentVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnContentVisibilityChanged((Visibility)e.OldValue, (Visibility)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnContentVisibilityChanged((Visibility)e.OldValue, (Visibility)e.NewValue);
+        }
     }
 
     private static void OnBackButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnBackButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnBackButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        }
     }
 
     private static void OnPaneSearchButtonStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnPaneSearchButtonStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        }
     }
 
     private static void OnSettingsItemStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var owner = (NavigationViewEx)d;
-        owner.OnSettingsItemStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnSettingsItemStyleChanged((Style?)e.OldValue, (Style?)e.NewValue);
+        }
+    }
+
+    private static void OnContentVisibilityTransitionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is NavigationViewEx owner)
+        {
+            owner.OnContentVisibilityTransitionChanged((TransitionDirection)e.OldValue, (TransitionDirection)e.NewValue);
+        }
     }
 
     private void OnOverlayChanged(UIElement? oldValue, UIElement? newValue)
@@ -321,4 +356,18 @@ public sealed partial class NavigationViewEx
     {
         UpdateSettingsItemStyle();
     }
+
+    private void OnContentVisibilityTransitionChanged(TransitionDirection oldValue, TransitionDirection newValue)
+    {
+        UpdateContentAnimations();
+    }
+}
+
+public enum TransitionDirection
+{
+    None,
+    Left,
+    Top,
+    Right,
+    Bottom
 }

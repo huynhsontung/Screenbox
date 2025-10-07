@@ -99,6 +99,7 @@
             BackRequested="NavView_BackRequested"
             CloseButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationCloseButtonKey}"
             CompactModeThresholdWidth="701"
+            ContentVisibilityTransition="Top"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             DragOver="NavView_DragOver"
             Drop="NavView_Drop"
