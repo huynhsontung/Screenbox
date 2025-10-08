@@ -316,33 +316,6 @@
                 <!--  General section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryGeneral}" />
 
-                <ctc:SettingsExpander
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
-                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
-                    <ctc:SettingsExpander.HeaderIcon>
-                        <FontIcon
-                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
-                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
-                            MirroredWhenRightToLeft="True" />
-                    </ctc:SettingsExpander.HeaderIcon>
-                    <interactivity:Interaction.Behaviors>
-                        <behaviors:SettingsExpanderXYNavigationBehavior />
-                    </interactivity:Interaction.Behaviors>
-                    <ToggleSwitch
-                        x:Name="ShowRecentToggleSwitch"
-                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
-                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
-                    <ctc:SettingsExpander.Items>
-                        <ctc:SettingsCard
-                            x:Name="SettingsClearRecentCard"
-                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
-                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
-                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
-                        </ctc:SettingsCard>
-                    </ctc:SettingsExpander.Items>
-                </ctc:SettingsExpander>
-
                 <ctc:SettingsCard
                     x:Name="SettingsEnqueueAllFilesInFolderCard"
                     Margin="{StaticResource SettingsCardMargin}"
@@ -574,6 +547,36 @@
                             <ctc:SettingsCard.Description>
                                 <TextBlock IsTextSelectionEnabled="True" Text="{x:Bind ViewModel.GlobalArguments, Mode=OneWay}" />
                             </ctc:SettingsCard.Description>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
+
+                <!--  Privacy  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind strings:Resources.SettingsCategoryPrivacy}" />
+
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{strings:Resources Key=SettingsShowRecentDescription}"
+                    Header="{strings:Resources Key=SettingsShowRecentHeader}">
+                    <ctc:SettingsExpander.HeaderIcon>
+                        <FontIcon
+                            FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
+                            Glyph="{x:Bind converters:GlyphConverter.ToRecentGlyph(ViewModel.ShowRecent), Mode=OneWay}"
+                            MirroredWhenRightToLeft="True" />
+                    </ctc:SettingsExpander.HeaderIcon>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch
+                        x:Name="ShowRecentToggleSwitch"
+                        AutomationProperties.HelpText="{strings:Resources Key=SettingsShowRecentDescription}"
+                        IsOn="{x:Bind ViewModel.ShowRecent, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard
+                            x:Name="SettingsClearRecentCard"
+                            AutomationProperties.Name="{x:Bind SettingsClearRecentCard.Header}"
+                            Header="{strings:Resources Key=SettingsClearRecentHeader}">
+                            <Button Command="{x:Bind ViewModel.ClearRecentHistoryCommand}" Content="{strings:Resources Key=Clear}" />
                         </ctc:SettingsCard>
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
