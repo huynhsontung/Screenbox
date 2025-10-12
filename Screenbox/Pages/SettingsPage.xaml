@@ -420,7 +420,7 @@
                                 SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="x:Int32">
-                                        <TextBlock Text="{x:Bind Converter={StaticResource HideDelayOptionsToUnitStringConverter}}" />
+                                        <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
