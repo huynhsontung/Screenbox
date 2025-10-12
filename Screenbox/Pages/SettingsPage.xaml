@@ -30,7 +30,6 @@
         <Thickness x:Key="SettingsCardMargin">0,0,0,4</Thickness>
 
         <converters:ResourceNameToResourceStringConverter x:Key="ResourceNameToResourceStringConverter" />
-        <converters:IntToUnitStringConverter x:Key="HideDelayOptionsToUnitStringConverter" Unit="Seconds" />
 
         <!--  Section header text style  -->
         <Style

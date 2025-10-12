@@ -231,7 +231,6 @@
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
     <Compile Include="Converters\HumanizedDurationConverter.cs" />
-    <Compile Include="Converters\IntToUnitStringConverter.cs" />
     <Compile Include="Converters\LanguageLayoutDirectionToFlowDirectionConverter.cs" />
     <Compile Include="Converters\MediaGlyphConverter.cs" />
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
