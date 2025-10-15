@@ -468,6 +468,8 @@ namespace Screenbox.Core.ViewModels
                 // Update current item
                 CurrentItem = playlist.CurrentItem;
                 CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+                NextCommand.NotifyCanExecuteChanged();
+                PreviousCommand.NotifyCanExecuteChanged();
             }
             finally
             {
