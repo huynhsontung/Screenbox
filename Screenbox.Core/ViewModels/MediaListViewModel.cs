@@ -181,19 +181,29 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlayFilesMessage message)
         {
             IReadOnlyList<IStorageItem> files = message.Value;
-            _neighboringFilesQuery = message.NeighboringFilesQuery;
+            _neighboringFilesQuery = message.NeighboringFilesQuery ?? _neighboringFilesQuery;
             if (files.Count == 1 && files[0] is StorageFile file)
             {
                 var media = _mediaFactory.GetSingleton(file);
-                // The current play queue may already have the file already. Just play the file in this case.
+                // If the file already exists in the queue, just play it, but ensure neighboring query is ready
                 if (Items.Contains(media))
                 {
+                    if (_neighboringFilesQuery == null)
+                    {
+                        _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
+                    }
+
                     PlaySingle(media);
                     return;
                 }
 
-                // If there is only 1 file, play it immediately
-                // Avoid waiting to get all the neighboring files then play, which may cause delay
+                // Prepare neighboring files query before starting playback so Next is enabled immediately
+                if (_neighboringFilesQuery == null)
+                {
+                    _neighboringFilesQuery = await _filesService.GetNeighboringFilesQueryAsync(file);
+                }
+
+                // If there is only 1 file, play it immediately to avoid delay
                 ClearPlaylist();
                 if (_mediaPlayer == null)
                 {
@@ -207,8 +217,7 @@ namespace Screenbox.Core.ViewModels
                 // If there are more than one item in the queue, file is already a playlist, no need to check for neighboring files
                 if (Items.Count > 1) return;
 
-                _neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
-                // Populate the play queue with neighboring media if needed
+                // Populate the play queue with neighboring media if needed (non-blocking for initial play)
                 if (!_settingsService.EnqueueAllFilesInFolder || _neighboringFilesQuery == null) return;
                 _playFilesCts?.Cancel();
                 using CancellationTokenSource cts = new();
@@ -809,14 +818,16 @@ namespace Screenbox.Core.ViewModels
             {
                 switch (RepeatMode)
                 {
-                    case MediaPlaybackAutoRepeatMode.List when CurrentIndex == Items.Count - 1:
-                        PlaySingle(Items[0]);
-                        break;
                     case MediaPlaybackAutoRepeatMode.Track:
                         sender.Position = TimeSpan.Zero;
                         break;
+                    case MediaPlaybackAutoRepeatMode.List when CurrentIndex == Items.Count - 1 && Items.Count > 0:
+                        PlaySingle(Items[0]);
+                        break;
                     default:
-                        if (Items.Count > 1) _ = NextAsync();
+                        // Always attempt next. If only one item and a neighboring files query is available,
+                        // NextAsync will move to the next file in the same folder.
+                        _ = NextAsync();
                         break;
                 }
             });
