@@ -80,7 +80,6 @@ public sealed class PlaylistService : IPlaylistService
     {
         Guard.IsNotNull(playlist.ShuffleBackup, nameof(playlist.ShuffleBackup));
         var shuffleBackup = playlist.ShuffleBackup;
-        var restored = new Playlist();
         var backup = new List<MediaViewModel>(shuffleBackup.OriginalPlaylist);
 
         foreach (var removal in shuffleBackup.Removals)
@@ -88,21 +87,10 @@ public sealed class PlaylistService : IPlaylistService
             backup.Remove(removal);
         }
 
-        foreach (var media in backup)
-        {
-            restored.Items.Add(media);
-        }
+        var restored = playlist.CurrentItem != null
+            ? new Playlist(playlist.CurrentItem, backup) : new Playlist(backup);
 
-        // Try to maintain current item
-        if (playlist.CurrentItem != null)
-        {
-            restored.CurrentIndex = restored.Items.IndexOf(playlist.CurrentItem);
-        }
-
-        restored.ShuffleMode = false;
-        restored.ShuffleBackup = null;
         restored.LastUpdated = playlist.LastUpdated;
-
         return restored;
     }
 

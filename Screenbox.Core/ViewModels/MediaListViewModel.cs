@@ -67,6 +67,7 @@ namespace Screenbox.Core.ViewModels
         private List<MediaViewModel> _mediaBuffer = new();
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
+        private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
         private StorageFileQueryResult? _neighboringFilesQuery;
         private CancellationTokenSource? _cts;
         private CancellationTokenSource? _playFilesCts;
@@ -127,7 +128,6 @@ namespace Screenbox.Core.ViewModels
                 if (_neighboringFilesQuery != null)
                 {
                     var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist, _neighboringFilesQuery);
-                    _playlist = updatedPlaylist;
                     LoadFromPlaylist(updatedPlaylist);
                 }
             }
@@ -289,29 +289,27 @@ namespace Screenbox.Core.ViewModels
 
         partial void OnShuffleModeChanged(bool value)
         {
+            Playlist playlist;
             if (value)
             {
-                var playlist = _playlist;
-                _playlist = _playlistService.ShufflePlaylist(playlist, CurrentIndex);
+                playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
             }
             else
             {
                 if (_playlist.ShuffleBackup != null)
                 {
-                    var restoredPlaylist = _playlistService.RestoreFromShuffle(_playlist);
-                    _playlist = restoredPlaylist;
+                    playlist = _playlistService.RestoreFromShuffle(_playlist);
                 }
                 else
                 {
                     // No backup - just reshuffle
-                    var shuffledPlaylist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
-                    shuffledPlaylist.ShuffleMode = false;
-                    shuffledPlaylist.ShuffleBackup = null;
-                    _playlist = shuffledPlaylist;
+                    playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+                    playlist.ShuffleMode = false;
+                    playlist.ShuffleBackup = null;
                 }
             }
 
-            LoadFromPlaylist(_playlist);
+            LoadFromPlaylist(playlist);
         }
 
         #endregion
@@ -356,7 +354,6 @@ namespace Screenbox.Core.ViewModels
                 if (result.UpdatedPlaylist != null)
                 {
                     // Playlist was replaced (neighboring file navigation)
-                    _playlist = result.UpdatedPlaylist;
                     LoadFromPlaylist(result.UpdatedPlaylist);
                 }
 
@@ -392,7 +389,6 @@ namespace Screenbox.Core.ViewModels
                 if (result.UpdatedPlaylist != null)
                 {
                     // Playlist was replaced (neighboring file navigation)
-                    _playlist = result.UpdatedPlaylist;
                     LoadFromPlaylist(result.UpdatedPlaylist);
                 }
 
@@ -449,11 +445,34 @@ namespace Screenbox.Core.ViewModels
 
         private void LoadFromPlaylist(Playlist playlist)
         {
-            // Sync ObservableCollection with mediaList
-            Items.SyncItems(playlist.Items);
+            try
+            {
+                _deferCollectionChanged = true;
+                _playlist = playlist;
 
-            // Update current item
-            CurrentItem = playlist.CurrentItem;
+                // Sync ObservableCollection with mediaList
+                // Only use sync if both lists are small enough to avoid UI freezing
+                if (Items.Count < 200 && playlist.Items.Count < 200)
+                {
+                    Items.SyncItems(playlist.Items);
+                }
+                else
+                {
+                    Items.Clear();
+                    foreach (var item in playlist.Items)
+                    {
+                        Items.Add(item);
+                    }
+                }
+
+                // Update current item
+                CurrentItem = playlist.CurrentItem;
+                CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+            }
+            finally
+            {
+                _deferCollectionChanged = false;
+            }
         }
 
         private void ClearPlaylist()
@@ -463,9 +482,19 @@ namespace Screenbox.Core.ViewModels
                 item.Clean();
             }
 
-            Items.Clear();
-            _playlist = new Playlist();
-            ShuffleMode = false;
+            try
+            {
+                _deferCollectionChanged = true;
+                Items.Clear();
+                CurrentItem = null;
+                CurrentIndex = -1;
+                _playlist = new Playlist();
+                ShuffleMode = false;
+            }
+            finally
+            {
+                _deferCollectionChanged = false;
+            }
         }
 
         private async Task UpdateMediaBufferAsync()
@@ -521,16 +550,16 @@ namespace Screenbox.Core.ViewModels
 
             if (result != null)
             {
-                _playlist = new Playlist(result.NextItem, result.Items);
-                LoadFromPlaylist(_playlist);
+                var playlist = new Playlist(result.NextItem, result.Items);
+                LoadFromPlaylist(playlist);
                 PlaySingle(result.NextItem);
             }
         }
 
         private void CreatePlaylistAndPlay(MediaViewModel nextItem)
         {
-            _playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
-            LoadFromPlaylist(_playlist);
+            var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
+            LoadFromPlaylist(playlist);
             PlaySingle(nextItem);
         }
 
@@ -577,7 +606,6 @@ namespace Screenbox.Core.ViewModels
                     if (result.UpdatedPlaylist != null)
                     {
                         // Playlist was replaced (neighboring file navigation)
-                        _playlist = result.UpdatedPlaylist;
                         LoadFromPlaylist(result.UpdatedPlaylist);
                     }
 
@@ -616,6 +644,7 @@ namespace Screenbox.Core.ViewModels
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (_deferCollectionChanged) return;
             CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
             _playlist = new Playlist(CurrentIndex, Items, _playlist);
             NextCommand.NotifyCanExecuteChanged();

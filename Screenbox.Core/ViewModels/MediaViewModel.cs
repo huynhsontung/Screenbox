@@ -1,5 +1,12 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
@@ -11,13 +18,6 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using TagLib;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
@@ -214,7 +214,7 @@ namespace Screenbox.Core.ViewModels
         public void UpdateSource(StorageFile file)
         {
             Source = file;
-            Name = file.DisplayName;
+            //Name = file.DisplayName;
             AltCaption = file.Name;
         }
 
