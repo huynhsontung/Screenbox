@@ -338,7 +338,8 @@ namespace Screenbox.Core.ViewModels
 
         private bool CanNext()
         {
-            return _playbackControlService.CanNext(_playlist, RepeatMode);
+            var hasNeighbors = _playlist.Items.Count == 1 && _neighboringFilesQuery != null;
+            return hasNeighbors || _playbackControlService.CanNext(_playlist, RepeatMode);
         }
 
         [RelayCommand(CanExecute = nameof(CanNext))]
@@ -363,7 +364,8 @@ namespace Screenbox.Core.ViewModels
 
         private bool CanPrevious()
         {
-            return _playbackControlService.CanPrevious(_playlist, RepeatMode);
+            var hasNeighbors = _playlist.Items.Count == 1 && _neighboringFilesQuery != null;
+            return hasNeighbors || _playbackControlService.CanPrevious(_playlist, RepeatMode);
         }
 
         [RelayCommand(CanExecute = nameof(CanPrevious))]
@@ -495,6 +497,7 @@ namespace Screenbox.Core.ViewModels
                 CurrentItem = null;
                 CurrentIndex = -1;
                 _playlist = new Playlist();
+                _neighboringFilesQuery = null;
                 ShuffleMode = false;
             }
             finally
