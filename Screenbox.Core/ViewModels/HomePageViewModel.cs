@@ -177,7 +177,7 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
-        private void Play(MediaViewModel media)
+        private async Task Play(MediaViewModel media)
         {
             if (media.IsMediaActive)
             {
@@ -185,7 +185,17 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                Messenger.Send(new PlayMediaMessage(media, false));
+                // If the recent item is a StorageFile, use PlayFilesMessage so the playlist can be
+                // populated with neighboring files (based on settings) and Next/Previous can work.
+                if (media.Source is StorageFile file)
+                {
+                    var query = await _filesService.GetNeighboringFilesQueryAsync(file);
+                    Messenger.Send(new PlayFilesMessage(new IStorageItem[] { file }, query));
+                }
+                else
+                {
+                    Messenger.Send(new PlayMediaMessage(media, false));
+                }
             }
         }
 
