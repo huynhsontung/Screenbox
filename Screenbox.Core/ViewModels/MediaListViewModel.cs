@@ -370,12 +370,16 @@ namespace Screenbox.Core.ViewModels
         private async Task PreviousAsync()
         {
             if (_mediaPlayer == null) return;
+            void SetPositionToStart()
+            {
+                _mediaPlayer.Position = TimeSpan.Zero;
+            }
 
             // If playing and position > 5 seconds, restart current track
             if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
                 _mediaPlayer.Position > TimeSpan.FromSeconds(5))
             {
-                _mediaPlayer.Position = TimeSpan.Zero;
+                _dispatcherQueue.TryEnqueue(SetPositionToStart);
                 return;
             }
 
@@ -397,7 +401,7 @@ namespace Screenbox.Core.ViewModels
             else
             {
                 // At beginning without repeat - restart current track
-                _mediaPlayer.Position = TimeSpan.Zero;
+                _dispatcherQueue.TryEnqueue(SetPositionToStart);
             }
         }
 
