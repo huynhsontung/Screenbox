@@ -142,35 +142,15 @@ namespace Screenbox.Core.ViewModels
         private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
         {
             IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
-            StorageFileQueryResult? query = Messenger.Send<PlaylistRequestMessage>().Response.NeighboringFilesQuery;
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            {
+                ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
+            };
+
+            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
             if (query != null)
             {
-                try
-                {
-                    IReadOnlyList<StorageFile> files = await query.GetFilesAsync(0, 50);
-                    subtitles = files.Where(f =>
-                            f.IsSupportedSubtitle() && f.Name.StartsWith(
-                                Path.GetFileNameWithoutExtension(sourceFile.Name),
-                                StringComparison.OrdinalIgnoreCase))
-                        .ToList();
-                }
-                catch (Exception e)
-                {
-                    LogService.Log(e);
-                }
-            }
-            else
-            {
-                QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-                {
-                    ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
-                };
-
-                query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-                if (query != null)
-                {
-                    subtitles = await query.GetFilesAsync(0, 50);
-                }
+                subtitles = await query.GetFilesAsync(0, 50);
             }
 
             return subtitles;

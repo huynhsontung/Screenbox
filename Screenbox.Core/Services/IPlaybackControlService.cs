@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
 using Windows.Media;
+using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
 
@@ -19,14 +20,24 @@ public interface IPlaybackControlService
     bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
 
     /// <summary>
+    /// Get the next media file in the folder using a files query
+    /// </summary>
+    Task<PlaybackNavigationResult?> GetNeighboringNextAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery);
+
+    /// <summary>
+    /// Get the previous media file in the folder using a files query
+    /// </summary>
+    Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery);
+
+    /// <summary>
     /// Get the next media item to play
     /// </summary>
-    Task<PlaybackNavigationResult?> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    PlaybackNavigationResult? GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
 
     /// <summary>
     /// Get the previous media item to play
     /// </summary>
-    Task<PlaybackNavigationResult?> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    PlaybackNavigationResult? GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
 
     /// <summary>
     /// Handle end of media playback

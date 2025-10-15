@@ -20,6 +20,7 @@ using Sentry;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
+using Windows.Storage.Search;
 using Windows.System;
 
 namespace Screenbox.Core.ViewModels
@@ -66,6 +67,7 @@ namespace Screenbox.Core.ViewModels
         private List<MediaViewModel> _mediaBuffer = new();
         private IMediaPlayer? _mediaPlayer;
         private object? _delayPlay;
+        private StorageFileQueryResult? _neighboringFilesQuery;
         private CancellationTokenSource? _cts;
         private CancellationTokenSource? _playFilesCts;
         private readonly DispatcherQueue _dispatcherQueue;
@@ -111,29 +113,20 @@ namespace Screenbox.Core.ViewModels
         public async void Receive(PlayFilesMessage message)
         {
             var files = message.Value;
-            if (files.Count == 0) return;
-            var result = await _mediaListFactory.TryParseMediaListAsync(files);
-            if (result == null || result.Items.Count == 0) return;
-
-            _playlist = new Playlist(result.NextItem, result.Items)
-            {
-                NeighboringFilesQuery = message.NeighboringFilesQuery
-            };
-
-            LoadFromPlaylist(_playlist);
-            PlaySingle(result.NextItem);
+            await ParseAndPlayAsync(files);
+            _neighboringFilesQuery = message.NeighboringFilesQuery;
 
             // Enqueue neighboring files if needed
             if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
             {
-                if (_playlist.NeighboringFilesQuery == null && files[0] is StorageFile file)
+                if (_neighboringFilesQuery == null && files[0] is StorageFile file)
                 {
-                    _playlist.NeighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
+                    _neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
                 }
 
-                if (_playlist.NeighboringFilesQuery != null)
+                if (_neighboringFilesQuery != null)
                 {
-                    var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist);
+                    var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist, _neighboringFilesQuery);
                     _playlist = updatedPlaylist;
                     LoadFromPlaylist(updatedPlaylist);
                 }
@@ -171,7 +164,7 @@ namespace Screenbox.Core.ViewModels
 
         public void Receive(PlaylistRequestMessage message)
         {
-            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _playlist.LastUpdated, _playlist.NeighboringFilesQuery));
+            message.Reply(_playlist);
         }
 
         public async void Receive(PlayMediaMessage message)
@@ -298,13 +291,8 @@ namespace Screenbox.Core.ViewModels
         {
             if (value)
             {
-                var playlist = SaveToPlaylist();
-                var shuffleBackup = new ShuffleBackup(new List<MediaViewModel>(Items));
-                var shuffledPlaylist = _playlistService.ShufflePlaylist(playlist, CurrentIndex);
-
-                _playlist = shuffledPlaylist;
-                _playlist.ShuffleBackup = shuffleBackup;
-                _playlist.ShuffleMode = true;
+                var playlist = _playlist;
+                _playlist = _playlistService.ShufflePlaylist(playlist, CurrentIndex);
             }
             else
             {
@@ -315,7 +303,10 @@ namespace Screenbox.Core.ViewModels
                 }
                 else
                 {
+                    // No backup - just reshuffle
                     var shuffledPlaylist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+                    shuffledPlaylist.ShuffleMode = false;
+                    shuffledPlaylist.ShuffleBackup = null;
                     _playlist = shuffledPlaylist;
                 }
             }
@@ -355,8 +346,10 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand(CanExecute = nameof(CanNext))]
         private async Task NextAsync()
         {
-            var playlist = SaveToPlaylist();
-            var result = await _playbackControlService.GetNextAsync(playlist, RepeatMode);
+            var playlist = _playlist;
+            var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
+                ? await _playbackControlService.GetNeighboringNextAsync(playlist, _neighboringFilesQuery)
+                : _playbackControlService.GetNext(playlist, RepeatMode);
 
             if (result != null)
             {
@@ -389,8 +382,10 @@ namespace Screenbox.Core.ViewModels
                 return;
             }
 
-            var playlist = SaveToPlaylist();
-            var result = await _playbackControlService.GetPreviousAsync(playlist, RepeatMode);
+            var playlist = _playlist;
+            var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
+                ? await _playbackControlService.GetNeighboringPreviousAsync(playlist, _neighboringFilesQuery)
+                : _playbackControlService.GetPrevious(playlist, RepeatMode);
 
             if (result != null)
             {
@@ -430,16 +425,14 @@ namespace Screenbox.Core.ViewModels
 
         #region Private Methods
 
-        private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist)
+        private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
         {
-            if (playlist.NeighboringFilesQuery == null) return playlist;
-
             _playFilesCts?.Cancel();
             using var cts = new CancellationTokenSource();
             try
             {
                 _playFilesCts = cts;
-                var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, playlist.NeighboringFilesQuery, cts.Token);
+                var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, neighboringFilesQuery, cts.Token);
                 return updatedPlaylist;
             }
             catch (OperationCanceledException)
@@ -451,13 +444,6 @@ namespace Screenbox.Core.ViewModels
                 _playFilesCts = null;
             }
 
-            return playlist;
-        }
-
-        private Playlist SaveToPlaylist()
-        {
-            var playlist = CurrentItem != null ? new Playlist(CurrentItem, Items, _playlist) : new Playlist(Items, _playlist);
-            _playlist = playlist;
             return playlist;
         }
 
@@ -505,16 +491,28 @@ namespace Screenbox.Core.ViewModels
 
             switch (value)
             {
-                case StorageFile file:
+                case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
                     var fileMedia = _mediaFactory.GetSingleton(file);
                     CreatePlaylistAndPlay(fileMedia);
                     result = await _mediaListFactory.ParseMediaListAsync(file);
                     break;
+
+                case IReadOnlyList<IStorageItem> items:
+                    result = await _mediaListFactory.TryParseMediaListAsync(items);
+                    break;
+
+                case StorageFile file:
+                    var fileMedia0 = _mediaFactory.GetSingleton(file);
+                    CreatePlaylistAndPlay(fileMedia0);
+                    result = await _mediaListFactory.ParseMediaListAsync(file);
+                    break;
+
                 case Uri uri:
                     var uriMedia = _mediaFactory.GetTransient(uri);
                     CreatePlaylistAndPlay(uriMedia);
                     result = await _mediaListFactory.ParseMediaListAsync(uri);
                     break;
+
                 case MediaViewModel media:
                     CreatePlaylistAndPlay(media);
                     result = await _mediaListFactory.ParseMediaListAsync(media);
@@ -572,7 +570,7 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                var playlist = SaveToPlaylist();
+                var playlist = _playlist;
                 var result = _playbackControlService.HandleMediaEnded(playlist, RepeatMode);
                 if (result != null)
                 {
@@ -611,7 +609,7 @@ namespace Screenbox.Core.ViewModels
             _dispatcherQueue.TryEnqueue(HandleTransportControlsButtonPressed);
         }
 
-        private void TransportControlsOnAutoRepeatModeChangeRequested(Windows.Media.SystemMediaTransportControls sender, Windows.Media.AutoRepeatModeChangeRequestedEventArgs args)
+        private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
         {
             _dispatcherQueue.TryEnqueue(() => RepeatMode = args.RequestedAutoRepeatMode);
         }
@@ -619,6 +617,7 @@ namespace Screenbox.Core.ViewModels
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+            _playlist = new Playlist(CurrentIndex, Items, _playlist);
             NextCommand.NotifyCanExecuteChanged();
             PreviousCommand.NotifyCanExecuteChanged();
 

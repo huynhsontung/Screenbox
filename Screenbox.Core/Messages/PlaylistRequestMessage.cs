@@ -3,7 +3,7 @@ using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Messages
 {
-    public sealed class PlaylistRequestMessage : RequestMessage<PlaylistInfo>
+    public sealed class PlaylistRequestMessage : RequestMessage<Playlist>
     {
     }
 }

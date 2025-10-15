@@ -527,8 +527,8 @@ namespace Screenbox.Core.ViewModels
                     _windowService.TryExitCompactLayoutAsync();
                     break;
                 case WindowViewMode.Default:
-                    PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-                    bool hasItemsInQueue = playlist.Playlist.Count > 0;
+                    Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+                    bool hasItemsInQueue = playlist.Items.Count > 0;
                     PlayerVisibility = hasItemsInQueue ? PlayerVisibilityState.Minimal : PlayerVisibilityState.Hidden;
                     break;
                 default:

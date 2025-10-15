@@ -51,7 +51,13 @@ public sealed class PlaylistService : IPlaylistService
 
     public Playlist ShufflePlaylist(Playlist playlist, int? preserveIndex = null)
     {
-        var shuffled = playlist.Clone();
+        var shuffleBackup = new ShuffleBackup(new List<MediaViewModel>(playlist.Items));
+        var shuffled = new Playlist(playlist)
+        {
+            ShuffleMode = true,
+            ShuffleBackup = shuffleBackup
+        };
+
         var random = new Random();
 
         if (preserveIndex.HasValue && preserveIndex.Value >= 0 && preserveIndex.Value < shuffled.Items.Count)
@@ -95,7 +101,6 @@ public sealed class PlaylistService : IPlaylistService
 
         restored.ShuffleMode = false;
         restored.ShuffleBackup = null;
-        restored.NeighboringFilesQuery = playlist.NeighboringFilesQuery;
         restored.LastUpdated = playlist.LastUpdated;
 
         return restored;

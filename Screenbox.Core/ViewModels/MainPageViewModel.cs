@@ -79,8 +79,8 @@ namespace Screenbox.Core.ViewModels
         {
             // All Gamepad keys are in the range of [195, 218]
             if ((int)args.Key < 195 || (int)args.Key > 218) return;
-            PlaylistInfo playlist = Messenger.Send(new PlaylistRequestMessage());
-            if (playlist.ActiveItem == null) return;
+            Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
+            if (playlist.CurrentItem == null) return;
             int volumeChange = 0;
             switch (args.Key)
             {

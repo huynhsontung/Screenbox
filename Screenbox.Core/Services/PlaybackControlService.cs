@@ -5,6 +5,7 @@ using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Windows.Media;
 using Windows.Storage;
+using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
 
@@ -29,12 +30,6 @@ public sealed class PlaybackControlService : IPlaybackControlService
             return true;
         }
 
-        // Single file with neighboring files
-        if (playlist.Items.Count == 1)
-        {
-            return playlist.NeighboringFilesQuery != null;
-        }
-
         return playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1;
     }
 
@@ -45,28 +40,24 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return playlist.Items.Count > 0 && playlist.CurrentIndex >= 0;
     }
 
-    public async Task<PlaybackNavigationResult?> GetNextAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public async Task<PlaybackNavigationResult?> GetNeighboringNextAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
-        if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return null;
-
         // Single file with neighboring files
-        if (playlist.Items.Count == 1 && playlist.NeighboringFilesQuery != null && playlist.CurrentItem.Source is StorageFile file)
+        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is StorageFile file)
         {
-            var nextFile = await _filesService.GetNextFileAsync(file, playlist.NeighboringFilesQuery);
+            var nextFile = await _filesService.GetNextFileAsync(file, neighboringFilesQuery);
             if (nextFile != null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(nextFile);
                 var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
-            return null;
         }
 
-        return GetNext(playlist, repeatMode);
+        return null;
     }
 
-    private PlaybackNavigationResult? GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public PlaybackNavigationResult? GetNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
             return null;
@@ -88,28 +79,24 @@ public sealed class PlaybackControlService : IPlaybackControlService
         return null;
     }
 
-    public async Task<PlaybackNavigationResult?> GetPreviousAsync(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public async Task<PlaybackNavigationResult?> GetNeighboringPreviousAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
-        if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
-            return null;
-
         // Single file with neighboring files
-        if (playlist.Items.Count == 1 && playlist.NeighboringFilesQuery != null && playlist.CurrentItem.Source is StorageFile file)
+        if (playlist.Items.Count == 1 && playlist.CurrentItem?.Source is StorageFile file)
         {
-            var previousFile = await _filesService.GetPreviousFileAsync(file, playlist.NeighboringFilesQuery);
+            var previousFile = await _filesService.GetPreviousFileAsync(file, neighboringFilesQuery);
             if (previousFile != null)
             {
                 var result = await _mediaListFactory.ParseMediaListAsync(previousFile);
                 var newPlaylist = new Playlist(result.NextItem, result.Items, playlist);
                 return new PlaybackNavigationResult(newPlaylist, result.NextItem);
             }
-            return null;
         }
 
-        return GetPrevious(playlist, repeatMode);
+        return null;
     }
 
-    private PlaybackNavigationResult? GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public PlaybackNavigationResult? GetPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
     {
         if (playlist.Items.Count == 0 || playlist.CurrentItem == null)
             return null;
