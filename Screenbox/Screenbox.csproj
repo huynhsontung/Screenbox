@@ -194,8 +194,8 @@
     <Compile Include="Controls\PlayerElement.xaml.cs">
       <DependentUpon>PlayerElement.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PlaylistView.xaml.cs">
-      <DependentUpon>PlaylistView.xaml</DependentUpon>
+    <Compile Include="Controls\PlayQueueControl.xaml.cs">
+      <DependentUpon>PlayQueueControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PropertiesDialog.xaml.cs">
       <DependentUpon>PropertiesDialog.xaml</DependentUpon>
@@ -570,7 +570,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\PlaylistView.xaml">
+    <Page Include="Controls\PlayQueueControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

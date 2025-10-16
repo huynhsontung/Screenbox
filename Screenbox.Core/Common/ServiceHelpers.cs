@@ -25,7 +25,7 @@ public static class ServiceHelpers
         services.AddTransient<MainPageViewModel>();
         services.AddTransient<PlayQueuePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
-        services.AddTransient<PlaylistViewModel>();
+        services.AddTransient<PlayQueueViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
         services.AddTransient<SongsPageViewModel>();
@@ -50,6 +50,7 @@ public static class ServiceHelpers
         services.AddSingleton<StorageItemViewModelFactory>();
         services.AddSingleton<ArtistViewModelFactory>();
         services.AddSingleton<AlbumViewModelFactory>();
+        services.AddSingleton<IMediaListFactory, MediaListFactory>();
 
         // Services
         services.AddSingleton<LibVlcService>();
@@ -62,5 +63,7 @@ public static class ServiceHelpers
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ISystemMediaTransportControlsService, SystemMediaTransportControlsService>();
         services.AddSingleton<ILivelyWallpaperService, LivelyWallpaperService>();
+        services.AddSingleton<IPlaybackControlService, PlaybackControlService>();
+        services.AddSingleton<IPlaylistService, PlaylistService>();
     }
 }
