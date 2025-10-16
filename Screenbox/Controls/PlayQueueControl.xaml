@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Screenbox.Controls.PlaylistView"
+    x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
@@ -17,8 +17,8 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
     d:DesignWidth="848"
-    Loaded="PlaylistView_OnLoaded"
-    Unloaded="PlaylistView_OnUnloaded"
+    Loaded="PlayQueue_OnLoaded"
+    Unloaded="PlayQueue_OnUnloaded"
     mc:Ignorable="d">
 
     <Grid>
