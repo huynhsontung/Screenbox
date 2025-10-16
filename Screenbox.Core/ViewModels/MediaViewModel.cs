@@ -214,7 +214,6 @@ public partial class MediaViewModel : ObservableRecipient
     public void UpdateSource(StorageFile file)
     {
         Source = file;
-        //Name = file.DisplayName;
         AltCaption = file.Name;
     }
 

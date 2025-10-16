@@ -441,6 +441,10 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             // Expected
         }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
         finally
         {
             _playFilesCts = null;
