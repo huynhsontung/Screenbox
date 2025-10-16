@@ -256,8 +256,8 @@
                                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
-                        <controls:PlaylistView
-                            x:Name="PlaylistView"
+                        <controls:PlayQueueControl
+                            x:Name="PlayQueue"
                             Width="432"
                             MinHeight="200"
                             MaxHeight="500"

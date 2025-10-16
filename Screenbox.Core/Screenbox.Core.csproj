@@ -9,7 +9,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Screenbox.Core</RootNamespace>
     <AssemblyName>Screenbox.Core</AssemblyName>
-    <LangVersion>10.0</LangVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.26100.0</TargetPlatformVersion>
@@ -203,11 +202,14 @@
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
-    <Compile Include="Models\PlaylistInfo.cs" />
+    <Compile Include="Models\PlaybackNavigationResult.cs" />
+    <Compile Include="Models\Playlist.cs" />
+    <Compile Include="Models\NextMediaList.cs" />
     <Compile Include="Models\Renderer.cs" />
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Models\PersistentMediaRecord.cs" />
+    <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />
     <Compile Include="Helpers\DisplayRequestTracker.cs" />
@@ -229,8 +231,11 @@
     <Compile Include="Services\IFilesService.cs" />
     <Compile Include="Services\ILibraryService.cs" />
     <Compile Include="Services\ILivelyWallpaperService.cs" />
+    <Compile Include="Factories\IMediaListFactory.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\INotificationService.cs" />
+    <Compile Include="Services\IPlaybackControlService.cs" />
+    <Compile Include="Services\IPlaylistService.cs" />
     <Compile Include="Services\IResourceService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\ISettingsService.cs" />
@@ -240,8 +245,11 @@
     <Compile Include="Services\LibVlcService.cs" />
     <Compile Include="Services\LivelyWallpaperService.cs" />
     <Compile Include="Services\LogService.cs" />
+    <Compile Include="Factories\MediaListFactory.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\PlaybackControlService.cs" />
+    <Compile Include="Services\PlaylistService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\SystemMediaTransportControlsService.cs" />
@@ -274,7 +282,7 @@
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
-    <Compile Include="ViewModels\PlaylistViewModel.cs" />
+    <Compile Include="ViewModels\PlayQueueViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />
     <Compile Include="ViewModels\PropertyViewModel.cs" />
     <Compile Include="ViewModels\SearchResultPageViewModel.cs" />

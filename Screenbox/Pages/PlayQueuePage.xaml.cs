@@ -1,7 +1,6 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,7 +27,7 @@ namespace Screenbox.Pages
 
         private async void PlayQueuePage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            await PlaylistView.SmoothScrollActiveItemIntoViewAsync();
+            await PlayQueue.SmoothScrollActiveItemIntoViewAsync();
         }
     }
 }
