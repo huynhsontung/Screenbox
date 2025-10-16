@@ -7,57 +7,56 @@ using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
 using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
 
-namespace Screenbox.Core.Helpers
+namespace Screenbox.Core.Helpers;
+
+internal static class MessengerExtensions
 {
-    internal static class MessengerExtensions
+    public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
+        IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
     {
-        public static void SendQueueAndPlay(this IMessenger messenger, MediaViewModel media,
-            IReadOnlyList<MediaViewModel> queue, bool pauseIfExists = true)
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+        if (media.IsMediaActive && pauseIfExists)
         {
-            Playlist playlist = messenger.Send(new PlaylistRequestMessage());
-            if (media.IsMediaActive && pauseIfExists)
-            {
-                messenger.Send(new TogglePlayPauseMessage(false));
-                return;
-            }
-
-            if (playlist.Items.Count != queue.Count || !ReferenceEquals(playlist.LastUpdated, queue))
-            {
-                messenger.Send(new ClearPlaylistMessage());
-                messenger.Send(new QueuePlaylistMessage(queue, false));
-            }
-
-            messenger.Send(new PlayMediaMessage(media, true));
+            messenger.Send(new TogglePlayPauseMessage(false));
+            return;
         }
 
-        public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
+        if (playlist.Items.Count != queue.Count || !ReferenceEquals(playlist.LastUpdated, queue))
         {
-            // Clone to prevent queuing duplications
-            MediaViewModel clone = new(media);
-            messenger.Send(new QueuePlaylistMessage(clone, true));
-            Playlist info = messenger.Send(new PlaylistRequestMessage());
-            if (info.CurrentIndex == -1)
-            {
-                messenger.Send(new PlayMediaMessage(clone));
-            }
+            messenger.Send(new ClearPlaylistMessage());
+            messenger.Send(new QueuePlaylistMessage(queue, false));
         }
 
-        public static void SendPositionStatus(this IMessenger messenger, TimeSpan position, TimeSpan duration, string extra = "")
-        {
-            string text = string.IsNullOrEmpty(extra)
-                ? $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)}"
-                : $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)} ({extra})";
-            messenger.Send(new UpdateStatusMessage(text));
-        }
+        messenger.Send(new PlayMediaMessage(media, true));
+    }
 
-        public static void SendSeekWithStatus(this IMessenger messenger, TimeSpan amount)
+    public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
+    {
+        // Clone to prevent queuing duplications
+        MediaViewModel clone = new(media);
+        messenger.Send(new QueuePlaylistMessage(clone, true));
+        Playlist info = messenger.Send(new PlaylistRequestMessage());
+        if (info.CurrentIndex == -1)
         {
-            PositionChangedResult result =
-                messenger.Send(new ChangeTimeRequestMessage(amount, true, false));
-
-            TimeSpan offset = result.NewPosition - result.OriginalPosition;
-            string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
-            messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
+            messenger.Send(new PlayMediaMessage(clone));
         }
+    }
+
+    public static void SendPositionStatus(this IMessenger messenger, TimeSpan position, TimeSpan duration, string extra = "")
+    {
+        string text = string.IsNullOrEmpty(extra)
+            ? $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)}"
+            : $"{Humanizer.ToDuration(position)} / {Humanizer.ToDuration(duration)} ({extra})";
+        messenger.Send(new UpdateStatusMessage(text));
+    }
+
+    public static void SendSeekWithStatus(this IMessenger messenger, TimeSpan amount)
+    {
+        PositionChangedResult result =
+            messenger.Send(new ChangeTimeRequestMessage(amount, true, false));
+
+        TimeSpan offset = result.NewPosition - result.OriginalPosition;
+        string extra = $"{(offset > TimeSpan.Zero ? '+' : string.Empty)}{Humanizer.ToDuration(offset)}";
+        messenger.SendPositionStatus(result.NewPosition, result.NaturalDuration, extra);
     }
 }
