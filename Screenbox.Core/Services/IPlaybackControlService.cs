@@ -12,12 +12,12 @@ public interface IPlaybackControlService
     /// <summary>
     /// Check if next track is available
     /// </summary>
-    bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None, bool hasNeighbor = false);
 
     /// <summary>
     /// Check if previous track is available
     /// </summary>
-    bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None);
+    bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None, bool hasNeighbor = false);
 
     /// <summary>
     /// Get the next media file in the folder using a files query

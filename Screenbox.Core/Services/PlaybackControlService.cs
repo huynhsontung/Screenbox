@@ -22,18 +22,18 @@ public sealed class PlaybackControlService : IPlaybackControlService
         _mediaListFactory = mediaListFactory;
     }
 
-    public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public bool CanNext(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None, bool hasNeighbor = false)
     {
         // With list repeat, we can always go next if there are items
-        if (repeatMode == MediaPlaybackAutoRepeatMode.List && playlist.Items.Count > 0)
-        {
-            return true;
-        }
+        if (repeatMode == MediaPlaybackAutoRepeatMode.List && playlist.Items.Count > 0) return true;
+
+        // With a single item, we can only go next if there is a neighboring file
+        if (playlist.Items.Count == 1 && hasNeighbor) return true;
 
         return playlist.CurrentIndex >= 0 && playlist.CurrentIndex < playlist.Items.Count - 1;
     }
 
-    public bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None)
+    public bool CanPrevious(Playlist playlist, MediaPlaybackAutoRepeatMode repeatMode = MediaPlaybackAutoRepeatMode.None, bool hasNeighbor = false)
     {
         // We can always go back even when there is only one item in the queue
         // If there is no previous item then the player will just restart the current item

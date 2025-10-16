@@ -338,8 +338,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private bool CanNext()
     {
-        var hasNeighbors = _playlist.Items.Count == 1 && _neighboringFilesQuery != null;
-        return hasNeighbors || _playbackControlService.CanNext(_playlist, RepeatMode);
+        return _playbackControlService.CanNext(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
     }
 
     [RelayCommand(CanExecute = nameof(CanNext))]
@@ -364,8 +363,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     private bool CanPrevious()
     {
-        var hasNeighbors = _playlist.Items.Count == 1 && _neighboringFilesQuery != null;
-        return hasNeighbors || _playbackControlService.CanPrevious(_playlist, RepeatMode);
+        return _playbackControlService.CanPrevious(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
     }
 
     [RelayCommand(CanExecute = nameof(CanPrevious))]
