@@ -409,14 +409,22 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     #region Public Methods
 
-    public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
+    public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files, int insertIndex = -1)
     {
         var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
         if (mediaList?.Items.Count > 0)
         {
             foreach (var item in mediaList.Items)
             {
-                Items.Add(item);
+                if (insertIndex < 0 || insertIndex >= Items.Count)
+                {
+                    Items.Add(item);
+                }
+                else
+                {
+                    Items.Insert(insertIndex, item);
+                    insertIndex++;
+                }
             }
         }
     }
