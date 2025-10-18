@@ -619,7 +619,7 @@
     <value>Music library locations</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Remember recent media</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
     <value>Display controls on pause</value>
@@ -631,7 +631,7 @@
     <value>Subtitles</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
-    <value>Display recently played media on the home page</value>
+    <value>Show recently played media on the home page</value>
   </data>
   <data name="SettingsClearRecentHeader" xml:space="preserve">
     <value>Clear recent media history</value>
@@ -736,6 +736,9 @@
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
     <value>Advanced</value>
+  </data>
+  <data name="SettingsCategoryPrivacy" xml:space="preserve">
+    <value>Privacy</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
     <value>Advanced mode</value>
@@ -963,5 +966,14 @@
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Use system language</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionHeader" xml:space="preserve">
+    <value>Remember playback position</value>
+  </data>
+  <data name="SettingsSavePlaybackPositionDescription" xml:space="preserve">
+    <value>Store my playback position history on this device to resume where I left off</value>
+  </data>
+  <data name="SettingsClearPlaybackPositionHeader" xml:space="preserve">
+    <value>Clear device playback position history</value>
   </data>
 </root>

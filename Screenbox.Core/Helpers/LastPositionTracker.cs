@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
-using Screenbox.Core.Messages;
-using Screenbox.Core.Models;
-using Screenbox.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Messages;
+using Screenbox.Core.Models;
+using Screenbox.Core.Services;
 using Windows.Storage;
 
 namespace Screenbox.Core.Helpers
@@ -98,7 +98,7 @@ namespace Screenbox.Core.Helpers
         {
             try
             {
-                await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions.ToList());
+                await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
             }
             catch (FileLoadException)
             {
@@ -115,6 +115,33 @@ namespace Screenbox.Core.Helpers
                 lastPositions.Capacity = Capacity;
                 _lastPositions = lastPositions;
                 LastUpdated = DateTimeOffset.UtcNow;
+            }
+            catch (FileNotFoundException)
+            {
+                // pass
+            }
+            catch (Exception)
+            {
+                // pass
+            }
+        }
+
+        public async Task DeleteFromDiskAsync()
+        {
+            try
+            {
+                _lastPositions.Clear();
+                _updateCache = null;
+                _removeCache = null;
+                LastUpdated = default;
+
+                //await _filesService.SaveToDiskAsync(ApplicationData.Current.TemporaryFolder, SaveFileName, _lastPositions);
+
+                var folder = ApplicationData.Current.TemporaryFolder;
+                if (await folder.TryGetItemAsync(SaveFileName) is StorageFile file)
+                {
+                    await file.DeleteAsync();
+                }
             }
             catch (FileNotFoundException)
             {

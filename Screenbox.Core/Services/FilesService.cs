@@ -21,6 +21,13 @@ namespace Screenbox.Core.Services
 {
     public sealed class FilesService : IFilesService
     {
+        private readonly ISettingsService _settingsService;
+
+        public FilesService(ISettingsService settingsService)
+        {
+            _settingsService = settingsService;
+        }
+
         public async Task<StorageFileQueryResult?> GetNeighboringFilesQueryAsync(StorageFile file, QueryOptions? options = null)
         {
             try
@@ -162,6 +169,9 @@ namespace Screenbox.Core.Services
 
         public void AddToRecent(IStorageItem item)
         {
+            if (!_settingsService.ShowRecent)
+                return;
+
             string metadata = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
             try
             {

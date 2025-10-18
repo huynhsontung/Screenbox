@@ -43,6 +43,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private string _globalArguments;
         [ObservableProperty] private bool _isRelaunchRequired;
         [ObservableProperty] private int _selectedLanguage;
+        [ObservableProperty] private bool _savePlaybackPosition;
 
         public ObservableCollection<StorageFolder> MusicLocations { get; }
 
@@ -59,6 +60,7 @@ namespace Screenbox.Core.ViewModels
         private readonly DispatcherQueue _dispatcherQueue;
         private readonly DispatcherQueueTimer _storageDeviceRefreshTimer;
         private readonly DeviceWatcher? _portableStorageDeviceWatcher;
+        private readonly LastPositionTracker _lastPositionTracker;
         private static InitialValues? _initialValues;
         private StorageLibrary? _videosLibrary;
         private StorageLibrary? _musicLibrary;
@@ -71,10 +73,11 @@ namespace Screenbox.Core.ViewModels
             public int Language { get; } = Language;
         }
 
-        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService)
+        public SettingsPageViewModel(ISettingsService settingsService, ILibraryService libraryService, LastPositionTracker lastPositionTracker)
         {
             _settingsService = settingsService;
             _libraryService = libraryService;
+            _lastPositionTracker = lastPositionTracker;
             _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
             _storageDeviceRefreshTimer = _dispatcherQueue.CreateTimer();
             MusicLocations = new ObservableCollection<StorageFolder>();
@@ -105,6 +108,7 @@ namespace Screenbox.Core.ViewModels
             _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
+            _savePlaybackPosition = _settingsService.SavePlaybackPosition;
             _theme = ((int)_settingsService.Theme + 2) % 3;
             _enqueueAllFilesInFolder = _settingsService.EnqueueAllFilesInFolder;
             _restorePlaybackPosition = _settingsService.RestorePlaybackPosition;
@@ -276,6 +280,12 @@ namespace Screenbox.Core.ViewModels
             CheckForRelaunch();
         }
 
+        partial void OnSavePlaybackPositionChanged(bool value)
+        {
+            _settingsService.SavePlaybackPosition = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(SavePlaybackPosition), typeof(SettingsPageViewModel)));
+        }
+
         [RelayCommand]
         private async Task RefreshLibrariesAsync()
         {
@@ -332,6 +342,19 @@ namespace Screenbox.Core.ViewModels
             StorageApplicationPermissions.MostRecentlyUsedList.Clear();
         }
 
+
+        [RelayCommand]
+        private async Task ClearPlaybackPositionsAsync()
+        {
+            try
+            {
+                await _lastPositionTracker.DeleteFromDiskAsync();
+            }
+            catch (Exception)
+            {
+                // pass
+            }
+        }
         public void OnNavigatedFrom()
         {
             if (SystemInformation.IsXbox)
