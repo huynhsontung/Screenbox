@@ -648,6 +648,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Autoriser le volume maximum au-delà de 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestes tactiles</value>
   </data>
@@ -937,6 +943,17 @@
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Display chapter name when available</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
     <value>App language</value>
