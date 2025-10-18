@@ -251,7 +251,7 @@ namespace Screenbox.Core.ViewModels
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
-                IsPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                IsPlaying = sender.PlaybackState is MediaPlaybackState.Playing or MediaPlaybackState.Opening;
             });
         }
 
