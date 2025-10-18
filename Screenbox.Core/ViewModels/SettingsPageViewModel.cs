@@ -29,6 +29,7 @@ namespace Screenbox.Core.ViewModels
         [ObservableProperty] private bool _playerTapGesture;
         [ObservableProperty] private bool _playerShowControls;
         [ObservableProperty] private bool _playerShowChapters;
+        [ObservableProperty] private int _playerControlsHideDelay;
         [ObservableProperty] private int _volumeBoost;
         [ObservableProperty] private bool _useIndexer;
         [ObservableProperty] private bool _showRecent;
@@ -50,6 +51,8 @@ namespace Screenbox.Core.ViewModels
         public ObservableCollection<StorageFolder> RemovableStorageFolders { get; }
 
         public List<Models.Language> AvailableLanguages { get; }
+
+        public int[] PlayerControlsHideDelayOptions { get; } = { 1, 2, 3, 4, 5 };
 
         private readonly ISettingsService _settingsService;
         private readonly ILibraryService _libraryService;
@@ -99,6 +102,7 @@ namespace Screenbox.Core.ViewModels
             _playerTapGesture = _settingsService.PlayerTapGesture;
             _playerShowControls = _settingsService.PlayerShowControls;
             _playerShowChapters = _settingsService.PlayerShowChapters;
+            _playerControlsHideDelay = _settingsService.PlayerControlsHideDelay;
             _useIndexer = _settingsService.UseIndexer;
             _showRecent = _settingsService.ShowRecent;
             _theme = ((int)_settingsService.Theme + 2) % 3;
@@ -185,6 +189,12 @@ namespace Screenbox.Core.ViewModels
         {
             _settingsService.PlayerShowChapters = value;
             Messenger.Send(new SettingsChangedMessage(nameof(PlayerShowChapters), typeof(SettingsPageViewModel)));
+        }
+
+        partial void OnPlayerControlsHideDelayChanged(int value)
+        {
+            _settingsService.PlayerControlsHideDelay = value;
+            Messenger.Send(new SettingsChangedMessage(nameof(PlayerControlsHideDelay), typeof(SettingsPageViewModel)));
         }
 
         partial void OnUseIndexerChanged(bool value)

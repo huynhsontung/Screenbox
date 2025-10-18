@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Screenbox.Controls.PlaylistView"
+    x:Class="Screenbox.Controls.PlayQueueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
@@ -7,7 +7,7 @@
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -17,8 +17,8 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
     d:DesignWidth="848"
-    Loaded="PlaylistView_OnLoaded"
-    Unloaded="PlaylistView_OnUnloaded"
+    Loaded="PlayQueue_OnLoaded"
+    Unloaded="PlayQueue_OnUnloaded"
     mc:Ignorable="d">
 
     <Grid>
@@ -27,6 +27,8 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="ms-appx:///Styles/CommandBar.xaml" />
                 </ResourceDictionary.MergedDictionaries>
+
+                <commands:SelectDeselectAllCommand x:Key="SelectDeselectAllCommand" />
 
                 <MenuFlyout x:Name="ItemFlyout">
                     <MenuFlyoutItem
@@ -219,6 +221,7 @@
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
+                        <!--  SelectionCheckBox value and tooltip are updated in code-behind  -->
                         <CheckBox
                             x:Name="SelectionCheckBox"
                             MinWidth="60"
@@ -226,15 +229,16 @@
                             d:Content="11 items selected"
                             AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
-                            Command="{x:Bind Common.ToggleListViewBaseItemSelectionCommand}"
+                            Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
-                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked), Mode=OneWay}" />
+                            IsThreeState="True"
+                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked)}" />
                         <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"
-                            controls:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
+                            extensions:AcceleratorService.ToolTip="{x:Bind strings:Resources.ClearSelection}"
                             AutomationProperties.Name="{strings:Resources Key=ClearSelection}"
                             BorderThickness="0"
                             Command="{x:Bind ViewModel.ClearSelectionCommand}"
@@ -290,8 +294,6 @@
             Grid.Row="1"
             Margin="{StaticResource TopMediumMargin}"
             Padding="{x:Bind Padding, Mode=OneWay}"
-            extensions:ListViewExtensions.ItemCornerRadius="{StaticResource MediaItemCornerRadius}"
-            extensions:ListViewExtensions.ItemMargin="0,2,0,2"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
             AllowDrop="True"
@@ -300,11 +302,11 @@
             DragOver="PlaylistListView_OnDragOver"
             Drop="PlaylistListView_OnDrop"
             IsItemClickEnabled="True"
-            ItemContainerStyle="{StaticResource MediaListViewItemStyle}"
             ItemsSource="{x:Bind ViewModel.Playlist.Items}"
             KeyboardAcceleratorPlacementMode="Hidden"
             SelectionChanged="PlaylistListView_OnSelectionChanged"
-            SelectionMode="Extended">
+            SelectionMode="Extended"
+            Style="{StaticResource MediaListViewStyle}">
             <ListView.Resources>
                 <x:Boolean x:Key="ListViewItemSelectionIndicatorVisualEnabled">False</x:Boolean>
             </ListView.Resources>

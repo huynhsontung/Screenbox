@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
+using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace Screenbox.Controls
 {
-    public sealed partial class PlaylistView : UserControl
+    public sealed partial class PlayQueueControl : UserControl
     {
         public static readonly DependencyProperty IsFlyoutProperty = DependencyProperty.Register(
             "IsFlyout",
             typeof(bool),
-            typeof(PlaylistView),
+            typeof(PlayQueueControl),
             new PropertyMetadata(false));
 
         public bool IsFlyout
@@ -31,14 +31,16 @@ namespace Screenbox.Controls
             set => SetValue(IsFlyoutProperty, value);
         }
 
-        internal PlaylistViewModel ViewModel => (PlaylistViewModel)DataContext;
+        internal PlayQueueViewModel ViewModel => (PlayQueueViewModel)DataContext;
 
         internal CommonViewModel Common { get; }
 
-        public PlaylistView()
+        private readonly Commands.SelectDeselectAllCommand _selectionCommand = new();
+
+        public PlayQueueControl()
         {
             this.InitializeComponent();
-            DataContext = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+            DataContext = Ioc.Default.GetRequiredService<PlayQueueViewModel>();
             Common = Ioc.Default.GetRequiredService<CommonViewModel>();
         }
 
@@ -50,13 +52,18 @@ namespace Screenbox.Controls
 
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SelectionCheckBox.IsChecked = PlaylistListView.SelectedItems.Count == ViewModel.Playlist.Items.Count;
+            int selectedCount = PlaylistListView.SelectedItems.Count;
+            SelectionCheckBox.IsChecked = selectedCount == 0
+                ? false
+                : selectedCount == PlaylistListView.Items.Count ? true : null;
+            ToolTipService.SetToolTip(SelectionCheckBox, GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked));
+
             if (ViewModel.EnableMultiSelect)
             {
                 VisualStateManager.GoToState(this, "Multiple", true);
             }
 
-            ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
+            ViewModel.SelectionCount = selectedCount;
         }
 
         internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
@@ -66,7 +73,8 @@ namespace Screenbox.Controls
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                await ViewModel.Playlist.EnqueueAsync(items);
+                int insertIndex = PlaylistListView.GetDropIndex(e);
+                await ViewModel.Playlist.EnqueueAsync(items, insertIndex);
             }
         }
 
@@ -109,11 +117,11 @@ namespace Screenbox.Controls
 
         private void ViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(PlaylistViewModel.SelectionCount)) return;
+            if (e.PropertyName != nameof(PlayQueueViewModel.SelectionCount)) return;
             if (ViewModel.SelectionCount == 0) PlaylistListView.SelectedItems.Clear();
         }
 
-        private void PlaylistView_OnLoaded(object sender, RoutedEventArgs e)
+        private void PlayQueue_OnLoaded(object sender, RoutedEventArgs e)
         {
             UpdateLayoutState();
             GoToCurrentItem();
@@ -121,7 +129,7 @@ namespace Screenbox.Controls
             ViewModel.PropertyChanged += ViewModelOnPropertyChanged;
         }
 
-        private void PlaylistView_OnUnloaded(object sender, RoutedEventArgs e)
+        private void PlayQueue_OnUnloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.PropertyChanged -= ViewModelOnPropertyChanged;
         }
@@ -130,16 +138,10 @@ namespace Screenbox.Controls
         {
             if (ViewModel.HasItems)
             {
-                var itemsRange = new ItemIndexRange(0, (uint)ViewModel.Playlist.Items.Count);
-                if (ViewModel.SelectionCount != ViewModel.Playlist.Items.Count)
+                if (_selectionCommand.CanToggleSelection(PlaylistListView))
                 {
                     ViewModel.EnableMultiSelect = true;
-                    PlaylistListView.SelectRange(itemsRange);
-                    args.Handled = true;
-                }
-                else
-                {
-                    PlaylistListView.DeselectRange(itemsRange);
+                    _selectionCommand.ToggleSelection(PlaylistListView);
                     args.Handled = true;
                 }
             }
@@ -150,15 +152,14 @@ namespace Screenbox.Controls
         /// </summary>
         /// <param name="value">A nullable boolean representing the <see cref="CheckBox"/> state.</param>
         /// <returns>
-        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked;
-        /// otherwise throw not implemented exception.
+        /// <strong>SelectNoneToolTip</strong> if the ToggleButton is checked; <strong>SelectAllToolTip</strong> if the ToggleButton is unchecked or
+        /// intermediate.
         /// </returns>
-        /// <exception cref="NotImplementedException">Thrown if <paramref name="value"/> is <see langword="null"/>.</exception>
         private string GetSelectionCheckBoxToolTip(bool? value)
         {
-            return value is null
-                ? throw new NotImplementedException()
-                : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
+            return value is true
+                ? Strings.Resources.SelectNoneToolTip
+                : Strings.Resources.SelectAllToolTip;
         }
     }
 }

@@ -10,9 +10,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		crowdin.yml = crowdin.yml
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
-		nuget.config = nuget.config
 		NOTICE.md = NOTICE.md
+		nuget.config = nuget.config
 		PRIVACY.md = PRIVACY.md
 		README.md = README.md
 	EndProjectSection
@@ -89,6 +90,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A6A15B98-A3D8-4053-843B-10AFB810500C}
-		RESX_EnableXlifSync = False
 	EndGlobalSection
 EndGlobal

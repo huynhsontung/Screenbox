@@ -223,8 +223,8 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
 
     private void LoadMedia()
     {
-        PlaylistInfo reply = Messenger.Send(new PlaylistRequestMessage());
-        Media = reply.ActiveItem;
+        Playlist reply = Messenger.Send(new PlaylistRequestMessage());
+        Media = reply.CurrentItem;
     }
 
     private static async Task<string> ReadToBase64Async(IRandomAccessStream source)

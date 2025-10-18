@@ -6,11 +6,10 @@
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:converters="using:Screenbox.Converters"
-    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:ctc="using:CommunityToolkit.WinUI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:extensions="using:Screenbox.Controls.Extensions"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -82,13 +81,6 @@
                     <StaticResource x:Key="PlayerControlsBackgroundBrush" ResourceKey="SystemColorWindowColorBrush" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-
-            <ctConverters:BoolToObjectConverter
-                x:Key="PlayPauseSolidGlyphConverter"
-                FalseValue="{StaticResource PauseSolidGlyph}"
-                TrueValue="{StaticResource PlaySolidGlyph}" />
-
-            <ThemeShadow x:Name="SharedShadow" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -264,8 +256,8 @@
                                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
-                        <controls:PlaylistView
-                            x:Name="PlaylistView"
+                        <controls:PlayQueueControl
+                            x:Name="PlayQueue"
                             Width="432"
                             MinHeight="200"
                             MaxHeight="500"
@@ -418,9 +410,9 @@
             ContextFlyout="{x:Bind PlayerControls.PlayerContextMenu}"
             ManipulationCompleted="VideoView_OnManipulationCompleted">
             <interactivity:Interaction.Behaviors>
-                <core:EventTriggerBehavior EventName="DoubleTapped">
-                    <core:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
-                </core:EventTriggerBehavior>
+                <interactivity:EventTriggerBehavior EventName="DoubleTapped">
+                    <interactivity:InvokeCommandAction Command="{x:Bind PlayerControls.ViewModel.ToggleFullscreenCommand}" />
+                </interactivity:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
         </controls:PlayerElement>
 
@@ -574,7 +566,7 @@
                 FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                 FontSize="{StaticResource TitleTextBlockFontSize}"
                 Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                Glyph="{x:Bind ViewModel.IsPlayingBadge, Converter={StaticResource PlayPauseSolidGlyphConverter}, Mode=OneWay}" />
+                Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseSolidGlyph(ViewModel.IsPlayingBadge), Mode=OneWay}" />
         </Border>
 
         <muxc:ProgressRing

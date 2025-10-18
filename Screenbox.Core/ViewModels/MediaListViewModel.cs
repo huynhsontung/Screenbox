@@ -1,9 +1,15 @@
 ﻿#nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using LibVLCSharp.Shared;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
@@ -11,884 +17,706 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Playback;
 using Screenbox.Core.Services;
 using Sentry;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Search;
 using Windows.System;
 
-namespace Screenbox.Core.ViewModels
+namespace Screenbox.Core.ViewModels;
+
+/// <summary>
+/// ViewModel for media list UI following proper MVVM separation
+/// </summary>
+public sealed partial class MediaListViewModel : ObservableRecipient,
+    IRecipient<PlayMediaMessage>,
+    IRecipient<PlayFilesMessage>,
+    IRecipient<QueuePlaylistMessage>,
+    IRecipient<ClearPlaylistMessage>,
+    IRecipient<PlaylistRequestMessage>,
+    IRecipient<MediaPlayerChangedMessage>
 {
-    public sealed partial class MediaListViewModel : ObservableRecipient,
-        IRecipient<PlayMediaMessage>,
-        IRecipient<PlayFilesMessage>,
-        IRecipient<QueuePlaylistMessage>,
-        IRecipient<ClearPlaylistMessage>,
-        IRecipient<PlaylistRequestMessage>,
-        IRecipient<MediaPlayerChangedMessage>
+    // UI-bindable properties
+    public ObservableCollection<MediaViewModel> Items { get; }
+
+    [ObservableProperty] private bool _shuffleMode;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
+    private MediaPlaybackAutoRepeatMode _repeatMode;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(NextCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
+    private MediaViewModel? _currentItem;
+
+    [ObservableProperty] private int _currentIndex;
+
+    // Services (stateless)
+    private readonly IPlaylistService _playlistService;
+    private readonly IPlaybackControlService _playbackControlService;
+    private readonly IMediaListFactory _mediaListFactory;
+    private readonly IFilesService _filesService;
+    private readonly ISettingsService _settingsService;
+    private readonly ISystemMediaTransportControlsService _transportControlsService;
+    private readonly MediaViewModelFactory _mediaFactory;
+
+    // ViewModel state
+    private Playlist _playlist;
+    private List<MediaViewModel> _mediaBuffer = new();
+    private IMediaPlayer? _mediaPlayer;
+    private object? _delayPlay;
+    private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
+    private StorageFileQueryResult? _neighboringFilesQuery;
+    private CancellationTokenSource? _cts;
+    private CancellationTokenSource? _playFilesCts;
+    private readonly DispatcherQueue _dispatcherQueue;
+
+    public MediaListViewModel(
+        IPlaylistService playlistService,
+        IPlaybackControlService playbackControlService,
+        IMediaListFactory mediaListFactory,
+        IFilesService filesService,
+        ISettingsService settingsService,
+        ISystemMediaTransportControlsService transportControlsService,
+        MediaViewModelFactory mediaFactory)
     {
-        public ObservableCollection<MediaViewModel> Items { get; }
+        _playlistService = playlistService;
+        _playbackControlService = playbackControlService;
+        _mediaListFactory = mediaListFactory;
+        _filesService = filesService;
+        _settingsService = settingsService;
+        _transportControlsService = transportControlsService;
+        _mediaFactory = mediaFactory;
+        _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
-        [ObservableProperty] private bool _shuffleMode;
+        // Initialize UI collections
+        Items = new ObservableCollection<MediaViewModel>();
+        Items.CollectionChanged += OnCollectionChanged;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(NextCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
-        private MediaPlaybackAutoRepeatMode _repeatMode;
+        // Initialize state
+        _playlist = new Playlist();
+        _repeatMode = settingsService.PersistentRepeatMode;
+        _currentIndex = -1;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(NextCommand))]
-        [NotifyCanExecuteChangedFor(nameof(PreviousCommand))]
-        private MediaViewModel? _currentItem;
+        // Setup transport controls
+        _transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
+        _transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
+        NextCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsNextEnabled = CanNext();
+        PreviousCommand.CanExecuteChanged += (_, _) => _transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
 
-        [ObservableProperty] private int _currentIndex;
+        IsActive = true;
+    }
 
-        private readonly IFilesService _filesService;
-        private readonly ISettingsService _settingsService;
-        private readonly ISystemMediaTransportControlsService _transportControlsService;
-        private readonly MediaViewModelFactory _mediaFactory;
-        private readonly DispatcherQueue _dispatcherQueue;
-        private List<MediaViewModel> _mediaBuffer;
-        private ShuffleBackup? _shuffleBackup;
-        private Random? _random;
-        private IMediaPlayer? _mediaPlayer;
-        private object? _delayPlay;
-        private StorageFileQueryResult? _neighboringFilesQuery;
-        private object? _lastUpdated;
-        private CancellationTokenSource? _cts;
-        private CancellationTokenSource? _playFilesCts;
+    #region Message Handlers
 
-        private const int MediaBufferCapacity = 5;
+    public async void Receive(PlayFilesMessage message)
+    {
+        var files = message.Value;
+        await ParseAndPlayAsync(files);
+        _neighboringFilesQuery = message.NeighboringFilesQuery;
 
-        private sealed class ShuffleBackup
+        // Enqueue neighboring files if needed
+        if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
         {
-            public List<MediaViewModel> OriginalPlaylist { get; }
-
-            // Needed due to how UI invokes CollectionChanged when moving items
-            public List<MediaViewModel> Removals { get; }
-
-            public ShuffleBackup(List<MediaViewModel> originalPlaylist, List<MediaViewModel>? removals = null)
+            if (_neighboringFilesQuery == null && files[0] is StorageFile file)
             {
-                OriginalPlaylist = originalPlaylist;
-                Removals = removals ?? new List<MediaViewModel>();
-            }
-        }
-
-        private sealed class PlaylistCreateResult
-        {
-            public MediaViewModel PlayNext { get; }
-
-            public IList<MediaViewModel> Playlist { get; }
-
-            public PlaylistCreateResult(MediaViewModel playNext, IList<MediaViewModel> playlist)
-            {
-                PlayNext = playNext;
-                Playlist = playlist;
-            }
-
-            public PlaylistCreateResult(MediaViewModel playNext) : this(playNext, new[] { playNext }) { }
-        }
-
-        public MediaListViewModel(IFilesService filesService, ISettingsService settingsService,
-            ISystemMediaTransportControlsService transportControlsService,
-            MediaViewModelFactory mediaFactory)
-        {
-            Items = new ObservableCollection<MediaViewModel>();
-            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-            _filesService = filesService;
-            _settingsService = settingsService;
-            _transportControlsService = transportControlsService;
-            _mediaFactory = mediaFactory;
-            _mediaBuffer = new List<MediaViewModel>(0);
-            _repeatMode = settingsService.PersistentRepeatMode;
-            _currentIndex = -1;
-
-            Items.CollectionChanged += OnCollectionChanged;
-            transportControlsService.TransportControls.ButtonPressed += TransportControlsOnButtonPressed;
-            transportControlsService.TransportControls.AutoRepeatModeChangeRequested += TransportControlsOnAutoRepeatModeChangeRequested;
-            NextCommand.CanExecuteChanged += (_, _) => transportControlsService.TransportControls.IsNextEnabled = CanNext();
-            PreviousCommand.CanExecuteChanged += (_, _) => transportControlsService.TransportControls.IsPreviousEnabled = CanPrevious();
-
-            // Activate the view model's messenger
-            IsActive = true;
-        }
-
-
-        public void Receive(MediaPlayerChangedMessage message)
-        {
-            _mediaPlayer = message.Value;
-            _mediaPlayer.MediaFailed += OnMediaFailed;
-            _mediaPlayer.MediaEnded += OnEndReached;
-            _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
-
-            if (_delayPlay != null)
-            {
-                async void SetPlayQueue()
-                {
-                    if (_delayPlay is MediaViewModel media && Items.Contains(media))
-                    {
-                        PlaySingle(media);
-                        await TryEnqueueAndPlayPlaylistAsync(media);
-                    }
-                    else
-                    {
-                        ClearPlaylist();
-                        await EnqueueAndPlay(_delayPlay);
-                    }
-                }
-
-                _dispatcherQueue.TryEnqueue(SetPlayQueue);
-            }
-        }
-
-        private void OnMediaFailed(IMediaPlayer sender, EventArgs args)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                if (CurrentItem != null)
-                {
-                    CurrentItem.IsPlaying = false;
-                    CurrentItem.IsAvailable = false;
-                }
-            });
-        }
-
-        private void OnPlaybackStateChanged(IMediaPlayer sender, object args)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                if (CurrentItem != null)
-                {
-                    bool isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
-                    if (isPlaying)
-                    {
-                        CurrentItem.IsAvailable = true;
-                    }
-
-                    CurrentItem.IsPlaying = isPlaying;
-                }
-            });
-        }
-
-        public async void Receive(PlayFilesMessage message)
-        {
-            IReadOnlyList<IStorageItem> files = message.Value;
-            _neighboringFilesQuery = message.NeighboringFilesQuery;
-            if (files.Count == 1 && files[0] is StorageFile file)
-            {
-                var media = _mediaFactory.GetSingleton(file);
-                // The current play queue may already have the file already. Just play the file in this case.
-                if (Items.Contains(media))
-                {
-                    PlaySingle(media);
-                    return;
-                }
-
-                // If there is only 1 file, play it immediately
-                // Avoid waiting to get all the neighboring files then play, which may cause delay
-                ClearPlaylist();
-                if (_mediaPlayer == null)
-                {
-                    _delayPlay = media;
-                }
-                else
-                {
-                    await EnqueueAndPlay(file);
-                }
-
-                // If there are more than one item in the queue, file is already a playlist, no need to check for neighboring files
-                if (Items.Count > 1) return;
-
                 _neighboringFilesQuery ??= await _filesService.GetNeighboringFilesQueryAsync(file);
-                // Populate the play queue with neighboring media if needed
-                if (!_settingsService.EnqueueAllFilesInFolder || _neighboringFilesQuery == null) return;
-                _playFilesCts?.Cancel();
-                using CancellationTokenSource cts = new();
-                try
-                {
-                    _playFilesCts = cts;
-                    await EnqueueNeighboringFiles(_neighboringFilesQuery, file, cts.Token);
-                }
-                finally
-                {
-                    _playFilesCts = null;
-                }
-            }
-            else
-            {
-                var playlist = await CreatePlaylistAsync(files);
-                if (_mediaPlayer == null)
-                {
-                    _delayPlay = playlist;
-                }
-                else if (playlist != null)
-                {
-                    await EnqueueAndPlay(playlist);
-                }
-            }
-        }
-
-        public void Receive(ClearPlaylistMessage message)
-        {
-            ClearPlaylistAndNeighboringQuery();
-        }
-
-        public async void Receive(QueuePlaylistMessage message)
-        {
-            _lastUpdated = message.Value;
-            bool canInsert = CurrentIndex + 1 < Items.Count;
-            int counter = 0;
-            foreach (MediaViewModel media in message.Value.ToList()) // ToList() to avoid modifying the collection while iterating
-            {
-                var result = await CreatePlaylistAsync(media);
-                foreach (MediaViewModel subMedia in result.Playlist)
-                {
-                    if (message.AddNext && canInsert)
-                    {
-                        Items.Insert(CurrentIndex + 1 + counter, subMedia);
-                        counter++;
-                    }
-                    else
-                    {
-                        Items.Add(subMedia);
-                    }
-                }
-            }
-        }
-
-        public void Receive(PlaylistRequestMessage message)
-        {
-            message.Reply(new PlaylistInfo(Items, CurrentItem, CurrentIndex, _lastUpdated, _neighboringFilesQuery));
-        }
-
-        public async void Receive(PlayMediaMessage message)
-        {
-            if (_mediaPlayer == null)
-            {
-                _delayPlay = message.Value;
-                return;
             }
 
-            if (message is { Existing: true, Value: MediaViewModel next })
+            if (_neighboringFilesQuery != null)
             {
-                PlaySingle(next);
-            }
-            else
-            {
-                _lastUpdated = message.Value;
-                ClearPlaylistAndNeighboringQuery();
-                await EnqueueAndPlay(message.Value);
-            }
-        }
-
-        partial void OnCurrentItemChanging(MediaViewModel? value)
-        {
-            if (_mediaPlayer != null)
-            {
-                _mediaPlayer.PlaybackItem = value?.Item.Value;
-            }
-
-            if (CurrentItem != null)
-            {
-                _cts?.Cancel();
-                CurrentItem.IsMediaActive = false;
-                CurrentItem.IsPlaying = null;
-            }
-
-            if (value != null)
-            {
-                value.IsMediaActive = true;
-                // Setting current index here to handle updating playlist before calling PlaySingle
-                // If playlist is updated after, CollectionChanged handler will update the index
-                CurrentIndex = Items.IndexOf(value);
-            }
-            else
-            {
-                CurrentIndex = -1;
-            }
-        }
-
-        async partial void OnCurrentItemChanged(MediaViewModel? value)
-        {
-            SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
-                ? new Dictionary<string, string>
-                {
-                    { "MediaType", value.MediaType.ToString() }
-                }
-                : null);
-
-            switch (value?.Source)
-            {
-                case StorageFile file:
-                    _filesService.AddToRecent(file);
-                    break;
-                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                    try
-                    {
-                        StorageFile file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                        _filesService.AddToRecent(file);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-
-                    break;
-            }
-
-            Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
-            await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
-            await UpdateMediaBufferAsync();
-        }
-
-        partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
-        {
-            Messenger.Send(new RepeatModeChangedMessage(value));
-            _transportControlsService.TransportControls.AutoRepeatMode = value;
-            _settingsService.PersistentRepeatMode = value;
-        }
-
-        partial void OnShuffleModeChanged(bool value)
-        {
-            if (value)
-            {
-                List<MediaViewModel> backup = new(Items);
-                ShufflePlaylist();
-                _shuffleBackup = new ShuffleBackup(backup);
-            }
-            else
-            {
-                if (_shuffleBackup != null)
-                {
-                    ShuffleBackup shuffleBackup = _shuffleBackup;
-                    _shuffleBackup = null;
-                    List<MediaViewModel> backup = shuffleBackup.OriginalPlaylist;
-                    foreach (MediaViewModel removal in shuffleBackup.Removals)
-                    {
-                        backup.Remove(removal);
-                    }
-
-                    Items.Clear();
-                    foreach (MediaViewModel media in backup)
-                    {
-                        Items.Add(media);
-                    }
-                }
-                else
-                {
-                    ShufflePlaylist();
-                }
-            }
-        }
-
-        private async Task EnqueueNeighboringFiles(StorageFileQueryResult neighboringFilesQuery, StorageFile file, CancellationToken cancellationToken = default)
-        {
-            PlaylistCreateResult? playlist;
-            try
-            {
-                var neighboringFiles = await neighboringFilesQuery.GetFilesAsync();
-                playlist = await CreatePlaylistAsync(neighboringFiles, file);
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            if (playlist == null || playlist.Playlist.Count == 0) return;
-            if (CurrentItem != null && !playlist.Playlist.Contains(CurrentItem))
-                CurrentItem = null;
-            Items.SyncItems((IReadOnlyList<MediaViewModel>)playlist.Playlist);
-        }
-
-        private void ShufflePlaylist()
-        {
-            _random ??= new Random();
-            if (CurrentIndex >= 0 && CurrentItem != null)
-            {
-                MediaViewModel activeItem = CurrentItem;
-                Items.RemoveAt(CurrentIndex);
-                Shuffle(Items, _random);
-                Items.Insert(0, activeItem);
-            }
-            else
-            {
-                Shuffle(Items, _random);
-            }
-        }
-
-        private async Task UpdateMediaBufferAsync()
-        {
-            int playlistCount = Items.Count;
-            if (CurrentIndex < 0 || playlistCount == 0) return;
-            int startIndex = Math.Max(CurrentIndex - 2, 0);
-            int endIndex = Math.Min(CurrentIndex + 2, playlistCount - 1);
-            int count = endIndex - startIndex + 1;
-            List<MediaViewModel> newBuffer = Items.Skip(startIndex).Take(count).ToList();
-            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
-            {
-                if (count < MediaBufferCapacity && startIndex == 0 && endIndex < playlistCount - 1)
-                {
-                    newBuffer.Add(Items.Last());
-                }
-
-                if (count < MediaBufferCapacity && startIndex > 0 && endIndex == playlistCount - 1)
-                {
-                    newBuffer.Add(Items[0]);
-                }
-            }
-
-            IEnumerable<MediaViewModel> toLoad = newBuffer.Except(_mediaBuffer);
-            IEnumerable<MediaViewModel> toClean = _mediaBuffer.Except(newBuffer);
-
-            foreach (MediaViewModel media in toClean)
-            {
-                media.Clean();
-            }
-
-            _mediaBuffer = newBuffer;
-            await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
-        }
-
-        private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
-        {
-            async void AsyncCallback()
-            {
-                switch (args.Button)
-                {
-                    case SystemMediaTransportControlsButton.Next:
-                        await NextAsync();
-                        break;
-                    case SystemMediaTransportControlsButton.Previous:
-                        await PreviousAsync();
-                        break;
-                }
-            }
-
-            _dispatcherQueue.TryEnqueue(AsyncCallback);
-        }
-
-        private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
-        {
-            _dispatcherQueue.TryEnqueue(() => RepeatMode = args.RequestedAutoRepeatMode);
-        }
-
-        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
-
-            NextCommand.NotifyCanExecuteChanged();
-            PreviousCommand.NotifyCanExecuteChanged();
-
-            if (Items.Count <= 1)
-            {
-                _shuffleBackup = null;
-                return;
-            }
-
-            // Update shuffle backup if shuffling is enabled
-            ShuffleBackup? backup = _shuffleBackup;
-            if (ShuffleMode && backup != null)
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Remove when e.OldItems.Count > 0:
-                        foreach (object item in e.OldItems)
-                        {
-                            backup.Removals.Add((MediaViewModel)item);
-                        }
-                        break;
-
-                    case NotifyCollectionChangedAction.Replace when e.OldItems.Count > 0 && e.OldItems.Count == e.NewItems.Count:
-                        for (int i = 0; i < e.OldItems.Count; i++)
-                        {
-                            int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
-                            if (backupIndex >= 0)
-                            {
-                                backup.OriginalPlaylist[backupIndex] = (MediaViewModel)e.NewItems[i];
-                            }
-                        }
-                        break;
-
-                    case NotifyCollectionChangedAction.Add:
-                        foreach (object item in e.NewItems)
-                        {
-                            if (!backup.Removals.Remove((MediaViewModel)item))
-                            {
-                                _shuffleBackup = null;
-                                break;
-                            }
-                        }
-                        break;
-
-                    case NotifyCollectionChangedAction.Reset:
-                        _shuffleBackup = null;
-                        break;
-                }
-            }
-        }
-
-        private async Task<PlaylistCreateResult?> CreatePlaylistAsync(IReadOnlyList<IStorageItem> storageItems, StorageFile? playNext = null)
-        {
-            List<MediaViewModel> queue = new();
-            List<IStorageItem> storageItemQueue = storageItems.ToList();
-            MediaViewModel? next = null;
-            // Max number of items in queue is 10k. Reevaluate if needed.
-            for (int i = 0; i < storageItemQueue.Count && queue.Count < 10000; i++)
-            {
-                IStorageItem item = storageItemQueue[i];
-                switch (item)
-                {
-                    case StorageFile storageFile when storageFile.IsSupported():
-                        MediaViewModel vm = _mediaFactory.GetSingleton(storageFile);
-                        if (playNext != null && storageFile.IsEqual(playNext))
-                        {
-                            next = vm;
-                        }
-
-                        if (storageFile.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(vm) is
-                            { Count: > 0 } playlist)
-                        {
-                            queue.AddRange(playlist);
-                        }
-                        else
-                        {
-                            queue.Add(vm);
-                        }
-                        break;
-
-                    case StorageFolder storageFolder:
-                        // Max number of items in a folder is 10k. Reevaluate if needed.
-                        var subItems = await storageFolder.GetItemsAsync(0, 10000);
-                        storageItemQueue.AddRange(subItems);
-                        break;
-                }
-            }
-
-            return queue.Count > 0 ? new PlaylistCreateResult(next ?? queue[0], queue) : null;
-        }
-
-        public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files)
-        {
-            var result = await CreatePlaylistAsync(files);
-            if (result?.Playlist.Count > 0)
-            {
-                Enqueue(result.Playlist);
-            }
-        }
-
-        private void Enqueue(IEnumerable<MediaViewModel> list)
-        {
-            foreach (MediaViewModel item in list)
-            {
-                Items.Add(item);
-            }
-        }
-
-        private async Task<PlaylistCreateResult> CreatePlaylistAsync(MediaViewModel media)
-        {
-            // The ordering of the conditional terms below is important
-            // Delay check Item as much as possible. Item is lazy init.
-            if ((media.Source is StorageFile file && !file.IsSupportedPlaylist())
-                || media.Source is Uri uri && !IsUriLocalPlaylistFile(uri)
-                || media.Item.Value?.Media is { ParsedStatus: MediaParsedStatus.Done or MediaParsedStatus.Failed, SubItems.Count: 0 }
-                || await ParseSubMediaRecursiveAsync(media) is not { Count: > 0 } playlist)
-            {
-                return new PlaylistCreateResult(media);
-            }
-
-            return new PlaylistCreateResult(playlist[0], playlist);
-        }
-
-        private async Task<PlaylistCreateResult> CreatePlaylistAsync(StorageFile file)
-        {
-            MediaViewModel media = _mediaFactory.GetSingleton(file);
-            if (file.IsSupportedPlaylist() && await ParseSubMediaRecursiveAsync(media) is { Count: > 0 } playlist)
-            {
-                media = playlist[0];
-                return new PlaylistCreateResult(media, playlist);
-            }
-
-            return new PlaylistCreateResult(media);
-        }
-
-        private async Task<PlaylistCreateResult> CreatePlaylistAsync(Uri uri)
-        {
-            MediaViewModel media = _mediaFactory.GetTransient(uri);
-            if (await ParseSubMediaRecursiveAsync(media) is { Count: > 0 } playlist)
-            {
-                media = playlist[0];
-                return new PlaylistCreateResult(media, playlist);
-            }
-
-            return new PlaylistCreateResult(media);
-        }
-
-        private async Task<PlaylistCreateResult?> CreatePlaylistAsync(object value) => value switch
-        {
-            StorageFile file => await CreatePlaylistAsync(file),
-            Uri uri => await CreatePlaylistAsync(uri),
-            IReadOnlyList<IStorageItem> files => await CreatePlaylistAsync(files),
-            MediaViewModel media => await CreatePlaylistAsync(media),
-            _ => throw new ArgumentException("Unsupported media type", nameof(value))
-        };
-
-        private MediaViewModel? GetMedia(object value) => value switch
-        {
-            MediaViewModel media => media,
-            StorageFile file => _mediaFactory.GetSingleton(file),
-            Uri uri => _mediaFactory.GetTransient(uri),
-            _ => null
-        };
-
-        private async Task EnqueueAndPlay(object value)
-        {
-            MediaViewModel? playNext = GetMedia(value);
-            if (playNext != null)
-            {
-                Enqueue(new[] { playNext });
-                PlaySingle(playNext);
-            }
-
-            // If playNext is a playlist file, recursively parse the playlist and enqueue the items
-            await TryEnqueueAndPlayPlaylistAsync(playNext ?? value);
-        }
-
-        private async Task TryEnqueueAndPlayPlaylistAsync(object value)
-        {
-            MediaViewModel? playNext = GetMedia(value);
-            PlaylistCreateResult? result = (value as PlaylistCreateResult) ?? await CreatePlaylistAsync(playNext ?? value);
-            if (result != null && !result.PlayNext.Source.Equals(playNext?.Source))
-            {
-                ClearPlaylist();
-                Enqueue(result.Playlist);
-                PlaySingle(result.PlayNext);
-            }
-        }
-
-        [RelayCommand]
-        private void PlaySingle(MediaViewModel vm)
-        {
-            // OnCurrentItemChanging handles the rest
-            CurrentItem = vm;
-            _mediaPlayer?.Play();
-        }
-
-        [RelayCommand]
-        private void Clear()
-        {
-            CurrentItem = null;
-            ClearPlaylistAndNeighboringQuery();
-        }
-
-        private void ClearPlaylistAndNeighboringQuery()
-        {
-            _neighboringFilesQuery = null;
-            ClearPlaylist();
-        }
-
-        private void ClearPlaylist()
-        {
-            _shuffleBackup = null;
-
-            foreach (MediaViewModel item in Items)
-            {
-                item.Clean();
-            }
-
-            Items.Clear();
-            ShuffleMode = false;
-        }
-
-        private bool CanNext()
-        {
-            if (Items.Count == 1)
-            {
-                return _neighboringFilesQuery != null;
-            }
-
-            if (RepeatMode == MediaPlaybackAutoRepeatMode.List)
-            {
-                return true;
-            }
-
-            return CurrentIndex >= 0 && CurrentIndex < Items.Count - 1;
-        }
-
-        [RelayCommand(CanExecute = nameof(CanNext))]
-        private async Task NextAsync()
-        {
-            if (Items.Count == 0 || CurrentItem == null) return;
-            int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is StorageFile file)
-            {
-                StorageFile? nextFile = await _filesService.GetNextFileAsync(file, _neighboringFilesQuery);
-                if (nextFile != null)
-                {
-                    ClearPlaylist();
-                    var result = await CreatePlaylistAsync(nextFile);
-                    Enqueue(result.Playlist);
-                    MediaViewModel next = result.PlayNext;
-                    PlaySingle(next);
-                }
-            }
-            else if (index == Items.Count - 1 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
-            {
-                PlaySingle(Items[0]);
-            }
-            else if (index >= 0 && index < Items.Count - 1)
-            {
-                MediaViewModel next = Items[index + 1];
-                PlaySingle(next);
-            }
-        }
-
-        private bool CanPrevious()
-        {
-            return Items.Count != 0 && CurrentItem != null;
-        }
-
-        [RelayCommand(CanExecute = nameof(CanPrevious))]
-        private async Task PreviousAsync()
-        {
-            if (_mediaPlayer == null || Items.Count == 0 || CurrentItem == null) return;
-            if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
-                _mediaPlayer.Position > TimeSpan.FromSeconds(5))
-            {
-                _mediaPlayer.Position = TimeSpan.Zero;
-                return;
-            }
-
-            int index = CurrentIndex;
-            if (Items.Count == 1 && _neighboringFilesQuery != null && CurrentItem.Source is StorageFile file)
-            {
-                StorageFile? previousFile = await _filesService.GetPreviousFileAsync(file, _neighboringFilesQuery);
-                if (previousFile != null)
-                {
-                    ClearPlaylist();
-                    var result = await CreatePlaylistAsync(previousFile);
-                    Enqueue(result.Playlist);
-                    MediaViewModel prev = result.PlayNext;
-                    PlaySingle(prev);
-                }
-                else
-                {
-                    _mediaPlayer.Position = TimeSpan.Zero;
-                }
-            }
-            else if (Items.Count == 1 && RepeatMode != MediaPlaybackAutoRepeatMode.List)
-            {
-                _mediaPlayer.Position = TimeSpan.Zero;
-            }
-            else if (index == 0 && RepeatMode == MediaPlaybackAutoRepeatMode.List)
-            {
-                PlaySingle(Items.Last());
-            }
-            else if (index >= 1 && index < Items.Count)
-            {
-                MediaViewModel previous = Items[index - 1];
-                PlaySingle(previous);
-            }
-            else
-            {
-                _mediaPlayer.Position = TimeSpan.Zero;
-            }
-        }
-
-        private void OnEndReached(IMediaPlayer sender, object? args)
-        {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                switch (RepeatMode)
-                {
-                    case MediaPlaybackAutoRepeatMode.List when CurrentIndex == Items.Count - 1:
-                        PlaySingle(Items[0]);
-                        break;
-                    case MediaPlaybackAutoRepeatMode.Track:
-                        sender.Position = TimeSpan.Zero;
-                        break;
-                    default:
-                        if (Items.Count > 1) _ = NextAsync();
-                        break;
-                }
-            });
-        }
-
-        private async Task<IList<MediaViewModel>> ParseSubMediaRecursiveAsync(MediaViewModel source)
-        {
-            IList<MediaViewModel> playlist = await ParseSubMediaAsync(source);
-            if (playlist.Count > 0)
-            {
-                MediaViewModel nextItem = playlist[0];
-                while (playlist.Count == 1 && await ParseSubMediaAsync(nextItem) is { Count: > 0 } nextSubItems)
-                {
-                    nextItem = nextSubItems[0];
-                    playlist = nextSubItems;
-                }
-            }
-
-            return playlist;
-        }
-
-
-        private async Task<IList<MediaViewModel>> ParseSubMediaAsync(MediaViewModel source)
-        {
-            if (source.Item.Value == null) return Array.Empty<MediaViewModel>();
-
-            // Parsing sub items is atomic
-            _cts?.Cancel();
-            using CancellationTokenSource cts = new();
-
-            try
-            {
-                _cts = cts;
-                Media media = source.Item.Value.Media;
-                if (!media.IsParsed || media.ParsedStatus is MediaParsedStatus.Skipped)    // Not yet parsed
-                {
-                    await media.ParseAsync(TimeSpan.FromSeconds(10), cts.Token);
-                }
-
-                // If token is cancelled, it is likely that media is already disposed
-                // Must immediately throw
-                cts.Token.ThrowIfCancellationRequested();   // Important
-
-                IEnumerable<MediaViewModel> subItems = media.SubItems.Select(item => _mediaFactory.GetTransient(item));
-                return subItems.ToList();
-            }
-            catch (OperationCanceledException)
-            {
-                return Array.Empty<MediaViewModel>();
-            }
-            finally
-            {
-                _cts = null;
-            }
-        }
-
-        private static bool IsUriLocalPlaylistFile(Uri uri)
-        {
-            if (!uri.IsAbsoluteUri || !uri.IsLoopback || !uri.IsFile) return false;
-            var extension = Path.GetExtension(uri.LocalPath);
-            return FilesHelpers.SupportedPlaylistFormats.Contains(extension, StringComparer.OrdinalIgnoreCase);
-        }
-
-        private static void Shuffle<T>(IList<T> list, Random rng)
-        {
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rng.Next(n + 1);
-                (list[k], list[n]) = (list[n], list[k]);
+                var updatedPlaylist = await EnqueueNeighboringFilesAsync(_playlist, _neighboringFilesQuery);
+                LoadFromPlaylist(updatedPlaylist);
             }
         }
     }
+
+    public void Receive(ClearPlaylistMessage message)
+    {
+        ClearPlaylist();
+    }
+
+    public async void Receive(QueuePlaylistMessage message)
+    {
+        _playlist.LastUpdated = message.Value;
+        bool canInsert = CurrentIndex + 1 < Items.Count;
+        int counter = 0;
+
+        foreach (var media in message.Value.ToList())
+        {
+            var result = await _mediaListFactory.ParseMediaListAsync(media);
+            foreach (var subMedia in result.Items)
+            {
+                if (message.AddNext && canInsert)
+                {
+                    Items.Insert(CurrentIndex + 1 + counter, subMedia);
+                    counter++;
+                }
+                else
+                {
+                    Items.Add(subMedia);
+                }
+            }
+        }
+    }
+
+    public void Receive(PlaylistRequestMessage message)
+    {
+        message.Reply(_playlist);
+    }
+
+    public async void Receive(PlayMediaMessage message)
+    {
+        if (_mediaPlayer == null)
+        {
+            _delayPlay = message.Value;
+            return;
+        }
+
+        if (message is { Existing: true, Value: MediaViewModel next })
+        {
+            PlaySingle(next);
+        }
+        else
+        {
+            _playlist.LastUpdated = message.Value;
+            ClearPlaylist();
+            await ParseAndPlayAsync(message.Value);
+        }
+    }
+
+    public void Receive(MediaPlayerChangedMessage message)
+    {
+        _mediaPlayer = message.Value;
+        _mediaPlayer.MediaFailed += OnMediaFailed;
+        _mediaPlayer.MediaEnded += OnEndReached;
+        _mediaPlayer.PlaybackStateChanged += OnPlaybackStateChanged;
+
+        if (_delayPlay != null)
+        {
+            async void SetPlayQueue()
+            {
+                if (_delayPlay is MediaViewModel media && Items.Contains(media))
+                {
+                    PlaySingle(media);
+                }
+                else
+                {
+                    ClearPlaylist();
+                    await ParseAndPlayAsync(_delayPlay);
+                }
+                _delayPlay = null;
+            }
+
+            _dispatcherQueue.TryEnqueue(SetPlayQueue);
+        }
+    }
+
+    #endregion
+
+    #region Property Changed Handlers
+
+    partial void OnCurrentItemChanging(MediaViewModel? value)
+    {
+        if (_mediaPlayer != null)
+        {
+            _mediaPlayer.PlaybackItem = value?.Item.Value;
+        }
+
+        if (CurrentItem != null)
+        {
+            _cts?.Cancel();
+            CurrentItem.IsMediaActive = false;
+            CurrentItem.IsPlaying = null;
+        }
+
+        if (value != null)
+        {
+            value.IsMediaActive = true;
+            CurrentIndex = Items.IndexOf(value);
+            _playlist.CurrentIndex = CurrentIndex;
+        }
+        else
+        {
+            CurrentIndex = -1;
+            _playlist.CurrentIndex = -1;
+        }
+    }
+
+    async partial void OnCurrentItemChanged(MediaViewModel? value)
+    {
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+        SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
+            ? new Dictionary<string, string>
+            {
+                { "MediaType", value.MediaType.ToString() }
+            }
+            : null);
+
+        // Add to recent files
+        switch (value?.Source)
+        {
+            case StorageFile file:
+                _filesService.AddToRecent(file);
+                break;
+            case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                try
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    _filesService.AddToRecent(file);
+                }
+                catch
+                {
+                    // ignored
+                }
+                break;
+        }
+
+        Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
+        await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
+        await UpdateMediaBufferAsync();
+    }
+
+    partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
+    {
+        Messenger.Send(new RepeatModeChangedMessage(value));
+        _transportControlsService.TransportControls.AutoRepeatMode = value;
+        _settingsService.PersistentRepeatMode = value;
+    }
+
+    partial void OnShuffleModeChanged(bool value)
+    {
+        Playlist playlist;
+        if (value)
+        {
+            playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+        }
+        else
+        {
+            if (_playlist.ShuffleBackup != null)
+            {
+                playlist = _playlistService.RestoreFromShuffle(_playlist);
+            }
+            else
+            {
+                // No backup - just reshuffle
+                playlist = _playlistService.ShufflePlaylist(_playlist, CurrentIndex);
+                playlist.ShuffleMode = false;
+                playlist.ShuffleBackup = null;
+            }
+        }
+
+        LoadFromPlaylist(playlist);
+    }
+
+    #endregion
+
+    #region Commands
+
+    [RelayCommand]
+    private void PlaySingle(MediaViewModel vm)
+    {
+        if (_mediaPlayer == null)
+        {
+            _delayPlay = vm;
+            return;
+        }
+
+        CurrentItem = vm;
+        _mediaPlayer.PlaybackItem = vm.Item.Value;
+        _mediaPlayer.Play();
+    }
+
+    [RelayCommand]
+    private void Clear()
+    {
+        ClearPlaylist();
+    }
+
+    private bool CanNext()
+    {
+        return _playbackControlService.CanNext(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanNext))]
+    private async Task NextAsync()
+    {
+        var playlist = _playlist;
+        var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
+            ? await _playbackControlService.GetNeighboringNextAsync(playlist, _neighboringFilesQuery)
+            : _playbackControlService.GetNext(playlist, RepeatMode);
+
+        if (result != null)
+        {
+            if (result.UpdatedPlaylist != null)
+            {
+                // Playlist was replaced (neighboring file navigation)
+                LoadFromPlaylist(result.UpdatedPlaylist);
+            }
+
+            PlaySingle(result.NextItem);
+        }
+    }
+
+    private bool CanPrevious()
+    {
+        return _playbackControlService.CanPrevious(_playlist, RepeatMode, hasNeighbor: _neighboringFilesQuery != null);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanPrevious))]
+    private async Task PreviousAsync()
+    {
+        if (_mediaPlayer == null) return;
+        void SetPositionToStart()
+        {
+            _mediaPlayer.Position = TimeSpan.Zero;
+        }
+
+        // If playing and position > 5 seconds, restart current track
+        if (_mediaPlayer.PlaybackState == MediaPlaybackState.Playing &&
+            _mediaPlayer.Position > TimeSpan.FromSeconds(5))
+        {
+            _dispatcherQueue.TryEnqueue(SetPositionToStart);
+            return;
+        }
+
+        var playlist = _playlist;
+        var result = playlist.Items.Count == 1 && _neighboringFilesQuery != null
+            ? await _playbackControlService.GetNeighboringPreviousAsync(playlist, _neighboringFilesQuery)
+            : _playbackControlService.GetPrevious(playlist, RepeatMode);
+
+        if (result != null)
+        {
+            if (result.UpdatedPlaylist != null)
+            {
+                // Playlist was replaced (neighboring file navigation)
+                LoadFromPlaylist(result.UpdatedPlaylist);
+            }
+
+            PlaySingle(result.NextItem);
+        }
+        else
+        {
+            // At beginning without repeat - restart current track
+            _dispatcherQueue.TryEnqueue(SetPositionToStart);
+        }
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public async Task EnqueueAsync(IReadOnlyList<IStorageItem> files, int insertIndex = -1)
+    {
+        var mediaList = await _mediaListFactory.TryParseMediaListAsync(files);
+        if (mediaList?.Items.Count > 0)
+        {
+            foreach (var item in mediaList.Items)
+            {
+                if (insertIndex < 0 || insertIndex >= Items.Count)
+                {
+                    Items.Add(item);
+                }
+                else
+                {
+                    Items.Insert(insertIndex, item);
+                    insertIndex++;
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
+    {
+        _playFilesCts?.Cancel();
+        using var cts = new CancellationTokenSource();
+        try
+        {
+            _playFilesCts = cts;
+            var updatedPlaylist = await _playlistService.AddNeighboringFilesAsync(playlist, neighboringFilesQuery, cts.Token);
+            return updatedPlaylist;
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected
+        }
+        catch (Exception e)
+        {
+            LogService.Log(e);
+        }
+        finally
+        {
+            _playFilesCts = null;
+        }
+
+        return playlist;
+    }
+
+    private void LoadFromPlaylist(Playlist playlist)
+    {
+        try
+        {
+            _deferCollectionChanged = true;
+            _playlist = playlist;
+
+            // Sync ObservableCollection with mediaList
+            // Only use sync if both lists are small enough to avoid UI freezing
+            if (Items.Count < 200 && playlist.Items.Count < 200)
+            {
+                Items.SyncItems(playlist.Items);
+            }
+            else
+            {
+                Items.Clear();
+                foreach (var item in playlist.Items)
+                {
+                    Items.Add(item);
+                }
+            }
+
+            // Update current item
+            CurrentItem = playlist.CurrentItem;
+            CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+            NextCommand.NotifyCanExecuteChanged();
+            PreviousCommand.NotifyCanExecuteChanged();
+        }
+        finally
+        {
+            _deferCollectionChanged = false;
+        }
+    }
+
+    private void ClearPlaylist()
+    {
+        foreach (var item in Items)
+        {
+            item.Clean();
+        }
+
+        try
+        {
+            _deferCollectionChanged = true;
+            Items.Clear();
+            CurrentItem = null;
+            CurrentIndex = -1;
+            _playlist = new Playlist();
+            _neighboringFilesQuery = null;
+            ShuffleMode = false;
+        }
+        finally
+        {
+            _deferCollectionChanged = false;
+        }
+    }
+
+    private async Task UpdateMediaBufferAsync()
+    {
+        var bufferIndices = _playlistService.GetMediaBufferIndices(_playlist.CurrentIndex, _playlist.Items.Count, RepeatMode);
+        var newBuffer = bufferIndices.Select(i => _playlist.Items[i]).ToList();
+
+        var toLoad = newBuffer.Except(_mediaBuffer);
+        var toClean = _mediaBuffer.Except(newBuffer);
+
+        foreach (var media in toClean)
+        {
+            media.Clean();
+        }
+
+        _mediaBuffer = newBuffer;
+        await Task.WhenAll(toLoad.Select(x => x.LoadThumbnailAsync()));
+    }
+
+    private async Task ParseAndPlayAsync(object value)
+    {
+        NextMediaList? result = null;
+
+        switch (value)
+        {
+            case IReadOnlyList<IStorageItem> items when items.Count == 1 && items[0] is StorageFile file:
+                var fileMedia = _mediaFactory.GetSingleton(file);
+                CreatePlaylistAndPlay(fileMedia);
+                result = await _mediaListFactory.ParseMediaListAsync(file);
+                break;
+
+            case IReadOnlyList<IStorageItem> items:
+                result = await _mediaListFactory.TryParseMediaListAsync(items);
+                break;
+
+            case StorageFile file:
+                var fileMedia0 = _mediaFactory.GetSingleton(file);
+                CreatePlaylistAndPlay(fileMedia0);
+                result = await _mediaListFactory.ParseMediaListAsync(file);
+                break;
+
+            case Uri uri:
+                var uriMedia = _mediaFactory.GetTransient(uri);
+                CreatePlaylistAndPlay(uriMedia);
+                result = await _mediaListFactory.ParseMediaListAsync(uri);
+                break;
+
+            case MediaViewModel media:
+                CreatePlaylistAndPlay(media);
+                result = await _mediaListFactory.ParseMediaListAsync(media);
+                break;
+        }
+
+        if (result != null)
+        {
+            var playlist = new Playlist(result.NextItem, result.Items);
+            LoadFromPlaylist(playlist);
+            PlaySingle(result.NextItem);
+        }
+    }
+
+    private void CreatePlaylistAndPlay(MediaViewModel nextItem)
+    {
+        var playlist = new Playlist(nextItem, new List<MediaViewModel> { nextItem });
+        LoadFromPlaylist(playlist);
+        PlaySingle(nextItem);
+    }
+
+    #endregion
+
+    #region Event Handlers
+
+    private void OnMediaFailed(IMediaPlayer sender, EventArgs args)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            if (CurrentItem != null)
+            {
+                CurrentItem.IsPlaying = false;
+                CurrentItem.IsAvailable = false;
+            }
+        });
+    }
+
+    private void OnPlaybackStateChanged(IMediaPlayer sender, object args)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            if (CurrentItem != null)
+            {
+                bool isPlaying = sender.PlaybackState == MediaPlaybackState.Playing;
+                if (isPlaying)
+                {
+                    CurrentItem.IsAvailable = true;
+                }
+                CurrentItem.IsPlaying = isPlaying;
+            }
+        });
+    }
+
+    private void OnEndReached(IMediaPlayer sender, object? args)
+    {
+        _dispatcherQueue.TryEnqueue(() =>
+        {
+            var playlist = _playlist;
+            var result = _playbackControlService.HandleMediaEnded(playlist, RepeatMode);
+            if (result != null)
+            {
+                if (result.UpdatedPlaylist != null)
+                {
+                    // Playlist was replaced (neighboring file navigation)
+                    LoadFromPlaylist(result.UpdatedPlaylist);
+                }
+
+                PlaySingle(result.NextItem);
+            }
+            else if (RepeatMode == MediaPlaybackAutoRepeatMode.Track)
+            {
+                // Track repeat - restart current track
+                sender.Position = TimeSpan.Zero;
+            }
+        });
+    }
+
+    private void TransportControlsOnButtonPressed(SystemMediaTransportControls sender, SystemMediaTransportControlsButtonPressedEventArgs args)
+    {
+        async void HandleTransportControlsButtonPressed()
+        {
+            switch (args.Button)
+            {
+                case SystemMediaTransportControlsButton.Next:
+                    await NextAsync();
+                    break;
+                case SystemMediaTransportControlsButton.Previous:
+                    await PreviousAsync();
+                    break;
+            }
+        }
+
+        _dispatcherQueue.TryEnqueue(HandleTransportControlsButtonPressed);
+    }
+
+    private void TransportControlsOnAutoRepeatModeChangeRequested(SystemMediaTransportControls sender, AutoRepeatModeChangeRequestedEventArgs args)
+    {
+        _dispatcherQueue.TryEnqueue(() => RepeatMode = args.RequestedAutoRepeatMode);
+    }
+
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (_deferCollectionChanged) return;
+        CurrentIndex = CurrentItem != null ? Items.IndexOf(CurrentItem) : -1;
+        _playlist = new Playlist(CurrentIndex, Items, _playlist);
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+
+        if (Items.Count <= 1)
+        {
+            _playlist.ShuffleBackup = null;
+            return;
+        }
+
+        // Update shuffle backup if shuffling is enabled
+        ShuffleBackup? backup = _playlist.ShuffleBackup;
+        if (ShuffleMode && backup != null)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Remove when e.OldItems.Count > 0:
+                    foreach (object item in e.OldItems)
+                    {
+                        backup.Removals.Add((MediaViewModel)item);
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Replace when e.OldItems.Count > 0 && e.OldItems.Count == e.NewItems.Count:
+                    for (int i = 0; i < e.OldItems.Count; i++)
+                    {
+                        int backupIndex = backup.OriginalPlaylist.IndexOf((MediaViewModel)e.OldItems[i]);
+                        if (backupIndex >= 0)
+                        {
+                            backup.OriginalPlaylist[backupIndex] = (MediaViewModel)e.NewItems[i];
+                        }
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Add:
+                    foreach (object item in e.NewItems)
+                    {
+                        if (!backup.Removals.Remove((MediaViewModel)item))
+                        {
+                            _playlist.ShuffleBackup = null;
+                            break;
+                        }
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    _playlist.ShuffleBackup = null;
+                    break;
+            }
+
+        }
+    }
+
+    #endregion
 }
