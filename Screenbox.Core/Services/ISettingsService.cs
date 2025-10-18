@@ -27,5 +27,6 @@ namespace Screenbox.Core.Services
         bool UseMultipleInstances { get; set; }
         string LivelyActivePath { get; set; }
         MediaPlaybackAutoRepeatMode PersistentRepeatMode { get; set; }
+        bool SavePlaybackPosition { get; set; }
     }
 }
