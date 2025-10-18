@@ -152,22 +152,39 @@ public partial class LivelyWallpaperPlayerViewModel : ObservableRecipient,
             switch (typeToken.GetString())
             {
                 case "slider":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetDouble());
+                    if (valueToken.ValueKind == JsonValueKind.Number && valueToken.TryGetDouble(out double sliderValue))
+                    {
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name, sliderValue);
+                    }
                     break;
                 case "dropdown":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetInt32());
+                    if (valueToken.ValueKind == JsonValueKind.Number && valueToken.TryGetInt32(out int dropdownValue))
+                    {
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name, dropdownValue);
+                    }
                     break;
                 case "checkbox":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetBoolean());
+                    if (valueToken.ValueKind is JsonValueKind.True or JsonValueKind.False)
+                    {
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetBoolean());
+                    }
                     break;
                 case "color":
-                    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
+                    if (valueToken.ValueKind == JsonValueKind.String)
+                    {
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
+                    }
                     break;
-                //case "textbox":
-                //    await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
-                //    break;
+                case "textbox":
+                    if (valueToken.ValueKind == JsonValueKind.String)
+                    {
+                        await webView.ExecuteScriptFunctionAsync(functionName, item.Name, valueToken.GetString());
+                    }
+                    break;
                 case "folderDropdown":
-                    if (item.Value.TryGetProperty("folder", out var folderToken))
+                    if (item.Value.TryGetProperty("folder", out var folderToken) &&
+                        folderToken.ValueKind == JsonValueKind.String &&
+                        valueToken.ValueKind == JsonValueKind.String)
                     {
                         var relativePath = Path.Combine(folderToken.GetString() ?? string.Empty,
                             valueToken.GetString() ?? string.Empty);
