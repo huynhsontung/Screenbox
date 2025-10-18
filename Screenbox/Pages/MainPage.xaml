@@ -8,6 +8,7 @@
     xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -121,7 +122,7 @@
             </controls:NavigationViewEx.PaneSearchButtonKeyboardAccelerators>
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind HomeNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemHomeKey}"
                     Icon="Home"
                     KeyTipPlacementMode="Right"
@@ -132,7 +133,7 @@
                     <TextBlock x:Name="HomeNavItemText" Text="{strings:Resources Key=Home}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind MusicNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemMusicKey}"
                     Icon="Audio"
                     KeyTipPlacementMode="Right"
@@ -143,7 +144,7 @@
                     <TextBlock x:Name="MusicNavItemText" Text="{strings:Resources Key=MusicLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind VideosNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemVideosKey}"
                     KeyTipPlacementMode="Right"
                     Tag="videos">
@@ -156,7 +157,7 @@
                     <TextBlock x:Name="VideosNavItemText" Text="{strings:Resources Key=VideoLibrary}" />
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind NetworkNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemNetworkKey}"
                     Icon="MapDrive"
                     KeyTipPlacementMode="Right"
@@ -168,7 +169,7 @@
                 </muxc:NavigationViewItem>
                 <muxc:NavigationViewItemSeparator />
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind PlayQueueNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind PlayQueueNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemQueueKey}"
                     KeyTipPlacementMode="Right"
                     Tag="queue">
@@ -187,7 +188,7 @@
             <muxc:NavigationView.FooterMenuItems>
                 <!--  Reimplement settings nav item to allow transition  -->
                 <muxc:NavigationViewItem
-                    controls:AcceleratorService.ToolTip="{x:Bind SettingsNavItemText.Text}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind SettingsNavItemText.Text}"
                     AccessKey="{strings:KeyboardResources Key=NavigationItemSettingsKey}"
                     KeyTipPlacementMode="Right"
                     Tag="settings">
@@ -209,7 +210,7 @@
             <muxc:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="NavViewSearchBox"
-                    controls:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
+                    extensions:AcceleratorService.ToolTip="{x:Bind NavViewSearchBox.(AutomationProperties.Name)}"
                     AccessKey="{strings:KeyboardResources Key=NavigationPaneAutoSuggestButtonKey}"
                     AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
