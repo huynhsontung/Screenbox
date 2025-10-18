@@ -135,7 +135,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public void Receive(ClearPlaylistMessage message)
     {
-        ClearPlaylist();
+        Clear();
     }
 
     public async void Receive(QueuePlaylistMessage message)
@@ -334,6 +334,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private void Clear()
     {
         ClearPlaylist();
+        CurrentItem = null;
+        CurrentIndex = -1;
     }
 
     private bool CanNext()
@@ -504,8 +506,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             _deferCollectionChanged = true;
             Items.Clear();
-            CurrentItem = null;
-            CurrentIndex = -1;
             _playlist = new Playlist();
             _neighboringFilesQuery = null;
             ShuffleMode = false;
