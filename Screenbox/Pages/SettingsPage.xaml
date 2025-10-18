@@ -581,6 +581,32 @@
                     </ctc:SettingsExpander.Items>
                 </ctc:SettingsExpander>
 
+                <ctc:SettingsExpander
+                    Margin="{StaticResource SettingsCardMargin}"
+                    Description="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}"
+                    Header="{x:Bind strings:Resources.SettingsSavePlaybackPositionHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE81C;}">
+                    <ctc:SettingsExpander.Resources>
+                        <ResourceDictionary>
+                            <ResourceDictionary.MergedDictionaries>
+                                <ResourceDictionary Source="ms-appx:///CommunityToolkit.WinUI.Controls.SettingsControls/SettingsExpander/SettingsExpander.xaml" />
+                            </ResourceDictionary.MergedDictionaries>
+                        </ResourceDictionary>
+                    </ctc:SettingsExpander.Resources>
+                    <interactivity:Interaction.Behaviors>
+                        <behaviors:SettingsExpanderXYNavigationBehavior />
+                    </interactivity:Interaction.Behaviors>
+                    <ToggleSwitch AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsSavePlaybackPositionDescription}" IsOn="{x:Bind ViewModel.SavePlaybackPosition, Mode=TwoWay}" />
+                    <ctc:SettingsExpander.ItemsFooter>
+                        <ctc:SettingsCard
+                            AutomationProperties.Name="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}"
+                            Header="{x:Bind strings:Resources.SettingsClearPlaybackPositionHeader}"
+                            Style="{StaticResource DefaultSettingsExpanderItemStyle}">
+                            <Button Command="{x:Bind ViewModel.ClearPlaybackPositionsCommand}" Content="{x:Bind strings:Resources.Clear}" />
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.ItemsFooter>
+                </ctc:SettingsExpander>
+
                 <!--  About section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{strings:Resources Key=SettingsCategoryAbout}" />
 

@@ -391,7 +391,8 @@ namespace Screenbox.Core.ViewModels
 
         private void UpdateLastPosition(TimeSpan position)
         {
-            if (_currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
+            if (!_settingsService.SavePlaybackPosition ||
+                _currentItem == null || NaturalDuration <= TimeSpan.FromMinutes(1) ||
                 DateTimeOffset.Now - _lastPositionTracker.LastUpdated <= TimeSpan.FromSeconds(3))
                 return;
 
