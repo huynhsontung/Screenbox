@@ -73,7 +73,7 @@ namespace Screenbox.Controls
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                int insertIndex = PlaylistListView.GetDropIndex(e) - 1;
+                int insertIndex = PlaylistListView.GetDropIndex(e);
                 await ViewModel.Playlist.EnqueueAsync(items, insertIndex);
             }
         }

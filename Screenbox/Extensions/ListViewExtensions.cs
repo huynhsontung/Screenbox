@@ -1,5 +1,6 @@
 ﻿#nullable enable
 
+using System;
 using CommunityToolkit.WinUI;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -295,18 +296,23 @@ public static class ListViewExtensions
     {
         var position = e.GetPosition(listView);
 
-        foreach (var item in listView.Items)
+        foreach (var item in listView.ItemsPanelRoot.Children)
         {
-            var container = listView.ContainerFromItem(item) as ListViewItem;
+            var container = item as ListViewItem;
             if (container != null)
             {
                 var bounds = container.TransformToVisual(listView).TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
 
                 // Check to see if the bounds of the item's container intersects the drop point
-                if (bounds.Top > position.Y)
+                if (bounds.Contains(position))
                 {
                     // Get the list view to tell us the index of the hit container
-                    return listView.IndexFromContainer(container);
+                    int dropIndex = listView.IndexFromContainer(container);
+
+                    // If the drop point is in the lower 40% of the container, we want to insert after it
+                    // The ratio is derived from WinUI 3 source code for ListViewBase drag and drop
+                    double threshold = bounds.Top + (bounds.Height * 0.6);
+                    return position.Y < threshold ? dropIndex : Math.Min(dropIndex + 1, listView.Items.Count);
                 }
             }
         }
