@@ -648,6 +648,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
   </data>
@@ -921,7 +927,7 @@
     <value>Continue a reproduzir de onde você parou pela última vez ao abrir um arquivo</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Método de upscaling de vídeo</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
@@ -930,21 +936,32 @@
     <value>Bilinear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Ponto</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Super resolução</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Exibir nome do capítulo quando disponível</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Idioma do aplicativo</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Alterar o idioma de exibição do aplicativo</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Usar o idioma do sistema</value>
   </data>
 </root>

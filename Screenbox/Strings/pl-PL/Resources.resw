@@ -648,6 +648,12 @@
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Pozwól na osiągnięcie maksymalnej głośności powyżej 100%</value>
   </data>
+  <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
+    <value>On-screen controls</value>
+  </data>
+  <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
+    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+  </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesty</value>
   </data>
@@ -846,7 +852,7 @@
     <value>Efekty wizualne</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Przeglądaj plik(i)</value>
+    <value>Przeglądaj pliki</value>
   </data>
   <data name="Default" xml:space="preserve">
     <value>Domyślne</value>
@@ -936,15 +942,26 @@
     <value>Super rozdzielczość</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Wyświetlaj nazwę rozdziału, jeśli jest dostępna</value>
+  </data>
+  <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
+    <value>Dismiss controls after this amount of time</value>
+  </data>
+  <data name="SecondsCount_One" xml:space="preserve">
+    <value>{0} second</value>
+    <comment>#Format[Plural Int]</comment>
+  </data>
+  <data name="SecondsCount_Other" xml:space="preserve">
+    <value>{0} seconds</value>
+    <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Język aplikacji</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Zmień język wyświetlania aplikacji</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Użyj języka systemu</value>
   </data>
 </root>
