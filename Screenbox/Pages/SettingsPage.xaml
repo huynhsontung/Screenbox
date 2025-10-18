@@ -399,19 +399,33 @@
                     </ComboBox>
                 </ctc:SettingsCard>
 
-                <ctc:SettingsCard
+                <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowControlsHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowControlsToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
-                </ctc:SettingsCard>
-
-                <ctc:SettingsCard
-                    Margin="{StaticResource SettingsCardMargin}"
-                    Header="{strings:Resources Key=SettingsShowChaptersHeader}"
-                    HeaderIcon="{ui:FontIcon Glyph=&#xE75B;}">
-                    <ToggleSwitch x:Name="ShowChaptersToggleSwitch" IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
-                </ctc:SettingsCard>
+                    Description="{x:Bind strings:Resources.SettingsOnScreenControlsDescription}"
+                    Header="{x:Bind strings:Resources.SettingsOnScreenControlsHeader}"
+                    HeaderIcon="{ui:FontIcon Glyph=&#xE75A;}">
+                    <ctc:SettingsExpander.Items>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowControlsHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowControls, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsShowChaptersHeader}">
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.PlayerShowChapters, Mode=TwoWay}" />
+                        </ctc:SettingsCard>
+                        <ctc:SettingsCard Header="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}">
+                            <ComboBox
+                                MinWidth="150"
+                                AutomationProperties.HelpText="{x:Bind strings:Resources.SettingsOnScreenControlsHideDelayHeader}"
+                                ItemsSource="{x:Bind ViewModel.PlayerControlsHideDelayOptions, Mode=OneWay}"
+                                SelectedItem="{x:Bind ViewModel.PlayerControlsHideDelay, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="x:Int32">
+                                        <TextBlock Text="{x:Bind strings:Resources.SecondsCount((x:Int32))}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </ctc:SettingsCard>
+                    </ctc:SettingsExpander.Items>
+                </ctc:SettingsExpander>
 
                 <ctc:SettingsExpander
                     Margin="{StaticResource SettingsCardMargin}"
