@@ -1,6 +1,8 @@
 ﻿#nullable enable
 
+using System;
 using CommunityToolkit.WinUI;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -283,4 +285,41 @@ public static class ListViewExtensions
         if (args.Phase > 0 || args.InRecycleQueue || GetItemIsFocusEngagementEnabled(sender) is not { } isEnabled) return;
         args.ItemContainer.IsFocusEngagementEnabled = isEnabled;
     }
+
+    #region Extension Methods
+
+    /// <summary>
+    /// Get index of the item where the cursor is over when a drag event occurs.
+    /// </summary>
+    /// Reference: https://stackoverflow.com/a/74604730/10934913
+    public static int GetDropIndex(this ListViewBase listView, DragEventArgs e)
+    {
+        var position = e.GetPosition(listView);
+
+        foreach (var item in listView.ItemsPanelRoot.Children)
+        {
+            var container = item as ListViewItem;
+            if (container != null)
+            {
+                var bounds = container.TransformToVisual(listView).TransformBounds(new Rect(0, 0, container.ActualWidth, container.ActualHeight));
+
+                // Check to see if the bounds of the item's container intersects the drop point
+                if (bounds.Contains(position))
+                {
+                    // Get the list view to tell us the index of the hit container
+                    int dropIndex = listView.IndexFromContainer(container);
+
+                    // If the drop point is in the lower 40% of the container, we want to insert after it
+                    // The ratio is derived from WinUI 3 source code for ListViewBase drag and drop
+                    double threshold = bounds.Top + (bounds.Height * 0.6);
+                    return position.Y < threshold ? dropIndex : Math.Min(dropIndex + 1, listView.Items.Count);
+                }
+            }
+        }
+
+        // The drop occurred after the last item in the list
+        return listView.Items.Count;
+    }
+
+    #endregion
 }

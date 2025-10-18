@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Screenbox.Core.ViewModels;
+using Screenbox.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -72,7 +73,8 @@ namespace Screenbox.Controls
             IReadOnlyList<IStorageItem>? items = await e.DataView.GetStorageItemsAsync();
             if (items?.Count > 0)
             {
-                await ViewModel.Playlist.EnqueueAsync(items);
+                int insertIndex = PlaylistListView.GetDropIndex(e);
+                await ViewModel.Playlist.EnqueueAsync(items, insertIndex);
             }
         }
 
