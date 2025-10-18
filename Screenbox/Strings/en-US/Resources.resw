@@ -830,6 +830,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Sort by</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Artist</value>
   </data>

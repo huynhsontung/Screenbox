@@ -82,7 +82,7 @@
             Margin="{StaticResource ContentPagePadding}"
             HorizontalAlignment="Right"
             AccessKey="{strings:KeyboardResources Key=CommandSortByKey}"
-            AutomationProperties.Name="{x:Bind SortByText.Text}"
+            AutomationProperties.Name="{x:Bind GetSortByButtonAutomationName(ViewModel.SortBy), Mode=OneWay}"
             Background="Transparent"
             BorderBrush="Transparent">
             <muxc:DropDownButton.Flyout>
