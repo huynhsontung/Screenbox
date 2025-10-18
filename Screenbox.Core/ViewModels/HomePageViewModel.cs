@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Services;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.UI.Core;
+using Windows.System;
 
 namespace Screenbox.Core.ViewModels
 {
@@ -28,7 +29,8 @@ namespace Screenbox.Core.ViewModels
         private readonly MediaViewModelFactory _mediaFactory;
         private readonly IFilesService _filesService;
         private readonly ISettingsService _settingsService;
-        private readonly CoreDispatcher _dispatcher;
+        private readonly DispatcherQueue _dispatcherQueue;
+        private readonly DispatcherQueueTimer _changeDebounceTimer;
         private readonly Dictionary<string, string> _pathToMruMappings;
 
         public HomePageViewModel(MediaViewModelFactory mediaFactory, IFilesService filesService,
@@ -37,7 +39,8 @@ namespace Screenbox.Core.ViewModels
             _mediaFactory = mediaFactory;
             _filesService = filesService;
             _settingsService = settingsService;
-            _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+            _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+            _changeDebounceTimer = _dispatcherQueue.CreateTimer();
             _pathToMruMappings = new Dictionary<string, string>();
             Recent = new ObservableCollection<MediaViewModel>();
 
@@ -45,11 +48,16 @@ namespace Screenbox.Core.ViewModels
             IsActive = true;
         }
 
-        public async void Receive(PlaylistCurrentItemChangedMessage message)
+        public void Receive(PlaylistCurrentItemChangedMessage message)
         {
             if (_settingsService.ShowRecent)
             {
-                await UpdateRecentMediaListAsync(false).ConfigureAwait(false);
+                _changeDebounceTimer.Debounce(DebouncedAction, TimeSpan.FromMilliseconds(100));
+
+                async void DebouncedAction()
+                {
+                    await UpdateRecentMediaListAsync(false).ConfigureAwait(false);
+                }
             }
         }
 
@@ -74,12 +82,16 @@ namespace Screenbox.Core.ViewModels
             }
             else
             {
-                Recent.Clear();
+                lock (Recent)
+                {
+                    Recent.Clear();
+                }
             }
         }
 
         private async Task UpdateRecentMediaListAsync(bool loadMediaDetails)
         {
+            // Assume UI Thread
             string[] tokens = StorageApplicationPermissions.MostRecentlyUsedList.Entries
                 .OrderByDescending(x => x.Metadata)
                 .Select(x => x.Token)
@@ -88,57 +100,63 @@ namespace Screenbox.Core.ViewModels
 
             if (tokens.Length == 0)
             {
-                Recent.Clear();
+                lock (Recent)
+                {
+                    Recent.Clear();
+                }
                 return;
             }
 
-            for (int i = 0; i < tokens.Length; i++)
+            var files = await Task.WhenAll(tokens.Select(ConvertMruTokenToStorageFileAsync));
+            var pairs = tokens.Zip(files, (t, f) => (Token: t, File: f)).ToList();
+            var pairsToRemove = pairs.Where(p => p.File == null).ToList();
+
+            lock (Recent)
             {
-                string token = tokens[i];
-                StorageFile? file = await ConvertMruTokenToStorageFileAsync(token);
-                if (file == null)
+                for (int i = 0; i < tokens.Length; i++)
                 {
-                    try
+                    var (token, file) = pairs[i];
+                    if (file == null) continue;
+                    // TODO: Add support for playing playlist file from home page
+                    if (file.IsSupportedPlaylist()) continue;
+                    if (i >= Recent.Count)
                     {
-                        StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                        MediaViewModel media = _mediaFactory.GetSingleton(file);
+                        _pathToMruMappings[media.Location] = token;
+                        Recent.Add(media);
                     }
-                    catch (Exception e)
+                    else if (Recent[i].Source is StorageFile existing)
                     {
-                        LogService.Log(e);
+                        try
+                        {
+                            if (!file.IsEqual(existing)) MoveOrInsert(file, token, i);
+                        }
+                        catch (Exception)
+                        {
+                            // StorageFile.IsEqual() throws an exception
+                            // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
+                            // pass
+                        }
                     }
-                    continue;
                 }
 
-                // TODO: Add support for playing playlist file from home page
-                if (file.IsSupportedPlaylist()) continue;
-                if (!_dispatcher.HasThreadAccess)
-                    throw new InvalidOperationException("This method must be called on the UI thread.");
-
-                if (i >= Recent.Count)
+                // Remove stale items
+                while (Recent.Count > tokens.Length)
                 {
-                    MediaViewModel media = _mediaFactory.GetSingleton(file);
-                    _pathToMruMappings[media.Location] = token;
-                    Recent.Add(media);
-                }
-                else if (Recent[i].Source is StorageFile existing)
-                {
-                    try
-                    {
-                        if (!file.IsEqual(existing)) MoveOrInsert(file, token, i);
-                    }
-                    catch (Exception)
-                    {
-                        // StorageFile.IsEqual() throws an exception
-                        // System.Exception: Element not found. (Exception from HRESULT: 0x80070490)
-                        // pass
-                    }
+                    Recent.RemoveAt(Recent.Count - 1);
                 }
             }
 
-            // Remove stale items
-            while (Recent.Count > tokens.Length)
+            foreach (var (token, _) in pairsToRemove)
             {
-                Recent.RemoveAt(Recent.Count - 1);
+                try
+                {
+                    StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                }
+                catch (Exception e)
+                {
+                    LogService.Log(e);
+                }
             }
 
             // Load media details for the remaining items
@@ -192,10 +210,13 @@ namespace Screenbox.Core.ViewModels
         [RelayCommand]
         private void Remove(MediaViewModel media)
         {
-            Recent.Remove(media);
-            if (_pathToMruMappings.Remove(media.Location, out string token))
+            lock (Recent)
             {
-                StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                Recent.Remove(media);
+                if (_pathToMruMappings.Remove(media.Location, out string token))
+                {
+                    StorageApplicationPermissions.MostRecentlyUsedList.Remove(token);
+                }
             }
         }
 
