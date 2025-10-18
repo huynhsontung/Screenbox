@@ -649,10 +649,10 @@
     <value>Permitir que o volume máximo exceda 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Controlos no ecrã</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Escolher os elementos que podem aparecer nos controlos, e o comportamento da ocultação automática</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
@@ -873,7 +873,7 @@
     <value>Data de adição</value>
   </data>
   <data name="Media" xml:space="preserve">
-    <value>Media</value>
+    <value>Multimédia</value>
   </data>
   <data name="Video" xml:space="preserve">
     <value>Vídeo</value>
@@ -945,14 +945,14 @@
     <value>Mostrar, se disponível, o nome do capítulo</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Dispensar controlos após este período de tempo</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} segundo</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} segundos</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
