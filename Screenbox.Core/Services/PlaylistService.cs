@@ -18,10 +18,11 @@ public sealed class PlaylistService
 {
     private const string PlaylistsFolderName = "Playlists";
     private const string ThumbnailsFolderName = "Thumbnails";
-    private readonly FilesService _filesService;
-    private readonly IMediaListFactory _mediaListFactory;
 
-    public PlaylistService(IMediaListFactory mediaListFactory, FilesService filesService)
+    private readonly IMediaListFactory _mediaListFactory;
+    private readonly IFilesService _filesService;
+
+    public PlaylistService(IFilesService filesService, IMediaListFactory mediaListFactory)
     {
         _mediaListFactory = mediaListFactory;
         _filesService = filesService;
