@@ -69,7 +69,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private object? _delayPlay;
     private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
     private StorageFileQueryResult? _neighboringFilesQuery;
-    private CancellationTokenSource? _cts;
     private CancellationTokenSource? _playFilesCts;
     private readonly DispatcherQueue _dispatcherQueue;
 
@@ -227,7 +226,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (CurrentItem != null)
         {
-            _cts?.Cancel();
             CurrentItem.IsMediaActive = false;
             CurrentItem.IsPlaying = null;
         }

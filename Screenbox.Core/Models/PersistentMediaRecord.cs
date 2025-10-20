@@ -1,10 +1,12 @@
-﻿using ProtoBuf;
+﻿#nullable enable
+
 using System;
+using ProtoBuf;
 
 namespace Screenbox.Core.Models;
 
 [ProtoContract]
-internal class PersistentMediaRecord
+public class PersistentMediaRecord
 {
     [ProtoMember(1)]
     public string Title { get; set; }
@@ -17,8 +19,6 @@ internal class PersistentMediaRecord
 
     [ProtoMember(4)]
     public DateTime DateAdded { get; set; } // Must be UTC datetime
-
-    public PersistentMediaRecord() { }
 
     public PersistentMediaRecord(string title, string path, IMediaProperties properties, DateTimeOffset dateAdded)
     {
