@@ -172,7 +172,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         }
         else
         {
-            _playlist.LastUpdated = message.Value;
             ClearPlaylist();
             await ParseAndPlayAsync(message.Value);
         }
