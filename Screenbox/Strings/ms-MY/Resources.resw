@@ -140,13 +140,13 @@
     <value>Gagal menyimpan bingkai</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Masa berlalu</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Masa berbaki</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
-    <value>Total duration</value>
+    <value>Jumlah durasi</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
     <value>Bab {0}</value>
@@ -177,7 +177,7 @@
     <value>Volum</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Laras volum</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Geladah</value>
@@ -224,13 +224,13 @@
     <value>Tambah ke baris gilir</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
-    <value>Select all</value>
+    <value>Pilih semua</value>
   </data>
   <data name="SelectAllToolTip" xml:space="preserve">
     <value>Select all items in this view</value>
   </data>
   <data name="SelectNone" xml:space="preserve">
-    <value>Select none</value>
+    <value>Pilih tiada</value>
   </data>
   <data name="SelectNoneToolTip" xml:space="preserve">
     <value>Clear your selection</value>
@@ -332,7 +332,7 @@
     <value>Cari</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
-    <value>Search videos, songs, albums, and more</value>
+    <value>Cari video, lagu, album, dan lebih</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Tetapan</value>
@@ -461,7 +461,7 @@
     <value>Semak imbas fail untuk bermain</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
-    <value>More options for opening media</value>
+    <value>Lebih pilihan untuk membuka media</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
     <value>Tambah fail</value>
@@ -470,7 +470,7 @@
     <value>Semak imbas fail untuk menambah ke baris gilir main</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Lebih pilihan untuk menambah media ke baris gilir main</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
     <value>Tambah folder pada pustaka muzik anda</value>
@@ -622,7 +622,7 @@
     <value>Tunjuk baru-baru ini</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
-    <value>Display controls on pause</value>
+    <value>Papar kawalan pada jeda</value>
   </data>
   <data name="SettingsVideoLibraryLocationsHeader" xml:space="preserve">
     <value>Lokasi pustaka video</value>
@@ -649,10 +649,10 @@
     <value>Benarkan volum maksimum melebihi 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Kawalan atas skrin</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Pilih kawalan mana yang mungkin muncul dalam tindanan, dan perilaku sembunyi secara automatik</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gerak isyarat</value>
@@ -771,7 +771,7 @@
     <value>Lesen</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
-    <value>Third-party software acknowledgments</value>
+    <value>Pengakuan perisian pihak ketiga</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
     <value>Bantu terjemah</value>
@@ -828,49 +828,49 @@
     <value>Always open media files in a new instance</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Isih mengikut</value>
   </data>
   <data name="Artist" xml:space="preserve">
-    <value>Artist</value>
+    <value>Artis</value>
   </data>
   <data name="ReleasedYear" xml:space="preserve">
     <value>Released year</value>
   </data>
   <data name="SettingsAudioVisualHeader" xml:space="preserve">
-    <value>Audio visual</value>
+    <value>Visual audio</value>
   </data>
   <data name="GetLivelyApp" xml:space="preserve">
-    <value>Get Lively Wallpaper</value>
+    <value>Dapatkan Lively Wallpaper</value>
   </data>
   <data name="GetLivelyVisuals" xml:space="preserve">
-    <value>Download visuals on GitHub</value>
+    <value>Muat turun visual di GitHub</value>
   </data>
   <data name="VisualizerOptionsToolTip" xml:space="preserve">
-    <value>Audio visual options</value>
+    <value>Pilihan visual audio</value>
   </data>
   <data name="Visuals" xml:space="preserve">
-    <value>Visuals</value>
+    <value>Visual</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse files</value>
+    <value>Semak imbas fail</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Lalai</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
-    <value>Powered by Lively Wallpaper</value>
+    <value>Dikuasakan oleh Lively Wallpaper</value>
   </data>
   <data name="SettingsImportVisualsHeader" xml:space="preserve">
-    <value>Import visuals</value>
+    <value>Import visual</value>
   </data>
   <data name="SettingsImportVisualsDescription" xml:space="preserve">
-    <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
+    <value>Dapatkan lebih visual melalui apl Lively Wallpaper atau muat turun ia dari GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Tarikh ditambah</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>
@@ -879,7 +879,7 @@
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Fail</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
     <value>Muzik</value>
@@ -888,46 +888,46 @@
     <value>Video</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Tunjuk album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Tunjuk artis</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
-    <value>Failed to load visual</value>
+    <value>Gagal memuat visual</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderDescription" xml:space="preserve">
-    <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
+    <value>Apabila membuka fail tunggal, tambah semua fail lain dalam folder secara automatik ke baris gilir main</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Tambah semua fail dalam folder ke baris gilir</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Guna tetapan sistem</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Gelap</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Cerah</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
-    <value>Change the app's overall color scheme</value>
+    <value>Ubah skema warna keseluruhan apl</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Tema apl</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Pemeribadian</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
     <value>Always resume from last position</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
-    <value>Continue playing from where you last stopped when opening a file</value>
+    <value>Terus bermain dari tempat terakhir anda berhenti ketika membuka fail</value>
   </data>
   <data name="SettingsVideoUpscalingHeader" xml:space="preserve">
-    <value>Video upscaling method</value>
+    <value>Kaedah peningkatan video</value>
   </data>
   <data name="SettingsVideoUpscalingDescription" xml:space="preserve">
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
@@ -939,7 +939,7 @@
     <value>Point</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Resolusi super</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Display chapter name when available</value>
@@ -948,20 +948,20 @@
     <value>Dismiss controls after this amount of time</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} saat</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} saat</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>Bahasa apl</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Ubah bahasa paparan apl</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Guna bahasa sistem</value>
   </data>
 </root>
