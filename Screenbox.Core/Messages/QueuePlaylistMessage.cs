@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Screenbox.Core.Models;
 
-using MediaViewModel = Screenbox.Core.ViewModels.MediaViewModel;
+namespace Screenbox.Core.Messages;
 
-namespace Screenbox.Core.Messages
+public sealed class QueuePlaylistMessage : ValueChangedMessage<Playlist>
 {
-    public sealed class QueuePlaylistMessage : ValueChangedMessage<IEnumerable<MediaViewModel>>
-    {
-        public bool AddNext { get; }
+    public bool ShouldPlay { get; }
 
-        public QueuePlaylistMessage(IEnumerable<MediaViewModel> playlist, bool addNext = false) : base(playlist)
-        {
-            AddNext = addNext;
-        }
+    public QueuePlaylistMessage(Playlist playlist, bool shouldPlay = false) : base(playlist)
+    {
+        ShouldPlay = shouldPlay;
     }
 }
