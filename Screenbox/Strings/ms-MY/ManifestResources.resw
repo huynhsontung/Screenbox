@@ -147,7 +147,7 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>Audio AIFF Termampat</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
@@ -167,7 +167,7 @@
     <comment>Display name for the file type ".flac" (Free Lossless Audio Codec)</comment>
   </data>
   <data name="FileDisplayNameFlashMP4" xml:space="preserve">
-    <value>Flash MP4 Video</value>
+    <value>Video Flash MP4</value>
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
@@ -251,7 +251,7 @@
     <comment>Display name for the file type ".rm"</comment>
   </data>
   <data name="FileDisplayNameRealMediaVariable" xml:space="preserve">
-    <value>RealMedia Variable Bit Rate File</value>
+    <value>Fail Kadar Bit Boleh Ubah RealMedia</value>
     <comment>Display name for the file type ".rmvb"</comment>
   </data>
   <data name="FileDisplayNameVOB" xml:space="preserve">
