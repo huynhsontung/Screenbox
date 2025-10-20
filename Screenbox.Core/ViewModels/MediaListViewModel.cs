@@ -565,6 +565,9 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
                 CreatePlaylistAndPlay(media);
                 result = await _mediaListFactory.ParseMediaListAsync(media);
                 break;
+
+            default:
+                throw new NotSupportedException($"Cannot parse and play object with type {value.GetType().FullName}");
         }
 
         if (result != null)
