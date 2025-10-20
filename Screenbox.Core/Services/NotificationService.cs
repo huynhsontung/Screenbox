@@ -3,10 +3,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 using LibVLCSharp.Shared;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Events;
+using Windows.UI.Xaml.Controls;
 
 namespace Screenbox.Core.Services
 {
@@ -70,7 +70,7 @@ namespace Screenbox.Core.Services
         {
             if (token.IsCancellationRequested) return;
             IVlcLoginDialog loginDialog = _vlcLoginDialogFactory();
-            loginDialog.Title = title;
+            loginDialog.Title = title ?? string.Empty;
             loginDialog.Text = text;
             loginDialog.Username = defaultUsername;
             loginDialog.AskStoreCredential = askStore;

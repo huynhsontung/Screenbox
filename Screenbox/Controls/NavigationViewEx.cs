@@ -88,7 +88,6 @@ public sealed partial class NavigationViewEx : NavigationView
     private Grid? _overlayRoot;
     private Border? _overlayChildBorder;
     private Rectangle? _overlayChildRectangle;
-    private Border? _contentBackground;
     private SplitView? _splitView;
     private Grid? _paneToggleButtonGrid;
     private Grid? _contentGrid;
@@ -348,11 +347,6 @@ public sealed partial class NavigationViewEx : NavigationView
         if (_paneContentGrid != null)
         {
             _paneContentGrid.Visibility = visibility;
-        }
-
-        if (_contentBackground != null)
-        {
-            _contentBackground.Visibility = visibility;
         }
     }
 
