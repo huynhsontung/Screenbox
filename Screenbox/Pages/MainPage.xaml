@@ -5,7 +5,6 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
     xmlns:controls="using:Screenbox.Controls"
-    xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
@@ -13,6 +12,7 @@
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
@@ -32,12 +32,10 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
-
-            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
+            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
-                    <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
+                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind Glyph}" />
+                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Name}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -215,6 +213,7 @@
                     AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
+                    ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
                     KeyTipPlacementMode="Right"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"

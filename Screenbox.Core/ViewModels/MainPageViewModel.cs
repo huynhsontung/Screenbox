@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -25,6 +26,14 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     IRecipient<NavigationViewDisplayModeRequestMessage>,
     IRecipient<CriticalErrorMessage>
 {
+    private const int MaxSuggestionsPerCategory = 6;
+    private const int MaxTotalSuggestions = 10;
+    private const string AudioGlyph = "\uE8D6";
+    private const string MoviesGlyph = "\uE8B2";
+    private const string ContactGlyph = "\uE77B";
+    private const string MusicAlbumGlyph = "\uE93C";
+    private const double IndexWeightFactor = 0.1;
+
     [ObservableProperty] private bool _playerVisible;
     [ObservableProperty] private bool _shouldUseMargin;
     [ObservableProperty] private bool _isPaneOpen;
@@ -39,6 +48,8 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly ILibraryService _libraryService;
+
+    public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
         ILibraryService libraryService)
@@ -128,16 +139,21 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         Messenger.Send(new DragDropMessage(data));
     }
 
-    public IReadOnlyList<object> GetSearchSuggestions(string queryText)
+    public void UpdateSearchSuggestions(string queryText)
     {
         string searchQuery = queryText.Trim();
         if (searchQuery.Length > 0)
         {
-            var result = _searchService.SearchLocalLibrary(searchQuery);
-            return GetSuggestItems(result, searchQuery);
-        }
+            SearchSuggestions.Clear();
 
-        return Array.Empty<object>();
+            var result = _searchService.SearchLocalLibrary(searchQuery);
+            var suggestions = GetSuggestItems(result, searchQuery);
+
+            foreach (var suggestion in suggestions)
+            {
+                SearchSuggestions.Add(suggestion);
+            }
+        }
     }
 
     public void SubmitSearch(string queryText)
@@ -150,9 +166,11 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         }
     }
 
-    public void SelectSuggestion(object chosenSuggestion)
+    public void SelectSuggestion(SearchSuggestionItem? chosenSuggestion)
     {
-        switch (chosenSuggestion)
+        if (chosenSuggestion?.Data == null) return;
+
+        switch (chosenSuggestion.Data)
         {
             case MediaViewModel media:
                 Messenger.Send(new PlayMediaMessage(media));
@@ -163,21 +181,26 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case ArtistViewModel artist:
                 _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
                 break;
-            default:
-                return;
         }
     }
 
-    private IReadOnlyList<object> GetSuggestItems(SearchResult result, string searchQuery)
+    private IReadOnlyList<SearchSuggestionItem> GetSuggestItems(SearchResult result, string searchQuery)
     {
-        if (!result.HasItems) return Array.Empty<object>();
-        IEnumerable<Tuple<string, object>> songs = result.Songs.Take(6).Select(s => new Tuple<string, object>(s.Name, s));
-        IEnumerable<Tuple<string, object>> videos = result.Videos.Take(6).Select(v => new Tuple<string, object>(v.Name, v));
-        IEnumerable<Tuple<string, object>> artists = result.Artists.Take(6).Select(a => new Tuple<string, object>(a.Name, a));
-        IEnumerable<Tuple<string, object>> albums = result.Albums.Take(6).Select(a => new Tuple<string, object>(a.Name, a));
-        IEnumerable<(double, object)> searchResults = songs.Concat(videos).Concat(artists).Concat(albums)
-            .Select(t => (GetRanking(t.Item1, searchQuery), t.Item2))
-            .OrderBy(t => t.Item1).Take(10);
+        if (!result.HasItems) return Array.Empty<SearchSuggestionItem>();
+
+        IEnumerable<SearchSuggestionItem> songs = result.Songs
+            .Take(MaxSuggestionsPerCategory).Select(s => new SearchSuggestionItem(s.Name, s, AudioGlyph));
+        IEnumerable<SearchSuggestionItem> videos = result.Videos
+            .Take(MaxSuggestionsPerCategory).Select(v => new SearchSuggestionItem(v.Name, v, MoviesGlyph));
+        IEnumerable<SearchSuggestionItem> artists = result.Artists
+            .Take(MaxSuggestionsPerCategory).Select(a => new SearchSuggestionItem(a.Name, a, ContactGlyph));
+        IEnumerable<SearchSuggestionItem> albums = result.Albums
+            .Take(MaxSuggestionsPerCategory).Select(a => new SearchSuggestionItem(a.Name, a, MusicAlbumGlyph));
+        IEnumerable<(double, SearchSuggestionItem)> searchResults = songs.Concat(videos).Concat(artists).Concat(albums)
+            .Select(item => (GetRanking(item.Name, searchQuery), item))
+            .OrderBy(t => t.Item1)
+            .Take(MaxTotalSuggestions);
+
         return searchResults.Select(t => t.Item2).ToArray();
     }
 
@@ -194,7 +217,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             .Select(s => s.IndexOf(query, StringComparison.CurrentCultureIgnoreCase))
             .Where(i => i >= 0)
             .Average();
-        return index * 0.1 + wordRank;
+        return index * IndexWeightFactor + wordRank;
     }
 
     public Task FetchLibraries()

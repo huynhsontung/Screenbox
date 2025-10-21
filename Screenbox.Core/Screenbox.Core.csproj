@@ -209,6 +209,7 @@
     <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Models\PositionChangedResult.cs" />
     <Compile Include="Models\PersistentMediaRecord.cs" />
+    <Compile Include="Models\SearchSuggestionItem.cs" />
     <Compile Include="Models\ShuffleBackup.cs" />
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Playback\AudioTrack.cs" />

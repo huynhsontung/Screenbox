@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
+using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Sentry;
 using Windows.ApplicationModel.Core;
@@ -318,7 +319,7 @@ namespace Screenbox.Pages
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                sender.ItemsSource = ViewModel.GetSearchSuggestions(sender.Text);
+                ViewModel.UpdateSearchSuggestions(sender.Text);
             }
         }
 
@@ -326,7 +327,7 @@ namespace Screenbox.Pages
         {
             if (args.ChosenSuggestion != null)
             {
-                ViewModel.SelectSuggestion(args.ChosenSuggestion);
+                ViewModel.SelectSuggestion((SearchSuggestionItem?)args.ChosenSuggestion);
             }
             else
             {
@@ -334,6 +335,7 @@ namespace Screenbox.Pages
             }
 
             ViewModel.SearchQuery = string.Empty;
+            ViewModel.SearchSuggestions.Clear();
             if (ViewModel.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
             {
                 ViewModel.IsPaneOpen = false;
