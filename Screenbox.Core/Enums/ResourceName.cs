@@ -42,6 +42,10 @@
         AccessDeniedVideosLibraryTitle,
         AccessDeniedPicturesLibraryTitle,
         OpenPrivacySettingsButtonText,
-        AccessDeniedMessage
+        AccessDeniedMessage,
+        Song,
+        Artist,
+        Video,
+        SearchNoResults,
     }
 }
