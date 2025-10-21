@@ -128,53 +128,43 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         Messenger.Send(new DragDropMessage(data));
     }
 
-    public void AutoSuggestBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+    public IReadOnlyList<object> GetSearchSuggestions(string queryText)
     {
-        string searchQuery = sender.Text.Trim();
-        if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+        string searchQuery = queryText.Trim();
+        if (searchQuery.Length > 0)
         {
-            if (searchQuery.Length > 0)
-            {
-                SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
-                sender.ItemsSource = GetSuggestItems(result, searchQuery);
-            }
-            else
-            {
-                sender.ItemsSource = Array.Empty<object>();
-            }
+            var result = _searchService.SearchLocalLibrary(searchQuery);
+            return GetSuggestItems(result, searchQuery);
         }
+
+        return Array.Empty<object>();
     }
 
-    public void AutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+    public void SubmitSearch(string queryText)
     {
-        string searchQuery = args.QueryText.Trim();
-        if (args.ChosenSuggestion == null && searchQuery.Length > 0)
+        string searchQuery = queryText.Trim();
+        if (searchQuery.Length > 0)
         {
             SearchResult result = _searchService.SearchLocalLibrary(searchQuery);
             _navigationService.Navigate(typeof(SearchResultPageViewModel), result);
         }
-        else
-        {
-            switch (args.ChosenSuggestion)
-            {
-                case MediaViewModel media:
-                    Messenger.Send(new PlayMediaMessage(media));
-                    break;
-                case AlbumViewModel album:
-                    _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
-                    break;
-                case ArtistViewModel artist:
-                    _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
-                    break;
-                default:
-                    return;
-            }
-        }
+    }
 
-        SearchQuery = string.Empty;
-        if (this.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
+    public void SelectSuggestion(object chosenSuggestion)
+    {
+        switch (chosenSuggestion)
         {
-            IsPaneOpen = false;
+            case MediaViewModel media:
+                Messenger.Send(new PlayMediaMessage(media));
+                break;
+            case AlbumViewModel album:
+                _navigationService.Navigate(typeof(AlbumDetailsPageViewModel), album);
+                break;
+            case ArtistViewModel artist:
+                _navigationService.Navigate(typeof(ArtistDetailsPageViewModel), artist);
+                break;
+            default:
+                return;
         }
     }
 

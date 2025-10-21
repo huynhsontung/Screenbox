@@ -314,6 +314,32 @@ namespace Screenbox.Pages
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
         }
 
+        private void NavViewSearchBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                sender.ItemsSource = ViewModel.GetSearchSuggestions(sender.Text);
+            }
+        }
+
+        private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                ViewModel.SelectSuggestion(args.ChosenSuggestion);
+            }
+            else
+            {
+                ViewModel.SubmitSearch(args.QueryText);
+            }
+
+            ViewModel.SearchQuery = string.Empty;
+            if (ViewModel.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
+            {
+                ViewModel.IsPaneOpen = false;
+            }
+        }
+
         /// <summary>
         /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the keyboard shortcut combination.
         /// </summary>

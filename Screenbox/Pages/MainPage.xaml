@@ -218,9 +218,9 @@
                     KeyTipPlacementMode="Right"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
-                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
+                    QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
-                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}"
+                    TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
                     <AutoSuggestBox.KeyboardAccelerators>
                         <KeyboardAccelerator
