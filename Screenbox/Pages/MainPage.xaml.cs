@@ -323,6 +323,17 @@ namespace Screenbox.Pages
             }
         }
 
+        private void NavViewSearchBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            // Update the text box when navigating through the suggestion list using the keyboard.
+            if (args.SelectedItem is SearchSuggestionItem suggestion)
+            {
+                // We set sender.Text directly instead of ViewModel.SearchQuery
+                // to avoid triggering TextChanged event.
+                sender.Text = suggestion.Name;
+            }
+        }
+
         private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (args.ChosenSuggestion != null)

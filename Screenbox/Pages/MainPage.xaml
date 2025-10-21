@@ -218,6 +218,7 @@
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
                     QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
+                    SuggestionChosen="NavViewSearchBox_OnSuggestionChosen"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
                     TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
