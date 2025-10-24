@@ -649,10 +649,10 @@
     <value>Permitir que o volume máximo ultrapasse 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Controles na tela</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Escolha quais controles podem aparecer na sobreposição e o comportamento de ocultar automaticamente</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
@@ -945,14 +945,14 @@
     <value>Exibir nome do capítulo quando disponível</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Descartar controles após este período de tempo</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} segundo</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} segundos</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
