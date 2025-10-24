@@ -201,7 +201,7 @@
     <Compile Include="Models\MediaLastPosition.cs" />
     <Compile Include="Models\MusicInfo.cs" />
     <Compile Include="Models\MusicLibraryFetchResult.cs" />
-    <Compile Include="Models\PersistentPlaylist.cs"/>
+    <Compile Include="Models\PersistentPlaylist.cs" />
     <Compile Include="Models\PersistentStorageLibrary.cs" />
     <Compile Include="Models\PlaybackNavigationResult.cs" />
     <Compile Include="Models\Playlist.cs" />
@@ -283,6 +283,7 @@
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
+    <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PlayQueueViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />
     <Compile Include="ViewModels\PlayQueuePageViewModel.cs" />

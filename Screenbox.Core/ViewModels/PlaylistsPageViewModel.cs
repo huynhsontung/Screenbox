@@ -3,72 +3,42 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Screenbox.Core.Models;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core.Services;
 
 namespace Screenbox.Core.ViewModels;
 
 public partial class PlaylistsPageViewModel : ObservableObject
 {
-    private readonly PlaylistService _playlistService;
+    private readonly IPlaylistService _playlistService;
 
-    [ObservableProperty]
-    private ObservableCollection<PersistentPlaylist> _playlists = new();
+    public ObservableCollection<PlaylistViewModel> Playlists { get; } = new();
 
-    [ObservableProperty]
-    private PersistentPlaylist? _selectedPlaylist;
+    [ObservableProperty] private PlaylistViewModel? _selectedPlaylist;
 
-    public PlaylistsPageViewModel(PlaylistService playlistService)
+    public PlaylistsPageViewModel(IPlaylistService playlistService)
     {
         _playlistService = playlistService;
     }
 
-    [RelayCommand]
     public async Task LoadPlaylistsAsync()
     {
         var loaded = await _playlistService.ListPlaylistsAsync();
         Playlists.Clear();
         foreach (var p in loaded)
-            Playlists.Add(p);
-    }
-
-    [RelayCommand]
-    public async Task CreatePlaylistAsync()
-    {
-        // UI modal should collect display name and items, then call this command
-        var playlist = new PersistentPlaylist
         {
-            Id = System.Guid.NewGuid().ToString(),
-            DisplayName = string.Empty, // To be set by modal
-            Created = System.DateTimeOffset.Now,
-            Items = new()
-        };
-        await _playlistService.SavePlaylistAsync(playlist);
-        Playlists.Add(playlist);
-        SelectedPlaylist = playlist;
+            var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+            playlist.Load(p);
+            Playlists.Add(playlist);
+        }
     }
 
-
-    [RelayCommand]
-    public async Task RenamePlaylistAsync(PersistentPlaylist playlist)
+    public void CreatePlaylist(string displayName)
     {
-        //playlist.DisplayName = newName;
-        //await _playlistService.SavePlaylistAsync(playlist);
-    }
+        var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
+        playlist.DisplayName = displayName;
 
-    [RelayCommand]
-    public async Task DeletePlaylistAsync(PersistentPlaylist playlist)
-    {
-        await _playlistService.DeletePlaylistAsync(playlist.Id);
-        Playlists.Remove(playlist);
-        if (SelectedPlaylist == playlist)
-            SelectedPlaylist = null;
-    }
-
-    [RelayCommand]
-    public void SelectPlaylist(PersistentPlaylist playlist)
-    {
-        SelectedPlaylist = playlist;
+        // Assume sort by last updated
+        Playlists.Insert(0, playlist);
     }
 }

@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
-using CommunityToolkit.WinUI;
-using Screenbox.Core.Factories;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
+using Screenbox.Core.Factories;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
+using Screenbox.Core.ViewModels;
 using Windows.Devices.Enumeration;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -244,9 +244,8 @@ namespace Screenbox.Core.Services
             }
         }
 
-        private List<MediaViewModel> GetMediaFromCache(PersistentStorageLibrary libraryCache)
+        private List<MediaViewModel> GetMediaFromCache(List<PersistentMediaRecord> records)
         {
-            var records = libraryCache.Records;
             List<MediaViewModel> mediaList = records.Select(record =>
             {
                 MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
@@ -281,7 +280,7 @@ namespace Screenbox.Core.Services
                     var libraryCache = await LoadStorageLibraryCacheAsync(SongsCacheFileName);
                     if (libraryCache?.Records.Count > 0)
                     {
-                        songs = GetMediaFromCache(libraryCache);
+                        songs = GetMediaFromCache(libraryCache.Records);
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, MusicLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
@@ -392,7 +391,7 @@ namespace Screenbox.Core.Services
                     var libraryCache = await LoadStorageLibraryCacheAsync(VideoCacheFileName);
                     if (libraryCache?.Records.Count > 0)
                     {
-                        videos = GetMediaFromCache(libraryCache);
+                        videos = GetMediaFromCache(libraryCache.Records);
                         hasCache = !AreLibraryPathsChanged(libraryCache.FolderPaths, VideosLibrary);
 
                         // Update cache with changes from library tracker. Invalidate cache if needed.
@@ -691,7 +690,8 @@ namespace Screenbox.Core.Services
                 {
                     // pass
                 }
-            };
+            }
+            ;
             // Delay fetch due to query result not yet updated at this time
             _musicRefreshTimer.Debounce(FetchAction, TimeSpan.FromMilliseconds(1000));
         }
