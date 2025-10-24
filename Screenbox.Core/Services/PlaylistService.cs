@@ -14,7 +14,7 @@ using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
 
-public sealed class PlaylistService
+public sealed class PlaylistService : IPlaylistService
 {
     private const string PlaylistsFolderName = "Playlists";
     private const string ThumbnailsFolderName = "Thumbnails";

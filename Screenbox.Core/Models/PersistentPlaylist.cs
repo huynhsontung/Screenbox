@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Screenbox.Core.Models;
 
 namespace Screenbox.Core.Models;
 
