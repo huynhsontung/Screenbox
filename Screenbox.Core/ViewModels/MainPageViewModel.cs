@@ -14,9 +14,7 @@ using Screenbox.Core.Models;
 using Screenbox.Core.Services;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Windows.System;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -75,52 +73,38 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
     }
 
-    public void ProcessGamepadKeyDown(KeyRoutedEventArgs args)
+    public void ChangeVolume(int offset)
     {
-        // All Gamepad keys are in the range of [195, 218]
-        if ((int)args.Key < 195 || (int)args.Key > 218) return;
-        Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
-        if (playlist.CurrentItem == null) return;
-        int volumeChange = 0;
-        switch (args.Key)
-        {
-            case VirtualKey.GamepadRightThumbstickLeft:
-            case VirtualKey.GamepadLeftShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-5000));
-                break;
-            case VirtualKey.GamepadRightThumbstickRight:
-            case VirtualKey.GamepadRightShoulder:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(5000));
-                break;
-            case VirtualKey.GamepadLeftTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(-30_000));
-                break;
-            case VirtualKey.GamepadRightTrigger when PlayerVisible:
-                Messenger.SendSeekWithStatus(TimeSpan.FromMilliseconds(30_000));
-                break;
-            case VirtualKey.GamepadRightThumbstickUp:
-                volumeChange = 2;
-                break;
-            case VirtualKey.GamepadRightThumbstickDown:
-                volumeChange = -2;
-                break;
-            case VirtualKey.GamepadX:
-                Messenger.Send(new TogglePlayPauseMessage(true));
-                break;
-            case VirtualKey.GamepadView when !PlayerVisible:
-                Messenger.Send(new TogglePlayerVisibilityMessage());
-                break;
-            default:
-                return;
-        }
+        int volume = Messenger.Send(new ChangeVolumeRequestMessage(offset, true));
+        Messenger.Send(new UpdateVolumeStatusMessage(volume));
+    }
 
-        if (volumeChange != 0)
-        {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
-            Messenger.Send(new UpdateVolumeStatusMessage(volume));
-        }
+    public void Seek(TimeSpan offset)
+    {
+        Messenger.SendSeekWithStatus(offset);
+    }
 
-        args.Handled = true;
+    public void TogglePlayPause()
+    {
+        Messenger.Send(new TogglePlayPauseMessage(true));
+    }
+
+    public void TogglePlayerVisibility()
+    {
+        Messenger.Send(new TogglePlayerVisibilityMessage());
+    }
+
+    /// <summary>
+    /// Gets whether the current playlist is empty.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if the playlist is empty or not available;
+    /// otherwise, <see langword="false"/>. The default is <b>true</b>.
+    /// </returns>
+    public bool IsPlaylistEmpty()
+    {
+        Playlist? playlist = Messenger.Send(new PlaylistRequestMessage());
+        return playlist?.IsEmpty ?? true;
     }
 
     public void OnDrop(DataPackageView data)

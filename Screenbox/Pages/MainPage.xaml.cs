@@ -87,8 +87,47 @@ namespace Screenbox.Pages
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
-            base.OnKeyDown(e);
-            ViewModel.ProcessGamepadKeyDown(e);
+            // All Gamepad keys are in the range of [195, 218]
+            if (ViewModel.IsPlaylistEmpty() || (int)e.Key < 195 || (int)e.Key > 218)
+            {
+                base.OnKeyDown(e);
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case VirtualKey.GamepadRightThumbstickLeft:
+                case VirtualKey.GamepadLeftShoulder:
+                    ViewModel.Seek(TimeSpan.FromMilliseconds(-5000));
+                    break;
+                case VirtualKey.GamepadRightThumbstickRight:
+                case VirtualKey.GamepadRightShoulder:
+                    ViewModel.Seek(TimeSpan.FromMilliseconds(5000));
+                    break;
+                case VirtualKey.GamepadLeftTrigger when ViewModel.PlayerVisible:
+                    ViewModel.Seek(TimeSpan.FromMilliseconds(-30_000));
+                    break;
+                case VirtualKey.GamepadRightTrigger when ViewModel.PlayerVisible:
+                    ViewModel.Seek(TimeSpan.FromMilliseconds(30_000));
+                    break;
+                case VirtualKey.GamepadRightThumbstickUp:
+                    ViewModel.ChangeVolume(2);
+                    break;
+                case VirtualKey.GamepadRightThumbstickDown:
+                    ViewModel.ChangeVolume(-2);
+                    break;
+                case VirtualKey.GamepadX:
+                    ViewModel.TogglePlayPause();
+                    break;
+                case VirtualKey.GamepadView:
+                    ViewModel.TogglePlayerVisibility();
+                    break;
+                default:
+                    base.OnKeyDown(e);
+                    return;
+            }
+
+            e.Handled = true;
         }
 
         public void GoBack()
