@@ -649,10 +649,10 @@
     <value>Erlaube der maximalen Lautstärke über 100% zu gehen</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Bildschirmsteuerung</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Wählen Sie, welche Steuerelemente im Overlay angezeigt werden können und das Verhalten für automatisches Ausblenden</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesten</value>
@@ -830,6 +830,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Sortieren nach</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Künstler</value>
   </data>
@@ -945,14 +949,14 @@
     <value>Kapitelnamen anzeigen, wenn verfügbar</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Steuerung nach dieser Zeit ausblenden</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} Sekunde</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} Sekunden</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
