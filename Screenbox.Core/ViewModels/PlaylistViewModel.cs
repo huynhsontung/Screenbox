@@ -13,7 +13,9 @@ public partial class PlaylistViewModel : ObservableObject
 {
     public ObservableCollection<MediaViewModel> Items { get; } = new();
 
-    [ObservableProperty] private string _displayName = string.Empty;
+    [ObservableProperty] private string _caption = string.Empty;
+    [ObservableProperty] private bool _isPlaying;
+    [ObservableProperty] private object? _thumbnail;
     [ObservableProperty] private DateTimeOffset _lastUpdated = DateTimeOffset.Now;
 
     private Guid _id;
@@ -35,7 +37,7 @@ public partial class PlaylistViewModel : ObservableObject
     public void Load(PersistentPlaylist persistentPlaylist)
     {
         if (!Guid.TryParse(persistentPlaylist.Id, out _id)) return;
-        DisplayName = persistentPlaylist.DisplayName;
+        Caption = persistentPlaylist.DisplayName;
         LastUpdated = persistentPlaylist.LastUpdated;
         Items.Clear();
         foreach (var item in persistentPlaylist.Items)

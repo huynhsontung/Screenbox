@@ -36,7 +36,7 @@ public partial class PlaylistsPageViewModel : ObservableObject
     public void CreatePlaylist(string displayName)
     {
         var playlist = Ioc.Default.GetRequiredService<PlaylistViewModel>();
-        playlist.DisplayName = displayName;
+        playlist.Caption = displayName;
 
         // Assume sort by last updated
         Playlists.Insert(0, playlist);

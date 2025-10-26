@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿#nullable enable
+
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core.ViewModels;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,8 +12,14 @@ namespace Screenbox.Pages;
 /// </summary>
 public sealed partial class PlaylistsPage : Page
 {
+    internal PlaylistsPageViewModel ViewModel => (PlaylistsPageViewModel)DataContext;
+
+    internal CommonViewModel Common { get; }
+
     public PlaylistsPage()
     {
         this.InitializeComponent();
+        DataContext = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
+        Common = Ioc.Default.GetRequiredService<CommonViewModel>();
     }
 }
