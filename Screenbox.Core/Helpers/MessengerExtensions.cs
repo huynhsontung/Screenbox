@@ -21,24 +21,27 @@ internal static class MessengerExtensions
             return;
         }
 
-        if (playlist.Items.Count != queue.Count || !ReferenceEquals(playlist.LastUpdated, queue))
-        {
-            messenger.Send(new ClearPlaylistMessage());
-            messenger.Send(new QueuePlaylistMessage(queue, false));
-        }
-
-        messenger.Send(new PlayMediaMessage(media, true));
+        var updatedPlaylist = new Playlist(media, queue, playlist);
+        messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
     }
 
     public static void SendPlayNext(this IMessenger messenger, MediaViewModel media)
     {
         // Clone to prevent queuing duplications
         MediaViewModel clone = new(media);
-        messenger.Send(new QueuePlaylistMessage(clone, true));
-        Playlist info = messenger.Send(new PlaylistRequestMessage());
-        if (info.CurrentIndex == -1)
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
         {
+            // Play the item on its own
             messenger.Send(new PlayMediaMessage(clone));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            updatedPlaylist.Items.Insert(Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count), clone);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
         }
     }
 

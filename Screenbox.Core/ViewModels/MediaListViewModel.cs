@@ -138,27 +138,18 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         ClearPlaylist();
     }
 
-    public async void Receive(QueuePlaylistMessage message)
+    public void Receive(QueuePlaylistMessage message)
     {
-        _playlist.LastUpdated = message.Value;
-        bool canInsert = CurrentIndex + 1 < Items.Count;
-        int counter = 0;
+        // Perform some clean ups as we assume new playlist
+        _neighboringFilesQuery = null;
+        ShuffleMode = false;
 
-        foreach (var media in message.Value.ToList())
+        // Load and play the new playlist
+        LoadFromPlaylist(message.Value);
+        var playNext = message.Value.CurrentItem;
+        if (message.ShouldPlay && playNext != null)
         {
-            var result = await _mediaListFactory.ParseMediaListAsync(media);
-            foreach (var subMedia in result.Items)
-            {
-                if (message.AddNext && canInsert)
-                {
-                    Items.Insert(CurrentIndex + 1 + counter, subMedia);
-                    counter++;
-                }
-                else
-                {
-                    Items.Add(subMedia);
-                }
-            }
+            PlaySingle(playNext);
         }
     }
 
@@ -181,7 +172,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         }
         else
         {
-            _playlist.LastUpdated = message.Value;
             ClearPlaylist();
             await ParseAndPlayAsync(message.Value);
         }
@@ -565,6 +555,9 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
                 CreatePlaylistAndPlay(media);
                 result = await _mediaListFactory.ParseMediaListAsync(media);
                 break;
+
+            default:
+                throw new NotSupportedException($"Cannot parse and play object with type {value.GetType().FullName}");
         }
 
         if (result != null)

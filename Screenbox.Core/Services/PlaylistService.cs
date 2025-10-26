@@ -76,11 +76,9 @@ public sealed class PlaylistService : IPlaylistService
             backup.Remove(removal);
         }
 
-        var restored = playlist.CurrentItem != null
-            ? new Playlist(playlist.CurrentItem, backup) : new Playlist(backup);
-
-        restored.LastUpdated = playlist.LastUpdated;
-        return restored;
+        return playlist.CurrentItem != null
+            ? new Playlist(playlist.CurrentItem, backup)
+            : new Playlist(backup);
     }
 
     public IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5)
