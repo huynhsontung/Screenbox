@@ -16,4 +16,9 @@ public record LivelyWallpaperModel
     public bool IsAudio { get; set; }
     public bool IsPauseNotify { get; set; }
     public Uri AuthorUrl { get; set; }
+
+    public override string ToString()
+    {
+        return Model.Author != null ? $"{Model.Title}; {Model.Author}" : $"{Model.Title}";
+    }
 }
