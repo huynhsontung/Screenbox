@@ -652,7 +652,7 @@
     <value>On-screen controls</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
@@ -829,6 +829,10 @@
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Ordenar por</value>
+  </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
     <value>Artista</value>
