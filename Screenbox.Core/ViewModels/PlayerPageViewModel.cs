@@ -51,6 +51,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     [ObservableProperty] private NavigationViewDisplayMode _navigationViewDisplayMode;
     [ObservableProperty] private MediaViewModel? _media;
     [ObservableProperty] private bool _showVisualizer;
+    [ObservableProperty] private bool _keyTipsVisible;
 
     [ObservableProperty]
     [NotifyPropertyChangedRecipients]
@@ -552,7 +553,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     {
         bool shouldCheckPlaying = _settingsService.PlayerShowControls && !IsPlaying;
         if (PlayerVisibility != PlayerVisibilityState.Visible || shouldCheckPlaying ||
-            SeekBarPointerInteracting || AudioOnly || ControlsHidden) return false;
+            SeekBarPointerInteracting || AudioOnly || ControlsHidden || KeyTipsVisible) return false;
 
         if (!skipFocusCheck)
         {
@@ -578,7 +579,7 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
 
     private void DelayHideControls()
     {
-        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly) return;
+        if (PlayerVisibility != PlayerVisibilityState.Visible || AudioOnly || KeyTipsVisible) return;
 
         int delayInSeconds = _settingsService.PlayerControlsHideDelay;
         _controlsVisibilityTimer.Debounce(() => TryHideControls(), TimeSpan.FromSeconds(delayInSeconds));

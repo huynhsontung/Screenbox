@@ -10,6 +10,15 @@ namespace Screenbox.Helpers;
 /// </summary>
 public static class KeyboardAcceleratorHelper
 {
+    /// <summary>The Equals (=) and Plus (+) key or button for any country/region (VK_OEM_PLUS).</summary>
+    public const VirtualKey Plus = (VirtualKey)0xBB;
+    /// <summary>The Comma (,) and Less Than (<) key or button for any country/region (VK_OEM_COMMA).</summary>
+    public const VirtualKey Comma = (VirtualKey)0xBC;
+    /// <summary>The Dash (-) and Underscore (_) key or button for any country/region (VK_OEM_MINUS).</summary>
+    public const VirtualKey Minus = (VirtualKey)0xBD;
+    /// <summary>The Period (.) and Greater Than (>) key or button for any country/region (VK_OEM_PERIOD).</summary>
+    public const VirtualKey Period = (VirtualKey)0xBE;
+
     /// <summary>
     /// Converts the value of the specified <see cref="KeyboardAccelerator"/> to its equivalent
     /// <see cref="string"/> representation.
