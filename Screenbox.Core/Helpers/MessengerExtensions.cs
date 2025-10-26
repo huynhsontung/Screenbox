@@ -41,7 +41,7 @@ internal static class MessengerExtensions
         {
             var updatedPlaylist = new Playlist(playlist);
             updatedPlaylist.Items.Insert(Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count), clone);
-            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
         }
     }
 
