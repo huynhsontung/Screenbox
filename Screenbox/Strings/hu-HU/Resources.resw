@@ -652,7 +652,7 @@
     <value>On-screen controls</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which controls may appear in the overlay, and the automatically hide behavior</value>
+    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesztusok</value>
@@ -830,6 +830,10 @@
   <data name="SortBy" xml:space="preserve">
     <value>Rendezés</value>
   </data>
+  <data name="SortByAutomationName" xml:space="preserve">
+    <value>Sort by {0} option selected</value>
+    <comment>#Format[String sortBy]</comment>
+  </data>
   <data name="Artist" xml:space="preserve">
     <value>Előadó</value>
   </data>
@@ -942,7 +946,7 @@
     <value>Super resolution</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Display chapter name when available</value>
+    <value>Show chapter name when available</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
     <value>Dismiss controls after this amount of time</value>
