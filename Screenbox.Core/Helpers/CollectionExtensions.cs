@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#nullable enable
+
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CommunityToolkit.Mvvm.Collections;
@@ -46,7 +48,7 @@ public static class CollectionExtensions
     }
 
     public static void SyncObservableGroups<TKey, TValue>(this IList<ObservableGroup<TKey, TValue>> target,
-        IReadOnlyList<IGrouping<TKey, TValue>> reference)
+        IReadOnlyList<IGrouping<TKey, TValue>> reference) where TKey : notnull
     {
         var refDict = reference.ToDictionary(g => g.Key, g => g.ToList());
         var targetDict = target.ToDictionary(g => g.Key, g => g);
