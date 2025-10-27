@@ -336,9 +336,9 @@ namespace Screenbox.Pages
 
         private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion != null)
+            if (args.ChosenSuggestion is SearchSuggestionItem suggestion)
             {
-                ViewModel.SelectSuggestion((SearchSuggestionItem?)args.ChosenSuggestion);
+                ViewModel.SelectSuggestion(suggestion);
             }
             else
             {
