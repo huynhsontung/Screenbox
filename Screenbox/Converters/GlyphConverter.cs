@@ -169,7 +169,7 @@ public static partial class GlyphConverter
     }
 
     /// <summary>
-    /// Converts a <see cref="SearchSuggestionKind"/> value to its corresponding glyph representation.
+    /// Gets the search suggestion glyph code base on the suggestion category.
     /// </summary>
     /// <param name="value">A <see cref="SearchSuggestionKind"/> enumeration indicating the type of search suggestion.</param>
     /// <returns>
@@ -177,8 +177,8 @@ public static partial class GlyphConverter
     /// <b>MusicAlbum</b> glyph code for <see cref="SearchSuggestionKind.Album"/>,
     /// <b>Contact</b> glyph code for <see cref="SearchSuggestionKind.Artist"/>,
     /// <b>Movies</b> glyph code for <see cref="SearchSuggestionKind.Video"/>,
-    /// <b>MusicInfo</b> glyph code for <see cref="SearchSuggestionKind.Playlist"/>,
-    /// or empty string if is null or does not match a known suggestion kind.
+    /// or <b>MusicInfo</b> glyph code for <see cref="SearchSuggestionKind.Playlist"/>;
+    /// otherwise, a empty string.
     /// </returns>
     public static string ToSearchSuggestionGlyph(SearchSuggestionKind? value)
     {

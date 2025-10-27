@@ -32,6 +32,7 @@ public sealed class SearchSuggestionItem
     /// </summary>
     /// <param name="name">The text to display in the search suggestion list.</param>
     /// <param name="viewModel">The view model instance that this suggestion represents.</param>
+    /// <param name="type">The category of the search suggestion.</param>
     public SearchSuggestionItem(string name, object? viewModel = default, SearchSuggestionKind? type = default)
     {
         Name = name;
