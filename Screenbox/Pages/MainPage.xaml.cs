@@ -6,7 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
+using Screenbox.Core.Services;
 using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Sentry;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
@@ -32,6 +34,8 @@ namespace Screenbox.Pages
         private MainPageViewModel ViewModel => (MainPageViewModel)DataContext;
 
         private readonly Dictionary<string, Type> _pages;
+
+        private ISettingsService Settings => Ioc.Default.GetRequiredService<ISettingsService>();
 
         public MainPage()
         {
@@ -116,7 +120,12 @@ namespace Screenbox.Pages
             if (!ViewModel.PlayerVisible)
             {
                 SetTitleBar();
-                NavView.SelectedItem = NavView.MenuItems[0];
+                var launchPage = Settings.LaunchPage;
+                var launchPageTag = launchPage.GetNavPageFirstLevel();
+                var navItem = NavView.MenuItems
+                    .OfType<muxc.NavigationViewItem>()
+                    .FirstOrDefault(item => item.Tag?.ToString() == launchPageTag);
+                NavView.SelectedItem = navItem ?? NavView.MenuItems[0];
                 _ = ViewModel.FetchLibraries();
             }
         }

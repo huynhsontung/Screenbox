@@ -1,16 +1,19 @@
 ﻿#nullable enable
 
-using CommunityToolkit.Mvvm.DependencyInjection;
-using Screenbox.Core;
-using Screenbox.Core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Core;
+using Screenbox.Core.Services;
+using Screenbox.Core.ViewModels;
+using Screenbox.Helpers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using NavigationView = Microsoft.UI.Xaml.Controls.NavigationView;
 using NavigationViewSelectionChangedEventArgs = Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs;
+using muxc = Microsoft.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,6 +33,8 @@ namespace Screenbox.Pages
         internal CommonViewModel Common { get; }
 
         private readonly Dictionary<string, Type> _pages;
+
+        private ISettingsService Settings => Ioc.Default.GetRequiredService<ISettingsService>();
 
         public MusicPage()
         {
@@ -55,7 +60,20 @@ namespace Screenbox.Pages
             }
             else
             {
-                LibraryNavView.SelectedItem = LibraryNavView.MenuItems[0];
+                muxc.NavigationViewItem? libraryNavItem = null;
+                var launchPage = Settings.LaunchPage;
+                if (launchPage.GetNavPageFirstLevel() != "music")
+                {
+                    libraryNavItem = (muxc.NavigationViewItem?)LibraryNavView.MenuItems[0];
+                }
+                else
+                {
+                    var launchPageTag = launchPage.GetNavPageSecondLevel();
+                    libraryNavItem = LibraryNavView.MenuItems
+                        .OfType<muxc.NavigationViewItem>()
+                        .FirstOrDefault(item => item.Tag?.ToString() == launchPageTag);
+                }
+                LibraryNavView.SelectedItem = libraryNavItem ?? LibraryNavView.MenuItems[0];
             }
 
             ViewModel.UpdateSongs();

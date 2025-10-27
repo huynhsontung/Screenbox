@@ -968,4 +968,10 @@
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Use system language</value>
   </data>
+  <data name="SettingsLaunchPageHeader" xml:space="preserve">
+    <value>Select what to show at launch</value>
+  </data>
+  <data name="SettingsLaunchPageDescription" xml:space="preserve">
+    <value>This page will be shown when the app is launched</value>
+  </data>
 </root>
