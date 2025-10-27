@@ -28,10 +28,6 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
 {
     private const int MaxSuggestionsPerCategory = 6;
     private const int MaxTotalSuggestions = 10;
-    private const string AudioGlyph = "\uE8D6";
-    private const string MoviesGlyph = "\uE8B2";
-    private const string ContactGlyph = "\uE77B";
-    private const string MusicAlbumGlyph = "\uE93C";
     private const double IndexWeightFactor = 0.1;
 
     [ObservableProperty] private bool _playerVisible;
@@ -144,10 +140,9 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     public void UpdateSearchSuggestions(string queryText)
     {
         string searchQuery = queryText.Trim();
+        SearchSuggestions.Clear();
         if (searchQuery.Length > 0)
         {
-            SearchSuggestions.Clear();
-
             var result = _searchService.SearchLocalLibrary(searchQuery);
             var suggestions = GetSuggestItems(result, searchQuery);
 
@@ -160,7 +155,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             }
             else
             {
-                SearchSuggestions.Add(new SearchSuggestionItem($"{_resourceService.GetString(ResourceName.SearchNoResults)} {searchQuery}"));
+                SearchSuggestions.Add(new SearchSuggestionItem($"{_resourceService.GetString(ResourceName.SearchNoResults)} '{searchQuery}'"));
             }
         }
     }
@@ -198,14 +193,19 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
         if (!result.HasItems) return Array.Empty<SearchSuggestionItem>();
 
         IEnumerable<SearchSuggestionItem> songs = result.Songs
-            .Take(MaxSuggestionsPerCategory).Select(s => new SearchSuggestionItem(s.Name, s, AudioGlyph, _resourceService.GetString(ResourceName.Song)));
+            .Take(MaxSuggestionsPerCategory)
+            .Select(s => new SearchSuggestionItem(s.Name, s, SearchSuggestionKind.Song));
         IEnumerable<SearchSuggestionItem> videos = result.Videos
-            .Take(MaxSuggestionsPerCategory).Select(v => new SearchSuggestionItem(v.Name, v, MoviesGlyph, _resourceService.GetString(ResourceName.Video)));
+            .Take(MaxSuggestionsPerCategory)
+            .Select(v => new SearchSuggestionItem(v.Name, v, SearchSuggestionKind.Video));
         IEnumerable<SearchSuggestionItem> artists = result.Artists
-            .Take(MaxSuggestionsPerCategory).Select(a => new SearchSuggestionItem(a.Name, a, ContactGlyph, _resourceService.GetString(ResourceName.Artist)));
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Artist));
         IEnumerable<SearchSuggestionItem> albums = result.Albums
-            .Take(MaxSuggestionsPerCategory).Select(a => new SearchSuggestionItem(a.Name, a, MusicAlbumGlyph, _resourceService.GetString(ResourceName.PropertyAlbum)));
-        IEnumerable<(double, SearchSuggestionItem)> searchResults = songs.Concat(videos).Concat(artists).Concat(albums)
+            .Take(MaxSuggestionsPerCategory)
+            .Select(a => new SearchSuggestionItem(a.Name, a, SearchSuggestionKind.Album));
+        IEnumerable<(double, SearchSuggestionItem)> searchResults = songs
+            .Concat(videos).Concat(artists).Concat(albums)
             .Select(item => (GetRanking(item.Name, searchQuery), item))
             .OrderBy(t => t.Item1)
             .Take(MaxTotalSuggestions);

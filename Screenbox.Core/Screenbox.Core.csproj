@@ -133,6 +133,7 @@
     <Compile Include="Enums\ManipulationLock.cs" />
     <Compile Include="Enums\NotificationLevel.cs" />
     <Compile Include="Enums\PlayerVisibilityState.cs" />
+    <Compile Include="Enums\SearchSuggestionKind.cs" />
     <Compile Include="Enums\SettingsOptions.cs" />
     <Compile Include="Enums\WindowViewMode.cs" />
     <Compile Include="Events\FolderViewNavigationEventArgs.cs" />

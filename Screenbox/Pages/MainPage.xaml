@@ -5,6 +5,7 @@
     xmlns:animatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:appModel="using:Windows.ApplicationModel"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
@@ -33,9 +34,13 @@
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{x:Bind Glyph}" />
-                    <TextBlock Margin="8,0,0,0" Text="{x:Bind Name}" />
+                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Type, Name)}" Orientation="Horizontal">
+                    <FontIcon
+                        Margin="0,0,8,0"
+                        FontSize="{StaticResource StandardIconFontSize}"
+                        Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
+                        Visibility="{x:Bind converters:SearchSuggestionConverter.GetIconVisibility(Type)}" />
+                    <TextBlock Text="{x:Bind Name}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>

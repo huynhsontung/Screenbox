@@ -1,4 +1,5 @@
 ﻿using System;
+using Screenbox.Core.Enums;
 using Screenbox.Helpers;
 using Windows.Media;
 
@@ -15,19 +16,19 @@ public static partial class GlyphConverter
     /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
     /// <param name="value">A <see cref="bool"/> that specifies the shuffle mode.</param>
     /// <returns>
-    /// <strong>Shuffle</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
-    /// otherwise, <strong>Shuffle Off</strong> glyph code.
+    /// <b>Shuffle</b> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
+    /// otherwise, <b>Shuffle Off</b> glyph code.
     /// </returns>
     public static string ToShuffleGlyph(bool value)
     {
         const string ShuffleGlyph = "\uE8B1";
         const string ShuffleOffGlyph = "\U000F002A";
-        const string ShuffleGlyphMirrored = "\U000F0021";
-        const string ShuffleOffGlyphMirrored = "\U000F002B";
+        const string ShuffleMirroredGlyph = "\U000F0021";
+        const string ShuffleOffMirroredGlyph = "\U000F002B";
 
         return value
-            ? (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleGlyphMirrored : ShuffleGlyph)
-            : (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleOffGlyphMirrored : ShuffleOffGlyph);
+            ? (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleMirroredGlyph : ShuffleGlyph)
+            : (GlobalizationHelper.IsRightToLeftLanguage ? ShuffleOffMirroredGlyph : ShuffleOffGlyph);
     }
 
     /// <summary>
@@ -36,8 +37,8 @@ public static partial class GlyphConverter
     /// <remarks>The glyph code adapts according to the current text reading order.</remarks>
     /// <param name="repeatMode">A <see langword="enum"/> that specifies the auto repeat mode for the <see cref="MediaPlaybackAutoRepeatMode"/>.</param>
     /// <returns>
-    /// <strong>Repeat Off</strong> glyph code <see cref="string"/> if <paramref name="repeatMode"/> is <see cref="MediaPlaybackAutoRepeatMode.None"/>,
-    /// <strong>Repeat All</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.List"/>, or <strong>Repeat One</strong> glyph code for <see cref="MediaPlaybackAutoRepeatMode.Track"/>.
+    /// <b>Repeat Off</b> glyph code <see cref="string"/> if <paramref name="repeatMode"/> is <see cref="MediaPlaybackAutoRepeatMode.None"/>,
+    /// <b>Repeat All</b> glyph code for <see cref="MediaPlaybackAutoRepeatMode.List"/>, or <b>Repeat One</b> glyph code for <see cref="MediaPlaybackAutoRepeatMode.Track"/>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="repeatMode"/> is not one of the valid <see cref="MediaPlaybackAutoRepeatMode"/> value.</exception>
     public static string ToRepeatGlyph(MediaPlaybackAutoRepeatMode repeatMode)
@@ -63,8 +64,9 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="speed">A <see langword="double"/> value that specifies the playback rate.</param>
     /// <returns>
-    /// <strong>Speed Medium</strong> glyph if PlaybackSpeed equals 1 x, <strong>Speed High</strong> glyph if its greater than 1 x,
-    /// <strong>Auto Racing</strong> glyph if its greater than 1.75 x, <strong>Speed Low</strong> glyph if its less than 1 x, <strong>Speed Off</strong> glyph if its less than 0.25 x.
+    /// <b>Speed Medium</b> glyph if <paramref name="speed"/> equals 1 x, <b>Speed High</b> glyph if its greater than 1 x,
+    /// <b>Auto Racing</b> glyph if its greater than 1.75 x, <b>Speed Low</b> glyph if its less than 1 x,
+    /// <b>Speed Off</b> glyph if its less than 0.25 x.
     /// </returns>
     public static string ToSpeedGlyph(double speed)
     {
@@ -95,8 +97,8 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="value">A <see cref="bool"/> that specifies the show recent setting.</param>
     /// <returns>
-    /// <strong>Recent</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
-    /// otherwise, <strong>Recent Empty</strong> glyph code.
+    /// <b>Recent</b> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
+    /// otherwise, <b>Recent Empty</b> glyph code.
     /// </returns>
     public static string ToRecentGlyph(bool value)
     {
@@ -127,8 +129,8 @@ public static partial class GlyphConverter
     /// </summary>
     /// <param name="value">A <see cref="bool"/> that represents the playing state.</param>
     /// <returns>
-    /// <strong>Play Solid</strong> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
-    /// otherwise, <strong>Pause Solid</strong> glyph code.
+    /// <b>Play Solid</b> glyph code <see cref="string"/> if the <paramref name="value"/> is <see langword="true"/>;
+    /// otherwise, <b>Pause Solid</b> glyph code.
     /// </returns>
     public static string ToPlayPauseSolidGlyph(bool value)
     {
@@ -144,7 +146,7 @@ public static partial class GlyphConverter
     /// <param name="isMute">A <see cref="bool"/> that specifies if the player is muted.</param>
     /// <param name="volume">An <see cref="int"/> that specifies the player's volume.</param>
     /// <returns>
-    /// <strong>Mute</strong> glyph code <see cref="string"/> if <paramref name="isMute"/> is <see langword="true"/>;
+    /// <b>Mute</b> glyph code <see cref="string"/> if <paramref name="isMute"/> is <see langword="true"/>;
     /// otherwise, a glyph code representing the volume level.
     /// </returns>
     public static string ToVolumeGlyph(bool isMute, int volume)
@@ -163,6 +165,37 @@ public static partial class GlyphConverter
             < 50 => Volume1Glyph,
             < 75 => Volume2Glyph,
             _ => Volume3Glyph
+        };
+    }
+
+    /// <summary>
+    /// Converts a <see cref="SearchSuggestionKind"/> value to its corresponding glyph representation.
+    /// </summary>
+    /// <param name="value">A <see cref="SearchSuggestionKind"/> enumeration indicating the type of search suggestion.</param>
+    /// <returns>
+    /// <b>Audio</b> glyph code <see cref="string"/> if <paramref name="value"/> is <see cref="SearchSuggestionKind.Song"/>,
+    /// <b>MusicAlbum</b> glyph code for <see cref="SearchSuggestionKind.Album"/>,
+    /// <b>Contact</b> glyph code for <see cref="SearchSuggestionKind.Artist"/>,
+    /// <b>Movies</b> glyph code for <see cref="SearchSuggestionKind.Video"/>,
+    /// <b>MusicInfo</b> glyph code for <see cref="SearchSuggestionKind.Playlist"/>,
+    /// or empty string if is null or does not match a known suggestion kind.
+    /// </returns>
+    public static string ToSearchSuggestionGlyph(SearchSuggestionKind? value)
+    {
+        const string ContactGlyph = "\uE77B";
+        const string MoviesGlyph = "\uE8B2";
+        const string AudioGlyph = "\uE8D6";
+        const string MusicInfoGlyph = "\uE90B";
+        const string MusicAlbumGlyph = "\uE93C";
+
+        return value switch
+        {
+            SearchSuggestionKind.Song => AudioGlyph,
+            SearchSuggestionKind.Album => MusicAlbumGlyph,
+            SearchSuggestionKind.Artist => ContactGlyph,
+            SearchSuggestionKind.Video => MoviesGlyph,
+            SearchSuggestionKind.Playlist => MusicInfoGlyph,
+            _ => string.Empty,
         };
     }
 }
