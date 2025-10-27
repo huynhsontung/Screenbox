@@ -454,12 +454,12 @@
                 <Border
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
+                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, FallbackValue=Visible}">
                     <FontIcon
                         x:Name="AlbumArtGlyph"
                         FontSize="80"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
+                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue=&#xEA69;}" />
                 </Border>
             </Grid>
         </ctc:ConstrainedBox>
