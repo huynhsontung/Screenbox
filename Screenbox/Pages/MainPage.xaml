@@ -40,7 +40,7 @@
                         FontSize="{StaticResource StandardIconFontSize}"
                         Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
                         Visibility="{x:Bind converters:SearchSuggestionConverter.GetIconVisibility(Type)}" />
-                    <TextBlock Text="{x:Bind Name}" />
+                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>

@@ -44,17 +44,15 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
     private readonly ISearchService _searchService;
     private readonly INavigationService _navigationService;
     private readonly ILibraryService _libraryService;
-    private readonly IResourceService _resourceService;
 
     public ObservableCollection<SearchSuggestionItem> SearchSuggestions { get; } = new();
 
     public MainPageViewModel(ISearchService searchService, INavigationService navigationService,
-        ILibraryService libraryService, IResourceService resourceService)
+        ILibraryService libraryService)
     {
         _searchService = searchService;
         _navigationService = navigationService;
         _libraryService = libraryService;
-        _resourceService = resourceService;
         _searchQuery = string.Empty;
         _criticalErrorMessage = string.Empty;
         IsActive = true;
@@ -155,7 +153,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             }
             else
             {
-                SearchSuggestions.Add(new SearchSuggestionItem($"{_resourceService.GetString(ResourceName.SearchNoResults)} '{searchQuery}'"));
+                SearchSuggestions.Add(new SearchSuggestionItem(searchQuery, null, SearchSuggestionKind.None));
             }
         }
     }

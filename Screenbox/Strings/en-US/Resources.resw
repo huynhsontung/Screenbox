@@ -968,6 +968,7 @@
     <value>Use system language</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for</value>
+    <value>No results for "{0}"</value>
+    <comment>#Format[String searchQuery]</comment>
   </data>
 </root>

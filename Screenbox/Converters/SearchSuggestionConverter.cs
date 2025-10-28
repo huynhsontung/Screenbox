@@ -5,6 +5,11 @@ namespace Screenbox.Converters;
 
 public sealed class SearchSuggestionConverter
 {
+    public static string GetName(string name, SearchSuggestionKind? suggestionKind)
+    {
+        return suggestionKind == SearchSuggestionKind.None ? Strings.Resources.SearchNoResults(name) : name;
+    }
+
     public static string GetAutomationName(SearchSuggestionKind? value, string name)
     {
         return value switch

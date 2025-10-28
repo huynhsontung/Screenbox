@@ -42,7 +42,6 @@
         AccessDeniedVideosLibraryTitle,
         AccessDeniedPicturesLibraryTitle,
         OpenPrivacySettingsButtonText,
-        AccessDeniedMessage,
-        SearchNoResults,
+        AccessDeniedMessage
     }
 }
