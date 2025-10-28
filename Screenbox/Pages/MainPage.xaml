@@ -15,6 +15,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
     muxc:BackdropMaterial.ApplyToRootOrPageBackground="True"
@@ -34,13 +35,13 @@
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
             <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
-                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Type, Name)}" Orientation="Horizontal">
+                <StackPanel AutomationProperties.Name="{x:Bind pages:MainPage.GetSearchSuggestionAutomationName(Name, Type), Mode=OneWay}" Orientation="Horizontal">
                     <FontIcon
                         Margin="0,0,8,0"
                         FontSize="{StaticResource StandardIconFontSize}"
                         Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
-                        Visibility="{x:Bind converters:SearchSuggestionConverter.GetIconVisibility(Type)}" />
-                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
+                        Visibility="{x:Bind pages:MainPage.GetSearchSuggestionIconVisibility(Type)}" />
+                    <TextBlock Text="{x:Bind pages:MainPage.GetSearchSuggestionName(Name, Type)}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
