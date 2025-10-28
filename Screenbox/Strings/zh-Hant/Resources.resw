@@ -649,7 +649,7 @@
     <value>允許最大音量超過 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>螢幕控制</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
     <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
@@ -952,11 +952,11 @@
     <value>Dismiss controls after this amount of time</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} 秒</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} 秒</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
