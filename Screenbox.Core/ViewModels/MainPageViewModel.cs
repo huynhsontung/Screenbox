@@ -16,7 +16,6 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Core.ViewModels;
 
@@ -75,14 +74,15 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
                _navigationService.TryGetPageType(metadata.RootViewModelType, out pageType);
     }
 
-    public void ProcessGamepadKeyDown(KeyRoutedEventArgs args)
+    public bool ProcessGamepadKeyDown(VirtualKey key)
     {
         // All Gamepad keys are in the range of [195, 218]
-        if ((int)args.Key < 195 || (int)args.Key > 218) return;
+        if ((int)key < 195 || (int)key > 218) return false;
         Playlist playlist = Messenger.Send(new PlaylistRequestMessage());
-        if (playlist.CurrentItem == null) return;
-        int volumeChange = 0;
-        switch (args.Key)
+        if (playlist.IsEmpty) return false;
+
+        int? volumeChange = null;
+        switch (key)
         {
             case VirtualKey.GamepadRightThumbstickLeft:
             case VirtualKey.GamepadLeftShoulder:
@@ -107,20 +107,20 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
-            case VirtualKey.GamepadView when !PlayerVisible:
+            case VirtualKey.GamepadView:
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
-                return;
+                return false;
         }
 
-        if (volumeChange != 0)
+        if (volumeChange.HasValue)
         {
-            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange, true));
+            int volume = Messenger.Send(new ChangeVolumeRequestMessage(volumeChange.Value, true));
             Messenger.Send(new UpdateVolumeStatusMessage(volume));
         }
 
-        args.Handled = true;
+        return true;
     }
 
     public void OnDrop(DataPackageView data)
