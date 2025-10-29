@@ -33,4 +33,9 @@ public interface IPlaylistService
     /// Get media buffer indices around current position
     /// </summary>
     IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5);
+
+    /// <summary>
+    /// List persistent playlists from storage
+    /// </summary>
+    Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync();
 }
