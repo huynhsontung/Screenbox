@@ -1,14 +1,14 @@
 ﻿#nullable enable
 
-using Newtonsoft.Json;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Windows.Storage;
 
 namespace Screenbox.Core.Services;
@@ -109,7 +109,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
             using var entryStream = livelyInfoEntry.Open();
             using var streamReader = new StreamReader(entryStream);
             var jsonContent = await streamReader.ReadToEndAsync();
-            var model = JsonConvert.DeserializeObject<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
             return model;
         }
         catch
@@ -124,7 +124,7 @@ public class LivelyWallpaperService : ILivelyWallpaperService
         {
             var modelFile = await wallpaperFolder.GetFileAsync("LivelyInfo.json");
             var jsonContent = await FileIO.ReadTextAsync(modelFile);
-            var model = JsonConvert.DeserializeObject<LivelyInfoModel>(jsonContent);
+            var model = JsonSerializer.Deserialize<LivelyInfoModel>(jsonContent);
             return model;
         }
         catch
