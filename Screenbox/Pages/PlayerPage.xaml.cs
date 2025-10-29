@@ -166,14 +166,6 @@ namespace Screenbox.Pages
         private void AccessKeyManager_OnIsDisplayModeEnabledChanged(object sender, object args)
         {
             ViewModel.KeyTipsVisible = AccessKeyManager.IsDisplayModeEnabled;
-            if (AccessKeyManager.IsDisplayModeEnabled)
-            {
-                ViewModel.ControlsHidden = false;
-            }
-            else
-            {
-                ViewModel.TryHideControls();
-            }
         }
 
         private void BackgroundElementOnSizeChanged(object sender, SizeChangedEventArgs e)

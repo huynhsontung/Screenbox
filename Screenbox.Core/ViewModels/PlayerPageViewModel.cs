@@ -514,6 +514,18 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         if (value != PlayerVisibilityState.Visible) ControlsHidden = false;
     }
 
+    partial void OnKeyTipsVisibleChanged(bool value)
+    {
+        if (value)
+        {
+            ControlsHidden = false;
+        }
+        else
+        {
+            DelayHideControls();
+        }
+    }
+
     [RelayCommand]
     public void GoBack()
     {
