@@ -102,10 +102,12 @@ namespace Screenbox.Pages
             {
                 case VirtualKey.GamepadY when ViewModel.ViewMode != WindowViewMode.Compact:
                     ViewModel.ControlsHidden = false;
-                    PlayQueueFlyout.ShowAt(PlayQueueButton, new FlyoutShowOptions { Placement = FlyoutPlacementMode.BottomEdgeAlignedLeft });
+                    PlayQueueFlyout.ShowAt(PlayQueueButton,
+                        new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.BottomEdgeAlignedRight : FlyoutPlacementMode.BottomEdgeAlignedLeft });
                     break;
                 case VirtualKey.GamepadMenu:
-                    VideoView.ContextFlyout.ShowAt(VideoView, new FlyoutShowOptions { Placement = FlyoutPlacementMode.Auto });
+                    VideoView.ContextFlyout.ShowAt(PlayerControls,
+                        new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                     break;
                 case VirtualKey.Escape when shouldHideControls:
                 case VirtualKey.GamepadB when shouldHideControls:
