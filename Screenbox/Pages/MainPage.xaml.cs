@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
-using Screenbox.Core.Enums;
 using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Sentry;
@@ -352,29 +351,6 @@ namespace Screenbox.Pages
             {
                 ViewModel.IsPaneOpen = false;
             }
-        }
-
-        private static string GetSearchSuggestionName(string name, SearchSuggestionKind? value)
-        {
-            return value == SearchSuggestionKind.None ? Strings.Resources.SearchNoResults(name) : name;
-        }
-
-        private static string GetSearchSuggestionAutomationName(string name, SearchSuggestionKind? value)
-        {
-            return value switch
-            {
-                SearchSuggestionKind.None => Strings.Resources.SearchNoResults(name),
-                SearchSuggestionKind.Song => $"{Strings.Resources.Song} {name}",
-                SearchSuggestionKind.Album => $"{Strings.Resources.PropertyAlbum} {name}",
-                SearchSuggestionKind.Artist => $"{Strings.Resources.Artist} {name}",
-                SearchSuggestionKind.Video => $"{Strings.Resources.Video} {name}",
-                _ => name
-            };
-        }
-
-        private static Visibility GetSearchSuggestionIconVisibility(SearchSuggestionKind? value)
-        {
-            return value == SearchSuggestionKind.None ? Visibility.Collapsed : Visibility.Visible;
         }
 
         /// <summary>
