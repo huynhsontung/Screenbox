@@ -649,10 +649,10 @@
     <value>Permite volumului maxim să depășească 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Comenzi pe ecran</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Alegeți care elemente pot apărea în comenzi și reglați comportamentul de auto-ascundere</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gesturi</value>
@@ -831,7 +831,7 @@
     <value>Sortare după</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Sortare după opțiunea {0} selectată</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -949,14 +949,14 @@
     <value>Afișare nume capitole atunci când sunt disponibile</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Ascundeți controalele după această perioadă de timp</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} secundă</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} secunde</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
