@@ -221,7 +221,7 @@
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
-                        <!--  SelectionCheckBox value and tooltip are updated in code-behind  -->
+                        <!--  SelectionCheckBox value is updated in code-behind  -->
                         <CheckBox
                             x:Name="SelectionCheckBox"
                             MinWidth="60"
@@ -233,7 +233,7 @@
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked)}" />
+                            ToolTipService.ToolTip="{x:Bind SelectionCheckBox.IsChecked, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
