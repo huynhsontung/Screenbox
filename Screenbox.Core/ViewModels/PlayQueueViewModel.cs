@@ -36,6 +36,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
     private int _selectionCount;
 
+    [ObservableProperty] private bool? _selectionCheckState;
     [ObservableProperty] private bool _enableMultiSelect;
 
     private bool _hasItems;
@@ -49,6 +50,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         Playlist = playlist;
         _filesService = filesService;
         _resourceService = resourceService;
+        SelectionCheckState = false;
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
@@ -61,6 +63,13 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         {
             EnableMultiSelect = false;
         }
+    }
+
+    partial void OnSelectionCountChanged(int value)
+    {
+        SelectionCheckState = value == 0
+            ? false
+            : value == Playlist?.Items.Count ? true : null;
     }
 
     partial void OnEnableMultiSelectChanged(bool value)

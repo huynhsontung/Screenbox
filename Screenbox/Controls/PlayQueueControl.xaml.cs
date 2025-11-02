@@ -52,17 +52,12 @@ namespace Screenbox.Controls
 
         private void PlaylistListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selectedCount = PlaylistListView.SelectedItems.Count;
-            SelectionCheckBox.IsChecked = selectedCount == 0
-                ? false
-                : selectedCount == PlaylistListView.Items.Count ? true : null;
-
             if (ViewModel.EnableMultiSelect)
             {
                 VisualStateManager.GoToState(this, "Multiple", true);
             }
 
-            ViewModel.SelectionCount = selectedCount;
+            ViewModel.SelectionCount = PlaylistListView.SelectedItems.Count;
         }
 
         internal async void PlaylistListView_OnDrop(object sender, DragEventArgs e)
