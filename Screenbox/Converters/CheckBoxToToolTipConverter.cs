@@ -25,8 +25,8 @@ public sealed class CheckBoxToToolTipConverter : IValueConverter
     public static string GetSelectionToolTip(bool? value)
     {
         return value is null
-          ? Strings.Resources.SelectAllToolTip
-          : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
+            ? Strings.Resources.SelectAllToolTip
+            : (value.Value ? Strings.Resources.SelectNoneToolTip : Strings.Resources.SelectAllToolTip);
     }
 
     /// <inheritdoc/>
