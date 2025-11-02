@@ -156,7 +156,7 @@
     <value>Failed to load subtitle</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Tillbaka</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
     <value>Mute</value>
@@ -186,13 +186,13 @@
     <value>Exit picture in picture</value>
   </data>
   <data name="Next" xml:space="preserve">
-    <value>Next</value>
+    <value>Nästa</value>
   </data>
   <data name="Previous" xml:space="preserve">
     <value>Previous</value>
   </data>
   <data name="Play" xml:space="preserve">
-    <value>Play</value>
+    <value>Spela</value>
   </data>
   <data name="Pause" xml:space="preserve">
     <value>Pause</value>
@@ -314,7 +314,7 @@
     <value>Clear</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>Home</value>
+    <value>Hem</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
     <value>Select multiple</value>
@@ -389,7 +389,7 @@
     <value>Resolution</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
-    <value>Size</value>
+    <value>Storlek</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
     <value>Subtitle</value>
@@ -404,7 +404,7 @@
     <value>Writers</value>
   </data>
   <data name="PropertyYear" xml:space="preserve">
-    <value>Year</value>
+    <value>År</value>
   </data>
   <data name="Custom" xml:space="preserve">
     <value>Custom</value>
