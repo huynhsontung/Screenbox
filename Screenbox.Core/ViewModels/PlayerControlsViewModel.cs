@@ -201,13 +201,21 @@ namespace Screenbox.Core.ViewModels
         partial void OnAudioTimingOffsetChanged(double value)
         {
             if (_mediaPlayer == null) return;
-            _mediaPlayer.AudioTimingOffset = value;
+
+            if (_mediaPlayer is VlcMediaPlayer vlc)
+            {
+                vlc.AudioTimingOffset = value;
+            }
         }
 
         partial void OnSubtitleTimingOffsetChanged(double value)
         {
             if (_mediaPlayer == null) return;
-            _mediaPlayer.SubtitleTimingOffset = value;
+
+            if (_mediaPlayer is VlcMediaPlayer vlc)
+            {
+                vlc.SubtitleTimingOffset = value;
+            }
         }
 
         private void PlaylistViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
