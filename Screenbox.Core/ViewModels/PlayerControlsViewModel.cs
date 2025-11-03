@@ -202,9 +202,9 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
 
-            if (_mediaPlayer is VlcMediaPlayer vlc)
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
             {
-                vlc.AudioTimingOffset = value;
+                vlcMediaPlayer.AudioDelay = value;
             }
         }
 
@@ -212,9 +212,9 @@ namespace Screenbox.Core.ViewModels
         {
             if (_mediaPlayer == null) return;
 
-            if (_mediaPlayer is VlcMediaPlayer vlc)
+            if (_mediaPlayer is VlcMediaPlayer vlcMediaPlayer)
             {
-                vlc.SubtitleTimingOffset = value;
+                vlcMediaPlayer.SubtitleDelay = value;
             }
         }
 

@@ -32,8 +32,8 @@ namespace Screenbox.Core.Playback
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<ChapterCue?>>? ChapterChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<MediaPlaybackState>>? PlaybackStateChanged;
         public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? PlaybackRateChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? SubtitleTimingOffsetChanged;
-        public event TypedEventHandler<IMediaPlayer, ValueChangedEventArgs<double>>? AudioTimingOffsetChanged;
+        public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? SubtitleDelayChanged;
+        public event TypedEventHandler<VlcMediaPlayer, ValueChangedEventArgs<double>>? AudioDelayChanged;
 
         public ChapterCue? Chapter
         {
@@ -132,51 +132,47 @@ namespace Screenbox.Core.Playback
         }
 
         /// <summary>
-        /// Gets or sets the subtitle timing offset in milliseconds.
+        /// Gets or sets the subtitle timing offset.
         /// </summary>
         /// <remarks>
-        /// The <see cref="SubtitleTimingOffsetChanged"/> event is raised whenever this property changes,
+        /// The <see cref="SubtitleDelayChanged"/> event is raised whenever this property changes,
         /// providing both the new and old values. The value is converted from milliseconds to microseconds
         /// before being passed to the LibVLC API.
         /// </remarks>
-        /// <value>
-        /// A <see cref="double"/> representing the subtitle offset in milliseconds.
-        /// </value>
-        public double SubtitleTimingOffset
+        /// <value>A <see cref="double"/> representing the subtitle offset in milliseconds.</value>
+        public double SubtitleDelay
         {
-            get => VlcPlayer.SpuDelay / 1000.0;
+            get => ConvertMicrosecondsToMilliseconds(VlcPlayer.SpuDelay);
             set
             {
-                double oldValue = VlcPlayer.SpuDelay / 1000.0;
+                double oldValue = ConvertMicrosecondsToMilliseconds(VlcPlayer.SpuDelay);
                 if (Math.Abs(oldValue - value) > 0.0001)
                 {
-                    VlcPlayer.SetSpuDelay((long)(value * 1000));
-                    SubtitleTimingOffsetChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                    VlcPlayer.SetSpuDelay(ConvertMillisecondsToMicroseconds(value));
+                    SubtitleDelayChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the audio timing offset in milliseconds.
+        /// Gets or sets the audio timing offset.
         /// </summary>
         /// <remarks>
-        /// The <see cref="AudioTimingOffsetChanged"/> event is raised whenever this property changes,
+        /// The <see cref="AudioDelayChanged"/> event is raised whenever this property changes,
         /// providing both the new and old values. The value is converted from milliseconds to microseconds
         /// before being passed to the LibVLC API.
         /// </remarks>
-        /// <value>
-        /// A <see cref="double"/> representing the audio offset in milliseconds.
-        /// </value>
-        public double AudioTimingOffset
+        /// <value>A <see cref="double"/> representing the audio offset in milliseconds.</value>
+        public double AudioDelay
         {
-            get => VlcPlayer.AudioDelay / 1000.0;
+            get => ConvertMicrosecondsToMilliseconds(VlcPlayer.AudioDelay);
             set
             {
-                double oldValue = VlcPlayer.AudioDelay / 1000.0;
+                double oldValue = ConvertMicrosecondsToMilliseconds(VlcPlayer.AudioDelay);
                 if (Math.Abs(oldValue - value) > 0.0001)
                 {
-                    VlcPlayer.SetAudioDelay((long)(value * 1000));
-                    AudioTimingOffsetChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
+                    VlcPlayer.SetAudioDelay(ConvertMillisecondsToMicroseconds(value));
+                    AudioDelayChanged?.Invoke(this, new ValueChangedEventArgs<double>(value, oldValue));
                 }
             }
         }
@@ -533,6 +529,16 @@ namespace Screenbox.Core.Playback
             {
                 VlcPlayer.SetOutputDevice(args.Id);
             }
+        }
+
+        private static double ConvertMicrosecondsToMilliseconds(long microseconds)
+        {
+            return microseconds / 1000.0;
+        }
+
+        private static long ConvertMillisecondsToMicroseconds(double milliseconds)
+        {
+            return (long)(milliseconds * 1000.0);
         }
     }
 }
