@@ -233,7 +233,7 @@
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
                             IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind SelectionCheckBox.IsChecked, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                            ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
                         <TextBlock Padding="{x:Bind converters:ThicknessFiltersConverter.Extract(SelectionCheckBox.Padding, converters:ThicknessFilterKinds.Vertical)}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
