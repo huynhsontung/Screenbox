@@ -649,10 +649,10 @@
     <value>Cho phép âm lượng tối đa vượt quá 100%</value>
   </data>
   <data name="SettingsOnScreenControlsHeader" xml:space="preserve">
-    <value>On-screen controls</value>
+    <value>Điều khiển trên màn hình</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>Chọn thành phần nào có thể xuất hiện trong điều khiển và điều chỉnh hành vi tự động ẩn</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Cử chỉ</value>
@@ -831,7 +831,7 @@
     <value>Xếp theo</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
-    <value>Sort by {0} option selected</value>
+    <value>Sắp xếp theo tùy chọn {0} đã chọn</value>
     <comment>#Format[String sortBy]</comment>
   </data>
   <data name="Artist" xml:space="preserve">
@@ -949,14 +949,14 @@
     <value>Hiển thị tên chương khi có sẵn</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>Loại bỏ các điều khiển sau khoảng thời gian này</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} giây</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} giây</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
