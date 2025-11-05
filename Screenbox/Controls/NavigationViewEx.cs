@@ -254,10 +254,7 @@ public sealed partial class NavigationViewEx : NavigationView
                 }
 
                 var autoSuggestBox = AutoSuggestBox;
-                if (autoSuggestBox != null)
-                {
-                    autoSuggestBox.Focus(FocusState.Programmatic);
-                }
+                autoSuggestBox?.Focus(FocusState.Programmatic);
 
                 e.Handled = true;
                 return;
@@ -403,6 +400,7 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             Grid.SetColumn(_overlayRoot, 0);
             Grid.SetColumnSpan(_overlayRoot, 2);
+            UpdateOverlayLightDismissLayerVisibility();
             return;
         }
 
