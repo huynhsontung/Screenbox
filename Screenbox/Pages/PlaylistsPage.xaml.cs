@@ -1,7 +1,9 @@
 ﻿#nullable enable
 
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Screenbox.Controls;
 using Screenbox.Core.ViewModels;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -21,5 +23,14 @@ public sealed partial class PlaylistsPage : Page
         this.InitializeComponent();
         DataContext = Ioc.Default.GetRequiredService<PlaylistsPageViewModel>();
         Common = Ioc.Default.GetRequiredService<CommonViewModel>();
+    }
+
+    private async void HeaderCreateButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
+        if (!string.IsNullOrWhiteSpace(playlistName))
+        {
+            await ViewModel.CreatePlaylistAsync(playlistName);
+        }
     }
 }

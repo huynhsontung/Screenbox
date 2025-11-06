@@ -39,16 +39,17 @@
                 Style="{StaticResource TitleMediumTextBlockStyle}"
                 Text="Playlists" />
             <Button
-                x:Name="HeaderOpenButton"
+                x:Name="HeaderCreateButton"
                 HorizontalAlignment="Right"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Click="HeaderCreateButton_OnClick">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         Margin="{StaticResource IconButtonStandardIconMargin}"
                         FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}"
                         Glyph="{StaticResource FolderOpenGlyph}" />
                     <TextBlock
-                        x:Name="HeaderOpenButtonText"
+                        x:Name="HeaderCreateButtonText"
                         Margin="8,0,0,0"
                         Text="Create playlist" />
                 </StackPanel>

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Screenbox.Core.Models;
 using Windows.Media;
+using Windows.Storage;
 using Windows.Storage.Search;
 
 namespace Screenbox.Core.Services;
@@ -35,7 +36,32 @@ public interface IPlaylistService
     IReadOnlyList<int> GetMediaBufferIndices(int currentIndex, int playlistCount, MediaPlaybackAutoRepeatMode repeatMode, int bufferSize = 5);
 
     /// <summary>
+    /// Save a persistent playlist to storage
+    /// </summary>
+    Task SavePlaylistAsync(PersistentPlaylist playlist);
+
+    /// <summary>
+    /// Load a persistent playlist from storage
+    /// </summary>
+    Task<PersistentPlaylist?> LoadPlaylistAsync(string id);
+
+    /// <summary>
     /// List persistent playlists from storage
     /// </summary>
     Task<IReadOnlyList<PersistentPlaylist>> ListPlaylistsAsync();
+
+    /// <summary>
+    /// Delete a persistent playlist from storage
+    /// </summary>
+    Task DeletePlaylistAsync(string id);
+
+    /// <summary>
+    /// Save a thumbnail for a media item
+    /// </summary>
+    Task SaveThumbnailAsync(string mediaLocation, byte[] imageBytes);
+
+    /// <summary>
+    /// Get a thumbnail file for a media item
+    /// </summary>
+    Task<StorageFile?> GetThumbnailFileAsync(string mediaLocation);
 }

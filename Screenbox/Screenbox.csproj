@@ -152,6 +152,9 @@
     <Compile Include="Controls\CommonGridViewItem.xaml.cs">
       <DependentUpon>CommonGridViewItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CreatePlaylistDialog.xaml.cs">
+      <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomSlider.cs" />
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
@@ -541,6 +544,10 @@
     <Page Include="Controls\ChapterProgressBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CreatePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ErrorInfo.xaml">
       <SubType>Designer</SubType>
