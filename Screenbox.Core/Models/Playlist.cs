@@ -14,7 +14,6 @@ public class Playlist
     public int CurrentIndex { get; set; }
     public bool ShuffleMode { get; set; }
     internal ShuffleBackup? ShuffleBackup { get; set; }
-    public object? LastUpdated { get; set; }
 
     public Playlist() : this(new List<MediaViewModel>()) { }
 
@@ -24,7 +23,6 @@ public class Playlist
         CurrentIndex = -1;
         ShuffleMode = reference?.ShuffleMode ?? false;
         ShuffleBackup = reference?.ShuffleBackup;
-        LastUpdated = reference?.LastUpdated;
     }
 
     public Playlist(int currentIndex, IReadOnlyList<MediaViewModel> items, Playlist? reference = null)

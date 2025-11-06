@@ -88,7 +88,6 @@ public sealed partial class NavigationViewEx : NavigationView
     private Grid? _overlayRoot;
     private Border? _overlayChildBorder;
     private Rectangle? _overlayChildRectangle;
-    private Border? _contentBackground;
     private SplitView? _splitView;
     private Grid? _paneToggleButtonGrid;
     private Grid? _contentGrid;
@@ -255,10 +254,7 @@ public sealed partial class NavigationViewEx : NavigationView
                 }
 
                 var autoSuggestBox = AutoSuggestBox;
-                if (autoSuggestBox != null)
-                {
-                    autoSuggestBox.Focus(FocusState.Programmatic);
-                }
+                autoSuggestBox?.Focus(FocusState.Programmatic);
 
                 e.Handled = true;
                 return;
@@ -349,11 +345,6 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             _paneContentGrid.Visibility = visibility;
         }
-
-        if (_contentBackground != null)
-        {
-            _contentBackground.Visibility = visibility;
-        }
     }
 
     private void UpdateOverlay()
@@ -409,6 +400,7 @@ public sealed partial class NavigationViewEx : NavigationView
         {
             Grid.SetColumn(_overlayRoot, 0);
             Grid.SetColumnSpan(_overlayRoot, 2);
+            UpdateOverlayLightDismissLayerVisibility();
             return;
         }
 

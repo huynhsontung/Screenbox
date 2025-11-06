@@ -69,7 +69,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private object? _delayPlay;
     private bool _deferCollectionChanged;   // Optimization to avoid excessive updates on collection changed events
     private StorageFileQueryResult? _neighboringFilesQuery;
-    private CancellationTokenSource? _cts;
     private CancellationTokenSource? _playFilesCts;
     private readonly DispatcherQueue _dispatcherQueue;
 
@@ -135,30 +134,21 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public void Receive(ClearPlaylistMessage message)
     {
-        ClearPlaylist();
+        Clear();
     }
 
-    public async void Receive(QueuePlaylistMessage message)
+    public void Receive(QueuePlaylistMessage message)
     {
-        _playlist.LastUpdated = message.Value;
-        bool canInsert = CurrentIndex + 1 < Items.Count;
-        int counter = 0;
+        // Perform some clean ups as we assume new playlist
+        _neighboringFilesQuery = null;
+        ShuffleMode = false;
 
-        foreach (var media in message.Value.ToList())
+        // Load and play the new playlist
+        LoadFromPlaylist(message.Value);
+        var playNext = message.Value.CurrentItem;
+        if (message.ShouldPlay && playNext != null)
         {
-            var result = await _mediaListFactory.ParseMediaListAsync(media);
-            foreach (var subMedia in result.Items)
-            {
-                if (message.AddNext && canInsert)
-                {
-                    Items.Insert(CurrentIndex + 1 + counter, subMedia);
-                    counter++;
-                }
-                else
-                {
-                    Items.Add(subMedia);
-                }
-            }
+            PlaySingle(playNext);
         }
     }
 
@@ -181,7 +171,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         }
         else
         {
-            _playlist.LastUpdated = message.Value;
             ClearPlaylist();
             await ParseAndPlayAsync(message.Value);
         }
@@ -227,7 +216,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
         if (CurrentItem != null)
         {
-            _cts?.Cancel();
             CurrentItem.IsMediaActive = false;
             CurrentItem.IsPlaying = null;
         }
@@ -334,6 +322,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     private void Clear()
     {
         ClearPlaylist();
+        CurrentItem = null;
+        CurrentIndex = -1;
     }
 
     private bool CanNext()
@@ -504,8 +494,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         {
             _deferCollectionChanged = true;
             Items.Clear();
-            CurrentItem = null;
-            CurrentIndex = -1;
             _playlist = new Playlist();
             _neighboringFilesQuery = null;
             ShuffleMode = false;
@@ -565,6 +553,9 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
                 CreatePlaylistAndPlay(media);
                 result = await _mediaListFactory.ParseMediaListAsync(media);
                 break;
+
+            default:
+                throw new NotSupportedException($"Cannot parse and play object with type {value.GetType().FullName}");
         }
 
         if (result != null)

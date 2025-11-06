@@ -600,12 +600,12 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     private async void ProcessOpeningMedia(MediaViewModel? current)
     {
         Media = current;
+        AudioOnly = current == null || current.MediaType == MediaPlaybackType.Music;
+        ShowVisualizer = current != null && AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
         if (current != null)
         {
             await current.LoadDetailsAsync(_filesService);
             await current.LoadThumbnailAsync();
-            AudioOnly = current.MediaType == MediaPlaybackType.Music;
-            ShowVisualizer = AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
             bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
             if (PlayerVisibility != PlayerVisibilityState.Visible)
             {

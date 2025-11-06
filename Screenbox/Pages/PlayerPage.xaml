@@ -454,12 +454,12 @@
                 <Border
                     Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}"
                     CornerRadius="{x:Bind AlbumArt.CornerRadius, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true}">
+                    Visibility="{x:Bind ViewModel.Media.Thumbnail, Mode=OneWay, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter=true, FallbackValue=Visible}">
                     <FontIcon
                         x:Name="AlbumArtGlyph"
                         FontSize="80"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue={x:Null}}" />
+                        Glyph="{x:Bind ViewModel.Media, Converter={StaticResource MediaGlyphConverter}, Mode=OneWay, FallbackValue=&#xEA69;}" />
                 </Border>
             </Grid>
         </ctc:ConstrainedBox>
@@ -897,7 +897,6 @@
                         <Setter Target="TitleText.FontSize" Value="{StaticResource BodyTextBlockFontSize}" />
                         <!--<Setter Target="LivelyOptionsButton.Visibility" Value="Collapsed" />-->
                         <Setter Target="BackgroundElement.Opacity" Value="0" />
-                        <Setter Target="VideoView.Opacity" Value="0" />
                         <Setter Target="VideoView.IsEnabled" Value="False" />
                         <Setter Target="AlbumArtPanel.(Grid.Row)" Value="0" />
                         <Setter Target="AlbumArtPanel.(Grid.RowSpan)" Value="3" />
