@@ -87,8 +87,8 @@ namespace Screenbox.Pages
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
+            e.Handled = ViewModel.ProcessGamepadKeyDown(e.Key);
             base.OnKeyDown(e);
-            ViewModel.ProcessGamepadKeyDown(e);
         }
 
         public void GoBack()
