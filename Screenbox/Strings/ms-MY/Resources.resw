@@ -968,4 +968,7 @@
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Guna bahasa sistem</value>
   </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
 </root>
