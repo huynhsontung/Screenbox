@@ -174,10 +174,10 @@
     <value>Exit fullscreen</value>
   </data>
   <data name="Volume" xml:space="preserve">
-    <value>Volume</value>
+    <value>Volym</value>
   </data>
   <data name="VolumeSliderTooltip" xml:space="preserve">
-    <value>Adjust volume</value>
+    <value>Justera volym</value>
   </data>
   <data name="Seek" xml:space="preserve">
     <value>Seek</value>
@@ -189,7 +189,7 @@
     <value>Nästa</value>
   </data>
   <data name="Previous" xml:space="preserve">
-    <value>Previous</value>
+    <value>Föregående</value>
   </data>
   <data name="Play" xml:space="preserve">
     <value>Spela</value>
@@ -198,7 +198,7 @@
     <value>Pause</value>
   </data>
   <data name="More" xml:space="preserve">
-    <value>More</value>
+    <value>Mer</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
     <value>Play queue</value>
@@ -239,23 +239,23 @@
     <value>Clear selection</value>
   </data>
   <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+    <value>Ta bort</value>
   </data>
   <data name="PlayNext" xml:space="preserve">
-    <value>Play next</value>
+    <value>Spela nästa</value>
   </data>
   <data name="MoveUp" xml:space="preserve">
-    <value>Move up</value>
+    <value>Flytta upp</value>
   </data>
   <data name="MoveDown" xml:space="preserve">
-    <value>Move down</value>
+    <value>Flytta ner</value>
   </data>
   <data name="IsPlaying" xml:space="preserve">
     <value>Is playing</value>
     <comment>Tool tip on which item is currently playing</comment>
   </data>
   <data name="Videos" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videor</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
     <value>This folder is empty</value>
@@ -269,7 +269,7 @@
     <comment>#Format[Plural]</comment>
   </data>
   <data name="ItemsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Tom</value>
   </data>
   <data name="RestoreView" xml:space="preserve">
     <value>Restore immersive view</value>
@@ -290,28 +290,28 @@
     <value>Cast to a device</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Inaktivera</value>
   </data>
   <data name="Music" xml:space="preserve">
-    <value>Music</value>
+    <value>Musik</value>
   </data>
   <data name="ShuffleAndPlay" xml:space="preserve">
     <value>Shuffle and play</value>
   </data>
   <data name="UnknownArtist" xml:space="preserve">
-    <value>Unknown artist</value>
+    <value>Okänd artist</value>
   </data>
   <data name="UnknownAlbum" xml:space="preserve">
-    <value>Unknown album</value>
+    <value>Okänt album</value>
   </data>
   <data name="UnknownGenre" xml:space="preserve">
-    <value>Unknown genre</value>
+    <value>Okänd genre</value>
   </data>
   <data name="AddFolder" xml:space="preserve">
-    <value>Add folder</value>
+    <value>Lägg till mapp</value>
   </data>
   <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Rensa</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Hem</value>
@@ -326,16 +326,16 @@
     <value>Your music library doesn't contain any music content.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
-    <value>Open file(s)</value>
+    <value>Öppna fil(er)</value>
   </data>
   <data name="SearchBoxPlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Sök</value>
   </data>
   <data name="SearchBoxToolTip" xml:space="preserve">
     <value>Search videos, songs, albums, and more</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Inställningar</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
     <value>Welcome to Screenbox</value>
@@ -344,10 +344,10 @@
     <value>Let's start playing some of your media content to get things going.</value>
   </data>
   <data name="Properties" xml:space="preserve">
-    <value>Properties</value>
+    <value>Egenskaper</value>
   </data>
   <data name="Close" xml:space="preserve">
-    <value>Close</value>
+    <value>Stäng</value>
   </data>
   <data name="OpenFileLocation" xml:space="preserve">
     <value>Open file location</value>
@@ -362,7 +362,7 @@
     <value>Bit rate</value>
   </data>
   <data name="PropertyContentType" xml:space="preserve">
-    <value>Content type</value>
+    <value>Innehållstyp</value>
   </data>
   <data name="PropertyContributingArtists" xml:space="preserve">
     <value>Contributing artists</value>
@@ -371,7 +371,7 @@
     <value>File location</value>
   </data>
   <data name="PropertyFileType" xml:space="preserve">
-    <value>File type</value>
+    <value>Filtyp</value>
   </data>
   <data name="PropertyGenre" xml:space="preserve">
     <value>Genre</value>
@@ -380,13 +380,13 @@
     <value>Last modified</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
-    <value>Length</value>
+    <value>Längd</value>
   </data>
   <data name="PropertyProducers" xml:space="preserve">
-    <value>Producers</value>
+    <value>Producenter</value>
   </data>
   <data name="PropertyResolution" xml:space="preserve">
-    <value>Resolution</value>
+    <value>Upplösning</value>
   </data>
   <data name="PropertySize" xml:space="preserve">
     <value>Storlek</value>
@@ -395,10 +395,10 @@
     <value>Subtitle</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
-    <value>Title</value>
+    <value>Titel</value>
   </data>
   <data name="PropertyTrack" xml:space="preserve">
-    <value>Track</value>
+    <value>Spår</value>
   </data>
   <data name="PropertyWriters" xml:space="preserve">
     <value>Writers</value>
@@ -410,7 +410,7 @@
     <value>Custom</value>
   </data>
   <data name="Network" xml:space="preserve">
-    <value>Network</value>
+    <value>Nätverk</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
     <value>No network device available</value>
@@ -419,13 +419,13 @@
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
   </data>
   <data name="Recent" xml:space="preserve">
-    <value>Recent</value>
+    <value>Senaste</value>
   </data>
   <data name="VideoSettings" xml:space="preserve">
-    <value>Video settings</value>
+    <value>Videoinställningar</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>Öppna</value>
   </data>
   <data name="LocationSpecified_One" xml:space="preserve">
     <value>{0} location specified</value>
@@ -449,13 +449,13 @@
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
-    <value>Albums</value>
+    <value>Album</value>
   </data>
   <data name="Artists" xml:space="preserve">
-    <value>Artists</value>
+    <value>Artister</value>
   </data>
   <data name="Songs" xml:space="preserve">
-    <value>Songs</value>
+    <value>Låtar</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
     <value>Browse for files to play</value>
@@ -482,16 +482,16 @@
     <value>Add a folder to your video library</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>Öppna mapp</value>
   </data>
   <data name="OpenUrl" xml:space="preserve">
-    <value>Open URL</value>
+    <value>Öppna URL</value>
   </data>
   <data name="SongsCount_None" xml:space="preserve">
-    <value>Empty</value>
+    <value>Tom</value>
   </data>
   <data name="SongsCount_One" xml:space="preserve">
-    <value>{0} song</value>
+    <value>{0} låt</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
@@ -503,7 +503,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_Other" xml:space="preserve">
-    <value>{0} albums</value>
+    <value>{0} album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="RunTime" xml:space="preserve">
@@ -511,7 +511,7 @@
     <comment>#Format[String runtime]</comment>
   </data>
   <data name="AllVideos" xml:space="preserve">
-    <value>All videos</value>
+    <value>Alla videor</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
     <value>Video folders</value>
@@ -521,7 +521,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
-    <value>See all</value>
+    <value>Visa alla</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
     <value>Artist results for "{0}"</value>
@@ -540,7 +540,7 @@
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
-    <value>No album</value>
+    <value>Inget album</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AccessDeniedMessage" xml:space="preserve">
@@ -583,7 +583,7 @@
     <value>Custom playback speed</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>Ingen</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
     <value>Scale: {0}</value>
@@ -598,22 +598,22 @@
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
-    <value>Add subtitle</value>
+    <value>Lägg till undertext</value>
   </data>
   <data name="Audio" xml:space="preserve">
     <value>Audio</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
-    <value>About</value>
+    <value>Om</value>
   </data>
   <data name="SettingsCategoryGeneral" xml:space="preserve">
-    <value>General</value>
+    <value>Allmänt</value>
   </data>
   <data name="SettingsCategoryLibraries" xml:space="preserve">
-    <value>Libraries</value>
+    <value>Bibliotek</value>
   </data>
   <data name="SettingsCategoryPlayer" xml:space="preserve">
-    <value>Player</value>
+    <value>Spelare</value>
   </data>
   <data name="SettingsMusicLibraryLocationsHeader" xml:space="preserve">
     <value>Music library locations</value>
@@ -670,7 +670,7 @@
     <value>Screenbox Media Player</value>
   </data>
   <data name="HyperlinkSourceCode" xml:space="preserve">
-    <value>Source code</value>
+    <value>Källkod</value>
   </data>
   <data name="HyperlinkDiscord" xml:space="preserve">
     <value>Discord</value>
@@ -679,10 +679,10 @@
     <value>Support the development</value>
   </data>
   <data name="Always" xml:space="preserve">
-    <value>Always</value>
+    <value>Alltid</value>
   </data>
   <data name="Never" xml:space="preserve">
-    <value>Never</value>
+    <value>Aldrig</value>
   </data>
   <data name="OnLaunch" xml:space="preserve">
     <value>On launch</value>
@@ -695,7 +695,7 @@
     <value>Subtitle added</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
-    <value>Critical error</value>
+    <value>Kritiskt fel</value>
   </data>
   <data name="CriticalErrorDirect3D11NotAvailable" xml:space="preserve">
     <value>No compatible renderer available. Please make sure Direct3D 11 is available on your device.</value>
@@ -735,10 +735,10 @@
     <comment>{0} = VLC command-line help</comment>
   </data>
   <data name="SettingsCategoryAdvanced" xml:space="preserve">
-    <value>Advanced</value>
+    <value>Avancerat</value>
   </data>
   <data name="SettingsAdvancedModeHeader" xml:space="preserve">
-    <value>Advanced mode</value>
+    <value>Avancerat läge</value>
   </data>
   <data name="SettingsAdvancedModeDescription" xml:space="preserve">
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
@@ -750,7 +750,7 @@
     <value>Command line arguments that apply to all media playback</value>
   </data>
   <data name="RemoveFolder" xml:space="preserve">
-    <value>Remove folder</value>
+    <value>Ta bort mapp</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
     <value>Pending changes</value>
@@ -762,13 +762,13 @@
     <value>Failed to initialize</value>
   </data>
   <data name="RelatedLinks" xml:space="preserve">
-    <value>Related links</value>
+    <value>Relaterade länkar</value>
   </data>
   <data name="PrivacyPolicy" xml:space="preserve">
     <value>Privacy policy</value>
   </data>
   <data name="License" xml:space="preserve">
-    <value>License</value>
+    <value>Licens</value>
   </data>
   <data name="ThirdPartyNotices" xml:space="preserve">
     <value>Third-party software acknowledgments</value>
@@ -777,7 +777,7 @@
     <value>Help translate</value>
   </data>
   <data name="Options" xml:space="preserve">
-    <value>Options</value>
+    <value>Alternativ</value>
   </data>
   <data name="TimingOffset" xml:space="preserve">
     <value>Timing offset</value>
@@ -789,10 +789,10 @@
     <value>Couldn't add folder</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
-    <value>Open album</value>
+    <value>Öppna album</value>
   </data>
   <data name="OpenArtist" xml:space="preserve">
-    <value>Open artist</value>
+    <value>Öppna artist</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
     <value>Refresh libraries</value>
@@ -828,7 +828,7 @@
     <value>Always open media files in a new instance</value>
   </data>
   <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
+    <value>Sortera efter</value>
   </data>
   <data name="SortByAutomationName" xml:space="preserve">
     <value>Sort by {0} option selected</value>
@@ -883,19 +883,19 @@
     <value>Video</value>
   </data>
   <data name="File" xml:space="preserve">
-    <value>File</value>
+    <value>Fil</value>
   </data>
   <data name="MusicLibrary" xml:space="preserve">
-    <value>Music</value>
+    <value>Musik</value>
   </data>
   <data name="VideoLibrary" xml:space="preserve">
-    <value>Videos</value>
+    <value>Videor</value>
   </data>
   <data name="ShowAlbum" xml:space="preserve">
-    <value>Show album</value>
+    <value>Visa album</value>
   </data>
   <data name="ShowArtist" xml:space="preserve">
-    <value>Show artist</value>
+    <value>Visa artist</value>
   </data>
   <data name="FailedToLoadVisualNotificationTitle" xml:space="preserve">
     <value>Failed to load visual</value>
@@ -910,10 +910,10 @@
     <value>Use system setting</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
-    <value>Dark</value>
+    <value>Mörk</value>
   </data>
   <data name="ThemeLight" xml:space="preserve">
-    <value>Light</value>
+    <value>Ljus</value>
   </data>
   <data name="SettingsThemeSelectionDescription" xml:space="preserve">
     <value>Change the app's overall color scheme</value>
@@ -956,11 +956,11 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
-    <value>{0} seconds</value>
+    <value>{0} sekunder</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SettingsLanguageSelectionHeader" xml:space="preserve">
-    <value>App language</value>
+    <value>App-språk</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
     <value>Change the app's display language</value>
@@ -969,6 +969,6 @@
     <value>Use system language</value>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Mapp</value>
   </data>
 </root>
