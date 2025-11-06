@@ -9,20 +9,22 @@ namespace Screenbox.Core.Models;
 public class PersistentMediaRecord
 {
     [ProtoMember(1)]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
     [ProtoMember(2)]
-    public string Path { get; set; } = string.Empty;
+    public string Path { get; set; }
 
     [ProtoMember(3)]
-    public IMediaProperties Properties { get; set; } = new VideoInfo();
+    public IMediaProperties Properties { get; set; }
 
     [ProtoMember(4)]
-    public DateTime DateAdded { get; set; } = DateTime.UtcNow; // Must be UTC
+    public DateTime DateAdded { get; set; } // Must be UTC
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     public PersistentMediaRecord()
     {
         // Required for ProtoBuf deserialization
+        // Properties must be uninitialized or there will be a stack overflow exception
     }
 
     public PersistentMediaRecord(string title, string path, IMediaProperties properties, DateTimeOffset dateAdded)
