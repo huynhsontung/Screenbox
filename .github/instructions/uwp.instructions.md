@@ -9,7 +9,7 @@ applyTo: '**/*.cs'
 
 - Always use the latest version C#, currently C# 13 features.
 - Write clear and concise comments for each function.
-- User `#nullable enable` directive at the top of each file to enable nullable reference types.
+- Use `#nullable enable` directive at the top of each file to enable nullable reference types.
 
 ## General Instructions
 
