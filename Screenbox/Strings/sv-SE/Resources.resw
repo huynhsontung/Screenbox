@@ -149,7 +149,7 @@
     <value>Total duration</value>
   </data>
   <data name="ChapterName" xml:space="preserve">
-    <value>Chapter {0}</value>
+    <value>Kapitel {0}</value>
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
@@ -159,13 +159,13 @@
     <value>Tillbaka</value>
   </data>
   <data name="MuteToggle_Variant0" xml:space="preserve">
-    <value>Mute</value>
+    <value>Tysta</value>
   </data>
   <data name="MuteToggle_Variant1" xml:space="preserve">
     <value>Unmute</value>
   </data>
   <data name="FullscreenToggle_Variant0" xml:space="preserve">
-    <value>Fullscreen</value>
+    <value>Fullskärm</value>
   </data>
   <data name="AudioAndCaption" xml:space="preserve">
     <value>Audio &amp; captions</value>
@@ -195,13 +195,13 @@
     <value>Spela</value>
   </data>
   <data name="Pause" xml:space="preserve">
-    <value>Pause</value>
+    <value>Pausa</value>
   </data>
   <data name="More" xml:space="preserve">
     <value>Mer</value>
   </data>
   <data name="PlayQueue" xml:space="preserve">
-    <value>Play queue</value>
+    <value>Spela kö</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
     <value>Repeat: Off</value>
@@ -258,7 +258,7 @@
     <value>Videor</value>
   </data>
   <data name="EmptyFolder" xml:space="preserve">
-    <value>This folder is empty</value>
+    <value>Denna mapp är tom</value>
   </data>
   <data name="ItemsCount_One" xml:space="preserve">
     <value>{0} item</value>
@@ -338,7 +338,7 @@
     <value>Inställningar</value>
   </data>
   <data name="WelcomePanelHeader" xml:space="preserve">
-    <value>Welcome to Screenbox</value>
+    <value>Välkommen till Screenbox</value>
   </data>
   <data name="WelcomePanelSubtext" xml:space="preserve">
     <value>Let's start playing some of your media content to get things going.</value>
@@ -377,7 +377,7 @@
     <value>Genre</value>
   </data>
   <data name="PropertyLastModified" xml:space="preserve">
-    <value>Last modified</value>
+    <value>Senast ändrad</value>
   </data>
   <data name="PropertyLength" xml:space="preserve">
     <value>Längd</value>
@@ -392,7 +392,7 @@
     <value>Storlek</value>
   </data>
   <data name="PropertySubtitle" xml:space="preserve">
-    <value>Subtitle</value>
+    <value>Undertext</value>
   </data>
   <data name="PropertyTitle" xml:space="preserve">
     <value>Titel</value>
@@ -445,7 +445,7 @@
     <value>Resume where you left off</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
-    <value>Go to {0}</value>
+    <value>Gå till {0}</value>
     <comment>#Format[String position]</comment>
   </data>
   <data name="Albums" xml:space="preserve">
@@ -464,7 +464,7 @@
     <value>More options for opening media</value>
   </data>
   <data name="AddFiles" xml:space="preserve">
-    <value>Add file(s)</value>
+    <value>Lägg till fil(er)</value>
   </data>
   <data name="AddFilesToPlayQueueToolTip" xml:space="preserve">
     <value>Browse for file(s) to add to the play queue</value>
@@ -495,7 +495,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SongsCount_Other" xml:space="preserve">
-    <value>{0} songs</value>
+    <value>{0} låtar</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AlbumsCount_One" xml:space="preserve">
@@ -514,7 +514,7 @@
     <value>Alla videor</value>
   </data>
   <data name="VideoFolders" xml:space="preserve">
-    <value>Video folders</value>
+    <value>Video-mappar</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
     <value>Search results for "{0}"</value>
@@ -565,7 +565,7 @@
     <value>Open privacy settings</value>
   </data>
   <data name="FailedToLoadMediaNotificationTitle" xml:space="preserve">
-    <value>Unable to load media</value>
+    <value>Kunde inte ladda media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
     <value>Aspect ratio</value>
@@ -574,7 +574,7 @@
     <value>Fit</value>
   </data>
   <data name="Fill" xml:space="preserve">
-    <value>Fill</value>
+    <value>Fyll</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
     <value>Custom aspect ratio</value>
@@ -590,18 +590,18 @@
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
-    <value>Subtitle: {0}</value>
+    <value>Undertext: {0}</value>
     <comment>#Format[String name]</comment>
   </data>
   <data name="TrackIndex" xml:space="preserve">
-    <value>Track {0}</value>
+    <value>Spår {0}</value>
     <comment>#Format[Int index]</comment>
   </data>
   <data name="AddSubtitle" xml:space="preserve">
     <value>Lägg till undertext</value>
   </data>
   <data name="Audio" xml:space="preserve">
-    <value>Audio</value>
+    <value>Ljud</value>
   </data>
   <data name="SettingsCategoryAbout" xml:space="preserve">
     <value>Om</value>
@@ -619,7 +619,7 @@
     <value>Music library locations</value>
   </data>
   <data name="SettingsShowRecentHeader" xml:space="preserve">
-    <value>Show recent</value>
+    <value>Visa senaste</value>
   </data>
   <data name="SettingsShowControlsHeader" xml:space="preserve">
     <value>Show controls when paused</value>
@@ -628,7 +628,7 @@
     <value>Video library locations</value>
   </data>
   <data name="Subtitles" xml:space="preserve">
-    <value>Subtitles</value>
+    <value>Undertexter</value>
   </data>
   <data name="SettingsShowRecentDescription" xml:space="preserve">
     <value>Display recently played media on the home page</value>
@@ -744,7 +744,7 @@
     <value>Advanced mode allows you to customize LibVLC's behavior using command line arguments</value>
   </data>
   <data name="SettingsGlobalArgumentsHeader" xml:space="preserve">
-    <value>Global arguments</value>
+    <value>Globala argument</value>
   </data>
   <data name="SettingsGlobalArgumentsDescription" xml:space="preserve">
     <value>Command line arguments that apply to all media playback</value>
@@ -786,7 +786,7 @@
     <value>Composers</value>
   </data>
   <data name="FailedToAddFolderNotificationTitle" xml:space="preserve">
-    <value>Couldn't add folder</value>
+    <value>Kunde inte lägga till mapp</value>
   </data>
   <data name="OpenAlbum" xml:space="preserve">
     <value>Öppna album</value>
@@ -819,7 +819,7 @@
     <value>Include media from storage devices like USB sticks in your libraries</value>
   </data>
   <data name="ActiveArguments" xml:space="preserve">
-    <value>Active arguments</value>
+    <value>Aktiva argument</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
     <value>Allow multiple instances</value>
@@ -907,7 +907,7 @@
     <value>Add all files in folder to queue</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
-    <value>Use system setting</value>
+    <value>Använd systeminställning</value>
   </data>
   <data name="ThemeDark" xml:space="preserve">
     <value>Mörk</value>
@@ -919,7 +919,7 @@
     <value>Change the app's overall color scheme</value>
   </data>
   <data name="SettingsThemeSelectionHeader" xml:space="preserve">
-    <value>App theme</value>
+    <value>Apptema</value>
   </data>
   <data name="SettingsCategoryPersonalization" xml:space="preserve">
     <value>Personalization</value>
@@ -940,7 +940,7 @@
     <value>Bilinear</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
-    <value>Point</value>
+    <value>Punkt</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
     <value>Super resolution</value>
@@ -952,7 +952,7 @@
     <value>Dismiss controls after this amount of time</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
-    <value>{0} second</value>
+    <value>{0} sekund</value>
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="SecondsCount_Other" xml:space="preserve">
@@ -966,7 +966,7 @@
     <value>Change the app's display language</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
-    <value>Use system language</value>
+    <value>Använd systemspråk</value>
   </data>
   <data name="Folder" xml:space="preserve">
     <value>Mapp</value>
