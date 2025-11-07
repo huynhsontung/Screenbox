@@ -139,7 +139,7 @@
     <comment>Display name for the file type ".aac" ".adts" (Advanced Audio Coding)</comment>
   </data>
   <data name="FileDisplayNameAC3" xml:space="preserve">
-    <value>Dolby AC-3 Audio</value>
+    <value>Dolby AC-3-ljud</value>
     <comment>Display name for the file type ".ac3" (Audio Codec 3)</comment>
   </data>
   <data name="FileDisplayNameAIFF" xml:space="preserve">
@@ -147,7 +147,7 @@
     <comment>Display name for the file type ".aiff" and ".aif" (Audio Interchange File Format)</comment>
   </data>
   <data name="FileDisplayNameAIFC" xml:space="preserve">
-    <value>Compressed AIFF Audio</value>
+    <value>Komprimerat AIFF-ljud</value>
     <comment>Display name for the file type ".aifc" (Compressed Audio Interchange File)</comment>
   </data>
   <data name="FileDisplayNameAPE" xml:space="preserve">
@@ -171,7 +171,7 @@
     <comment>Display name for the file type ".f4v"</comment>
   </data>
   <data name="FileDisplayNameFlash" xml:space="preserve">
-    <value>Flash Video</value>
+    <value>Flash-video</value>
     <comment>Display name for the file type ".flv"</comment>
   </data>
   <data name="FileDisplayNameShockwave" xml:space="preserve">
