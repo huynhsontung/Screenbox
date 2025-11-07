@@ -20,10 +20,11 @@ applyTo: '**/*.cs'
 
 ## Naming Conventions
 
-- Follow PascalCase for component names, method names, and public members.
-- Use _camelCase for private fields, prefixing them with an underscore (e.g., _myField).
+- Follow PascalCase for component names, method names, public members, and constants.
 - Use camelCase for local variables.
+- Prefix private fields with an underscore and use camelCase (e.g., _myField).
 - Prefix interface names with "I" (e.g., IUserService).
+- Type parameters should start with a capital T, optionally followed by a descriptive word (e.g., T, TItem, TResult).
 - Boolean properties should be named to imply true/false (e.g., IsEnabled, HasItems).
 
 ## Formatting

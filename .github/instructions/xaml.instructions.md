@@ -21,7 +21,7 @@ applyTo: '**/*.xaml'
 - Prefer x:Bind for better performance and compile-time validation.
 - Use FallbackValue and TargetNullValue to handle missing or null data gracefully.
 - Bind to view model properties rather than directly to models.
-- Use converters for data transformations; keep them in the Converters directory.
+- Use converters for data transformations (in the Converters directory) or, preferably, x:Bind functions for better performance and compile-time validation.
 
 ## Localization
 
@@ -34,7 +34,7 @@ applyTo: '**/*.xaml'
 
 ## Accessibility
 
-- Set AutomationProperties.Name for all interactive elements (buttons, text boxes, etc.).
+- Set AutomationProperties.Name if you use a custom ContentTemplate or nested elements in interactive elements (buttons, text boxes, etc.).
 - Use AutomationProperties.LabeledBy to associate labels with input controls.
 - Ensure proper keyboard navigation order with TabIndex when default tab order is insufficient.
 - Support high contrast themes by using theme resources and testing with high contrast mode.
