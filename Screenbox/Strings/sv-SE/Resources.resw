@@ -121,29 +121,29 @@
     <value>Frame saved</value>
   </data>
   <data name="CompactOverlayToggle_Variant0" xml:space="preserve">
-    <value>Picture in picture</value>
+    <value>Bild i bild</value>
   </data>
   <data name="SaveCurrentFrame" xml:space="preserve">
-    <value>Save current frame</value>
+    <value>Spara nuvarande bildruta</value>
   </data>
   <data name="Loop" xml:space="preserve">
     <value>Loop</value>
   </data>
   <data name="PlaybackSpeed" xml:space="preserve">
-    <value>Playback speed</value>
+    <value>Uppspelningshastighet</value>
   </data>
   <data name="VolumeChangeStatusMessage" xml:space="preserve">
-    <value>Volume {0:F0}%</value>
+    <value>Volym {0:F0}%</value>
     <comment>#Format[Double volume]</comment>
   </data>
   <data name="FailedToSaveFrameNotificationTitle" xml:space="preserve">
     <value>Failed to save frame</value>
   </data>
   <data name="TimeElapsed" xml:space="preserve">
-    <value>Time elapsed</value>
+    <value>Förfluten tid</value>
   </data>
   <data name="TimeRemaining" xml:space="preserve">
-    <value>Time remaining</value>
+    <value>Återstående tid</value>
   </data>
   <data name="TimeLength" xml:space="preserve">
     <value>Total duration</value>
@@ -153,7 +153,7 @@
     <comment>#Format[Int32 chapter]</comment>
   </data>
   <data name="FailedToLoadSubtitleNotificationTitle" xml:space="preserve">
-    <value>Failed to load subtitle</value>
+    <value>Kunde inte ladda undertext</value>
   </data>
   <data name="Back" xml:space="preserve">
     <value>Tillbaka</value>
@@ -171,7 +171,7 @@
     <value>Audio &amp; captions</value>
   </data>
   <data name="FullscreenToggle_Variant1" xml:space="preserve">
-    <value>Exit fullscreen</value>
+    <value>Avsluta fullskärm</value>
   </data>
   <data name="Volume" xml:space="preserve">
     <value>Volym</value>
@@ -180,10 +180,10 @@
     <value>Justera volym</value>
   </data>
   <data name="Seek" xml:space="preserve">
-    <value>Seek</value>
+    <value>Sök</value>
   </data>
   <data name="CompactOverlayToggle_Variant1" xml:space="preserve">
-    <value>Exit picture in picture</value>
+    <value>Avsluta bild i bild</value>
   </data>
   <data name="Next" xml:space="preserve">
     <value>Nästa</value>
@@ -204,13 +204,13 @@
     <value>Spela kö</value>
   </data>
   <data name="RepeatMode_Variant0" xml:space="preserve">
-    <value>Repeat: Off</value>
+    <value>Repetera: Av</value>
   </data>
   <data name="RepeatMode_Variant2" xml:space="preserve">
-    <value>Repeat: All</value>
+    <value>Repetera: Alla</value>
   </data>
   <data name="RepeatMode_Variant1" xml:space="preserve">
-    <value>Repeat: One</value>
+    <value>Repetera: En</value>
   </data>
   <data name="ItemsSelected_One" xml:space="preserve">
     <value>{0} item selected</value>
@@ -221,7 +221,7 @@
     <comment>#Format[Plural Int]</comment>
   </data>
   <data name="AddToQueue" xml:space="preserve">
-    <value>Add to queue</value>
+    <value>Lägg till i kö</value>
   </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Select all</value>
@@ -317,13 +317,13 @@
     <value>Hem</value>
   </data>
   <data name="Multiselect" xml:space="preserve">
-    <value>Select multiple</value>
+    <value>Välj flera</value>
   </data>
   <data name="NoMusicPanelHeader" xml:space="preserve">
     <value>We couldn't find any music</value>
   </data>
   <data name="NoMusicPanelSubtext" xml:space="preserve">
-    <value>Your music library doesn't contain any music content.</value>
+    <value>Ditt musikbibliotek innehåller inget musikinnehåll.</value>
   </data>
   <data name="OpenFiles" xml:space="preserve">
     <value>Öppna fil(er)</value>
@@ -356,7 +356,7 @@
     <value>Album</value>
   </data>
   <data name="PropertyAlbumArtist" xml:space="preserve">
-    <value>Album artist</value>
+    <value>Albumartist</value>
   </data>
   <data name="PropertyBitRate" xml:space="preserve">
     <value>Bit rate</value>
@@ -407,13 +407,13 @@
     <value>År</value>
   </data>
   <data name="Custom" xml:space="preserve">
-    <value>Custom</value>
+    <value>Anpassad</value>
   </data>
   <data name="Network" xml:space="preserve">
     <value>Nätverk</value>
   </data>
   <data name="NoNetworkDrivePanelHeader" xml:space="preserve">
-    <value>No network device available</value>
+    <value>Ingen nätverksenhet tillgänglig</value>
   </data>
   <data name="NoNetworkDrivePanelSubtext" xml:space="preserve">
     <value>Can't find your media? Make sure your network device is paired in the Windows Settings.</value>
@@ -442,7 +442,7 @@
     <value>Shuffle: On</value>
   </data>
   <data name="ResumePositionNotificationTitle" xml:space="preserve">
-    <value>Resume where you left off</value>
+    <value>Fortsätt där du slutade</value>
   </data>
   <data name="GoToPosition" xml:space="preserve">
     <value>Gå till {0}</value>
@@ -458,7 +458,7 @@
     <value>Låtar</value>
   </data>
   <data name="OpenFilesToolTip" xml:space="preserve">
-    <value>Browse for files to play</value>
+    <value>Bläddra efter filer att spela upp</value>
   </data>
   <data name="OpenFilesSecondaryToolTip" xml:space="preserve">
     <value>More options for opening media</value>
@@ -470,16 +470,16 @@
     <value>Browse for file(s) to add to the play queue</value>
   </data>
   <data name="AddFilesToPlayQueueSecondaryToolTip" xml:space="preserve">
-    <value>More options for adding media to the play queue</value>
+    <value>Fler alternativ för att lägga till media i uppspelningskön</value>
   </data>
   <data name="AddMusicFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your music library</value>
+    <value>Lägg till en mapp till ditt musikbibliotek</value>
   </data>
   <data name="AddUrl" xml:space="preserve">
-    <value>Add media from URL</value>
+    <value>Lägg till media från URL</value>
   </data>
   <data name="AddVideoFolderToolTip" xml:space="preserve">
-    <value>Add a folder to your video library</value>
+    <value>Lägg till en mapp till ditt videobibliotek</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
     <value>Öppna mapp</value>
@@ -517,26 +517,26 @@
     <value>Video-mappar</value>
   </data>
   <data name="SearchResultHeader" xml:space="preserve">
-    <value>Search results for "{0}"</value>
+    <value>Sökresultat för "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SeeAll" xml:space="preserve">
     <value>Visa alla</value>
   </data>
   <data name="SearchResultArtistHeader" xml:space="preserve">
-    <value>Artist results for "{0}"</value>
+    <value>Artistresultat för "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultAlbumHeader" xml:space="preserve">
-    <value>Album results for "{0}"</value>
+    <value>Albumresultat för "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultSongHeader" xml:space="preserve">
-    <value>Song results for "{0}"</value>
+    <value>Låtresultat för "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="SearchResultVideoHeader" xml:space="preserve">
-    <value>Video results for "{0}"</value>
+    <value>Videoresultat för "{0}"</value>
     <comment>#Format[String query]</comment>
   </data>
   <data name="AlbumsCount_None" xml:space="preserve">
@@ -550,16 +550,16 @@
     <value>Can't access music library</value>
   </data>
   <data name="AccessDeniedPicturesLibraryTitle" xml:space="preserve">
-    <value>Can't access pictures library</value>
+    <value>Kan inte komma åt bildbibliotek</value>
   </data>
   <data name="AccessDeniedVideosLibraryTitle" xml:space="preserve">
     <value>Can't access videos library</value>
   </data>
   <data name="NoVideosPanelHeader" xml:space="preserve">
-    <value>We couldn't find any videos</value>
+    <value>Vi kunde inte hitta några videor</value>
   </data>
   <data name="NoVideosPanelSubtext" xml:space="preserve">
-    <value>Your video library doesn't contain any video content.</value>
+    <value>Ditt videobibliotek innehåller inget videoinnehåll.</value>
   </data>
   <data name="OpenPrivacySettingsButtonText" xml:space="preserve">
     <value>Open privacy settings</value>
@@ -568,7 +568,7 @@
     <value>Kunde inte ladda media</value>
   </data>
   <data name="AspectRatio" xml:space="preserve">
-    <value>Aspect ratio</value>
+    <value>Bildförhållande</value>
   </data>
   <data name="Fit" xml:space="preserve">
     <value>Fit</value>
@@ -577,16 +577,16 @@
     <value>Fyll</value>
   </data>
   <data name="CustomAspectRatio" xml:space="preserve">
-    <value>Custom aspect ratio</value>
+    <value>Anpassat bildförhållande</value>
   </data>
   <data name="CustomPlaybackSpeed" xml:space="preserve">
-    <value>Custom playback speed</value>
+    <value>Anpassad uppspelningshastighet</value>
   </data>
   <data name="None" xml:space="preserve">
     <value>Ingen</value>
   </data>
   <data name="ScaleStatus" xml:space="preserve">
-    <value>Scale: {0}</value>
+    <value>Skala: {0}</value>
     <comment>#Format[String scale]</comment>
   </data>
   <data name="SubtitleStatus" xml:space="preserve">
@@ -643,7 +643,7 @@
     <value>Resize the app window to best match a video's native resolution on playback</value>
   </data>
   <data name="SettingsVolumeBoostHeader" xml:space="preserve">
-    <value>Volume boost</value>
+    <value>Volymboost</value>
   </data>
   <data name="SettingsVolumeBoostDescription" xml:space="preserve">
     <value>Allow the maximum volume to go above 100%</value>
@@ -655,13 +655,13 @@
     <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
-    <value>Gestures</value>
+    <value>Gester</value>
   </data>
   <data name="SettingsGestureSeek" xml:space="preserve">
     <value>Drag horizontally to seek</value>
   </data>
   <data name="SettingsGestureVolume" xml:space="preserve">
-    <value>Drag vertically to adjust volume</value>
+    <value>Dra vertikalt för att justera volymen</value>
   </data>
   <data name="SettingsGestureTap" xml:space="preserve">
     <value>Tap anywhere to play or pause</value>
@@ -676,7 +676,7 @@
     <value>Discord</value>
   </data>
   <data name="HyperlinkSponsor" xml:space="preserve">
-    <value>Support the development</value>
+    <value>Stöd utvecklingen</value>
   </data>
   <data name="Always" xml:space="preserve">
     <value>Alltid</value>
@@ -692,7 +692,7 @@
     <comment>#Format[VERSION]</comment>
   </data>
   <data name="SubtitleAddedNotificationTitle" xml:space="preserve">
-    <value>Subtitle added</value>
+    <value>Undertext tillagd</value>
   </data>
   <data name="CriticalError" xml:space="preserve">
     <value>Kritiskt fel</value>
@@ -704,7 +704,7 @@
     <value>For more information about this issue and possible fixes, visit</value>
   </data>
   <data name="FailedToOpenFilesNotificationTitle" xml:space="preserve">
-    <value>Failed to open file(s)</value>
+    <value>Kunde inte öppna fil(er)</value>
   </data>
   <data name="OpenUrlPlaceholder" xml:space="preserve">
     <value>Enter the URL for a file or stream</value>
@@ -713,7 +713,7 @@
     <value>Open Connected Devices settings</value>
   </data>
   <data name="SetPlaybackOptions" xml:space="preserve">
-    <value>Set playback options</value>
+    <value>Ställ in uppspelningsalternativ</value>
   </data>
   <data name="Set" xml:space="preserve">
     <value>Set</value>
@@ -753,7 +753,7 @@
     <value>Ta bort mapp</value>
   </data>
   <data name="PendingChanges" xml:space="preserve">
-    <value>Pending changes</value>
+    <value>Väntande ändringar</value>
   </data>
   <data name="RelaunchForChangesMessage" xml:space="preserve">
     <value>Relaunch the app for changes to take effect</value>
@@ -774,7 +774,7 @@
     <value>Third-party software acknowledgments</value>
   </data>
   <data name="HyperlinkTranslate" xml:space="preserve">
-    <value>Help translate</value>
+    <value>Hjälp att översätta</value>
   </data>
   <data name="Options" xml:space="preserve">
     <value>Alternativ</value>
@@ -795,10 +795,10 @@
     <value>Öppna artist</value>
   </data>
   <data name="RefreshLibraries" xml:space="preserve">
-    <value>Refresh libraries</value>
+    <value>Uppdatera bibliotek</value>
   </data>
   <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Uppdatera</value>
   </data>
   <data name="SettingsUseIndexerHeader" xml:space="preserve">
     <value>Use indexer for scanning</value>
@@ -807,7 +807,7 @@
     <value>Speed up the library scanning by using the system index when available. Turn this off if you are not seeing all the media from your library locations.</value>
   </data>
   <data name="ManageSystemIndexingLink" xml:space="preserve">
-    <value>Manage system indexing settings</value>
+    <value>Hantera systemindexeringsinställningar</value>
   </data>
   <data name="SetArguments" xml:space="preserve">
     <value>Set arguments</value>
@@ -822,10 +822,10 @@
     <value>Aktiva argument</value>
   </data>
   <data name="SettingsUseMultipleInstancesHeader" xml:space="preserve">
-    <value>Allow multiple instances</value>
+    <value>Tillåt flera instanser</value>
   </data>
   <data name="SettingsUseMultipleInstancesDescription" xml:space="preserve">
-    <value>Always open media files in a new instance</value>
+    <value>Öppna alltid mediefiler i en ny instans</value>
   </data>
   <data name="SortBy" xml:space="preserve">
     <value>Sortera efter</value>
@@ -856,10 +856,10 @@
     <value>Visuals</value>
   </data>
   <data name="BrowseFiles" xml:space="preserve">
-    <value>Browse files</value>
+    <value>Bläddra filer</value>
   </data>
   <data name="Default" xml:space="preserve">
-    <value>Default</value>
+    <value>Standard</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
     <value>Choose a backdrop to give your audio playback a visual flair in the immersive view</value>
@@ -874,7 +874,7 @@
     <value>Get more visuals via the Lively Wallpaper app or download them from GitHub</value>
   </data>
   <data name="DateAdded" xml:space="preserve">
-    <value>Date added</value>
+    <value>Datum tillagd</value>
   </data>
   <data name="Media" xml:space="preserve">
     <value>Media</value>
@@ -904,7 +904,7 @@
     <value>When opening a single file, automatically add all other files in the folder to the play queue</value>
   </data>
   <data name="SettingsEnqueueAllFilesInFolderHeader" xml:space="preserve">
-    <value>Add all files in folder to queue</value>
+    <value>Lägg till alla filer i mappen i kö</value>
   </data>
   <data name="ThemeAuto" xml:space="preserve">
     <value>Använd systeminställning</value>
@@ -925,7 +925,7 @@
     <value>Personalization</value>
   </data>
   <data name="SettingsRestorePlaybackPositionHeader" xml:space="preserve">
-    <value>Always resume from last position</value>
+    <value>Återuppta alltid från senaste position</value>
   </data>
   <data name="SettingsRestorePlaybackPositionDescription" xml:space="preserve">
     <value>Continue playing from where you last stopped when opening a file</value>
@@ -937,16 +937,16 @@
     <value>Super resolution upscaling requires compatible hardware and driver support.</value>
   </data>
   <data name="VideoUpscalingLinear" xml:space="preserve">
-    <value>Bilinear</value>
+    <value>Bilinjär</value>
   </data>
   <data name="VideoUpscalingPoint" xml:space="preserve">
     <value>Punkt</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolution</value>
+    <value>Superupplösning</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
-    <value>Show chapter name when available</value>
+    <value>Visa kapitelnamn när tillgängligt</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
     <value>Dismiss controls after this amount of time</value>
@@ -963,7 +963,7 @@
     <value>App-språk</value>
   </data>
   <data name="SettingsLanguageSelectionDescription" xml:space="preserve">
-    <value>Change the app's display language</value>
+    <value>Ändra appens visningsspråk</value>
   </data>
   <data name="LanguageSystemDefault" xml:space="preserve">
     <value>Använd systemspråk</value>
