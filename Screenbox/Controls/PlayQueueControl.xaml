@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:converters="using:Screenbox.Converters"
     xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:ctConverters="using:CommunityToolkit.WinUI.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -13,7 +14,6 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:strings="using:Screenbox.Strings"
-    xmlns:system="using:System"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="752"
     d:DesignWidth="848"
@@ -221,20 +221,20 @@
 
                 <CommandBar.Content>
                     <StackPanel Orientation="Horizontal">
-                        <!--  SelectionCheckBox value and tooltip are updated in code-behind  -->
                         <CheckBox
                             x:Name="SelectionCheckBox"
                             MinWidth="60"
                             Margin="10,0,4,0"
                             d:Content="11 items selected"
-                            AutomationProperties.HelpText="{x:Bind system:Convert.ToString(SelectionCheckBox.Content), Mode=OneWay}"
+                            AutomationProperties.HelpText="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
                             AutomationProperties.Name="{x:Bind strings:Resources.SelectAll}"
                             Command="{StaticResource SelectDeselectAllCommand}"
                             CommandParameter="{x:Bind Path=PlaylistListView}"
                             Content="{x:Bind strings:Resources.ItemsSelected(ViewModel.SelectionCount), Mode=OneWay}"
+                            IsChecked="{x:Bind ViewModel.SelectionCheckState, Mode=OneWay}"
                             IsThreeState="True"
-                            ToolTipService.ToolTip="{x:Bind GetSelectionCheckBoxToolTip(SelectionCheckBox.IsChecked)}" />
-                        <TextBlock Padding="{x:Bind Path=SelectionCheckBox.Padding, Converter={StaticResource VerticalThicknessFiltersConverter}}" Text="•" />
+                            ToolTipService.ToolTip="{x:Bind ViewModel.SelectionCheckState, Converter={StaticResource CheckBoxToToolTipConverter}, Mode=OneWay}" />
+                        <TextBlock Padding="{x:Bind converters:ThicknessFiltersConverter.Extract(SelectionCheckBox.Padding, converters:ThicknessFilterKinds.Vertical)}" Text="•" />
                         <Button
                             Padding="4,5,4,5"
                             VerticalAlignment="Top"

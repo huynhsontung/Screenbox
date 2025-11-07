@@ -217,6 +217,7 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\CheckBoxToToolTipConverter.cs" />
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
