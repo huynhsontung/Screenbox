@@ -1,9 +1,9 @@
 ---
-description: 'Guidelines for building UWP C# applications'
+description: 'Guidelines for building .NET UWP applications'
 applyTo: '**/*.cs'
 ---
 
-# UWP C# Development
+# .NET UWP
 
 ## C# Instructions
 
@@ -17,6 +17,7 @@ applyTo: '**/*.cs'
 - Write code with good maintainability practices, including comments on why certain design decisions were made.
 - Handle edge cases and write clear exception handling.
 - Be aware of the .NET and WinRT interop boundaries.
+- Prefer overriding virtual UWP methods, such as `OnNavigatedTo`, instead of attaching event handlers when possible.
 
 ## Naming Conventions
 
@@ -85,8 +86,8 @@ applyTo: '**/*.cs'
 
 ## Performance Optimization
 
-- Guide users through efficient collection iteration techniques.
+- Use efficient collection iteration techniques.
 - Avoid unnecessary allocations and boxing where possible.
 - Consider UI thread responsiveness when performing long-running operations.
 - Consider UI thread affinity when working with async/await.
-- Consider pagination, filtering, and sorting for large data sets. 
+- Consider pagination, filtering, and sorting for large data sets.

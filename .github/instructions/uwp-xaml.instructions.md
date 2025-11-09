@@ -3,7 +3,7 @@ description: 'Guidelines for XAML development in UWP applications'
 applyTo: '**/*.xaml'
 ---
 
-# XAML Development
+# UWP XAML
 
 ## XAML Best Practices
 
@@ -37,8 +37,7 @@ applyTo: '**/*.xaml'
 - Set AutomationProperties.Name if you use a custom ContentTemplate or nested elements in interactive elements (buttons, text boxes, etc.).
 - Use AutomationProperties.LabeledBy to associate labels with input controls.
 - Ensure proper keyboard navigation order with TabIndex when default tab order is insufficient.
-- Support high contrast themes by using theme resources and testing with high contrast mode.
-- Test with Narrator screen reader to ensure proper accessibility.
+- Support dark, light, and high contrast themes by using theme resources.
 - Set AutomationProperties.AccessibilityView="Raw" for decorative elements that should be ignored by screen readers.
 - Use semantic controls (e.g., Button, CheckBox) rather than generic controls with click handlers.
 
@@ -47,9 +46,9 @@ applyTo: '**/*.xaml'
 - Define styles in resource dictionaries rather than inline.
 - Use BasedOn for style inheritance to maintain consistency.
 - Follow the application's design system for spacing, typography, and colors.
-- Reuse existing resources, styles, and templates wherever possible.
 - Use theme resources for colors to support light/dark theme switching.
-- Test UI in both light and dark themes.
+- Use static resources for all value types (e.g., Thickness, CornerRadius, FontSize) to ensure consistency.
+- Reuse existing resources, styles, and templates wherever possible.
 
 ## Performance
 
