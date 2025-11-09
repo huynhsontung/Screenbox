@@ -52,7 +52,23 @@ applyTo: '**/*.xaml'
 
 ## Performance
 
-- Use x:Load for conditionally visible UI to defer element creation and improve load times.
 - Use incremental loading (ISupportIncrementalLoading) for large lists.
 - Consider using ListView or GridView virtualizing for large data sets.
 - Avoid deep visual trees; flatten where possible.
+
+## Sample XAML Snippets That Follows These Guidelines
+
+```xml
+<Button
+    x:Name="PlayPauseButton"
+    extensions:AcceleratorService.ToolTip="{x:Bind ViewModel.IsPlaying, Converter={StaticResource BoolToPlayPauseTextConverter}, Mode=OneWay}"
+    AccessKey="{strings:KeyboardResources Key=PlayerPlayPauseKey}"
+    AutomationProperties.Name="{x:Bind PlayPauseButton.(extensions:AcceleratorService.ToolTip), Mode=OneWay}"
+    Command="{x:Bind ViewModel.PlayPauseCommand}"
+    Style="{StaticResource PlayerButtonStyle}">
+    <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
+    <Button.KeyboardAccelerators>
+        <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+    </Button.KeyboardAccelerators>
+</Button>
+```

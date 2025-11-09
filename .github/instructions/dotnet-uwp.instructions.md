@@ -91,3 +91,41 @@ applyTo: '**/*.cs'
 - Consider UI thread responsiveness when performing long-running operations.
 - Consider UI thread affinity when working with async/await.
 - Consider pagination, filtering, and sorting for large data sets.
+
+## Sample Instruction Snippets Copilot Can Use
+
+```cs
+public class MainViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private string _userName;
+
+    [ObservableProperty]
+    private string _password;
+
+    [RelayCommand]
+    private void Login()
+    {
+        // Add login logic here
+    }
+}
+
+public class MessagingViewModel : ObservableRecipient,
+    IRecipient<Message>
+{
+    private readonly IDependencyService _service;
+
+    public MessagingViewModel(IDependencyService service)
+    {
+        _service = service;
+
+        // Activate the view model's messenger
+        IsActive = true;
+    }
+
+    public void Receive(Message message)
+    {
+        // Handle the received message
+    }
+}
+```
