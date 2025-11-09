@@ -353,18 +353,19 @@ namespace Screenbox.Pages
             }
         }
 
-        /// <summary>
-        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the keyboard shortcut combination.
-        /// </summary>
-        private void NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void NavViewSearchBoxFocusKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             NavViewSearchBox.Focus(FocusState.Keyboard);
             args.Handled = true;
         }
 
-        /// <summary>
-        /// Give the <see cref="NavViewSearchBox"/> text entry box focus ("Focused" visual state) through the access key combination.
-        /// </summary
+        private void NavViewSearchBoxClearKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            ViewModel.SearchQuery = string.Empty;
+            ViewModel.SearchSuggestions.Clear();
+            args.Handled = true;
+        }
+
         private void NavViewSearchBox_OnAccessKeyInvoked(UIElement sender, AccessKeyInvokedEventArgs args)
         {
             NavViewSearchBox.Focus(FocusState.Keyboard);

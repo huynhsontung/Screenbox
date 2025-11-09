@@ -230,8 +230,12 @@
                     <AutoSuggestBox.KeyboardAccelerators>
                         <KeyboardAccelerator
                             Key="F"
-                            Invoked="NavViewSearchBoxKeyboardAcceleratorFocus_OnInvoked"
+                            Invoked="NavViewSearchBoxFocusKeyboardAccelerator_OnInvoked"
                             Modifiers="Control" />
+                        <KeyboardAccelerator
+                            Key="Escape"
+                            Invoked="NavViewSearchBoxClearKeyboardAccelerator_OnInvoked"
+                            ScopeOwner="{x:Bind NavViewSearchBox}" />
                     </AutoSuggestBox.KeyboardAccelerators>
                 </AutoSuggestBox>
             </muxc:NavigationView.AutoSuggestBox>
