@@ -235,8 +235,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     async partial void OnCurrentItemChanged(MediaViewModel? value)
     {
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
         SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
             ? new Dictionary<string, string>
             {
@@ -245,6 +243,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             : null);
 
         Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
 
         // Async updates
         await Task.WhenAll(
