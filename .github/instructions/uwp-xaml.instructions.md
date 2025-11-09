@@ -18,10 +18,11 @@ applyTo: '**/*.xaml'
 
 ## Data Binding
 
-- Prefer x:Bind for better performance and compile-time validation.
+- Prefer x:Bind over Binding for better performance and compile-time validation.
 - Use FallbackValue and TargetNullValue to handle missing or null data gracefully.
 - Bind to view model properties rather than directly to models.
-- Use converters for data transformations (in the Converters directory) or, preferably, x:Bind functions for better performance and compile-time validation.
+- Use value converters for data transformations (in the Converters directory) or x:Bind functions if the transformation is unique to the view and there is no existing converter that can serve that purpose.
+- Only create new converters when the transformation logic is reusable across multiple views or when it involves complex logic that is better encapsulated in a separate class.
 
 ## Localization
 
@@ -68,7 +69,7 @@ applyTo: '**/*.xaml'
     Style="{StaticResource PlayerButtonStyle}">
     <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
     <Button.KeyboardAccelerators>
-        <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+        <KeyboardAccelerator Key="P" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
     </Button.KeyboardAccelerators>
 </Button>
 ```
