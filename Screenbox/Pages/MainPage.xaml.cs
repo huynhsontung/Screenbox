@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Screenbox.Core;
+using Screenbox.Core.Models;
 using Screenbox.Core.ViewModels;
 using Sentry;
 using Windows.ApplicationModel.Core;
@@ -312,6 +313,44 @@ namespace Screenbox.Pages
         private void NavView_OnPaneClosing(muxc.NavigationView sender, object args)
         {
             UpdateNavigationViewState(sender.DisplayMode, sender.IsPaneOpen);
+        }
+
+        private void NavViewSearchBox_OnTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                ViewModel.UpdateSearchSuggestions(sender.Text);
+            }
+        }
+
+        private void NavViewSearchBox_OnSuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            // Update the text box when navigating through the suggestion list using the keyboard.
+            if (args.SelectedItem is SearchSuggestionItem suggestion)
+            {
+                // We set sender.Text directly instead of ViewModel.SearchQuery
+                // to avoid triggering TextChanged event.
+                sender.Text = suggestion.Name;
+            }
+        }
+
+        private void NavViewSearchBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion is SearchSuggestionItem suggestion)
+            {
+                ViewModel.SelectSuggestion(suggestion);
+            }
+            else
+            {
+                ViewModel.SubmitSearch(args.QueryText);
+            }
+
+            ViewModel.SearchQuery = string.Empty;
+            ViewModel.SearchSuggestions.Clear();
+            if (ViewModel.NavigationViewDisplayMode != NavigationViewDisplayMode.Expanded)
+            {
+                ViewModel.IsPaneOpen = false;
+            }
         }
 
         /// <summary>
