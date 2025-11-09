@@ -167,9 +167,18 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         });
     }
 
-    public void Receive(PlaylistCurrentItemChangedMessage message)
+    public async void Receive(PlaylistCurrentItemChangedMessage message)
     {
-        _dispatcherQueue.TryEnqueue(() => ProcessOpeningMedia(message.Value));
+        MediaViewModel? current = message.Value;
+        _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
+        if (current != null)
+        {
+            await current.LoadDetailsAsync(_filesService);
+            await current.LoadThumbnailAsync();
+
+            // Process again in case media type changed after loading details
+            _dispatcherQueue.TryEnqueue(() => UpdatePropertiesWithCurrentItem(current));
+        }
     }
 
     public void Receive(ShowPlayPauseBadgeMessage message)
@@ -610,15 +619,14 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         DelayHideControls();
     }
 
-    private async void ProcessOpeningMedia(MediaViewModel? current)
+    private void UpdatePropertiesWithCurrentItem(MediaViewModel? current)
     {
         Media = current;
         AudioOnly = current == null || current.MediaType == MediaPlaybackType.Music;
         ShowVisualizer = current != null && AudioOnly && !string.IsNullOrEmpty(_settingsService.LivelyActivePath);
         if (current != null)
         {
-            await current.LoadDetailsAsync(_filesService);
-            await current.LoadThumbnailAsync();
+            // Auto-resize player window
             bool shouldBeVisible = _settingsService.PlayerAutoResize == PlayerAutoResizeOption.Always && !AudioOnly;
             if (PlayerVisibility != PlayerVisibilityState.Visible)
             {
