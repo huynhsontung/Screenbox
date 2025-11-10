@@ -452,9 +452,12 @@ public sealed partial class NavigationViewEx : NavigationView
     {
         if (_overlayChildRectangle != null)
         {
-            bool isLayerVisible = DisplayMode != NavigationViewDisplayMode.Expanded && IsPaneOpen;
+            bool showLightDismissLayer =
+                (DisplayMode != NavigationViewDisplayMode.Expanded) &&
+                IsPaneOpen &&
+                (ContentVisibility == Visibility.Visible);
 
-            _overlayChildRectangle.Visibility = isLayerVisible ? Visibility.Visible : Visibility.Collapsed;
+            _overlayChildRectangle.Visibility = showLightDismissLayer ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
