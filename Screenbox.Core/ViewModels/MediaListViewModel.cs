@@ -235,8 +235,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     async partial void OnCurrentItemChanged(MediaViewModel? value)
     {
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
         SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
             ? new Dictionary<string, string>
             {
@@ -244,28 +242,16 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             }
             : null);
 
-        // Add to recent files
-        switch (value?.Source)
-        {
-            case StorageFile file:
-                _filesService.AddToRecent(file);
-                break;
-            case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                try
-                {
-                    var file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    _filesService.AddToRecent(file);
-                }
-                catch
-                {
-                    // ignored
-                }
-                break;
-        }
-
         Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
-        await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
-        await UpdateMediaBufferAsync();
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+
+        // Async updates
+        await Task.WhenAll(
+            AddToRecent(value?.Source),
+            _transportControlsService.UpdateTransportControlsDisplayAsync(value),
+            UpdateMediaBufferAsync()
+        );
     }
 
     partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
@@ -422,6 +408,27 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     #endregion
 
     #region Private Methods
+
+    private async Task AddToRecent(object? source)
+    {
+        try
+        {
+            switch (source)
+            {
+                case StorageFile file:
+                    _filesService.AddToRecent(file);
+                    break;
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                    var fileFromPath = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    _filesService.AddToRecent(fileFromPath);
+                    break;
+            }
+        }
+        catch
+        {
+            // ignored
+        }
+    }
 
     private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
