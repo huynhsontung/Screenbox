@@ -45,6 +45,26 @@ internal static class MessengerExtensions
         }
     }
 
+    public static void SendAddToQueue(this IMessenger messenger, MediaViewModel media)
+    {
+        // Clone to prevent queuing duplications
+        MediaViewModel clone = new(media);
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Play the item on its own
+            messenger.Send(new PlayMediaMessage(clone));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            updatedPlaylist.Items.Add(clone);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
     public static void SendPositionStatus(this IMessenger messenger, TimeSpan position, TimeSpan duration, string extra = "")
     {
         string text = string.IsNullOrEmpty(extra)

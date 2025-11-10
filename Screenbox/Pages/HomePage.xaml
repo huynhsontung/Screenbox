@@ -38,6 +38,12 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayAddGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind ViewModel.RemoveCommand}"
