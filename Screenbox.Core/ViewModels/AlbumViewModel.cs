@@ -133,5 +133,36 @@ namespace Screenbox.Core.ViewModels
                 Messenger.SendQueueAndPlay(inQueue ?? songs[0], songs);
             }
         }
+
+        [RelayCommand]
+        private void PlayAlbumNext()
+        {
+            if (RelatedSongs.Count == 0) return;
+            List<MediaViewModel> songs = RelatedSongs
+                .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
+                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+                .Reverse()
+                .ToList();
+
+            foreach (MediaViewModel song in songs)
+            {
+                Messenger.SendPlayNext(song);
+            }
+        }
+
+        [RelayCommand]
+        private void AddAlbumToQueue()
+        {
+            if (RelatedSongs.Count == 0) return;
+            List<MediaViewModel> songs = RelatedSongs
+                .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
+                .ThenBy(m => m.Name, StringComparer.CurrentCulture)
+                .ToList();
+
+            foreach (MediaViewModel song in songs)
+            {
+                Messenger.SendAddToQueue(song);
+            }
+        }
     }
 }

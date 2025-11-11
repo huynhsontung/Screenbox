@@ -36,7 +36,7 @@
                     Command="{x:Bind ViewModel.AddToQueueCommand}"
                     CommandParameter="{Binding}"
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
-                                       Glyph={StaticResource PlayAddGlyph}}"
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
                     Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem

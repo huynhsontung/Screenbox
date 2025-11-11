@@ -33,6 +33,16 @@
                         <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{Binding IsPlaying, Converter={StaticResource PlayPauseGlyphConverter}}" />
                     </MenuFlyoutItem.Icon>
                 </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding PlayArtistNextCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlayAddGlyph}}"
+                    Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{Binding AddArtistToQueueCommand}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{x:Bind Common.OpenArtistCommand}"
