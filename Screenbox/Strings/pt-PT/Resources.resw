@@ -455,7 +455,7 @@
     <value>Artistas</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Música</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Músicas</value>
@@ -972,7 +972,7 @@
     <value>Utilizar idioma do sistema</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Nenhum resultado para "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
