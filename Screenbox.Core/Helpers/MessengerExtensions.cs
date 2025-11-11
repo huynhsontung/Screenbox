@@ -101,7 +101,7 @@ internal static class MessengerExtensions
         else
         {
             // Clone all items to prevent queuing duplications
-            var clones = items.Select(item => new MediaViewModel(item));
+            var clones = items.Select(item => new MediaViewModel(item)).ToList();
 
             // Add all items to the end of the queue
             foreach (MediaViewModel clone in clones)
