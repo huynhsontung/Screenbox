@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CommunityToolkit.Mvvm.Messaging;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -41,6 +42,87 @@ internal static class MessengerExtensions
         {
             var updatedPlaylist = new Playlist(playlist);
             updatedPlaylist.Items.Insert(Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count), clone);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
+    public static void SendPlayNext(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    {
+        if (items.Count == 0) return;
+
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // Clone all items to prevent queuing duplications
+        List<MediaViewModel> clones = items.Select(item => new MediaViewModel(item)).ToList();
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Queue all items and play the first one
+            var updatedPlaylist = new Playlist(clones[0], clones, playlist);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            int insertIndex = Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count);
+            
+            // Insert items in order at the insertion point
+            for (int i = 0; i < clones.Count; i++)
+            {
+                updatedPlaylist.Items.Insert(insertIndex + i, clones[i]);
+            }
+            
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
+    public static void SendAddToQueue(this IMessenger messenger, MediaViewModel media)
+    {
+        // Clone to prevent queuing duplications
+        MediaViewModel clone = new(media);
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Play the item on its own
+            messenger.Send(new PlayMediaMessage(clone));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            updatedPlaylist.Items.Add(clone);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
+    public static void SendAddToQueue(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    {
+        if (items.Count == 0) return;
+
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // Clone all items to prevent queuing duplications
+        List<MediaViewModel> clones = items.Select(item => new MediaViewModel(item)).ToList();
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Queue all items and play the first one
+            var updatedPlaylist = new Playlist(clones[0], clones, playlist);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, true));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            
+            // Add all items to the end of the queue
+            foreach (MediaViewModel clone in clones)
+            {
+                updatedPlaylist.Items.Add(clone);
+            }
+            
             messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
         }
     }
