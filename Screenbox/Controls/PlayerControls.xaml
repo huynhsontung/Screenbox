@@ -384,9 +384,9 @@
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon FontFamily="{StaticResource ScreenboxSymbolThemeFontFamily}" Glyph="{x:Bind converters:GlyphConverter.ToPlayPauseGlyph(ViewModel.IsPlaying), Mode=OneWay}" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="P" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
-                    <KeyboardAccelerator Key="K" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
-                    <KeyboardAccelerator Key="Space" Invoked="{x:Bind ViewModel.PlayPauseKeyboardAccelerator_OnInvoked}" />
+                    <KeyboardAccelerator Key="P" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
+                    <KeyboardAccelerator Key="K" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
+                    <KeyboardAccelerator Key="Space" Invoked="PlayPauseKeyboardAccelerator_OnInvoked" />
                 </Button.KeyboardAccelerators>
             </Button>
             <!--  Previous/Next  -->
@@ -503,14 +503,14 @@
                 Style="{StaticResource PlayerButtonStyle}">
                 <FontIcon Glyph="&#xED1F;" MirroredWhenRightToLeft="True" />
                 <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Key="C" Invoked="{x:Bind ViewModel.ToggleSubtitle}" />
+                    <KeyboardAccelerator Key="C" Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked" />
                     <KeyboardAccelerator
                         Key="C"
-                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked"
                         Modifiers="Control" />
                     <KeyboardAccelerator
                         Key="C"
-                        Invoked="{x:Bind ViewModel.ToggleSubtitle}"
+                        Invoked="ToggleSubtitleKeyboardAccelerator_OnInvoked"
                         Modifiers="Control,Shift" />
                 </Button.KeyboardAccelerators>
                 <Button.Flyout>
