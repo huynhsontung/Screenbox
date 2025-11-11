@@ -8,6 +8,7 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -227,7 +228,7 @@ public sealed partial class NavigationViewEx : NavigationView
             _contentGrid = contentGrid;
 
             // Set implicit animations to play when ContentVisibility changes.
-            UpdateContentAnimations();
+            UpdateContentGridAnimations();
         }
 
         if (GetTemplateChild(ShadowCaster) is Grid shadowCaster)
@@ -505,19 +506,19 @@ public sealed partial class NavigationViewEx : NavigationView
         }
     }
 
-    private string GetTranslationTo(TransitionDirection direction, bool entrance)
+    private string GetContentAnimationTranslationTo(AnimationDirection? direction, bool isEntrance)
     {
         return direction switch
         {
-            TransitionDirection.Top => entrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
-            TransitionDirection.Bottom => entrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
-            TransitionDirection.Left => entrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
-            TransitionDirection.Right => entrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
+            AnimationDirection.Left => isEntrance ? "0,0,0" : $"-{ContentGridFinalValue},0,0",
+            AnimationDirection.Top => isEntrance ? "0,0,0" : $"0,-{ContentGridFinalValue},0",
+            AnimationDirection.Right => isEntrance ? "0,0,0" : $"{ContentGridFinalValue},0,0",
+            AnimationDirection.Bottom => isEntrance ? "0,0,0" : $"0,{ContentGridFinalValue},0",
             _ => "0,0,0"
         };
     }
 
-    private void UpdateContentAnimations()
+    private void UpdateContentGridAnimations()
     {
         var showAnimationSet = new ImplicitAnimationSet
         {
@@ -528,17 +529,17 @@ public sealed partial class NavigationViewEx : NavigationView
             new OpacityAnimation { To = 0, Duration = TimeSpan.FromMilliseconds(167), EasingType = EasingType.Linear }
         };
 
-        if (ContentVisibilityTransition != TransitionDirection.None)
+        if (ContentAnimationDirection != null)
         {
             showAnimationSet.Add(new TranslationAnimation
             {
-                To = GetTranslationTo(ContentVisibilityTransition, true),
+                To = GetContentAnimationTranslationTo(ContentAnimationDirection, true),
                 Duration = TimeSpan.FromMilliseconds(400),
                 EasingMode = EasingMode.EaseOut
             });
             hideAnimationSet.Add(new TranslationAnimation
             {
-                To = GetTranslationTo(ContentVisibilityTransition, false),
+                To = GetContentAnimationTranslationTo(ContentAnimationDirection, false),
                 Duration = TimeSpan.FromMilliseconds(250),
                 EasingMode = EasingMode.EaseIn
             });
