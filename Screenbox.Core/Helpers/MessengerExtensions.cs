@@ -45,6 +45,35 @@ internal static class MessengerExtensions
         }
     }
 
+    public static void SendPlayNext(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    {
+        if (items.Count == 0) return;
+
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Play the first item
+            messenger.Send(new PlayMediaMessage(new MediaViewModel(items[0])));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            int insertIndex = Math.Min(playlist.CurrentIndex + 1, playlist.Items.Count);
+            
+            // Insert items in order at the insertion point
+            for (int i = 0; i < items.Count; i++)
+            {
+                // Clone to prevent queuing duplications
+                MediaViewModel clone = new(items[i]);
+                updatedPlaylist.Items.Insert(insertIndex + i, clone);
+            }
+            
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
     public static void SendAddToQueue(this IMessenger messenger, MediaViewModel media)
     {
         // Clone to prevent queuing duplications
@@ -61,6 +90,34 @@ internal static class MessengerExtensions
         {
             var updatedPlaylist = new Playlist(playlist);
             updatedPlaylist.Items.Add(clone);
+            messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
+        }
+    }
+
+    public static void SendAddToQueue(this IMessenger messenger, IReadOnlyList<MediaViewModel> items)
+    {
+        if (items.Count == 0) return;
+
+        Playlist playlist = messenger.Send(new PlaylistRequestMessage());
+
+        // If current index < 0 then the current playlist is empty
+        if (playlist.CurrentIndex < 0)
+        {
+            // Play the first item
+            messenger.Send(new PlayMediaMessage(new MediaViewModel(items[0])));
+        }
+        else
+        {
+            var updatedPlaylist = new Playlist(playlist);
+            
+            // Add all items to the end of the queue
+            foreach (MediaViewModel item in items)
+            {
+                // Clone to prevent queuing duplications
+                MediaViewModel clone = new(item);
+                updatedPlaylist.Items.Add(clone);
+            }
+            
             messenger.Send(new QueuePlaylistMessage(updatedPlaylist, false));
         }
     }

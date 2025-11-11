@@ -94,13 +94,9 @@ namespace Screenbox.Core.ViewModels
                 .GroupBy(m => m.Album)
                 .OrderByDescending(g => g.Key?.Year ?? 0)
                 .SelectMany(g => g)
-                .Reverse()
                 .ToList();
 
-            foreach (MediaViewModel song in songs)
-            {
-                Messenger.SendPlayNext(song);
-            }
+            Messenger.SendPlayNext(songs);
         }
 
         [RelayCommand]
@@ -115,10 +111,7 @@ namespace Screenbox.Core.ViewModels
                 .SelectMany(g => g)
                 .ToList();
 
-            foreach (MediaViewModel song in songs)
-            {
-                Messenger.SendAddToQueue(song);
-            }
+            Messenger.SendAddToQueue(songs);
         }
     }
 }

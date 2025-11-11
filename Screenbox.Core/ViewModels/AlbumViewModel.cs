@@ -141,13 +141,9 @@ namespace Screenbox.Core.ViewModels
             List<MediaViewModel> songs = RelatedSongs
                 .OrderBy(m => m.MediaInfo.MusicProperties.TrackNumber)
                 .ThenBy(m => m.Name, StringComparer.CurrentCulture)
-                .Reverse()
                 .ToList();
 
-            foreach (MediaViewModel song in songs)
-            {
-                Messenger.SendPlayNext(song);
-            }
+            Messenger.SendPlayNext(songs);
         }
 
         [RelayCommand]
@@ -159,10 +155,7 @@ namespace Screenbox.Core.ViewModels
                 .ThenBy(m => m.Name, StringComparer.CurrentCulture)
                 .ToList();
 
-            foreach (MediaViewModel song in songs)
-            {
-                Messenger.SendAddToQueue(song);
-            }
+            Messenger.SendAddToQueue(songs);
         }
     }
 }
