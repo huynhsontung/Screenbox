@@ -106,8 +106,9 @@ public partial class MediaViewModel : ObservableRecipient
         Options = new ReadOnlyCollection<string>(_options);
         Location = source.Location;
         Source = source.Source;
-        Item = source.Item;
+        Item = new Lazy<PlaybackItem?>(CreatePlaybackItem);
         DateAdded = source.DateAdded;
+        IsFromLibrary = source.IsFromLibrary;
     }
 
     private MediaViewModel(object source, MediaInfo mediaInfo, LibVlcService libVlcService)
