@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -124,6 +125,7 @@
                     <GridView
                         x:Name="ArtistGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
+                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenArtistCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -154,6 +156,7 @@
                     <GridView
                         x:Name="AlbumGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
+                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
@@ -227,6 +230,7 @@
                     <GridView
                         x:Name="VideosGridView"
                         Padding="{StaticResource GridViewContentPagePadding}"
+                        ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                         ui:ListViewExtensions.Command="{x:Bind ViewModel.PlayCommand}"
                         IsItemClickEnabled="True"
                         ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Screenbox.Controls"
+    xmlns:ctAnimations="using:CommunityToolkit.WinUI.Animations"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
@@ -143,6 +144,7 @@
                 <GridView
                     x:Name="AlbumGridView"
                     Padding="{StaticResource GridViewContentPagePadding}"
+                    ctAnimations:ItemsReorderAnimation.Duration="{StaticResource ControlFastAnimationDuration}"
                     ui:ListViewExtensions.Command="{x:Bind Common.OpenAlbumCommand}"
                     ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
                     ContainerContentChanging="{x:Bind ViewModel.OnContainerContentChanging}"
