@@ -655,7 +655,7 @@
     <value>Controles na tela</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Escolha quais controles podem aparecer na sobreposição e o comportamento de ocultar automaticamente</value>
+    <value>Escolha quais elementos podem aparecer nos controles e ajuste o comportamento de ocultação automática</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>Gestos</value>
@@ -865,7 +865,7 @@
     <value>Padrão</value>
   </data>
   <data name="SettingsAudioVisualDescription" xml:space="preserve">
-    <value>Escolha um estilo de imagem a ser exibido na reprodução de áudio</value>
+    <value>Escolha um estilo de imagem exibido durante a reprodução de áudio</value>
   </data>
   <data name="PoweredByLivelyWallpaper" xml:space="preserve">
     <value>Desenvolvido por Lively Wallpaper</value>
@@ -946,7 +946,7 @@
     <value>Ponto</value>
   </data>
   <data name="VideoUpscalingSuper" xml:space="preserve">
-    <value>Super resolução</value>
+    <value>Super-resolução</value>
   </data>
   <data name="SettingsShowChaptersHeader" xml:space="preserve">
     <value>Exibir nome do capítulo quando disponível</value>
