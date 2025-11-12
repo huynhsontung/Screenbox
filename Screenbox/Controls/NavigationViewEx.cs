@@ -106,6 +106,7 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged += OnDisplayModeChanged;
         PaneOpening += OnPaneOpening;
         PaneClosing += OnPaneClosing;
+        PaneClosed += OnPaneClosed;
     }
 
     protected override void OnApplyTemplate()
@@ -300,6 +301,7 @@ public sealed partial class NavigationViewEx : NavigationView
         DisplayModeChanged -= OnDisplayModeChanged;
         PaneOpening -= OnPaneOpening;
         PaneClosing -= OnPaneClosing;
+        PaneClosed -= OnPaneClosed;
 
         if (_overlayChildRectangle != null)
         {
@@ -320,6 +322,11 @@ public sealed partial class NavigationViewEx : NavigationView
     private void OnPaneClosing(NavigationView sender, NavigationViewPaneClosingEventArgs args)
     {
         UpdateOverlayLayout();
+    }
+
+    private void OnPaneClosed(NavigationView sender, object args)
+    {
+        UpdateOverlayLightDismissLayerVisibility();
     }
 
     private void OverlayLightDismissLayer_OnTapped(object sender, TappedRoutedEventArgs e)
