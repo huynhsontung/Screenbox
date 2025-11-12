@@ -455,7 +455,7 @@
     <value>אמנים</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>שיר</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>שירים</value>
@@ -972,10 +972,10 @@
     <value>השתמש בשפת המערכת</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>אין תוצאות עבור "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>תיקיה</value>
   </data>
 </root>
