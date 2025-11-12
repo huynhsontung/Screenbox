@@ -114,7 +114,7 @@ public sealed partial class MainPageViewModel : ObservableRecipient,
             case VirtualKey.GamepadX:
                 Messenger.Send(new TogglePlayPauseMessage(true));
                 break;
-            case VirtualKey.GamepadView when PlayerVisible:
+            case VirtualKey.GamepadView when (PlayerVisible || NavigationViewDisplayMode == NavigationViewDisplayMode.Expanded):
                 Messenger.Send(new TogglePlayerVisibilityMessage());
                 break;
             default:
