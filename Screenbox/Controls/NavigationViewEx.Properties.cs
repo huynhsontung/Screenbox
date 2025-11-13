@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 
 namespace Screenbox.Controls;
@@ -255,18 +256,18 @@ public sealed partial class NavigationViewEx
     }
 
     /// <summary>
-    /// Identifies the <see cref="ContentVisibilityTransition"/> dependency property.
+    /// Identifies the <see cref="ContentAnimationDirection"/> dependency property.
     /// </summary>
-    public static readonly DependencyProperty ContentVisibilityTransitionProperty = DependencyProperty.Register(
-        nameof(ContentVisibilityTransition), typeof(TransitionDirection), typeof(NavigationViewEx), new PropertyMetadata(TransitionDirection.None, OnContentVisibilityTransitionPropertyChanged));
+    public static readonly DependencyProperty ContentAnimationDirectionProperty = DependencyProperty.Register(
+        nameof(ContentAnimationDirection), typeof(AnimationDirection?), typeof(NavigationViewEx), new PropertyMetadata(null, OnContentAnimationDirectionPropertyChanged));
 
     /// <summary>
     /// Gets or sets the direction used for the translation animation of the content grid.
     /// </summary>
-    public TransitionDirection ContentVisibilityTransition
+    public AnimationDirection? ContentAnimationDirection
     {
-        get => (TransitionDirection)GetValue(ContentVisibilityTransitionProperty);
-        set => SetValue(ContentVisibilityTransitionProperty, value);
+        get => (AnimationDirection?)GetValue(ContentAnimationDirectionProperty);
+        set => SetValue(ContentAnimationDirectionProperty, value);
     }
 
     private static void OnOverlayPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -317,11 +318,11 @@ public sealed partial class NavigationViewEx
         }
     }
 
-    private static void OnContentVisibilityTransitionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnContentAnimationDirectionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is NavigationViewEx owner)
         {
-            owner.OnContentVisibilityTransitionChanged((TransitionDirection)e.OldValue, (TransitionDirection)e.NewValue);
+            owner.OnContentAnimationDirectionChanged((AnimationDirection?)e.OldValue, (AnimationDirection?)e.NewValue);
         }
     }
 
@@ -357,17 +358,8 @@ public sealed partial class NavigationViewEx
         UpdateSettingsItemStyle();
     }
 
-    private void OnContentVisibilityTransitionChanged(TransitionDirection oldValue, TransitionDirection newValue)
+    private void OnContentAnimationDirectionChanged(AnimationDirection? oldValue, AnimationDirection? newValue)
     {
-        UpdateContentAnimations();
+        UpdateContentGridAnimations();
     }
-}
-
-public enum TransitionDirection
-{
-    None,
-    Left,
-    Top,
-    Right,
-    Bottom
 }
