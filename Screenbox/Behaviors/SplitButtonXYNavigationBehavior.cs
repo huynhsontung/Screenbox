@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 using SplitButton = Microsoft.UI.Xaml.Controls.SplitButton;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 
 /// <summary>
 /// A behavior that makes the <see cref="SplitButton"/> secondary button accessible to XY focus navigation.

@@ -3,7 +3,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 internal class GroupingOverviewBehavior : Behavior<GridView>
 {
     public static readonly DependencyProperty GroupTypeProperty = DependencyProperty.Register(

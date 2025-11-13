@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 
 /// <summary>
 /// A behavior that makes the <see cref="SettingsExpander"/> content accessible to XY focus navigation.
