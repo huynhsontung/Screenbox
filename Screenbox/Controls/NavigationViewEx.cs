@@ -32,10 +32,10 @@ namespace Screenbox.Controls;
 /// while allowing the navigation pane and main content visibility to be changed independently of the overlay.
 /// <para>Key features include:</para>
 /// <list type="bullet">
-/// <item><description><strong>Overlay:</strong> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
-/// <item><description><strong>Styling:</strong> Apply custom styles to built-in buttons.</description></item>
-/// <item><description><strong>Accessibility:</strong> Configure built-in buttons access keys and keyboard accelerators.</description></item>
-/// <item><description><strong>Motion:</strong> Fluid animations for content when visibility changes.</description></item>
+/// <item><description><b>Overlay:</b> Display custom content above the main content without obscuring the pane. The layer order can be changed.</description></item>
+/// <item><description><b>Styling:</b> Apply custom styles to built-in buttons.</description></item>
+/// <item><description><b>Accessibility:</b> Configure built-in buttons access keys and keyboard accelerators.</description></item>
+/// <item><description><b>Motion:</b> Fluid animations for content when visibility changes.</description></item>
 /// </list>
 /// </remarks>
 /// <example>
