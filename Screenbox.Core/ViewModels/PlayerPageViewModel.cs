@@ -480,16 +480,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
         }
     }
 
-    public void OnManualHideControlsKeyboardAcceleratorInvoked(KeyboardAccelerator sender,
-        KeyboardAcceleratorInvokedEventArgs args)
-    {
-        if (_windowService.ViewMode != WindowViewMode.Default) return;
-        if (TryHideControls())
-        {
-            args.Handled = true;
-        }
-    }
-
     /// <summary>
     /// Handles a window resize operation based on keyboard input.
     /// </summary>

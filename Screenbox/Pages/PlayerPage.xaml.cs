@@ -109,7 +109,6 @@ namespace Screenbox.Pages
                     VideoView.ContextFlyout.ShowAt(PlayerControls,
                         new FlyoutShowOptions { Placement = GlobalizationHelper.IsRightToLeftLanguage ? FlyoutPlacementMode.TopEdgeAlignedLeft : FlyoutPlacementMode.TopEdgeAlignedRight });
                     break;
-                case VirtualKey.Escape when shouldHideControls:
                 case VirtualKey.GamepadB when shouldHideControls:
                     handled = ViewModel.TryHideControls();
                     break;
@@ -557,6 +556,15 @@ namespace Screenbox.Pages
         {
             if (ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key))
             {
+                args.Handled = true;
+            }
+        }
+
+        private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ViewMode == WindowViewMode.Default)
+            {
+                ViewModel.TryHideControls();
                 args.Handled = true;
             }
         }
