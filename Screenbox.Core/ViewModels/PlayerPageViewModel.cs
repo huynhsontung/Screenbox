@@ -315,8 +315,8 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// The seek duration is determined by the following modifier keys:
     /// <list type="bullet">
     /// <item><description><see cref="VirtualKeyModifiers.Control"/>: Seek by 10 seconds.</description></item>
-    /// <item><description><see cref="VirtualKeyModifiers.Shift"/> Seek by 1 second.</description></item>
-    /// <item><description><see cref="VirtualKeyModifiers.None"/> Seek by 5 seconds.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.Shift"/>: Seek by 1 second.</description></item>
+    /// <item><description><see cref="VirtualKeyModifiers.None"/>: Seek by 5 seconds.</description></item>
     /// </list>
     /// </remarks>
     /// <param name="key">The key that was pressed.</param>
