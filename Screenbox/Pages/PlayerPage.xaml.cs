@@ -496,5 +496,53 @@ namespace Screenbox.Pages
             e.Handled = true;
             await ViewModel.OnDropAsync(e.DataView);
         }
+
+        private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessChangeVolumeKeyDown(args.KeyboardAccelerator.Key))
+            {
+                args.Handled = true;
+            }
+        }
+
+        private void SeekKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers))
+            {
+                args.Handled = true;
+            }
+        }
+
+        private void FrameSteppingKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessFrameSteppingKeyDown(args.KeyboardAccelerator.Key))
+            {
+                args.Handled = true;
+            }
+        }
+
+        private void PlaybackRateKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessTogglePlaybackRateKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers))
+            {
+                args.Handled = true;
+            }
+        }
+
+        private void WindowResizeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers))
+            {
+                args.Handled = true;
+            }
+        }
+
+        private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key))
+            {
+                args.Handled = true;
+            }
+        }
     }
 }
