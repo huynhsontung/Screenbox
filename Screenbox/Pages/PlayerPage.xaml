@@ -87,7 +87,7 @@
         x:Name="LayoutRoot"
         KeyboardAcceleratorPlacementMode="Hidden"
         PointerMoved="{x:Bind ViewModel.OnPointerMoved}"
-        PreviewKeyDown="{x:Bind ViewModel.OnPreviewSpaceKeyDown}"
+        PreviewKeyDown="LayoutRoot_OnPreviewKeyDown"
         Translation="0,0,32">
         <Grid.Transitions>
             <TransitionCollection>

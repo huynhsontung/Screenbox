@@ -497,6 +497,22 @@ namespace Screenbox.Pages
             await ViewModel.OnDropAsync(e.DataView);
         }
 
+        private void LayoutRoot_OnPreviewKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            var coreWindow = Window.Current.CoreWindow;
+            bool isControlKeyDown = coreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down);
+            bool isShiftKeyDown = coreWindow.GetKeyState(VirtualKey.Shift).HasFlag(CoreVirtualKeyStates.Down);
+            if (e.OriginalKey == VirtualKey.Space && !isControlKeyDown && !isShiftKeyDown && !e.KeyStatus.IsMenuKeyDown)
+            {
+                e.Handled = true;
+                // Only trigger once when Space is held down
+                if (!e.KeyStatus.WasKeyDown)
+                {
+                    ViewModel.TogglePlayPause();
+                }
+            }
+        }
+
         private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (ViewModel.ProcessChangeVolumeKeyDown(args.KeyboardAccelerator.Key))
