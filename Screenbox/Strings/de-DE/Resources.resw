@@ -972,10 +972,10 @@
     <value>Systemsprache verwenden</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Keine Ergebnisse für "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Ordner</value>
   </data>
 </root>
