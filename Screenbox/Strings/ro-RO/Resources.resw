@@ -455,7 +455,7 @@
     <value>Artiști</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Melodie</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Melodii</value>
@@ -972,7 +972,7 @@
     <value>Utilizați limba sistemului</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Niciun rezultat pentru "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
