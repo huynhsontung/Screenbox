@@ -512,42 +512,46 @@ namespace Screenbox.Pages
             }
         }
 
-        private void ChangeVolumeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        private void LayoutRoot_OnProcessKeyboardAccelerators(UIElement sender, ProcessKeyboardAcceleratorEventArgs args)
         {
-            args.Handled = ViewModel.ProcessChangeVolumeKeyDown(args.KeyboardAccelerator.Key);
-        }
+            var key = args.Key;
+            var modifiers = args.Modifiers;
 
-        private void SeekKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = ViewModel.ProcessSeekKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
-        }
-
-        private void FrameSteppingKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = ViewModel.ProcessFrameSteppingKeyDown(args.KeyboardAccelerator.Key);
-        }
-
-        private void PlaybackRateKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = ViewModel.ProcessTogglePlaybackRateKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
-        }
-
-        private void WindowResizeKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = ViewModel.ProcessResizeKeyDown(args.KeyboardAccelerator.Key, args.KeyboardAccelerator.Modifiers);
-        }
-
-        private void SeekToPercentageKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            args.Handled = ViewModel.ProcessPercentJumpKeyDown(args.KeyboardAccelerator.Key);
-        }
-
-        private void HideControlsKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-        {
-            if (ViewModel.ViewMode == WindowViewMode.Default)
+            if (ViewModel.ProcessChangeVolumeKeyDown(key))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (ViewModel.ProcessSeekKeyDown(key, modifiers))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (ViewModel.ProcessFrameSteppingKeyDown(key))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (ViewModel.ProcessTogglePlaybackRateKeyDown(key, modifiers))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (ViewModel.ProcessResizeKeyDown(key, modifiers))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (ViewModel.ProcessPercentJumpKeyDown(key))
+            {
+                args.Handled = true;
+                return;
+            }
+            if (key == VirtualKey.Escape && ViewModel.ViewMode == WindowViewMode.Default)
             {
                 ViewModel.TryHideControls();
                 args.Handled = true;
+                return;
             }
         }
     }
