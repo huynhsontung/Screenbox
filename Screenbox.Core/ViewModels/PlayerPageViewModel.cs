@@ -259,10 +259,10 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// <para>Volume change is only available when the player is visible.</para>
     /// The following keys determine the volume delta:
     /// <list type="bullet">
-    /// <item><description><see cref="VirtualKey.Add"/> or (<see cref="VirtualKey"/>)0xBB (VK_OEM_PLUS): Increase volume by 5.</description></item>
-    /// <item><description><see cref="VirtualKey.Subtract"/> or (<see cref="VirtualKey"/>)0xBD (VK_OEM_MINUS): Decrease volume by 5.</description></item>
-    /// <item><description><see cref="VirtualKey.Up"/>, while the player is visible: Increase volume by 5</description></item>
-    /// <item><description><see cref="VirtualKey.Down"/>, while the player is visible: Decrease volume by 5</description></item>
+    /// <item><description><see cref="VirtualKey.Add"/>, (<see cref="VirtualKey"/>)0xBB (VK_OEM_PLUS),
+    /// or <see cref="VirtualKey.Up"/> (when player is visible): Increase volume by 5.</description></item>
+    /// <item><description><see cref="VirtualKey.Subtract"/>, (<see cref="VirtualKey"/>)0xBD (VK_OEM_MINUS),
+    /// or <see cref="VirtualKey.Down"/> (when player is visible): Decrease volume by 5.</description></item>
     /// </list>
     /// </remarks>
     /// <param name="key">The key that was pressed.</param>
@@ -298,7 +298,6 @@ public sealed partial class PlayerPageViewModel : ObservableRecipient,
     /// Handles a seek operation based on keyboard input.
     /// </summary>
     /// <remarks>
-    /// <para>Seeking is only available when the player is visible.</para>
     /// The following keys determine the seek direction:
     /// <list type="bullet">
     /// <item><description><see cref="VirtualKey.Right"/> (when player is visible) or <see cref="VirtualKey.L"/>: Seek forward.</description></item>
