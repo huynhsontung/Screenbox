@@ -455,7 +455,7 @@
     <value>Sanatçılar</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Şarkı</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Şarkılar</value>
@@ -972,10 +972,10 @@
     <value>Sistem dilini kullan</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>"{0}" için sonuç bulunamadı</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Klasör</value>
   </data>
 </root>
