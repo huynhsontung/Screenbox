@@ -1,7 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Screenbox.Controls.Interactions
+namespace Screenbox.Behaviors
 {
     public class ListViewContextRequestedEventArgs : EventArgs
     {
