@@ -5,19 +5,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Create Playlist"
-    PrimaryButtonText="Create"
     CloseButtonText="Cancel"
     DefaultButton="Primary"
+    PrimaryButtonText="Create"
     mc:Ignorable="d">
 
     <StackPanel Spacing="8">
-        <TextBlock
-            Text="Playlist name"
-            Style="{StaticResource BodyTextBlockStyle}" />
+        <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="Playlist name" />
         <TextBox
             x:Name="PlaylistNameTextBox"
             MaxLength="100"
-            TextChanged="PlaylistNameTextBox_OnTextChanged"
-            PlaceholderText="Enter a name for this playlist" />
+            PlaceholderText="Enter a name for this playlist"
+            TextChanged="PlaylistNameTextBox_OnTextChanged" />
     </StackPanel>
 </ContentDialog>
