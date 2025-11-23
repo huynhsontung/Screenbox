@@ -100,6 +100,12 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
+        private void AddToQueue(MediaViewModel media)
+        {
+            Messenger.SendAddToQueue(media);
+        }
+
+        [RelayCommand]
         private void OpenAlbum(AlbumViewModel? album)
         {
             if (album == null) return;

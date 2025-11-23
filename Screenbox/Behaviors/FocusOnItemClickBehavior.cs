@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using CommunityToolkit.WinUI;
 using Microsoft.Xaml.Interactivity;
@@ -6,7 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 
 internal class FocusOnItemClickBehavior : Behavior<ListViewBase>
 {

@@ -2,13 +2,12 @@
     x:Class="Screenbox.Pages.PlayQueuePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:behaviors="using:CommunityToolkit.WinUI.Behaviors"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:controls="using:Screenbox.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -88,8 +87,8 @@
                         Text="{strings:Resources Key=AddFiles}" />
                 </StackPanel>
                 <interactivity:Interaction.Behaviors>
-                    <interactions:SplitButtonXYNavigationBehavior />
-                    <interactions:AutoFocusBehavior />
+                    <behaviors:SplitButtonXYNavigationBehavior />
+                    <behaviors:AutoFocusBehavior />
                 </interactivity:Interaction.Behaviors>
             </muxc:SplitButton>
         </Grid>
@@ -100,7 +99,7 @@
             Padding="{StaticResource ContentPagePadding}" />
 
         <interactivity:Interaction.Behaviors>
-            <interactions:GamepadXYNavigationBehavior />
+            <behaviors:GamepadXYNavigationBehavior />
         </interactivity:Interaction.Behaviors>
 
         <VisualStateManager.VisualStateGroups>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Screenbox.Helpers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -30,11 +29,10 @@ public sealed partial class SetOptionsDialog : ContentDialog
         OptionTextBoxPlaceholder = global ? "--option=value" : ":option=value";
         Options = existingOptions;
         OptionsTextBox.Text = Options;
-        VlcCommandLineHelpTextParts = new string[2];
-        string[] parts = Strings.Resources.VlcCommandLineHelpText
-            .Split("{0}", StringSplitOptions.RemoveEmptyEntries)
-            .Select(s => s.Trim()).ToArray();
-        Array.Copy(parts, VlcCommandLineHelpTextParts, VlcCommandLineHelpTextParts.Length);
+        var helpText = Strings.Resources.VlcCommandLineHelpText;
+        VlcCommandLineHelpTextParts = helpText.Contains("{0}")
+            ? helpText.Split("{0}").Select(s => s.Trim()).Take(2).ToArray()
+            : new[] { helpText, string.Empty };
 
         if (global)
         {

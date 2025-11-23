@@ -134,6 +134,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Behaviors\AdaptiveLayoutBreakpointsBehavior.cs" />
+    <Compile Include="Behaviors\AlternatingListViewBehavior.cs" />
+    <Compile Include="Behaviors\AutoFocusBehavior.cs" />
+    <Compile Include="Behaviors\BringIntoViewWithOffsetBehavior.cs" />
+    <Compile Include="Behaviors\FocusOnItemClickBehavior.cs" />
+    <Compile Include="Behaviors\GamepadXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\GroupingOverviewBehavior.cs" />
+    <Compile Include="Behaviors\ListViewContextTriggerBehavior.cs" />
+    <Compile Include="Behaviors\ListViewContextRequestedEventArgs.cs" />
+    <Compile Include="Behaviors\MediaListViewItemBehavior.cs" />
+    <Compile Include="Behaviors\OverflowTextToolTipBehavior.cs" />
+    <Compile Include="Behaviors\SettingsExpanderXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\SplitButtonXYNavigationBehavior.cs" />
+    <Compile Include="Behaviors\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Commands\BindableCommand.cs" />
     <Compile Include="Commands\OpenUrlCommand.cs" />
     <Compile Include="Commands\SelectDeselectAllCommand.cs" />
@@ -159,20 +173,6 @@
     <Compile Include="Controls\ErrorInfo.xaml.cs">
       <DependentUpon>ErrorInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Interactions\AdaptiveLayoutBreakpointsBehavior.cs" />
-    <Compile Include="Controls\Interactions\AlternatingListViewBehavior.cs" />
-    <Compile Include="Controls\Interactions\AutoFocusBehavior.cs" />
-    <Compile Include="Controls\Interactions\BringIntoViewWithOffsetBehavior.cs" />
-    <Compile Include="Controls\Interactions\FocusOnItemClickBehavior.cs" />
-    <Compile Include="Controls\Interactions\GamepadXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\GroupingOverviewBehavior.cs" />
-    <Compile Include="Controls\Interactions\ListViewContextTriggerBehavior.cs" />
-    <Compile Include="Controls\Interactions\ListViewContextRequestedEventArgs.cs" />
-    <Compile Include="Controls\Interactions\MediaListViewItemBehavior.cs" />
-    <Compile Include="Controls\Interactions\OverflowTextToolTipBehavior.cs" />
-    <Compile Include="Controls\Interactions\SettingsExpanderXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\SplitButtonXYNavigationBehavior.cs" />
-    <Compile Include="Controls\Interactions\ThumbnailGridViewBehavior.cs" />
     <Compile Include="Controls\LivelyWallpaperSelector.xaml.cs">
       <DependentUpon>LivelyWallpaperSelector.xaml</DependentUpon>
     </Compile>
@@ -220,6 +220,7 @@
     <Compile Include="Controls\VolumeControl.xaml.cs">
       <DependentUpon>VolumeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\CheckBoxToToolTipConverter.cs" />
     <Compile Include="Converters\DefaultStringConverter.cs" />
     <Compile Include="Converters\FirstOrDefaultConverter.cs" />
     <Compile Include="Converters\GlyphConverter.cs" />
@@ -229,7 +230,7 @@
     <Compile Include="Converters\PlayPauseGlyphConverter.cs" />
     <Compile Include="Converters\RendererGlyphConverter.cs" />
     <Compile Include="Converters\ResourceNameToResourceStringConverter.cs" />
-    <Compile Include="Converters\SearchItemGlyphConverter.cs" />
+    <Compile Include="Converters\SearchSuggestionConverter.cs" />
     <Compile Include="Converters\ThicknessFiltersConverter.cs" />
     <Compile Include="Converters\ToggleButtonCheckToRepeatModeConverter.cs" />
     <Compile Include="Extensions\AcceleratorService.cs" />

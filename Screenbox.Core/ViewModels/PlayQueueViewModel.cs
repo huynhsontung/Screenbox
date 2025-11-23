@@ -36,6 +36,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
     [NotifyCanExecuteChangedFor(nameof(MoveSelectedItemDownCommand))]
     private int _selectionCount;
 
+    [ObservableProperty] private bool? _selectionCheckState;
     [ObservableProperty] private bool _enableMultiSelect;
 
     private bool _hasItems;
@@ -49,6 +50,7 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         Playlist = playlist;
         _filesService = filesService;
         _resourceService = resourceService;
+        SelectionCheckState = GetSelectionCheckState(_selectionCount);
         _hasItems = playlist.Items.Count > 0;
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         Playlist.Items.CollectionChanged += ItemsOnCollectionChanged;
@@ -63,10 +65,30 @@ public sealed partial class PlayQueueViewModel : ObservableRecipient
         }
     }
 
+    partial void OnSelectionCountChanged(int value)
+    {
+        SelectionCheckState = GetSelectionCheckState(value);
+    }
+
     partial void OnEnableMultiSelectChanged(bool value)
     {
         if (!value)
             SelectionCount = 0;
+    }
+
+    /// <summary>
+    /// Determines the check state of the current selection based on the number of selected items.
+    /// </summary>
+    /// <param name="selectionCount">The number of items currently selected.</param>
+    /// <returns>
+    /// <see langword="false"/> if no items are selected, and <see langword="true"/> if all items
+    /// in the playlist are selected; otherwise, <see langword="null"/> if the selection is partial.
+    /// </returns>
+    private bool? GetSelectionCheckState(int selectionCount)
+    {
+        return selectionCount == 0
+            ? false
+            : selectionCount == Playlist.Items.Count ? true : null;
     }
 
     private static bool HasSelection(IList<object>? selectedItems) => selectedItems?.Count > 0;

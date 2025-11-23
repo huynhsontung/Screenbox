@@ -15,7 +15,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    xmlns:pages="using:Screenbox.Pages"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:ui="using:CommunityToolkit.WinUI"
     d:DesignHeight="720"
@@ -106,10 +105,10 @@
         </Grid.ColumnDefinitions>
 
         <Grid.KeyboardAccelerators>
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PlusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.AddKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.MinusKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.SubtractKey}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Plus}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Add" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Minus}" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="Subtract" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="J" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="L" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Left" Invoked="{x:Bind ViewModel.OnSeekKeyboardAcceleratorInvoked}" />
@@ -133,21 +132,21 @@
             <KeyboardAccelerator Key="Up" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator Key="Down" Invoked="{x:Bind ViewModel.OnVolumeKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator
-                Key="{x:Bind pages:PlayerPage.PeriodKey}"
+                Key="{x:Bind helpers:KeyboardAcceleratorHelper.Period}"
                 Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
                 Modifiers="Shift" />
             <KeyboardAccelerator
-                Key="{x:Bind pages:PlayerPage.CommaKey}"
+                Key="{x:Bind helpers:KeyboardAcceleratorHelper.Comma}"
                 Invoked="{x:Bind ViewModel.OnPlaybackRateKeyboardAcceleratorInvoked}"
                 Modifiers="Shift" />
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.PeriodKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
-            <KeyboardAccelerator Key="{x:Bind pages:PlayerPage.CommaKey}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Period}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
+            <KeyboardAccelerator Key="{x:Bind helpers:KeyboardAcceleratorHelper.Comma}" Invoked="{x:Bind ViewModel.OnFrameJumpKeyboardAcceleratorInvoked}" />
             <KeyboardAccelerator
-                Key="{x:Bind pages:PlayerPage.PlusKey}"
+                Key="{x:Bind helpers:KeyboardAcceleratorHelper.Plus}"
                 Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
                 Modifiers="Control" />
             <KeyboardAccelerator
-                Key="{x:Bind pages:PlayerPage.MinusKey}"
+                Key="{x:Bind helpers:KeyboardAcceleratorHelper.Minus}"
                 Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}"
                 Modifiers="Control" />
             <KeyboardAccelerator Key="Number1" Invoked="{x:Bind ViewModel.OnResizeKeyboardAcceleratorInvoked}" />
@@ -950,6 +949,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="PlayQueueButtonIcon.Glyph" Value="{StaticResource PlaylistMusicMirroredGlyph}" />
+                        <Setter Target="PlayQueueFlyout.Placement" Value="BottomEdgeAlignedRight" />
                         <Setter Target="LivelyOptionsButtonIcon.Glyph" Value="{StaticResource MusicVisualizerMirroredGlyph}" />
                     </VisualState.Setters>
                 </VisualState>

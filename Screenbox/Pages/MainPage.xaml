@@ -10,9 +10,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:extensions="using:Screenbox.Extensions"
     xmlns:helpers="using:Screenbox.Helpers"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Screenbox.Core.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:strings="using:Screenbox.Strings"
     xmlns:triggers="using:Screenbox.Triggers"
@@ -33,12 +33,14 @@
 
             <x:String x:Key="NavItemTextShowDuration">0:0:0.2</x:String>
 
-            <converters:SearchItemGlyphConverter x:Name="SearchItemGlyphConverter" />
-
-            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon FontSize="{StaticResource StandardIconFontSize}" Glyph="{Binding Converter={StaticResource SearchItemGlyphConverter}}" />
-                    <TextBlock Margin="8,0,0,0" Text="{Binding Name}" />
+            <DataTemplate x:Key="SearchAutoSuggestBoxItemTemplate" x:DataType="models:SearchSuggestionItem">
+                <StackPanel AutomationProperties.Name="{x:Bind converters:SearchSuggestionConverter.GetAutomationName(Name, Type)}" Orientation="Horizontal">
+                    <FontIcon
+                        Margin="0,0,8,0"
+                        FontSize="{StaticResource StandardIconFontSize}"
+                        Glyph="{x:Bind converters:GlyphConverter.ToSearchSuggestionGlyph(Type)}"
+                        Visibility="{x:Bind converters:SearchSuggestionConverter.GetGlyphVisibility(Type)}" />
+                    <TextBlock Text="{x:Bind converters:SearchSuggestionConverter.GetName(Name, Type)}" />
                 </StackPanel>
             </DataTemplate>
         </ResourceDictionary>
@@ -101,7 +103,7 @@
             BackRequested="NavView_BackRequested"
             CloseButtonAccessKey="{x:Bind strings:KeyboardResources.NavigationCloseButtonKey}"
             CompactModeThresholdWidth="701"
-            ContentVisibilityTransition="Top"
+            ContentAnimationDirection="Top"
             DisplayModeChanged="NavView_OnDisplayModeChanged"
             DragOver="NavView_DragOver"
             Drop="NavView_Drop"
@@ -219,12 +221,14 @@
                     AccessKeyInvoked="NavViewSearchBox_OnAccessKeyInvoked"
                     AutomationProperties.Name="{strings:Resources Key=SearchBoxToolTip}"
                     ItemTemplate="{StaticResource SearchAutoSuggestBoxItemTemplate}"
+                    ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
                     KeyTipPlacementMode="Right"
                     PlaceholderText="{strings:Resources Key=SearchBoxPlaceholderText}"
                     QueryIcon="Find"
-                    QuerySubmitted="{x:Bind ViewModel.AutoSuggestBox_OnQuerySubmitted}"
+                    QuerySubmitted="NavViewSearchBox_OnQuerySubmitted"
+                    SuggestionChosen="NavViewSearchBox_OnSuggestionChosen"
                     Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}"
-                    TextChanged="{x:Bind ViewModel.AutoSuggestBox_OnTextChanged}"
+                    TextChanged="NavViewSearchBox_OnTextChanged"
                     UpdateTextOnSelect="False">
                     <AutoSuggestBox.KeyboardAccelerators>
                         <KeyboardAccelerator

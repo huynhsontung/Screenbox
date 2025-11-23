@@ -10,7 +10,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace Screenbox.Controls.Interactions;
+namespace Screenbox.Behaviors;
 internal class AutoFocusBehavior : BehaviorBase<Control>
 {
     private bool _focused;

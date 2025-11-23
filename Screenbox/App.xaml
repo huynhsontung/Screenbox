@@ -34,6 +34,7 @@
                     <converters:HumanizedDurationConverter x:Key="HumanizedDurationConverter" />
                     <converters:MediaGlyphConverter x:Key="MediaGlyphConverter" />
                     <converters:PlayPauseGlyphConverter x:Key="PlayPauseGlyphConverter" />
+                    <converters:CheckBoxToToolTipConverter x:Key="CheckBoxToToolTipConverter" />
                     <!--<converters:ThicknessFiltersConverter x:Key="LeftThicknessFiltersConverter" Filters="Left" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="TopThicknessFiltersConverter" Filters="Top" />-->
                     <!--<converters:ThicknessFiltersConverter x:Key="RightThicknessFiltersConverter" Filters="Right" />-->

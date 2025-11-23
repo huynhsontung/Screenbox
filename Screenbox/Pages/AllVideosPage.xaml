@@ -2,9 +2,9 @@
     x:Class="Screenbox.Pages.AllVideosPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:commands="using:Screenbox.Commands"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
@@ -32,6 +32,12 @@
                     Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                        Glyph={StaticResource PlayAddGlyph}}"
                     Text="{strings:Resources Key=PlayNext}" />
+                <MenuFlyoutItem
+                    Command="{x:Bind Common.AddToQueueCommand}"
+                    CommandParameter="{Binding}"
+                    Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
+                                       Glyph={StaticResource PlaylistMusicGlyph}}"
+                    Text="{strings:Resources Key=AddToQueue}" />
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem
                     Command="{StaticResource ShowPropertiesCommand}"
@@ -53,7 +59,7 @@
     </Page.Resources>
 
     <interactivity:Interaction.Behaviors>
-        <interactions:AutoFocusBehavior />
+        <behaviors:AutoFocusBehavior />
     </interactivity:Interaction.Behaviors>
 
     <Grid>
@@ -78,9 +84,9 @@
                 <Border Height="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
             </GridView.Footer>
             <interactivity:Interaction.Behaviors>
-                <interactions:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
-                <interactions:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
-                <interactions:ThumbnailGridViewBehavior />
+                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind ItemFlyout}" />
+                <behaviors:BringIntoViewWithOffsetBehavior FromBottom="{x:Bind Common.FooterBottomPaddingHeight, Mode=OneWay}" />
+                <behaviors:ThumbnailGridViewBehavior />
             </interactivity:Interaction.Behaviors>
         </GridView>
 

@@ -144,6 +144,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
         ShuffleMode = false;
 
         // Load and play the new playlist
+        // Note that we don't clone the playlist here so the sender still has control over it
+        // TODO: Consider cloning to avoid external modifications
         LoadFromPlaylist(message.Value);
         var playNext = message.Value.CurrentItem;
         if (message.ShouldPlay && playNext != null)
@@ -154,7 +156,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     public void Receive(PlaylistRequestMessage message)
     {
-        message.Reply(_playlist);
+        message.Reply(new Playlist(_playlist));
     }
 
     public async void Receive(PlayMediaMessage message)
@@ -235,8 +237,6 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
 
     async partial void OnCurrentItemChanged(MediaViewModel? value)
     {
-        NextCommand.NotifyCanExecuteChanged();
-        PreviousCommand.NotifyCanExecuteChanged();
         SentrySdk.AddBreadcrumb("Play queue current item changed", data: value != null
             ? new Dictionary<string, string>
             {
@@ -244,28 +244,16 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             }
             : null);
 
-        // Add to recent files
-        switch (value?.Source)
-        {
-            case StorageFile file:
-                _filesService.AddToRecent(file);
-                break;
-            case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
-                try
-                {
-                    var file = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
-                    _filesService.AddToRecent(file);
-                }
-                catch
-                {
-                    // ignored
-                }
-                break;
-        }
-
         Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
-        await _transportControlsService.UpdateTransportControlsDisplayAsync(value);
-        await UpdateMediaBufferAsync();
+        NextCommand.NotifyCanExecuteChanged();
+        PreviousCommand.NotifyCanExecuteChanged();
+
+        // Async updates
+        await Task.WhenAll(
+            AddToRecent(value?.Source),
+            _transportControlsService.UpdateTransportControlsDisplayAsync(value),
+            UpdateMediaBufferAsync()
+        );
     }
 
     partial void OnRepeatModeChanged(MediaPlaybackAutoRepeatMode value)
@@ -422,6 +410,27 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     #endregion
 
     #region Private Methods
+
+    private async Task AddToRecent(object? source)
+    {
+        try
+        {
+            switch (source)
+            {
+                case StorageFile file:
+                    _filesService.AddToRecent(file);
+                    break;
+                case Uri { IsFile: true, IsLoopback: true, IsAbsoluteUri: true } uri:
+                    var fileFromPath = await StorageFile.GetFileFromPathAsync(uri.OriginalString);
+                    _filesService.AddToRecent(fileFromPath);
+                    break;
+            }
+        }
+        catch
+        {
+            // ignored
+        }
+    }
 
     private async Task<Playlist> EnqueueNeighboringFilesAsync(Playlist playlist, StorageFileQueryResult neighboringFilesQuery)
     {
