@@ -455,7 +455,7 @@
     <value>Nghệ sĩ</value>
   </data>
   <data name="Song" xml:space="preserve">
-    <value>Song</value>
+    <value>Bài hát</value>
   </data>
   <data name="Songs" xml:space="preserve">
     <value>Bài hát</value>
@@ -972,10 +972,10 @@
     <value>Dùng ngôn ngữ hệ thống</value>
   </data>
   <data name="SearchNoResults" xml:space="preserve">
-    <value>No results for "{0}"</value>
+    <value>Không có kết quả cho "{0}"</value>
     <comment>#Format[String searchQuery]</comment>
   </data>
   <data name="Folder" xml:space="preserve">
-    <value>Folder</value>
+    <value>Thư mục</value>
   </data>
 </root>
