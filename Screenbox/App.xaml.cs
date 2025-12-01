@@ -181,6 +181,8 @@ namespace Screenbox
             });
 
             Frame rootFrame = InitRootFrame();
+            LibVLCSharp.Shared.Core.Initialize();
+
             if (rootFrame.Content is not MainPage)
             {
                 rootFrame.Navigate(typeof(MainPage), true);
