@@ -153,7 +153,7 @@ namespace Screenbox.Controls
 
         private void ToggleSubtitleKeyboardAccelerator_OnInvoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            args.Handled = ViewModel.ProcessSubtitleToggle(args.KeyboardAccelerator.Modifiers);
+            args.Handled = ViewModel.ProcessToggleSubtitleKeyDown(args.KeyboardAccelerator.Modifiers);
         }
     }
 }

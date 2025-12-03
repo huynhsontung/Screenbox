@@ -136,18 +136,19 @@ namespace Screenbox.Core.ViewModels
         }
 
         /// <summary>
-        /// Toggles the subtitle track of the current media playback based on the specified key modifiers.
+        /// Handles toggling the subtitle track during media playback based on keyboard input.
         /// </summary>
-        /// <param name="modifiers">The modifiers key that determine the toggle behavior.
+        /// <remarks>
+        /// The following modifiers determine the toggle action:
         /// <list type="bullet">
         /// <item><description><see cref="VirtualKeyModifiers.None"/> toggles the only subtitle track on or off.</description></item>
         /// <item><description><see cref="VirtualKeyModifiers.Control"/> cycles forward through the available subtitle tracks.</description></item>
         /// <item><description><see cref="VirtualKeyModifiers.Control"/> + <see cref="VirtualKeyModifiers.Shift"/> cycles backward through the available subtitle tracks.</description></item>
-        /// </list></param>
-        /// <returns>
-        /// <see langword="true"/> if the subtitle toggle operation was successful; otherwise, <see langword="false"/>.
-        /// </returns>
-        public bool ProcessSubtitleToggle(VirtualKeyModifiers modifiers)
+        /// </list>
+        /// </remarks>
+        /// <param name="modifiers">The modifier keys held during the key press.</param>
+        /// <returns><see langword="true"/> if the toggle operation was successful; otherwise, <see langword="false"/>.</returns>
+        public bool ProcessToggleSubtitleKeyDown(VirtualKeyModifiers modifiers)
         {
             if (_mediaPlayer?.PlaybackItem is null)
             {
