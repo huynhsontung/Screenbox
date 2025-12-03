@@ -153,7 +153,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
                         f.IsSupportedSubtitle() && f.Name.StartsWith(
                             Path.GetFileNameWithoutExtension(sourceFile.Name),
                             StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                    .ToArray();
             }
             catch (Exception e)
             {
