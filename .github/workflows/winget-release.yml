@@ -1,0 +1,17 @@
+name: Winget Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  winget-release:
+    runs-on: ubuntu-latest
+    if: github.event.release.draft == false && github.event.release.prerelease == false
+    steps:
+      - name: Submit to Winget
+        uses: vedantmgoyal9/winget-releaser@v2
+        with:
+          identifier: Starpine.Screenbox
+          installers-regex: '\.msixbundle$'
+          token: ${{ secrets.WINGET_TOKEN }}
