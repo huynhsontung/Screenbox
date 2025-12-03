@@ -85,3 +85,6 @@ A typical workflow for translating resources:
 1. Copy over any missing files from the `en-US` folder. 
 1. Translate the `.resw` and `.md` files in the directory.
 1. Once you're done, commit your changes, push to GitHub, and make a pull request.
+
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/huynhsontung/Screenbox.svg?variant=adaptive)](https://starchart.cc/huynhsontung/Screenbox)
