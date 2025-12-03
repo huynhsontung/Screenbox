@@ -7,7 +7,7 @@ on:
 jobs:
   winget-release:
     runs-on: ubuntu-latest
-    if: github.event.release.draft == false && github.event.release.prerelease == false
+    if: "!github.event.release.draft && !github.event.release.prerelease"
     steps:
       - name: Submit to Winget
         uses: vedantmgoyal9/winget-releaser@v2
