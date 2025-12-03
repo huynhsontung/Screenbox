@@ -81,7 +81,7 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         var playbackSubtitleTrackList = media.Item.Value?.SubtitleTracks;
         if (playbackSubtitleTrackList == null) return;
         if (playbackSubtitleTrackList.Count > 0) subtitleInitialized = true;
-        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file);
+        IReadOnlyList<StorageFile> subtitles = await GetSubtitlesForFile(file, message.NeighboringFilesQuery);
         foreach (StorageFile subtitleFile in subtitles)
         {
             // Preload subtitle but don't select it
@@ -139,18 +139,40 @@ public sealed partial class CompositeTrackPickerViewModel : ObservableRecipient,
         }
     }
 
-    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile)
+    private async Task<IReadOnlyList<StorageFile>> GetSubtitlesForFile(StorageFile sourceFile, StorageFileQueryResult? neighboringFilesQuery = null)
     {
         IReadOnlyList<StorageFile> subtitles = Array.Empty<StorageFile>();
-        QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
-        {
-            ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
-        };
 
-        var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
-        if (query != null)
+        // If we have a neighboring files query from the playlist, use it and filter for subtitles
+        if (neighboringFilesQuery != null)
         {
-            subtitles = await query.GetFilesAsync(0, 50);
+            try
+            {
+                IReadOnlyList<StorageFile> files = await neighboringFilesQuery.GetFilesAsync(0, 50);
+                subtitles = files.Where(f =>
+                        f.IsSupportedSubtitle() && f.Name.StartsWith(
+                            Path.GetFileNameWithoutExtension(sourceFile.Name),
+                            StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                LogService.Log(e);
+            }
+        }
+        else
+        {
+            // Fallback to creating a new query with subtitle filter
+            QueryOptions options = new(CommonFileQuery.DefaultQuery, FilesHelpers.SupportedSubtitleFormats)
+            {
+                ApplicationSearchFilter = $"System.FileName:$<\"{Path.GetFileNameWithoutExtension(sourceFile.Name)}\""
+            };
+
+            var query = await _filesService.GetNeighboringFilesQueryAsync(sourceFile, options);
+            if (query != null)
+            {
+                subtitles = await query.GetFilesAsync(0, 50);
+            }
         }
 
         return subtitles;

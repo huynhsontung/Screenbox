@@ -244,7 +244,7 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
             }
             : null);
 
-        Messenger.Send(new PlaylistCurrentItemChangedMessage(value));
+        Messenger.Send(new PlaylistCurrentItemChangedMessage(value, _neighboringFilesQuery));
         NextCommand.NotifyCanExecuteChanged();
         PreviousCommand.NotifyCanExecuteChanged();
 
