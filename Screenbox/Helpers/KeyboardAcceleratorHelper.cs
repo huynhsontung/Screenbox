@@ -12,26 +12,30 @@ public static class KeyboardAcceleratorHelper
 {
     /// <summary>The Equals (=) and Plus (+) key or button for any country/region (VK_OEM_PLUS).</summary>
     /// <remarks>
-    /// If used as a key on an AppBarButton or MenuFlyoutItem, the <c>KeyboardAcceleratorTextOverride</c>
-    /// property must be set; otherwise, the app will crash.
+    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
+    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
     /// </remarks>
     public const VirtualKey Plus = (VirtualKey)0xBB;
-    /// <summary>The Comma (,) and Less Than (<) key or button for any country/region (VK_OEM_COMMA).</summary>
+    /// <summary>The Comma (,) and Less Than (&lt;) key or button for any country/region (VK_OEM_COMMA).</summary>
     /// <remarks>
-    /// If used as a key on an AppBarButton or MenuFlyoutItem, the <c>KeyboardAcceleratorTextOverride</c>
-    /// property must be set; otherwise, the app will crash.
+    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
+    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
     /// </remarks>
     public const VirtualKey Comma = (VirtualKey)0xBC;
     /// <summary>The Dash (-) and Underscore (_) key or button for any country/region (VK_OEM_MINUS).</summary>
     /// <remarks>
-    /// If used as a key on an AppBarButton or MenuFlyoutItem, the <c>KeyboardAcceleratorTextOverride</c>
-    /// property must be set; otherwise, the app will crash.
+    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
+    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
     /// </remarks>
     public const VirtualKey Minus = (VirtualKey)0xBD;
-    /// <summary>The Period (.) and Greater Than (>) key or button for any country/region (VK_OEM_PERIOD).</summary>
+    /// <summary>The Period (.) and Greater Than (&gt;) key or button for any country/region (VK_OEM_PERIOD).</summary>
     /// <remarks>
-    /// If used as a key on an AppBarButton or MenuFlyoutItem, the <c>KeyboardAcceleratorTextOverride</c>
-    /// property must be set; otherwise, the app will crash.
+    /// When used on an AppBarButton, AppBarToggleButton, MenuFlyoutItem, ToggleMenuFlyoutItem,
+    /// or RadioMenuFlyoutItem the <c>KeyboardAcceleratorTextOverride</c> property is required.
+    /// For other controls, set <c>KeyTipPlacementMode</c> to <c>Hidden</c>; otherwise, the app will crash.
     /// </remarks>
     public const VirtualKey Period = (VirtualKey)0xBE;
 
