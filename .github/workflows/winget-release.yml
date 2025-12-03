@@ -10,8 +10,6 @@ jobs:
   winget-release:
     runs-on: ubuntu-latest
     if: "!github.event.release.draft && !github.event.release.prerelease"
-    permissions:
-      contents: read
     steps:
       - name: Submit to Winget
         uses: vedantmgoyal9/winget-releaser@v2
