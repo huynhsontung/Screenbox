@@ -113,8 +113,8 @@ public sealed partial class MediaListViewModel : ObservableRecipient,
     public async void Receive(PlayFilesMessage message)
     {
         var files = message.Value;
-        await ParseAndPlayAsync(files);
         _neighboringFilesQuery = message.NeighboringFilesQuery;
+        await ParseAndPlayAsync(files);
 
         // Enqueue neighboring files if needed
         if (_playlist.Items.Count == 1 && _settingsService.EnqueueAllFilesInFolder)
