@@ -8,6 +8,7 @@
     CloseButtonText="Cancel"
     DefaultButton="Primary"
     PrimaryButtonText="Create"
+    Style="{StaticResource DefaultContentDialogStyle}"
     mc:Ignorable="d">
 
     <StackPanel Spacing="8">

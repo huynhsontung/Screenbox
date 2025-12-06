@@ -16,6 +16,7 @@ public sealed partial class CreatePlaylistDialog : ContentDialog
 
     public CreatePlaylistDialog()
     {
+        this.DefaultStyleKey = typeof(ContentDialog);
         this.InitializeComponent();
         FlowDirection = GlobalizationHelper.GetFlowDirection();
         RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;

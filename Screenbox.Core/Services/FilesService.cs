@@ -146,7 +146,7 @@ namespace Screenbox.Core.Services
                 uint size = (uint)readStream.Size;
                 await dataReader.LoadAsync(size);
                 string json = dataReader.ReadString(size);
-                return JsonSerializer.Deserialize<T>(json);
+                return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize JSON");
             }
 
             return Serializer.Deserialize<T>(readStream.AsStream());

@@ -30,7 +30,7 @@ public sealed partial class PlaylistsPage : Page
         string? playlistName = await CreatePlaylistDialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(playlistName))
         {
-            await ViewModel.CreatePlaylistAsync(playlistName);
+            await ViewModel.CreatePlaylistAsync(playlistName!);
         }
     }
 }
