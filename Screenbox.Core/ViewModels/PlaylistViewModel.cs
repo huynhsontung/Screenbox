@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
 using Screenbox.Core.Models;
 using Screenbox.Core.Services;
@@ -17,6 +19,8 @@ public partial class PlaylistViewModel : ObservableObject
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private object? _thumbnail;
     [ObservableProperty] private DateTimeOffset _lastUpdated = DateTimeOffset.Now;
+
+    public string Id => _id.ToString();
 
     private Guid _id;
 
@@ -44,6 +48,22 @@ public partial class PlaylistViewModel : ObservableObject
         {
             Items.Add(ToMediaViewModel(item));
         }
+    }
+
+    public PersistentPlaylist ToPersistentPlaylist()
+    {
+        return new PersistentPlaylist
+        {
+            Id = _id.ToString(),
+            DisplayName = Caption,
+            LastUpdated = LastUpdated,
+            Items = Items.Select(m => new PersistentMediaRecord(
+                m.Name,
+                m.Location,
+                m.MediaType == MediaPlaybackType.Music ? (IMediaProperties)m.MediaInfo.MusicProperties : m.MediaInfo.VideoProperties,
+                m.DateAdded
+            )).ToList()
+        };
     }
 
     private MediaViewModel ToMediaViewModel(PersistentMediaRecord record)

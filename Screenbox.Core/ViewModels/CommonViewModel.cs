@@ -122,6 +122,14 @@ namespace Screenbox.Core.ViewModels
         }
 
         [RelayCommand]
+        private void OpenPlaylist(PlaylistViewModel? playlist)
+        {
+            if (playlist == null) return;
+            _navigationService.Navigate(typeof(PlaylistDetailsPageViewModel),
+                new NavigationMetadata(typeof(PlaylistsPageViewModel), playlist));
+        }
+
+        [RelayCommand]
         private async Task OpenFilesAsync()
         {
             try

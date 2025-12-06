@@ -28,6 +28,7 @@ public static class ServiceHelpers
         services.AddTransient<PlayQueueViewModel>();
         services.AddTransient<AlbumDetailsPageViewModel>();
         services.AddTransient<ArtistDetailsPageViewModel>();
+        services.AddTransient<PlaylistDetailsPageViewModel>();
         services.AddTransient<SongsPageViewModel>();
         services.AddTransient<AlbumsPageViewModel>();
         services.AddTransient<ArtistsPageViewModel>();

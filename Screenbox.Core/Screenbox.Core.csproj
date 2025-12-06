@@ -285,6 +285,7 @@
     <Compile Include="ViewModels\PlayerControlsViewModel.cs" />
     <Compile Include="ViewModels\PlayerElementViewModel.cs" />
     <Compile Include="ViewModels\PlayerPageViewModel.cs" />
+    <Compile Include="ViewModels\PlaylistDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\PlaylistViewModel.cs" />
     <Compile Include="ViewModels\PlayQueueViewModel.cs" />
     <Compile Include="ViewModels\PlaylistsPageViewModel.cs" />

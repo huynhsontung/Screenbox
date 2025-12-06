@@ -120,6 +120,7 @@ namespace Screenbox
             services.AddSingleton<INavigationService, NavigationService>(_ => new NavigationService(
                 new KeyValuePair<Type, Type>(typeof(HomePageViewModel), typeof(HomePage)),
                 new KeyValuePair<Type, Type>(typeof(PlaylistsPageViewModel), typeof(PlaylistsPage)),
+                new KeyValuePair<Type, Type>(typeof(PlaylistDetailsPageViewModel), typeof(PlaylistDetailsPage)),
                 new KeyValuePair<Type, Type>(typeof(VideosPageViewModel), typeof(VideosPage)),
                 new KeyValuePair<Type, Type>(typeof(AllVideosPageViewModel), typeof(AllVideosPage)),
                 new KeyValuePair<Type, Type>(typeof(MusicPageViewModel), typeof(MusicPage)),

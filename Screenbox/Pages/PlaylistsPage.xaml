@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -59,10 +60,13 @@
             x:Name="PlaylistsGridView"
             Grid.Row="2"
             Padding="{StaticResource GridViewContentPagePadding}"
+            ui:ListViewExtensions.Command="{x:Bind Common.OpenPlaylistCommand}"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind Common.ScrollBarMargin, Mode=OneWay}"
+            IsItemClickEnabled="True"
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
-            ItemsSource="{x:Bind ViewModel.Playlists}" />
+            ItemsSource="{x:Bind ViewModel.Playlists}"
+            SelectionMode="None" />
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">
