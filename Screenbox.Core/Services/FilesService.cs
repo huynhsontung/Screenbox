@@ -114,16 +114,14 @@ namespace Screenbox.Core.Services
 
         public async Task SaveToDiskAsync<T>(StorageFile file, T source)
         {
-            using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
             if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
             {
-                using var writer = new DataWriter(stream);
                 var json = JsonSerializer.Serialize(source);
-                writer.WriteString(json);
-                await writer.FlushAsync();
+                await FileIO.WriteTextAsync(file, json);
             }
             else
             {
+                using var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
                 var writeStream = stream.AsStreamForWrite();
                 Serializer.Serialize(writeStream, source);
                 writeStream.SetLength(writeStream.Position);  // A weird quirk of protobuf-net
