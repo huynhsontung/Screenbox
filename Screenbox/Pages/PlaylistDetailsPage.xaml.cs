@@ -172,10 +172,48 @@ public sealed partial class PlaylistDetailsPage : Page
         return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
     }
 
-    private static string GetSubtext(int itemsCount, TimeSpan duration)
+    public static string GetSubtext(int itemsCount, TimeSpan duration)
     {
         string itemsCountText = Strings.Resources.SongsCount(itemsCount);
         string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
         return $"{itemsCountText} • {runTime}";
+    }
+
+    private async void RenamePlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.Source == null) return;
+
+        Controls.RenamePlaylistDialog dialog = new(ViewModel.Source.Caption);
+        string? newName = await dialog.GetPlaylistNameAsync();
+        if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Caption)
+        {
+            await ViewModel.Source.RenameAsync(newName);
+        }
+    }
+
+    private async void DeletePlaylistButton_OnClick(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel.Source == null) return;
+
+        ContentDialog dialog = new()
+        {
+            Title = "Delete Playlist",
+            Content = $"Are you sure you want to delete '{ViewModel.Source.Caption}'?",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Close
+        };
+        dialog.FlowDirection = Helpers.GlobalizationHelper.GetFlowDirection();
+        dialog.RequestedTheme = ((FrameworkElement)Window.Current.Content).RequestedTheme;
+
+        ContentDialogResult result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            bool deleted = await ViewModel.DeletePlaylistAsync();
+            if (deleted && Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+        }
     }
 }

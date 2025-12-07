@@ -58,6 +58,12 @@ public partial class PlaylistViewModel : ObservableObject
         await _playlistService.SavePlaylistAsync(persistentPlaylist);
     }
 
+    public async Task RenameAsync(string newDisplayName)
+    {
+        Caption = newDisplayName;
+        await SaveAsync();
+    }
+
     private PersistentPlaylist ToPersistentPlaylist()
     {
         return new PersistentPlaylist

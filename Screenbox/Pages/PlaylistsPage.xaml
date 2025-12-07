@@ -2,9 +2,9 @@
     x:Class="Screenbox.Pages.PlaylistsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Screenbox.Behaviors"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactions="using:Screenbox.Controls.Interactions"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Screenbox.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -18,6 +18,20 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Controls/Templates/GridViewItemTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <MenuFlyout x:Name="PlaylistContextMenu">
+                <MenuFlyoutItem
+                    x:Name="RenamePlaylistMenuItem"
+                    Click="RenamePlaylistMenuItem_OnClick"
+                    Icon="{ui:SymbolIcon Symbol=Rename}"
+                    Text="Rename" />
+                <MenuFlyoutSeparator />
+                <MenuFlyoutItem
+                    x:Name="DeletePlaylistMenuItem"
+                    Click="DeletePlaylistMenuItem_OnClick"
+                    Icon="{ui:SymbolIcon Symbol=Delete}"
+                    Text="Delete" />
+            </MenuFlyout>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -66,7 +80,11 @@
             ItemContainerStyle="{StaticResource GridViewItemMediaCardStyle}"
             ItemTemplate="{StaticResource MediaGridViewItemTemplate}"
             ItemsSource="{x:Bind ViewModel.Playlists}"
-            SelectionMode="None" />
+            SelectionMode="None">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:ListViewContextTriggerBehavior Flyout="{x:Bind PlaylistContextMenu}" />
+            </interactivity:Interaction.Behaviors>
+        </GridView>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="NavigationViewStates">

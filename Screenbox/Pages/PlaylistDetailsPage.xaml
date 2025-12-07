@@ -215,6 +215,17 @@
                                 Icon="{ui:SymbolIcon Symbol=Add}"
                                 Label="Add files"
                                 Style="{StaticResource DefaultButtonAppBarButtonStyle}" />
+
+                            <CommandBar.SecondaryCommands>
+                                <AppBarButton
+                                    Click="RenamePlaylistButton_OnClick"
+                                    Icon="{ui:SymbolIcon Symbol=Rename}"
+                                    Label="Rename" />
+                                <AppBarButton
+                                    Click="DeletePlaylistButton_OnClick"
+                                    Icon="{ui:SymbolIcon Symbol=Delete}"
+                                    Label="Delete" />
+                            </CommandBar.SecondaryCommands>
                         </CommandBar>
                     </Grid>
                 </StackPanel>

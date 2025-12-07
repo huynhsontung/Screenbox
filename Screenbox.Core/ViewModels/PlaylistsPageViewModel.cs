@@ -43,4 +43,16 @@ public partial class PlaylistsPageViewModel : ObservableObject
         // Assume sort by last updated
         Playlists.Insert(0, playlist);
     }
+
+    public async Task RenamePlaylistAsync(PlaylistViewModel playlist, string newDisplayName)
+    {
+        playlist.Caption = newDisplayName;
+        await playlist.SaveAsync();
+    }
+
+    public async Task DeletePlaylistAsync(PlaylistViewModel playlist)
+    {
+        await _playlistService.DeletePlaylistAsync(playlist.Id);
+        Playlists.Remove(playlist);
+    }
 }

@@ -32,11 +32,13 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     private List<MediaViewModel>? _itemList;
     private readonly IFilesService _filesService;
+    private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistDetailsPageViewModel(IFilesService filesService, MediaViewModelFactory mediaFactory)
+    public PlaylistDetailsPageViewModel(IFilesService filesService, IPlaylistService playlistService, MediaViewModelFactory mediaFactory)
     {
         _filesService = filesService;
+        _playlistService = playlistService;
         _mediaFactory = mediaFactory;
     }
 
@@ -107,6 +109,14 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
         // Load media details in parallel
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
+    }
+
+    public async Task<bool> DeletePlaylistAsync()
+    {
+        if (Source == null) return false;
+
+        await _playlistService.DeletePlaylistAsync(Source.Id);
+        return true;
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

@@ -205,6 +205,9 @@
     <Compile Include="Controls\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RenamePlaylistDialog.xaml.cs">
+      <DependentUpon>RenamePlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SeekBar.xaml.cs">
       <DependentUpon>SeekBar.xaml</DependentUpon>
     </Compile>
@@ -596,6 +599,10 @@
     <Page Include="Controls\PropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RenamePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\SeekBar.xaml">
       <SubType>Designer</SubType>
