@@ -4,12 +4,11 @@ name: Winget Release
 # Requires WINGET_TOKEN secret: A GitHub PAT with public_repo scope to create PRs in microsoft/winget-pkgs.
 on:
   release:
-    types: [published]
+    types: [released]
 
 jobs:
   winget-release:
     runs-on: ubuntu-latest
-    if: "!github.event.release.draft && !github.event.release.prerelease"
     steps:
       - name: Submit to Winget
         uses: vedantmgoyal9/winget-releaser@v2
