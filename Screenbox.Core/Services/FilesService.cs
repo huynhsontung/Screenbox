@@ -1,15 +1,15 @@
 ﻿#nullable enable
 
-using ProtoBuf;
-using Screenbox.Core.Enums;
-using Screenbox.Core.Helpers;
-using Screenbox.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
+using ProtoBuf;
+using Screenbox.Core.Enums;
+using Screenbox.Core.Helpers;
+using Screenbox.Core.Models;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
@@ -17,7 +17,6 @@ using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Search;
 using Windows.System;
-using Windows.Storage.Streams;
 
 namespace Screenbox.Core.Services
 {
@@ -137,16 +136,13 @@ namespace Screenbox.Core.Services
 
         public async Task<T> LoadFromDiskAsync<T>(StorageFile file)
         {
-            using var readStream = await file.OpenReadAsync();
             if (file.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
             {
-                using var dataReader = new DataReader(readStream);
-                uint size = (uint)readStream.Size;
-                await dataReader.LoadAsync(size);
-                string json = dataReader.ReadString(size);
+                string json = await FileIO.ReadTextAsync(file);
                 return JsonSerializer.Deserialize<T>(json) ?? throw new InvalidOperationException("Failed to deserialize JSON");
             }
 
+            using var readStream = await file.OpenReadAsync();
             return Serializer.Deserialize<T>(readStream.AsStream());
         }
 
