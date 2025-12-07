@@ -191,7 +191,7 @@
                             <AppBarButton
                                 AccessKey="{strings:KeyboardResources Key=CommandPlayKey}"
                                 Command="{x:Bind ViewModel.PlayCommand}"
-                                CommandParameter="{x:Bind ViewModel.Items, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
+                                CommandParameter="{x:Bind ViewModel.Source.Items, Mode=OneWay, Converter={StaticResource FirstOrDefaultConverter}}"
                                 Icon="{ui:FontIcon FontFamily={StaticResource ScreenboxSymbolThemeFontFamily},
                                                    Glyph={StaticResource PlayGlyph}}"
                                 Label="{strings:Resources Key=Play}"
@@ -228,7 +228,7 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ui:ScrollViewerExtensions.VerticalScrollBarMargin="{x:Bind GetScrollbarVerticalMargin(Common.ScrollBarMargin), Mode=OneWay}"
             IsItemClickEnabled="True"
-            ItemsSource="{x:Bind ViewModel.Items}"
+            ItemsSource="{x:Bind ViewModel.Source.Items, Mode=OneWay}"
             SelectionMode="None"
             Style="{StaticResource MediaListViewStyle}">
             <ListView.ItemTemplate>

@@ -2,12 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Screenbox.Core.Factories;
 using Screenbox.Core.Helpers;
 using Screenbox.Core.Messages;
 using Screenbox.Core.Models;
@@ -30,17 +30,19 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
     public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.Items) : TimeSpan.Zero;
 
-    public ObservableCollection<MediaViewModel> Items { get; }
-
     private List<MediaViewModel>? _itemList;
     private readonly IPlaylistService _playlistService;
     private readonly IFilesService _filesService;
+    private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistDetailsPageViewModel(IPlaylistService playlistService, IFilesService filesService)
+    public PlaylistDetailsPageViewModel(
+        IPlaylistService playlistService,
+        IFilesService filesService,
+        MediaViewModelFactory mediaFactory)
     {
         _playlistService = playlistService;
         _filesService = filesService;
-        Items = new ObservableCollection<MediaViewModel>();
+        _mediaFactory = mediaFactory;
     }
 
     public void OnNavigatedTo(object? parameter)
@@ -53,26 +55,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         };
     }
 
-    partial void OnSourceChanged(PlaylistViewModel? value)
-    {
-        if (value == null)
-        {
-            Items.Clear();
-            _itemList = null;
-            return;
-        }
-
-        Items.Clear();
-        foreach (MediaViewModel media in value.Items)
-        {
-            Items.Add(media);
-        }
-    }
-
     [RelayCommand]
     private void Play(MediaViewModel item)
     {
-        _itemList ??= Items.ToList();
+        if (Source == null) return;
+        _itemList ??= Source.Items.ToList();
         Messenger.SendQueueAndPlay(item, _itemList);
     }
 
@@ -87,15 +74,14 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void Remove(MediaViewModel item)
+    private async Task Remove(MediaViewModel item)
     {
         if (Source == null) return;
         Source.Items.Remove(item);
-        Items.Remove(item);
         _itemList = null;
         OnPropertyChanged(nameof(ItemsCount));
         OnPropertyChanged(nameof(TotalDuration));
-        _ = SavePlaylistAsync();
+        await SavePlaylistAsync();
     }
 
     [RelayCommand]
@@ -106,10 +92,26 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         IReadOnlyList<StorageFile>? files = await _filesService.PickMultipleFilesAsync();
         if (files == null || files.Count == 0) return;
 
-        // TODO: Create media view models from files and add to playlist
-        // For now, this is a placeholder
+        var mediaList = files.Where(f => f.IsSupported()).Select(_mediaFactory.GetSingleton).ToList();
+        if (mediaList.Count == 0) return;
 
+        foreach (var item in mediaList)
+        {
+            Source.Items.Add(item);
+        }
+
+        // Invalidate cached item list
+        _itemList = null;
+
+        // Update property notifications
+        OnPropertyChanged(nameof(ItemsCount));
+        OnPropertyChanged(nameof(TotalDuration));
+
+        // Save the updated playlist to disk
         await SavePlaylistAsync();
+
+        // Load media details in parallel
+        await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
     }
 
     private async Task SavePlaylistAsync()

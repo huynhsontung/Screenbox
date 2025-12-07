@@ -60,7 +60,7 @@ public partial class PlaylistViewModel : ObservableObject
             Items = Items.Select(m => new PersistentMediaRecord(
                 m.Name,
                 m.Location,
-                m.MediaType == MediaPlaybackType.Music ? (IMediaProperties)m.MediaInfo.MusicProperties : m.MediaInfo.VideoProperties,
+                m.MediaType == MediaPlaybackType.Music ? m.MediaInfo.MusicProperties : m.MediaInfo.VideoProperties,
                 m.DateAdded
             )).ToList()
         };
@@ -70,7 +70,10 @@ public partial class PlaylistViewModel : ObservableObject
     {
         MediaViewModel media = _mediaFactory.GetSingleton(new Uri(record.Path));
         if (!string.IsNullOrEmpty(record.Title)) media.Name = record.Title;
-        media.MediaInfo = new MediaInfo(record.Properties);
+        media.MediaInfo = record.Properties != null
+            ? new MediaInfo(record.Properties)
+            : new MediaInfo(record.MediaType, record.Title, record.Year, record.Duration);
+
         if (record.DateAdded != default)
         {
             DateTimeOffset utcTime = DateTime.SpecifyKind(record.DateAdded, DateTimeKind.Utc);
