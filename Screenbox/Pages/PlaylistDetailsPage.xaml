@@ -138,7 +138,7 @@
                     <TextBlock
                         x:Name="TitleText"
                         Style="{StaticResource TitleMediumTextBlockStyle}"
-                        Text="{x:Bind ViewModel.DisplayName, Mode=OneWay, FallbackValue={x:Null}}"
+                        Text="{x:Bind ViewModel.Source.Caption, Mode=OneWay, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />
@@ -162,7 +162,7 @@
                         Margin="0,12,0,0"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                         Style="{StaticResource BodyTextBlockStyle}"
-                        Text="{x:Bind local:PlaylistDetailsPage.GetSubtext(ViewModel.ItemsCount, ViewModel.TotalDuration), Mode=OneWay}"
+                        Text="{x:Bind local:PlaylistDetailsPage.GetSubtext(ViewModel.Source.Items), Mode=OneWay, FallbackValue=''}"
                         TextWrapping="NoWrap">
                         <interactivity:Interaction.Behaviors>
                             <behaviors:OverflowTextToolTipBehavior />

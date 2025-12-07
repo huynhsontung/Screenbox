@@ -50,7 +50,7 @@ public sealed partial class PlaylistsPage : Page
         string? newName = await dialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(newName) && newName != playlist.Caption)
         {
-            await ViewModel.RenamePlaylistAsync(playlist, newName);
+            await ViewModel.RenamePlaylistAsync(playlist, newName!);
         }
     }
 

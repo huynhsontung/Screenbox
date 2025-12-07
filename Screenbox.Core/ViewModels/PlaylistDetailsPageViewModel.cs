@@ -19,16 +19,7 @@ namespace Screenbox.Core.ViewModels;
 public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(ItemsCount))]
-    [NotifyPropertyChangedFor(nameof(TotalDuration))]
-    [NotifyPropertyChangedFor(nameof(DisplayName))]
     private PlaylistViewModel? _source;
-
-    public string DisplayName => Source?.Caption ?? string.Empty;
-
-    public int ItemsCount => Source?.Items.Count ?? 0;
-
-    public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.Items) : TimeSpan.Zero;
 
     private List<MediaViewModel>? _itemList;
     private readonly IFilesService _filesService;
@@ -76,8 +67,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         if (Source == null) return;
         Source.Items.Remove(item);
         _itemList = null;
-        OnPropertyChanged(nameof(ItemsCount));
-        OnPropertyChanged(nameof(TotalDuration));
         await Source.SaveAsync();
     }
 
@@ -100,10 +89,6 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         // Invalidate cached item list
         _itemList = null;
 
-        // Update property notifications
-        OnPropertyChanged(nameof(ItemsCount));
-        OnPropertyChanged(nameof(TotalDuration));
-
         // Save the updated playlist to disk
         await Source.SaveAsync();
 
@@ -117,16 +102,5 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
 
         await _playlistService.DeletePlaylistAsync(Source.Id);
         return true;
-    }
-
-    private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)
-    {
-        TimeSpan duration = TimeSpan.Zero;
-        foreach (MediaViewModel item in items)
-        {
-            duration += item.Duration;
-        }
-
-        return duration;
     }
 }

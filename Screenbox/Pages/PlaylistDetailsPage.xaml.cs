@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
@@ -172,11 +173,29 @@ public sealed partial class PlaylistDetailsPage : Page
         return new Thickness(value.Left, value.Top - headerHeight, value.Right, value.Bottom);
     }
 
-    public static string GetSubtext(int itemsCount, TimeSpan duration)
+    public static string GetSubtext(IReadOnlyCollection<MediaViewModel>? items)
     {
+        if (items == null) return string.Empty;
+
+        int itemsCount = items.Count;
+        TimeSpan duration = GetTotalDuration(items);
+
         string itemsCountText = Strings.Resources.SongsCount(itemsCount);
         string runTime = Strings.Resources.RunTime(Humanizer.ToDuration(duration));
         return $"{itemsCountText} • {runTime}";
+    }
+
+    public static TimeSpan GetTotalDuration(IReadOnlyCollection<MediaViewModel>? items)
+    {
+        if (items == null) return TimeSpan.Zero;
+
+        TimeSpan duration = TimeSpan.Zero;
+        foreach (MediaViewModel item in items)
+        {
+            duration += item.Duration;
+        }
+
+        return duration;
     }
 
     private async void RenamePlaylistButton_OnClick(object sender, RoutedEventArgs e)
@@ -187,7 +206,7 @@ public sealed partial class PlaylistDetailsPage : Page
         string? newName = await dialog.GetPlaylistNameAsync();
         if (!string.IsNullOrWhiteSpace(newName) && newName != ViewModel.Source.Caption)
         {
-            await ViewModel.Source.RenameAsync(newName);
+            await ViewModel.Source.RenameAsync(newName!);
         }
     }
 
