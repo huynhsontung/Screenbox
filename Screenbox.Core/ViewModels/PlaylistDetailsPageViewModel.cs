@@ -31,16 +31,11 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
     public TimeSpan TotalDuration => Source != null ? GetTotalDuration(Source.Items) : TimeSpan.Zero;
 
     private List<MediaViewModel>? _itemList;
-    private readonly IPlaylistService _playlistService;
     private readonly IFilesService _filesService;
     private readonly MediaViewModelFactory _mediaFactory;
 
-    public PlaylistDetailsPageViewModel(
-        IPlaylistService playlistService,
-        IFilesService filesService,
-        MediaViewModelFactory mediaFactory)
+    public PlaylistDetailsPageViewModel(IFilesService filesService, MediaViewModelFactory mediaFactory)
     {
-        _playlistService = playlistService;
         _filesService = filesService;
         _mediaFactory = mediaFactory;
     }
@@ -81,7 +76,7 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         _itemList = null;
         OnPropertyChanged(nameof(ItemsCount));
         OnPropertyChanged(nameof(TotalDuration));
-        await SavePlaylistAsync();
+        await Source.SaveAsync();
     }
 
     [RelayCommand]
@@ -108,19 +103,10 @@ public sealed partial class PlaylistDetailsPageViewModel : ObservableRecipient
         OnPropertyChanged(nameof(TotalDuration));
 
         // Save the updated playlist to disk
-        await SavePlaylistAsync();
+        await Source.SaveAsync();
 
         // Load media details in parallel
         await Task.WhenAll(mediaList.Select(m => m.LoadDetailsAsync(_filesService)));
-    }
-
-    private async Task SavePlaylistAsync()
-    {
-        if (Source == null) return;
-
-        Source.LastUpdated = DateTimeOffset.Now;
-        var persistentPlaylist = Source.ToPersistentPlaylist();
-        await _playlistService.SavePlaylistAsync(persistentPlaylist);
     }
 
     private static TimeSpan GetTotalDuration(IEnumerable<MediaViewModel> items)

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Screenbox.Core.Enums;
 using Screenbox.Core.Factories;
@@ -22,7 +23,7 @@ public partial class PlaylistViewModel : ObservableObject
 
     public string Id => _id.ToString();
 
-    private Guid _id;
+    private Guid _id = Guid.NewGuid();
 
     private readonly IPlaylistService _playlistService;
     private readonly MediaViewModelFactory _mediaFactory;
@@ -50,7 +51,14 @@ public partial class PlaylistViewModel : ObservableObject
         }
     }
 
-    public PersistentPlaylist ToPersistentPlaylist()
+    public async Task SaveAsync()
+    {
+        LastUpdated = DateTimeOffset.Now;
+        var persistentPlaylist = ToPersistentPlaylist();
+        await _playlistService.SavePlaylistAsync(persistentPlaylist);
+    }
+
+    private PersistentPlaylist ToPersistentPlaylist()
     {
         return new PersistentPlaylist
         {
