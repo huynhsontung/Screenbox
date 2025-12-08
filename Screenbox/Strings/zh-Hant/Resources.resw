@@ -655,7 +655,7 @@
     <value>螢幕控制</value>
   </data>
   <data name="SettingsOnScreenControlsDescription" xml:space="preserve">
-    <value>Choose which elements may appear in the controls, and adjust the auto-hide behavior</value>
+    <value>選擇控制項中可顯示的元件</value>
   </data>
   <data name="SettingsGesturesHeader" xml:space="preserve">
     <value>手勢</value>
@@ -952,7 +952,7 @@
     <value>可用時顯示章節名稱</value>
   </data>
   <data name="SettingsOnScreenControlsHideDelayHeader" xml:space="preserve">
-    <value>Dismiss controls after this amount of time</value>
+    <value>經過此時間後自動隱藏控制項</value>
   </data>
   <data name="SecondsCount_One" xml:space="preserve">
     <value>{0} 秒</value>
